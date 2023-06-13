@@ -89,7 +89,11 @@ class _AuthActionButtonState extends State<AuthActionButton> {
             this.predictedUser = user;
           }
         }
-        context.pushNamed(RouteNames.absenDaftarNameRoute);
+        PersistentBottomSheetController bottomSheetController =
+            Scaffold.of(context)
+                .showBottomSheet((context) => signSheet(context));
+        bottomSheetController.closed.whenComplete(
+            () => context.pushNamed(RouteNames.absenDaftarNameRoute));
       }
     } catch (e) {
       print(e);
