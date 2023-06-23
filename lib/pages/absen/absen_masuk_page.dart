@@ -4,8 +4,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../style/style.dart';
 import '../../application/timer/timer_state.dart';
-import '../../core/shared/providers.dart';
-import '../welcome/presentation/widget/app_logo.dart';
+import '../../shared/providers.dart';
+import '../widgets/app_logo.dart';
 
 class AbsenMasukPage extends HookConsumerWidget {
   const AbsenMasukPage();

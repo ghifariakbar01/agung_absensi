@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../style/style.dart';
-import '../../core/shared/providers.dart';
+import '../../shared/providers.dart';
 
 class SignInForm extends HookConsumerWidget {
   const SignInForm();
@@ -20,8 +20,8 @@ class SignInForm extends HookConsumerWidget {
       child: Column(
         children: [
           TextFormField(
-            decoration: Themes.formStyle('Masukkan nama / username'),
-            keyboardType: TextInputType.name,
+            decoration: Themes.formStyle('Masukkan email'),
+            keyboardType: TextInputType.emailAddress,
             onChanged: (value) => ref
                 .read(signInFormNotifierProvider.notifier)
                 .changeEmail(value),
@@ -29,6 +29,22 @@ class SignInForm extends HookConsumerWidget {
                 ref.read(signInFormNotifierProvider).email.value.fold(
                       (f) => f.maybeMap(
                         invalidEmail: (_) => 'invalid email',
+                        empty: (_) => 'kosong',
+                        orElse: () => null,
+                      ),
+                      (_) => null,
+                    ),
+          ),
+          const SizedBox(height: 8),
+          TextFormField(
+            decoration: Themes.formStyle('Masukkan nama / username'),
+            keyboardType: TextInputType.name,
+            onChanged: (value) => ref
+                .read(signInFormNotifierProvider.notifier)
+                .changeUserId(value),
+            validator: (_) =>
+                ref.read(signInFormNotifierProvider).userId.value.fold(
+                      (f) => f.maybeMap(
                         empty: (_) => 'kosong',
                         orElse: () => null,
                       ),

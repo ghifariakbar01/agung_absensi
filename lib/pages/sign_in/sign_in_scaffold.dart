@@ -4,8 +4,10 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../style/style.dart';
-import '../../../core/application/routes/route_names.dart';
-import '../welcome/presentation/widget/app_logo.dart';
+
+import '../../application/routes/route_names.dart';
+
+import '../widgets/app_logo.dart';
 import 'sign_in_form.dart';
 
 class SignInScaffold extends HookConsumerWidget {
@@ -23,20 +25,20 @@ class SignInScaffold extends HookConsumerWidget {
               const SizedBox(height: 58),
               const SignInForm(),
               const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed: () =>
-                        context.pushNamed(RouteNames.changePassNameRoute),
-                    child: Text(
-                      'Ganti password',
-                      style: Themes.blackItalic(),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 90),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.end,
+              //   children: [
+              //     TextButton(
+              //       onPressed: () =>
+              //           context.pushNamed(RouteNames.changePassNameRoute),
+              //       child: Text(
+              //         'Ganti password',
+              //         style: Themes.blackItalic(),
+              //       ),
+              //     ),
+              //   ],
+              // ),
+              // const SizedBox(height: 90),
             ],
           ),
         ),

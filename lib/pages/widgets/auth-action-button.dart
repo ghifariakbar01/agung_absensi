@@ -1,15 +1,16 @@
-import 'package:face_net_authentication/core/application/routes/route_names.dart';
+import 'dart:developer';
+
 import 'package:face_net_authentication/locator.dart';
-import 'package:face_net_authentication/pages/db/databse_helper.dart';
-import 'package:face_net_authentication/pages/models/user.model.dart';
-import 'package:face_net_authentication/pages/profile.dart';
+
 import 'package:face_net_authentication/pages/widgets/app_button.dart';
-import 'package:face_net_authentication/services/camera.service.dart';
 import 'package:face_net_authentication/services/ml_service.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../application/face_recognition/db/databse_helper.dart';
+import '../../application/face_recognition/models/user.model.dart';
+import '../../application/routes/route_names.dart';
 import '../../style/style.dart';
-import '../home.dart';
+import '../home/home.dart';
 import 'app_text_field.dart';
 
 class AuthActionButton extends StatefulWidget {
@@ -27,7 +28,6 @@ class AuthActionButton extends StatefulWidget {
 
 class _AuthActionButtonState extends State<AuthActionButton> {
   final MLService _mlService = locator<MLService>();
-  final CameraService _cameraService = locator<CameraService>();
 
   final TextEditingController _userTextEditingController =
       TextEditingController(text: '');
@@ -47,6 +47,7 @@ class _AuthActionButtonState extends State<AuthActionButton> {
       modelData: predictedData,
     );
     await _databaseHelper.insert(userToSave);
+    debugger(message: 'inserted');
     this._mlService.setPredictedData([]);
     Navigator.push(context,
         MaterialPageRoute(builder: (BuildContext context) => MyHomePage()));
@@ -55,13 +56,7 @@ class _AuthActionButtonState extends State<AuthActionButton> {
   Future _signIn(context) async {
     String password = _passwordTextEditingController.text;
     if (this.predictedUser!.password == password) {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (BuildContext context) => Profile(
-                    this.predictedUser!.user,
-                    imagePath: _cameraService.imagePath!,
-                  )));
+      return;
     } else {
       showDialog(
         context: context,

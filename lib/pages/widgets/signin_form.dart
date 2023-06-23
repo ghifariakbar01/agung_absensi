@@ -1,27 +1,18 @@
-import 'package:face_net_authentication/locator.dart';
-import 'package:face_net_authentication/pages/models/user.model.dart';
-import 'package:face_net_authentication/pages/profile.dart';
 import 'package:face_net_authentication/pages/widgets/app_button.dart';
 import 'package:face_net_authentication/pages/widgets/app_text_field.dart';
-import 'package:face_net_authentication/services/camera.service.dart';
 import 'package:flutter/material.dart';
+
+import '../../application/face_recognition/models/user.model.dart';
 
 class SignInSheet extends StatelessWidget {
   SignInSheet({Key? key, required this.user}) : super(key: key);
   final User user;
 
   final _passwordController = TextEditingController();
-  final _cameraService = locator<CameraService>();
 
   Future _signIn(context, user) async {
     if (user.password == _passwordController.text) {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (BuildContext context) => Profile(
-                    user.user,
-                    imagePath: _cameraService.imagePath!,
-                  )));
+      return;
     } else {
       showDialog(
         context: context,

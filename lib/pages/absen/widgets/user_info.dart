@@ -24,9 +24,10 @@ class WelcomeLabel extends StatelessWidget {
 }
 
 class UserInfo extends StatelessWidget {
-  const UserInfo({required this.title});
+  const UserInfo({required this.title, required this.user});
 
   final String title;
+  final String user;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +42,7 @@ class UserInfo extends StatelessWidget {
         const SizedBox(height: 8),
         Center(
           child: Text(
-            'Agung Fitrah Wibodo',
+            user,
             style: Themes.black(FontWeight.bold, 24),
           ),
         ),

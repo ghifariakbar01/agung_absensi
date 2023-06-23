@@ -13,7 +13,8 @@ class BuildConfig {
 
   const BuildConfig._development()
       : this._(
-          baseUrl: 'https://6128855786a213001729f948.mockapi.io/api/v1/',
+          baseUrl:
+              'http://agunglogisticsapp.co.id:1225/service_mobile.asmx/Perintah',
           socketUrl: '',
           connectTimeout: 20000,
           receiveTimeout: 20000,
@@ -22,7 +23,8 @@ class BuildConfig {
 
   const BuildConfig._staging()
       : this._(
-          baseUrl: 'https://6128855786a213001729f948.mockapi.io/api/v1/',
+          baseUrl:
+              'http://agunglogisticsapp.co.id:1225/service_mobile.asmx/Perintah',
           socketUrl: '',
           connectTimeout: 20000,
           receiveTimeout: 20000,
@@ -31,7 +33,8 @@ class BuildConfig {
 
   const BuildConfig._release()
       : this._(
-          baseUrl: 'https://6128855786a213001729f948.mockapi.io/api/v1/',
+          baseUrl:
+              'http://agunglogisticsapp.co.id:1225/service_mobile.asmx/Perintah',
           socketUrl: '',
           connectTimeout: 20000,
           receiveTimeout: 20000,
@@ -41,9 +44,12 @@ class BuildConfig {
   static late BuildConfig _instance;
 
   static void init({String? flavor}) {
-    debugPrint('╔══════════════════════════════════════════════════════════════╗');
-    debugPrint('                    Build Flavor: $flavor                       ');
-    debugPrint('╚══════════════════════════════════════════════════════════════╝');
+    debugPrint(
+        '╔══════════════════════════════════════════════════════════════╗');
+    debugPrint(
+        '                    Build Flavor: $flavor                       ');
+    debugPrint(
+        '╚══════════════════════════════════════════════════════════════╝');
     switch (flavor) {
       case 'development':
         _instance = const BuildConfig._development();

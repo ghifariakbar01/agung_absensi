@@ -28,18 +28,21 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.4
   tflite_flutter: ^0.9.0
+
+  # iOS : microphone access required
   camera: ^0.9.4+19
+
   path_provider: ^2.0.9
   path: ^1.8.0
   google_ml_kit: ^0.13.0
   image: ^3.0.2
   font_awesome_flutter: ^9.0.0
-  url_launcher: ^6.0.3
   sqflite: ^2.0.2
   get_it: ^7.2.0
   permission_handler: ^10.3.0
 
   #* Maps
+  geocoding: ^2.1.0
   geofence_service: ^4.0.0
 
   #* UI
@@ -53,9 +56,6 @@ dependencies:
   dio: ^4.0.6
   pretty_dio_logger: ^1.2.0-beta-1
 
-  #* Notification
-  flutter_local_notifications: ^14.1.1
-
   #* Dart data class
   freezed_annotation: ^2.2.0
   json_annotation: ^4.7.0
@@ -67,19 +67,15 @@ dependencies:
   logging: ^1.1.0
 
   #* Routing
-  go_router: ^5.1.1
-
-  #* Date Time util
-  jiffy: ^5.0.0
+  go_router: ^8.0.3
 
   #* Persistent storage
   flutter_secure_storage: ^6.0.0
-  hive_flutter: ^1.1.0
-  hive: ^2.2.3
 
   #* Misc
+  collection: ^1.16.0
   dartz: ^0.10.1
-  device_info_plus: ^9.0.2
+  intl: ^0.18.1
 
 dev_dependencies:
   flutter_test:

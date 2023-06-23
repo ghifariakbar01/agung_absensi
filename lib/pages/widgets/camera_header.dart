@@ -35,7 +35,7 @@ class CameraHeader extends StatelessWidget {
               width: 150,
               child: Padding(
                 padding: const EdgeInsets.only(right: 16.0),
-                child: Image.asset(Assets.appLogoPng),
+                child: Image.asset(Assets.iconLogo),
               )),
         ],
       ),

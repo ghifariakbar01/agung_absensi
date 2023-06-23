@@ -1,12 +1,12 @@
-import 'package:face_net_authentication/core/application/routes/route_names.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../style/style.dart';
+import '../../application/routes/route_names.dart';
 import '../../application/timer/timer_state.dart';
-import '../../core/shared/providers.dart';
-import '../welcome/presentation/widget/app_logo.dart';
+import '../../shared/providers.dart';
+import '../widgets/app_logo.dart';
 
 class AbsenDaftarPage extends HookConsumerWidget {
   const AbsenDaftarPage();
@@ -18,7 +18,7 @@ class AbsenDaftarPage extends HookConsumerWidget {
 
     ref.listen<TimerModel>(timerProvider, (_, timer) {
       if (timer.timeLeft == '00:00') {
-        context.replaceNamed(RouteNames.welcomeSignedNameRoute);
+        context.replaceNamed(RouteNames.welcomeNameRoute);
       }
     });
 

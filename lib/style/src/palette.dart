@@ -3,6 +3,8 @@ part of style;
 class Palette {
   static const primaryColor = Color(0xffFFD600);
 
+  static const primaryDarker = Color(0xffF4CD00);
+
   static const secondaryColor = Color(0xff2D7CF3);
 
   static const primaryTextColor = Color(0xffffffff);

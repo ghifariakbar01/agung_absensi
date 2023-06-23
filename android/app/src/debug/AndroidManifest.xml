@@ -7,7 +7,7 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="${applicationName}"
-        android:label="Agung Absensi Online"
+        android:label="Agung HRMS Online"
         android:icon="@mipmap/ic_launcher"
         android:exported="true"
         >

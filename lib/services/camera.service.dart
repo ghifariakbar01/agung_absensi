@@ -1,9 +1,9 @@
-import 'dart:ui';
-
 import 'package:camera/camera.dart';
-import 'package:face_net_authentication/core/presentation/widgets/alert_helper.dart';
+
 import 'package:flutter/material.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
+
+import '../pages/widgets/alert_helper.dart';
 
 class CameraService {
   CameraController? _cameraController;

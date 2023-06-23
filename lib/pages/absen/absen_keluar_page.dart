@@ -3,9 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../style/style.dart';
-import '../../../core/application/routes/route_names.dart';
 import '../../application/timer/timer_state.dart';
-import '../../core/shared/providers.dart';
+import '../../shared/providers.dart';
 
 class AbsenKeluarPage extends HookConsumerWidget {
   const AbsenKeluarPage();

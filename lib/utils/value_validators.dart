@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 
-import '../core/domain/failures.dart';
+import '../domain/failures.dart';
 
 Either<ValueFailure<String>, String> validateMaxStringLength(
   String input,

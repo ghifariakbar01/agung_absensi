@@ -1,0 +1,50 @@
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:permission_handler/permission_handler.dart';
+
+import 'permission_state.dart';
+
+class PermissionNotifier extends StateNotifier<PermissionState> {
+  PermissionNotifier() : super(PermissionState.initial());
+
+  // void askCamera() async {
+  //   await Permission.camera.request();
+  //   await checkAllStatus(() => changeAuthorized(
+  //       state.locationAuthorized == true && state.cameraAuthorized == true));
+  // }
+
+  void askLocation() async {
+    await Permission.location.request();
+    await checkAllStatus(
+        () => changeAuthorized(state.locationAuthorized == true));
+  }
+
+  Future<void> checkAllStatus(Function() onCheck) async {
+    // if (await Permission.camera.status.isPermanentlyDenied ||
+    //     await Permission.camera.status.isDenied) {
+    //   state = state.copyWith(cameraAuthorized: false);
+    // } else {
+    //   state = state.copyWith(cameraAuthorized: true);
+    // }
+
+    if (await Permission.location.status.isPermanentlyDenied ||
+        await Permission.location.status.isDenied) {
+      state = state.copyWith(locationAuthorized: false);
+    } else {
+      state = state.copyWith(locationAuthorized: true);
+    }
+
+    onCheck();
+  }
+
+  // void changeCamera(bool authorized) {
+  //   state = state.copyWith(cameraAuthorized: authorized);
+  // }
+
+  void changeLocation(bool authorized) {
+    state = state.copyWith(locationAuthorized: authorized);
+  }
+
+  void changeAuthorized(bool isAuthorized) {
+    state = state.copyWith(isAuthorized: isAuthorized);
+  }
+}

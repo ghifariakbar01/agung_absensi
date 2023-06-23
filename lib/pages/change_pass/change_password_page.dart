@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../core/presentation/widgets/loading_overlay.dart';
-import '../../style/style.dart';
+import '../widgets/loading_overlay.dart';
+import '../widgets/v_button.dart';
 import 'change_pass_scaffold.dart';
 
 class ChangePasswordPage extends HookConsumerWidget {
@@ -20,32 +20,9 @@ class ChangePasswordPage extends HookConsumerWidget {
       children: [
         const ChangePassScaffold(),
         Align(
-          alignment: Alignment.bottomCenter,
-          child: TextButton(
-            onPressed: () {
-              FocusScope.of(context).unfocus();
-              // ref
-              //     .read(signInFormNotifierProvider.notifier)
-              //     .signInWithEmailAndPassword();
-            },
-            child: Container(
-              height: 56,
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                  color: Palette.primaryColor,
-                  borderRadius: BorderRadius.circular(10)),
-              child: Center(
-                child: Text(
-                  'SIMPAN',
-                  style: Themes.blueSpaced(
-                    FontWeight.bold,
-                    16,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
+            alignment: Alignment.bottomCenter,
+            child: VButton(
+                label: 'SIMPAN', onPressed: () => Focus.of(context).unfocus())),
         LoadingOverlay(isLoading: false),
       ],
     );
