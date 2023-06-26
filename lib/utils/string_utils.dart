@@ -58,7 +58,11 @@ class StringUtils {
     String formattedDate1 = outputFormat.format(date2);
     String formattedDate2 = outputFormat.format(date1);
 
-    return '$formattedDate1 - $formattedDate2 ${date1.year}';
+    if (date1.year != date2.year) {
+      return '$formattedDate1 ${date2.year} - $formattedDate2 ${date1.year}';
+    } else {
+      return '$formattedDate1 - $formattedDate2 ${date1.year}';
+    }
   }
 
   // Output: 2023-06-21

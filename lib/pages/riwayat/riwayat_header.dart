@@ -45,7 +45,7 @@ class RiwayatHeader extends ConsumerWidget {
               final start = StringUtils.formatTanggal('${picked.start}');
               final end = StringUtils.formatTanggal('${picked.end}');
 
-              ref.read(riwayatAbsenNotifierProvider.notifier).startFilter(
+              await ref.read(riwayatAbsenNotifierProvider.notifier).startFilter(
                   changePage: () => ref
                       .read(riwayatAbsenNotifierProvider.notifier)
                       .changePage(1),

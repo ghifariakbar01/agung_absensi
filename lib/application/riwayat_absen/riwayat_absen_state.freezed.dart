@@ -25,6 +25,8 @@ mixin _$RiwayatAbsenState {
   bool get isGetting => throw _privateConstructorUsedError;
   Option<Either<RiwayatAbsenFailure, List<RiwayatAbsenModel>>>
       get failureOrSuccessOption => throw _privateConstructorUsedError;
+  Option<Either<RiwayatAbsenFailure, RiwayatAbsenModel>>
+      get failureOrSuccessOptionByID => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $RiwayatAbsenStateCopyWith<RiwayatAbsenState> get copyWith =>
@@ -45,7 +47,9 @@ abstract class $RiwayatAbsenStateCopyWith<$Res> {
       bool isMore,
       bool isGetting,
       Option<Either<RiwayatAbsenFailure, List<RiwayatAbsenModel>>>
-          failureOrSuccessOption});
+          failureOrSuccessOption,
+      Option<Either<RiwayatAbsenFailure, RiwayatAbsenModel>>
+          failureOrSuccessOptionByID});
 }
 
 /// @nodoc
@@ -68,6 +72,7 @@ class _$RiwayatAbsenStateCopyWithImpl<$Res, $Val extends RiwayatAbsenState>
     Object? isMore = null,
     Object? isGetting = null,
     Object? failureOrSuccessOption = null,
+    Object? failureOrSuccessOptionByID = null,
   }) {
     return _then(_value.copyWith(
       riwayatAbsen: null == riwayatAbsen
@@ -98,6 +103,10 @@ class _$RiwayatAbsenStateCopyWithImpl<$Res, $Val extends RiwayatAbsenState>
           ? _value.failureOrSuccessOption
           : failureOrSuccessOption // ignore: cast_nullable_to_non_nullable
               as Option<Either<RiwayatAbsenFailure, List<RiwayatAbsenModel>>>,
+      failureOrSuccessOptionByID: null == failureOrSuccessOptionByID
+          ? _value.failureOrSuccessOptionByID
+          : failureOrSuccessOptionByID // ignore: cast_nullable_to_non_nullable
+              as Option<Either<RiwayatAbsenFailure, RiwayatAbsenModel>>,
     ) as $Val);
   }
 }
@@ -118,7 +127,9 @@ abstract class _$$_RiwayatAbsenStateCopyWith<$Res>
       bool isMore,
       bool isGetting,
       Option<Either<RiwayatAbsenFailure, List<RiwayatAbsenModel>>>
-          failureOrSuccessOption});
+          failureOrSuccessOption,
+      Option<Either<RiwayatAbsenFailure, RiwayatAbsenModel>>
+          failureOrSuccessOptionByID});
 }
 
 /// @nodoc
@@ -139,6 +150,7 @@ class __$$_RiwayatAbsenStateCopyWithImpl<$Res>
     Object? isMore = null,
     Object? isGetting = null,
     Object? failureOrSuccessOption = null,
+    Object? failureOrSuccessOptionByID = null,
   }) {
     return _then(_$_RiwayatAbsenState(
       riwayatAbsen: null == riwayatAbsen
@@ -169,6 +181,10 @@ class __$$_RiwayatAbsenStateCopyWithImpl<$Res>
           ? _value.failureOrSuccessOption
           : failureOrSuccessOption // ignore: cast_nullable_to_non_nullable
               as Option<Either<RiwayatAbsenFailure, List<RiwayatAbsenModel>>>,
+      failureOrSuccessOptionByID: null == failureOrSuccessOptionByID
+          ? _value.failureOrSuccessOptionByID
+          : failureOrSuccessOptionByID // ignore: cast_nullable_to_non_nullable
+              as Option<Either<RiwayatAbsenFailure, RiwayatAbsenModel>>,
     ));
   }
 }
@@ -183,7 +199,8 @@ class _$_RiwayatAbsenState implements _RiwayatAbsenState {
       required this.dateSecond,
       required this.isMore,
       required this.isGetting,
-      required this.failureOrSuccessOption})
+      required this.failureOrSuccessOption,
+      required this.failureOrSuccessOptionByID})
       : _riwayatAbsen = riwayatAbsen;
 
   final List<RiwayatAbsenModel> _riwayatAbsen;
@@ -207,10 +224,13 @@ class _$_RiwayatAbsenState implements _RiwayatAbsenState {
   @override
   final Option<Either<RiwayatAbsenFailure, List<RiwayatAbsenModel>>>
       failureOrSuccessOption;
+  @override
+  final Option<Either<RiwayatAbsenFailure, RiwayatAbsenModel>>
+      failureOrSuccessOptionByID;
 
   @override
   String toString() {
-    return 'RiwayatAbsenState(riwayatAbsen: $riwayatAbsen, page: $page, dateFirst: $dateFirst, dateSecond: $dateSecond, isMore: $isMore, isGetting: $isGetting, failureOrSuccessOption: $failureOrSuccessOption)';
+    return 'RiwayatAbsenState(riwayatAbsen: $riwayatAbsen, page: $page, dateFirst: $dateFirst, dateSecond: $dateSecond, isMore: $isMore, isGetting: $isGetting, failureOrSuccessOption: $failureOrSuccessOption, failureOrSuccessOptionByID: $failureOrSuccessOptionByID)';
   }
 
   @override
@@ -229,7 +249,11 @@ class _$_RiwayatAbsenState implements _RiwayatAbsenState {
             (identical(other.isGetting, isGetting) ||
                 other.isGetting == isGetting) &&
             (identical(other.failureOrSuccessOption, failureOrSuccessOption) ||
-                other.failureOrSuccessOption == failureOrSuccessOption));
+                other.failureOrSuccessOption == failureOrSuccessOption) &&
+            (identical(other.failureOrSuccessOptionByID,
+                    failureOrSuccessOptionByID) ||
+                other.failureOrSuccessOptionByID ==
+                    failureOrSuccessOptionByID));
   }
 
   @override
@@ -241,7 +265,8 @@ class _$_RiwayatAbsenState implements _RiwayatAbsenState {
       dateSecond,
       isMore,
       isGetting,
-      failureOrSuccessOption);
+      failureOrSuccessOption,
+      failureOrSuccessOptionByID);
 
   @JsonKey(ignore: true)
   @override
@@ -261,7 +286,9 @@ abstract class _RiwayatAbsenState implements RiwayatAbsenState {
       required final bool isGetting,
       required final Option<
               Either<RiwayatAbsenFailure, List<RiwayatAbsenModel>>>
-          failureOrSuccessOption}) = _$_RiwayatAbsenState;
+          failureOrSuccessOption,
+      required final Option<Either<RiwayatAbsenFailure, RiwayatAbsenModel>>
+          failureOrSuccessOptionByID}) = _$_RiwayatAbsenState;
 
   @override
   List<RiwayatAbsenModel> get riwayatAbsen;
@@ -278,6 +305,9 @@ abstract class _RiwayatAbsenState implements RiwayatAbsenState {
   @override
   Option<Either<RiwayatAbsenFailure, List<RiwayatAbsenModel>>>
       get failureOrSuccessOption;
+  @override
+  Option<Either<RiwayatAbsenFailure, RiwayatAbsenModel>>
+      get failureOrSuccessOptionByID;
   @override
   @JsonKey(ignore: true)
   _$$_RiwayatAbsenStateCopyWith<_$_RiwayatAbsenState> get copyWith =>

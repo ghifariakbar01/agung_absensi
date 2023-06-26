@@ -259,6 +259,72 @@ class AbsenRemoteService {
     }
   }
 
+  Future<RiwayatAbsenModel> getRiwayatAbsenByID(
+      {required int page, required String? date}) async {
+    // DATEFORMAT YYYY - MM - DD
+    try {
+      final String command =
+          "SELECT TOP 1 id_absenmnl, id_user, tgl, jam_awal, jam_akhir, ket, c_date, c_user, spv_nm, spv_tgl, hrd_nm, hrd_tgl, btl_sta, btl_tgl, spv_note, hrd_note, latitude_masuk, longtitude_masuk, latitude_keluar, longtitude_keluar, lokasi_masuk, lokasi_keluar FROM hr_trs_absenmnl_test WHERE tgl = '$date' AND id_user = ${_userModelWithPassword.idUser} ORDER BY id_absenmnl DESC";
+
+      final data = dioRequest;
+
+      data.addAll({
+        "mode": "SELECT",
+        "username": "${_userModelWithPassword.nama}",
+        "password": "${_userModelWithPassword.password}",
+        "command": command,
+      });
+
+      log('data ${jsonEncode(data)}');
+
+      final response = await _dio.post('',
+          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
+
+      final items = response.data?[0];
+
+      if (items['status'] == 'Success') {
+        final riwayatExist = items['items'] != null && items['items'] is List;
+
+        if (riwayatExist) {
+          final list = items['items'] as List;
+
+          log('list $list');
+
+          if (list.isNotEmpty) {
+            final riwayat = list.first;
+
+            return RiwayatAbsenModel(
+              jamAwal: riwayat['jam_awal'] ?? '',
+              jamAkhir: riwayat['jam_akhir'] ?? '',
+              lokasiKeluar: riwayat['lokasi_keluar'] ?? '',
+              lokasiMasuk: riwayat['lokasi_masuk'] ?? '',
+              tgl: riwayat['tgl'],
+            );
+          }
+
+          throw RestApiException(4);
+        } else {
+          debugger(message: 'called');
+
+          throw RestApiException(4);
+        }
+      } else {
+        throw RestApiException(5);
+      }
+    } on FormatException {
+      throw FormatException();
+    } on DioError catch (e) {
+      if (e.isNoConnectionError || e.isConnectionTimeout) {
+        throw NoConnectionException();
+      } else if (e.response != null) {
+        log('e.response ${e.response}');
+        throw RestApiException(e.response?.statusCode);
+      } else {
+        rethrow;
+      }
+    }
+  }
+
   Future<List<RiwayatAbsenModel>> getRiwayatAbsen(
       {required int page,
       required String? dateFirst,
@@ -312,10 +378,10 @@ class AbsenRemoteService {
         } else {
           debugger(message: 'called');
 
-          throw RestApiException(1);
+          return [];
         }
       } else {
-        throw RestApiException(2);
+        throw RestApiException(5);
       }
     } on FormatException {
       throw FormatException();
@@ -323,6 +389,7 @@ class AbsenRemoteService {
       if (e.isNoConnectionError || e.isConnectionTimeout) {
         throw NoConnectionException();
       } else if (e.response != null) {
+        log('e.response ${e.response}');
         throw RestApiException(e.response?.statusCode);
       } else {
         rethrow;

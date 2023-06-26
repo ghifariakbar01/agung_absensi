@@ -16,13 +16,16 @@ class RiwayatAbsenState with _$RiwayatAbsenState {
       required bool isMore,
       required bool isGetting,
       required Option<Either<RiwayatAbsenFailure, List<RiwayatAbsenModel>>>
-          failureOrSuccessOption}) = _RiwayatAbsenState;
+          failureOrSuccessOption,
+      required Option<Either<RiwayatAbsenFailure, RiwayatAbsenModel>>
+          failureOrSuccessOptionByID}) = _RiwayatAbsenState;
 
   factory RiwayatAbsenState.initial() => RiwayatAbsenState(
       riwayatAbsen: [],
       isMore: true,
       isGetting: false,
       failureOrSuccessOption: none(),
+      failureOrSuccessOptionByID: none(),
       dateFirst: StringUtils.yyyyMMddWithStripe(DateTime.now()),
       dateSecond: StringUtils.yyyyMMddWithStripe(
           DateTime.now().subtract(Duration(days: 7))),

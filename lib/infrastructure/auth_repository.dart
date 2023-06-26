@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
-import 'package:face_net_authentication/application/user/user_model.dart';
 import 'package:flutter/services.dart';
 
 import '../domain/auth_failure.dart';

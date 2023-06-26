@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/application/riwayat_absen/riwayat_absen_model.dart';
 import 'package:face_net_authentication/application/riwayat_absen/riwayat_absen_notifier.dart';
@@ -47,14 +49,23 @@ class RiwayatAbsenPage extends ConsumerWidget {
                                         asset: Assets.iconCrossed,
                                         color: Palette.red)),
                               ), (list) {
-                        ref
+                        final oldList = ref
                             .read(riwayatAbsenNotifierProvider.notifier)
-                            .changeAbsenRiwayat(list);
+                            .state
+                            .riwayatAbsen;
+
+                        log('list.length ${list.length}');
 
                         if (list.length < 1) {
                           ref
                               .read(riwayatAbsenNotifierProvider.notifier)
                               .changeIsMore(false);
+                        } else {
+                          // debugger(message: 'called');
+
+                          ref
+                              .read(riwayatAbsenNotifierProvider.notifier)
+                              .changeAbsenRiwayat(oldList, list);
                         }
                       }))
             });

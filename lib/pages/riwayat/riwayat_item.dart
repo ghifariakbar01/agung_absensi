@@ -68,7 +68,7 @@ class RiwayatItem extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(10)),
             child: Column(
               children: [
-                // Jam Masuk
+                // Lokasi Masuk
                 Row(
                   children: [
                     Icon(Icons.pin_drop_rounded),
