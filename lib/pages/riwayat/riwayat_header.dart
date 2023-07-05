@@ -17,17 +17,44 @@ class RiwayatHeader extends ConsumerWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Container(
-          height: 45,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Palette.primaryColor),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Center(
-              child: Text(
-                date,
-                style: Themes.black(FontWeight.bold, 15),
+        TextButton(
+          onPressed: () async {
+            final picked = await showDateRangePicker(
+              context: context,
+              lastDate: DateTime.now(),
+              firstDate: new DateTime(2021),
+            );
+            if (picked != null) {
+              print(picked);
+
+              final start = StringUtils.formatTanggal('${picked.start}');
+              final end = StringUtils.formatTanggal('${picked.end}');
+
+              await ref.read(riwayatAbsenNotifierProvider.notifier).startFilter(
+                  changePage: () => ref
+                      .read(riwayatAbsenNotifierProvider.notifier)
+                      .changePage(1),
+                  changeFilter: () => ref
+                      .read(riwayatAbsenNotifierProvider.notifier)
+                      .changeFilter(end, start),
+                  onAllChanged: () async => ref
+                      .read(riwayatAbsenNotifierProvider.notifier)
+                      .getAbsenRiwayat(
+                          page: 1, dateFirst: end, dateSecond: start));
+            }
+          },
+          child: Container(
+            height: 45,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Palette.primaryColor),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Center(
+                child: Text(
+                  date,
+                  style: Themes.customColor(FontWeight.bold, 15, Colors.white),
+                ),
               ),
             ),
           ),
@@ -66,7 +93,7 @@ class RiwayatHeader extends ConsumerWidget {
                   color: Palette.primaryColor),
               child: Icon(
                 Icons.filter_alt_rounded,
-                color: Colors.black,
+                color: Colors.white,
               )),
         ),
       ],

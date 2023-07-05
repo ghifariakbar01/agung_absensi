@@ -46,9 +46,9 @@ mixin Themes {
         fontSize: fontSize);
   }
 
-  static TextStyle black(FontWeight? fontWeight, double fontSize) {
+  static TextStyle white(FontWeight? fontWeight, double fontSize) {
     return GoogleFonts.poppins(
-        color: Colors.black,
+        color: Colors.white,
         fontWeight: fontWeight ?? FontWeight.normal,
         fontSize: fontSize);
   }
@@ -56,6 +56,14 @@ mixin Themes {
   static TextStyle blueSpaced(FontWeight fontWeight, double fontSize) {
     return GoogleFonts.poppins(
         color: Palette.secondaryColor,
+        fontWeight: fontWeight,
+        fontSize: fontSize,
+        letterSpacing: 4);
+  }
+
+  static TextStyle whiteSpaced(FontWeight fontWeight, double fontSize) {
+    return GoogleFonts.poppins(
+        color: Colors.white,
         fontWeight: fontWeight,
         fontSize: fontSize,
         letterSpacing: 4);
@@ -97,7 +105,7 @@ mixin Themes {
         borderSide: BorderSide(color: Palette.primaryColor));
   }
 
-  static InputDecoration formStyle(String hintText) {
+  static InputDecoration formStyle(String hintText, {Widget? icon}) {
     return InputDecoration(
       enabledBorder: Themes.notFocused(),
       focusedBorder: Themes.focused(),
@@ -105,6 +113,7 @@ mixin Themes {
       border: InputBorder.none,
       hintStyle: Themes.greyHint(FontWeight.normal, 16),
       hintText: hintText,
+      suffixIcon: icon ?? null,
     );
   }
 

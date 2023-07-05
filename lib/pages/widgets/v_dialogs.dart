@@ -1,6 +1,5 @@
 import 'package:face_net_authentication/style/style.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 
@@ -9,11 +8,9 @@ class VAlertDialog extends StatelessWidget {
       {Key? key,
       required this.label,
       required this.labelDescription,
-      required this.color,
       required this.onPressed})
       : super(key: key);
 
-  final Color color;
   final String label;
   final String labelDescription;
   final Function() onPressed;
@@ -28,25 +25,37 @@ class VAlertDialog extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         title: Text(
           label,
-          style: Themes.customColor(FontWeight.bold, 15, color),
+          style: Themes.white(
+            FontWeight.bold,
+            15,
+          ),
         ),
         content: Text(
           labelDescription,
-          style: Themes.customColor(FontWeight.bold, 20, color),
+          style: Themes.white(
+            FontWeight.bold,
+            20,
+          ),
         ),
         actions: [
           TextButton(
             onPressed: () => context.pop(),
             child: Text(
               'TIDAK',
-              style: Themes.customColor(FontWeight.bold, 15, color),
+              style: Themes.white(
+                FontWeight.bold,
+                15,
+              ),
             ),
           ),
           TextButton(
             onPressed: onPressed,
             child: Text(
               'YA',
-              style: Themes.customColor(FontWeight.bold, 15, color),
+              style: Themes.white(
+                FontWeight.bold,
+                15,
+              ),
             ),
           ),
         ],
@@ -56,15 +65,15 @@ class VAlertDialog extends StatelessWidget {
 }
 
 class VSimpleDialog extends StatelessWidget {
-  const VSimpleDialog(
-      {Key? key,
-      required this.label,
-      required this.labelDescription,
-      required this.asset,
-      required this.color})
-      : super(key: key);
+  const VSimpleDialog({
+    Key? key,
+    required this.label,
+    required this.labelDescription,
+    required this.asset,
+    this.color,
+  }) : super(key: key);
 
-  final Color color;
+  final Color? color;
   final String asset;
   final String label;
   final String labelDescription;
@@ -73,7 +82,7 @@ class VSimpleDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: SimpleDialog(
-        backgroundColor: Palette.primaryColor,
+        backgroundColor: color ?? Palette.primaryColor,
         title: SizedBox(height: 28, child: SvgPicture.asset(asset)),
         children: [
           SizedBox(
@@ -82,16 +91,19 @@ class VSimpleDialog extends StatelessWidget {
           Center(
             child: Text(
               label,
-              style: Themes.customColor(FontWeight.bold, 20, color),
+              style: Themes.white(FontWeight.bold, 20),
             ),
           ),
           SizedBox(
             height: 4,
           ),
           Center(
-            child: Text(
-              labelDescription,
-              style: Themes.customColor(FontWeight.bold, 15, color),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                labelDescription,
+                style: Themes.white(FontWeight.bold, 15),
+              ),
             ),
           )
         ],

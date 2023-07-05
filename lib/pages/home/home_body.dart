@@ -5,6 +5,7 @@ import 'package:face_net_authentication/application/absen/absen_state.dart';
 import 'package:face_net_authentication/shared/providers.dart';
 import 'package:face_net_authentication/style/style.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -34,7 +35,6 @@ class HomeBody extends ConsumerWidget {
             onPressed: () => showCupertinoDialog(
                 context: context,
                 builder: (_) => VAlertDialog(
-                    color: Palette.secondaryColor,
                     label: 'Ingin absen-in ?',
                     labelDescription:
                         'JAM: ${StringUtils.hoursDate(DateTime.now())}',
@@ -61,7 +61,6 @@ class HomeBody extends ConsumerWidget {
             onPressed: () => showCupertinoDialog(
                 context: context,
                 builder: (_) => VAlertDialog(
-                      color: Palette.secondaryColor,
                       label: 'Ingin absen-out ?',
                       labelDescription:
                           'JAM: ${StringUtils.hoursDate(DateTime.now())}',

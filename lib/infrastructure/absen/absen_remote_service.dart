@@ -5,12 +5,10 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:face_net_authentication/application/absen/absen_response.dart';
 import 'package:face_net_authentication/application/absen/absen_state.dart';
-import 'package:face_net_authentication/application/riwayat_absen/riwayat_absen_state.dart';
 import 'package:face_net_authentication/application/user/user_model.dart';
 import 'package:face_net_authentication/domain/absen_failure.dart';
 
 import 'package:face_net_authentication/infrastructure/dio_extensions.dart';
-import 'package:face_net_authentication/infrastructure/dio_request.dart';
 
 import '../../application/absen/absen_enum.dart';
 import '../../application/riwayat_absen/riwayat_absen_model.dart';
@@ -21,10 +19,13 @@ class AbsenRemoteService {
   AbsenRemoteService(
     this._dio,
     this._userModelWithPassword,
+    this._dioRequest,
   );
 
   final Dio _dio;
-  final UserModel _userModelWithPassword;
+  final UserModelWithPassword _userModelWithPassword;
+  final Map<String, String> _dioRequest;
+
   static const String dbName = 'hr_trs_absenmnl_test';
   final currentDate =
       StringUtils.midnightDate(DateTime.now().subtract(Duration(days: 1)));
@@ -68,11 +69,9 @@ class AbsenRemoteService {
             "UPDATE $dbName SET latitude_keluar = '$latitude', longtitude_keluar = '$longitude', jam_akhir = '$trimmedNow', u_date = '$trimmedNow', lokasi_keluar = '$lokasi', ket = 'ABSEN MASUK DAN ABSEN PULANG' WHERE id_user = '${_userModelWithPassword.idUser}' AND tgl = '$currentDate'";
       }
 
-      final data = dioRequest;
+      final data = _dioRequest;
 
       data.addAll({
-        "username": "${_userModelWithPassword.nama}",
-        "password": "${_userModelWithPassword.password}",
         "mode": mode,
         "command": command,
       });
@@ -119,12 +118,10 @@ class AbsenRemoteService {
       final String command =
           "SELECT TOP 1 id_absenmnl FROM $dbName ORDER BY id_absenmnl DESC";
 
-      final data = dioRequest;
+      final data = _dioRequest;
 
       data.addAll({
         "mode": "SELECT",
-        "username": "${_userModelWithPassword.nama}",
-        "password": "${_userModelWithPassword.password}",
         "command": command,
       });
 
@@ -170,12 +167,10 @@ class AbsenRemoteService {
       final String command =
           "SELECT TOP 1 * FROM $dbName WHERE tgl = '$currentDate' AND id_user = ${_userModelWithPassword.idUser}";
 
-      final data = dioRequest;
+      final data = _dioRequest;
 
       data.addAll({
         "mode": "SELECT",
-        "username": "${_userModelWithPassword.nama}",
-        "password": "${_userModelWithPassword.password}",
         "command": command,
       });
 
@@ -266,12 +261,10 @@ class AbsenRemoteService {
       final String command =
           "SELECT TOP 1 id_absenmnl, id_user, tgl, jam_awal, jam_akhir, ket, c_date, c_user, spv_nm, spv_tgl, hrd_nm, hrd_tgl, btl_sta, btl_tgl, spv_note, hrd_note, latitude_masuk, longtitude_masuk, latitude_keluar, longtitude_keluar, lokasi_masuk, lokasi_keluar FROM hr_trs_absenmnl_test WHERE tgl = '$date' AND id_user = ${_userModelWithPassword.idUser} ORDER BY id_absenmnl DESC";
 
-      final data = dioRequest;
+      final data = _dioRequest;
 
       data.addAll({
         "mode": "SELECT",
-        "username": "${_userModelWithPassword.nama}",
-        "password": "${_userModelWithPassword.password}",
         "command": command,
       });
 
@@ -334,12 +327,10 @@ class AbsenRemoteService {
       final String command =
           "SELECT * FROM hr_trs_absenmnl_test WHERE id_user = '${_userModelWithPassword.idUser}' AND tgl >= '$dateSecond' AND tgl < '$dateFirst' ORDER BY tgl DESC OFFSET ${(page - 1) * 10} ROWS FETCH FIRST 20 ROWS ONLY";
 
-      final data = dioRequest;
+      final data = _dioRequest;
 
       data.addAll({
         "mode": "SELECT",
-        "username": "${_userModelWithPassword.nama}",
-        "password": "${_userModelWithPassword.password}",
         "command": command,
       });
 

@@ -4,26 +4,23 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 
 import 'package:face_net_authentication/infrastructure/dio_extensions.dart';
-import 'package:face_net_authentication/infrastructure/dio_request.dart';
 
 import '../../application/geofence/geofence_response.dart';
-import '../../application/user/user_model.dart';
 import '../exceptions.dart';
 
 class GeofenceRemoteService {
-  GeofenceRemoteService(this._dio, this._userModelWithPassword);
+  GeofenceRemoteService(this._dio, this._dioRequest);
 
   final Dio _dio;
-  final UserModel _userModelWithPassword;
+  final Map<String, String> _dioRequest;
+
   static const String dbName = 'mst_geofence';
 
   Future<List<GeofenceResponse>> getGeofenceList() async {
     try {
-      final data = dioRequest;
+      final data = _dioRequest;
 
       data.addAll({
-        "username": "${_userModelWithPassword.nama}",
-        "password": "${_userModelWithPassword.password}",
         "mode": "SELECT",
         "command": "SELECT id_geof, nm_lokasi, geof FROM $dbName",
       });
@@ -33,7 +30,7 @@ class GeofenceRemoteService {
 
       log('data ${jsonEncode(data)}');
 
-      log('response ${response}');
+      log('response $response');
 
       final items = response.data?[0];
 

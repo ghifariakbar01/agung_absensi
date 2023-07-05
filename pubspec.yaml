@@ -71,6 +71,10 @@ dependencies:
 
   #* Persistent storage
   flutter_secure_storage: ^6.0.0
+  shared_preferences: ^2.2.0
+
+  #* UUID
+  uuid: ^3.0.7
 
   #* Misc
   collection: ^1.16.0

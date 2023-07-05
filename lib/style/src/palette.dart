@@ -1,11 +1,13 @@
 part of style;
 
 class Palette {
-  static const primaryColor = Color(0xffFFD600);
+  static const primaryColor = Color(0xff2D7CF3);
 
-  static const primaryDarker = Color(0xffF4CD00);
+  static const primaryDarker = Color(0xFF005BE4);
 
-  static const secondaryColor = Color(0xff2D7CF3);
+  static const primaryDarkerMaximize = Color.fromARGB(255, 0, 74, 184);
+
+  static const secondaryColor = Color.fromARGB(255, 18, 93, 128);
 
   static const primaryTextColor = Color(0xffffffff);
   static const secondaryTextColor = Color(0xffffffff);

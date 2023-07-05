@@ -17,6 +17,45 @@ class Email extends ValueObject<String> {
   final Either<ValueFailure<String>, String> value;
 }
 
+class IdKaryawan extends ValueObject<String> {
+  factory IdKaryawan(String input) {
+    return IdKaryawan._(
+      validateStringNotEmpty(input).flatMap(validateIdKaryawan),
+    );
+  }
+
+  const IdKaryawan._(this.value);
+
+  @override
+  final Either<ValueFailure<String>, String> value;
+}
+
+class NoHP extends ValueObject<String> {
+  factory NoHP(String input) {
+    return NoHP._(
+      validateStringNotEmpty(input).flatMap(validateNoHP),
+    );
+  }
+
+  const NoHP._(this.value);
+
+  @override
+  final Either<ValueFailure<String>, String> value;
+}
+
+class Nama extends ValueObject<String> {
+  factory Nama(String input) {
+    return Nama._(
+      validateStringNotEmpty(input).flatMap(validateNama),
+    );
+  }
+
+  const Nama._(this.value);
+
+  @override
+  final Either<ValueFailure<String>, String> value;
+}
+
 class UserId extends ValueObject<String> {
   factory UserId(String input) {
     return UserId._(validateStringNotEmpty(input));

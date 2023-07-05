@@ -1,3 +1,6 @@
+import 'package:face_net_authentication/pages/imei_introduction/imei_introduction_page.dart';
+import 'package:face_net_authentication/pages/profile/edit_profile.dart/edit_profile_page.dart';
+import 'package:face_net_authentication/pages/profile/profile_page.dart';
 import 'package:face_net_authentication/pages/sign_in/sign_in_page.dart';
 import 'package:face_net_authentication/pages/welcome_signed_in/welcome_page.dart';
 import 'package:flutter/widgets.dart';
@@ -107,6 +110,24 @@ class RouterNotifier extends ChangeNotifier {
               name: RouteNames.cameraNameRoute,
               path: RouteNames.cameraRoute,
               builder: (context, state) => const CameraPage(),
+            ),
+
+            GoRoute(
+              name: RouteNames.editProfileNameRoute,
+              path: RouteNames.editProfileRoute,
+              builder: (context, state) => const EditProfilePage(),
+            ),
+
+            GoRoute(
+              name: RouteNames.profileNameRoute,
+              path: RouteNames.profileRoute,
+              builder: (context, state) => const ProfilePage(),
+            ),
+
+            GoRoute(
+              name: RouteNames.imeiInstructionNameRoute,
+              path: RouteNames.imeiInstructionRoute,
+              builder: (context, state) => const ImeiIntroductionPage(),
             ),
 
             GoRoute(

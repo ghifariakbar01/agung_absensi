@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:face_net_authentication/application/absen/absen_enum.dart';
 import 'package:face_net_authentication/style/style.dart';
 import 'package:face_net_authentication/utils/string_utils.dart';
 import 'package:flutter/material.dart';
@@ -97,21 +96,21 @@ class _RiwayatAbsenScaffoldState extends ConsumerState<RiwayatAbsenScaffold> {
 
     return Scaffold(
         appBar: AppBar(
-          iconTheme: IconThemeData(color: Colors.black),
+          iconTheme: IconThemeData(color: Colors.white),
           elevation: 0,
           backgroundColor: Palette.primaryColor,
           title: Text(
             'Riwayat Absen',
-            style: Themes.black(FontWeight.bold, 20),
+            style: Themes.customColor(FontWeight.bold, 20, Colors.white),
           ),
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Container(
-            padding: EdgeInsets.all(8),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 color: Palette.primaryColor.withOpacity(0.1)),
+            padding: EdgeInsets.all(8),
             child: ListView(
                 controller: _scrollController,
                 physics: const BouncingScrollPhysics(),

@@ -1,11 +1,19 @@
 import 'package:dio/dio.dart';
 import 'package:face_net_authentication/application/absen/absen_auth_notifier.dart';
 import 'package:face_net_authentication/application/absen/absen_state.dart';
+import 'package:face_net_authentication/application/edit_profile/edit_profile_notifier.dart';
+import 'package:face_net_authentication/application/imei/imei_auth_state.dart';
+import 'package:face_net_authentication/application/imei/imei_saved_notifier.dart';
+import 'package:face_net_authentication/application/imei/imei_state.dart';
 
 import 'package:face_net_authentication/infrastructure/absen/absen_remote_service.dart';
 import 'package:face_net_authentication/infrastructure/absen/absen_repository.dart';
 import 'package:face_net_authentication/infrastructure/geofence/geofence_remote_service.dart';
 import 'package:face_net_authentication/infrastructure/geofence/geofence_repository.dart';
+import 'package:face_net_authentication/infrastructure/imei_credentials_storage.dart/imei_secure_credentials_storage.dart';
+import 'package:face_net_authentication/infrastructure/imei_repository.dart';
+import 'package:face_net_authentication/infrastructure/profile/edit_profile_remote_service.dart';
+import 'package:face_net_authentication/infrastructure/profile/edit_profile_repository.dart';
 
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -13,8 +21,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../application/absen/absen_auth_state.dart';
 import '../application/absen/absen_notifier.dart';
 import '../application/auth/auth_notifier.dart';
+import '../application/edit_profile/edit_profile_state.dart';
 import '../application/geofence/geofence_notifier.dart';
 import '../application/geofence/geofence_state.dart';
+import '../application/imei/imei_notifier.dart';
 import '../application/permission/permission_notifier.dart';
 import '../application/permission/permission_state.dart';
 import '../application/routes/route_names.dart';
@@ -32,9 +42,16 @@ import '../infrastructure/auth_repository.dart';
 import '../infrastructure/credentials_storage/credentials_storage.dart';
 import '../infrastructure/credentials_storage/secure_credentials_storage.dart';
 
+import '../utils/string_utils.dart';
+
 // Networking & Router
 
 final dioProvider = Provider((ref) => Dio());
+
+final dioRequestProvider = Provider<Map<String, String>>(
+  (ref) =>
+      {"server": "gs_12", "kode": "${StringUtils.formatDate(DateTime.now())}"},
+);
 
 final routerProvider = Provider<GoRouter>((ref) {
   final router = RouterNotifier(ref);
@@ -56,16 +73,20 @@ final credentialsStorageProvider = Provider<CredentialsStorage>(
   (ref) => SecureCredentialsStorage(ref.watch(flutterSecureStorageProvider)),
 );
 
-final authRemoteServiceProvider = Provider(
-  (ref) => AuthRemoteService(ref.watch(dioProvider)),
+final imeiCredentialsStorageProvider = Provider<CredentialsStorage>(
+  (ref) =>
+      ImeiSecureCredentialsStorage(ref.watch(flutterSecureStorageProvider)),
 );
 
-final authRepositoryProvider = Provider(
-  (ref) => AuthRepository(
-    ref.watch(credentialsStorageProvider),
-    ref.watch(authRemoteServiceProvider),
-  ),
+final authRemoteServiceProvider = Provider(
+  (ref) =>
+      AuthRemoteService(ref.watch(dioProvider), ref.watch(dioRequestProvider)),
 );
+
+final authRepositoryProvider = Provider((ref) => AuthRepository(
+      ref.watch(credentialsStorageProvider),
+      ref.watch(authRemoteServiceProvider),
+    ));
 
 // final authInterceptorProvider = Provider(
 //   (ref) => AuthInterceptor(ref.watch(authRepositoryProvider)),
@@ -83,11 +104,32 @@ final signInFormNotifierProvider =
   (ref) => SignInFormNotifier(ref.watch(authRepositoryProvider)),
 );
 
+// Edit Profile
+
+final editProfileRemoteServiceProvider = Provider(
+  (ref) => EditProfileRemoteService(
+      ref.watch(dioProvider),
+      ref.watch(userNotifierProvider.select((value) => value.user)),
+      ref.watch(dioRequestProvider)),
+);
+
+final editProfileRepositoryProvider = Provider(
+  (ref) => EditProfileRepostiroy(
+    ref.watch(editProfileRemoteServiceProvider),
+  ),
+);
+
+final editProfileNotifierProvider =
+    StateNotifierProvider<EditProfileNotifier, EditProfileState>(
+  (ref) => EditProfileNotifier(ref.watch(editProfileRepositoryProvider)),
+);
+
 // Absen
 
 final absenRemoteServiceProvider = Provider((ref) => AbsenRemoteService(
     ref.watch(dioProvider),
-    ref.watch(userNotifierProvider.select((value) => value.user))));
+    ref.watch(userNotifierProvider.select((value) => value.user)),
+    ref.watch(dioRequestProvider)));
 
 final absenRepositoryProvider = Provider(
   (ref) => AbsenRepository(
@@ -107,8 +149,7 @@ final absenAuthNotifierProvidier =
 // Geofence
 
 final geofenceRemoteServiceProvider = Provider((ref) => GeofenceRemoteService(
-    ref.watch(dioProvider),
-    ref.watch(userNotifierProvider.select((value) => value.user))));
+    ref.watch(dioProvider), ref.watch(dioRequestProvider)));
 
 final geofenceRepositoryProvider = Provider(
   (ref) => GeofenceRepository(
@@ -121,7 +162,21 @@ final geofenceProvider = StateNotifierProvider<GeofenceNotifier, GeofenceState>(
           ref.watch(geofenceRepositoryProvider),
         ));
 
+// Imei
+
+final imeiRepositoryProvider = Provider(
+    (ref) => ImeiRepository(ref.watch(imeiCredentialsStorageProvider)));
+
+final imeiNotifierProvider =
+    StateNotifierProvider<ImeiNotifier, ImeiState>((ref) => ImeiNotifier());
+
+final imeiAuthNotifierProvider =
+    StateNotifierProvider<ImeiAuthNotifier, ImeiAuthState>(
+        (ref) => ImeiAuthNotifier(ref.watch(imeiRepositoryProvider)));
+
 // Misc
+
+final passwordVisibleProvider = StateProvider.autoDispose<bool>((ref) => false);
 
 final permissionProvider =
     StateNotifierProvider<PermissionNotifier, PermissionState>(

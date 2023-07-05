@@ -34,18 +34,21 @@ class RiwayatItem extends ConsumerWidget {
                 // Jam Masuk
                 Row(
                   children: [
-                    Icon(Icons.alarm),
+                    Icon(
+                      Icons.alarm,
+                      color: Colors.white,
+                    ),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           'Jam $coancenate',
-                          style: Themes.black(FontWeight.bold, 7),
+                          style: Themes.white(FontWeight.bold, 7),
                         ),
                         Text(
                           jam,
-                          style: Themes.black(FontWeight.bold, 5),
+                          style: Themes.white(FontWeight.bold, 5),
                         ),
                       ],
                     )
@@ -71,20 +74,23 @@ class RiwayatItem extends ConsumerWidget {
                 // Lokasi Masuk
                 Row(
                   children: [
-                    Icon(Icons.pin_drop_rounded),
+                    Icon(
+                      Icons.pin_drop_rounded,
+                      color: Colors.white,
+                    ),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           'Lokasi $coancenate',
-                          style: Themes.black(FontWeight.bold, 7),
+                          style: Themes.white(FontWeight.bold, 7),
                         ),
                         Text(
                           alamat.length > 25
                               ? '${alamat.substring(0, 25)}...'
                               : alamat,
-                          style: Themes.black(FontWeight.bold, 5),
+                          style: Themes.white(FontWeight.bold, 5),
                         ),
                       ],
                     )

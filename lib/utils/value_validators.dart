@@ -41,6 +41,31 @@ Either<ValueFailure<String>, String> validateEmail(String input) {
   }
 }
 
+Either<ValueFailure<String>, String> validateIdKaryawan(String input) {
+  if (input.length >= 5) {
+    return right(input);
+  } else {
+    return left(ValueFailure.invalidIdKaryawan(failedValue: input));
+  }
+}
+
+Either<ValueFailure<String>, String> validateNoHP(String input) {
+  RegExp regex = RegExp(r'^(\+62|62|0)8[1-9][0-9]{6,9}$');
+  if (regex.hasMatch(input)) {
+    return right(input);
+  } else {
+    return left(ValueFailure.invalidNoHP(failedValue: input));
+  }
+}
+
+Either<ValueFailure<String>, String> validateNama(String input) {
+  if (input.length >= 5) {
+    return right(input);
+  } else {
+    return left(ValueFailure.invalidName(failedValue: input));
+  }
+}
+
 Either<ValueFailure<String>, String> validatePassword(String input) {
   if (input.length >= 6) {
     return right(input);

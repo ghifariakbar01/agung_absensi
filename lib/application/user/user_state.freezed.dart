@@ -16,9 +16,11 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$UserState {
-  UserModel get user => throw _privateConstructorUsedError;
+  UserModelWithPassword get user => throw _privateConstructorUsedError;
   bool get isGetting => throw _privateConstructorUsedError;
   Option<Either<UserFailure, String?>> get failureOrSuccessOption =>
+      throw _privateConstructorUsedError;
+  Option<Either<AuthFailure, Unit?>> get failureOrSuccessOptionUpdate =>
       throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -32,11 +34,12 @@ abstract class $UserStateCopyWith<$Res> {
       _$UserStateCopyWithImpl<$Res, UserState>;
   @useResult
   $Res call(
-      {UserModel user,
+      {UserModelWithPassword user,
       bool isGetting,
-      Option<Either<UserFailure, String?>> failureOrSuccessOption});
+      Option<Either<UserFailure, String?>> failureOrSuccessOption,
+      Option<Either<AuthFailure, Unit?>> failureOrSuccessOptionUpdate});
 
-  $UserModelCopyWith<$Res> get user;
+  $UserModelWithPasswordCopyWith<$Res> get user;
 }
 
 /// @nodoc
@@ -55,12 +58,13 @@ class _$UserStateCopyWithImpl<$Res, $Val extends UserState>
     Object? user = null,
     Object? isGetting = null,
     Object? failureOrSuccessOption = null,
+    Object? failureOrSuccessOptionUpdate = null,
   }) {
     return _then(_value.copyWith(
       user: null == user
           ? _value.user
           : user // ignore: cast_nullable_to_non_nullable
-              as UserModel,
+              as UserModelWithPassword,
       isGetting: null == isGetting
           ? _value.isGetting
           : isGetting // ignore: cast_nullable_to_non_nullable
@@ -69,13 +73,17 @@ class _$UserStateCopyWithImpl<$Res, $Val extends UserState>
           ? _value.failureOrSuccessOption
           : failureOrSuccessOption // ignore: cast_nullable_to_non_nullable
               as Option<Either<UserFailure, String?>>,
+      failureOrSuccessOptionUpdate: null == failureOrSuccessOptionUpdate
+          ? _value.failureOrSuccessOptionUpdate
+          : failureOrSuccessOptionUpdate // ignore: cast_nullable_to_non_nullable
+              as Option<Either<AuthFailure, Unit?>>,
     ) as $Val);
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $UserModelCopyWith<$Res> get user {
-    return $UserModelCopyWith<$Res>(_value.user, (value) {
+  $UserModelWithPasswordCopyWith<$Res> get user {
+    return $UserModelWithPasswordCopyWith<$Res>(_value.user, (value) {
       return _then(_value.copyWith(user: value) as $Val);
     });
   }
@@ -89,12 +97,13 @@ abstract class _$$_UserStateCopyWith<$Res> implements $UserStateCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {UserModel user,
+      {UserModelWithPassword user,
       bool isGetting,
-      Option<Either<UserFailure, String?>> failureOrSuccessOption});
+      Option<Either<UserFailure, String?>> failureOrSuccessOption,
+      Option<Either<AuthFailure, Unit?>> failureOrSuccessOptionUpdate});
 
   @override
-  $UserModelCopyWith<$Res> get user;
+  $UserModelWithPasswordCopyWith<$Res> get user;
 }
 
 /// @nodoc
@@ -111,12 +120,13 @@ class __$$_UserStateCopyWithImpl<$Res>
     Object? user = null,
     Object? isGetting = null,
     Object? failureOrSuccessOption = null,
+    Object? failureOrSuccessOptionUpdate = null,
   }) {
     return _then(_$_UserState(
       user: null == user
           ? _value.user
           : user // ignore: cast_nullable_to_non_nullable
-              as UserModel,
+              as UserModelWithPassword,
       isGetting: null == isGetting
           ? _value.isGetting
           : isGetting // ignore: cast_nullable_to_non_nullable
@@ -125,6 +135,10 @@ class __$$_UserStateCopyWithImpl<$Res>
           ? _value.failureOrSuccessOption
           : failureOrSuccessOption // ignore: cast_nullable_to_non_nullable
               as Option<Either<UserFailure, String?>>,
+      failureOrSuccessOptionUpdate: null == failureOrSuccessOptionUpdate
+          ? _value.failureOrSuccessOptionUpdate
+          : failureOrSuccessOptionUpdate // ignore: cast_nullable_to_non_nullable
+              as Option<Either<AuthFailure, Unit?>>,
     ));
   }
 }
@@ -135,18 +149,21 @@ class _$_UserState implements _UserState {
   const _$_UserState(
       {required this.user,
       required this.isGetting,
-      required this.failureOrSuccessOption});
+      required this.failureOrSuccessOption,
+      required this.failureOrSuccessOptionUpdate});
 
   @override
-  final UserModel user;
+  final UserModelWithPassword user;
   @override
   final bool isGetting;
   @override
   final Option<Either<UserFailure, String?>> failureOrSuccessOption;
+  @override
+  final Option<Either<AuthFailure, Unit?>> failureOrSuccessOptionUpdate;
 
   @override
   String toString() {
-    return 'UserState(user: $user, isGetting: $isGetting, failureOrSuccessOption: $failureOrSuccessOption)';
+    return 'UserState(user: $user, isGetting: $isGetting, failureOrSuccessOption: $failureOrSuccessOption, failureOrSuccessOptionUpdate: $failureOrSuccessOptionUpdate)';
   }
 
   @override
@@ -158,12 +175,16 @@ class _$_UserState implements _UserState {
             (identical(other.isGetting, isGetting) ||
                 other.isGetting == isGetting) &&
             (identical(other.failureOrSuccessOption, failureOrSuccessOption) ||
-                other.failureOrSuccessOption == failureOrSuccessOption));
+                other.failureOrSuccessOption == failureOrSuccessOption) &&
+            (identical(other.failureOrSuccessOptionUpdate,
+                    failureOrSuccessOptionUpdate) ||
+                other.failureOrSuccessOptionUpdate ==
+                    failureOrSuccessOptionUpdate));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, user, isGetting, failureOrSuccessOption);
+  int get hashCode => Object.hash(runtimeType, user, isGetting,
+      failureOrSuccessOption, failureOrSuccessOptionUpdate);
 
   @JsonKey(ignore: true)
   @override
@@ -174,17 +195,21 @@ class _$_UserState implements _UserState {
 
 abstract class _UserState implements UserState {
   const factory _UserState(
-      {required final UserModel user,
+      {required final UserModelWithPassword user,
       required final bool isGetting,
       required final Option<Either<UserFailure, String?>>
-          failureOrSuccessOption}) = _$_UserState;
+          failureOrSuccessOption,
+      required final Option<Either<AuthFailure, Unit?>>
+          failureOrSuccessOptionUpdate}) = _$_UserState;
 
   @override
-  UserModel get user;
+  UserModelWithPassword get user;
   @override
   bool get isGetting;
   @override
   Option<Either<UserFailure, String?>> get failureOrSuccessOption;
+  @override
+  Option<Either<AuthFailure, Unit?>> get failureOrSuccessOptionUpdate;
   @override
   @JsonKey(ignore: true)
   _$$_UserStateCopyWith<_$_UserState> get copyWith =>

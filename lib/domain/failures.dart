@@ -17,6 +17,15 @@ class ValueFailure<T> with _$ValueFailure<T> {
   const factory ValueFailure.invalidEmail({
     required T failedValue,
   }) = InvalidEmail<T>;
+  const factory ValueFailure.invalidIdKaryawan({
+    required T failedValue,
+  }) = InvalidIdKaryawan<T>;
+  const factory ValueFailure.invalidNoHP({
+    required T failedValue,
+  }) = InvalidNoHP<T>;
+  const factory ValueFailure.invalidName({
+    required T failedValue,
+  }) = InvalidName<T>;
   const factory ValueFailure.shortPassword({
     required T failedValue,
   }) = ShortPassword<T>;

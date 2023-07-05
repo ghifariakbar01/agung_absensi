@@ -40,4 +40,13 @@ class RouteNames {
 
   static const cameraNameRoute = 'camera';
   static const cameraRoute = 'camera';
+
+  static const profileNameRoute = 'profile';
+  static const profileRoute = 'profile';
+
+  static const editProfileNameRoute = 'editProfile';
+  static const editProfileRoute = 'editProfile';
+
+  static const imeiInstructionNameRoute = 'imeiInstruction';
+  static const imeiInstructionRoute = 'imeiInstruction';
 }

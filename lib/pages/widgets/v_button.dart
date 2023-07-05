@@ -4,10 +4,15 @@ import '../../../../style/style.dart';
 
 class VButton extends StatelessWidget {
   const VButton(
-      {Key? key, required this.label, this.isEnabled, required this.onPressed})
+      {Key? key,
+      required this.label,
+      this.isEnabled,
+      required this.onPressed,
+      this.color})
       : super(key: key);
 
   final String label;
+  final Color? color;
   final Function() onPressed;
   final bool? isEnabled;
 
@@ -20,12 +25,12 @@ class VButton extends StatelessWidget {
               height: 56,
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
-                  color: Palette.primaryColor,
+                  color: color ?? Palette.primaryColor,
                   borderRadius: BorderRadius.circular(10)),
               child: Center(
                 child: Text(
                   label,
-                  style: Themes.blueSpaced(
+                  style: Themes.whiteSpaced(
                     FontWeight.bold,
                     16,
                   ),

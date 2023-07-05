@@ -35,18 +35,18 @@ class AuthRepository {
     return clearCredentialsStorage();
   }
 
-  Future<Either<AuthFailure, Unit>> signInWithUserIdEmailAndPassword({
-    required Email email,
+  Future<Either<AuthFailure, Unit>> signInWithIdKaryawanUsernameAndPassword({
+    required IdKaryawan idKaryawan,
     required UserId userId,
     required Password password,
   }) async {
     try {
-      final emailStr = email.getOrCrash();
+      final idKaryawanStr = idKaryawan.getOrCrash();
       final userIdStr = userId.getOrCrash();
       final passwordStr = password.getOrCrash();
 
       final authResponse = await _remoteService.signIn(
-        email: emailStr,
+        idKaryawan: idKaryawanStr,
         userId: userIdStr,
         password: passwordStr,
       );
@@ -55,7 +55,43 @@ class AuthRepository {
         withUser: (user) async {
           final userSave = jsonEncode(user);
 
-          debugger(message: 'user $user');
+          log('jsonEncode(user) ${jsonEncode(user)}');
+
+          await _credentialsStorage.save(userSave);
+
+          return right(unit);
+        },
+        failure: (errorCode, message) => left(AuthFailure.server(
+          errorCode,
+          message,
+        )),
+      );
+    } on RestApiException catch (e) {
+      return left(AuthFailure.server(e.errorCode));
+    } on NoConnectionException {
+      return left(const AuthFailure.noConnection());
+    }
+  }
+
+  Future<Either<AuthFailure, Unit>> saveUserAfterUpdate({
+    required IdKaryawan idKaryawan,
+    required UserId userId,
+    required Password password,
+  }) async {
+    try {
+      final idKaryawanStr = idKaryawan.getOrCrash();
+      final userIdStr = userId.getOrCrash();
+      final passwordStr = password.getOrCrash();
+
+      final authResponse = await _remoteService.signIn(
+        idKaryawan: idKaryawanStr,
+        userId: userIdStr.toString(),
+        password: passwordStr,
+      );
+
+      return authResponse.when(
+        withUser: (user) async {
+          final userSave = jsonEncode(user);
 
           log('jsonEncode(user) ${jsonEncode(user)}');
 

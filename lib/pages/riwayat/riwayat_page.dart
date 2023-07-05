@@ -11,8 +11,6 @@ import 'package:face_net_authentication/pages/widgets/v_dialogs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../style/style.dart';
-
 class RiwayatAbsenPage extends ConsumerWidget {
   const RiwayatAbsenPage();
 
@@ -30,24 +28,24 @@ class RiwayatAbsenPage extends ConsumerWidget {
                                     showCupertinoDialog(
                                         context: context,
                                         builder: (builder) => VSimpleDialog(
-                                            label: 'Error $errorCode',
-                                            labelDescription: '$message',
-                                            asset: Assets.iconCrossed,
-                                            color: Palette.red))),
+                                              label: 'Error $errorCode',
+                                              labelDescription: '$message',
+                                              asset: Assets.iconCrossed,
+                                            ))),
                                 wrongFormat: () => showCupertinoDialog(
                                     context: context,
                                     builder: (builder) => VSimpleDialog(
-                                        label: 'FormatException',
-                                        labelDescription: 'Error parsing',
-                                        asset: Assets.iconCrossed,
-                                        color: Palette.red)),
+                                          label: 'FormatException',
+                                          labelDescription: 'Error parsing',
+                                          asset: Assets.iconCrossed,
+                                        )),
                                 noConnection: () => showCupertinoDialog(
                                     context: context,
                                     builder: (builder) => VSimpleDialog(
-                                        label: 'NoConnection',
-                                        labelDescription: 'no internet',
-                                        asset: Assets.iconCrossed,
-                                        color: Palette.red)),
+                                          label: 'NoConnection',
+                                          labelDescription: 'no internet',
+                                          asset: Assets.iconCrossed,
+                                        )),
                               ), (list) {
                         final oldList = ref
                             .read(riwayatAbsenNotifierProvider.notifier)

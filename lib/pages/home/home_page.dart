@@ -64,7 +64,6 @@ class HomePage extends HookConsumerWidget {
                   asset: Assets.iconCrossed,
                   label: '$code',
                   labelDescription: '$message',
-                  color: Palette.red,
                 )),
       );
     });

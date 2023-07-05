@@ -29,12 +29,12 @@ class WelcomeItem extends StatelessWidget {
             Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: Palette.primaryDarker),
+                    color: Colors.white),
                 padding: EdgeInsets.all(8),
                 child: SizedBox(child: SvgPicture.asset(homeData.icon))),
             Text(
               homeData.absen.toUpperCase(),
-              style: Themes.blue(FontWeight.bold, 9),
+              style: Themes.customColor(FontWeight.bold, 9, Colors.white),
             )
           ],
         ),

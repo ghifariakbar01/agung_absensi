@@ -30,7 +30,6 @@ class HomeScaffold extends HookConsumerWidget {
                                     asset: Assets.iconCrossed,
                                     label: '$code',
                                     labelDescription: '$message',
-                                    color: Palette.red,
                                   )),
                           noConnection: () => showDialog(
                               context: context,
@@ -38,7 +37,6 @@ class HomeScaffold extends HookConsumerWidget {
                                     asset: Assets.iconCrossed,
                                     label: 'NoConnection',
                                     labelDescription: 'Tidak ada koneksi',
-                                    color: Palette.red,
                                   )),
                         ), (_) async {
                   debugger(message: 'called');
@@ -52,7 +50,6 @@ class HomeScaffold extends HookConsumerWidget {
                             label:
                                 'JAM ${StringUtils.hoursDate(DateTime.now())}',
                             labelDescription: 'BERHASIL',
-                            color: Palette.secondaryColor,
                           ));
                 })));
 

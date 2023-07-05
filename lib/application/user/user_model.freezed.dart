@@ -14,40 +14,63 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
-UserModel _$UserModelFromJson(Map<String, dynamic> json) {
-  return _UserModel.fromJson(json);
+UserModelWithPassword _$UserModelWithPasswordFromJson(
+    Map<String, dynamic> json) {
+  return _UserModelWithPassword.fromJson(json);
 }
 
 /// @nodoc
-mixin _$UserModel {
+mixin _$UserModelWithPassword {
   @JsonKey(name: 'id_user')
   int? get idUser => throw _privateConstructorUsedError;
+  String? get idKary => throw _privateConstructorUsedError;
+  @JsonKey(name: 'imei_hp')
+  String? get imeiHp => throw _privateConstructorUsedError;
   String? get nama => throw _privateConstructorUsedError;
   String? get fullname => throw _privateConstructorUsedError;
+  @JsonKey(name: 'no_telp1')
+  String? get noTelp1 => throw _privateConstructorUsedError;
+  @JsonKey(name: 'no_telp2')
+  String? get noTelp2 => throw _privateConstructorUsedError;
+  String? get email1 => throw _privateConstructorUsedError;
+  String? get email2 => throw _privateConstructorUsedError;
+  @JsonKey(name: 'dept_list')
+  String? get deptList => throw _privateConstructorUsedError;
+  String? get photo => throw _privateConstructorUsedError;
   String? get password => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $UserModelCopyWith<UserModel> get copyWith =>
+  $UserModelWithPasswordCopyWith<UserModelWithPassword> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $UserModelCopyWith<$Res> {
-  factory $UserModelCopyWith(UserModel value, $Res Function(UserModel) then) =
-      _$UserModelCopyWithImpl<$Res, UserModel>;
+abstract class $UserModelWithPasswordCopyWith<$Res> {
+  factory $UserModelWithPasswordCopyWith(UserModelWithPassword value,
+          $Res Function(UserModelWithPassword) then) =
+      _$UserModelWithPasswordCopyWithImpl<$Res, UserModelWithPassword>;
   @useResult
   $Res call(
       {@JsonKey(name: 'id_user') int? idUser,
+      String? idKary,
+      @JsonKey(name: 'imei_hp') String? imeiHp,
       String? nama,
       String? fullname,
+      @JsonKey(name: 'no_telp1') String? noTelp1,
+      @JsonKey(name: 'no_telp2') String? noTelp2,
+      String? email1,
+      String? email2,
+      @JsonKey(name: 'dept_list') String? deptList,
+      String? photo,
       String? password});
 }
 
 /// @nodoc
-class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
-    implements $UserModelCopyWith<$Res> {
-  _$UserModelCopyWithImpl(this._value, this._then);
+class _$UserModelWithPasswordCopyWithImpl<$Res,
+        $Val extends UserModelWithPassword>
+    implements $UserModelWithPasswordCopyWith<$Res> {
+  _$UserModelWithPasswordCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -58,8 +81,16 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
   @override
   $Res call({
     Object? idUser = freezed,
+    Object? idKary = freezed,
+    Object? imeiHp = freezed,
     Object? nama = freezed,
     Object? fullname = freezed,
+    Object? noTelp1 = freezed,
+    Object? noTelp2 = freezed,
+    Object? email1 = freezed,
+    Object? email2 = freezed,
+    Object? deptList = freezed,
+    Object? photo = freezed,
     Object? password = freezed,
   }) {
     return _then(_value.copyWith(
@@ -67,6 +98,14 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
           ? _value.idUser
           : idUser // ignore: cast_nullable_to_non_nullable
               as int?,
+      idKary: freezed == idKary
+          ? _value.idKary
+          : idKary // ignore: cast_nullable_to_non_nullable
+              as String?,
+      imeiHp: freezed == imeiHp
+          ? _value.imeiHp
+          : imeiHp // ignore: cast_nullable_to_non_nullable
+              as String?,
       nama: freezed == nama
           ? _value.nama
           : nama // ignore: cast_nullable_to_non_nullable
@@ -74,6 +113,30 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
       fullname: freezed == fullname
           ? _value.fullname
           : fullname // ignore: cast_nullable_to_non_nullable
+              as String?,
+      noTelp1: freezed == noTelp1
+          ? _value.noTelp1
+          : noTelp1 // ignore: cast_nullable_to_non_nullable
+              as String?,
+      noTelp2: freezed == noTelp2
+          ? _value.noTelp2
+          : noTelp2 // ignore: cast_nullable_to_non_nullable
+              as String?,
+      email1: freezed == email1
+          ? _value.email1
+          : email1 // ignore: cast_nullable_to_non_nullable
+              as String?,
+      email2: freezed == email2
+          ? _value.email2
+          : email2 // ignore: cast_nullable_to_non_nullable
+              as String?,
+      deptList: freezed == deptList
+          ? _value.deptList
+          : deptList // ignore: cast_nullable_to_non_nullable
+              as String?,
+      photo: freezed == photo
+          ? _value.photo
+          : photo // ignore: cast_nullable_to_non_nullable
               as String?,
       password: freezed == password
           ? _value.password
@@ -84,40 +147,65 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
 }
 
 /// @nodoc
-abstract class _$$_UserModelCopyWith<$Res> implements $UserModelCopyWith<$Res> {
-  factory _$$_UserModelCopyWith(
-          _$_UserModel value, $Res Function(_$_UserModel) then) =
-      __$$_UserModelCopyWithImpl<$Res>;
+abstract class _$$_UserModelWithPasswordCopyWith<$Res>
+    implements $UserModelWithPasswordCopyWith<$Res> {
+  factory _$$_UserModelWithPasswordCopyWith(_$_UserModelWithPassword value,
+          $Res Function(_$_UserModelWithPassword) then) =
+      __$$_UserModelWithPasswordCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
       {@JsonKey(name: 'id_user') int? idUser,
+      String? idKary,
+      @JsonKey(name: 'imei_hp') String? imeiHp,
       String? nama,
       String? fullname,
+      @JsonKey(name: 'no_telp1') String? noTelp1,
+      @JsonKey(name: 'no_telp2') String? noTelp2,
+      String? email1,
+      String? email2,
+      @JsonKey(name: 'dept_list') String? deptList,
+      String? photo,
       String? password});
 }
 
 /// @nodoc
-class __$$_UserModelCopyWithImpl<$Res>
-    extends _$UserModelCopyWithImpl<$Res, _$_UserModel>
-    implements _$$_UserModelCopyWith<$Res> {
-  __$$_UserModelCopyWithImpl(
-      _$_UserModel _value, $Res Function(_$_UserModel) _then)
+class __$$_UserModelWithPasswordCopyWithImpl<$Res>
+    extends _$UserModelWithPasswordCopyWithImpl<$Res, _$_UserModelWithPassword>
+    implements _$$_UserModelWithPasswordCopyWith<$Res> {
+  __$$_UserModelWithPasswordCopyWithImpl(_$_UserModelWithPassword _value,
+      $Res Function(_$_UserModelWithPassword) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? idUser = freezed,
+    Object? idKary = freezed,
+    Object? imeiHp = freezed,
     Object? nama = freezed,
     Object? fullname = freezed,
+    Object? noTelp1 = freezed,
+    Object? noTelp2 = freezed,
+    Object? email1 = freezed,
+    Object? email2 = freezed,
+    Object? deptList = freezed,
+    Object? photo = freezed,
     Object? password = freezed,
   }) {
-    return _then(_$_UserModel(
+    return _then(_$_UserModelWithPassword(
       idUser: freezed == idUser
           ? _value.idUser
           : idUser // ignore: cast_nullable_to_non_nullable
               as int?,
+      idKary: freezed == idKary
+          ? _value.idKary
+          : idKary // ignore: cast_nullable_to_non_nullable
+              as String?,
+      imeiHp: freezed == imeiHp
+          ? _value.imeiHp
+          : imeiHp // ignore: cast_nullable_to_non_nullable
+              as String?,
       nama: freezed == nama
           ? _value.nama
           : nama // ignore: cast_nullable_to_non_nullable
@@ -125,6 +213,30 @@ class __$$_UserModelCopyWithImpl<$Res>
       fullname: freezed == fullname
           ? _value.fullname
           : fullname // ignore: cast_nullable_to_non_nullable
+              as String?,
+      noTelp1: freezed == noTelp1
+          ? _value.noTelp1
+          : noTelp1 // ignore: cast_nullable_to_non_nullable
+              as String?,
+      noTelp2: freezed == noTelp2
+          ? _value.noTelp2
+          : noTelp2 // ignore: cast_nullable_to_non_nullable
+              as String?,
+      email1: freezed == email1
+          ? _value.email1
+          : email1 // ignore: cast_nullable_to_non_nullable
+              as String?,
+      email2: freezed == email2
+          ? _value.email2
+          : email2 // ignore: cast_nullable_to_non_nullable
+              as String?,
+      deptList: freezed == deptList
+          ? _value.deptList
+          : deptList // ignore: cast_nullable_to_non_nullable
+              as String?,
+      photo: freezed == photo
+          ? _value.photo
+          : photo // ignore: cast_nullable_to_non_nullable
               as String?,
       password: freezed == password
           ? _value.password
@@ -136,84 +248,150 @@ class __$$_UserModelCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_UserModel implements _UserModel {
-  const _$_UserModel(
+class _$_UserModelWithPassword implements _UserModelWithPassword {
+  const _$_UserModelWithPassword(
       {@JsonKey(name: 'id_user') required this.idUser,
+      required this.idKary,
+      @JsonKey(name: 'imei_hp') required this.imeiHp,
       required this.nama,
       required this.fullname,
+      @JsonKey(name: 'no_telp1') required this.noTelp1,
+      @JsonKey(name: 'no_telp2') required this.noTelp2,
+      required this.email1,
+      required this.email2,
+      @JsonKey(name: 'dept_list') required this.deptList,
+      required this.photo,
       required this.password});
 
-  factory _$_UserModel.fromJson(Map<String, dynamic> json) =>
-      _$$_UserModelFromJson(json);
+  factory _$_UserModelWithPassword.fromJson(Map<String, dynamic> json) =>
+      _$$_UserModelWithPasswordFromJson(json);
 
   @override
   @JsonKey(name: 'id_user')
   final int? idUser;
   @override
+  final String? idKary;
+  @override
+  @JsonKey(name: 'imei_hp')
+  final String? imeiHp;
+  @override
   final String? nama;
   @override
   final String? fullname;
+  @override
+  @JsonKey(name: 'no_telp1')
+  final String? noTelp1;
+  @override
+  @JsonKey(name: 'no_telp2')
+  final String? noTelp2;
+  @override
+  final String? email1;
+  @override
+  final String? email2;
+  @override
+  @JsonKey(name: 'dept_list')
+  final String? deptList;
+  @override
+  final String? photo;
   @override
   final String? password;
 
   @override
   String toString() {
-    return 'UserModel(idUser: $idUser, nama: $nama, fullname: $fullname, password: $password)';
+    return 'UserModelWithPassword(idUser: $idUser, idKary: $idKary, imeiHp: $imeiHp, nama: $nama, fullname: $fullname, noTelp1: $noTelp1, noTelp2: $noTelp2, email1: $email1, email2: $email2, deptList: $deptList, photo: $photo, password: $password)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_UserModel &&
+            other is _$_UserModelWithPassword &&
             (identical(other.idUser, idUser) || other.idUser == idUser) &&
+            (identical(other.idKary, idKary) || other.idKary == idKary) &&
+            (identical(other.imeiHp, imeiHp) || other.imeiHp == imeiHp) &&
             (identical(other.nama, nama) || other.nama == nama) &&
             (identical(other.fullname, fullname) ||
                 other.fullname == fullname) &&
+            (identical(other.noTelp1, noTelp1) || other.noTelp1 == noTelp1) &&
+            (identical(other.noTelp2, noTelp2) || other.noTelp2 == noTelp2) &&
+            (identical(other.email1, email1) || other.email1 == email1) &&
+            (identical(other.email2, email2) || other.email2 == email2) &&
+            (identical(other.deptList, deptList) ||
+                other.deptList == deptList) &&
+            (identical(other.photo, photo) || other.photo == photo) &&
             (identical(other.password, password) ||
                 other.password == password));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, idUser, nama, fullname, password);
+  int get hashCode => Object.hash(runtimeType, idUser, idKary, imeiHp, nama,
+      fullname, noTelp1, noTelp2, email1, email2, deptList, photo, password);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_UserModelCopyWith<_$_UserModel> get copyWith =>
-      __$$_UserModelCopyWithImpl<_$_UserModel>(this, _$identity);
+  _$$_UserModelWithPasswordCopyWith<_$_UserModelWithPassword> get copyWith =>
+      __$$_UserModelWithPasswordCopyWithImpl<_$_UserModelWithPassword>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_UserModelToJson(
+    return _$$_UserModelWithPasswordToJson(
       this,
     );
   }
 }
 
-abstract class _UserModel implements UserModel {
-  const factory _UserModel(
+abstract class _UserModelWithPassword implements UserModelWithPassword {
+  const factory _UserModelWithPassword(
       {@JsonKey(name: 'id_user') required final int? idUser,
+      required final String? idKary,
+      @JsonKey(name: 'imei_hp') required final String? imeiHp,
       required final String? nama,
       required final String? fullname,
-      required final String? password}) = _$_UserModel;
+      @JsonKey(name: 'no_telp1') required final String? noTelp1,
+      @JsonKey(name: 'no_telp2') required final String? noTelp2,
+      required final String? email1,
+      required final String? email2,
+      @JsonKey(name: 'dept_list') required final String? deptList,
+      required final String? photo,
+      required final String? password}) = _$_UserModelWithPassword;
 
-  factory _UserModel.fromJson(Map<String, dynamic> json) =
-      _$_UserModel.fromJson;
+  factory _UserModelWithPassword.fromJson(Map<String, dynamic> json) =
+      _$_UserModelWithPassword.fromJson;
 
   @override
   @JsonKey(name: 'id_user')
   int? get idUser;
   @override
+  String? get idKary;
+  @override
+  @JsonKey(name: 'imei_hp')
+  String? get imeiHp;
+  @override
   String? get nama;
   @override
   String? get fullname;
   @override
+  @JsonKey(name: 'no_telp1')
+  String? get noTelp1;
+  @override
+  @JsonKey(name: 'no_telp2')
+  String? get noTelp2;
+  @override
+  String? get email1;
+  @override
+  String? get email2;
+  @override
+  @JsonKey(name: 'dept_list')
+  String? get deptList;
+  @override
+  String? get photo;
+  @override
   String? get password;
   @override
   @JsonKey(ignore: true)
-  _$$_UserModelCopyWith<_$_UserModel> get copyWith =>
+  _$$_UserModelWithPasswordCopyWith<_$_UserModelWithPassword> get copyWith =>
       throw _privateConstructorUsedError;
 }

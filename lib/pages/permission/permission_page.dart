@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/application/auth/auth_notifier.dart';
 
@@ -5,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../application/routes/route_names.dart';
 import '../../shared/providers.dart';
@@ -33,6 +36,12 @@ final initPermission = FutureProvider<Unit>((ref) async {
   return unit;
 });
 
+final imeiIntroductionPreference = FutureProvider<bool?>((ref) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  return prefs.getBool('imei_introduction');
+});
+
 class PermissionPage extends HookConsumerWidget {
   const PermissionPage();
 
@@ -49,9 +58,26 @@ class PermissionPage extends HookConsumerWidget {
 
         final isLoggedIn = ref.watch(authNotifierProvider);
 
-        isLoggedIn == AuthState.authenticated()
-            ? context.replaceNamed(RouteNames.welcomeNameRoute)
-            : context.replaceNamed(RouteNames.signInNameRoute);
+        switch (isLoggedIn == AuthState.authenticated()) {
+          case true:
+            () async {
+              final imeiInstructionPage =
+                  await ref.read(imeiIntroductionPreference.future);
+
+              if (imeiInstructionPage == true) {
+                log('imeiInstructionPage != null ${imeiInstructionPage != null} imeiInstructionPage == true ${imeiInstructionPage == true}');
+
+                context.replaceNamed(RouteNames.welcomeNameRoute);
+              } else {
+                context.replaceNamed(RouteNames.imeiInstructionNameRoute);
+              }
+            }();
+            break;
+          case false:
+            context.replaceNamed(RouteNames.signInNameRoute);
+            break;
+          default:
+        }
       }
     });
 

@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../application/routes/route_names.dart';
 import '../widgets/app_logo.dart';
+import 'welcome_drawer.dart';
 import 'welcome_item.dart';
 
 class HomeData {
@@ -28,6 +29,24 @@ class WelcomeScaffold extends ConsumerWidget {
     final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
+      drawer: WelcomeDrawer(),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leadingWidth: 0,
+        actions: [
+          Builder(
+            builder: (context) => TextButton(
+              onPressed: () => Scaffold.of(context).openDrawer(),
+              child: Icon(
+                Icons.more_horiz,
+                color: Palette.primaryColor,
+              ),
+            ),
+          )
+        ],
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -53,7 +72,7 @@ class WelcomeScaffold extends ConsumerWidget {
                         itemBuilder: (_, index) =>
                             WelcomeItem(homeData: items[index])),
                   )),
-              const SizedBox(height: 90),
+              const SizedBox(height: 35),
             ],
           ),
         ),

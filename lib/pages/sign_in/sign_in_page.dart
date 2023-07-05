@@ -8,9 +8,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../application/routes/route_names.dart';
 
 import '../../domain/auth_failure.dart';
-import '../../domain/user_failure.dart';
 import '../../shared/providers.dart';
 
+import '../permission/permission_page.dart';
 import '../widgets/alert_helper.dart';
 import '../widgets/loading_overlay.dart';
 import '../widgets/v_button.dart';
@@ -48,30 +48,34 @@ class SignInPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.listen<Option<Either<AuthFailure, Unit>>>(
-      signInFormNotifierProvider.select(
-        (state) => state.failureOrSuccessOption,
-      ),
-      (_, failureOrSuccessOption) => failureOrSuccessOption.fold(
-          () {},
-          (either) => either.fold(
-              (failure) => AlertHelper.showSnackBar(
-                    context,
-                    message: failure.map(
-                      storage: (_) => 'storage penuh',
-                      server: (value) => value.message ?? 'server error',
-                      noConnection: (_) => 'tidak ada koneksi',
-                    ),
-                  ),
-              (_) => context.replaceNamed(RouteNames.welcomeNameRoute))),
-    );
+        signInFormNotifierProvider.select(
+          (state) => state.failureOrSuccessOption,
+        ),
+        (_, failureOrSuccessOption) => failureOrSuccessOption.fold(
+              () {},
+              (either) => either.fold(
+                  (failure) => AlertHelper.showSnackBar(
+                        context,
+                        message: failure.map(
+                          storage: (_) => 'storage penuh',
+                          server: (value) => value.message ?? 'server error',
+                          noConnection: (_) => 'tidak ada koneksi',
+                        ),
+                      ), (_) async {
+                final visiitedInstructionPage =
+                    await ref.read(imeiIntroductionPreference.future);
+
+                if (visiitedInstructionPage == true) {
+                  context.replaceNamed(RouteNames.welcomeNameRoute);
+                } else {
+                  context.replaceNamed(RouteNames.imeiInstructionNameRoute);
+                }
+              }),
+            ));
 
     final isSubmitting = ref.watch(
       signInFormNotifierProvider.select((state) => state.isSubmitting),
     );
-
-    // final isInitialized = ref.watch(isInitializedProvider);
-
-    // print('isInitialized $isInitialized');
 
     return Stack(
       children: [
@@ -81,9 +85,16 @@ class SignInPage extends HookConsumerWidget {
             child: VButton(
               onPressed: () {
                 FocusScope.of(context).unfocus();
-                ref
-                    .read(signInFormNotifierProvider.notifier)
-                    .signInWithUserIdEmailAndPassword();
+                ref.read(signInFormNotifierProvider.notifier).signInAndRemember(
+                    signIn: () => ref
+                        .read(signInFormNotifierProvider.notifier)
+                        .signInWithUserIdEmailAndPassword(),
+                    remember: () => ref
+                        .read(signInFormNotifierProvider.notifier)
+                        .rememberInfo(),
+                    clear: () => ref
+                        .read(signInFormNotifierProvider.notifier)
+                        .clearInfo());
               },
               label: 'LOGIN',
             )),

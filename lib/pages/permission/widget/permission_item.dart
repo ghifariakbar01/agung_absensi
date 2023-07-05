@@ -24,7 +24,7 @@ class PermissionItem extends StatelessWidget {
         ProceedWidget(onPressed, title),
         Text(
           label,
-          style: Themes.black(FontWeight.normal, 14),
+          style: Themes.customColor(FontWeight.normal, 14, Colors.black),
         ),
       ],
     );

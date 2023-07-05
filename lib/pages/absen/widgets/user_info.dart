@@ -43,7 +43,7 @@ class UserInfo extends StatelessWidget {
         Center(
           child: Text(
             user,
-            style: Themes.black(FontWeight.bold, 24),
+            style: Themes.customColor(FontWeight.bold, 24, Colors.black),
           ),
         ),
       ],

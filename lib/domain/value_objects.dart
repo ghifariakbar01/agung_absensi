@@ -16,6 +16,11 @@ abstract class ValueObject<T> {
     return value.fold((f) => throw UnexpectedValueError(f), id);
   }
 
+  /// Leaves [input] as is
+  T getOrLeave(T input) {
+    return value.getOrElse(() => input);
+  }
+
   Either<ValueFailure<dynamic>, Unit> get failureOrUnit {
     return value.fold(
       left,

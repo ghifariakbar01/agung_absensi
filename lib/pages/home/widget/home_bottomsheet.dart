@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../application/routes/route_names.dart';
 import '../../widgets/v_button.dart';
 import '../../widgets/v_dialogs.dart';
 
@@ -56,7 +55,7 @@ class HomeBottomsheet extends ConsumerWidget {
             //       Spacer(),
             //       Text(
             //         '1. Memiliki pencahayaan cukup.',
-            //         style: Themes.black(FontWeight.bold, 14),
+            //         style: Themes.white(FontWeight.bold, 14),
             //       ),
             //       SizedBox(
             //         height: 4,
@@ -128,7 +127,6 @@ class HomeBottomsheet extends ConsumerWidget {
                             asset: Assets.iconCrossed,
                             label: 'NoConnection',
                             labelDescription: 'Tidak ada internet',
-                            color: Palette.red,
                           ));
 
                   // context.pushNamed(RouteNames.cameraRoute);

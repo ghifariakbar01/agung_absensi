@@ -26,10 +26,13 @@ class RiwayatDelayed extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Icon(Icons.verified),
+            Icon(
+              Icons.verified,
+              color: Colors.white,
+            ),
             Text(
               'Belum absen\n $coancenate',
-              style: Themes.black(FontWeight.bold, 7),
+              style: Themes.white(FontWeight.bold, 7),
               textAlign: TextAlign.center,
             ),
           ],

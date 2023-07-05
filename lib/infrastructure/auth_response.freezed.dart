@@ -18,19 +18,19 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$AuthResponse {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(UserModel user) withUser,
+    required TResult Function(UserModelWithPassword user) withUser,
     required TResult Function(int? errorCode, String? message) failure,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(UserModel user)? withUser,
+    TResult? Function(UserModelWithPassword user)? withUser,
     TResult? Function(int? errorCode, String? message)? failure,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(UserModel user)? withUser,
+    TResult Function(UserModelWithPassword user)? withUser,
     TResult Function(int? errorCode, String? message)? failure,
     required TResult orElse(),
   }) =>
@@ -80,9 +80,9 @@ abstract class _$$_WithUserCopyWith<$Res> {
           _$_WithUser value, $Res Function(_$_WithUser) then) =
       __$$_WithUserCopyWithImpl<$Res>;
   @useResult
-  $Res call({UserModel user});
+  $Res call({UserModelWithPassword user});
 
-  $UserModelCopyWith<$Res> get user;
+  $UserModelWithPasswordCopyWith<$Res> get user;
 }
 
 /// @nodoc
@@ -102,14 +102,14 @@ class __$$_WithUserCopyWithImpl<$Res>
       null == user
           ? _value.user
           : user // ignore: cast_nullable_to_non_nullable
-              as UserModel,
+              as UserModelWithPassword,
     ));
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $UserModelCopyWith<$Res> get user {
-    return $UserModelCopyWith<$Res>(_value.user, (value) {
+  $UserModelWithPasswordCopyWith<$Res> get user {
+    return $UserModelWithPasswordCopyWith<$Res>(_value.user, (value) {
       return _then(_value.copyWith(user: value));
     });
   }
@@ -121,7 +121,7 @@ class _$_WithUser extends _WithUser {
   const _$_WithUser(this.user) : super._();
 
   @override
-  final UserModel user;
+  final UserModelWithPassword user;
 
   @override
   String toString() {
@@ -148,7 +148,7 @@ class _$_WithUser extends _WithUser {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(UserModel user) withUser,
+    required TResult Function(UserModelWithPassword user) withUser,
     required TResult Function(int? errorCode, String? message) failure,
   }) {
     return withUser(user);
@@ -157,7 +157,7 @@ class _$_WithUser extends _WithUser {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(UserModel user)? withUser,
+    TResult? Function(UserModelWithPassword user)? withUser,
     TResult? Function(int? errorCode, String? message)? failure,
   }) {
     return withUser?.call(user);
@@ -166,7 +166,7 @@ class _$_WithUser extends _WithUser {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(UserModel user)? withUser,
+    TResult Function(UserModelWithPassword user)? withUser,
     TResult Function(int? errorCode, String? message)? failure,
     required TResult orElse(),
   }) {
@@ -209,10 +209,10 @@ class _$_WithUser extends _WithUser {
 }
 
 abstract class _WithUser extends AuthResponse {
-  const factory _WithUser(final UserModel user) = _$_WithUser;
+  const factory _WithUser(final UserModelWithPassword user) = _$_WithUser;
   const _WithUser._() : super._();
 
-  UserModel get user;
+  UserModelWithPassword get user;
   @JsonKey(ignore: true)
   _$$_WithUserCopyWith<_$_WithUser> get copyWith =>
       throw _privateConstructorUsedError;
@@ -290,7 +290,7 @@ class _$_Failure extends _Failure {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(UserModel user) withUser,
+    required TResult Function(UserModelWithPassword user) withUser,
     required TResult Function(int? errorCode, String? message) failure,
   }) {
     return failure(errorCode, message);
@@ -299,7 +299,7 @@ class _$_Failure extends _Failure {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(UserModel user)? withUser,
+    TResult? Function(UserModelWithPassword user)? withUser,
     TResult? Function(int? errorCode, String? message)? failure,
   }) {
     return failure?.call(errorCode, message);
@@ -308,7 +308,7 @@ class _$_Failure extends _Failure {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(UserModel user)? withUser,
+    TResult Function(UserModelWithPassword user)? withUser,
     TResult Function(int? errorCode, String? message)? failure,
     required TResult orElse(),
   }) {

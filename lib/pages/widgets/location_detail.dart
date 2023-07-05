@@ -19,15 +19,15 @@ class LocationDetail extends ConsumerWidget {
           children: [
             Text(
               'Kantor Terdekat',
-              style: Themes.black(FontWeight.bold, 13),
+              style: Themes.customColor(FontWeight.bold, 13, Colors.black),
             ),
             Text(
               ' : ',
-              style: Themes.black(FontWeight.bold, 13),
+              style: Themes.customColor(FontWeight.bold, 13, Colors.black),
             ),
             Text(
               ' ${nearest.nama}',
-              style: Themes.black(FontWeight.bold, 13),
+              style: Themes.customColor(FontWeight.bold, 13, Colors.black),
             ),
           ],
         ),
@@ -37,11 +37,11 @@ class LocationDetail extends ConsumerWidget {
           children: [
             Text(
               'Jarak',
-              style: Themes.black(FontWeight.bold, 13),
+              style: Themes.customColor(FontWeight.bold, 13, Colors.black),
             ),
             Text(
               ' : ',
-              style: Themes.black(FontWeight.bold, 13),
+              style: Themes.customColor(FontWeight.bold, 13, Colors.black),
             ),
             if (nearest.remainingDistance != null) ...[
               Text(' ${nearest.remainingDistance.round()} m',

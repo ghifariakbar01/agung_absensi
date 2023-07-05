@@ -1,11 +1,16 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:dartz/dartz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../utils/validator.dart';
 import '../../domain/auth_failure.dart';
 import '../../domain/value_objects_copy.dart';
 import '../../infrastructure/auth_repository.dart';
+import '../remember_me/remember_me_state.dart';
 
 part 'sign_in_form_notifier.freezed.dart';
 part 'sign_in_form_state.dart';
@@ -14,6 +19,26 @@ class SignInFormNotifier extends StateNotifier<SignInFormState> {
   SignInFormNotifier(this._repository) : super(SignInFormState.initial());
 
   final AuthRepository _repository;
+
+  void changeAllData({
+    required String idKaryawanStr,
+    required String userStr,
+    required String passwordStr,
+  }) {
+    state = state.copyWith(
+      idKaryawan: IdKaryawan(idKaryawanStr),
+      userId: UserId(userStr),
+      password: Password(passwordStr),
+      failureOrSuccessOption: none(),
+    );
+  }
+
+  void changeIdKaryawan(String idKaryawanStr) {
+    state = state.copyWith(
+      idKaryawan: IdKaryawan(idKaryawanStr),
+      failureOrSuccessOption: none(),
+    );
+  }
 
   void changeEmail(String emailStr) {
     state = state.copyWith(
@@ -36,6 +61,45 @@ class SignInFormNotifier extends StateNotifier<SignInFormState> {
     );
   }
 
+  Future<void> signInAndRemember(
+      {required Function signIn,
+      required Function remember,
+      required Function clear}) async {
+    await signIn();
+    if (state.isChecked) {
+      await remember();
+    } else {
+      await clear();
+    }
+  }
+
+  void changeRemember(bool isChecked) {
+    state = state.copyWith(isChecked: isChecked);
+  }
+
+  /// [rememberInfo] and [clearInfo] should use [Either] and handle error when thrown
+
+  Future<void> rememberInfo() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    await prefs.setString(
+        'remember_me',
+        jsonEncode(RememberMeModel(
+            nik: state.idKaryawan.getOrLeave(''),
+            nama: state.userId.getOrLeave(''),
+            password: state.password.getOrLeave(''))));
+  }
+
+  Future<void> clearInfo() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    if (prefs.getString('remember_me') != null) {
+      await prefs.remove(
+        'remember_me',
+      );
+    }
+  }
+
   Future<void> signInWithUserIdEmailAndPassword() async {
     Either<AuthFailure, Unit>? signInFailureOrSuccess;
 
@@ -46,8 +110,8 @@ class SignInFormNotifier extends StateNotifier<SignInFormState> {
       );
 
       signInFailureOrSuccess =
-          await _repository.signInWithUserIdEmailAndPassword(
-        email: state.email,
+          await _repository.signInWithIdKaryawanUsernameAndPassword(
+        idKaryawan: state.idKaryawan,
         userId: state.userId,
         password: state.password,
       );
@@ -62,7 +126,7 @@ class SignInFormNotifier extends StateNotifier<SignInFormState> {
 
   bool get isValid {
     final values = [
-      state.email,
+      state.idKaryawan,
       state.userId,
       state.password,
     ];

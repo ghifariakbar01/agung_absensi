@@ -22,18 +22,21 @@ class RiwayatTanggal extends ConsumerWidget {
             borderRadius: BorderRadius.circular(10)),
         child: Row(
           children: [
-            Icon(Icons.date_range),
+            Icon(
+              Icons.date_range,
+              color: Colors.white,
+            ),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   'Tanggal',
-                  style: Themes.black(FontWeight.bold, 7),
+                  style: Themes.white(FontWeight.bold, 7),
                 ),
                 Text(
                   StringUtils.formatTanggal(tanggal),
-                  style: Themes.black(FontWeight.bold, 7),
+                  style: Themes.white(FontWeight.bold, 7),
                 ),
               ],
             )

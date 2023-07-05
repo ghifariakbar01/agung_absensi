@@ -7,16 +7,45 @@ part 'user_model.freezed.dart';
 part 'user_model.g.dart';
 
 @freezed
-class UserModel with _$UserModel {
-  const factory UserModel(
+class UserModelWithPassword with _$UserModelWithPassword {
+  const factory UserModelWithPassword(
       {@JsonKey(name: 'id_user') required int? idUser,
+      required String? idKary,
+      @JsonKey(name: 'imei_hp') required String? imeiHp,
       required String? nama,
       required String? fullname,
-      required String? password}) = _UserModel;
+      @JsonKey(name: 'no_telp1') required String? noTelp1,
+      @JsonKey(name: 'no_telp2') required String? noTelp2,
+      required String? email1,
+      required String? email2,
+      @JsonKey(name: 'dept_list') required String? deptList,
+      required String? photo,
+      required String? password}) = _UserModelWithPassword;
 
-  factory UserModel.fromJson(Map<String, Object?> json) =>
-      _$UserModelFromJson(json);
+  factory UserModelWithPassword.fromJson(Map<String, Object?> json) =>
+      _$UserModelWithPasswordFromJson(json);
 
-  factory UserModel.initial() =>
-      UserModel(fullname: '', idUser: null, nama: '', password: '');
+  factory UserModelWithPassword.initial() => UserModelWithPassword(
+      fullname: '',
+      idUser: null,
+      nama: '',
+      password: '',
+      deptList: '',
+      email1: '',
+      email2: '',
+      idKary: '',
+      photo: '',
+      noTelp1: '',
+      noTelp2: '',
+      imeiHp: '');
 }
+
+
+
+
+// - nik 
+// - nama
+// - departemen
+// - perusahaan
+
+// - foto

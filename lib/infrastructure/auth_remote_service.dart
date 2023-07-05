@@ -4,16 +4,16 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 
 import 'package:face_net_authentication/infrastructure/dio_extensions.dart';
-import 'package:face_net_authentication/infrastructure/dio_request.dart';
 
 import '../application/user/user_model.dart';
 import 'auth_response.dart';
 import 'exceptions.dart';
 
 class AuthRemoteService {
-  AuthRemoteService(this._dio);
+  AuthRemoteService(this._dio, this._dioRequestNotifier);
 
   final Dio _dio;
+  final Map<String, String> _dioRequestNotifier;
 
   Future<void> signOut() async {
     try {
@@ -30,19 +30,18 @@ class AuthRemoteService {
   }
 
   Future<AuthResponse> signIn({
-    required String email,
+    required String idKaryawan,
     required String userId,
     required String password,
   }) async {
     try {
-      final data = dioRequest;
+      final data = _dioRequestNotifier;
 
       data.addAll({
         "username": "$userId",
         "password": "$password",
         "mode": "SELECT",
-        "command":
-            "SELECT * FROM mst_user WHERE email2 = '$email' OR email = '$email'",
+        "command": "SELECT * FROM mst_user WHERE idKary = '$idKaryawan'",
       });
 
       log('data ${jsonEncode(data)}');
@@ -62,11 +61,19 @@ class AuthRemoteService {
             try {
               final listSelected = list[0];
 
-              final UserModel user = UserModel(
+              final UserModelWithPassword user = UserModelWithPassword(
                   idUser: listSelected['id_user'] ?? '',
-                  nama: listSelected['nama'] ?? '',
+                  idKary: listSelected['IdKary'] ?? '',
+                  deptList: listSelected['dept_list'] ?? '',
+                  email1: listSelected['email'] ?? '',
+                  email2: listSelected['email2'] ?? '',
+                  noTelp1: listSelected['no_telp1'] ?? '',
+                  noTelp2: listSelected['no_telp2'] ?? '',
                   fullname: listSelected['fullname'] ?? '',
-                  password: password);
+                  nama: listSelected['nama'] ?? '',
+                  password: password,
+                  photo: listSelected['picture'],
+                  imeiHp: listSelected['imei_hp'] ?? '');
 
               return AuthResponse.withUser(user);
             } catch (_) {
