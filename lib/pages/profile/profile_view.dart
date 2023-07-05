@@ -41,11 +41,16 @@ class ProfileView extends ConsumerWidget {
               icon: Icons.person,
               label: 'Username',
             ),
+            ProfileItem(
+              text: userProvider.user.ktp ?? '',
+              icon: Icons.person,
+              label: 'No KTP',
+            ),
             SizedBox(
               height: 8,
             ),
             ProfileItem(
-              text: userProvider.user.email1 ?? '',
+              text: userProvider.user.email ?? '',
               icon: Icons.email,
               label: 'Email',
             ),
@@ -67,7 +72,17 @@ class ProfileView extends ConsumerWidget {
             ProfileItem(
               text: userProvider.user.deptList ?? '',
               icon: Icons.list,
-              label: 'Dept List',
+              label: 'Departemen',
+            ),
+            ProfileItem(
+              text: userProvider.user.company ?? '',
+              icon: Icons.location_city,
+              label: 'Company',
+            ),
+            ProfileItem(
+              icon: Icons.business_center,
+              text: userProvider.user.jabatan ?? '',
+              label: 'Jabatan',
             ),
             ProfileItem(
               text: userProvider.user.imeiHp ?? '',

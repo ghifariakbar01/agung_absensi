@@ -39,7 +39,7 @@ class ProfileScaffold extends ConsumerWidget {
                   onPressed: () => ref
                       .read(editProfileNotifierProvider.notifier)
                       .changeEditProfile(
-                          email1: user.email1 ?? '',
+                          email1: user.email ?? '',
                           email2: user.email2 ?? '',
                           noTelp1: user.noTelp1 ?? '',
                           noTelp2: user.noTelp2 ?? '',

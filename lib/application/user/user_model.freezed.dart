@@ -24,6 +24,14 @@ mixin _$UserModelWithPassword {
   @JsonKey(name: 'id_user')
   int? get idUser => throw _privateConstructorUsedError;
   String? get idKary => throw _privateConstructorUsedError;
+  @JsonKey(name: 'ktp')
+  String? get ktp => throw _privateConstructorUsedError;
+  @JsonKey(name: 'dept')
+  String? get deptList => throw _privateConstructorUsedError;
+  @JsonKey(name: 'comp')
+  String? get company => throw _privateConstructorUsedError;
+  @JsonKey(name: 'jbt')
+  String? get jabatan => throw _privateConstructorUsedError;
   @JsonKey(name: 'imei_hp')
   String? get imeiHp => throw _privateConstructorUsedError;
   String? get nama => throw _privateConstructorUsedError;
@@ -32,10 +40,8 @@ mixin _$UserModelWithPassword {
   String? get noTelp1 => throw _privateConstructorUsedError;
   @JsonKey(name: 'no_telp2')
   String? get noTelp2 => throw _privateConstructorUsedError;
-  String? get email1 => throw _privateConstructorUsedError;
+  String? get email => throw _privateConstructorUsedError;
   String? get email2 => throw _privateConstructorUsedError;
-  @JsonKey(name: 'dept_list')
-  String? get deptList => throw _privateConstructorUsedError;
   String? get photo => throw _privateConstructorUsedError;
   String? get password => throw _privateConstructorUsedError;
 
@@ -54,14 +60,17 @@ abstract class $UserModelWithPasswordCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: 'id_user') int? idUser,
       String? idKary,
+      @JsonKey(name: 'ktp') String? ktp,
+      @JsonKey(name: 'dept') String? deptList,
+      @JsonKey(name: 'comp') String? company,
+      @JsonKey(name: 'jbt') String? jabatan,
       @JsonKey(name: 'imei_hp') String? imeiHp,
       String? nama,
       String? fullname,
       @JsonKey(name: 'no_telp1') String? noTelp1,
       @JsonKey(name: 'no_telp2') String? noTelp2,
-      String? email1,
+      String? email,
       String? email2,
-      @JsonKey(name: 'dept_list') String? deptList,
       String? photo,
       String? password});
 }
@@ -82,14 +91,17 @@ class _$UserModelWithPasswordCopyWithImpl<$Res,
   $Res call({
     Object? idUser = freezed,
     Object? idKary = freezed,
+    Object? ktp = freezed,
+    Object? deptList = freezed,
+    Object? company = freezed,
+    Object? jabatan = freezed,
     Object? imeiHp = freezed,
     Object? nama = freezed,
     Object? fullname = freezed,
     Object? noTelp1 = freezed,
     Object? noTelp2 = freezed,
-    Object? email1 = freezed,
+    Object? email = freezed,
     Object? email2 = freezed,
-    Object? deptList = freezed,
     Object? photo = freezed,
     Object? password = freezed,
   }) {
@@ -101,6 +113,22 @@ class _$UserModelWithPasswordCopyWithImpl<$Res,
       idKary: freezed == idKary
           ? _value.idKary
           : idKary // ignore: cast_nullable_to_non_nullable
+              as String?,
+      ktp: freezed == ktp
+          ? _value.ktp
+          : ktp // ignore: cast_nullable_to_non_nullable
+              as String?,
+      deptList: freezed == deptList
+          ? _value.deptList
+          : deptList // ignore: cast_nullable_to_non_nullable
+              as String?,
+      company: freezed == company
+          ? _value.company
+          : company // ignore: cast_nullable_to_non_nullable
+              as String?,
+      jabatan: freezed == jabatan
+          ? _value.jabatan
+          : jabatan // ignore: cast_nullable_to_non_nullable
               as String?,
       imeiHp: freezed == imeiHp
           ? _value.imeiHp
@@ -122,17 +150,13 @@ class _$UserModelWithPasswordCopyWithImpl<$Res,
           ? _value.noTelp2
           : noTelp2 // ignore: cast_nullable_to_non_nullable
               as String?,
-      email1: freezed == email1
-          ? _value.email1
-          : email1 // ignore: cast_nullable_to_non_nullable
+      email: freezed == email
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
               as String?,
       email2: freezed == email2
           ? _value.email2
           : email2 // ignore: cast_nullable_to_non_nullable
-              as String?,
-      deptList: freezed == deptList
-          ? _value.deptList
-          : deptList // ignore: cast_nullable_to_non_nullable
               as String?,
       photo: freezed == photo
           ? _value.photo
@@ -157,14 +181,17 @@ abstract class _$$_UserModelWithPasswordCopyWith<$Res>
   $Res call(
       {@JsonKey(name: 'id_user') int? idUser,
       String? idKary,
+      @JsonKey(name: 'ktp') String? ktp,
+      @JsonKey(name: 'dept') String? deptList,
+      @JsonKey(name: 'comp') String? company,
+      @JsonKey(name: 'jbt') String? jabatan,
       @JsonKey(name: 'imei_hp') String? imeiHp,
       String? nama,
       String? fullname,
       @JsonKey(name: 'no_telp1') String? noTelp1,
       @JsonKey(name: 'no_telp2') String? noTelp2,
-      String? email1,
+      String? email,
       String? email2,
-      @JsonKey(name: 'dept_list') String? deptList,
       String? photo,
       String? password});
 }
@@ -182,14 +209,17 @@ class __$$_UserModelWithPasswordCopyWithImpl<$Res>
   $Res call({
     Object? idUser = freezed,
     Object? idKary = freezed,
+    Object? ktp = freezed,
+    Object? deptList = freezed,
+    Object? company = freezed,
+    Object? jabatan = freezed,
     Object? imeiHp = freezed,
     Object? nama = freezed,
     Object? fullname = freezed,
     Object? noTelp1 = freezed,
     Object? noTelp2 = freezed,
-    Object? email1 = freezed,
+    Object? email = freezed,
     Object? email2 = freezed,
-    Object? deptList = freezed,
     Object? photo = freezed,
     Object? password = freezed,
   }) {
@@ -201,6 +231,22 @@ class __$$_UserModelWithPasswordCopyWithImpl<$Res>
       idKary: freezed == idKary
           ? _value.idKary
           : idKary // ignore: cast_nullable_to_non_nullable
+              as String?,
+      ktp: freezed == ktp
+          ? _value.ktp
+          : ktp // ignore: cast_nullable_to_non_nullable
+              as String?,
+      deptList: freezed == deptList
+          ? _value.deptList
+          : deptList // ignore: cast_nullable_to_non_nullable
+              as String?,
+      company: freezed == company
+          ? _value.company
+          : company // ignore: cast_nullable_to_non_nullable
+              as String?,
+      jabatan: freezed == jabatan
+          ? _value.jabatan
+          : jabatan // ignore: cast_nullable_to_non_nullable
               as String?,
       imeiHp: freezed == imeiHp
           ? _value.imeiHp
@@ -222,17 +268,13 @@ class __$$_UserModelWithPasswordCopyWithImpl<$Res>
           ? _value.noTelp2
           : noTelp2 // ignore: cast_nullable_to_non_nullable
               as String?,
-      email1: freezed == email1
-          ? _value.email1
-          : email1 // ignore: cast_nullable_to_non_nullable
+      email: freezed == email
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
               as String?,
       email2: freezed == email2
           ? _value.email2
           : email2 // ignore: cast_nullable_to_non_nullable
-              as String?,
-      deptList: freezed == deptList
-          ? _value.deptList
-          : deptList // ignore: cast_nullable_to_non_nullable
               as String?,
       photo: freezed == photo
           ? _value.photo
@@ -252,14 +294,17 @@ class _$_UserModelWithPassword implements _UserModelWithPassword {
   const _$_UserModelWithPassword(
       {@JsonKey(name: 'id_user') required this.idUser,
       required this.idKary,
+      @JsonKey(name: 'ktp') required this.ktp,
+      @JsonKey(name: 'dept') required this.deptList,
+      @JsonKey(name: 'comp') required this.company,
+      @JsonKey(name: 'jbt') required this.jabatan,
       @JsonKey(name: 'imei_hp') required this.imeiHp,
       required this.nama,
       required this.fullname,
       @JsonKey(name: 'no_telp1') required this.noTelp1,
       @JsonKey(name: 'no_telp2') required this.noTelp2,
-      required this.email1,
+      required this.email,
       required this.email2,
-      @JsonKey(name: 'dept_list') required this.deptList,
       required this.photo,
       required this.password});
 
@@ -271,6 +316,18 @@ class _$_UserModelWithPassword implements _UserModelWithPassword {
   final int? idUser;
   @override
   final String? idKary;
+  @override
+  @JsonKey(name: 'ktp')
+  final String? ktp;
+  @override
+  @JsonKey(name: 'dept')
+  final String? deptList;
+  @override
+  @JsonKey(name: 'comp')
+  final String? company;
+  @override
+  @JsonKey(name: 'jbt')
+  final String? jabatan;
   @override
   @JsonKey(name: 'imei_hp')
   final String? imeiHp;
@@ -285,12 +342,9 @@ class _$_UserModelWithPassword implements _UserModelWithPassword {
   @JsonKey(name: 'no_telp2')
   final String? noTelp2;
   @override
-  final String? email1;
+  final String? email;
   @override
   final String? email2;
-  @override
-  @JsonKey(name: 'dept_list')
-  final String? deptList;
   @override
   final String? photo;
   @override
@@ -298,7 +352,7 @@ class _$_UserModelWithPassword implements _UserModelWithPassword {
 
   @override
   String toString() {
-    return 'UserModelWithPassword(idUser: $idUser, idKary: $idKary, imeiHp: $imeiHp, nama: $nama, fullname: $fullname, noTelp1: $noTelp1, noTelp2: $noTelp2, email1: $email1, email2: $email2, deptList: $deptList, photo: $photo, password: $password)';
+    return 'UserModelWithPassword(idUser: $idUser, idKary: $idKary, ktp: $ktp, deptList: $deptList, company: $company, jabatan: $jabatan, imeiHp: $imeiHp, nama: $nama, fullname: $fullname, noTelp1: $noTelp1, noTelp2: $noTelp2, email: $email, email2: $email2, photo: $photo, password: $password)';
   }
 
   @override
@@ -308,16 +362,19 @@ class _$_UserModelWithPassword implements _UserModelWithPassword {
             other is _$_UserModelWithPassword &&
             (identical(other.idUser, idUser) || other.idUser == idUser) &&
             (identical(other.idKary, idKary) || other.idKary == idKary) &&
+            (identical(other.ktp, ktp) || other.ktp == ktp) &&
+            (identical(other.deptList, deptList) ||
+                other.deptList == deptList) &&
+            (identical(other.company, company) || other.company == company) &&
+            (identical(other.jabatan, jabatan) || other.jabatan == jabatan) &&
             (identical(other.imeiHp, imeiHp) || other.imeiHp == imeiHp) &&
             (identical(other.nama, nama) || other.nama == nama) &&
             (identical(other.fullname, fullname) ||
                 other.fullname == fullname) &&
             (identical(other.noTelp1, noTelp1) || other.noTelp1 == noTelp1) &&
             (identical(other.noTelp2, noTelp2) || other.noTelp2 == noTelp2) &&
-            (identical(other.email1, email1) || other.email1 == email1) &&
+            (identical(other.email, email) || other.email == email) &&
             (identical(other.email2, email2) || other.email2 == email2) &&
-            (identical(other.deptList, deptList) ||
-                other.deptList == deptList) &&
             (identical(other.photo, photo) || other.photo == photo) &&
             (identical(other.password, password) ||
                 other.password == password));
@@ -325,8 +382,23 @@ class _$_UserModelWithPassword implements _UserModelWithPassword {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, idUser, idKary, imeiHp, nama,
-      fullname, noTelp1, noTelp2, email1, email2, deptList, photo, password);
+  int get hashCode => Object.hash(
+      runtimeType,
+      idUser,
+      idKary,
+      ktp,
+      deptList,
+      company,
+      jabatan,
+      imeiHp,
+      nama,
+      fullname,
+      noTelp1,
+      noTelp2,
+      email,
+      email2,
+      photo,
+      password);
 
   @JsonKey(ignore: true)
   @override
@@ -347,14 +419,17 @@ abstract class _UserModelWithPassword implements UserModelWithPassword {
   const factory _UserModelWithPassword(
       {@JsonKey(name: 'id_user') required final int? idUser,
       required final String? idKary,
+      @JsonKey(name: 'ktp') required final String? ktp,
+      @JsonKey(name: 'dept') required final String? deptList,
+      @JsonKey(name: 'comp') required final String? company,
+      @JsonKey(name: 'jbt') required final String? jabatan,
       @JsonKey(name: 'imei_hp') required final String? imeiHp,
       required final String? nama,
       required final String? fullname,
       @JsonKey(name: 'no_telp1') required final String? noTelp1,
       @JsonKey(name: 'no_telp2') required final String? noTelp2,
-      required final String? email1,
+      required final String? email,
       required final String? email2,
-      @JsonKey(name: 'dept_list') required final String? deptList,
       required final String? photo,
       required final String? password}) = _$_UserModelWithPassword;
 
@@ -366,6 +441,18 @@ abstract class _UserModelWithPassword implements UserModelWithPassword {
   int? get idUser;
   @override
   String? get idKary;
+  @override
+  @JsonKey(name: 'ktp')
+  String? get ktp;
+  @override
+  @JsonKey(name: 'dept')
+  String? get deptList;
+  @override
+  @JsonKey(name: 'comp')
+  String? get company;
+  @override
+  @JsonKey(name: 'jbt')
+  String? get jabatan;
   @override
   @JsonKey(name: 'imei_hp')
   String? get imeiHp;
@@ -380,12 +467,9 @@ abstract class _UserModelWithPassword implements UserModelWithPassword {
   @JsonKey(name: 'no_telp2')
   String? get noTelp2;
   @override
-  String? get email1;
+  String? get email;
   @override
   String? get email2;
-  @override
-  @JsonKey(name: 'dept_list')
-  String? get deptList;
   @override
   String? get photo;
   @override

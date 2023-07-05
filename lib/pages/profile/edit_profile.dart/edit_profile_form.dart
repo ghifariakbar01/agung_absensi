@@ -33,7 +33,7 @@ class EditProfileForm extends ConsumerWidget {
             decoration: Themes.formStyle('Masukkan email'),
             style: Themes.customColor(FontWeight.w500, 15, Colors.black),
             keyboardType: TextInputType.emailAddress,
-            initialValue: user.email1,
+            initialValue: user.email,
             onChanged: (value) => ref
                 .read(editProfileNotifierProvider.notifier)
                 .changeEmail1(value),

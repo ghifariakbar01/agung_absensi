@@ -41,7 +41,8 @@ class AuthRemoteService {
         "username": "$userId",
         "password": "$password",
         "mode": "SELECT",
-        "command": "SELECT * FROM mst_user WHERE idKary = '$idKaryawan'",
+        "command":
+            "SELECT *, (select nama from mst_dept where id_dept = A.id_dept) as dept, (select nama from mst_comp where id_comp = A.id_comp) as comp, (select nama from mst_jabatan where id_jbt = A.id_jbt) as jbt FROM mst_user A WHERE idKary = '$idKaryawan'",
       });
 
       log('data ${jsonEncode(data)}');
@@ -62,18 +63,22 @@ class AuthRemoteService {
               final listSelected = list[0];
 
               final UserModelWithPassword user = UserModelWithPassword(
-                  idUser: listSelected['id_user'] ?? '',
-                  idKary: listSelected['IdKary'] ?? '',
-                  deptList: listSelected['dept_list'] ?? '',
-                  email1: listSelected['email'] ?? '',
-                  email2: listSelected['email2'] ?? '',
-                  noTelp1: listSelected['no_telp1'] ?? '',
-                  noTelp2: listSelected['no_telp2'] ?? '',
-                  fullname: listSelected['fullname'] ?? '',
-                  nama: listSelected['nama'] ?? '',
-                  password: password,
-                  photo: listSelected['picture'],
-                  imeiHp: listSelected['imei_hp'] ?? '');
+                idUser: listSelected['id_user'] ?? '',
+                idKary: listSelected['IdKary'] ?? '',
+                company: listSelected['comp'] ?? '',
+                deptList: listSelected['dept'] ?? '',
+                email2: listSelected['email2'] ?? '',
+                email: listSelected['email'] ?? '',
+                fullname: listSelected['fullname'] ?? '',
+                imeiHp: listSelected['imei_hp'] ?? '',
+                jabatan: listSelected['jbt'] ?? '',
+                ktp: listSelected['ktp'] ?? '',
+                nama: listSelected['nama'] ?? '',
+                noTelp1: listSelected['no_telp1'] ?? '',
+                noTelp2: listSelected['no_telp2'] ?? '',
+                photo: listSelected['picture'],
+                password: password,
+              );
 
               return AuthResponse.withUser(user);
             } catch (_) {
