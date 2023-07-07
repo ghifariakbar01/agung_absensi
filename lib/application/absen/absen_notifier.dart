@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:face_net_authentication/application/absen/absen_state.dart';
+import 'package:face_net_authentication/infrastructure/remote_response.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../infrastructure/absen/absen_repository.dart';
@@ -14,14 +15,22 @@ class AbsenNotifier extends StateNotifier<AbsenState> {
     state = absen;
   }
 
-  Future<void> getAbsen() async {
-    final response = await _absenRepository.getAbsen();
-
-    log('getAbsen() response $response');
+  Future<void> getAbsen(
+      {required DateTime date,
+      required Function(AbsenState absen) onAbsen}) async {
+    final response = await _absenRepository.getAbsen(date: date);
 
     response.when(
-        withNewData: ((data) => changeAbsen(data)),
+        withNewData: ((data) => onAbsen(data)),
         failure: (int? errorCode, String? message) =>
-            changeAbsen(AbsenState.failure()));
+            onAbsen(AbsenState.failure()));
+  }
+
+  Future<void> getAbsenSaved(
+      {required DateTime date,
+      Function(RemoteResponse<AbsenState>)? onAbsen}) async {
+    final response = await _absenRepository.getAbsen(date: date);
+
+    if (onAbsen != null) await onAbsen(response);
   }
 }

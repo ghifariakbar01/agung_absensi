@@ -93,10 +93,10 @@ class ImeiIntroductionPage extends ConsumerWidget {
                       label: 'Apakah anda yakin?',
                       labelDescription:
                           'Jika anda sudah mengerti instruksi di atas, tap YA',
-                      onPressed: () {
+                      onPressed: () async {
                         context.pop();
 
-                        understood(
+                        await understood(
                             true,
                             () => ref
                                 .refresh(imeiIntroductionPreference(context)));
@@ -110,9 +110,9 @@ class ImeiIntroductionPage extends ConsumerWidget {
 Future<void> understood(bool understood, Function onUnderstood) async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-  prefs.setBool('imei_introduction', true);
+  await prefs.setBool('imei_introduction', true);
 
-  onUnderstood();
+  await onUnderstood();
 }
 
 Widget instructionImage(int number) => Padding(

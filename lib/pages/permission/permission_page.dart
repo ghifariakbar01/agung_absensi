@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/application/auth/auth_notifier.dart';
 
@@ -65,11 +63,9 @@ class PermissionPage extends HookConsumerWidget {
                   await ref.read(imeiIntroductionPreference.future);
 
               if (imeiInstructionPage == true) {
-                log('imeiInstructionPage != null ${imeiInstructionPage != null} imeiInstructionPage == true ${imeiInstructionPage == true}');
-
                 context.replaceNamed(RouteNames.welcomeNameRoute);
               } else {
-                context.replaceNamed(RouteNames.imeiInstructionNameRoute);
+                navigateToImeiInstructionPage(context);
               }
             }();
             break;
@@ -87,5 +83,19 @@ class PermissionPage extends HookConsumerWidget {
         LoadingOverlay(isLoading: false),
       ],
     );
+  }
+
+  // Curried function
+  void Function(BuildContext) navigateToWelcomePage(BuildContext context) {
+    return (context) {
+      context.replaceNamed(RouteNames.welcomeNameRoute);
+    };
+  }
+
+  void Function(BuildContext) navigateToImeiInstructionPage(
+      BuildContext context) {
+    return (context) {
+      context.replaceNamed(RouteNames.imeiInstructionNameRoute);
+    };
   }
 }

@@ -18,9 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$ImeiAuthState {
   String get imei => throw _privateConstructorUsedError;
   bool get isGetting => throw _privateConstructorUsedError;
-  Option<Either<UserFailure, String?>> get failureOrSuccessOption =>
-      throw _privateConstructorUsedError;
-  Option<Either<AuthFailure, Unit>> get failureOrSuccessOptionClear =>
+  Option<Either<ImeiFailure, String?>> get failureOrSuccessOption =>
       throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -37,8 +35,7 @@ abstract class $ImeiAuthStateCopyWith<$Res> {
   $Res call(
       {String imei,
       bool isGetting,
-      Option<Either<UserFailure, String?>> failureOrSuccessOption,
-      Option<Either<AuthFailure, Unit>> failureOrSuccessOptionClear});
+      Option<Either<ImeiFailure, String?>> failureOrSuccessOption});
 }
 
 /// @nodoc
@@ -57,7 +54,6 @@ class _$ImeiAuthStateCopyWithImpl<$Res, $Val extends ImeiAuthState>
     Object? imei = null,
     Object? isGetting = null,
     Object? failureOrSuccessOption = null,
-    Object? failureOrSuccessOptionClear = null,
   }) {
     return _then(_value.copyWith(
       imei: null == imei
@@ -71,11 +67,7 @@ class _$ImeiAuthStateCopyWithImpl<$Res, $Val extends ImeiAuthState>
       failureOrSuccessOption: null == failureOrSuccessOption
           ? _value.failureOrSuccessOption
           : failureOrSuccessOption // ignore: cast_nullable_to_non_nullable
-              as Option<Either<UserFailure, String?>>,
-      failureOrSuccessOptionClear: null == failureOrSuccessOptionClear
-          ? _value.failureOrSuccessOptionClear
-          : failureOrSuccessOptionClear // ignore: cast_nullable_to_non_nullable
-              as Option<Either<AuthFailure, Unit>>,
+              as Option<Either<ImeiFailure, String?>>,
     ) as $Val);
   }
 }
@@ -91,8 +83,7 @@ abstract class _$$_ImeiAuthStateCopyWith<$Res>
   $Res call(
       {String imei,
       bool isGetting,
-      Option<Either<UserFailure, String?>> failureOrSuccessOption,
-      Option<Either<AuthFailure, Unit>> failureOrSuccessOptionClear});
+      Option<Either<ImeiFailure, String?>> failureOrSuccessOption});
 }
 
 /// @nodoc
@@ -109,7 +100,6 @@ class __$$_ImeiAuthStateCopyWithImpl<$Res>
     Object? imei = null,
     Object? isGetting = null,
     Object? failureOrSuccessOption = null,
-    Object? failureOrSuccessOptionClear = null,
   }) {
     return _then(_$_ImeiAuthState(
       imei: null == imei
@@ -123,11 +113,7 @@ class __$$_ImeiAuthStateCopyWithImpl<$Res>
       failureOrSuccessOption: null == failureOrSuccessOption
           ? _value.failureOrSuccessOption
           : failureOrSuccessOption // ignore: cast_nullable_to_non_nullable
-              as Option<Either<UserFailure, String?>>,
-      failureOrSuccessOptionClear: null == failureOrSuccessOptionClear
-          ? _value.failureOrSuccessOptionClear
-          : failureOrSuccessOptionClear // ignore: cast_nullable_to_non_nullable
-              as Option<Either<AuthFailure, Unit>>,
+              as Option<Either<ImeiFailure, String?>>,
     ));
   }
 }
@@ -138,21 +124,18 @@ class _$_ImeiAuthState implements _ImeiAuthState {
   const _$_ImeiAuthState(
       {required this.imei,
       required this.isGetting,
-      required this.failureOrSuccessOption,
-      required this.failureOrSuccessOptionClear});
+      required this.failureOrSuccessOption});
 
   @override
   final String imei;
   @override
   final bool isGetting;
   @override
-  final Option<Either<UserFailure, String?>> failureOrSuccessOption;
-  @override
-  final Option<Either<AuthFailure, Unit>> failureOrSuccessOptionClear;
+  final Option<Either<ImeiFailure, String?>> failureOrSuccessOption;
 
   @override
   String toString() {
-    return 'ImeiAuthState(imei: $imei, isGetting: $isGetting, failureOrSuccessOption: $failureOrSuccessOption, failureOrSuccessOptionClear: $failureOrSuccessOptionClear)';
+    return 'ImeiAuthState(imei: $imei, isGetting: $isGetting, failureOrSuccessOption: $failureOrSuccessOption)';
   }
 
   @override
@@ -164,16 +147,12 @@ class _$_ImeiAuthState implements _ImeiAuthState {
             (identical(other.isGetting, isGetting) ||
                 other.isGetting == isGetting) &&
             (identical(other.failureOrSuccessOption, failureOrSuccessOption) ||
-                other.failureOrSuccessOption == failureOrSuccessOption) &&
-            (identical(other.failureOrSuccessOptionClear,
-                    failureOrSuccessOptionClear) ||
-                other.failureOrSuccessOptionClear ==
-                    failureOrSuccessOptionClear));
+                other.failureOrSuccessOption == failureOrSuccessOption));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, imei, isGetting,
-      failureOrSuccessOption, failureOrSuccessOptionClear);
+  int get hashCode =>
+      Object.hash(runtimeType, imei, isGetting, failureOrSuccessOption);
 
   @JsonKey(ignore: true)
   @override
@@ -186,19 +165,15 @@ abstract class _ImeiAuthState implements ImeiAuthState {
   const factory _ImeiAuthState(
       {required final String imei,
       required final bool isGetting,
-      required final Option<Either<UserFailure, String?>>
-          failureOrSuccessOption,
-      required final Option<Either<AuthFailure, Unit>>
-          failureOrSuccessOptionClear}) = _$_ImeiAuthState;
+      required final Option<Either<ImeiFailure, String?>>
+          failureOrSuccessOption}) = _$_ImeiAuthState;
 
   @override
   String get imei;
   @override
   bool get isGetting;
   @override
-  Option<Either<UserFailure, String?>> get failureOrSuccessOption;
-  @override
-  Option<Either<AuthFailure, Unit>> get failureOrSuccessOptionClear;
+  Option<Either<ImeiFailure, String?>> get failureOrSuccessOption;
   @override
   @JsonKey(ignore: true)
   _$$_ImeiAuthStateCopyWith<_$_ImeiAuthState> get copyWith =>

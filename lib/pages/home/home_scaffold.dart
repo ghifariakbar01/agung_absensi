@@ -7,7 +7,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../constants/assets.dart';
 import '../../domain/absen_failure.dart';
-import '../../style/style.dart';
 import '../../utils/string_utils.dart';
 import '../widgets/v_dialogs.dart';
 import 'home.dart';
@@ -41,7 +40,11 @@ class HomeScaffold extends HookConsumerWidget {
                         ), (_) async {
                   debugger(message: 'called');
 
-                  await ref.read(absenNotifierProvidier.notifier).getAbsen();
+                  await ref.read(absenNotifierProvidier.notifier).getAbsen(
+                      date: DateTime.now(),
+                      onAbsen: (absen) => ref
+                          .read(absenNotifierProvidier.notifier)
+                          .changeAbsen(absen));
 
                   await showDialog(
                       context: context,

@@ -19,6 +19,7 @@ mixin _$GeofenceCoordinate {
   String get id => throw _privateConstructorUsedError;
   String get nama => throw _privateConstructorUsedError;
   Coordinate get coordinate => throw _privateConstructorUsedError;
+  double get minDistance => throw _privateConstructorUsedError;
   double get remainingDistance => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -36,6 +37,7 @@ abstract class $GeofenceCoordinateCopyWith<$Res> {
       {String id,
       String nama,
       Coordinate coordinate,
+      double minDistance,
       double remainingDistance});
 
   $CoordinateCopyWith<$Res> get coordinate;
@@ -57,6 +59,7 @@ class _$GeofenceCoordinateCopyWithImpl<$Res, $Val extends GeofenceCoordinate>
     Object? id = null,
     Object? nama = null,
     Object? coordinate = null,
+    Object? minDistance = null,
     Object? remainingDistance = null,
   }) {
     return _then(_value.copyWith(
@@ -72,6 +75,10 @@ class _$GeofenceCoordinateCopyWithImpl<$Res, $Val extends GeofenceCoordinate>
           ? _value.coordinate
           : coordinate // ignore: cast_nullable_to_non_nullable
               as Coordinate,
+      minDistance: null == minDistance
+          ? _value.minDistance
+          : minDistance // ignore: cast_nullable_to_non_nullable
+              as double,
       remainingDistance: null == remainingDistance
           ? _value.remainingDistance
           : remainingDistance // ignore: cast_nullable_to_non_nullable
@@ -100,6 +107,7 @@ abstract class _$$_GeofenceCoordinateCopyWith<$Res>
       {String id,
       String nama,
       Coordinate coordinate,
+      double minDistance,
       double remainingDistance});
 
   @override
@@ -120,6 +128,7 @@ class __$$_GeofenceCoordinateCopyWithImpl<$Res>
     Object? id = null,
     Object? nama = null,
     Object? coordinate = null,
+    Object? minDistance = null,
     Object? remainingDistance = null,
   }) {
     return _then(_$_GeofenceCoordinate(
@@ -135,6 +144,10 @@ class __$$_GeofenceCoordinateCopyWithImpl<$Res>
           ? _value.coordinate
           : coordinate // ignore: cast_nullable_to_non_nullable
               as Coordinate,
+      minDistance: null == minDistance
+          ? _value.minDistance
+          : minDistance // ignore: cast_nullable_to_non_nullable
+              as double,
       remainingDistance: null == remainingDistance
           ? _value.remainingDistance
           : remainingDistance // ignore: cast_nullable_to_non_nullable
@@ -150,6 +163,7 @@ class _$_GeofenceCoordinate implements _GeofenceCoordinate {
       {required this.id,
       required this.nama,
       required this.coordinate,
+      required this.minDistance,
       required this.remainingDistance});
 
   @override
@@ -159,11 +173,13 @@ class _$_GeofenceCoordinate implements _GeofenceCoordinate {
   @override
   final Coordinate coordinate;
   @override
+  final double minDistance;
+  @override
   final double remainingDistance;
 
   @override
   String toString() {
-    return 'GeofenceCoordinate(id: $id, nama: $nama, coordinate: $coordinate, remainingDistance: $remainingDistance)';
+    return 'GeofenceCoordinate(id: $id, nama: $nama, coordinate: $coordinate, minDistance: $minDistance, remainingDistance: $remainingDistance)';
   }
 
   @override
@@ -175,13 +191,15 @@ class _$_GeofenceCoordinate implements _GeofenceCoordinate {
             (identical(other.nama, nama) || other.nama == nama) &&
             (identical(other.coordinate, coordinate) ||
                 other.coordinate == coordinate) &&
+            (identical(other.minDistance, minDistance) ||
+                other.minDistance == minDistance) &&
             (identical(other.remainingDistance, remainingDistance) ||
                 other.remainingDistance == remainingDistance));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, nama, coordinate, remainingDistance);
+  int get hashCode => Object.hash(
+      runtimeType, id, nama, coordinate, minDistance, remainingDistance);
 
   @JsonKey(ignore: true)
   @override
@@ -196,6 +214,7 @@ abstract class _GeofenceCoordinate implements GeofenceCoordinate {
       {required final String id,
       required final String nama,
       required final Coordinate coordinate,
+      required final double minDistance,
       required final double remainingDistance}) = _$_GeofenceCoordinate;
 
   @override
@@ -204,6 +223,8 @@ abstract class _GeofenceCoordinate implements GeofenceCoordinate {
   String get nama;
   @override
   Coordinate get coordinate;
+  @override
+  double get minDistance;
   @override
   double get remainingDistance;
   @override

@@ -71,6 +71,11 @@ class StringUtils {
     return dateTime.toIso8601String().split('T')[0];
   }
 
+  static String formatTanggalJam(String dateTimeString) {
+    DateTime dateTime = DateTime.parse(dateTimeString);
+    return DateFormat('dd-MM-yyyy HH:mm').format(dateTime);
+  }
+
   static String trimmedDate(DateTime dateTime) {
     return dateTime.toString().substring(0, 23);
   }

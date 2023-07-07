@@ -1,10 +1,11 @@
+import 'dart:developer';
+
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../domain/user_failure.dart';
+import '../../domain/imei_failure.dart';
 import '../../shared/providers.dart';
-import '../widgets/alert_helper.dart';
 import 'welcome_imei_scaffold.dart';
 
 class WelcomeImei extends ConsumerStatefulWidget {
@@ -22,20 +23,14 @@ class _WelcomeImeiState extends ConsumerState<WelcomeImei> {
       await ref.read(editProfileNotifierProvider.notifier).getImei();
     });
 
-    ref.listen<Option<Either<UserFailure, String?>>>(
+    ref.listen<Option<Either<ImeiFailure, String?>>>(
       imeiAuthNotifierProvider.select(
         (state) => state.failureOrSuccessOption,
       ),
       (_, failureOrSuccessOption) => failureOrSuccessOption.fold(
           () {},
           (either) => either.fold(
-              (failure) => AlertHelper.showSnackBar(
-                    context,
-                    message: failure.map(
-                        empty: (_) => 'Installation ID belum ada',
-                        errorParsing: (_) => 'Error parsing Installation ID',
-                        unknown: (_) => 'Unknown Installation ID error'),
-                  ),
+              (failure) => (_) => log('imei failure $failure'),
               (imei) => ref
                   .read(imeiAuthNotifierProvider.notifier)
                   .changeSavedImei(imei ?? ''))),

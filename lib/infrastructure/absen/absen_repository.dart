@@ -24,12 +24,14 @@ class AbsenRepository {
     required String lokasi,
     required String latitude,
     required String longitude,
-    required JenisAbsen inOrOut,
     required String jenisAbsen,
+    required JenisAbsen inOrOut,
+    required DateTime date,
   }) async {
     try {
       await _remoteService.absen(
         idAbsenMnl: idAbsenMnl,
+        date: date,
         lokasi: lokasi,
         latitude: latitude,
         longitude: longitude,
@@ -76,9 +78,10 @@ class AbsenRepository {
     }
   }
 
-  Future<RemoteResponse<AbsenState>> getAbsen() async {
+  Future<RemoteResponse<AbsenState>> getAbsen({required DateTime date}) async {
     try {
-      return RemoteResponse.withNewData(await _remoteService.getAbsen());
+      return RemoteResponse.withNewData(
+          await _remoteService.getAbsen(date: date));
     } on NoConnectionException {
       return RemoteResponse.failure(errorCode: 502, message: 'no connection');
     } on RestApiException {
@@ -104,10 +107,9 @@ class AbsenRepository {
   }
 
   Future<Either<RiwayatAbsenFailure, RiwayatAbsenModel>> getRiwayatAbsenByID(
-      {required int page, required String? date}) async {
+      {required String? date}) async {
     try {
-      return right(
-          await _remoteService.getRiwayatAbsenByID(page: page, date: date));
+      return right(await _remoteService.getRiwayatAbsenByID(date: date));
     } on FormatException {
       return left(RiwayatAbsenFailure.wrongFormat());
     } on NoConnectionException {

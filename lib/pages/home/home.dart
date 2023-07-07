@@ -2,7 +2,6 @@ import 'package:face_net_authentication/pages/absen/widgets/user_info.dart';
 
 import 'package:face_net_authentication/shared/providers.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../style/style.dart';
@@ -28,7 +27,10 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
     super.initState();
     // _initializeServices();
     WidgetsBinding.instance.addPostFrameCallback(
-      (_) => ref.read(absenNotifierProvidier.notifier).getAbsen(),
+      (_) => ref.read(absenNotifierProvidier.notifier).getAbsen(
+          date: DateTime.now(),
+          onAbsen: (absen) =>
+              ref.read(absenNotifierProvidier.notifier).changeAbsen(absen)),
     );
   }
 

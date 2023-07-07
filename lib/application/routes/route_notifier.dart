@@ -1,3 +1,4 @@
+import 'package:face_net_authentication/pages/background/background_page.dart';
 import 'package:face_net_authentication/pages/imei_introduction/imei_introduction_page.dart';
 import 'package:face_net_authentication/pages/profile/edit_profile.dart/edit_profile_page.dart';
 import 'package:face_net_authentication/pages/profile/profile_page.dart';
@@ -128,6 +129,12 @@ class RouterNotifier extends ChangeNotifier {
               name: RouteNames.imeiInstructionNameRoute,
               path: RouteNames.imeiInstructionRoute,
               builder: (context, state) => const ImeiIntroductionPage(),
+            ),
+
+            GoRoute(
+              name: RouteNames.absenTersimpanNameRoute,
+              path: RouteNames.absenTersimpanRoute,
+              builder: (context, state) => BackgroundPage(),
             ),
 
             GoRoute(

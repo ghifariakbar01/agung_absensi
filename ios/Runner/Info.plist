@@ -26,6 +26,8 @@
 		<string>This app requires access to your camera to use facial recognition for validating your presence and ensuring security during attendance tracking.</string>
 		<key>NSLocationWhenInUseUsageDescription</key>
 		<string>This app requires access to your location to validate your presence within a specific radius for attendance tracking purposes. Your location information will only be used for this purpose and will not be shared with any third parties.</string>
+		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+		<string>This app requires background access to your location to validate your presence within a specific radius for attendance tracking purposes. Your location will be saved locally. Your location information will only be used for this purpose and will not be shared with any third parties.</string>
 		<key>UILaunchStoryboardName</key>
 		<string>LaunchScreen.storyboard</string>
 		<key>UIMainStoryboardFile</key>

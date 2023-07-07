@@ -61,10 +61,21 @@ class SignInFormNotifier extends StateNotifier<SignInFormState> {
     );
   }
 
-  Future<void> signInAndRemember(
-      {required Function signIn,
-      required Function remember,
-      required Function clear}) async {
+  Future<void> initializeAndRedirect({
+    required Function initializeSavedLocations,
+    required Function initializeGeofenceList,
+    required Function redirect,
+  }) async {
+    await initializeSavedLocations();
+    await initializeGeofenceList();
+    await redirect();
+  }
+
+  Future<void> signInAndRemember({
+    required Function signIn,
+    required Function remember,
+    required Function clear,
+  }) async {
     await signIn();
     if (state.isChecked) {
       await remember();

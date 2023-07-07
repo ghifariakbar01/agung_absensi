@@ -70,11 +70,11 @@ class ProfileScaffold extends ConsumerWidget {
 
                             final isLoggedIn = ref.watch(authNotifierProvider);
 
-                            isLoggedIn == AuthState.authenticated()
-                                ? context
-                                    .replaceNamed(RouteNames.welcomeNameRoute)
-                                : context
-                                    .replaceNamed(RouteNames.signInNameRoute);
+                            if (isLoggedIn == AuthState.authenticated()) {
+                              context.replaceNamed(RouteNames.welcomeNameRoute);
+                            } else {
+                              context.replaceNamed(RouteNames.signInNameRoute);
+                            }
                           })))
             ],
           ),

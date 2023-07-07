@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:face_net_authentication/application/imei/imei_register_state.dart';
 import 'package:face_net_authentication/infrastructure/dio_extensions.dart';
 
 import '../../application/user/user_model.dart';
@@ -104,7 +105,7 @@ class EditProfileRemoteService {
     }
   }
 
-  Future<Unit> registerImei({required String imei}) async {
+  Future<ImeiRegisterResponse> registerImei({required String imei}) async {
     try {
       final data = _dioRequest;
 
@@ -128,9 +129,12 @@ class EditProfileRemoteService {
       final items = response.data?[0];
 
       if (items['status'] == 'Success') {
-        return unit;
+        return ImeiRegisterResponse.withImei(imei: imei);
       } else {
-        throw RestApiException(10);
+        return ImeiRegisterResponse.failure(
+          items['errornum'] as int?,
+          items['error'] as String?,
+        );
       }
     } on FormatException {
       throw FormatException();

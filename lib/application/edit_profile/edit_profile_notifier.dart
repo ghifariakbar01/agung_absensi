@@ -77,6 +77,7 @@ class EditProfileNotifier extends StateNotifier<EditProfileState> {
     if (imeiDBState == ImeiState.registered()) {
       switch (savedImei.isEmpty) {
         case true:
+          debugger(message: 'called');
           await onImeiAlreadyRegistered();
           break;
         case false:
@@ -84,6 +85,8 @@ class EditProfileNotifier extends StateNotifier<EditProfileState> {
             if (imeiDBString == savedImei) {
               return;
             } else if (imeiDBString != savedImei) {
+              debugger(message: 'called');
+
               await onImeiAlreadyRegistered();
             }
           }();
@@ -109,17 +112,13 @@ class EditProfileNotifier extends StateNotifier<EditProfileState> {
 
   Future<void> registerAndShowDialog({
     required Function register,
-    required Function saveImei,
     required Function getImeiCredentials,
     required Function onImeiComplete,
     required Function showDialog,
   }) async {
     await register();
-    await saveImei();
-
     await getImeiCredentials();
     await onImeiComplete();
-
     await showDialog();
   }
 
@@ -139,8 +138,6 @@ class EditProfileNotifier extends StateNotifier<EditProfileState> {
   Future<void> clearImei() async {
     Either<EditFailure, Unit>? failureOrSuccess;
 
-    log('called');
-
     state = state.copyWith(isSubmitting: true, failureOrSuccessOption: none());
 
     failureOrSuccess = await _editProfileRepostiroy.clearImei();
@@ -153,8 +150,6 @@ class EditProfileNotifier extends StateNotifier<EditProfileState> {
   Future<void> registerImei({required String imei}) async {
     Either<EditFailure, Unit>? failureOrSuccess;
 
-    log('called');
-
     state = state.copyWith(isSubmitting: true, failureOrSuccessOption: none());
 
     failureOrSuccess = await _editProfileRepostiroy.registerImei(imei: imei);
@@ -166,8 +161,6 @@ class EditProfileNotifier extends StateNotifier<EditProfileState> {
 
   Future<void> submitEdit() async {
     Either<EditFailure, Unit>? failureOrSuccess;
-
-    log('called');
 
     if (isValid) {
       final noTelp1Str = state.telp1.getOrCrash();

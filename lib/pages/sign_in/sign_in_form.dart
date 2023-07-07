@@ -155,7 +155,7 @@ class _SignInFormState extends ConsumerState<SignInForm> {
                 width: 4,
               ),
               Text(
-                'Remember Me ? ',
+                'Remember Me',
                 style: Themes.blue(FontWeight.normal, 14),
               )
             ],

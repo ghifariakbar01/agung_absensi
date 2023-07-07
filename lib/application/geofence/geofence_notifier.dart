@@ -1,7 +1,10 @@
+import 'dart:convert';
+import 'dart:developer';
 import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:dartz/dartz.dart';
+import 'package:face_net_authentication/application/background_service/saved_location.dart';
 import 'package:geofence_service/geofence_service.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -19,13 +22,6 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
 
   final GeofenceRepository _repository;
 
-  // Geofence list
-
-  // agung probolinggo :  -6.195435,106.8387355
-  // agung cut mutiah : -6.186813,106.834304
-  // agung tanjung priok : -6.1099187,106.8874862
-  // agung cibitong pool : -6.2774306,107.0663507
-
   Future<void> getGeofenceList() async {
     Either<GeofenceFailure, List<GeofenceResponse>> failureOrSuccess;
 
@@ -37,35 +33,41 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
         isGetting: false, failureOrSuccessOption: optionOf(failureOrSuccess));
   }
 
-  List<Geofence> geofenceResponseToList(List<GeofenceResponse> geofenceList) {
+  List<Geofence> geofenceResponseToList(
+      List<GeofenceResponse> geofenceResponseList) {
     final List<Geofence> geofences = [];
 
-    for (var geofence in geofenceList) {
+    for (var geofence in geofenceResponseList) {
       final geofenceCoordinates =
           coordinates(coordinatesString: geofence.latLong);
 
-      // geofenceCoordinates[0] = latitude
-      // geofenceCoordinates[1] = longitude
+      final radius = getRadius(geofence.radius);
 
       geofences.addAll([
         Geofence(
-          id: geofence.id.toString(),
-          latitude: -geofenceCoordinates[0],
-          longitude: geofenceCoordinates[1],
-          data: geofence.namaLokasi,
-          radius: [
-            GeofenceRadius(id: 'radius_100m', length: 100),
-          ],
-        ),
+            id: geofence.id.toString(),
+            latitude: -geofenceCoordinates[0],
+            longitude: geofenceCoordinates[1],
+            data: geofence.namaLokasi,
+            radius: radius),
       ]);
-
-      print(
-          'geofence ${geofences.last.data} ${geofences.last.id} ${geofences.last.latitude} ${geofences.last.longitude} ${geofences.last.radius.last.length} ${geofences.last.remainingDistance} ${geofences.last.radius.first.remainingDistance}');
-
-      // log('geofence ${geofenceListStatic.first.data} ${geofenceListStatic.first.id} ${geofenceListStatic.first.latitude} ${geofenceListStatic.first.longitude} ${geofenceListStatic.first.radius.first.length} ${geofenceListStatic.first.remainingDistance} ${geofenceListStatic.first.radius.first.remainingDistance}');
     }
 
     return geofences;
+  }
+
+  List<GeofenceRadius> getRadius(String response) {
+    final List<GeofenceRadius> list = [];
+
+    final clean = response.replaceAll("u0027", "\"").replaceAll("mu0027", "\"");
+
+    final radius = jsonDecode(clean) as Map<String, dynamic>;
+
+    radius.forEach((key, value) {
+      list.add(GeofenceRadius(id: key, length: (value as int).toDouble()));
+    });
+
+    return list;
   }
 
   List<double> coordinates({required String coordinatesString}) {
@@ -78,11 +80,13 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
 
   // Geofence initializatioin
 
-  Future<void> initializeGeoFence(List<Geofence> geofenceListAdditional) async {
+  Future<void> initializeGeoFence(List<Geofence> geofenceListAdditional,
+      List<SavedLocation>? savedLocations) async {
     final _geofenceService = initialize();
 
     _geofenceService.addLocationChangeListener(
-      (location) => onLocationChanged(location, geofenceListAdditional),
+      (location) =>
+          onLocationChanged(location, savedLocations, geofenceListAdditional),
     );
 
     _geofenceService.addStreamErrorListener(onErrorStream);
@@ -109,8 +113,21 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
   // Geofence listener
 
   // This function is to be called when the location has changed.
-  onLocationChanged(Location location, List<Geofence> coordinates) {
+  onLocationChanged(Location location, List<SavedLocation>? locations,
+      List<Geofence> coordinates) {
     print('location: ${location.toJson()}');
+
+    if (locations != null) {
+      final geofenceCoordinatesSaved = state.geofenceCoordinatesSaved;
+
+      final designatedCoordinate = convertSavedLocationsToLocations(locations);
+
+      updateAndChangeNearestSaved(
+          coordinates: coordinates,
+          designatedCoordinate: designatedCoordinate,
+          geofenceCoordinatesSaved: geofenceCoordinatesSaved);
+    }
+
     state = state.copyWith(currentLocation: location);
 
     final geofenceCoordinates = state.geofenceCoordinates;
@@ -134,10 +151,13 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
 
   // Utils
 
-  void stop(GeofenceService _geofenceService,
-      List<GeofenceResponse> geofenceList, List<Geofence> geofence) {
+  void stop(
+      GeofenceService _geofenceService,
+      List<GeofenceResponse> geofenceList,
+      List<Geofence> geofence,
+      List<SavedLocation> savedLocations) {
     _geofenceService.removeLocationChangeListener(
-        onLocationChanged(geofenceList as Location, geofence));
+        onLocationChanged(geofenceList as Location, savedLocations, geofence));
     _geofenceService.removeStreamErrorListener(onErrorStream);
     _geofenceService.clearAllListeners();
     _geofenceService.stop();
@@ -153,24 +173,66 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
             nama: coordinate.data,
             coordinate: Coordinate(
                 latitude: coordinate.latitude, longitude: coordinate.longitude),
+            minDistance: coordinate.radius.isNotEmpty
+                ? coordinate.radius.first.length
+                : 100,
             remainingDistance:
                 calculateDistance(designatedCoordinate, coordinate)))
         .toList();
 
     for (var geofence in coordinatesupdated) {
-      print('geofence ${geofence.id}');
-      print('geofence ${geofence.nama}');
-      print('geofence ${geofence.coordinate.latitude}');
-      print('geofence ${geofence.coordinate.latitude}');
+      // print('geofence ${geofence.id}');
+      // print('geofence ${geofence.nama}');
+      // print('geofence ${geofence.coordinate.latitude}');
+      // print('geofence ${geofence.coordinate.latitude}');
     }
 
     return coordinatesupdated;
   }
 
+  List<GeofenceCoordinate> updateCoordinatesSavedFromGeofence(
+      List<Location> designatedCoordinate, List<Geofence> coordinates) {
+    final List<GeofenceCoordinate> coordinatesList = [];
+
+    for (final location in designatedCoordinate) {
+      List<GeofenceCoordinate> coordinatesupdated = coordinates
+          .map(
+            (coordinate) => GeofenceCoordinate(
+                id: coordinate.id,
+                nama: coordinate.data,
+                coordinate: Coordinate(
+                    latitude: coordinate.latitude,
+                    longitude: coordinate.longitude),
+                minDistance: coordinate.radius.isNotEmpty
+                    ? coordinate.radius.first.length
+                    : 100,
+                remainingDistance: calculateDistance(location, coordinate)),
+          )
+          .toList();
+
+      for (var geofence in coordinatesupdated) {
+        print('geofence ${geofence.id}');
+        print('geofence ${geofence.nama}');
+        print('geofence ${geofence.coordinate.latitude}');
+        print('geofence ${geofence.coordinate.latitude}');
+      }
+
+      coordinatesList.addAll(coordinatesupdated);
+    }
+
+    return coordinatesList;
+  }
+
   void changeGeofenceCoordinates(List<GeofenceCoordinate> coordinates) {
-    print('coordinates ${coordinates.first} ${coordinates.last}');
+    // print('coordinates ${coordinates.first} ${coordinates.last}');
 
     state = state.copyWith(geofenceCoordinates: [...coordinates]);
+  }
+
+  void changeGeofenceCoordinatesSaved(List<GeofenceCoordinate> coordinates) {
+    print('coordinates ${coordinates.first} ${coordinates.last}');
+
+    state = state.copyWith(geofenceCoordinatesSaved: [...coordinates]);
   }
 
   getSmallestDistance(List<GeofenceCoordinate> coordinates) {
@@ -178,10 +240,62 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
         (GeofenceCoordinate coordinate) => coordinate.remainingDistance);
   }
 
-  void changeNearest(GeofenceCoordinate coordinate) {
-    print('coordinate nearest $coordinate');
+  /*
+    [
+      ['0', 'nama', Coordinate, 59], 
+      ['1', 'nama dua', Coordinate, 50], 
+      ['2', 'nama tiga', Coordinate, 89], 
+      ['3', 'nama empat', Coordinate, 99] 
+    ]
+  **/
 
+  List<GeofenceCoordinate> getSmallestDistanceSaved(
+      List<GeofenceCoordinate> coordinates, List<Location> locations) {
+    List<GeofenceCoordinate> coordinateList = [];
+
+    for (int i = 0; i < locations.length; i++) {
+      final coordinate = minBy(coordinates,
+          (GeofenceCoordinate coordinate) => coordinate.remainingDistance);
+
+      coordinateList.add(coordinate ?? GeofenceCoordinate.initial());
+    }
+
+    return coordinateList;
+  }
+
+  void changeNearest(GeofenceCoordinate coordinate) {
     state = state.copyWith(nearestCoordinates: coordinate);
+  }
+
+  void changeNearestSaved(List<GeofenceCoordinate> coordinates) {
+    print('coordinate nearest $coordinates');
+
+    state = state.copyWith(nearestCoordinatesSaved: [...coordinates]);
+  }
+
+  List<Location> convertSavedLocationsToLocations(
+      List<SavedLocation>? locations) {
+    if (locations == null) {
+      debugger(message: 'called');
+
+      return [];
+    }
+
+    return locations.map((savedLocation) {
+      return Location(
+        latitude: savedLocation.latitude ?? 0.0,
+        longitude: savedLocation.longitude ?? 0.0,
+        accuracy: 0.0,
+        altitude: 0.0,
+        heading: 0.0,
+        speed: 0.0,
+        speedAccuracy: 0.0,
+        millisecondsSinceEpoch:
+            savedLocation.date.millisecondsSinceEpoch.toDouble(),
+        timestamp: savedLocation.date,
+        isMock: false,
+      );
+    }).toList();
   }
 
   void updateAndChangeNearest(
@@ -192,6 +306,17 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
         updateCoordinatesFromGeofence(designatedCoordinate, coordinates));
 
     changeNearest(getSmallestDistance(geofenceCoordinates));
+  }
+
+  void updateAndChangeNearestSaved(
+      {required List<Location> designatedCoordinate,
+      required List<Geofence> coordinates,
+      required List<GeofenceCoordinate> geofenceCoordinatesSaved}) {
+    changeGeofenceCoordinatesSaved(
+        updateCoordinatesSavedFromGeofence(designatedCoordinate, coordinates));
+
+    changeNearestSaved(getSmallestDistanceSaved(
+        geofenceCoordinatesSaved, designatedCoordinate));
   }
 
   double calculateDistance(Location location, Geofence geofence) {

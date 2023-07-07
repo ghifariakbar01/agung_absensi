@@ -1,16 +1,12 @@
-import 'dart:developer';
-
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../application/routes/route_names.dart';
-
 import '../../domain/auth_failure.dart';
 import '../../shared/providers.dart';
-
-import '../permission/permission_page.dart';
 import '../widgets/alert_helper.dart';
 import '../widgets/loading_overlay.dart';
 import '../widgets/v_button.dart';
@@ -52,26 +48,41 @@ class SignInPage extends HookConsumerWidget {
           (state) => state.failureOrSuccessOption,
         ),
         (_, failureOrSuccessOption) => failureOrSuccessOption.fold(
-              () {},
-              (either) => either.fold(
+            () {},
+            (either) => either.fold(
                   (failure) => AlertHelper.showSnackBar(
-                        context,
-                        message: failure.map(
-                          storage: (_) => 'storage penuh',
-                          server: (value) => value.message ?? 'server error',
-                          noConnection: (_) => 'tidak ada koneksi',
-                        ),
-                      ), (_) async {
-                final visiitedInstructionPage =
-                    await ref.read(imeiIntroductionPreference.future);
+                    context,
+                    message: failure.map(
+                      storage: (_) => 'storage penuh',
+                      server: (value) => value.message ?? 'server error',
+                      noConnection: (_) => 'tidak ada koneksi',
+                    ),
+                  ),
+                  (_) => ref
+                      .read(signInFormNotifierProvider.notifier)
+                      .initializeAndRedirect(
+                        initializeSavedLocations: () => ref
+                            .read(backgroundNotifierProvider.notifier)
+                            .getSavedLocations(),
+                        initializeGeofenceList: () => ref
+                            .read(geofenceProvider.notifier)
+                            .getGeofenceList(),
+                        redirect: () async {
+                          final SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
 
-                if (visiitedInstructionPage == true) {
-                  context.replaceNamed(RouteNames.welcomeNameRoute);
-                } else {
-                  context.replaceNamed(RouteNames.imeiInstructionNameRoute);
-                }
-              }),
-            ));
+                          final introduction =
+                              prefs.getBool('imei_introduction');
+
+                          if (introduction != null && introduction == true) {
+                            context.replaceNamed(RouteNames.welcomeNameRoute);
+                          } else {
+                            context.replaceNamed(
+                                RouteNames.imeiInstructionNameRoute);
+                          }
+                        },
+                      ),
+                )));
 
     final isSubmitting = ref.watch(
       signInFormNotifierProvider.select((state) => state.isSubmitting),
@@ -83,18 +94,21 @@ class SignInPage extends HookConsumerWidget {
         Align(
             alignment: Alignment.bottomCenter,
             child: VButton(
-              onPressed: () {
+              onPressed: () async {
                 FocusScope.of(context).unfocus();
-                ref.read(signInFormNotifierProvider.notifier).signInAndRemember(
-                    signIn: () => ref
-                        .read(signInFormNotifierProvider.notifier)
-                        .signInWithUserIdEmailAndPassword(),
-                    remember: () => ref
-                        .read(signInFormNotifierProvider.notifier)
-                        .rememberInfo(),
-                    clear: () => ref
-                        .read(signInFormNotifierProvider.notifier)
-                        .clearInfo());
+                await ref
+                    .read(signInFormNotifierProvider.notifier)
+                    .signInAndRemember(
+                      signIn: () => ref
+                          .read(signInFormNotifierProvider.notifier)
+                          .signInWithUserIdEmailAndPassword(),
+                      remember: () => ref
+                          .read(signInFormNotifierProvider.notifier)
+                          .rememberInfo(),
+                      clear: () => ref
+                          .read(signInFormNotifierProvider.notifier)
+                          .clearInfo(),
+                    );
               },
               label: 'LOGIN',
             )),

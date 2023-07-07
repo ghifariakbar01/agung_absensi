@@ -8,7 +8,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../constants/assets.dart';
 import '../../domain/auth_failure.dart';
-import '../../domain/user_failure.dart';
 import '../../domain/value_objects_copy.dart';
 import '../../shared/providers.dart';
 import '../widgets/v_dialogs.dart';
@@ -48,41 +47,6 @@ class ProfilePage extends HookConsumerWidget {
                   ),
                 ),
             (_) => ref.read(userNotifierProvider.notifier).getUser()),
-      ),
-    );
-
-    ref.listen<Option<Either<UserFailure, String?>>>(
-      userNotifierProvider.select(
-        (state) => state.failureOrSuccessOption,
-      ),
-      (_, failureOrSuccessOption) => failureOrSuccessOption.fold(
-        () {},
-        (either) => either.fold(
-            (failure) => showDialog(
-                  context: context,
-                  builder: (_) => VSimpleDialog(
-                    label: 'Error',
-                    labelDescription: failure.maybeMap(
-                        empty: (_) => 'No user found',
-                        unknown: (unkn) => '${unkn.errorCode} ${unkn.message}',
-                        orElse: () => ''),
-                    asset: Assets.iconCrossed,
-                  ),
-                ), (user) {
-          final userParsed =
-              ref.read(userNotifierProvider.notifier).parseUser(user);
-
-          userParsed.fold(
-              (failure) => VSimpleDialog(
-                    label: 'Error',
-                    labelDescription: failure.maybeMap(
-                        errorParsing: (error) =>
-                            'Error while parsing user. ${error.message}',
-                        orElse: () => ''),
-                    asset: Assets.iconCrossed,
-                  ),
-              (_) => {});
-        }),
       ),
     );
 

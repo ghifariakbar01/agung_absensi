@@ -45,7 +45,6 @@ class WelcomeImeiScaffold extends ConsumerWidget {
 
                 final user = ref.read(userNotifierProvider.notifier).state.user;
 
-                log('called saved here');
                 log('savedImei imeiDBState imeiResponse user $savedImei $imeiDBState $imeiResponse ${user.imeiHp}');
 
                 await ref.read(editProfileNotifierProvider.notifier).onImei(
@@ -60,60 +59,32 @@ class WelcomeImeiScaffold extends ConsumerWidget {
                       await ref
                           .read(editProfileNotifierProvider.notifier)
                           .registerAndShowDialog(
-                            register: () => ref
-                                .read(editProfileNotifierProvider.notifier)
-                                .registerImei(imei: generatedImei),
-                            saveImei: () => ref
-                                .read(imeiAuthNotifierProvider.notifier)
-                                .saveImei(imei: generatedImei),
-                            getImeiCredentials: () => ref
-                                .read(imeiAuthNotifierProvider.notifier)
-                                .getImeiCredentials(),
-                            onImeiComplete: () => ref
-                                .read(editProfileNotifierProvider.notifier)
-                                .onEditProfile(
-                                    saveUser: () => ref
-                                        .read(userNotifierProvider.notifier)
-                                        .saveUserAfterUpdate(
-                                            idKaryawan:
-                                                IdKaryawan(user.idKary ?? ''),
-                                            password:
-                                                Password(user.password ?? ''),
-                                            userId: UserId(user.nama ?? '')),
-                                    onUser: () => ref
-                                        .read(userNotifierProvider.notifier)
-                                        .getUser()),
-                            showDialog: () => showDialog(
-                              context: context,
-                              builder: (_) => VSimpleDialog(
-                                label: 'Berhasil',
-                                labelDescription:
-                                    'Sukses daftar INSTALLATION ID',
-                                asset: Assets.iconChecked,
-                              ),
-                            ).then((_) => showDialog(
-                                  context: context,
-                                  builder: (_) => VSimpleDialog(
-                                    color: Palette.red,
-                                    label: 'Warning',
-                                    labelDescription:
-                                        'Jika uninstall, unlink hp di setting profil',
-                                    asset: Assets.iconChecked,
-                                  ),
-                                )),
-                          );
+                              register: () => ref
+                                  .read(editProfileNotifierProvider.notifier)
+                                  .registerImei(imei: generatedImei),
+                              getImeiCredentials: () => ref
+                                  .read(imeiAuthNotifierProvider.notifier)
+                                  .getImeiCredentials(),
+                              onImeiComplete: () => ref
+                                  .read(editProfileNotifierProvider.notifier)
+                                  .onEditProfile(
+                                      saveUser: () => ref
+                                          .read(userNotifierProvider.notifier)
+                                          .saveUserAfterUpdate(
+                                              idKaryawan:
+                                                  IdKaryawan(user.idKary ?? ''),
+                                              password:
+                                                  Password(user.password ?? ''),
+                                              userId: UserId(user.nama ?? '')),
+                                      onUser: () => ref
+                                          .read(userNotifierProvider.notifier)
+                                          .getUser()),
+                              showDialog: () => showSuccessDialog(context));
                     },
                     onImeiAlreadyRegistered: () async => ref
                         .read(editProfileNotifierProvider.notifier)
                         .onImeiAlreadyRegistered(
-                          showDialog: () => showDialog(
-                            context: context,
-                            builder: (_) => VSimpleDialog(
-                              label: 'Gagal',
-                              labelDescription: 'Sudah punya INSTALLATION ID',
-                              asset: Assets.iconCrossed,
-                            ),
-                          ),
+                          showDialog: () => showFailedDialog(context),
                           logout: () => ref
                               .read(userNotifierProvider.notifier)
                               .logout(UserModelWithPassword.initial()),
@@ -123,16 +94,46 @@ class WelcomeImeiScaffold extends ConsumerWidget {
                           redirect: () {
                             final isLoggedIn = ref.watch(authNotifierProvider);
 
-                            isLoggedIn == AuthState.authenticated()
-                                ? context
-                                    .replaceNamed(RouteNames.welcomeNameRoute)
-                                : context
-                                    .replaceNamed(RouteNames.signInNameRoute);
+                            if (isLoggedIn == AuthState.authenticated()) {
+                              context.replaceNamed(RouteNames.welcomeNameRoute);
+                            } else {
+                              context.replaceNamed(RouteNames.signInNameRoute);
+                            }
                           },
                         ));
               }),
             ));
 
     return Container();
+  }
+
+  Future<void> showSuccessDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (_) => VSimpleDialog(
+        label: 'Berhasil',
+        labelDescription: 'Sukses daftar INSTALLATION ID',
+        asset: Assets.iconChecked,
+      ),
+    ).then((_) => showDialog(
+          context: context,
+          builder: (_) => VSimpleDialog(
+            color: Palette.red,
+            label: 'Warning',
+            labelDescription: 'Jika uninstall, unlink hp di setting profil',
+            asset: Assets.iconChecked,
+          ),
+        ));
+  }
+
+  Future<void> showFailedDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (_) => VSimpleDialog(
+        label: 'Gagal',
+        labelDescription: 'Sudah punya INSTALLATION ID',
+        asset: Assets.iconCrossed,
+      ),
+    );
   }
 }

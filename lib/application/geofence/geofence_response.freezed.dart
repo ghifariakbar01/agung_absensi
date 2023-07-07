@@ -26,6 +26,7 @@ mixin _$GeofenceResponse {
   String get namaLokasi => throw _privateConstructorUsedError;
   @JsonKey(name: 'geof')
   String get latLong => throw _privateConstructorUsedError;
+  String get radius => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -42,7 +43,8 @@ abstract class $GeofenceResponseCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: 'id_geof') int id,
       @JsonKey(name: 'nm_lokasi') String namaLokasi,
-      @JsonKey(name: 'geof') String latLong});
+      @JsonKey(name: 'geof') String latLong,
+      String radius});
 }
 
 /// @nodoc
@@ -61,6 +63,7 @@ class _$GeofenceResponseCopyWithImpl<$Res, $Val extends GeofenceResponse>
     Object? id = null,
     Object? namaLokasi = null,
     Object? latLong = null,
+    Object? radius = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -74,6 +77,10 @@ class _$GeofenceResponseCopyWithImpl<$Res, $Val extends GeofenceResponse>
       latLong: null == latLong
           ? _value.latLong
           : latLong // ignore: cast_nullable_to_non_nullable
+              as String,
+      radius: null == radius
+          ? _value.radius
+          : radius // ignore: cast_nullable_to_non_nullable
               as String,
     ) as $Val);
   }
@@ -90,7 +97,8 @@ abstract class _$$_GeofenceResponseCopyWith<$Res>
   $Res call(
       {@JsonKey(name: 'id_geof') int id,
       @JsonKey(name: 'nm_lokasi') String namaLokasi,
-      @JsonKey(name: 'geof') String latLong});
+      @JsonKey(name: 'geof') String latLong,
+      String radius});
 }
 
 /// @nodoc
@@ -107,6 +115,7 @@ class __$$_GeofenceResponseCopyWithImpl<$Res>
     Object? id = null,
     Object? namaLokasi = null,
     Object? latLong = null,
+    Object? radius = null,
   }) {
     return _then(_$_GeofenceResponse(
       id: null == id
@@ -121,6 +130,10 @@ class __$$_GeofenceResponseCopyWithImpl<$Res>
           ? _value.latLong
           : latLong // ignore: cast_nullable_to_non_nullable
               as String,
+      radius: null == radius
+          ? _value.radius
+          : radius // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -131,7 +144,8 @@ class _$_GeofenceResponse implements _GeofenceResponse {
   const _$_GeofenceResponse(
       {@JsonKey(name: 'id_geof') required this.id,
       @JsonKey(name: 'nm_lokasi') required this.namaLokasi,
-      @JsonKey(name: 'geof') required this.latLong});
+      @JsonKey(name: 'geof') required this.latLong,
+      required this.radius});
 
   factory _$_GeofenceResponse.fromJson(Map<String, dynamic> json) =>
       _$$_GeofenceResponseFromJson(json);
@@ -145,10 +159,12 @@ class _$_GeofenceResponse implements _GeofenceResponse {
   @override
   @JsonKey(name: 'geof')
   final String latLong;
+  @override
+  final String radius;
 
   @override
   String toString() {
-    return 'GeofenceResponse(id: $id, namaLokasi: $namaLokasi, latLong: $latLong)';
+    return 'GeofenceResponse(id: $id, namaLokasi: $namaLokasi, latLong: $latLong, radius: $radius)';
   }
 
   @override
@@ -159,12 +175,13 @@ class _$_GeofenceResponse implements _GeofenceResponse {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.namaLokasi, namaLokasi) ||
                 other.namaLokasi == namaLokasi) &&
-            (identical(other.latLong, latLong) || other.latLong == latLong));
+            (identical(other.latLong, latLong) || other.latLong == latLong) &&
+            (identical(other.radius, radius) || other.radius == radius));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, namaLokasi, latLong);
+  int get hashCode => Object.hash(runtimeType, id, namaLokasi, latLong, radius);
 
   @JsonKey(ignore: true)
   @override
@@ -182,10 +199,10 @@ class _$_GeofenceResponse implements _GeofenceResponse {
 
 abstract class _GeofenceResponse implements GeofenceResponse {
   const factory _GeofenceResponse(
-          {@JsonKey(name: 'id_geof') required final int id,
-          @JsonKey(name: 'nm_lokasi') required final String namaLokasi,
-          @JsonKey(name: 'geof') required final String latLong}) =
-      _$_GeofenceResponse;
+      {@JsonKey(name: 'id_geof') required final int id,
+      @JsonKey(name: 'nm_lokasi') required final String namaLokasi,
+      @JsonKey(name: 'geof') required final String latLong,
+      required final String radius}) = _$_GeofenceResponse;
 
   factory _GeofenceResponse.fromJson(Map<String, dynamic> json) =
       _$_GeofenceResponse.fromJson;
@@ -199,6 +216,8 @@ abstract class _GeofenceResponse implements GeofenceResponse {
   @override
   @JsonKey(name: 'geof')
   String get latLong;
+  @override
+  String get radius;
   @override
   @JsonKey(ignore: true)
   _$$_GeofenceResponseCopyWith<_$_GeofenceResponse> get copyWith =>

@@ -29,20 +29,20 @@ class ProfileAvatarItem extends StatelessWidget {
                       '$url',
                       fit: BoxFit.cover,
                     )),
-          Positioned(
-              bottom: 0,
-              right: 0,
-              child: CircleAvatar(
-                  backgroundColor: color ?? Palette.primaryColor,
-                  radius: 15,
-                  child: TextButton(
-                      style: ButtonStyle(
-                          padding: MaterialStateProperty.all(EdgeInsets.zero)),
-                      onPressed: () {},
-                      child: Icon(
-                        Icons.edit,
-                        color: Colors.white,
-                      ))))
+          // Positioned(
+          //     bottom: 0,
+          //     right: 0,
+          //     child: CircleAvatar(
+          //         backgroundColor: color ?? Palette.primaryColor,
+          //         radius: 15,
+          //         child: TextButton(
+          //             style: ButtonStyle(
+          //                 padding: MaterialStateProperty.all(EdgeInsets.zero)),
+          //             onPressed: () {},
+          //             child: Icon(
+          //               Icons.edit,
+          //               color: Colors.white,
+          //             ))))
         ],
       ),
     );

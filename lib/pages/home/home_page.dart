@@ -1,19 +1,18 @@
 import 'dart:developer';
 
-import 'package:face_net_authentication/application/absen/absen_enum.dart';
-import 'package:face_net_authentication/application/absen/absen_request.dart';
-import 'package:face_net_authentication/infrastructure/remote_response.dart';
-import 'package:face_net_authentication/pages/home/home_scaffold.dart';
-import 'package:face_net_authentication/pages/widgets/loading_overlay.dart';
-import 'package:face_net_authentication/shared/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../application/absen/absen_enum.dart';
+import '../../application/absen/absen_request.dart';
 import '../../constants/assets.dart';
-import '../../style/style.dart';
+import '../../infrastructure/remote_response.dart';
+import '../../shared/providers.dart';
 import '../../utils/geofence_utils.dart';
+import '../widgets/loading_overlay.dart';
 import '../widgets/v_dialogs.dart';
+import 'home_scaffold.dart';
 
 class HomePage extends HookConsumerWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -31,29 +30,25 @@ class HomePage extends HookConsumerWidget {
         (_, id) async {
       debugger(message: 'called');
 
-      Placemark? lokasi = await getAddressFromCoordinates(
-          currentLocationLatitude, currentLocationLongitude);
-
-      if (lokasi == null) {
-        lokasi = Placemark(
-            street: 'LOCATION UKNOWN',
-            subAdministrativeArea: '',
-            postalCode: '');
-      }
+      final lokasi = await getLokasi(
+          latitude: currentLocationLatitude,
+          longitude: currentLocationLongitude);
 
       id.when(
         withNewData: (absenRequest) => absenRequest?.when(
             absenIn: (id) => ref.read(absenAuthNotifierProvidier.notifier).absen(
                 idAbsenMnl: '${id + 1}',
                 lokasi:
-                    '${lokasi?.street}, ${lokasi?.subAdministrativeArea}, ${lokasi?.postalCode}',
+                    '${lokasi?.street}, ${lokasi?.subAdministrativeArea}, ${lokasi?.postalCode}.',
+                date: DateTime.now(),
                 latitude: '$currentLocationLatitude',
                 longitude: '$currentLocationLongitude',
                 inOrOut: JenisAbsen.absenIn),
             absenOut: (id) => ref.read(absenAuthNotifierProvidier.notifier).absen(
                 idAbsenMnl: '${id + 1}',
                 lokasi:
-                    '${lokasi?.street}, ${lokasi?.subAdministrativeArea}, ${lokasi?.postalCode}',
+                    '${lokasi?.street}, ${lokasi?.subAdministrativeArea}, ${lokasi?.postalCode}.',
+                date: DateTime.now(),
                 latitude: '$currentLocationLatitude',
                 longitude: '$currentLocationLongitude',
                 inOrOut: JenisAbsen.absenOut),
@@ -73,5 +68,20 @@ class HomePage extends HookConsumerWidget {
 
     return Stack(
         children: [const HomeScaffold(), LoadingOverlay(isLoading: isLoading)]);
+  }
+
+  Future<Placemark?> getLokasi({
+    required double? latitude,
+    required double? longitude,
+  }) async {
+    Placemark? lokasi =
+        await getAddressFromCoordinates(latitude ?? 0, longitude ?? 0);
+
+    if (lokasi == null) {
+      lokasi = Placemark(
+          street: 'LOCATION UKNOWN', subAdministrativeArea: '', postalCode: '');
+    }
+
+    return lokasi;
   }
 }

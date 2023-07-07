@@ -1,8 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../domain/auth_failure.dart';
-import '../../domain/user_failure.dart';
+import '../../domain/imei_failure.dart';
 
 part 'imei_auth_state.freezed.dart';
 
@@ -11,13 +10,12 @@ class ImeiAuthState with _$ImeiAuthState {
   const factory ImeiAuthState({
     required String imei,
     required bool isGetting,
-    required Option<Either<UserFailure, String?>> failureOrSuccessOption,
-    required Option<Either<AuthFailure, Unit>> failureOrSuccessOptionClear,
+    required Option<Either<ImeiFailure, String?>> failureOrSuccessOption,
   }) = _ImeiAuthState;
 
   factory ImeiAuthState.initial() => ImeiAuthState(
-      imei: '',
-      failureOrSuccessOption: none(),
-      failureOrSuccessOptionClear: none(),
-      isGetting: false);
+        imei: '',
+        isGetting: false,
+        failureOrSuccessOption: none(),
+      );
 }

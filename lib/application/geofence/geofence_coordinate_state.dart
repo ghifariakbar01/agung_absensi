@@ -6,18 +6,22 @@ part 'geofence_coordinate_state.freezed.dart';
 
 @freezed
 class GeofenceCoordinate with _$GeofenceCoordinate {
-  const factory GeofenceCoordinate(
-      {required String id,
-      required String nama,
-      required Coordinate coordinate,
-      required double remainingDistance}) = _GeofenceCoordinate;
+  const factory GeofenceCoordinate({
+    required String id,
+    required String nama,
+    required Coordinate coordinate,
+    required double minDistance,
+    required double remainingDistance,
+  }) = _GeofenceCoordinate;
 
   factory GeofenceCoordinate.initial() => GeofenceCoordinate(
-      coordinate: Coordinate(
-        latitude: 0,
-        longitude: 0,
-      ),
-      id: '',
-      nama: '',
-      remainingDistance: 0);
+        coordinate: Coordinate(
+          latitude: 0,
+          longitude: 0,
+        ),
+        id: '',
+        nama: '',
+        minDistance: 0,
+        remainingDistance: 0,
+      );
 }

@@ -28,14 +28,12 @@ class RiwayatAbsenNotifier extends StateNotifier<RiwayatAbsenState> {
         isGetting: false, failureOrSuccessOption: optionOf(failureOrSuccess));
   }
 
-  Future<void> getAbsenRiwayatByID(
-      {required int page, required String? date}) async {
+  Future<void> getAbsenRiwayatByID({required String? date}) async {
     Either<RiwayatAbsenFailure, RiwayatAbsenModel> failureOrSuccess;
 
     state = state.copyWith(isGetting: true, failureOrSuccessOption: none());
 
-    failureOrSuccess =
-        await _absenRepository.getRiwayatAbsenByID(page: page, date: date);
+    failureOrSuccess = await _absenRepository.getRiwayatAbsenByID(date: date);
 
     state = state.copyWith(
         isGetting: false,

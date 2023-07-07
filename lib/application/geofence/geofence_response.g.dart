@@ -11,6 +11,7 @@ _$_GeofenceResponse _$$_GeofenceResponseFromJson(Map<String, dynamic> json) =>
       id: json['id_geof'] as int,
       namaLokasi: json['nm_lokasi'] as String,
       latLong: json['geof'] as String,
+      radius: json['radius'] as String,
     );
 
 Map<String, dynamic> _$$_GeofenceResponseToJson(_$_GeofenceResponse instance) =>
@@ -18,4 +19,5 @@ Map<String, dynamic> _$$_GeofenceResponseToJson(_$_GeofenceResponse instance) =>
       'id_geof': instance.id,
       'nm_lokasi': instance.namaLokasi,
       'geof': instance.latLong,
+      'radius': instance.radius,
     };

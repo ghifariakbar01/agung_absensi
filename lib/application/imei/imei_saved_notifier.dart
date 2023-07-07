@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:face_net_authentication/application/imei/imei_auth_state.dart';
 
-import '../../domain/user_failure.dart';
+import '../../domain/imei_failure.dart';
 import '../../infrastructure/imei_repository.dart';
 
 class ImeiAuthNotifier extends StateNotifier<ImeiAuthState> {
@@ -15,14 +15,8 @@ class ImeiAuthNotifier extends StateNotifier<ImeiAuthState> {
 
   Future<bool> hasImei() => _imeiRepository.hasImei();
 
-  Future<Unit> saveImei({required String imei}) async {
-    await _imeiRepository.saveImei(imei: imei);
-
-    return unit;
-  }
-
   Future<void> getImeiCredentials() async {
-    Either<UserFailure, String?> failureOrSuccessOption;
+    Either<ImeiFailure, String?> failureOrSuccessOption;
 
     state = state.copyWith(isGetting: true, failureOrSuccessOption: none());
 

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/application/geofence/geofence_response.dart';
 import 'package:face_net_authentication/infrastructure/geofence/geofence_remote_service.dart';

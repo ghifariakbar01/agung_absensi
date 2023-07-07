@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:face_net_authentication/application/absen/absen_auth_notifier.dart';
 import 'package:face_net_authentication/application/absen/absen_state.dart';
+import 'package:face_net_authentication/application/background_service/background_notifier.dart';
+import 'package:face_net_authentication/application/background_service/background_state.dart';
 import 'package:face_net_authentication/application/edit_profile/edit_profile_notifier.dart';
 import 'package:face_net_authentication/application/imei/imei_auth_state.dart';
 import 'package:face_net_authentication/application/imei/imei_saved_notifier.dart';
@@ -8,6 +10,7 @@ import 'package:face_net_authentication/application/imei/imei_state.dart';
 
 import 'package:face_net_authentication/infrastructure/absen/absen_remote_service.dart';
 import 'package:face_net_authentication/infrastructure/absen/absen_repository.dart';
+import 'package:face_net_authentication/infrastructure/background/background_repository.dart';
 import 'package:face_net_authentication/infrastructure/geofence/geofence_remote_service.dart';
 import 'package:face_net_authentication/infrastructure/geofence/geofence_repository.dart';
 import 'package:face_net_authentication/infrastructure/imei_credentials_storage.dart/imei_secure_credentials_storage.dart';
@@ -63,6 +66,12 @@ final routerProvider = Provider<GoRouter>((ref) {
   );
 });
 
+// Background
+
+final backgroundNotifierProvider =
+    StateNotifierProvider<BackgroundNotifier, BackgroundState>(
+        (ref) => BackgroundNotifier(BackgroundRepository()));
+
 // Auth
 
 final flutterSecureStorageProvider = Provider(
@@ -114,9 +123,8 @@ final editProfileRemoteServiceProvider = Provider(
 );
 
 final editProfileRepositoryProvider = Provider(
-  (ref) => EditProfileRepostiroy(
-    ref.watch(editProfileRemoteServiceProvider),
-  ),
+  (ref) => EditProfileRepostiroy(ref.watch(editProfileRemoteServiceProvider),
+      ref.watch(imeiCredentialsStorageProvider)),
 );
 
 final editProfileNotifierProvider =

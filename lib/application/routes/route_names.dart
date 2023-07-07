@@ -49,4 +49,7 @@ class RouteNames {
 
   static const imeiInstructionNameRoute = 'imeiInstruction';
   static const imeiInstructionRoute = 'imeiInstruction';
+
+  static const absenTersimpanNameRoute = 'absenTersimpan';
+  static const absenTersimpanRoute = 'absenTersimpan';
 }

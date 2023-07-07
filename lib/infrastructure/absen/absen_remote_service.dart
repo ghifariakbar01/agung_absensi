@@ -27,8 +27,7 @@ class AbsenRemoteService {
   final Map<String, String> _dioRequest;
 
   static const String dbName = 'hr_trs_absenmnl_test';
-  final currentDate =
-      StringUtils.midnightDate(DateTime.now().subtract(Duration(days: 1)));
+
   final currentMonth = StringUtils.monthDate(DateTime.now());
   final trimmedNow = StringUtils.trimmedDate(DateTime.now());
 
@@ -39,6 +38,7 @@ class AbsenRemoteService {
     required String longitude,
     required JenisAbsen inOrOut,
     required String jenisAbsen,
+    required DateTime date,
 
     // required String idUser,
     // required String tgl,
@@ -57,6 +57,8 @@ class AbsenRemoteService {
   }) async {
     String command = '';
     String mode = '';
+    final currentDate =
+        StringUtils.midnightDate(date.subtract(Duration(days: 1)));
 
     try {
       if (inOrOut == JenisAbsen.absenIn) {
@@ -162,8 +164,13 @@ class AbsenRemoteService {
     }
   }
 
-  Future<AbsenState> getAbsen() async {
+  Future<AbsenState> getAbsen({
+    required DateTime date,
+  }) async {
     try {
+      final currentDate =
+          StringUtils.midnightDate(date.subtract(Duration(days: 1)));
+
       final String command =
           "SELECT TOP 1 * FROM $dbName WHERE tgl = '$currentDate' AND id_user = ${_userModelWithPassword.idUser}";
 
@@ -254,8 +261,7 @@ class AbsenRemoteService {
     }
   }
 
-  Future<RiwayatAbsenModel> getRiwayatAbsenByID(
-      {required int page, required String? date}) async {
+  Future<RiwayatAbsenModel> getRiwayatAbsenByID({required String? date}) async {
     // DATEFORMAT YYYY - MM - DD
     try {
       final String command =

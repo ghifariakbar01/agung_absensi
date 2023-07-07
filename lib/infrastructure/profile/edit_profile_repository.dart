@@ -1,14 +1,14 @@
-import 'dart:developer';
-
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/domain/edit_failure.dart';
 import 'package:face_net_authentication/infrastructure/profile/edit_profile_remote_service.dart';
 
+import '../credentials_storage/credentials_storage.dart';
 import '../exceptions.dart';
 
 class EditProfileRepostiroy {
-  EditProfileRepostiroy(this._profileRemoteService);
+  EditProfileRepostiroy(this._profileRemoteService, this._credentialsStorage);
 
+  final CredentialsStorage _credentialsStorage;
   final EditProfileRemoteService _profileRemoteService;
 
   Future<Either<EditFailure, String?>> getImei() async {
@@ -45,7 +45,14 @@ class EditProfileRepostiroy {
     try {
       final response = await _profileRemoteService.registerImei(imei: imei);
 
-      return right(response);
+      return response.when(
+          withImei: (imei) async {
+            await _credentialsStorage.save(imei);
+
+            return right(unit);
+          },
+          failure: ((errorCode, message) =>
+              left(EditFailure.server(errorCode, message))));
     } on RestApiException catch (restApi) {
       return left(EditFailure.server(
           restApi.errorCode, 'RestApi exception register imei'));

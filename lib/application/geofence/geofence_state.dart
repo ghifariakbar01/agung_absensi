@@ -16,6 +16,10 @@ class GeofenceState with _$GeofenceState {
       {required List<GeofenceCoordinate> geofenceCoordinates,
       required GeofenceCoordinate nearestCoordinates,
       required Location currentLocation,
+      //
+      required List<GeofenceCoordinate> geofenceCoordinatesSaved,
+      required List<GeofenceCoordinate> nearestCoordinatesSaved,
+      //
       required bool isGetting,
       required Option<Either<GeofenceFailure, List<GeofenceResponse>>>
           failureOrSuccessOption}) = _GeofenceState;
@@ -23,6 +27,8 @@ class GeofenceState with _$GeofenceState {
   factory GeofenceState.initial() => GeofenceState(
       geofenceCoordinates: [],
       nearestCoordinates: GeofenceCoordinate.initial(),
+      geofenceCoordinatesSaved: [],
+      nearestCoordinatesSaved: [],
       currentLocation: Location.fromJson(dummyLocation),
       isGetting: false,
       failureOrSuccessOption: none());

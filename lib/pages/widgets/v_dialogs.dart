@@ -27,14 +27,14 @@ class VAlertDialog extends StatelessWidget {
           label,
           style: Themes.white(
             FontWeight.bold,
-            15,
+            20,
           ),
         ),
         content: Text(
           labelDescription,
           style: Themes.white(
             FontWeight.bold,
-            20,
+            15,
           ),
         ),
         actions: [
