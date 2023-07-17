@@ -15,15 +15,17 @@ class AbsenNotifier extends StateNotifier<AbsenState> {
     state = absen;
   }
 
-  Future<void> getAbsen(
-      {required DateTime date,
-      required Function(AbsenState absen) onAbsen}) async {
+  Future<void> getAbsen({
+    required DateTime date,
+    required Function(AbsenState absen) onAbsen,
+    required Function() onNoConnection,
+  }) async {
     final response = await _absenRepository.getAbsen(date: date);
 
     response.when(
         withNewData: ((data) => onAbsen(data)),
         failure: (int? errorCode, String? message) =>
-            onAbsen(AbsenState.failure()));
+            errorCode == 500 ? onNoConnection() : null);
   }
 
   Future<void> getAbsenSaved(

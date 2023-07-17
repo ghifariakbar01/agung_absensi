@@ -95,7 +95,7 @@ class PermissionPage extends HookConsumerWidget {
   void Function(BuildContext) navigateToImeiInstructionPage(
       BuildContext context) {
     return (context) {
-      context.replaceNamed(RouteNames.imeiInstructionNameRoute);
+      context.replaceNamed(RouteNames.imeiInstructionNameRoute, extra: true);
     };
   }
 }

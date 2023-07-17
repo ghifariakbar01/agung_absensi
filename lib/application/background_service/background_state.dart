@@ -14,11 +14,12 @@ class BackgroundState with _$BackgroundState {
     required bool isGetting,
     required Option<Either<BackgroundFailure, List<SavedLocation>>>
         failureOrSuccessOption,
+    required Option<Either<BackgroundFailure, Unit>> failureOrSuccessOptionSave,
   }) = _BackgroundState;
 
   factory BackgroundState.initial() => BackgroundState(
-        savedBackgroundItems: [],
-        isGetting: false,
-        failureOrSuccessOption: none(),
-      );
+      savedBackgroundItems: [],
+      isGetting: false,
+      failureOrSuccessOption: none(),
+      failureOrSuccessOptionSave: none());
 }

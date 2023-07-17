@@ -16,7 +16,7 @@ class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
 
   final AbsenRepository _absenRepository;
 
-  void absen({
+  Future<void> absen({
     required String idAbsenMnl,
     required String lokasi,
     required String latitude,
@@ -48,7 +48,7 @@ class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
         failureOrSuccessOption: optionOf(failureOrSuccess));
   }
 
-  void absenSaved({
+  Future<void> absenSaved({
     required String idAbsenMnl,
     required String lokasi,
     required String latitude,
@@ -82,19 +82,27 @@ class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
   }
 
   Future<RemoteResponse<AbsenRequest>> getAbsenID(JenisAbsen jenisAbsen) async {
-    final response = await _absenRepository.getAbsenId(jenisAbsen);
+    try {
+      final response = await _absenRepository.getAbsenId(jenisAbsen);
 
-    debugger(message: 'called');
+      log('response $response');
 
-    log('id $response');
+      debugger(message: 'called');
 
-    return response;
+      return response;
+    } catch (e) {
+      log('response error $e');
+
+      debugger(message: 'called');
+    }
+
+    return RemoteResponse.failure();
   }
 
   void changeAbsenState(RemoteResponse<AbsenRequest> absenId) {
-    debugger(message: 'called');
-
     log('absenId $absenId');
+
+    debugger(message: 'called');
 
     state = state.copyWith(absenId: absenId);
   }
@@ -114,13 +122,62 @@ class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
     state = state.copyWith(backgroundItemState: backgroundItemState);
   }
 
-  void absenAndUpdate(JenisAbsen jenisAbsen) async {
+  Future<void> absenOneLiner({
+    required BackgroundItemState backgroundItemState,
+    required JenisAbsen jenisAbsen,
+    required Future<void> Function() onAbsen,
+    required Future<void> Function() deleteSaved,
+    required Future<void> Function() reinitializeDependencies,
+    required Future<void> Function() getAbsenState,
+  }) async {
+    changeBackgroundAbsenStateSaved(backgroundItemState);
+
+    final id = await absenAndUpdateSavedReturned(jenisAbsen: jenisAbsen);
+
+    final location = backgroundItemState.savedLocations;
+
+    id.when(
+      withNewData: (absenRequest) => absenRequest.when(
+          absenIn: (id) async {
+            await absenSaved(
+                idAbsenMnl: '${id + 1}',
+                lokasi: '${location.alamat}',
+                date: location.date,
+                latitude: '${location.latitude ?? 0}',
+                longitude: '${location.longitude ?? 0}',
+                inOrOut: JenisAbsen.absenIn);
+
+            await onAbsen();
+            await deleteSaved();
+            await reinitializeDependencies();
+            await getAbsenState();
+          },
+          absenOut: (id) async {
+            await absenSaved(
+                idAbsenMnl: '${id + 1}',
+                lokasi: '${location.alamat}',
+                date: location.date,
+                latitude: '${location.latitude ?? 0}',
+                longitude: '${location.longitude ?? 0}',
+                inOrOut: JenisAbsen.absenOut);
+
+            await onAbsen();
+            await deleteSaved();
+            await reinitializeDependencies();
+            await getAbsenState();
+          },
+          absenUnknown: () {}),
+      failure: (code, message) => {},
+    );
+  }
+
+  Future<void> absenAndUpdate(JenisAbsen jenisAbsen) async {
+    state = state.copyWith(
+        absenId: RemoteResponse.withNewData(AbsenRequest.absenUnknown()));
+
     final absen = await getAbsenID(jenisAbsen);
 
-    absen.when(
-        withNewData: (absenId) =>
-            changeAbsenState(RemoteResponse.withNewData(absenId)),
-        failure: (_, __) {});
+    state = state.copyWith(absenId: absen);
   }
 
   Future<void> absenAndUpdateSaved({
@@ -132,5 +189,13 @@ class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
         withNewData: (absenId) =>
             changeIDAbsenStateSaved(RemoteResponse.withNewData(absenId)),
         failure: (_, __) {});
+  }
+
+  Future<RemoteResponse<AbsenRequest>> absenAndUpdateSavedReturned({
+    required JenisAbsen jenisAbsen,
+  }) async {
+    final absen = await getAbsenID(jenisAbsen);
+
+    return absen;
   }
 }

@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/pages/widgets/loading_overlay.dart';
 import 'package:face_net_authentication/shared/providers.dart';
+import 'package:flutter/material.dart';
 
 import 'package:flutter/src/widgets/basic.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -12,11 +15,25 @@ import '../../domain/background_failure.dart';
 import '../widgets/alert_helper.dart';
 import 'background_scaffold.dart';
 
-class BackgroundPage extends ConsumerWidget {
+class BackgroundPage extends ConsumerStatefulWidget {
   const BackgroundPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<BackgroundPage> createState() => _BackgroundPageState();
+}
+
+class _BackgroundPageState extends ConsumerState<BackgroundPage> {
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async => await ref
+        .read(backgroundNotifierProvider.notifier)
+        .getSavedLocations());
+  }
+
+  @override
+  Widget build(BuildContext context) {
     ref.listen<Option<Either<BackgroundFailure, List<SavedLocation>>>>(
         backgroundNotifierProvider.select(
           (state) => state.failureOrSuccessOption,
@@ -31,19 +48,26 @@ class BackgroundPage extends ConsumerWidget {
                           unknown: (value) =>
                               'Error ${value.errorCode} ${value.message} ',
                         ),
-                      ),
-                  (savedLocations) => ref
+                      ), (savedLocations) {
+                if (savedLocations.isNotEmpty) {
+                  debugger(message: 'called');
+
+                  log('savedLocations $savedLocations');
+
+                  ref
                       .read(backgroundNotifierProvider.notifier)
                       .processSavedLocations(
                         locations: savedLocations,
-                        getAbsenSaved: ({required date, required onAbsen}) =>
-                            ref
-                                .read(absenNotifierProvidier.notifier)
-                                .getAbsenSaved(date: date, onAbsen: onAbsen),
                         onProcessed: ({required items}) => ref
                             .read(backgroundNotifierProvider.notifier)
                             .changeBackgroundItems(items),
-                      )),
+                      );
+                } else {
+                  ref
+                      .read(backgroundNotifierProvider.notifier)
+                      .changeBackgroundItems([]);
+                }
+              }),
             ));
 
     final isLoading = ref.watch(

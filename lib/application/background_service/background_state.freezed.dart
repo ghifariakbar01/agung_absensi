@@ -21,6 +21,8 @@ mixin _$BackgroundState {
   bool get isGetting => throw _privateConstructorUsedError;
   Option<Either<BackgroundFailure, List<SavedLocation>>>
       get failureOrSuccessOption => throw _privateConstructorUsedError;
+  Option<Either<BackgroundFailure, Unit>> get failureOrSuccessOptionSave =>
+      throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $BackgroundStateCopyWith<BackgroundState> get copyWith =>
@@ -37,7 +39,8 @@ abstract class $BackgroundStateCopyWith<$Res> {
       {List<BackgroundItemState> savedBackgroundItems,
       bool isGetting,
       Option<Either<BackgroundFailure, List<SavedLocation>>>
-          failureOrSuccessOption});
+          failureOrSuccessOption,
+      Option<Either<BackgroundFailure, Unit>> failureOrSuccessOptionSave});
 }
 
 /// @nodoc
@@ -56,6 +59,7 @@ class _$BackgroundStateCopyWithImpl<$Res, $Val extends BackgroundState>
     Object? savedBackgroundItems = null,
     Object? isGetting = null,
     Object? failureOrSuccessOption = null,
+    Object? failureOrSuccessOptionSave = null,
   }) {
     return _then(_value.copyWith(
       savedBackgroundItems: null == savedBackgroundItems
@@ -70,6 +74,10 @@ class _$BackgroundStateCopyWithImpl<$Res, $Val extends BackgroundState>
           ? _value.failureOrSuccessOption
           : failureOrSuccessOption // ignore: cast_nullable_to_non_nullable
               as Option<Either<BackgroundFailure, List<SavedLocation>>>,
+      failureOrSuccessOptionSave: null == failureOrSuccessOptionSave
+          ? _value.failureOrSuccessOptionSave
+          : failureOrSuccessOptionSave // ignore: cast_nullable_to_non_nullable
+              as Option<Either<BackgroundFailure, Unit>>,
     ) as $Val);
   }
 }
@@ -86,7 +94,8 @@ abstract class _$$_BackgroundStateCopyWith<$Res>
       {List<BackgroundItemState> savedBackgroundItems,
       bool isGetting,
       Option<Either<BackgroundFailure, List<SavedLocation>>>
-          failureOrSuccessOption});
+          failureOrSuccessOption,
+      Option<Either<BackgroundFailure, Unit>> failureOrSuccessOptionSave});
 }
 
 /// @nodoc
@@ -103,6 +112,7 @@ class __$$_BackgroundStateCopyWithImpl<$Res>
     Object? savedBackgroundItems = null,
     Object? isGetting = null,
     Object? failureOrSuccessOption = null,
+    Object? failureOrSuccessOptionSave = null,
   }) {
     return _then(_$_BackgroundState(
       savedBackgroundItems: null == savedBackgroundItems
@@ -117,6 +127,10 @@ class __$$_BackgroundStateCopyWithImpl<$Res>
           ? _value.failureOrSuccessOption
           : failureOrSuccessOption // ignore: cast_nullable_to_non_nullable
               as Option<Either<BackgroundFailure, List<SavedLocation>>>,
+      failureOrSuccessOptionSave: null == failureOrSuccessOptionSave
+          ? _value.failureOrSuccessOptionSave
+          : failureOrSuccessOptionSave // ignore: cast_nullable_to_non_nullable
+              as Option<Either<BackgroundFailure, Unit>>,
     ));
   }
 }
@@ -127,7 +141,8 @@ class _$_BackgroundState implements _BackgroundState {
   const _$_BackgroundState(
       {required final List<BackgroundItemState> savedBackgroundItems,
       required this.isGetting,
-      required this.failureOrSuccessOption})
+      required this.failureOrSuccessOption,
+      required this.failureOrSuccessOptionSave})
       : _savedBackgroundItems = savedBackgroundItems;
 
   final List<BackgroundItemState> _savedBackgroundItems;
@@ -144,10 +159,12 @@ class _$_BackgroundState implements _BackgroundState {
   @override
   final Option<Either<BackgroundFailure, List<SavedLocation>>>
       failureOrSuccessOption;
+  @override
+  final Option<Either<BackgroundFailure, Unit>> failureOrSuccessOptionSave;
 
   @override
   String toString() {
-    return 'BackgroundState(savedBackgroundItems: $savedBackgroundItems, isGetting: $isGetting, failureOrSuccessOption: $failureOrSuccessOption)';
+    return 'BackgroundState(savedBackgroundItems: $savedBackgroundItems, isGetting: $isGetting, failureOrSuccessOption: $failureOrSuccessOption, failureOrSuccessOptionSave: $failureOrSuccessOptionSave)';
   }
 
   @override
@@ -160,7 +177,11 @@ class _$_BackgroundState implements _BackgroundState {
             (identical(other.isGetting, isGetting) ||
                 other.isGetting == isGetting) &&
             (identical(other.failureOrSuccessOption, failureOrSuccessOption) ||
-                other.failureOrSuccessOption == failureOrSuccessOption));
+                other.failureOrSuccessOption == failureOrSuccessOption) &&
+            (identical(other.failureOrSuccessOptionSave,
+                    failureOrSuccessOptionSave) ||
+                other.failureOrSuccessOptionSave ==
+                    failureOrSuccessOptionSave));
   }
 
   @override
@@ -168,7 +189,8 @@ class _$_BackgroundState implements _BackgroundState {
       runtimeType,
       const DeepCollectionEquality().hash(_savedBackgroundItems),
       isGetting,
-      failureOrSuccessOption);
+      failureOrSuccessOption,
+      failureOrSuccessOptionSave);
 
   @JsonKey(ignore: true)
   @override
@@ -182,7 +204,9 @@ abstract class _BackgroundState implements BackgroundState {
       {required final List<BackgroundItemState> savedBackgroundItems,
       required final bool isGetting,
       required final Option<Either<BackgroundFailure, List<SavedLocation>>>
-          failureOrSuccessOption}) = _$_BackgroundState;
+          failureOrSuccessOption,
+      required final Option<Either<BackgroundFailure, Unit>>
+          failureOrSuccessOptionSave}) = _$_BackgroundState;
 
   @override
   List<BackgroundItemState> get savedBackgroundItems;
@@ -191,6 +215,8 @@ abstract class _BackgroundState implements BackgroundState {
   @override
   Option<Either<BackgroundFailure, List<SavedLocation>>>
       get failureOrSuccessOption;
+  @override
+  Option<Either<BackgroundFailure, Unit>> get failureOrSuccessOptionSave;
   @override
   @JsonKey(ignore: true)
   _$$_BackgroundStateCopyWith<_$_BackgroundState> get copyWith =>

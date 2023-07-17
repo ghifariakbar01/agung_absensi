@@ -32,6 +32,24 @@ class LocationDetail extends ConsumerWidget {
           ],
         ),
 
+        Row(
+          children: [
+            Text(
+              'Jarak Minimum',
+              style: Themes.customColor(FontWeight.bold, 13, Colors.black),
+            ),
+            Text(
+              ' : ',
+              style: Themes.customColor(FontWeight.bold, 13, Colors.black),
+            ),
+            if (nearest.minDistance != null) ...[
+              Text(' ${nearest.minDistance.round()} m',
+                  style: Themes.customColor(
+                      FontWeight.bold, 13, Palette.primaryColor))
+            ]
+          ],
+        ),
+
         //
         Row(
           children: [
@@ -45,7 +63,7 @@ class LocationDetail extends ConsumerWidget {
             ),
             if (nearest.remainingDistance != null) ...[
               Text(' ${nearest.remainingDistance.round()} m',
-                  style: nearest.remainingDistance < 100
+                  style: nearest.remainingDistance < nearest.minDistance
                       ? Themes.customColor(FontWeight.bold, 14, Colors.green)
                       : Themes.customColor(FontWeight.bold, 14, Colors.red)),
             ]

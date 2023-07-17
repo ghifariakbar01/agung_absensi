@@ -100,7 +100,10 @@ class BackgroundScaffold extends ConsumerWidget {
                       date: DateTime.now(),
                       onAbsen: (absen) => ref
                           .read(absenNotifierProvidier.notifier)
-                          .changeAbsen(absen));
+                          .changeAbsen(absen),
+                      onNoConnection: () => ref
+                          .read(absenOfflineModeProvider.notifier)
+                          .state = true);
 
                   await showDialog(
                       context: context,

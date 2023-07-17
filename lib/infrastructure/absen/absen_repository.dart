@@ -71,8 +71,12 @@ class AbsenRepository {
 
       return RemoteResponse.failure(errorCode: 0, message: 'Error null');
     } on NoConnectionException {
-      return RemoteResponse.failure(errorCode: 502, message: 'no connection');
+      debugger(message: 'called');
+
+      return RemoteResponse.failure(errorCode: 500, message: 'no connection');
     } on RestApiException {
+      debugger(message: 'called');
+
       return RemoteResponse.failure(
           errorCode: 502, message: 'Error rest api exception');
     }
@@ -83,7 +87,7 @@ class AbsenRepository {
       return RemoteResponse.withNewData(
           await _remoteService.getAbsen(date: date));
     } on NoConnectionException {
-      return RemoteResponse.failure(errorCode: 502, message: 'no connection');
+      return RemoteResponse.failure(errorCode: 500, message: 'no connection');
     } on RestApiException {
       return RemoteResponse.failure(
           errorCode: 502, message: 'Error rest api exception');

@@ -18,7 +18,7 @@
 
     <application
         android:name="${applicationName}"
-        android:label="Agung HRMS Online"
+        android:label="Agung HRMS Mobile"
         android:icon="@mipmap/ic_launcher"
         android:exported="true"
         >

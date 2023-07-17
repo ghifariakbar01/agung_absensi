@@ -122,7 +122,6 @@ class SignInFormNotifier extends StateNotifier<SignInFormState> {
 
       signInFailureOrSuccess =
           await _repository.signInWithIdKaryawanUsernameAndPassword(
-        idKaryawan: state.idKaryawan,
         userId: state.userId,
         password: state.password,
       );
@@ -137,7 +136,6 @@ class SignInFormNotifier extends StateNotifier<SignInFormState> {
 
   bool get isValid {
     final values = [
-      state.idKaryawan,
       state.userId,
       state.password,
     ];

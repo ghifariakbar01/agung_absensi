@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:face_net_authentication/pages/absen/widgets/user_info.dart';
 
 import 'package:face_net_authentication/shared/providers.dart';
@@ -7,15 +9,15 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../style/style.dart';
 
 import '../widgets/location_detail.dart';
-import 'home_body.dart';
+import 'absen_button.dart';
 
-class MyHomePage extends ConsumerStatefulWidget {
-  MyHomePage({Key? key}) : super(key: key);
+class MyAbsenPage extends ConsumerStatefulWidget {
+  MyAbsenPage({Key? key}) : super(key: key);
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _MyAbsenPageState createState() => _MyAbsenPageState();
 }
 
-class _MyHomePageState extends ConsumerState<MyHomePage> {
+class _MyAbsenPageState extends ConsumerState<MyAbsenPage> {
   // MLService _mlService = locator<MLService>();
   // FaceDetectorService _mlKitService = locator<FaceDetectorService>();
   // CameraService _cameraService = locator<CameraService>();
@@ -26,12 +28,21 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
   void initState() {
     super.initState();
     // _initializeServices();
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => ref.read(absenNotifierProvidier.notifier).getAbsen(
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await ref.read(absenNotifierProvidier.notifier).getAbsen(
           date: DateTime.now(),
-          onAbsen: (absen) =>
-              ref.read(absenNotifierProvidier.notifier).changeAbsen(absen)),
-    );
+          onAbsen: (absen) {
+            ref.read(absenNotifierProvidier.notifier).changeAbsen(absen);
+
+            ref.read(absenOfflineModeProvider.notifier).state = false;
+          },
+          onNoConnection: () =>
+              ref.read(absenOfflineModeProvider.notifier).state = true);
+
+      await ref.read(userNotifierProvider.notifier).getUser();
+      await ref.read(backgroundNotifierProvider.notifier).getSavedLocations();
+      await ref.read(geofenceProvider.notifier).getGeofenceList();
+    });
   }
 
   // _initializeServices() async {
@@ -54,6 +65,8 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
   Widget build(BuildContext context) {
     final user =
         ref.watch(userNotifierProvider.select((value) => value.user.nama));
+
+    final isOfflineMode = ref.watch(absenOfflineModeProvider);
 
     return Stack(
       children: [
@@ -103,7 +116,8 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                             height: 24,
                           ),
                           UserInfo(
-                            title: 'User',
+                            title:
+                                'User ${isOfflineMode ? '(Mode Offline)' : ''}',
                             user: user ?? '',
                           ),
                           SizedBox(
@@ -117,7 +131,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                           SizedBox(
                             height: 8,
                           ),
-                          HomeBody(),
+                          AbsenButton(),
                         ],
                       ),
                     ),

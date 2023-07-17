@@ -11,9 +11,6 @@ class RouteNames {
   static const signUpRoute = 'register';
   static const signUpNameRoute = 'register';
 
-  static const homeRoute = 'home';
-  static const homeNameRoute = 'home';
-
   static const changePassNameRoute = 'changePass';
   static const changePassRoute = 'changePass';
 
@@ -28,12 +25,6 @@ class RouteNames {
 
   static const riwayatNameRoute = 'riwayat';
   static const riwayatRoute = 'riwayat';
-
-  static const absenMasukNameRoute = 'absenMasuk';
-  static const absenMasukRoute = 'absenMasuk';
-
-  static const absenKeluarNameRoute = 'absenKeluar';
-  static const absenKeluarRoute = 'absenKeluar';
 
   static const riwayatAbsenNameRoute = 'riwayatAbsen';
   static const riwayatAbsenRoute = 'riwayatAbsen';

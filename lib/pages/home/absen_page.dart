@@ -12,13 +12,19 @@ import '../../shared/providers.dart';
 import '../../utils/geofence_utils.dart';
 import '../widgets/loading_overlay.dart';
 import '../widgets/v_dialogs.dart';
-import 'home_scaffold.dart';
+import 'absen_middle_scaffold.dart';
 
-class HomePage extends HookConsumerWidget {
-  const HomePage({Key? key}) : super(key: key);
+class AbsenPage extends HookConsumerWidget {
+  const AbsenPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await ref.read(userNotifierProvider.notifier).getUser();
+      await ref.read(backgroundNotifierProvider.notifier).getSavedLocations();
+      await ref.read(geofenceProvider.notifier).getGeofenceList();
+    });
+
     final currentLocationLatitude = ref.watch(
         geofenceProvider.select((value) => value.currentLocation.latitude));
 
@@ -66,8 +72,10 @@ class HomePage extends HookConsumerWidget {
     final isLoading = ref.watch(
         absenAuthNotifierProvidier.select((value) => value.isSubmitting));
 
-    return Stack(
-        children: [const HomeScaffold(), LoadingOverlay(isLoading: isLoading)]);
+    return Stack(children: [
+      const AbsenMiddleScaffold(),
+      LoadingOverlay(isLoading: isLoading)
+    ]);
   }
 
   Future<Placemark?> getLokasi({

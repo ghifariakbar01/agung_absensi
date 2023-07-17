@@ -36,17 +36,14 @@ class AuthRepository {
   }
 
   Future<Either<AuthFailure, Unit>> signInWithIdKaryawanUsernameAndPassword({
-    required IdKaryawan idKaryawan,
     required UserId userId,
     required Password password,
   }) async {
     try {
-      final idKaryawanStr = idKaryawan.getOrCrash();
       final userIdStr = userId.getOrCrash();
       final passwordStr = password.getOrCrash();
 
       final authResponse = await _remoteService.signIn(
-        idKaryawan: idKaryawanStr,
         userId: userIdStr,
         password: passwordStr,
       );
@@ -79,12 +76,10 @@ class AuthRepository {
     required Password password,
   }) async {
     try {
-      final idKaryawanStr = idKaryawan.getOrCrash();
       final userIdStr = userId.getOrCrash();
       final passwordStr = password.getOrCrash();
 
       final authResponse = await _remoteService.signIn(
-        idKaryawan: idKaryawanStr,
         userId: userIdStr.toString(),
         password: passwordStr,
       );

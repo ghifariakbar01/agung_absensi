@@ -50,7 +50,7 @@ class _AuthActionButtonState extends State<AuthActionButton> {
     debugger(message: 'inserted');
     this._mlService.setPredictedData([]);
     Navigator.push(context,
-        MaterialPageRoute(builder: (BuildContext context) => MyHomePage()));
+        MaterialPageRoute(builder: (BuildContext context) => MyAbsenPage()));
   }
 
   Future _signIn(context) async {

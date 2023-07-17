@@ -108,7 +108,7 @@ class CameraPageState extends State<CameraPage> {
       User? user = await _mlService.predict();
 
       if (user != null) {
-        context.pushNamed(RouteNames.absenMasukNameRoute);
+        context.pop();
       } else {
         var bottomSheetController = scaffoldKey.currentState!
             .showBottomSheet((context) => signInSheet(user: user));

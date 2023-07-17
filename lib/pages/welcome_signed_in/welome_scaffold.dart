@@ -1,6 +1,7 @@
 import 'package:face_net_authentication/constants/assets.dart';
 import 'package:face_net_authentication/style/style.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../application/routes/route_names.dart';
@@ -17,7 +18,7 @@ class HomeData {
 }
 
 final List<HomeData> items = [
-  HomeData('absen', Assets.iconClock, RouteNames.homeNameRoute),
+  HomeData('absen', Assets.iconClock, RouteNames.absenNameRoute),
   HomeData('riwayat', Assets.iconList, RouteNames.riwayatAbsenNameRoute),
 ];
 
@@ -38,6 +39,20 @@ class WelcomeScaffold extends ConsumerWidget {
         actions: [
           Builder(
             builder: (context) => TextButton(
+              style: ButtonStyle(
+                  padding: MaterialStatePropertyAll(EdgeInsets.zero)),
+              onPressed: () => context
+                  .pushNamed(RouteNames.imeiInstructionNameRoute, extra: false),
+              child: Icon(
+                Icons.help_outline_outlined,
+                color: Palette.primaryColor,
+              ),
+            ),
+          ),
+          Builder(
+            builder: (context) => TextButton(
+              style: ButtonStyle(
+                  padding: MaterialStatePropertyAll(EdgeInsets.zero)),
               onPressed: () => Scaffold.of(context).openDrawer(),
               child: Icon(
                 Icons.more_horiz,

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../application/riwayat_absen/riwayat_absen_notifier.dart';
+import '../../shared/providers.dart';
 import 'riwayat_header.dart';
 import 'riwayat_list.dart';
 
@@ -27,7 +28,8 @@ class _RiwayatAbsenScaffoldState extends ConsumerState<RiwayatAbsenScaffold> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await ref.read(riwayatAbsenNotifierProvider.notifier).getAbsenRiwayat(
           page: 1,
-          dateFirst: StringUtils.yyyyMMddWithStripe(DateTime.now()),
+          dateFirst: StringUtils.yyyyMMddWithStripe(
+              DateTime.now().add(Duration(days: 1))),
           dateSecond: StringUtils.yyyyMMddWithStripe(
               DateTime.now().subtract(Duration(days: 7))));
     });

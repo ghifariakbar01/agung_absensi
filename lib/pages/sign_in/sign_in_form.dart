@@ -61,31 +61,7 @@ class _SignInFormState extends ConsumerState<SignInForm> {
           : AutovalidateMode.disabled,
       child: Column(
         children: [
-          ProfileLabel(icon: Icons.person, label: 'Nomor induk karyawan'),
-          SizedBox(
-            height: 4,
-          ),
-          TextFormField(
-            initialValue: signInForm.idKaryawan.getOrLeave(''),
-            decoration: Themes.formStyle(idKaryawan != ''
-                ? idKaryawan + ' (ketik untuk ubah teks)'
-                : 'Masukkan nomor induk karyawan'),
-            keyboardType: TextInputType.number,
-            onChanged: (value) => ref
-                .read(signInFormNotifierProvider.notifier)
-                .changeIdKaryawan(value),
-            validator: (_) =>
-                ref.read(signInFormNotifierProvider).idKaryawan.value.fold(
-                      (f) => f.maybeMap(
-                        invalidIdKaryawan: (_) => 'id karyawan invalid',
-                        empty: (_) => 'kosong',
-                        orElse: () => null,
-                      ),
-                      (_) => null,
-                    ),
-          ),
-          const SizedBox(height: 16),
-          ProfileLabel(icon: Icons.person, label: 'Nama / username'),
+          ProfileLabel(icon: Icons.person, label: 'Username'),
           SizedBox(
             height: 4,
           ),
@@ -93,7 +69,7 @@ class _SignInFormState extends ConsumerState<SignInForm> {
             initialValue: signInForm.userId.getOrLeave(''),
             decoration: Themes.formStyle(userId != ''
                 ? userId + ' (ketik untuk ubah teks)'
-                : 'Masukkan user id'),
+                : 'Masukkan username'),
             keyboardType: TextInputType.name,
             onChanged: (value) => ref
                 .read(signInFormNotifierProvider.notifier)

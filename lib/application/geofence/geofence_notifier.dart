@@ -10,6 +10,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../domain/geofence_failure.dart';
 import '../../infrastructure/geofence/geofence_repository.dart';
+import '../background_service/background_item_state.dart';
 import 'coordinate_state.dart';
 import 'geofence_coordinate_state.dart';
 import 'geofence_response.dart';
@@ -28,6 +29,31 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
     state = state.copyWith(isGetting: true, failureOrSuccessOption: none());
 
     failureOrSuccess = await _repository.getGeofenceList();
+
+    state = state.copyWith(
+        isGetting: false, failureOrSuccessOption: optionOf(failureOrSuccess));
+  }
+
+  Future<void> saveGeofence(List<GeofenceResponse> geofenceResponseList) async {
+    Either<GeofenceFailure, Unit> failureOrSuccess;
+
+    state =
+        state.copyWith(isGetting: true, failureOrSuccessOptionStorage: none());
+
+    failureOrSuccess =
+        await _repository.saveGeofence(geofenceList: geofenceResponseList);
+
+    state = state.copyWith(
+        isGetting: false,
+        failureOrSuccessOptionStorage: optionOf(failureOrSuccess));
+  }
+
+  Future<void> getGeofenceListFromStorage() async {
+    Either<GeofenceFailure, List<GeofenceResponse>> failureOrSuccess;
+
+    state = state.copyWith(isGetting: true, failureOrSuccessOption: none());
+
+    failureOrSuccess = await _repository.readGeofenceList();
 
     state = state.copyWith(
         isGetting: false, failureOrSuccessOption: optionOf(failureOrSuccess));
@@ -54,6 +80,16 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
     }
 
     return geofences;
+  }
+
+  Future<void> startAutoAbsen({
+    required List<GeofenceResponse> geofenceResponseList,
+    required List<BackgroundItemState> savedBackgroundItems,
+    required Future<void> Function(List<GeofenceResponse>) saveGeofence,
+    required Future<void> Function(List<BackgroundItemState>) startAbsen,
+  }) async {
+    await saveGeofence(geofenceResponseList);
+    await startAbsen(savedBackgroundItems);
   }
 
   List<GeofenceRadius> getRadius(String response) {
@@ -97,6 +133,22 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
         .start([...geofenceListAdditional]).catchError(onErrorStream);
   }
 
+  Future<void> initializeGeoFenceOnly(
+      List<Geofence> geofenceListAdditional) async {
+    final _geofenceService = initialize();
+
+    _geofenceService.addLocationChangeListener(
+      (location) => onLocationChangedOnly(location, geofenceListAdditional),
+    );
+
+    _geofenceService.addStreamErrorListener(onErrorStream);
+
+    _geofenceService.addGeofenceList([...geofenceListAdditional]);
+
+    await _geofenceService
+        .start([...geofenceListAdditional]).catchError(onErrorStream);
+  }
+
   GeofenceService initialize() {
     // Create a [GeofenceService] instance and set options.
     return GeofenceService.instance.setup(
@@ -127,6 +179,20 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
           designatedCoordinate: designatedCoordinate,
           geofenceCoordinatesSaved: geofenceCoordinatesSaved);
     }
+
+    state = state.copyWith(currentLocation: location);
+
+    final geofenceCoordinates = state.geofenceCoordinates;
+
+    updateAndChangeNearest(
+        coordinates: coordinates,
+        designatedCoordinate: location,
+        geofenceCoordinates: geofenceCoordinates);
+  }
+
+  // This function is to be called when the location has changed.
+  onLocationChangedOnly(Location location, List<Geofence> coordinates) {
+    print('location: ${location.toJson()}');
 
     state = state.copyWith(currentLocation: location);
 

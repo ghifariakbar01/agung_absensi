@@ -27,7 +27,10 @@ mixin _$GeofenceState {
       throw _privateConstructorUsedError; //
   bool get isGetting => throw _privateConstructorUsedError;
   Option<Either<GeofenceFailure, List<GeofenceResponse>>>
-      get failureOrSuccessOption => throw _privateConstructorUsedError;
+      get failureOrSuccessOption =>
+          throw _privateConstructorUsedError; // GEOFENCE STORAGE ACTIVITY
+  Option<Either<GeofenceFailure, Unit>> get failureOrSuccessOptionStorage =>
+      throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $GeofenceStateCopyWith<GeofenceState> get copyWith =>
@@ -48,7 +51,8 @@ abstract class $GeofenceStateCopyWith<$Res> {
       List<GeofenceCoordinate> nearestCoordinatesSaved,
       bool isGetting,
       Option<Either<GeofenceFailure, List<GeofenceResponse>>>
-          failureOrSuccessOption});
+          failureOrSuccessOption,
+      Option<Either<GeofenceFailure, Unit>> failureOrSuccessOptionStorage});
 
   $GeofenceCoordinateCopyWith<$Res> get nearestCoordinates;
 }
@@ -73,6 +77,7 @@ class _$GeofenceStateCopyWithImpl<$Res, $Val extends GeofenceState>
     Object? nearestCoordinatesSaved = null,
     Object? isGetting = null,
     Object? failureOrSuccessOption = null,
+    Object? failureOrSuccessOptionStorage = null,
   }) {
     return _then(_value.copyWith(
       geofenceCoordinates: null == geofenceCoordinates
@@ -103,6 +108,10 @@ class _$GeofenceStateCopyWithImpl<$Res, $Val extends GeofenceState>
           ? _value.failureOrSuccessOption
           : failureOrSuccessOption // ignore: cast_nullable_to_non_nullable
               as Option<Either<GeofenceFailure, List<GeofenceResponse>>>,
+      failureOrSuccessOptionStorage: null == failureOrSuccessOptionStorage
+          ? _value.failureOrSuccessOptionStorage
+          : failureOrSuccessOptionStorage // ignore: cast_nullable_to_non_nullable
+              as Option<Either<GeofenceFailure, Unit>>,
     ) as $Val);
   }
 
@@ -132,7 +141,8 @@ abstract class _$$_GeofenceStateCopyWith<$Res>
       List<GeofenceCoordinate> nearestCoordinatesSaved,
       bool isGetting,
       Option<Either<GeofenceFailure, List<GeofenceResponse>>>
-          failureOrSuccessOption});
+          failureOrSuccessOption,
+      Option<Either<GeofenceFailure, Unit>> failureOrSuccessOptionStorage});
 
   @override
   $GeofenceCoordinateCopyWith<$Res> get nearestCoordinates;
@@ -156,6 +166,7 @@ class __$$_GeofenceStateCopyWithImpl<$Res>
     Object? nearestCoordinatesSaved = null,
     Object? isGetting = null,
     Object? failureOrSuccessOption = null,
+    Object? failureOrSuccessOptionStorage = null,
   }) {
     return _then(_$_GeofenceState(
       geofenceCoordinates: null == geofenceCoordinates
@@ -186,6 +197,10 @@ class __$$_GeofenceStateCopyWithImpl<$Res>
           ? _value.failureOrSuccessOption
           : failureOrSuccessOption // ignore: cast_nullable_to_non_nullable
               as Option<Either<GeofenceFailure, List<GeofenceResponse>>>,
+      failureOrSuccessOptionStorage: null == failureOrSuccessOptionStorage
+          ? _value.failureOrSuccessOptionStorage
+          : failureOrSuccessOptionStorage // ignore: cast_nullable_to_non_nullable
+              as Option<Either<GeofenceFailure, Unit>>,
     ));
   }
 }
@@ -200,7 +215,8 @@ class _$_GeofenceState implements _GeofenceState {
       required final List<GeofenceCoordinate> geofenceCoordinatesSaved,
       required final List<GeofenceCoordinate> nearestCoordinatesSaved,
       required this.isGetting,
-      required this.failureOrSuccessOption})
+      required this.failureOrSuccessOption,
+      required this.failureOrSuccessOptionStorage})
       : _geofenceCoordinates = geofenceCoordinates,
         _geofenceCoordinatesSaved = geofenceCoordinatesSaved,
         _nearestCoordinatesSaved = nearestCoordinatesSaved;
@@ -244,10 +260,13 @@ class _$_GeofenceState implements _GeofenceState {
   @override
   final Option<Either<GeofenceFailure, List<GeofenceResponse>>>
       failureOrSuccessOption;
+// GEOFENCE STORAGE ACTIVITY
+  @override
+  final Option<Either<GeofenceFailure, Unit>> failureOrSuccessOptionStorage;
 
   @override
   String toString() {
-    return 'GeofenceState(geofenceCoordinates: $geofenceCoordinates, nearestCoordinates: $nearestCoordinates, currentLocation: $currentLocation, geofenceCoordinatesSaved: $geofenceCoordinatesSaved, nearestCoordinatesSaved: $nearestCoordinatesSaved, isGetting: $isGetting, failureOrSuccessOption: $failureOrSuccessOption)';
+    return 'GeofenceState(geofenceCoordinates: $geofenceCoordinates, nearestCoordinates: $nearestCoordinates, currentLocation: $currentLocation, geofenceCoordinatesSaved: $geofenceCoordinatesSaved, nearestCoordinatesSaved: $nearestCoordinatesSaved, isGetting: $isGetting, failureOrSuccessOption: $failureOrSuccessOption, failureOrSuccessOptionStorage: $failureOrSuccessOptionStorage)';
   }
 
   @override
@@ -268,7 +287,11 @@ class _$_GeofenceState implements _GeofenceState {
             (identical(other.isGetting, isGetting) ||
                 other.isGetting == isGetting) &&
             (identical(other.failureOrSuccessOption, failureOrSuccessOption) ||
-                other.failureOrSuccessOption == failureOrSuccessOption));
+                other.failureOrSuccessOption == failureOrSuccessOption) &&
+            (identical(other.failureOrSuccessOptionStorage,
+                    failureOrSuccessOptionStorage) ||
+                other.failureOrSuccessOptionStorage ==
+                    failureOrSuccessOptionStorage));
   }
 
   @override
@@ -280,7 +303,8 @@ class _$_GeofenceState implements _GeofenceState {
       const DeepCollectionEquality().hash(_geofenceCoordinatesSaved),
       const DeepCollectionEquality().hash(_nearestCoordinatesSaved),
       isGetting,
-      failureOrSuccessOption);
+      failureOrSuccessOption,
+      failureOrSuccessOptionStorage);
 
   @JsonKey(ignore: true)
   @override
@@ -298,7 +322,9 @@ abstract class _GeofenceState implements GeofenceState {
       required final List<GeofenceCoordinate> nearestCoordinatesSaved,
       required final bool isGetting,
       required final Option<Either<GeofenceFailure, List<GeofenceResponse>>>
-          failureOrSuccessOption}) = _$_GeofenceState;
+          failureOrSuccessOption,
+      required final Option<Either<GeofenceFailure, Unit>>
+          failureOrSuccessOptionStorage}) = _$_GeofenceState;
 
   @override
   List<GeofenceCoordinate> get geofenceCoordinates;
@@ -315,6 +341,8 @@ abstract class _GeofenceState implements GeofenceState {
   @override
   Option<Either<GeofenceFailure, List<GeofenceResponse>>>
       get failureOrSuccessOption;
+  @override // GEOFENCE STORAGE ACTIVITY
+  Option<Either<GeofenceFailure, Unit>> get failureOrSuccessOptionStorage;
   @override
   @JsonKey(ignore: true)
   _$$_GeofenceStateCopyWith<_$_GeofenceState> get copyWith =>

@@ -29,7 +29,6 @@ class AbsenRemoteService {
   static const String dbName = 'hr_trs_absenmnl_test';
 
   final currentMonth = StringUtils.monthDate(DateTime.now());
-  final trimmedNow = StringUtils.trimmedDate(DateTime.now());
 
   Future<Either<AbsenFailure, Unit>> absen({
     required String idAbsenMnl,
@@ -57,18 +56,18 @@ class AbsenRemoteService {
   }) async {
     String command = '';
     String mode = '';
-    final currentDate =
-        StringUtils.midnightDate(date.subtract(Duration(days: 1)));
+    final currentDate = StringUtils.midnightDate(date);
+    final trimmedDate = StringUtils.trimmedDate(date);
 
     try {
       if (inOrOut == JenisAbsen.absenIn) {
         mode = 'INSERT';
         command =
-            "INSERT INTO $dbName (id_absenmnl, id_user, tgl, jam_awal, jam_akhir, ket, c_date, c_user, u_date, u_user, spv_sta, spv_tgl, hrd_sta, btl_sta, periode, jenis_absen, latitude_masuk, longtitude_masuk, lokasi_masuk) VALUES ('$idAbsenMnl', '${_userModelWithPassword.idUser}', '$currentDate', '$trimmedNow', '$trimmedNow', 'ABSEN MASUK', '$currentDate', '${_userModelWithPassword.nama}','$trimmedNow', '${_userModelWithPassword.nama}', 0, '$trimmedNow', 0, 0, '$currentMonth', '$jenisAbsen', '$latitude', '$longitude', '$lokasi')";
+            "INSERT INTO $dbName (id_absenmnl, id_user, tgl, jam_awal, jam_akhir, ket, c_date, hrd_tgl, c_user, u_date, u_user, spv_sta, spv_tgl, hrd_sta, btl_sta, periode, jenis_absen, latitude_masuk, longtitude_masuk, lokasi_masuk) VALUES ('$idAbsenMnl', '${_userModelWithPassword.idUser}', '$currentDate', '$trimmedDate', '$trimmedDate', 'ABSEN MASUK', '$currentDate', '$currentDate', '${_userModelWithPassword.nama}','$trimmedDate', '${_userModelWithPassword.nama}', 0, '$trimmedDate', 0, 0, '$currentMonth', '$jenisAbsen', '$latitude', '$longitude', '$lokasi')";
       } else if (inOrOut == JenisAbsen.absenOut) {
         mode = 'UPDATE';
         command =
-            "UPDATE $dbName SET latitude_keluar = '$latitude', longtitude_keluar = '$longitude', jam_akhir = '$trimmedNow', u_date = '$trimmedNow', lokasi_keluar = '$lokasi', ket = 'ABSEN MASUK DAN ABSEN PULANG' WHERE id_user = '${_userModelWithPassword.idUser}' AND tgl = '$currentDate'";
+            "UPDATE $dbName SET latitude_keluar = '$latitude', longtitude_keluar = '$longitude', jam_akhir = '$trimmedDate', u_date = '$trimmedDate', lokasi_keluar = '$lokasi', ket = 'ABSEN MASUK DAN ABSEN PULANG' WHERE id_user = '${_userModelWithPassword.idUser}' AND tgl = '$currentDate'";
       }
 
       final data = _dioRequest;
@@ -168,8 +167,7 @@ class AbsenRemoteService {
     required DateTime date,
   }) async {
     try {
-      final currentDate =
-          StringUtils.midnightDate(date.subtract(Duration(days: 1)));
+      final currentDate = StringUtils.midnightDate(date);
 
       final String command =
           "SELECT TOP 1 * FROM $dbName WHERE tgl = '$currentDate' AND id_user = ${_userModelWithPassword.idUser}";
@@ -265,7 +263,7 @@ class AbsenRemoteService {
     // DATEFORMAT YYYY - MM - DD
     try {
       final String command =
-          "SELECT TOP 1 id_absenmnl, id_user, tgl, jam_awal, jam_akhir, ket, c_date, c_user, spv_nm, spv_tgl, hrd_nm, hrd_tgl, btl_sta, btl_tgl, spv_note, hrd_note, latitude_masuk, longtitude_masuk, latitude_keluar, longtitude_keluar, lokasi_masuk, lokasi_keluar FROM hr_trs_absenmnl_test WHERE tgl = '$date' AND id_user = ${_userModelWithPassword.idUser} ORDER BY id_absenmnl DESC";
+          "SELECT TOP 1 id_absenmnl, id_user, tgl, jam_awal, jam_akhir, ket, c_date, c_user, spv_nm, spv_tgl, hrd_nm, hrd_tgl, btl_sta, btl_tgl, spv_note, hrd_note, latitude_masuk, longtitude_masuk, latitude_keluar, longtitude_keluar, lokasi_masuk, lokasi_keluar FROM $dbName WHERE tgl = '$date' AND id_user = ${_userModelWithPassword.idUser} ORDER BY id_absenmnl DESC";
 
       final data = _dioRequest;
 
@@ -331,7 +329,7 @@ class AbsenRemoteService {
     // DATEFORMAT YYYY - MM - DD
     try {
       final String command =
-          "SELECT * FROM hr_trs_absenmnl_test WHERE id_user = '${_userModelWithPassword.idUser}' AND tgl >= '$dateSecond' AND tgl < '$dateFirst' ORDER BY tgl DESC OFFSET ${(page - 1) * 10} ROWS FETCH FIRST 20 ROWS ONLY";
+          "SELECT * FROM $dbName WHERE id_user = '${_userModelWithPassword.idUser}' AND tgl >= '$dateSecond' AND tgl < '$dateFirst' ORDER BY tgl DESC OFFSET ${(page - 1) * 10} ROWS FETCH FIRST 20 ROWS ONLY";
 
       final data = _dioRequest;
 

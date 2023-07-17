@@ -22,11 +22,16 @@ final imeiIntroductionPreference =
 });
 
 class ImeiIntroductionPage extends ConsumerWidget {
-  const ImeiIntroductionPage({Key? key}) : super(key: key);
+  const ImeiIntroductionPage({Key? key, required this.isIntro})
+      : super(key: key);
+
+  final bool isIntro;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen(imeiIntroductionPreference(context), (_, __) {});
+    if (isIntro) {
+      ref.listen(imeiIntroductionPreference(context), (_, __) {});
+    }
 
     return Scaffold(
         body: SafeArea(
@@ -61,46 +66,70 @@ class ImeiIntroductionPage extends ConsumerWidget {
               style: Themes.customColor(FontWeight.normal, 15, Colors.black),
             ),
           ),
-          SizedBox(
-            height: 4,
-          ),
-          Text('Untuk petunjuk, ikuti instruksi dibawah.',
-              style: Themes.customColor(FontWeight.normal, 15, Colors.black)),
-          SizedBox(
-            height: 4,
-          ),
-          instructionImage(1),
-          SizedBox(
-            height: 8,
-          ),
-          instructionImage(2),
-          SizedBox(
-            height: 4,
-          ),
-          instructionImage(3),
-          SizedBox(
-            height: 4,
-          ),
-          instructionImage(4),
-          SizedBox(
-            height: 4,
-          ),
-          VButton(
-              label: 'OK, SAYA MENGERTI.',
-              onPressed: () => showDialog(
-                  context: context,
-                  builder: (_) => VAlertDialog(
-                      label: 'Apakah anda yakin?',
-                      labelDescription:
-                          'Jika anda sudah mengerti instruksi di atas, tap YA',
-                      onPressed: () async {
-                        context.pop();
+          Visibility(
+              visible: isIntro == false,
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 4,
+                  ),
+                  Text('Untuk petunjuk, ikuti instruksi dibawah.',
+                      style: Themes.customColor(
+                          FontWeight.normal, 15, Colors.black)),
+                  SizedBox(
+                    height: 4,
+                  ),
+                  instructionImage(1),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  instructionImage(2),
+                  SizedBox(
+                    height: 4,
+                  ),
+                  instructionImage(3),
+                  SizedBox(
+                    height: 4,
+                  ),
+                  instructionImage(4),
+                  SizedBox(
+                    height: 4,
+                  ),
+                  VButton(
+                      label: 'OK, SAYA MENGERTI.',
+                      onPressed: () => showDialog(
+                          context: context,
+                          builder: (_) => VAlertDialog(
+                              label: 'Apakah anda yakin?',
+                              labelDescription:
+                                  'Jika anda sudah mengerti instruksi di atas, tap YA',
+                              onPressed: () {
+                                context.pop();
 
-                        await understood(
-                            true,
-                            () => ref
-                                .refresh(imeiIntroductionPreference(context)));
-                      })))
+                                context
+                                    .replaceNamed(RouteNames.welcomeNameRoute);
+                              })))
+                ],
+              )),
+          Visibility(
+            visible: isIntro,
+            child: VButton(
+                label: 'OK, SAYA MENGERTI.',
+                onPressed: () => showDialog(
+                    context: context,
+                    builder: (_) => VAlertDialog(
+                        label: 'Apakah anda yakin?',
+                        labelDescription:
+                            'Jika anda sudah mengerti instruksi di atas, tap YA',
+                        onPressed: () async {
+                          context.pop();
+
+                          await understood(
+                              true,
+                              () => ref.refresh(
+                                  imeiIntroductionPreference(context)));
+                        }))),
+          )
         ],
       ),
     )));

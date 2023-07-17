@@ -8,15 +8,13 @@ import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../pages/absen/absen_daftar_page.dart';
-import '../../../pages/absen/absen_keluar_page.dart';
-import '../../../pages/absen/absen_masuk_page.dart';
-
 import '../../../pages/change_pass/change_password_page.dart';
 
+import '../../pages/absen_log/absen_log_page.dart';
 import '../../pages/camera/camera_page.dart';
 import '../../pages/camera/camera_signup.dart';
-import '../../pages/home/home_page.dart';
+import '../../pages/home/absen_page.dart';
+import '../../pages/home/home.dart';
 import '../../pages/permission/permission_page.dart';
 import '../../pages/riwayat/riwayat_page.dart';
 import '../../pages/widgets/splash_page.dart';
@@ -41,7 +39,7 @@ class RouterNotifier extends ChangeNotifier {
     final areWeSigningIn = state.location == RouteNames.signInRoute;
 
     return authState.maybeMap(
-      authenticated: (_) => areWeSigningIn ? RouteNames.homeRoute : null,
+      authenticated: (_) => areWeSigningIn ? RouteNames.welcomeNameRoute : null,
       orElse: () => areWeSigningIn ? null : RouteNames.signInRoute,
     );
   }
@@ -84,24 +82,6 @@ class RouterNotifier extends ChangeNotifier {
             ),
 
             GoRoute(
-              name: RouteNames.absenDaftarNameRoute,
-              path: RouteNames.absenDaftarRoute,
-              builder: (context, state) => const AbsenDaftarPage(),
-            ),
-
-            GoRoute(
-              name: RouteNames.absenMasukNameRoute,
-              path: RouteNames.absenMasukRoute,
-              builder: (context, state) => const AbsenMasukPage(),
-            ),
-
-            GoRoute(
-              name: RouteNames.absenKeluarNameRoute,
-              path: RouteNames.absenKeluarRoute,
-              builder: (context, state) => const AbsenKeluarPage(),
-            ),
-
-            GoRoute(
               name: RouteNames.riwayatAbsenNameRoute,
               path: RouteNames.riwayatAbsenRoute,
               builder: (context, state) => const RiwayatAbsenPage(),
@@ -126,10 +106,12 @@ class RouterNotifier extends ChangeNotifier {
             ),
 
             GoRoute(
-              name: RouteNames.imeiInstructionNameRoute,
-              path: RouteNames.imeiInstructionRoute,
-              builder: (context, state) => const ImeiIntroductionPage(),
-            ),
+                name: RouteNames.imeiInstructionNameRoute,
+                path: RouteNames.imeiInstructionRoute,
+                builder: (context, state) {
+                  bool isIntro = state.extra as bool; // 👈 casting is important
+                  return ImeiIntroductionPage(isIntro: isIntro);
+                }),
 
             GoRoute(
               name: RouteNames.absenTersimpanNameRoute,
@@ -138,9 +120,9 @@ class RouterNotifier extends ChangeNotifier {
             ),
 
             GoRoute(
-              name: RouteNames.homeNameRoute,
-              path: RouteNames.homeRoute,
-              builder: (context, state) => HomePage(),
+              name: RouteNames.absenNameRoute,
+              path: RouteNames.absenRoute,
+              builder: (context, state) => MyAbsenPage(),
             ),
           ]),
     ];

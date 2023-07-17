@@ -21,82 +21,101 @@ class RiwayatItem extends ConsumerWidget {
 
     return Column(
       children: [
-        Flexible(
-          flex: 1,
-          child: Container(
-            width: width,
-            padding: EdgeInsets.all(4),
-            decoration: BoxDecoration(
-                color: Palette.primaryDarker,
-                borderRadius: BorderRadius.circular(10)),
-            child: Column(
-              children: [
-                // Jam Masuk
-                Row(
-                  children: [
-                    Icon(
-                      Icons.alarm,
-                      color: Colors.white,
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Jam $coancenate',
-                          style: Themes.white(FontWeight.bold, 7),
-                        ),
-                        Text(
-                          jam,
-                          style: Themes.white(FontWeight.bold, 5),
-                        ),
-                      ],
-                    )
-                  ],
-                )
-              ],
+        if (alamat.isNotEmpty) ...[
+          Flexible(
+            flex: 1,
+            child: Container(
+              width: width,
+              padding: EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                  color: Palette.primaryDarker,
+                  borderRadius: BorderRadius.circular(10)),
+              child: Column(
+                children: [
+                  // Jam Masuk
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.alarm,
+                        color: Colors.white,
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Jam $coancenate',
+                            style: Themes.white(FontWeight.bold, 7),
+                          ),
+                          Text(
+                            jam,
+                            style: Themes.white(FontWeight.bold, 5),
+                          ),
+                        ],
+                      )
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
-        ),
-        SizedBox(
-          height: 4,
-        ),
-        Flexible(
-          flex: 1,
-          child: Container(
-            width: width,
-            padding: EdgeInsets.all(4),
-            decoration: BoxDecoration(
-                color: Palette.primaryDarker,
-                borderRadius: BorderRadius.circular(10)),
-            child: Column(
-              children: [
-                // Lokasi Masuk
-                Row(
-                  children: [
-                    Icon(
-                      Icons.pin_drop_rounded,
-                      color: Colors.white,
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Lokasi $coancenate',
-                          style: Themes.white(FontWeight.bold, 7),
-                        ),
-                        Text(
-                          alamat.length > 25
-                              ? '${alamat.substring(0, 25)}...'
-                              : alamat,
-                          style: Themes.white(FontWeight.bold, 5),
-                        ),
-                      ],
-                    )
-                  ],
-                )
-              ],
+          SizedBox(
+            height: 4,
+          ),
+          Flexible(
+            flex: 1,
+            child: Container(
+              width: width,
+              padding: EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                  color: Palette.primaryDarker,
+                  borderRadius: BorderRadius.circular(10)),
+              child: Column(
+                children: [
+                  // Lokasi Masuk
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.pin_drop_rounded,
+                        color: Colors.white,
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Lokasi $coancenate',
+                            style: Themes.white(FontWeight.bold, 7),
+                          ),
+                          Text(
+                            alamat.length > 25
+                                ? '${alamat.substring(0, 25)}...'
+                                : alamat,
+                            style: Themes.white(FontWeight.bold, 5),
+                          ),
+                        ],
+                      )
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ),
+        ],
+        Visibility(
+          visible: alamat.isEmpty,
+          child: Flexible(
+            flex: 1,
+            child: Container(
+              width: width,
+              padding: EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                  color: Palette.primaryDarker,
+                  borderRadius: BorderRadius.circular(10)),
+              child: Text(
+                'Belum absen $coancenate',
+                style: Themes.white(FontWeight.bold, 15),
+              ),
             ),
           ),
         ),

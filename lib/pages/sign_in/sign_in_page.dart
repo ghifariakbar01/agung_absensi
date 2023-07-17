@@ -78,7 +78,8 @@ class SignInPage extends HookConsumerWidget {
                             context.replaceNamed(RouteNames.welcomeNameRoute);
                           } else {
                             context.replaceNamed(
-                                RouteNames.imeiInstructionNameRoute);
+                                RouteNames.imeiInstructionNameRoute,
+                                extra: true);
                           }
                         },
                       ),

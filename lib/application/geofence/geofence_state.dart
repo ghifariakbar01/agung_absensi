@@ -22,7 +22,10 @@ class GeofenceState with _$GeofenceState {
       //
       required bool isGetting,
       required Option<Either<GeofenceFailure, List<GeofenceResponse>>>
-          failureOrSuccessOption}) = _GeofenceState;
+          failureOrSuccessOption,
+      // GEOFENCE STORAGE ACTIVITY
+      required Option<Either<GeofenceFailure, Unit>>
+          failureOrSuccessOptionStorage}) = _GeofenceState;
 
   factory GeofenceState.initial() => GeofenceState(
       geofenceCoordinates: [],
@@ -31,5 +34,6 @@ class GeofenceState with _$GeofenceState {
       nearestCoordinatesSaved: [],
       currentLocation: Location.fromJson(dummyLocation),
       isGetting: false,
-      failureOrSuccessOption: none());
+      failureOrSuccessOption: none(),
+      failureOrSuccessOptionStorage: none());
 }

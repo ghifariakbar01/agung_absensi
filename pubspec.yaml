@@ -30,7 +30,7 @@ dependencies:
   tflite_flutter: ^0.9.0
 
   #* Background service
-  workmanager: ^0.5.1
+  # workmanager: ^0.5.1
 
   # iOS : microphone access required
   camera: ^0.9.4+19
