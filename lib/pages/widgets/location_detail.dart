@@ -35,7 +35,7 @@ class LocationDetail extends ConsumerWidget {
         Row(
           children: [
             Text(
-              'Jarak Minimum',
+              'Jarak Maksimum',
               style: Themes.customColor(FontWeight.bold, 13, Colors.black),
             ),
             Text(

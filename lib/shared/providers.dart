@@ -1,6 +1,12 @@
+import 'dart:developer';
+
+import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:face_net_authentication/application/absen/absen_auth_notifier.dart';
 import 'package:face_net_authentication/application/absen/absen_state.dart';
+import 'package:face_net_authentication/application/auto_absen/auto_absen_notifier.dart';
+import 'package:face_net_authentication/application/auto_absen/auto_absen_repository.dart';
+import 'package:face_net_authentication/application/auto_absen/auto_absen_state.dart';
 import 'package:face_net_authentication/application/background_service/background_notifier.dart';
 import 'package:face_net_authentication/application/background_service/background_state.dart';
 import 'package:face_net_authentication/application/edit_profile/edit_profile_notifier.dart';
@@ -10,6 +16,7 @@ import 'package:face_net_authentication/application/imei/imei_state.dart';
 
 import 'package:face_net_authentication/infrastructure/absen/absen_remote_service.dart';
 import 'package:face_net_authentication/infrastructure/absen/absen_repository.dart';
+import 'package:face_net_authentication/infrastructure/auto_absen_secure_storage/auto_absen_secure_storage.dart';
 import 'package:face_net_authentication/infrastructure/background/background_repository.dart';
 import 'package:face_net_authentication/infrastructure/geofence/geofence_remote_service.dart';
 import 'package:face_net_authentication/infrastructure/geofence/geofence_repository.dart';
@@ -22,8 +29,10 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../application/absen/absen_auth_state.dart';
+import '../application/absen/absen_enum.dart';
 import '../application/absen/absen_notifier.dart';
 import '../application/auth/auth_notifier.dart';
+import '../application/background_service/background_item_state.dart';
 import '../application/edit_profile/edit_profile_state.dart';
 import '../application/geofence/geofence_notifier.dart';
 import '../application/geofence/geofence_state.dart';
@@ -45,6 +54,7 @@ import '../infrastructure/auth_repository.dart';
 import '../infrastructure/credentials_storage/credentials_storage.dart';
 import '../infrastructure/credentials_storage/secure_credentials_storage.dart';
 
+import '../infrastructure/geofence_secure_storage/geofence_secure_storage.dart';
 import '../utils/string_utils.dart';
 
 // Networking & Router
@@ -67,6 +77,17 @@ final routerProvider = Provider<GoRouter>((ref) {
 });
 
 // Background
+
+final autoAbsenSecureStorageProvider = Provider<CredentialsStorage>(
+  (ref) => AutoAbsenSecureStorage(ref.watch(flutterSecureStorageProvider)),
+);
+
+final autoAbsenRepositoryProvider = Provider(
+    (ref) => AutoAbsenRepository(ref.watch(autoAbsenSecureStorageProvider)));
+
+final autoAbsenNotifierProvider =
+    StateNotifierProvider<AutoAbsenNotifier, AutoAbsenState>(
+        (ref) => AutoAbsenNotifier(ref.watch(autoAbsenRepositoryProvider)));
 
 final backgroundNotifierProvider =
     StateNotifierProvider<BackgroundNotifier, BackgroundState>(
@@ -148,6 +169,10 @@ final absenRepositoryProvider = Provider(
 final absenNotifierProvidier = StateNotifierProvider<AbsenNotifier, AbsenState>(
     (ref) => AbsenNotifier(ref.watch(absenRepositoryProvider)));
 
+final absenOfflineModeProvider = StateProvider<bool>(
+  (ref) => false,
+);
+
 // Absen auth
 
 final absenAuthNotifierProvidier =
@@ -156,13 +181,15 @@ final absenAuthNotifierProvidier =
 
 // Geofence
 
+final geofenceSecureStorageProvider = Provider<CredentialsStorage>(
+    (ref) => GeofenceSecureStorage(ref.watch(flutterSecureStorageProvider)));
+
 final geofenceRemoteServiceProvider = Provider((ref) => GeofenceRemoteService(
     ref.watch(dioProvider), ref.watch(dioRequestProvider)));
 
 final geofenceRepositoryProvider = Provider(
-  (ref) => GeofenceRepository(
-    ref.watch(geofenceRemoteServiceProvider),
-  ),
+  (ref) => GeofenceRepository(ref.watch(geofenceRemoteServiceProvider),
+      ref.watch(geofenceSecureStorageProvider)),
 );
 
 final geofenceProvider = StateNotifierProvider<GeofenceNotifier, GeofenceState>(
