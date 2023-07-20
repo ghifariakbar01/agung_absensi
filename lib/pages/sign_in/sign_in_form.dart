@@ -37,7 +37,10 @@ class _SignInFormState extends ConsumerState<SignInForm> {
         final rememberMeModel =
             RememberMeModel.fromJson(jsonDecode(rememberMe));
 
+        log('rememberMeModel.ptName ${rememberMeModel.ptName}');
+
         ref.read(signInFormNotifierProvider.notifier).changeAllData(
+            ptNameStr: rememberMeModel.ptName,
             idKaryawanStr: rememberMeModel.nik,
             passwordStr: rememberMeModel.password,
             userStr: rememberMeModel.nama);
@@ -51,9 +54,10 @@ class _SignInFormState extends ConsumerState<SignInForm> {
 
     final passwordVisible = ref.watch(passwordVisibleProvider);
 
-    final idKaryawan = signInForm.idKaryawan.getOrLeave('');
     final userId = signInForm.userId.getOrLeave('');
     final password = signInForm.password.getOrLeave('');
+
+    final ptDropdownSelected = signInForm.ptDropdownSelected;
 
     return Form(
       autovalidateMode: signInForm.showErrorMessages
@@ -61,6 +65,50 @@ class _SignInFormState extends ConsumerState<SignInForm> {
           : AutovalidateMode.disabled,
       child: Column(
         children: [
+          ProfileLabel(icon: Icons.business, label: 'PT'),
+          SizedBox(
+            height: 4,
+          ),
+          Row(
+            children: [
+              DropdownButton<String>(
+                value: ptDropdownSelected,
+                icon: const Icon(Icons.arrow_downward),
+                elevation: 16,
+                style: const TextStyle(color: Palette.primaryColor),
+                iconSize: 20,
+                // This is called when the user selects an item.
+                onChanged: (String? value) => ref
+                    .read(signInFormNotifierProvider.notifier)
+                    .state
+                    .ptMap
+                    .forEach((serverName, ptNameStrList) {
+                  for (final ptNameStr in ptNameStrList) {
+                    if (value == ptNameStr) {
+                      ref
+                          .read(signInFormNotifierProvider.notifier)
+                          .changePTNameAndDropdown(
+                            changePTName: () => ref
+                                .read(signInFormNotifierProvider.notifier)
+                                .changePTName(serverName),
+                            changeDropdownSelected: () => ref
+                                .read(signInFormNotifierProvider.notifier)
+                                .changeDropdownSelected(value ?? ''),
+                          );
+                    }
+                  }
+                }),
+                items: signInForm.ptDropdownList
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
           ProfileLabel(icon: Icons.person, label: 'Username'),
           SizedBox(
             height: 4,

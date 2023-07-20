@@ -1,25 +1,25 @@
 import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
-import 'package:face_net_authentication/application/background_service/recent_absen_state.dart';
-import 'package:face_net_authentication/constants/assets.dart';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../application/absen/absen_enum.dart';
 import '../../application/absen/absen_state.dart';
 import '../../application/background_service/saved_location.dart';
 import '../../application/geofence/geofence_response.dart';
+import '../../constants/assets.dart';
 import '../../domain/background_failure.dart';
 import '../../domain/geofence_failure.dart';
 import '../../domain/user_failure.dart';
 import '../../shared/providers.dart';
+import '../../utils/string_utils.dart';
 import '../widgets/alert_helper.dart';
-import 'welcome_imei.dart';
 import '../widgets/loading_overlay.dart';
 import '../widgets/v_dialogs.dart';
+import 'welcome_imei.dart';
 import 'welcome_saved.dart';
 import 'welome_scaffold.dart';
 
@@ -77,21 +77,16 @@ class _WelcomePageState extends ConsumerState<WelcomePage> {
                       asset: Assets.iconCrossed,
                     ),
                   ),
-              (userParsed) => ref
-                  .read(userNotifierProvider.notifier)
-                  .onUserParsed(
-                    user: userParsed,
-                    dioRequestSet: () => ref.read(dioRequestProvider).addAll({
-                      "username": "${userParsed.nama}",
-                      "password": "${userParsed.password}",
-                    }),
-                    checkAndUpdateStatus: () => ref
-                        .read(authNotifierProvider.notifier)
-                        .checkAndUpdateAuthStatus(),
-                    checkAndUpdateImei: () => ref
-                        .read(imeiNotifierProvider.notifier)
-                        .checkAndUpdateImei(user: userParsed),
-                  ));
+              (userParsed) =>
+                  ref.read(userNotifierProvider.notifier).onUserParsed(
+                        user: userParsed,
+                        checkAndUpdateStatus: () => ref
+                            .read(authNotifierProvider.notifier)
+                            .checkAndUpdateAuthStatus(),
+                        checkAndUpdateImei: () => ref
+                            .read(imeiNotifierProvider.notifier)
+                            .checkAndUpdateImei(user: userParsed),
+                      ));
         }),
       ),
     );
@@ -156,8 +151,6 @@ class _WelcomePageState extends ConsumerState<WelcomePage> {
                             noConnection: () => 'No connection'),
                         asset: Assets.iconCrossed,
                         color: Colors.red))), (geofenceList) async {
-          log('geofenceList $geofenceList');
-
           // geofenceList exist
           if (geofenceList.isNotEmpty) {
             final geofence = ref
@@ -252,96 +245,105 @@ class _WelcomePageState extends ConsumerState<WelcomePage> {
                             await ref
                                 .read(absenAuthNotifierProvidier.notifier)
                                 .absenOneLiner(
-                                  backgroundItemState: absenSaved,
-                                  jenisAbsen: jenisAbsen,
-                                  onAbsen: () async {
-                                    await ref
-                                        .read(absenNotifierProvidier.notifier)
-                                        .getAbsen(
-                                            date:
-                                                absenSaved.savedLocations.date,
-                                            onAbsen: (absen) => ref
-                                                .read(absenNotifierProvidier
-                                                    .notifier)
-                                                .changeAbsen(absen),
-                                            onNoConnection: () => ref
-                                                .read(absenOfflineModeProvider
-                                                    .notifier)
-                                                .state = true);
+                                    backgroundItemState: absenSaved,
+                                    jenisAbsen: jenisAbsen,
+                                    onAbsen: () async {
+                                      await ref
+                                          .read(absenNotifierProvidier.notifier)
+                                          .getAbsen(
+                                              date: absenSaved
+                                                  .savedLocations.date,
+                                              onAbsen: (absen) => ref
+                                                  .read(absenNotifierProvidier
+                                                      .notifier)
+                                                  .changeAbsen(absen),
+                                              onNoConnection: () => ref
+                                                  .read(absenOfflineModeProvider
+                                                      .notifier)
+                                                  .state = true);
 
-                                    await ref
-                                        .read(
-                                            backgroundNotifierProvider.notifier)
-                                        .getSavedLocations();
-                                  },
-                                  deleteSaved: () async {
-                                    // delete saved absen
-                                    debugger(message: 'called');
-
-                                    await ref
-                                        .read(
-                                            backgroundNotifierProvider.notifier)
-                                        .removeLocationFromSaved(
-                                            absenSaved.savedLocations,
-                                            onSaved: () async {
-                                      final savedLocations = await ref
+                                      await ref
                                           .read(backgroundNotifierProvider
                                               .notifier)
-                                          .getSavedLocationsOneLiner();
-
+                                          .getSavedLocations();
+                                    },
+                                    deleteSaved: () async {
+                                      // delete saved absen
                                       debugger(message: 'called');
 
-                                      final bgItems = ref
+                                      await ref
                                           .read(backgroundNotifierProvider
                                               .notifier)
-                                          .getBackgroundItemsAsList(
-                                              savedLocations);
+                                          .removeLocationFromSaved(
+                                              absenSaved.savedLocations,
+                                              onSaved: () async {
+                                        final savedLocations = await ref
+                                            .read(backgroundNotifierProvider
+                                                .notifier)
+                                            .getSavedLocationsOneLiner();
 
-                                      log('bgItems savedLocations $bgItems $savedLocations');
+                                        debugger(message: 'called');
 
-                                      ref
+                                        final bgItems = ref
+                                            .read(backgroundNotifierProvider
+                                                .notifier)
+                                            .getBackgroundItemsAsList(
+                                                savedLocations);
+
+                                        log('bgItems savedLocations $bgItems $savedLocations');
+
+                                        ref
+                                            .read(backgroundNotifierProvider
+                                                .notifier)
+                                            .changeBackgroundItems(
+                                                bgItems ?? []);
+                                      });
+                                    },
+                                    reinitializeDependencies: () async {
+                                      // reinitialize dependecies
+                                      final savedLocations = ref
                                           .read(backgroundNotifierProvider
                                               .notifier)
-                                          .changeBackgroundItems(bgItems ?? []);
-                                    });
-                                  },
-                                  reinitializeDependencies: () async {
-                                    // reinitialize dependecies
-                                    final savedLocations = ref
-                                        .read(
-                                            backgroundNotifierProvider.notifier)
-                                        .getSavedLocationsAsList(savedItems);
+                                          .getSavedLocationsAsList(savedItems);
 
-                                    log('savedLocations ${savedLocations?.length}');
+                                      log('savedLocations ${savedLocations?.length}');
 
-                                    await ref
-                                        .read(
-                                            backgroundNotifierProvider.notifier)
-                                        .getSavedLocations();
+                                      await ref
+                                          .read(backgroundNotifierProvider
+                                              .notifier)
+                                          .getSavedLocations();
 
-                                    debugger(message: 'called');
-                                    await ref
-                                        .read(geofenceProvider.notifier)
-                                        .initializeGeoFence(
-                                            geofence, savedLocations);
-                                  },
-                                  getAbsenState: () async {
-                                    // get absen state
-                                    await ref
-                                        .read(absenNotifierProvidier.notifier)
-                                        .getAbsen(
-                                            date:
-                                                absenSaved.savedLocations.date,
-                                            onAbsen: (absen) => ref
-                                                .read(absenNotifierProvidier
-                                                    .notifier)
-                                                .changeAbsen(absen),
-                                            onNoConnection: () => ref
-                                                .read(absenOfflineModeProvider
-                                                    .notifier)
-                                                .state = true);
-                                  },
-                                );
+                                      debugger(message: 'called');
+                                      await ref
+                                          .read(geofenceProvider.notifier)
+                                          .initializeGeoFence(
+                                              geofence, savedLocations);
+                                    },
+                                    getAbsenState: () async {
+                                      // get absen state
+                                      await ref
+                                          .read(absenNotifierProvidier.notifier)
+                                          .getAbsen(
+                                              date: absenSaved
+                                                  .savedLocations.date,
+                                              onAbsen: (absen) => ref
+                                                  .read(absenNotifierProvidier
+                                                      .notifier)
+                                                  .changeAbsen(absen),
+                                              onNoConnection: () => ref
+                                                  .read(absenOfflineModeProvider
+                                                      .notifier)
+                                                  .state = true);
+                                    },
+                                    showSuccessDialog: () => showDialog(
+                                        context: context,
+                                        builder: (_) => VSimpleDialog(
+                                              asset: Assets.iconChecked,
+                                              label:
+                                                  'JAM ${StringUtils.hoursDate(absenSaved.savedLocations.date)}',
+                                              labelDescription:
+                                                  'TANGGAL ${StringUtils.yyyyMMddWithStripe(absenSaved.savedLocations.date)}',
+                                            )));
                           } else if (absenState == AbsenState.absenIn() &&
                               lastAbsen == i) {
                             debugger(message: 'called');
@@ -434,6 +436,15 @@ class _WelcomePageState extends ConsumerState<WelcomePage> {
                                                     .notifier)
                                                 .state = true);
                                   },
+                                  showSuccessDialog: () => showDialog(
+                                      context: context,
+                                      builder: (_) => VSimpleDialog(
+                                            asset: Assets.iconChecked,
+                                            label:
+                                                'JAM ${StringUtils.hoursDate(absenSaved.savedLocations.date)}',
+                                            labelDescription:
+                                                'TANGGAL ${StringUtils.yyyyMMddWithStripe(absenSaved.savedLocations.date)}',
+                                          )),
                                 );
                           } else if (absenState == AbsenState.complete()) {
                             // delete saved absen as we don't need them.

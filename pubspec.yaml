@@ -50,6 +50,7 @@ dependencies:
   geolocator: ^9.0.2
 
   #* UI
+  auto_size_text: ^3.0.0
   cached_network_image: ^3.2.2
   flash: ^2.0.5
   flutter_keyboard_visibility: ^5.4.0

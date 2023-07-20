@@ -129,6 +129,7 @@ class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
     required Future<void> Function() deleteSaved,
     required Future<void> Function() reinitializeDependencies,
     required Future<void> Function() getAbsenState,
+    required Future<void> Function() showSuccessDialog,
   }) async {
     changeBackgroundAbsenStateSaved(backgroundItemState);
 
@@ -151,6 +152,7 @@ class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
             await deleteSaved();
             await reinitializeDependencies();
             await getAbsenState();
+            await showSuccessDialog();
           },
           absenOut: (id) async {
             await absenSaved(
@@ -165,6 +167,7 @@ class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
             await deleteSaved();
             await reinitializeDependencies();
             await getAbsenState();
+            await showSuccessDialog();
           },
           absenUnknown: () {}),
       failure: (code, message) => {},

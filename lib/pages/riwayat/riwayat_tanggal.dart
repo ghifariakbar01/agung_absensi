@@ -14,7 +14,7 @@ class RiwayatTanggal extends ConsumerWidget {
     final width = MediaQuery.of(context).size.width;
 
     return Container(
-        height: 65,
+        height: 100,
         width: width,
         padding: EdgeInsets.all(4),
         decoration: BoxDecoration(
@@ -26,17 +26,20 @@ class RiwayatTanggal extends ConsumerWidget {
               Icons.date_range,
               color: Colors.white,
             ),
+            SizedBox(
+              width: 4,
+            ),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   'Tanggal',
-                  style: Themes.white(FontWeight.bold, 7),
+                  style: Themes.white(FontWeight.bold, 12),
                 ),
                 Text(
                   StringUtils.formatTanggal(tanggal),
-                  style: Themes.white(FontWeight.bold, 7),
+                  style: Themes.white(FontWeight.bold, 10),
                 ),
               ],
             )

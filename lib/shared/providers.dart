@@ -62,8 +62,7 @@ import '../utils/string_utils.dart';
 final dioProvider = Provider((ref) => Dio());
 
 final dioRequestProvider = Provider<Map<String, String>>(
-  (ref) =>
-      {"server": "gs_12", "kode": "${StringUtils.formatDate(DateTime.now())}"},
+  (ref) => {"kode": "${StringUtils.formatDate(DateTime.now())}"},
 );
 
 final routerProvider = Provider<GoRouter>((ref) {

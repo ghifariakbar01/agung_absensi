@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../application/riwayat_absen/riwayat_absen_notifier.dart';
-import '../../shared/providers.dart';
 import 'riwayat_header.dart';
 import 'riwayat_list.dart';
 
@@ -70,19 +69,17 @@ class _RiwayatAbsenScaffoldState extends ConsumerState<RiwayatAbsenScaffold> {
           _scrollController.position.pixels > nextPageTrigger &&
           isMore &&
           !isGetting) {
-        log('isGetting _scrollController.position.pixels > nextPageTrigger ${_scrollController.position.pixels > nextPageTrigger}');
-
         log('isGetting $isGetting');
+
         final endDate = DateTime.parse(dateSecond ?? '');
 
         final startDate = DateTime.parse(dateFirst ?? '');
 
         final start = StringUtils.formatTanggal(
             '${startDate.subtract(Duration(days: 7))}');
-        final end =
-            StringUtils.formatTanggal('${endDate.subtract(Duration(days: 7))}');
 
-        log('start end  $start $end');
+        final end =
+            StringUtils.formatTanggal('${endDate.subtract(Duration(days: 6))}');
 
         await ref.read(riwayatAbsenNotifierProvider.notifier).startFilter(
             changePage: () => {},

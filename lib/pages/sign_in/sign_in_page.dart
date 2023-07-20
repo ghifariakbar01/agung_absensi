@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -100,6 +102,29 @@ class SignInPage extends HookConsumerWidget {
                 await ref
                     .read(signInFormNotifierProvider.notifier)
                     .signInAndRemember(
+                      intializeDioRequest: () {
+                        final server = ref
+                            .read(signInFormNotifierProvider.notifier)
+                            .state
+                            .ptServerSelected
+                            .getOrLeave('');
+                        final username = ref
+                            .read(signInFormNotifierProvider.notifier)
+                            .state
+                            .userId
+                            .getOrLeave('');
+                        final password = ref
+                            .read(signInFormNotifierProvider.notifier)
+                            .state
+                            .password
+                            .getOrLeave('');
+
+                        ref.read(dioRequestProvider).addAll({
+                          "server": server,
+                          "username": username,
+                          "password": password
+                        });
+                      },
                       signIn: () => ref
                           .read(signInFormNotifierProvider.notifier)
                           .signInWithUserIdEmailAndPassword(),

@@ -28,21 +28,15 @@ class RiwayatAbsenNotifier extends StateNotifier<RiwayatAbsenState> {
         isGetting: false, failureOrSuccessOption: optionOf(failureOrSuccess));
   }
 
-  Future<void> getAbsenRiwayatByID({required String? date}) async {
-    Either<RiwayatAbsenFailure, RiwayatAbsenModel> failureOrSuccess;
-
-    state = state.copyWith(isGetting: true, failureOrSuccessOption: none());
-
-    failureOrSuccess = await _absenRepository.getRiwayatAbsenByID(date: date);
-
-    state = state.copyWith(
-        isGetting: false,
-        failureOrSuccessOptionByID: optionOf(failureOrSuccess));
-  }
-
   void changeAbsenRiwayat(
       List<RiwayatAbsenModel> listAbsenOld, List<RiwayatAbsenModel> listAbsen) {
     final list = [...listAbsenOld, ...listAbsen].toSet().toList();
+
+    state = state.copyWith(riwayatAbsen: [...list]);
+  }
+
+  void replaceAbsenRiwayat(List<RiwayatAbsenModel> listAbsen) {
+    final list = [...listAbsen].toSet().toList();
 
     state = state.copyWith(riwayatAbsen: [...list]);
   }

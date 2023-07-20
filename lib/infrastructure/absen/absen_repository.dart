@@ -109,17 +109,4 @@ class AbsenRepository {
       return left(RiwayatAbsenFailure.server());
     }
   }
-
-  Future<Either<RiwayatAbsenFailure, RiwayatAbsenModel>> getRiwayatAbsenByID(
-      {required String? date}) async {
-    try {
-      return right(await _remoteService.getRiwayatAbsenByID(date: date));
-    } on FormatException {
-      return left(RiwayatAbsenFailure.wrongFormat());
-    } on NoConnectionException {
-      return left(RiwayatAbsenFailure.noConnection());
-    } on RestApiException {
-      return left(RiwayatAbsenFailure.server());
-    }
-  }
 }

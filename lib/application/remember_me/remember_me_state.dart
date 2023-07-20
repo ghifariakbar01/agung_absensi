@@ -6,10 +6,12 @@ part 'remember_me_state.g.dart';
 
 @freezed
 class RememberMeModel with _$RememberMeModel {
-  const factory RememberMeModel(
-      {required String nik,
-      required String nama,
-      required String password}) = _RememberMeModel;
+  const factory RememberMeModel({
+    required String nik,
+    required String nama,
+    required String password,
+    required String ptName,
+  }) = _RememberMeModel;
 
   factory RememberMeModel.fromJson(Map<String, Object?> json) =>
       _$RememberMeModelFromJson(json);

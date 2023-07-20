@@ -1,8 +1,6 @@
-import 'package:face_net_authentication/application/absen/absen_enum.dart';
 import 'package:face_net_authentication/style/style.dart';
 import 'package:flutter/material.dart';
 
-import 'riwayat_delayed.dart';
 import 'riwayat_item.dart';
 import 'riwayat_tanggal.dart';
 
@@ -27,7 +25,7 @@ class RiwayatList extends StatelessWidget {
     final width = MediaQuery.of(context).size.width;
 
     return Container(
-        height: 80,
+        height: 110,
         width: width,
         padding: EdgeInsets.all(4),
         decoration: BoxDecoration(
@@ -39,47 +37,15 @@ class RiwayatList extends StatelessWidget {
               child: RiwayatTanggal(
                 tanggal: tanggal,
               )),
-          if (alamatMasuk != null) ...[
-            SizedBox(
-              width: 4,
-            ),
-            Flexible(
-                flex: 1,
-                child: RiwayatItem(
-                  jenisAbsen: JenisAbsen.absenIn,
-                  alamat: alamatMasuk ?? '',
-                  jam: jamMasuk ?? '',
-                )),
-          ] else ...[
-            Flexible(
-                flex: 1,
-                child: RiwayatDelayed(
-                  jenisAbsen: JenisAbsen.absenIn,
-                )),
-          ],
-          if (alamatKeluar != null) ...[
-            SizedBox(
-              width: 4,
-            ),
-            Flexible(
-                flex: 1,
-                child: RiwayatItem(
-                  jenisAbsen: JenisAbsen.absenOut,
-                  alamat: alamatKeluar ?? '',
-                  jam: jamKeluar ?? '',
-                )),
-          ] else ...[
-            if (alamatMasuk != null) ...[
-              SizedBox(
-                width: 8,
-              ),
-              Flexible(
-                  flex: 1,
-                  child: RiwayatDelayed(
-                    jenisAbsen: JenisAbsen.absenOut,
-                  )),
-            ]
-          ],
+          SizedBox(
+            width: 4,
+          ),
+          Flexible(
+              flex: 2,
+              child: RiwayatItem(
+                alamat: alamatMasuk ?? '',
+                jam: jamMasuk ?? '',
+              )),
         ]));
   }
 }

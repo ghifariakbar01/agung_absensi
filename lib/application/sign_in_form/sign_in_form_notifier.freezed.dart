@@ -20,6 +20,10 @@ mixin _$SignInFormState {
   Email get email => throw _privateConstructorUsedError;
   IdKaryawan get idKaryawan => throw _privateConstructorUsedError;
   Password get password => throw _privateConstructorUsedError;
+  PTName get ptServerSelected => throw _privateConstructorUsedError;
+  String get ptDropdownSelected => throw _privateConstructorUsedError;
+  List<String> get ptDropdownList => throw _privateConstructorUsedError;
+  Map<String, List<String>> get ptMap => throw _privateConstructorUsedError;
   bool get showErrorMessages => throw _privateConstructorUsedError;
   bool get isSubmitting => throw _privateConstructorUsedError;
   bool get isChecked => throw _privateConstructorUsedError;
@@ -42,6 +46,10 @@ abstract class $SignInFormStateCopyWith<$Res> {
       Email email,
       IdKaryawan idKaryawan,
       Password password,
+      PTName ptServerSelected,
+      String ptDropdownSelected,
+      List<String> ptDropdownList,
+      Map<String, List<String>> ptMap,
       bool showErrorMessages,
       bool isSubmitting,
       bool isChecked,
@@ -65,6 +73,10 @@ class _$SignInFormStateCopyWithImpl<$Res, $Val extends SignInFormState>
     Object? email = null,
     Object? idKaryawan = null,
     Object? password = null,
+    Object? ptServerSelected = null,
+    Object? ptDropdownSelected = null,
+    Object? ptDropdownList = null,
+    Object? ptMap = null,
     Object? showErrorMessages = null,
     Object? isSubmitting = null,
     Object? isChecked = null,
@@ -87,6 +99,22 @@ class _$SignInFormStateCopyWithImpl<$Res, $Val extends SignInFormState>
           ? _value.password
           : password // ignore: cast_nullable_to_non_nullable
               as Password,
+      ptServerSelected: null == ptServerSelected
+          ? _value.ptServerSelected
+          : ptServerSelected // ignore: cast_nullable_to_non_nullable
+              as PTName,
+      ptDropdownSelected: null == ptDropdownSelected
+          ? _value.ptDropdownSelected
+          : ptDropdownSelected // ignore: cast_nullable_to_non_nullable
+              as String,
+      ptDropdownList: null == ptDropdownList
+          ? _value.ptDropdownList
+          : ptDropdownList // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      ptMap: null == ptMap
+          ? _value.ptMap
+          : ptMap // ignore: cast_nullable_to_non_nullable
+              as Map<String, List<String>>,
       showErrorMessages: null == showErrorMessages
           ? _value.showErrorMessages
           : showErrorMessages // ignore: cast_nullable_to_non_nullable
@@ -120,6 +148,10 @@ abstract class _$$_SignInFormStateCopyWith<$Res>
       Email email,
       IdKaryawan idKaryawan,
       Password password,
+      PTName ptServerSelected,
+      String ptDropdownSelected,
+      List<String> ptDropdownList,
+      Map<String, List<String>> ptMap,
       bool showErrorMessages,
       bool isSubmitting,
       bool isChecked,
@@ -141,6 +173,10 @@ class __$$_SignInFormStateCopyWithImpl<$Res>
     Object? email = null,
     Object? idKaryawan = null,
     Object? password = null,
+    Object? ptServerSelected = null,
+    Object? ptDropdownSelected = null,
+    Object? ptDropdownList = null,
+    Object? ptMap = null,
     Object? showErrorMessages = null,
     Object? isSubmitting = null,
     Object? isChecked = null,
@@ -163,6 +199,22 @@ class __$$_SignInFormStateCopyWithImpl<$Res>
           ? _value.password
           : password // ignore: cast_nullable_to_non_nullable
               as Password,
+      ptServerSelected: null == ptServerSelected
+          ? _value.ptServerSelected
+          : ptServerSelected // ignore: cast_nullable_to_non_nullable
+              as PTName,
+      ptDropdownSelected: null == ptDropdownSelected
+          ? _value.ptDropdownSelected
+          : ptDropdownSelected // ignore: cast_nullable_to_non_nullable
+              as String,
+      ptDropdownList: null == ptDropdownList
+          ? _value._ptDropdownList
+          : ptDropdownList // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      ptMap: null == ptMap
+          ? _value._ptMap
+          : ptMap // ignore: cast_nullable_to_non_nullable
+              as Map<String, List<String>>,
       showErrorMessages: null == showErrorMessages
           ? _value.showErrorMessages
           : showErrorMessages // ignore: cast_nullable_to_non_nullable
@@ -191,10 +243,16 @@ class _$_SignInFormState implements _SignInFormState {
       required this.email,
       required this.idKaryawan,
       required this.password,
+      required this.ptServerSelected,
+      required this.ptDropdownSelected,
+      required final List<String> ptDropdownList,
+      required final Map<String, List<String>> ptMap,
       required this.showErrorMessages,
       required this.isSubmitting,
       required this.isChecked,
-      required this.failureOrSuccessOption});
+      required this.failureOrSuccessOption})
+      : _ptDropdownList = ptDropdownList,
+        _ptMap = ptMap;
 
   @override
   final UserId userId;
@@ -204,6 +262,26 @@ class _$_SignInFormState implements _SignInFormState {
   final IdKaryawan idKaryawan;
   @override
   final Password password;
+  @override
+  final PTName ptServerSelected;
+  @override
+  final String ptDropdownSelected;
+  final List<String> _ptDropdownList;
+  @override
+  List<String> get ptDropdownList {
+    if (_ptDropdownList is EqualUnmodifiableListView) return _ptDropdownList;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_ptDropdownList);
+  }
+
+  final Map<String, List<String>> _ptMap;
+  @override
+  Map<String, List<String>> get ptMap {
+    if (_ptMap is EqualUnmodifiableMapView) return _ptMap;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_ptMap);
+  }
+
   @override
   final bool showErrorMessages;
   @override
@@ -215,7 +293,7 @@ class _$_SignInFormState implements _SignInFormState {
 
   @override
   String toString() {
-    return 'SignInFormState(userId: $userId, email: $email, idKaryawan: $idKaryawan, password: $password, showErrorMessages: $showErrorMessages, isSubmitting: $isSubmitting, isChecked: $isChecked, failureOrSuccessOption: $failureOrSuccessOption)';
+    return 'SignInFormState(userId: $userId, email: $email, idKaryawan: $idKaryawan, password: $password, ptServerSelected: $ptServerSelected, ptDropdownSelected: $ptDropdownSelected, ptDropdownList: $ptDropdownList, ptMap: $ptMap, showErrorMessages: $showErrorMessages, isSubmitting: $isSubmitting, isChecked: $isChecked, failureOrSuccessOption: $failureOrSuccessOption)';
   }
 
   @override
@@ -229,6 +307,13 @@ class _$_SignInFormState implements _SignInFormState {
                 other.idKaryawan == idKaryawan) &&
             (identical(other.password, password) ||
                 other.password == password) &&
+            (identical(other.ptServerSelected, ptServerSelected) ||
+                other.ptServerSelected == ptServerSelected) &&
+            (identical(other.ptDropdownSelected, ptDropdownSelected) ||
+                other.ptDropdownSelected == ptDropdownSelected) &&
+            const DeepCollectionEquality()
+                .equals(other._ptDropdownList, _ptDropdownList) &&
+            const DeepCollectionEquality().equals(other._ptMap, _ptMap) &&
             (identical(other.showErrorMessages, showErrorMessages) ||
                 other.showErrorMessages == showErrorMessages) &&
             (identical(other.isSubmitting, isSubmitting) ||
@@ -246,6 +331,10 @@ class _$_SignInFormState implements _SignInFormState {
       email,
       idKaryawan,
       password,
+      ptServerSelected,
+      ptDropdownSelected,
+      const DeepCollectionEquality().hash(_ptDropdownList),
+      const DeepCollectionEquality().hash(_ptMap),
       showErrorMessages,
       isSubmitting,
       isChecked,
@@ -264,6 +353,10 @@ abstract class _SignInFormState implements SignInFormState {
       required final Email email,
       required final IdKaryawan idKaryawan,
       required final Password password,
+      required final PTName ptServerSelected,
+      required final String ptDropdownSelected,
+      required final List<String> ptDropdownList,
+      required final Map<String, List<String>> ptMap,
       required final bool showErrorMessages,
       required final bool isSubmitting,
       required final bool isChecked,
@@ -278,6 +371,14 @@ abstract class _SignInFormState implements SignInFormState {
   IdKaryawan get idKaryawan;
   @override
   Password get password;
+  @override
+  PTName get ptServerSelected;
+  @override
+  String get ptDropdownSelected;
+  @override
+  List<String> get ptDropdownList;
+  @override
+  Map<String, List<String>> get ptMap;
   @override
   bool get showErrorMessages;
   @override

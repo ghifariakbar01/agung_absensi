@@ -14,6 +14,9 @@ class ValueFailure<T> with _$ValueFailure<T> {
   const factory ValueFailure.multiline({
     required T failedValue,
   }) = Multiline<T>;
+  const factory ValueFailure.invalidPTName({
+    required T failedValue,
+  }) = InvalidPTName<T>;
   const factory ValueFailure.invalidEmail({
     required T failedValue,
   }) = InvalidEmail<T>;

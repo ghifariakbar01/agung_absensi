@@ -31,6 +31,14 @@ Either<ValueFailure<String>, String> validateSingleLine(String input) {
   }
 }
 
+Either<ValueFailure<String>, String> validatePTName(String input) {
+  if (input.contains('gs')) {
+    return right(input);
+  } else {
+    return left(ValueFailure.invalidPTName(failedValue: input));
+  }
+}
+
 Either<ValueFailure<String>, String> validateEmail(String input) {
   const emailRegex =
       r"""^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+""";

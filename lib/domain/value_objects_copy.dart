@@ -4,6 +4,19 @@ import 'package:face_net_authentication/domain/value_objects.dart';
 import '../../../utils/value_validators.dart';
 import 'failures.dart';
 
+class PTName extends ValueObject<String> {
+  factory PTName(String input) {
+    return PTName._(
+      validateStringNotEmpty(input).flatMap(validatePTName),
+    );
+  }
+
+  const PTName._(this.value);
+
+  @override
+  final Either<ValueFailure<String>, String> value;
+}
+
 class Email extends ValueObject<String> {
   factory Email(String input) {
     return Email._(

@@ -60,12 +60,10 @@ class UserNotifier extends StateNotifier<UserState> {
 
   void onUserParsed({
     required UserModelWithPassword user,
-    required Function dioRequestSet,
     required Function checkAndUpdateStatus,
     required Function checkAndUpdateImei,
   }) {
     setUser(user);
-    dioRequestSet();
     checkAndUpdateStatus();
     checkAndUpdateImei();
   }

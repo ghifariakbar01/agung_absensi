@@ -47,20 +47,27 @@ class RiwayatAbsenPage extends ConsumerWidget {
                                           asset: Assets.iconCrossed,
                                         )),
                               ), (list) {
+                        log('list.length ${list.length}');
+
                         final oldList = ref
                             .read(riwayatAbsenNotifierProvider.notifier)
                             .state
                             .riwayatAbsen;
 
-                        log('list.length ${list.length}');
+                        final page = ref
+                            .read(riwayatAbsenNotifierProvider.notifier)
+                            .state
+                            .page;
 
-                        if (list.length < 1) {
+                        if (list.length < 1 && page != 1) {
                           ref
                               .read(riwayatAbsenNotifierProvider.notifier)
                               .changeIsMore(false);
+                        } else if (list.length > 1 && page == 1) {
+                          ref
+                              .read(riwayatAbsenNotifierProvider.notifier)
+                              .replaceAbsenRiwayat(list);
                         } else {
-                          // debugger(message: 'called');
-
                           ref
                               .read(riwayatAbsenNotifierProvider.notifier)
                               .changeAbsenRiwayat(oldList, list);

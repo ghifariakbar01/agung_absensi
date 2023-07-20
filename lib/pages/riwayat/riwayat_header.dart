@@ -28,7 +28,8 @@ class RiwayatHeader extends ConsumerWidget {
               print(picked);
 
               final start = StringUtils.formatTanggal('${picked.start}');
-              final end = StringUtils.formatTanggal('${picked.end}');
+              final end = StringUtils.formatTanggal(
+                  '${picked.end.add(Duration(days: 1))}');
 
               await ref.read(riwayatAbsenNotifierProvider.notifier).startFilter(
                   changePage: () => ref
@@ -37,7 +38,7 @@ class RiwayatHeader extends ConsumerWidget {
                   changeFilter: () => ref
                       .read(riwayatAbsenNotifierProvider.notifier)
                       .changeFilter(end, start),
-                  onAllChanged: () async => ref
+                  onAllChanged: () => ref
                       .read(riwayatAbsenNotifierProvider.notifier)
                       .getAbsenRiwayat(
                           page: 1, dateFirst: end, dateSecond: start));
@@ -70,7 +71,8 @@ class RiwayatHeader extends ConsumerWidget {
               print(picked);
 
               final start = StringUtils.formatTanggal('${picked.start}');
-              final end = StringUtils.formatTanggal('${picked.end}');
+              final end = StringUtils.formatTanggal(
+                  '${picked.end.add(Duration(days: 1))}');
 
               await ref.read(riwayatAbsenNotifierProvider.notifier).startFilter(
                   changePage: () => ref

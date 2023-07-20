@@ -22,6 +22,7 @@ mixin _$ValueFailure<T> {
     required TResult Function(T failedValue, int max) exceedingLength,
     required TResult Function(T failedValue) empty,
     required TResult Function(T failedValue) multiline,
+    required TResult Function(T failedValue) invalidPTName,
     required TResult Function(T failedValue) invalidEmail,
     required TResult Function(T failedValue) invalidIdKaryawan,
     required TResult Function(T failedValue) invalidNoHP,
@@ -34,6 +35,7 @@ mixin _$ValueFailure<T> {
     TResult? Function(T failedValue, int max)? exceedingLength,
     TResult? Function(T failedValue)? empty,
     TResult? Function(T failedValue)? multiline,
+    TResult? Function(T failedValue)? invalidPTName,
     TResult? Function(T failedValue)? invalidEmail,
     TResult? Function(T failedValue)? invalidIdKaryawan,
     TResult? Function(T failedValue)? invalidNoHP,
@@ -46,6 +48,7 @@ mixin _$ValueFailure<T> {
     TResult Function(T failedValue, int max)? exceedingLength,
     TResult Function(T failedValue)? empty,
     TResult Function(T failedValue)? multiline,
+    TResult Function(T failedValue)? invalidPTName,
     TResult Function(T failedValue)? invalidEmail,
     TResult Function(T failedValue)? invalidIdKaryawan,
     TResult Function(T failedValue)? invalidNoHP,
@@ -59,6 +62,7 @@ mixin _$ValueFailure<T> {
     required TResult Function(ExceedingLength<T> value) exceedingLength,
     required TResult Function(Empty<T> value) empty,
     required TResult Function(Multiline<T> value) multiline,
+    required TResult Function(InvalidPTName<T> value) invalidPTName,
     required TResult Function(InvalidEmail<T> value) invalidEmail,
     required TResult Function(InvalidIdKaryawan<T> value) invalidIdKaryawan,
     required TResult Function(InvalidNoHP<T> value) invalidNoHP,
@@ -71,6 +75,7 @@ mixin _$ValueFailure<T> {
     TResult? Function(ExceedingLength<T> value)? exceedingLength,
     TResult? Function(Empty<T> value)? empty,
     TResult? Function(Multiline<T> value)? multiline,
+    TResult? Function(InvalidPTName<T> value)? invalidPTName,
     TResult? Function(InvalidEmail<T> value)? invalidEmail,
     TResult? Function(InvalidIdKaryawan<T> value)? invalidIdKaryawan,
     TResult? Function(InvalidNoHP<T> value)? invalidNoHP,
@@ -83,6 +88,7 @@ mixin _$ValueFailure<T> {
     TResult Function(ExceedingLength<T> value)? exceedingLength,
     TResult Function(Empty<T> value)? empty,
     TResult Function(Multiline<T> value)? multiline,
+    TResult Function(InvalidPTName<T> value)? invalidPTName,
     TResult Function(InvalidEmail<T> value)? invalidEmail,
     TResult Function(InvalidIdKaryawan<T> value)? invalidIdKaryawan,
     TResult Function(InvalidNoHP<T> value)? invalidNoHP,
@@ -210,6 +216,7 @@ class _$ExceedingLength<T> implements ExceedingLength<T> {
     required TResult Function(T failedValue, int max) exceedingLength,
     required TResult Function(T failedValue) empty,
     required TResult Function(T failedValue) multiline,
+    required TResult Function(T failedValue) invalidPTName,
     required TResult Function(T failedValue) invalidEmail,
     required TResult Function(T failedValue) invalidIdKaryawan,
     required TResult Function(T failedValue) invalidNoHP,
@@ -225,6 +232,7 @@ class _$ExceedingLength<T> implements ExceedingLength<T> {
     TResult? Function(T failedValue, int max)? exceedingLength,
     TResult? Function(T failedValue)? empty,
     TResult? Function(T failedValue)? multiline,
+    TResult? Function(T failedValue)? invalidPTName,
     TResult? Function(T failedValue)? invalidEmail,
     TResult? Function(T failedValue)? invalidIdKaryawan,
     TResult? Function(T failedValue)? invalidNoHP,
@@ -240,6 +248,7 @@ class _$ExceedingLength<T> implements ExceedingLength<T> {
     TResult Function(T failedValue, int max)? exceedingLength,
     TResult Function(T failedValue)? empty,
     TResult Function(T failedValue)? multiline,
+    TResult Function(T failedValue)? invalidPTName,
     TResult Function(T failedValue)? invalidEmail,
     TResult Function(T failedValue)? invalidIdKaryawan,
     TResult Function(T failedValue)? invalidNoHP,
@@ -259,6 +268,7 @@ class _$ExceedingLength<T> implements ExceedingLength<T> {
     required TResult Function(ExceedingLength<T> value) exceedingLength,
     required TResult Function(Empty<T> value) empty,
     required TResult Function(Multiline<T> value) multiline,
+    required TResult Function(InvalidPTName<T> value) invalidPTName,
     required TResult Function(InvalidEmail<T> value) invalidEmail,
     required TResult Function(InvalidIdKaryawan<T> value) invalidIdKaryawan,
     required TResult Function(InvalidNoHP<T> value) invalidNoHP,
@@ -274,6 +284,7 @@ class _$ExceedingLength<T> implements ExceedingLength<T> {
     TResult? Function(ExceedingLength<T> value)? exceedingLength,
     TResult? Function(Empty<T> value)? empty,
     TResult? Function(Multiline<T> value)? multiline,
+    TResult? Function(InvalidPTName<T> value)? invalidPTName,
     TResult? Function(InvalidEmail<T> value)? invalidEmail,
     TResult? Function(InvalidIdKaryawan<T> value)? invalidIdKaryawan,
     TResult? Function(InvalidNoHP<T> value)? invalidNoHP,
@@ -289,6 +300,7 @@ class _$ExceedingLength<T> implements ExceedingLength<T> {
     TResult Function(ExceedingLength<T> value)? exceedingLength,
     TResult Function(Empty<T> value)? empty,
     TResult Function(Multiline<T> value)? multiline,
+    TResult Function(InvalidPTName<T> value)? invalidPTName,
     TResult Function(InvalidEmail<T> value)? invalidEmail,
     TResult Function(InvalidIdKaryawan<T> value)? invalidIdKaryawan,
     TResult Function(InvalidNoHP<T> value)? invalidNoHP,
@@ -386,6 +398,7 @@ class _$Empty<T> implements Empty<T> {
     required TResult Function(T failedValue, int max) exceedingLength,
     required TResult Function(T failedValue) empty,
     required TResult Function(T failedValue) multiline,
+    required TResult Function(T failedValue) invalidPTName,
     required TResult Function(T failedValue) invalidEmail,
     required TResult Function(T failedValue) invalidIdKaryawan,
     required TResult Function(T failedValue) invalidNoHP,
@@ -401,6 +414,7 @@ class _$Empty<T> implements Empty<T> {
     TResult? Function(T failedValue, int max)? exceedingLength,
     TResult? Function(T failedValue)? empty,
     TResult? Function(T failedValue)? multiline,
+    TResult? Function(T failedValue)? invalidPTName,
     TResult? Function(T failedValue)? invalidEmail,
     TResult? Function(T failedValue)? invalidIdKaryawan,
     TResult? Function(T failedValue)? invalidNoHP,
@@ -416,6 +430,7 @@ class _$Empty<T> implements Empty<T> {
     TResult Function(T failedValue, int max)? exceedingLength,
     TResult Function(T failedValue)? empty,
     TResult Function(T failedValue)? multiline,
+    TResult Function(T failedValue)? invalidPTName,
     TResult Function(T failedValue)? invalidEmail,
     TResult Function(T failedValue)? invalidIdKaryawan,
     TResult Function(T failedValue)? invalidNoHP,
@@ -435,6 +450,7 @@ class _$Empty<T> implements Empty<T> {
     required TResult Function(ExceedingLength<T> value) exceedingLength,
     required TResult Function(Empty<T> value) empty,
     required TResult Function(Multiline<T> value) multiline,
+    required TResult Function(InvalidPTName<T> value) invalidPTName,
     required TResult Function(InvalidEmail<T> value) invalidEmail,
     required TResult Function(InvalidIdKaryawan<T> value) invalidIdKaryawan,
     required TResult Function(InvalidNoHP<T> value) invalidNoHP,
@@ -450,6 +466,7 @@ class _$Empty<T> implements Empty<T> {
     TResult? Function(ExceedingLength<T> value)? exceedingLength,
     TResult? Function(Empty<T> value)? empty,
     TResult? Function(Multiline<T> value)? multiline,
+    TResult? Function(InvalidPTName<T> value)? invalidPTName,
     TResult? Function(InvalidEmail<T> value)? invalidEmail,
     TResult? Function(InvalidIdKaryawan<T> value)? invalidIdKaryawan,
     TResult? Function(InvalidNoHP<T> value)? invalidNoHP,
@@ -465,6 +482,7 @@ class _$Empty<T> implements Empty<T> {
     TResult Function(ExceedingLength<T> value)? exceedingLength,
     TResult Function(Empty<T> value)? empty,
     TResult Function(Multiline<T> value)? multiline,
+    TResult Function(InvalidPTName<T> value)? invalidPTName,
     TResult Function(InvalidEmail<T> value)? invalidEmail,
     TResult Function(InvalidIdKaryawan<T> value)? invalidIdKaryawan,
     TResult Function(InvalidNoHP<T> value)? invalidNoHP,
@@ -561,6 +579,7 @@ class _$Multiline<T> implements Multiline<T> {
     required TResult Function(T failedValue, int max) exceedingLength,
     required TResult Function(T failedValue) empty,
     required TResult Function(T failedValue) multiline,
+    required TResult Function(T failedValue) invalidPTName,
     required TResult Function(T failedValue) invalidEmail,
     required TResult Function(T failedValue) invalidIdKaryawan,
     required TResult Function(T failedValue) invalidNoHP,
@@ -576,6 +595,7 @@ class _$Multiline<T> implements Multiline<T> {
     TResult? Function(T failedValue, int max)? exceedingLength,
     TResult? Function(T failedValue)? empty,
     TResult? Function(T failedValue)? multiline,
+    TResult? Function(T failedValue)? invalidPTName,
     TResult? Function(T failedValue)? invalidEmail,
     TResult? Function(T failedValue)? invalidIdKaryawan,
     TResult? Function(T failedValue)? invalidNoHP,
@@ -591,6 +611,7 @@ class _$Multiline<T> implements Multiline<T> {
     TResult Function(T failedValue, int max)? exceedingLength,
     TResult Function(T failedValue)? empty,
     TResult Function(T failedValue)? multiline,
+    TResult Function(T failedValue)? invalidPTName,
     TResult Function(T failedValue)? invalidEmail,
     TResult Function(T failedValue)? invalidIdKaryawan,
     TResult Function(T failedValue)? invalidNoHP,
@@ -610,6 +631,7 @@ class _$Multiline<T> implements Multiline<T> {
     required TResult Function(ExceedingLength<T> value) exceedingLength,
     required TResult Function(Empty<T> value) empty,
     required TResult Function(Multiline<T> value) multiline,
+    required TResult Function(InvalidPTName<T> value) invalidPTName,
     required TResult Function(InvalidEmail<T> value) invalidEmail,
     required TResult Function(InvalidIdKaryawan<T> value) invalidIdKaryawan,
     required TResult Function(InvalidNoHP<T> value) invalidNoHP,
@@ -625,6 +647,7 @@ class _$Multiline<T> implements Multiline<T> {
     TResult? Function(ExceedingLength<T> value)? exceedingLength,
     TResult? Function(Empty<T> value)? empty,
     TResult? Function(Multiline<T> value)? multiline,
+    TResult? Function(InvalidPTName<T> value)? invalidPTName,
     TResult? Function(InvalidEmail<T> value)? invalidEmail,
     TResult? Function(InvalidIdKaryawan<T> value)? invalidIdKaryawan,
     TResult? Function(InvalidNoHP<T> value)? invalidNoHP,
@@ -640,6 +663,7 @@ class _$Multiline<T> implements Multiline<T> {
     TResult Function(ExceedingLength<T> value)? exceedingLength,
     TResult Function(Empty<T> value)? empty,
     TResult Function(Multiline<T> value)? multiline,
+    TResult Function(InvalidPTName<T> value)? invalidPTName,
     TResult Function(InvalidEmail<T> value)? invalidEmail,
     TResult Function(InvalidIdKaryawan<T> value)? invalidIdKaryawan,
     TResult Function(InvalidNoHP<T> value)? invalidNoHP,
@@ -662,6 +686,188 @@ abstract class Multiline<T> implements ValueFailure<T> {
   @override
   @JsonKey(ignore: true)
   _$$MultilineCopyWith<T, _$Multiline<T>> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$InvalidPTNameCopyWith<T, $Res>
+    implements $ValueFailureCopyWith<T, $Res> {
+  factory _$$InvalidPTNameCopyWith(
+          _$InvalidPTName<T> value, $Res Function(_$InvalidPTName<T>) then) =
+      __$$InvalidPTNameCopyWithImpl<T, $Res>;
+  @override
+  @useResult
+  $Res call({T failedValue});
+}
+
+/// @nodoc
+class __$$InvalidPTNameCopyWithImpl<T, $Res>
+    extends _$ValueFailureCopyWithImpl<T, $Res, _$InvalidPTName<T>>
+    implements _$$InvalidPTNameCopyWith<T, $Res> {
+  __$$InvalidPTNameCopyWithImpl(
+      _$InvalidPTName<T> _value, $Res Function(_$InvalidPTName<T>) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? failedValue = freezed,
+  }) {
+    return _then(_$InvalidPTName<T>(
+      failedValue: freezed == failedValue
+          ? _value.failedValue
+          : failedValue // ignore: cast_nullable_to_non_nullable
+              as T,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$InvalidPTName<T> implements InvalidPTName<T> {
+  const _$InvalidPTName({required this.failedValue});
+
+  @override
+  final T failedValue;
+
+  @override
+  String toString() {
+    return 'ValueFailure<$T>.invalidPTName(failedValue: $failedValue)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$InvalidPTName<T> &&
+            const DeepCollectionEquality()
+                .equals(other.failedValue, failedValue));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType, const DeepCollectionEquality().hash(failedValue));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$InvalidPTNameCopyWith<T, _$InvalidPTName<T>> get copyWith =>
+      __$$InvalidPTNameCopyWithImpl<T, _$InvalidPTName<T>>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(T failedValue, int max) exceedingLength,
+    required TResult Function(T failedValue) empty,
+    required TResult Function(T failedValue) multiline,
+    required TResult Function(T failedValue) invalidPTName,
+    required TResult Function(T failedValue) invalidEmail,
+    required TResult Function(T failedValue) invalidIdKaryawan,
+    required TResult Function(T failedValue) invalidNoHP,
+    required TResult Function(T failedValue) invalidName,
+    required TResult Function(T failedValue) shortPassword,
+  }) {
+    return invalidPTName(failedValue);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(T failedValue, int max)? exceedingLength,
+    TResult? Function(T failedValue)? empty,
+    TResult? Function(T failedValue)? multiline,
+    TResult? Function(T failedValue)? invalidPTName,
+    TResult? Function(T failedValue)? invalidEmail,
+    TResult? Function(T failedValue)? invalidIdKaryawan,
+    TResult? Function(T failedValue)? invalidNoHP,
+    TResult? Function(T failedValue)? invalidName,
+    TResult? Function(T failedValue)? shortPassword,
+  }) {
+    return invalidPTName?.call(failedValue);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(T failedValue, int max)? exceedingLength,
+    TResult Function(T failedValue)? empty,
+    TResult Function(T failedValue)? multiline,
+    TResult Function(T failedValue)? invalidPTName,
+    TResult Function(T failedValue)? invalidEmail,
+    TResult Function(T failedValue)? invalidIdKaryawan,
+    TResult Function(T failedValue)? invalidNoHP,
+    TResult Function(T failedValue)? invalidName,
+    TResult Function(T failedValue)? shortPassword,
+    required TResult orElse(),
+  }) {
+    if (invalidPTName != null) {
+      return invalidPTName(failedValue);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(ExceedingLength<T> value) exceedingLength,
+    required TResult Function(Empty<T> value) empty,
+    required TResult Function(Multiline<T> value) multiline,
+    required TResult Function(InvalidPTName<T> value) invalidPTName,
+    required TResult Function(InvalidEmail<T> value) invalidEmail,
+    required TResult Function(InvalidIdKaryawan<T> value) invalidIdKaryawan,
+    required TResult Function(InvalidNoHP<T> value) invalidNoHP,
+    required TResult Function(InvalidName<T> value) invalidName,
+    required TResult Function(ShortPassword<T> value) shortPassword,
+  }) {
+    return invalidPTName(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(ExceedingLength<T> value)? exceedingLength,
+    TResult? Function(Empty<T> value)? empty,
+    TResult? Function(Multiline<T> value)? multiline,
+    TResult? Function(InvalidPTName<T> value)? invalidPTName,
+    TResult? Function(InvalidEmail<T> value)? invalidEmail,
+    TResult? Function(InvalidIdKaryawan<T> value)? invalidIdKaryawan,
+    TResult? Function(InvalidNoHP<T> value)? invalidNoHP,
+    TResult? Function(InvalidName<T> value)? invalidName,
+    TResult? Function(ShortPassword<T> value)? shortPassword,
+  }) {
+    return invalidPTName?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(ExceedingLength<T> value)? exceedingLength,
+    TResult Function(Empty<T> value)? empty,
+    TResult Function(Multiline<T> value)? multiline,
+    TResult Function(InvalidPTName<T> value)? invalidPTName,
+    TResult Function(InvalidEmail<T> value)? invalidEmail,
+    TResult Function(InvalidIdKaryawan<T> value)? invalidIdKaryawan,
+    TResult Function(InvalidNoHP<T> value)? invalidNoHP,
+    TResult Function(InvalidName<T> value)? invalidName,
+    TResult Function(ShortPassword<T> value)? shortPassword,
+    required TResult orElse(),
+  }) {
+    if (invalidPTName != null) {
+      return invalidPTName(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class InvalidPTName<T> implements ValueFailure<T> {
+  const factory InvalidPTName({required final T failedValue}) =
+      _$InvalidPTName<T>;
+
+  @override
+  T get failedValue;
+  @override
+  @JsonKey(ignore: true)
+  _$$InvalidPTNameCopyWith<T, _$InvalidPTName<T>> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -736,6 +942,7 @@ class _$InvalidEmail<T> implements InvalidEmail<T> {
     required TResult Function(T failedValue, int max) exceedingLength,
     required TResult Function(T failedValue) empty,
     required TResult Function(T failedValue) multiline,
+    required TResult Function(T failedValue) invalidPTName,
     required TResult Function(T failedValue) invalidEmail,
     required TResult Function(T failedValue) invalidIdKaryawan,
     required TResult Function(T failedValue) invalidNoHP,
@@ -751,6 +958,7 @@ class _$InvalidEmail<T> implements InvalidEmail<T> {
     TResult? Function(T failedValue, int max)? exceedingLength,
     TResult? Function(T failedValue)? empty,
     TResult? Function(T failedValue)? multiline,
+    TResult? Function(T failedValue)? invalidPTName,
     TResult? Function(T failedValue)? invalidEmail,
     TResult? Function(T failedValue)? invalidIdKaryawan,
     TResult? Function(T failedValue)? invalidNoHP,
@@ -766,6 +974,7 @@ class _$InvalidEmail<T> implements InvalidEmail<T> {
     TResult Function(T failedValue, int max)? exceedingLength,
     TResult Function(T failedValue)? empty,
     TResult Function(T failedValue)? multiline,
+    TResult Function(T failedValue)? invalidPTName,
     TResult Function(T failedValue)? invalidEmail,
     TResult Function(T failedValue)? invalidIdKaryawan,
     TResult Function(T failedValue)? invalidNoHP,
@@ -785,6 +994,7 @@ class _$InvalidEmail<T> implements InvalidEmail<T> {
     required TResult Function(ExceedingLength<T> value) exceedingLength,
     required TResult Function(Empty<T> value) empty,
     required TResult Function(Multiline<T> value) multiline,
+    required TResult Function(InvalidPTName<T> value) invalidPTName,
     required TResult Function(InvalidEmail<T> value) invalidEmail,
     required TResult Function(InvalidIdKaryawan<T> value) invalidIdKaryawan,
     required TResult Function(InvalidNoHP<T> value) invalidNoHP,
@@ -800,6 +1010,7 @@ class _$InvalidEmail<T> implements InvalidEmail<T> {
     TResult? Function(ExceedingLength<T> value)? exceedingLength,
     TResult? Function(Empty<T> value)? empty,
     TResult? Function(Multiline<T> value)? multiline,
+    TResult? Function(InvalidPTName<T> value)? invalidPTName,
     TResult? Function(InvalidEmail<T> value)? invalidEmail,
     TResult? Function(InvalidIdKaryawan<T> value)? invalidIdKaryawan,
     TResult? Function(InvalidNoHP<T> value)? invalidNoHP,
@@ -815,6 +1026,7 @@ class _$InvalidEmail<T> implements InvalidEmail<T> {
     TResult Function(ExceedingLength<T> value)? exceedingLength,
     TResult Function(Empty<T> value)? empty,
     TResult Function(Multiline<T> value)? multiline,
+    TResult Function(InvalidPTName<T> value)? invalidPTName,
     TResult Function(InvalidEmail<T> value)? invalidEmail,
     TResult Function(InvalidIdKaryawan<T> value)? invalidIdKaryawan,
     TResult Function(InvalidNoHP<T> value)? invalidNoHP,
@@ -913,6 +1125,7 @@ class _$InvalidIdKaryawan<T> implements InvalidIdKaryawan<T> {
     required TResult Function(T failedValue, int max) exceedingLength,
     required TResult Function(T failedValue) empty,
     required TResult Function(T failedValue) multiline,
+    required TResult Function(T failedValue) invalidPTName,
     required TResult Function(T failedValue) invalidEmail,
     required TResult Function(T failedValue) invalidIdKaryawan,
     required TResult Function(T failedValue) invalidNoHP,
@@ -928,6 +1141,7 @@ class _$InvalidIdKaryawan<T> implements InvalidIdKaryawan<T> {
     TResult? Function(T failedValue, int max)? exceedingLength,
     TResult? Function(T failedValue)? empty,
     TResult? Function(T failedValue)? multiline,
+    TResult? Function(T failedValue)? invalidPTName,
     TResult? Function(T failedValue)? invalidEmail,
     TResult? Function(T failedValue)? invalidIdKaryawan,
     TResult? Function(T failedValue)? invalidNoHP,
@@ -943,6 +1157,7 @@ class _$InvalidIdKaryawan<T> implements InvalidIdKaryawan<T> {
     TResult Function(T failedValue, int max)? exceedingLength,
     TResult Function(T failedValue)? empty,
     TResult Function(T failedValue)? multiline,
+    TResult Function(T failedValue)? invalidPTName,
     TResult Function(T failedValue)? invalidEmail,
     TResult Function(T failedValue)? invalidIdKaryawan,
     TResult Function(T failedValue)? invalidNoHP,
@@ -962,6 +1177,7 @@ class _$InvalidIdKaryawan<T> implements InvalidIdKaryawan<T> {
     required TResult Function(ExceedingLength<T> value) exceedingLength,
     required TResult Function(Empty<T> value) empty,
     required TResult Function(Multiline<T> value) multiline,
+    required TResult Function(InvalidPTName<T> value) invalidPTName,
     required TResult Function(InvalidEmail<T> value) invalidEmail,
     required TResult Function(InvalidIdKaryawan<T> value) invalidIdKaryawan,
     required TResult Function(InvalidNoHP<T> value) invalidNoHP,
@@ -977,6 +1193,7 @@ class _$InvalidIdKaryawan<T> implements InvalidIdKaryawan<T> {
     TResult? Function(ExceedingLength<T> value)? exceedingLength,
     TResult? Function(Empty<T> value)? empty,
     TResult? Function(Multiline<T> value)? multiline,
+    TResult? Function(InvalidPTName<T> value)? invalidPTName,
     TResult? Function(InvalidEmail<T> value)? invalidEmail,
     TResult? Function(InvalidIdKaryawan<T> value)? invalidIdKaryawan,
     TResult? Function(InvalidNoHP<T> value)? invalidNoHP,
@@ -992,6 +1209,7 @@ class _$InvalidIdKaryawan<T> implements InvalidIdKaryawan<T> {
     TResult Function(ExceedingLength<T> value)? exceedingLength,
     TResult Function(Empty<T> value)? empty,
     TResult Function(Multiline<T> value)? multiline,
+    TResult Function(InvalidPTName<T> value)? invalidPTName,
     TResult Function(InvalidEmail<T> value)? invalidEmail,
     TResult Function(InvalidIdKaryawan<T> value)? invalidIdKaryawan,
     TResult Function(InvalidNoHP<T> value)? invalidNoHP,
@@ -1089,6 +1307,7 @@ class _$InvalidNoHP<T> implements InvalidNoHP<T> {
     required TResult Function(T failedValue, int max) exceedingLength,
     required TResult Function(T failedValue) empty,
     required TResult Function(T failedValue) multiline,
+    required TResult Function(T failedValue) invalidPTName,
     required TResult Function(T failedValue) invalidEmail,
     required TResult Function(T failedValue) invalidIdKaryawan,
     required TResult Function(T failedValue) invalidNoHP,
@@ -1104,6 +1323,7 @@ class _$InvalidNoHP<T> implements InvalidNoHP<T> {
     TResult? Function(T failedValue, int max)? exceedingLength,
     TResult? Function(T failedValue)? empty,
     TResult? Function(T failedValue)? multiline,
+    TResult? Function(T failedValue)? invalidPTName,
     TResult? Function(T failedValue)? invalidEmail,
     TResult? Function(T failedValue)? invalidIdKaryawan,
     TResult? Function(T failedValue)? invalidNoHP,
@@ -1119,6 +1339,7 @@ class _$InvalidNoHP<T> implements InvalidNoHP<T> {
     TResult Function(T failedValue, int max)? exceedingLength,
     TResult Function(T failedValue)? empty,
     TResult Function(T failedValue)? multiline,
+    TResult Function(T failedValue)? invalidPTName,
     TResult Function(T failedValue)? invalidEmail,
     TResult Function(T failedValue)? invalidIdKaryawan,
     TResult Function(T failedValue)? invalidNoHP,
@@ -1138,6 +1359,7 @@ class _$InvalidNoHP<T> implements InvalidNoHP<T> {
     required TResult Function(ExceedingLength<T> value) exceedingLength,
     required TResult Function(Empty<T> value) empty,
     required TResult Function(Multiline<T> value) multiline,
+    required TResult Function(InvalidPTName<T> value) invalidPTName,
     required TResult Function(InvalidEmail<T> value) invalidEmail,
     required TResult Function(InvalidIdKaryawan<T> value) invalidIdKaryawan,
     required TResult Function(InvalidNoHP<T> value) invalidNoHP,
@@ -1153,6 +1375,7 @@ class _$InvalidNoHP<T> implements InvalidNoHP<T> {
     TResult? Function(ExceedingLength<T> value)? exceedingLength,
     TResult? Function(Empty<T> value)? empty,
     TResult? Function(Multiline<T> value)? multiline,
+    TResult? Function(InvalidPTName<T> value)? invalidPTName,
     TResult? Function(InvalidEmail<T> value)? invalidEmail,
     TResult? Function(InvalidIdKaryawan<T> value)? invalidIdKaryawan,
     TResult? Function(InvalidNoHP<T> value)? invalidNoHP,
@@ -1168,6 +1391,7 @@ class _$InvalidNoHP<T> implements InvalidNoHP<T> {
     TResult Function(ExceedingLength<T> value)? exceedingLength,
     TResult Function(Empty<T> value)? empty,
     TResult Function(Multiline<T> value)? multiline,
+    TResult Function(InvalidPTName<T> value)? invalidPTName,
     TResult Function(InvalidEmail<T> value)? invalidEmail,
     TResult Function(InvalidIdKaryawan<T> value)? invalidIdKaryawan,
     TResult Function(InvalidNoHP<T> value)? invalidNoHP,
@@ -1264,6 +1488,7 @@ class _$InvalidName<T> implements InvalidName<T> {
     required TResult Function(T failedValue, int max) exceedingLength,
     required TResult Function(T failedValue) empty,
     required TResult Function(T failedValue) multiline,
+    required TResult Function(T failedValue) invalidPTName,
     required TResult Function(T failedValue) invalidEmail,
     required TResult Function(T failedValue) invalidIdKaryawan,
     required TResult Function(T failedValue) invalidNoHP,
@@ -1279,6 +1504,7 @@ class _$InvalidName<T> implements InvalidName<T> {
     TResult? Function(T failedValue, int max)? exceedingLength,
     TResult? Function(T failedValue)? empty,
     TResult? Function(T failedValue)? multiline,
+    TResult? Function(T failedValue)? invalidPTName,
     TResult? Function(T failedValue)? invalidEmail,
     TResult? Function(T failedValue)? invalidIdKaryawan,
     TResult? Function(T failedValue)? invalidNoHP,
@@ -1294,6 +1520,7 @@ class _$InvalidName<T> implements InvalidName<T> {
     TResult Function(T failedValue, int max)? exceedingLength,
     TResult Function(T failedValue)? empty,
     TResult Function(T failedValue)? multiline,
+    TResult Function(T failedValue)? invalidPTName,
     TResult Function(T failedValue)? invalidEmail,
     TResult Function(T failedValue)? invalidIdKaryawan,
     TResult Function(T failedValue)? invalidNoHP,
@@ -1313,6 +1540,7 @@ class _$InvalidName<T> implements InvalidName<T> {
     required TResult Function(ExceedingLength<T> value) exceedingLength,
     required TResult Function(Empty<T> value) empty,
     required TResult Function(Multiline<T> value) multiline,
+    required TResult Function(InvalidPTName<T> value) invalidPTName,
     required TResult Function(InvalidEmail<T> value) invalidEmail,
     required TResult Function(InvalidIdKaryawan<T> value) invalidIdKaryawan,
     required TResult Function(InvalidNoHP<T> value) invalidNoHP,
@@ -1328,6 +1556,7 @@ class _$InvalidName<T> implements InvalidName<T> {
     TResult? Function(ExceedingLength<T> value)? exceedingLength,
     TResult? Function(Empty<T> value)? empty,
     TResult? Function(Multiline<T> value)? multiline,
+    TResult? Function(InvalidPTName<T> value)? invalidPTName,
     TResult? Function(InvalidEmail<T> value)? invalidEmail,
     TResult? Function(InvalidIdKaryawan<T> value)? invalidIdKaryawan,
     TResult? Function(InvalidNoHP<T> value)? invalidNoHP,
@@ -1343,6 +1572,7 @@ class _$InvalidName<T> implements InvalidName<T> {
     TResult Function(ExceedingLength<T> value)? exceedingLength,
     TResult Function(Empty<T> value)? empty,
     TResult Function(Multiline<T> value)? multiline,
+    TResult Function(InvalidPTName<T> value)? invalidPTName,
     TResult Function(InvalidEmail<T> value)? invalidEmail,
     TResult Function(InvalidIdKaryawan<T> value)? invalidIdKaryawan,
     TResult Function(InvalidNoHP<T> value)? invalidNoHP,
@@ -1439,6 +1669,7 @@ class _$ShortPassword<T> implements ShortPassword<T> {
     required TResult Function(T failedValue, int max) exceedingLength,
     required TResult Function(T failedValue) empty,
     required TResult Function(T failedValue) multiline,
+    required TResult Function(T failedValue) invalidPTName,
     required TResult Function(T failedValue) invalidEmail,
     required TResult Function(T failedValue) invalidIdKaryawan,
     required TResult Function(T failedValue) invalidNoHP,
@@ -1454,6 +1685,7 @@ class _$ShortPassword<T> implements ShortPassword<T> {
     TResult? Function(T failedValue, int max)? exceedingLength,
     TResult? Function(T failedValue)? empty,
     TResult? Function(T failedValue)? multiline,
+    TResult? Function(T failedValue)? invalidPTName,
     TResult? Function(T failedValue)? invalidEmail,
     TResult? Function(T failedValue)? invalidIdKaryawan,
     TResult? Function(T failedValue)? invalidNoHP,
@@ -1469,6 +1701,7 @@ class _$ShortPassword<T> implements ShortPassword<T> {
     TResult Function(T failedValue, int max)? exceedingLength,
     TResult Function(T failedValue)? empty,
     TResult Function(T failedValue)? multiline,
+    TResult Function(T failedValue)? invalidPTName,
     TResult Function(T failedValue)? invalidEmail,
     TResult Function(T failedValue)? invalidIdKaryawan,
     TResult Function(T failedValue)? invalidNoHP,
@@ -1488,6 +1721,7 @@ class _$ShortPassword<T> implements ShortPassword<T> {
     required TResult Function(ExceedingLength<T> value) exceedingLength,
     required TResult Function(Empty<T> value) empty,
     required TResult Function(Multiline<T> value) multiline,
+    required TResult Function(InvalidPTName<T> value) invalidPTName,
     required TResult Function(InvalidEmail<T> value) invalidEmail,
     required TResult Function(InvalidIdKaryawan<T> value) invalidIdKaryawan,
     required TResult Function(InvalidNoHP<T> value) invalidNoHP,
@@ -1503,6 +1737,7 @@ class _$ShortPassword<T> implements ShortPassword<T> {
     TResult? Function(ExceedingLength<T> value)? exceedingLength,
     TResult? Function(Empty<T> value)? empty,
     TResult? Function(Multiline<T> value)? multiline,
+    TResult? Function(InvalidPTName<T> value)? invalidPTName,
     TResult? Function(InvalidEmail<T> value)? invalidEmail,
     TResult? Function(InvalidIdKaryawan<T> value)? invalidIdKaryawan,
     TResult? Function(InvalidNoHP<T> value)? invalidNoHP,
@@ -1518,6 +1753,7 @@ class _$ShortPassword<T> implements ShortPassword<T> {
     TResult Function(ExceedingLength<T> value)? exceedingLength,
     TResult Function(Empty<T> value)? empty,
     TResult Function(Multiline<T> value)? multiline,
+    TResult Function(InvalidPTName<T> value)? invalidPTName,
     TResult Function(InvalidEmail<T> value)? invalidEmail,
     TResult Function(InvalidIdKaryawan<T> value)? invalidIdKaryawan,
     TResult Function(InvalidNoHP<T> value)? invalidNoHP,

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -21,6 +20,7 @@ class SignInFormNotifier extends StateNotifier<SignInFormState> {
   final AuthRepository _repository;
 
   void changeAllData({
+    required String ptNameStr,
     required String idKaryawanStr,
     required String userStr,
     required String passwordStr,
@@ -29,6 +29,7 @@ class SignInFormNotifier extends StateNotifier<SignInFormState> {
       idKaryawan: IdKaryawan(idKaryawanStr),
       userId: UserId(userStr),
       password: Password(passwordStr),
+      ptDropdownSelected: ptNameStr,
       failureOrSuccessOption: none(),
     );
   }
@@ -36,6 +37,13 @@ class SignInFormNotifier extends StateNotifier<SignInFormState> {
   void changeIdKaryawan(String idKaryawanStr) {
     state = state.copyWith(
       idKaryawan: IdKaryawan(idKaryawanStr),
+      failureOrSuccessOption: none(),
+    );
+  }
+
+  void changePTName(String ptNameStr) {
+    state = state.copyWith(
+      ptServerSelected: PTName(ptNameStr),
       failureOrSuccessOption: none(),
     );
   }
@@ -61,6 +69,19 @@ class SignInFormNotifier extends StateNotifier<SignInFormState> {
     );
   }
 
+  void changeDropdownSelected(String dropdownStr) {
+    state = state.copyWith(
+        ptDropdownSelected: dropdownStr, failureOrSuccessOption: none());
+  }
+
+  void changePTNameAndDropdown({
+    required void Function() changePTName,
+    required void Function() changeDropdownSelected,
+  }) {
+    changePTName();
+    changeDropdownSelected();
+  }
+
   Future<void> initializeAndRedirect({
     required Function initializeSavedLocations,
     required Function initializeGeofenceList,
@@ -72,10 +93,12 @@ class SignInFormNotifier extends StateNotifier<SignInFormState> {
   }
 
   Future<void> signInAndRemember({
+    required Function intializeDioRequest,
     required Function signIn,
     required Function remember,
     required Function clear,
   }) async {
+    await intializeDioRequest();
     await signIn();
     if (state.isChecked) {
       await remember();
@@ -98,7 +121,8 @@ class SignInFormNotifier extends StateNotifier<SignInFormState> {
         jsonEncode(RememberMeModel(
             nik: state.idKaryawan.getOrLeave(''),
             nama: state.userId.getOrLeave(''),
-            password: state.password.getOrLeave(''))));
+            password: state.password.getOrLeave(''),
+            ptName: state.ptDropdownSelected)));
   }
 
   Future<void> clearInfo() async {
@@ -135,10 +159,7 @@ class SignInFormNotifier extends StateNotifier<SignInFormState> {
   }
 
   bool get isValid {
-    final values = [
-      state.userId,
-      state.password,
-    ];
+    final values = [state.userId, state.password, state.ptServerSelected];
 
     return Validator.validate(values);
   }

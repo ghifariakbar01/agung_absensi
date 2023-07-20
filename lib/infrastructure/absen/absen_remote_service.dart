@@ -58,17 +58,12 @@ class AbsenRemoteService {
     String mode = '';
     final currentDate = StringUtils.midnightDate(date);
     final trimmedDate = StringUtils.trimmedDate(date);
+    final ket = inOrOut == JenisAbsen.absenIn ? 'ABSEN MASUK' : 'ABSEN PULANG';
 
     try {
-      if (inOrOut == JenisAbsen.absenIn) {
-        mode = 'INSERT';
-        command =
-            "INSERT INTO $dbName (id_absenmnl, id_user, tgl, jam_awal, jam_akhir, ket, c_date, hrd_tgl, c_user, u_date, u_user, spv_sta, spv_tgl, hrd_sta, btl_sta, periode, jenis_absen, latitude_masuk, longtitude_masuk, lokasi_masuk) VALUES ('$idAbsenMnl', '${_userModelWithPassword.idUser}', '$currentDate', '$trimmedDate', '$trimmedDate', 'ABSEN MASUK', '$currentDate', '$currentDate', '${_userModelWithPassword.nama}','$trimmedDate', '${_userModelWithPassword.nama}', 0, '$trimmedDate', 0, 0, '$currentMonth', '$jenisAbsen', '$latitude', '$longitude', '$lokasi')";
-      } else if (inOrOut == JenisAbsen.absenOut) {
-        mode = 'UPDATE';
-        command =
-            "UPDATE $dbName SET latitude_keluar = '$latitude', longtitude_keluar = '$longitude', jam_akhir = '$trimmedDate', u_date = '$trimmedDate', lokasi_keluar = '$lokasi', ket = 'ABSEN MASUK DAN ABSEN PULANG' WHERE id_user = '${_userModelWithPassword.idUser}' AND tgl = '$currentDate'";
-      }
+      mode = 'INSERT';
+      command =
+          "INSERT INTO $dbName (id_absenmnl, id_user, tgl, jam_awal, jam_akhir, ket, c_date, hrd_tgl, c_user, u_date, u_user, spv_sta, spv_tgl, hrd_sta, btl_sta, periode, jenis_absen, latitude_masuk, longtitude_masuk, lokasi_masuk) VALUES ('$idAbsenMnl', '${_userModelWithPassword.idUser}', '$currentDate', '$trimmedDate', '$trimmedDate', '$ket', '$currentDate', '$currentDate', '${_userModelWithPassword.nama}','$trimmedDate', '${_userModelWithPassword.nama}', 0, '$trimmedDate', 0, 0, '$currentMonth', '$jenisAbsen', '$latitude', '$longitude', '$lokasi')";
 
       final data = _dioRequest;
 
@@ -170,7 +165,7 @@ class AbsenRemoteService {
       final currentDate = StringUtils.midnightDate(date);
 
       final String command =
-          "SELECT TOP 1 * FROM $dbName WHERE tgl = '$currentDate' AND id_user = ${_userModelWithPassword.idUser}";
+          "SELECT TOP 2 * FROM $dbName WHERE tgl = '$currentDate' AND id_user = ${_userModelWithPassword.idUser}";
 
       final data = _dioRequest;
 
@@ -206,27 +201,14 @@ class AbsenRemoteService {
                 latitudeKeluar: item['latitude_keluar'],
                 longtitudeKeluar: item['longtitude_keluar']);
 
-            final sudahAbsen = absen.latitudeMasuk != null &&
-                absen.longtitudeMasuk != null &&
-                absen.longtitudeKeluar != null &&
-                absen.longtitudeMasuk != null;
+            final sudahAbsen = list.length == 2;
 
-            final absenMasuk = absen.latitudeMasuk != null &&
-                absen.longtitudeMasuk != null &&
-                absen.longtitudeKeluar == null &&
-                absen.longtitudeKeluar == null;
-
-            final belumAbsen = absen.latitudeMasuk == null &&
-                absen.longtitudeMasuk == null &&
-                absen.longtitudeKeluar == null &&
-                absen.longtitudeKeluar == null;
+            final absenMasuk = list.length == 1;
 
             if (sudahAbsen) {
               return AbsenState.complete();
             } else if (absenMasuk) {
               return AbsenState.absenIn();
-            } else if (belumAbsen) {
-              return AbsenState.incomplete();
             }
 
             log('null ${absen.latitudeMasuk == null} ${absen.longtitudeMasuk == null} ${absen.latitudeKeluar == null} ${absen.longtitudeKeluar == null}');
@@ -252,69 +234,6 @@ class AbsenRemoteService {
       if (e.isNoConnectionError || e.isConnectionTimeout) {
         throw NoConnectionException();
       } else if (e.response != null) {
-        throw RestApiException(e.response?.statusCode);
-      } else {
-        rethrow;
-      }
-    }
-  }
-
-  Future<RiwayatAbsenModel> getRiwayatAbsenByID({required String? date}) async {
-    // DATEFORMAT YYYY - MM - DD
-    try {
-      final String command =
-          "SELECT TOP 1 id_absenmnl, id_user, tgl, jam_awal, jam_akhir, ket, c_date, c_user, spv_nm, spv_tgl, hrd_nm, hrd_tgl, btl_sta, btl_tgl, spv_note, hrd_note, latitude_masuk, longtitude_masuk, latitude_keluar, longtitude_keluar, lokasi_masuk, lokasi_keluar FROM $dbName WHERE tgl = '$date' AND id_user = ${_userModelWithPassword.idUser} ORDER BY id_absenmnl DESC";
-
-      final data = _dioRequest;
-
-      data.addAll({
-        "mode": "SELECT",
-        "command": command,
-      });
-
-      log('data ${jsonEncode(data)}');
-
-      final response = await _dio.post('',
-          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
-
-      final items = response.data?[0];
-
-      if (items['status'] == 'Success') {
-        final riwayatExist = items['items'] != null && items['items'] is List;
-
-        if (riwayatExist) {
-          final list = items['items'] as List;
-
-          log('list $list');
-
-          if (list.isNotEmpty) {
-            final riwayat = list.first;
-
-            return RiwayatAbsenModel(
-              jamAwal: riwayat['jam_awal'] ?? '',
-              jamAkhir: riwayat['jam_akhir'] ?? '',
-              lokasiKeluar: riwayat['lokasi_keluar'] ?? '',
-              lokasiMasuk: riwayat['lokasi_masuk'] ?? '',
-              tgl: riwayat['tgl'],
-            );
-          }
-
-          throw RestApiException(4);
-        } else {
-          debugger(message: 'called');
-
-          throw RestApiException(4);
-        }
-      } else {
-        throw RestApiException(5);
-      }
-    } on FormatException {
-      throw FormatException();
-    } on DioError catch (e) {
-      if (e.isNoConnectionError || e.isConnectionTimeout) {
-        throw NoConnectionException();
-      } else if (e.response != null) {
-        log('e.response ${e.response}');
         throw RestApiException(e.response?.statusCode);
       } else {
         rethrow;
