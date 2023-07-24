@@ -45,7 +45,8 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                           .saveUserAfterUpdate(
                               idKaryawan: IdKaryawan(user.idKary ?? ''),
                               password: Password(user.password ?? ''),
-                              userId: UserId(user.nama ?? '')),
+                              userId: UserId(user.nama ?? ''),
+                              server: PTName(user.ptServer)),
                       onUser: () =>
                           context.replaceNamed(RouteNames.profileNameRoute)))),
     );

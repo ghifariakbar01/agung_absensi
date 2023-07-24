@@ -91,55 +91,57 @@ class SignInPage extends HookConsumerWidget {
       signInFormNotifierProvider.select((state) => state.isSubmitting),
     );
 
-    return Stack(
-      children: [
-        const SignInScaffold(),
-        Align(
-            alignment: Alignment.bottomCenter,
-            child: VButton(
-              onPressed: () async {
-                FocusScope.of(context).unfocus();
-                await ref
-                    .read(signInFormNotifierProvider.notifier)
-                    .signInAndRemember(
-                      intializeDioRequest: () {
-                        final server = ref
-                            .read(signInFormNotifierProvider.notifier)
-                            .state
-                            .ptServerSelected
-                            .getOrLeave('');
-                        final username = ref
-                            .read(signInFormNotifierProvider.notifier)
-                            .state
-                            .userId
-                            .getOrLeave('');
-                        final password = ref
-                            .read(signInFormNotifierProvider.notifier)
-                            .state
-                            .password
-                            .getOrLeave('');
+    return SafeArea(
+      child: Stack(
+        children: [
+          const SignInScaffold(),
+          Align(
+              alignment: Alignment.bottomCenter,
+              child: VButton(
+                onPressed: () async {
+                  FocusScope.of(context).unfocus();
+                  await ref
+                      .read(signInFormNotifierProvider.notifier)
+                      .signInAndRemember(
+                        intializeDioRequest: () {
+                          final server = ref
+                              .read(signInFormNotifierProvider.notifier)
+                              .state
+                              .ptServerSelected
+                              .getOrLeave('');
+                          final username = ref
+                              .read(signInFormNotifierProvider.notifier)
+                              .state
+                              .userId
+                              .getOrLeave('');
+                          final password = ref
+                              .read(signInFormNotifierProvider.notifier)
+                              .state
+                              .password
+                              .getOrLeave('');
 
-                        ref.read(dioRequestProvider).addAll({
-                          "server": server,
-                          "username": username,
-                          "password": password
-                        });
-                      },
-                      signIn: () => ref
-                          .read(signInFormNotifierProvider.notifier)
-                          .signInWithUserIdEmailAndPassword(),
-                      remember: () => ref
-                          .read(signInFormNotifierProvider.notifier)
-                          .rememberInfo(),
-                      clear: () => ref
-                          .read(signInFormNotifierProvider.notifier)
-                          .clearInfo(),
-                    );
-              },
-              label: 'LOGIN',
-            )),
-        LoadingOverlay(isLoading: isSubmitting),
-      ],
+                          ref.read(dioRequestProvider).addAll({
+                            "server": server,
+                            "username": username,
+                            "password": password
+                          });
+                        },
+                        signIn: () => ref
+                            .read(signInFormNotifierProvider.notifier)
+                            .signInWithUserIdEmailAndPassword(),
+                        remember: () => ref
+                            .read(signInFormNotifierProvider.notifier)
+                            .rememberInfo(),
+                        clear: () => ref
+                            .read(signInFormNotifierProvider.notifier)
+                            .clearInfo(),
+                      );
+                },
+                label: 'LOGIN',
+              )),
+          LoadingOverlay(isLoading: isSubmitting),
+        ],
+      ),
     );
   }
 }

@@ -35,18 +35,17 @@ class AuthRepository {
     return clearCredentialsStorage();
   }
 
-  Future<Either<AuthFailure, Unit>> signInWithIdKaryawanUsernameAndPassword({
-    required UserId userId,
-    required Password password,
-  }) async {
+  Future<Either<AuthFailure, Unit>> signInWithIdKaryawanUsernameAndPassword(
+      {required UserId userId,
+      required Password password,
+      required PTName server}) async {
     try {
       final userIdStr = userId.getOrCrash();
       final passwordStr = password.getOrCrash();
+      final serverStr = server.getOrCrash();
 
       final authResponse = await _remoteService.signIn(
-        userId: userIdStr,
-        password: passwordStr,
-      );
+          userId: userIdStr, password: passwordStr, server: serverStr);
 
       return authResponse.when(
         withUser: (user) async {
@@ -70,19 +69,20 @@ class AuthRepository {
     }
   }
 
-  Future<Either<AuthFailure, Unit>> saveUserAfterUpdate({
-    required IdKaryawan idKaryawan,
-    required UserId userId,
-    required Password password,
-  }) async {
+  Future<Either<AuthFailure, Unit>> saveUserAfterUpdate(
+      {required IdKaryawan idKaryawan,
+      required UserId userId,
+      required Password password,
+      required PTName server}) async {
     try {
       final userIdStr = userId.getOrCrash();
       final passwordStr = password.getOrCrash();
+      final serverStr = server.getOrCrash();
 
       final authResponse = await _remoteService.signIn(
-        userId: userIdStr.toString(),
-        password: passwordStr,
-      );
+          userId: userIdStr.toString(),
+          password: passwordStr,
+          server: serverStr);
 
       return authResponse.when(
         withUser: (user) async {

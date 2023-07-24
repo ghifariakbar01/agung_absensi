@@ -27,6 +27,7 @@ class RiwayatAbsenPage extends ConsumerWidget {
                                 server: ((errorCode, message) =>
                                     showCupertinoDialog(
                                         context: context,
+                                        barrierDismissible: true,
                                         builder: (builder) => VSimpleDialog(
                                               label: 'Error $errorCode',
                                               labelDescription: '$message',
@@ -34,6 +35,7 @@ class RiwayatAbsenPage extends ConsumerWidget {
                                             ))),
                                 wrongFormat: () => showCupertinoDialog(
                                     context: context,
+                                    barrierDismissible: true,
                                     builder: (builder) => VSimpleDialog(
                                           label: 'FormatException',
                                           labelDescription: 'Error parsing',
@@ -41,6 +43,7 @@ class RiwayatAbsenPage extends ConsumerWidget {
                                         )),
                                 noConnection: () => showCupertinoDialog(
                                     context: context,
+                                    barrierDismissible: true,
                                     builder: (builder) => VSimpleDialog(
                                           label: 'NoConnection',
                                           labelDescription: 'no internet',

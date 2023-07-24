@@ -123,6 +123,7 @@ class HomeBottomsheet extends ConsumerWidget {
 
                   showDialog(
                       context: context,
+                      barrierDismissible: true,
                       builder: (_) => VSimpleDialog(
                             asset: Assets.iconCrossed,
                             label: 'NoConnection',

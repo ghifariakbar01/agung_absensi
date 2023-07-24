@@ -110,6 +110,7 @@ class AbsenButton extends ConsumerWidget {
 
           await showDialog(
               context: context,
+              barrierDismissible: true,
               builder: (_) => VSimpleDialog(
                     color: Palette.red,
                     asset: Assets.iconCrossed,
@@ -117,6 +118,7 @@ class AbsenButton extends ConsumerWidget {
                     labelDescription: 'Tidak ada koneksi',
                   )).then((_) => showDialog(
               context: context,
+              barrierDismissible: true,
               builder: (_) => VSimpleDialog(
                     asset: Assets.iconChecked,
                     label: 'Saved',
@@ -142,6 +144,7 @@ class AbsenButton extends ConsumerWidget {
                     (failure) => failure.when(
                           server: (code, message) => showDialog(
                               context: context,
+                              barrierDismissible: true,
                               builder: (_) => VSimpleDialog(
                                     asset: Assets.iconCrossed,
                                     label: '$code',
@@ -164,6 +167,7 @@ class AbsenButton extends ConsumerWidget {
 
                             await showDialog(
                                 context: context,
+                                barrierDismissible: true,
                                 builder: (_) => VSimpleDialog(
                                       color: Palette.red,
                                       asset: Assets.iconCrossed,
@@ -171,6 +175,7 @@ class AbsenButton extends ConsumerWidget {
                                       labelDescription: 'Tidak ada koneksi',
                                     )).then((_) => showDialog(
                                 context: context,
+                                barrierDismissible: true,
                                 builder: (_) => VSimpleDialog(
                                       asset: Assets.iconChecked,
                                       label: 'Saved',
@@ -199,6 +204,7 @@ class AbsenButton extends ConsumerWidget {
 
                   await showDialog(
                       context: context,
+                      barrierDismissible: true,
                       builder: (_) => VSimpleDialog(
                             asset: Assets.iconChecked,
                             label:
@@ -293,19 +299,13 @@ class AbsenButton extends ConsumerWidget {
 
                       await showDialog(
                           context: context,
+                          barrierDismissible: true,
                           builder: (_) => VSimpleDialog(
                                 asset: Assets.iconChecked,
                                 label: 'Saved',
                                 labelDescription: 'Absen tersimpan',
                               ));
                     })),
-
-            // Visibility(
-            //     visible: recentIsNotEmpty,
-            //     child: VButton(
-            //         label: 'ABSEN LOG',
-            //         onPressed: () =>
-            //             context.pushNamed(RouteNames.absenLogNameRoute))),
 
             Visibility(
                 visible: savedIsNotEmpty,

@@ -27,18 +27,21 @@ class UserNotifier extends StateNotifier<UserState> {
         isGetting: false, failureOrSuccessOption: optionOf(failureOrSuccess));
   }
 
-  Future<void> saveUserAfterUpdate({
-    required IdKaryawan idKaryawan,
-    required UserId userId,
-    required Password password,
-  }) async {
+  Future<void> saveUserAfterUpdate(
+      {required IdKaryawan idKaryawan,
+      required UserId userId,
+      required Password password,
+      required PTName server}) async {
     Either<AuthFailure, Unit?> failureOrSuccess;
 
     state =
         state.copyWith(isGetting: true, failureOrSuccessOptionUpdate: none());
 
     failureOrSuccess = await _repository.saveUserAfterUpdate(
-        idKaryawan: idKaryawan, password: password, userId: userId);
+        idKaryawan: idKaryawan,
+        password: password,
+        userId: userId,
+        server: server);
 
     state = state.copyWith(
         isGetting: false,
@@ -58,14 +61,16 @@ class UserNotifier extends StateNotifier<UserState> {
     state = state.copyWith(user: user);
   }
 
-  void onUserParsed({
+  Future<void> onUserParsed({
     required UserModelWithPassword user,
+    required Function initializeDioRequest,
     required Function checkAndUpdateStatus,
     required Function checkAndUpdateImei,
-  }) {
+  }) async {
     setUser(user);
-    checkAndUpdateStatus();
-    checkAndUpdateImei();
+    await initializeDioRequest();
+    await checkAndUpdateStatus();
+    await checkAndUpdateImei();
   }
 
   Future<void> logout(UserModelWithPassword user) async {

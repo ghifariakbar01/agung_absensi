@@ -146,9 +146,9 @@ class SignInFormNotifier extends StateNotifier<SignInFormState> {
 
       signInFailureOrSuccess =
           await _repository.signInWithIdKaryawanUsernameAndPassword(
-        userId: state.userId,
-        password: state.password,
-      );
+              userId: state.userId,
+              password: state.password,
+              server: state.ptServerSelected);
     }
 
     state = state.copyWith(

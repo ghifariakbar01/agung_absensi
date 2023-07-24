@@ -17,7 +17,11 @@ PODS:
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
+  - geocoding_ios (1.0.5):
+    - Flutter
   - geofence_service (0.0.1):
+    - Flutter
+  - geolocator_apple (1.2.0):
     - Flutter
   - google_mlkit_barcode_scanning (0.5.0):
     - Flutter
@@ -290,7 +294,9 @@ DEPENDENCIES:
   - flutter_keyboard_visibility (from `.symlinks/plugins/flutter_keyboard_visibility/ios`)
   - flutter_native_splash (from `.symlinks/plugins/flutter_native_splash/ios`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
+  - geocoding_ios (from `.symlinks/plugins/geocoding_ios/ios`)
   - geofence_service (from `.symlinks/plugins/geofence_service/ios`)
+  - geolocator_apple (from `.symlinks/plugins/geolocator_apple/ios`)
   - google_mlkit_barcode_scanning (from `.symlinks/plugins/google_mlkit_barcode_scanning/ios`)
   - google_mlkit_commons (from `.symlinks/plugins/google_mlkit_commons/ios`)
   - google_mlkit_digital_ink_recognition (from `.symlinks/plugins/google_mlkit_digital_ink_recognition/ios`)
@@ -370,8 +376,12 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_native_splash/ios"
   flutter_secure_storage:
     :path: ".symlinks/plugins/flutter_secure_storage/ios"
+  geocoding_ios:
+    :path: ".symlinks/plugins/geocoding_ios/ios"
   geofence_service:
     :path: ".symlinks/plugins/geofence_service/ios"
+  geolocator_apple:
+    :path: ".symlinks/plugins/geolocator_apple/ios"
   google_mlkit_barcode_scanning:
     :path: ".symlinks/plugins/google_mlkit_barcode_scanning/ios"
   google_mlkit_commons:
@@ -419,7 +429,9 @@ SPEC CHECKSUMS:
   flutter_native_splash: 52501b97d1c0a5f898d687f1646226c1f93c56ef
   flutter_secure_storage: 23fc622d89d073675f2eaa109381aefbcf5a49be
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
+  geocoding_ios: a389ea40f6f548de6e63006a2e31bf66ff80769a
   geofence_service: e007ddec3cf8b85531e8f7b202c1ceabca669d64
+  geolocator_apple: cc556e6844d508c95df1e87e3ea6fa4e58c50401
   google_mlkit_barcode_scanning: 5c18504510a7b3a326c2ab19758457633248b7b6
   google_mlkit_commons: e9070f57232c3a3e4bd42fdfa621bb1f4bb3e709
   google_mlkit_digital_ink_recognition: 0fc99e1e3dd8f1b05b34d22bea4172b1239ed510

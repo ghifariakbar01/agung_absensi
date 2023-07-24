@@ -27,6 +27,7 @@ class _WelcomeSavedState extends ConsumerState<WelcomeSaved> {
                 (failure) => failure.when(
                       server: (code, message) => showDialog(
                           context: context,
+                          barrierDismissible: true,
                           builder: (_) => VSimpleDialog(
                                 asset: Assets.iconCrossed,
                                 label: '$code',
@@ -34,6 +35,7 @@ class _WelcomeSavedState extends ConsumerState<WelcomeSaved> {
                               )),
                       noConnection: () => showDialog(
                           context: context,
+                          barrierDismissible: true,
                           builder: (_) => VSimpleDialog(
                                 asset: Assets.iconCrossed,
                                 label: 'NoConnection',

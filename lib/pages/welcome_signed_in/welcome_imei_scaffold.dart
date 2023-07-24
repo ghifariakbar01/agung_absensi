@@ -75,7 +75,8 @@ class WelcomeImeiScaffold extends ConsumerWidget {
                                                   IdKaryawan(user.idKary ?? ''),
                                               password:
                                                   Password(user.password ?? ''),
-                                              userId: UserId(user.nama ?? '')),
+                                              userId: UserId(user.nama ?? ''),
+                                              server: PTName(user.ptServer)),
                                       onUser: () => ref
                                           .read(userNotifierProvider.notifier)
                                           .getUser()),
@@ -110,6 +111,7 @@ class WelcomeImeiScaffold extends ConsumerWidget {
   Future<void> showSuccessDialog(BuildContext context) {
     return showDialog(
       context: context,
+      barrierDismissible: true,
       builder: (_) => VSimpleDialog(
         label: 'Berhasil',
         labelDescription: 'Sukses daftar INSTALLATION ID',
@@ -117,6 +119,7 @@ class WelcomeImeiScaffold extends ConsumerWidget {
       ),
     ).then((_) => showDialog(
           context: context,
+          barrierDismissible: true,
           builder: (_) => VSimpleDialog(
             color: Palette.red,
             label: 'Warning',
@@ -129,6 +132,7 @@ class WelcomeImeiScaffold extends ConsumerWidget {
   Future<void> showFailedDialog(BuildContext context) {
     return showDialog(
       context: context,
+      barrierDismissible: true,
       builder: (_) => VSimpleDialog(
         label: 'Gagal',
         labelDescription: 'Sudah punya INSTALLATION ID',

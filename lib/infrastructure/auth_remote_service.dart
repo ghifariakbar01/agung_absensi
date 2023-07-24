@@ -29,10 +29,10 @@ class AuthRemoteService {
     }
   }
 
-  Future<AuthResponse> signIn({
-    required String userId,
-    required String password,
-  }) async {
+  Future<AuthResponse> signIn(
+      {required String userId,
+      required String password,
+      required String server}) async {
     try {
       final data = _dioRequestNotifier;
 
@@ -62,22 +62,22 @@ class AuthRemoteService {
               final listSelected = list[0];
 
               final UserModelWithPassword user = UserModelWithPassword(
-                idUser: listSelected['id_user'] ?? '',
-                idKary: listSelected['IdKary'] ?? '',
-                company: listSelected['comp'] ?? '',
-                deptList: listSelected['dept'] ?? '',
-                email2: listSelected['email2'] ?? '',
-                email: listSelected['email'] ?? '',
-                fullname: listSelected['fullname'] ?? '',
-                imeiHp: listSelected['imei_hp'] ?? '',
-                jabatan: listSelected['jbt'] ?? '',
-                ktp: listSelected['ktp'] ?? '',
-                nama: listSelected['nama'] ?? '',
-                noTelp1: listSelected['no_telp1'] ?? '',
-                noTelp2: listSelected['no_telp2'] ?? '',
-                photo: listSelected['picture'],
-                password: password,
-              );
+                  idUser: listSelected['id_user'] ?? '',
+                  idKary: listSelected['IdKary'] ?? '',
+                  company: listSelected['comp'] ?? '',
+                  deptList: listSelected['dept'] ?? '',
+                  email2: listSelected['email2'] ?? '',
+                  email: listSelected['email'] ?? '',
+                  fullname: listSelected['fullname'] ?? '',
+                  imeiHp: listSelected['imei_hp'] ?? '',
+                  jabatan: listSelected['jbt'] ?? '',
+                  ktp: listSelected['ktp'] ?? '',
+                  nama: listSelected['nama'] ?? '',
+                  noTelp1: listSelected['no_telp1'] ?? '',
+                  noTelp2: listSelected['no_telp2'] ?? '',
+                  photo: listSelected['picture'],
+                  password: password,
+                  ptServer: server);
 
               return AuthResponse.withUser(user);
             } catch (_) {

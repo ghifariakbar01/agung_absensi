@@ -60,6 +60,7 @@ class BackgroundScaffold extends ConsumerWidget {
               absenUnknown: () {}),
           failure: (code, message) => showDialog(
               context: context,
+              barrierDismissible: true,
               builder: (_) => VSimpleDialog(
                     asset: Assets.iconCrossed,
                     label: '$code',
@@ -81,6 +82,7 @@ class BackgroundScaffold extends ConsumerWidget {
                     (failure) => failure.when(
                           server: (code, message) => showDialog(
                               context: context,
+                              barrierDismissible: true,
                               builder: (_) => VSimpleDialog(
                                     asset: Assets.iconCrossed,
                                     label: '$code',
@@ -88,6 +90,7 @@ class BackgroundScaffold extends ConsumerWidget {
                                   )),
                           noConnection: () => showDialog(
                               context: context,
+                              barrierDismissible: true,
                               builder: (_) => VSimpleDialog(
                                     asset: Assets.iconCrossed,
                                     label: 'NoConnection',
@@ -107,6 +110,7 @@ class BackgroundScaffold extends ConsumerWidget {
 
                   await showDialog(
                       context: context,
+                      barrierDismissible: true,
                       builder: (_) => VSimpleDialog(
                             asset: Assets.iconChecked,
                             label:

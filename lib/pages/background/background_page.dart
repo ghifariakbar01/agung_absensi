@@ -50,7 +50,7 @@ class _BackgroundPageState extends ConsumerState<BackgroundPage> {
                         ),
                       ), (savedLocations) {
                 if (savedLocations.isNotEmpty) {
-                  debugger(message: 'called');
+                  // debugger(message: 'called');
 
                   log('savedLocations $savedLocations');
 

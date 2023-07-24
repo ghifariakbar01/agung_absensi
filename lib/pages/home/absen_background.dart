@@ -72,6 +72,7 @@ class AbsenBackground extends ConsumerWidget {
                     orElse: () {},
                     server: (errorCode, message) => showCupertinoDialog(
                         context: context,
+                        barrierDismissible: true,
                         builder: (_) => VSimpleDialog(
                             label: 'Error',
                             labelDescription: 'Error server geofence',
@@ -79,6 +80,7 @@ class AbsenBackground extends ConsumerWidget {
                             color: Colors.red)),
                     wrongFormat: () => showCupertinoDialog(
                         context: context,
+                        barrierDismissible: true,
                         builder: (_) => VSimpleDialog(
                             label: 'Error',
                             labelDescription: 'Error parsing geofence',

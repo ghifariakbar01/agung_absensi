@@ -24,7 +24,8 @@ class ProfilePage extends HookConsumerWidget {
       await ref.read(userNotifierProvider.notifier).saveUserAfterUpdate(
           idKaryawan: IdKaryawan(user.idKary ?? ''),
           password: Password(user.password ?? ''),
-          userId: UserId(user.nama ?? ''));
+          userId: UserId(user.nama ?? ''),
+          server: PTName(user.ptServer));
     });
 
     ref.listen<Option<Either<AuthFailure, Unit?>>>(
@@ -36,6 +37,7 @@ class ProfilePage extends HookConsumerWidget {
         (either) => either.fold(
             (failure) => showDialog(
                   context: context,
+                  barrierDismissible: true,
                   builder: (_) => VSimpleDialog(
                     label: 'Error',
                     labelDescription: failure.map(
