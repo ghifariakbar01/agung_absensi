@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:face_net_authentication/application/imei_introduction/shared/imei_introduction_providers.dart';
 import 'package:face_net_authentication/constants/assets.dart';
 import 'package:face_net_authentication/style/style.dart';
 import 'package:flutter/material.dart';
@@ -41,8 +44,28 @@ class WelcomeScaffold extends ConsumerWidget {
             builder: (context) => TextButton(
               style: ButtonStyle(
                   padding: MaterialStatePropertyAll(EdgeInsets.zero)),
-              onPressed: () => context
-                  .pushNamed(RouteNames.imeiInstructionNameRoute, extra: false),
+              onPressed: () => context.pushNamed(RouteNames.copyrightNameRoute),
+              child: Icon(
+                Icons.copyright,
+                color: Palette.primaryColor,
+              ),
+            ),
+          ),
+          Expanded(child: Container()),
+          Builder(
+            builder: (context) => TextButton(
+              style: ButtonStyle(
+                  padding: MaterialStatePropertyAll(EdgeInsets.zero)),
+              onPressed: () async {
+                debugger(message: 'called');
+                await ref
+                    .read(imeiIntroductionNotifierProvider.notifier)
+                    .clearVisitedIMEIIntroduction();
+                await ref
+                    .read(imeiIntroductionNotifierProvider.notifier)
+                    .checkAndUpdateStatusIMEIIntroduction();
+                await context.pushNamed(RouteNames.imeiInstructionNameRoute);
+              },
               child: Icon(
                 Icons.help_outline_outlined,
                 color: Palette.primaryColor,

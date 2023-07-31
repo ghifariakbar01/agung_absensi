@@ -21,14 +21,20 @@ RiwayatAbsenModel _$RiwayatAbsenModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$RiwayatAbsenModel {
   String? get tgl => throw _privateConstructorUsedError;
-  @JsonKey(name: 'jam_awal')
-  String? get jamAwal => throw _privateConstructorUsedError;
-  @JsonKey(name: 'jam_akhir')
-  String? get jamAkhir => throw _privateConstructorUsedError;
-  @JsonKey(name: 'lokasi_masuk')
+  @JsonKey(name: "latitude_masuk")
+  String? get latitudeMasuk => throw _privateConstructorUsedError;
+  @JsonKey(name: "longitude_masuk")
+  String? get longitudeMasuk => throw _privateConstructorUsedError;
+  @JsonKey(name: "latitude_keluar")
+  String? get latitudeKeluar => throw _privateConstructorUsedError;
+  @JsonKey(name: "longitude_keluar")
+  String? get longitudeKeluar => throw _privateConstructorUsedError;
+  @JsonKey(name: "lokasi_masuk")
   String? get lokasiMasuk => throw _privateConstructorUsedError;
-  @JsonKey(name: 'lokasi_keluar')
+  @JsonKey(name: "lokasi_keluar")
   String? get lokasiKeluar => throw _privateConstructorUsedError;
+  String? get masuk => throw _privateConstructorUsedError;
+  String? get pulang => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -44,10 +50,14 @@ abstract class $RiwayatAbsenModelCopyWith<$Res> {
   @useResult
   $Res call(
       {String? tgl,
-      @JsonKey(name: 'jam_awal') String? jamAwal,
-      @JsonKey(name: 'jam_akhir') String? jamAkhir,
-      @JsonKey(name: 'lokasi_masuk') String? lokasiMasuk,
-      @JsonKey(name: 'lokasi_keluar') String? lokasiKeluar});
+      @JsonKey(name: "latitude_masuk") String? latitudeMasuk,
+      @JsonKey(name: "longitude_masuk") String? longitudeMasuk,
+      @JsonKey(name: "latitude_keluar") String? latitudeKeluar,
+      @JsonKey(name: "longitude_keluar") String? longitudeKeluar,
+      @JsonKey(name: "lokasi_masuk") String? lokasiMasuk,
+      @JsonKey(name: "lokasi_keluar") String? lokasiKeluar,
+      String? masuk,
+      String? pulang});
 }
 
 /// @nodoc
@@ -64,23 +74,35 @@ class _$RiwayatAbsenModelCopyWithImpl<$Res, $Val extends RiwayatAbsenModel>
   @override
   $Res call({
     Object? tgl = freezed,
-    Object? jamAwal = freezed,
-    Object? jamAkhir = freezed,
+    Object? latitudeMasuk = freezed,
+    Object? longitudeMasuk = freezed,
+    Object? latitudeKeluar = freezed,
+    Object? longitudeKeluar = freezed,
     Object? lokasiMasuk = freezed,
     Object? lokasiKeluar = freezed,
+    Object? masuk = freezed,
+    Object? pulang = freezed,
   }) {
     return _then(_value.copyWith(
       tgl: freezed == tgl
           ? _value.tgl
           : tgl // ignore: cast_nullable_to_non_nullable
               as String?,
-      jamAwal: freezed == jamAwal
-          ? _value.jamAwal
-          : jamAwal // ignore: cast_nullable_to_non_nullable
+      latitudeMasuk: freezed == latitudeMasuk
+          ? _value.latitudeMasuk
+          : latitudeMasuk // ignore: cast_nullable_to_non_nullable
               as String?,
-      jamAkhir: freezed == jamAkhir
-          ? _value.jamAkhir
-          : jamAkhir // ignore: cast_nullable_to_non_nullable
+      longitudeMasuk: freezed == longitudeMasuk
+          ? _value.longitudeMasuk
+          : longitudeMasuk // ignore: cast_nullable_to_non_nullable
+              as String?,
+      latitudeKeluar: freezed == latitudeKeluar
+          ? _value.latitudeKeluar
+          : latitudeKeluar // ignore: cast_nullable_to_non_nullable
+              as String?,
+      longitudeKeluar: freezed == longitudeKeluar
+          ? _value.longitudeKeluar
+          : longitudeKeluar // ignore: cast_nullable_to_non_nullable
               as String?,
       lokasiMasuk: freezed == lokasiMasuk
           ? _value.lokasiMasuk
@@ -89,6 +111,14 @@ class _$RiwayatAbsenModelCopyWithImpl<$Res, $Val extends RiwayatAbsenModel>
       lokasiKeluar: freezed == lokasiKeluar
           ? _value.lokasiKeluar
           : lokasiKeluar // ignore: cast_nullable_to_non_nullable
+              as String?,
+      masuk: freezed == masuk
+          ? _value.masuk
+          : masuk // ignore: cast_nullable_to_non_nullable
+              as String?,
+      pulang: freezed == pulang
+          ? _value.pulang
+          : pulang // ignore: cast_nullable_to_non_nullable
               as String?,
     ) as $Val);
   }
@@ -104,10 +134,14 @@ abstract class _$$_RiwayatAbsenModelCopyWith<$Res>
   @useResult
   $Res call(
       {String? tgl,
-      @JsonKey(name: 'jam_awal') String? jamAwal,
-      @JsonKey(name: 'jam_akhir') String? jamAkhir,
-      @JsonKey(name: 'lokasi_masuk') String? lokasiMasuk,
-      @JsonKey(name: 'lokasi_keluar') String? lokasiKeluar});
+      @JsonKey(name: "latitude_masuk") String? latitudeMasuk,
+      @JsonKey(name: "longitude_masuk") String? longitudeMasuk,
+      @JsonKey(name: "latitude_keluar") String? latitudeKeluar,
+      @JsonKey(name: "longitude_keluar") String? longitudeKeluar,
+      @JsonKey(name: "lokasi_masuk") String? lokasiMasuk,
+      @JsonKey(name: "lokasi_keluar") String? lokasiKeluar,
+      String? masuk,
+      String? pulang});
 }
 
 /// @nodoc
@@ -122,23 +156,35 @@ class __$$_RiwayatAbsenModelCopyWithImpl<$Res>
   @override
   $Res call({
     Object? tgl = freezed,
-    Object? jamAwal = freezed,
-    Object? jamAkhir = freezed,
+    Object? latitudeMasuk = freezed,
+    Object? longitudeMasuk = freezed,
+    Object? latitudeKeluar = freezed,
+    Object? longitudeKeluar = freezed,
     Object? lokasiMasuk = freezed,
     Object? lokasiKeluar = freezed,
+    Object? masuk = freezed,
+    Object? pulang = freezed,
   }) {
     return _then(_$_RiwayatAbsenModel(
       tgl: freezed == tgl
           ? _value.tgl
           : tgl // ignore: cast_nullable_to_non_nullable
               as String?,
-      jamAwal: freezed == jamAwal
-          ? _value.jamAwal
-          : jamAwal // ignore: cast_nullable_to_non_nullable
+      latitudeMasuk: freezed == latitudeMasuk
+          ? _value.latitudeMasuk
+          : latitudeMasuk // ignore: cast_nullable_to_non_nullable
               as String?,
-      jamAkhir: freezed == jamAkhir
-          ? _value.jamAkhir
-          : jamAkhir // ignore: cast_nullable_to_non_nullable
+      longitudeMasuk: freezed == longitudeMasuk
+          ? _value.longitudeMasuk
+          : longitudeMasuk // ignore: cast_nullable_to_non_nullable
+              as String?,
+      latitudeKeluar: freezed == latitudeKeluar
+          ? _value.latitudeKeluar
+          : latitudeKeluar // ignore: cast_nullable_to_non_nullable
+              as String?,
+      longitudeKeluar: freezed == longitudeKeluar
+          ? _value.longitudeKeluar
+          : longitudeKeluar // ignore: cast_nullable_to_non_nullable
               as String?,
       lokasiMasuk: freezed == lokasiMasuk
           ? _value.lokasiMasuk
@@ -147,6 +193,14 @@ class __$$_RiwayatAbsenModelCopyWithImpl<$Res>
       lokasiKeluar: freezed == lokasiKeluar
           ? _value.lokasiKeluar
           : lokasiKeluar // ignore: cast_nullable_to_non_nullable
+              as String?,
+      masuk: freezed == masuk
+          ? _value.masuk
+          : masuk // ignore: cast_nullable_to_non_nullable
+              as String?,
+      pulang: freezed == pulang
+          ? _value.pulang
+          : pulang // ignore: cast_nullable_to_non_nullable
               as String?,
     ));
   }
@@ -157,10 +211,14 @@ class __$$_RiwayatAbsenModelCopyWithImpl<$Res>
 class _$_RiwayatAbsenModel implements _RiwayatAbsenModel {
   const _$_RiwayatAbsenModel(
       {required this.tgl,
-      @JsonKey(name: 'jam_awal') required this.jamAwal,
-      @JsonKey(name: 'jam_akhir') required this.jamAkhir,
-      @JsonKey(name: 'lokasi_masuk') required this.lokasiMasuk,
-      @JsonKey(name: 'lokasi_keluar') required this.lokasiKeluar});
+      @JsonKey(name: "latitude_masuk") required this.latitudeMasuk,
+      @JsonKey(name: "longitude_masuk") required this.longitudeMasuk,
+      @JsonKey(name: "latitude_keluar") required this.latitudeKeluar,
+      @JsonKey(name: "longitude_keluar") required this.longitudeKeluar,
+      @JsonKey(name: "lokasi_masuk") required this.lokasiMasuk,
+      @JsonKey(name: "lokasi_keluar") required this.lokasiKeluar,
+      required this.masuk,
+      required this.pulang});
 
   factory _$_RiwayatAbsenModel.fromJson(Map<String, dynamic> json) =>
       _$$_RiwayatAbsenModelFromJson(json);
@@ -168,21 +226,31 @@ class _$_RiwayatAbsenModel implements _RiwayatAbsenModel {
   @override
   final String? tgl;
   @override
-  @JsonKey(name: 'jam_awal')
-  final String? jamAwal;
+  @JsonKey(name: "latitude_masuk")
+  final String? latitudeMasuk;
   @override
-  @JsonKey(name: 'jam_akhir')
-  final String? jamAkhir;
+  @JsonKey(name: "longitude_masuk")
+  final String? longitudeMasuk;
   @override
-  @JsonKey(name: 'lokasi_masuk')
+  @JsonKey(name: "latitude_keluar")
+  final String? latitudeKeluar;
+  @override
+  @JsonKey(name: "longitude_keluar")
+  final String? longitudeKeluar;
+  @override
+  @JsonKey(name: "lokasi_masuk")
   final String? lokasiMasuk;
   @override
-  @JsonKey(name: 'lokasi_keluar')
+  @JsonKey(name: "lokasi_keluar")
   final String? lokasiKeluar;
+  @override
+  final String? masuk;
+  @override
+  final String? pulang;
 
   @override
   String toString() {
-    return 'RiwayatAbsenModel(tgl: $tgl, jamAwal: $jamAwal, jamAkhir: $jamAkhir, lokasiMasuk: $lokasiMasuk, lokasiKeluar: $lokasiKeluar)';
+    return 'RiwayatAbsenModel(tgl: $tgl, latitudeMasuk: $latitudeMasuk, longitudeMasuk: $longitudeMasuk, latitudeKeluar: $latitudeKeluar, longitudeKeluar: $longitudeKeluar, lokasiMasuk: $lokasiMasuk, lokasiKeluar: $lokasiKeluar, masuk: $masuk, pulang: $pulang)';
   }
 
   @override
@@ -191,19 +259,35 @@ class _$_RiwayatAbsenModel implements _RiwayatAbsenModel {
         (other.runtimeType == runtimeType &&
             other is _$_RiwayatAbsenModel &&
             (identical(other.tgl, tgl) || other.tgl == tgl) &&
-            (identical(other.jamAwal, jamAwal) || other.jamAwal == jamAwal) &&
-            (identical(other.jamAkhir, jamAkhir) ||
-                other.jamAkhir == jamAkhir) &&
+            (identical(other.latitudeMasuk, latitudeMasuk) ||
+                other.latitudeMasuk == latitudeMasuk) &&
+            (identical(other.longitudeMasuk, longitudeMasuk) ||
+                other.longitudeMasuk == longitudeMasuk) &&
+            (identical(other.latitudeKeluar, latitudeKeluar) ||
+                other.latitudeKeluar == latitudeKeluar) &&
+            (identical(other.longitudeKeluar, longitudeKeluar) ||
+                other.longitudeKeluar == longitudeKeluar) &&
             (identical(other.lokasiMasuk, lokasiMasuk) ||
                 other.lokasiMasuk == lokasiMasuk) &&
             (identical(other.lokasiKeluar, lokasiKeluar) ||
-                other.lokasiKeluar == lokasiKeluar));
+                other.lokasiKeluar == lokasiKeluar) &&
+            (identical(other.masuk, masuk) || other.masuk == masuk) &&
+            (identical(other.pulang, pulang) || other.pulang == pulang));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-      runtimeType, tgl, jamAwal, jamAkhir, lokasiMasuk, lokasiKeluar);
+      runtimeType,
+      tgl,
+      latitudeMasuk,
+      longitudeMasuk,
+      latitudeKeluar,
+      longitudeKeluar,
+      lokasiMasuk,
+      lokasiKeluar,
+      masuk,
+      pulang);
 
   @JsonKey(ignore: true)
   @override
@@ -223,14 +307,14 @@ class _$_RiwayatAbsenModel implements _RiwayatAbsenModel {
 abstract class _RiwayatAbsenModel implements RiwayatAbsenModel {
   const factory _RiwayatAbsenModel(
       {required final String? tgl,
-      @JsonKey(name: 'jam_awal')
-          required final String? jamAwal,
-      @JsonKey(name: 'jam_akhir')
-          required final String? jamAkhir,
-      @JsonKey(name: 'lokasi_masuk')
-          required final String? lokasiMasuk,
-      @JsonKey(name: 'lokasi_keluar')
-          required final String? lokasiKeluar}) = _$_RiwayatAbsenModel;
+      @JsonKey(name: "latitude_masuk") required final String? latitudeMasuk,
+      @JsonKey(name: "longitude_masuk") required final String? longitudeMasuk,
+      @JsonKey(name: "latitude_keluar") required final String? latitudeKeluar,
+      @JsonKey(name: "longitude_keluar") required final String? longitudeKeluar,
+      @JsonKey(name: "lokasi_masuk") required final String? lokasiMasuk,
+      @JsonKey(name: "lokasi_keluar") required final String? lokasiKeluar,
+      required final String? masuk,
+      required final String? pulang}) = _$_RiwayatAbsenModel;
 
   factory _RiwayatAbsenModel.fromJson(Map<String, dynamic> json) =
       _$_RiwayatAbsenModel.fromJson;
@@ -238,17 +322,27 @@ abstract class _RiwayatAbsenModel implements RiwayatAbsenModel {
   @override
   String? get tgl;
   @override
-  @JsonKey(name: 'jam_awal')
-  String? get jamAwal;
+  @JsonKey(name: "latitude_masuk")
+  String? get latitudeMasuk;
   @override
-  @JsonKey(name: 'jam_akhir')
-  String? get jamAkhir;
+  @JsonKey(name: "longitude_masuk")
+  String? get longitudeMasuk;
   @override
-  @JsonKey(name: 'lokasi_masuk')
+  @JsonKey(name: "latitude_keluar")
+  String? get latitudeKeluar;
+  @override
+  @JsonKey(name: "longitude_keluar")
+  String? get longitudeKeluar;
+  @override
+  @JsonKey(name: "lokasi_masuk")
   String? get lokasiMasuk;
   @override
-  @JsonKey(name: 'lokasi_keluar')
+  @JsonKey(name: "lokasi_keluar")
   String? get lokasiKeluar;
+  @override
+  String? get masuk;
+  @override
+  String? get pulang;
   @override
   @JsonKey(ignore: true)
   _$$_RiwayatAbsenModelCopyWith<_$_RiwayatAbsenModel> get copyWith =>

@@ -16,12 +16,43 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$PermissionState {
-  bool get isAuthorized => throw _privateConstructorUsedError;
-  bool get cameraAuthorized => throw _privateConstructorUsedError;
-  bool get locationAuthorized => throw _privateConstructorUsedError;
-
-  @JsonKey(ignore: true)
-  $PermissionStateCopyWith<PermissionState> get copyWith =>
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() completed,
+    required TResult Function() initial,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? completed,
+    TResult? Function()? initial,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? completed,
+    TResult Function()? initial,
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Completed value) completed,
+    required TResult Function(_Initial value) initial,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Completed value)? completed,
+    TResult? Function(_Initial value)? initial,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Completed value)? completed,
+    TResult Function(_Initial value)? initial,
+    required TResult orElse(),
+  }) =>
       throw _privateConstructorUsedError;
 }
 
@@ -30,9 +61,6 @@ abstract class $PermissionStateCopyWith<$Res> {
   factory $PermissionStateCopyWith(
           PermissionState value, $Res Function(PermissionState) then) =
       _$PermissionStateCopyWithImpl<$Res, PermissionState>;
-  @useResult
-  $Res call(
-      {bool isAuthorized, bool cameraAuthorized, bool locationAuthorized});
 }
 
 /// @nodoc
@@ -44,133 +72,207 @@ class _$PermissionStateCopyWithImpl<$Res, $Val extends PermissionState>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? isAuthorized = null,
-    Object? cameraAuthorized = null,
-    Object? locationAuthorized = null,
-  }) {
-    return _then(_value.copyWith(
-      isAuthorized: null == isAuthorized
-          ? _value.isAuthorized
-          : isAuthorized // ignore: cast_nullable_to_non_nullable
-              as bool,
-      cameraAuthorized: null == cameraAuthorized
-          ? _value.cameraAuthorized
-          : cameraAuthorized // ignore: cast_nullable_to_non_nullable
-              as bool,
-      locationAuthorized: null == locationAuthorized
-          ? _value.locationAuthorized
-          : locationAuthorized // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ) as $Val);
-  }
 }
 
 /// @nodoc
-abstract class _$$_PermissionStateCopyWith<$Res>
-    implements $PermissionStateCopyWith<$Res> {
-  factory _$$_PermissionStateCopyWith(
-          _$_PermissionState value, $Res Function(_$_PermissionState) then) =
-      __$$_PermissionStateCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {bool isAuthorized, bool cameraAuthorized, bool locationAuthorized});
+abstract class _$$_CompletedCopyWith<$Res> {
+  factory _$$_CompletedCopyWith(
+          _$_Completed value, $Res Function(_$_Completed) then) =
+      __$$_CompletedCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_PermissionStateCopyWithImpl<$Res>
-    extends _$PermissionStateCopyWithImpl<$Res, _$_PermissionState>
-    implements _$$_PermissionStateCopyWith<$Res> {
-  __$$_PermissionStateCopyWithImpl(
-      _$_PermissionState _value, $Res Function(_$_PermissionState) _then)
+class __$$_CompletedCopyWithImpl<$Res>
+    extends _$PermissionStateCopyWithImpl<$Res, _$_Completed>
+    implements _$$_CompletedCopyWith<$Res> {
+  __$$_CompletedCopyWithImpl(
+      _$_Completed _value, $Res Function(_$_Completed) _then)
       : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? isAuthorized = null,
-    Object? cameraAuthorized = null,
-    Object? locationAuthorized = null,
-  }) {
-    return _then(_$_PermissionState(
-      isAuthorized: null == isAuthorized
-          ? _value.isAuthorized
-          : isAuthorized // ignore: cast_nullable_to_non_nullable
-              as bool,
-      cameraAuthorized: null == cameraAuthorized
-          ? _value.cameraAuthorized
-          : cameraAuthorized // ignore: cast_nullable_to_non_nullable
-              as bool,
-      locationAuthorized: null == locationAuthorized
-          ? _value.locationAuthorized
-          : locationAuthorized // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ));
-  }
 }
 
 /// @nodoc
 
-class _$_PermissionState implements _PermissionState {
-  const _$_PermissionState(
-      {required this.isAuthorized,
-      required this.cameraAuthorized,
-      required this.locationAuthorized});
-
-  @override
-  final bool isAuthorized;
-  @override
-  final bool cameraAuthorized;
-  @override
-  final bool locationAuthorized;
+class _$_Completed implements _Completed {
+  const _$_Completed();
 
   @override
   String toString() {
-    return 'PermissionState(isAuthorized: $isAuthorized, cameraAuthorized: $cameraAuthorized, locationAuthorized: $locationAuthorized)';
+    return 'PermissionState.completed()';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$_PermissionState &&
-            (identical(other.isAuthorized, isAuthorized) ||
-                other.isAuthorized == isAuthorized) &&
-            (identical(other.cameraAuthorized, cameraAuthorized) ||
-                other.cameraAuthorized == cameraAuthorized) &&
-            (identical(other.locationAuthorized, locationAuthorized) ||
-                other.locationAuthorized == locationAuthorized));
+        (other.runtimeType == runtimeType && other is _$_Completed);
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, isAuthorized, cameraAuthorized, locationAuthorized);
+  int get hashCode => runtimeType.hashCode;
 
-  @JsonKey(ignore: true)
   @override
-  @pragma('vm:prefer-inline')
-  _$$_PermissionStateCopyWith<_$_PermissionState> get copyWith =>
-      __$$_PermissionStateCopyWithImpl<_$_PermissionState>(this, _$identity);
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() completed,
+    required TResult Function() initial,
+  }) {
+    return completed();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? completed,
+    TResult? Function()? initial,
+  }) {
+    return completed?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? completed,
+    TResult Function()? initial,
+    required TResult orElse(),
+  }) {
+    if (completed != null) {
+      return completed();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Completed value) completed,
+    required TResult Function(_Initial value) initial,
+  }) {
+    return completed(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Completed value)? completed,
+    TResult? Function(_Initial value)? initial,
+  }) {
+    return completed?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Completed value)? completed,
+    TResult Function(_Initial value)? initial,
+    required TResult orElse(),
+  }) {
+    if (completed != null) {
+      return completed(this);
+    }
+    return orElse();
+  }
 }
 
-abstract class _PermissionState implements PermissionState {
-  const factory _PermissionState(
-      {required final bool isAuthorized,
-      required final bool cameraAuthorized,
-      required final bool locationAuthorized}) = _$_PermissionState;
+abstract class _Completed implements PermissionState {
+  const factory _Completed() = _$_Completed;
+}
+
+/// @nodoc
+abstract class _$$_InitialCopyWith<$Res> {
+  factory _$$_InitialCopyWith(
+          _$_Initial value, $Res Function(_$_Initial) then) =
+      __$$_InitialCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$_InitialCopyWithImpl<$Res>
+    extends _$PermissionStateCopyWithImpl<$Res, _$_Initial>
+    implements _$$_InitialCopyWith<$Res> {
+  __$$_InitialCopyWithImpl(_$_Initial _value, $Res Function(_$_Initial) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$_Initial implements _Initial {
+  const _$_Initial();
 
   @override
-  bool get isAuthorized;
+  String toString() {
+    return 'PermissionState.initial()';
+  }
+
   @override
-  bool get cameraAuthorized;
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$_Initial);
+  }
+
   @override
-  bool get locationAuthorized;
+  int get hashCode => runtimeType.hashCode;
+
   @override
-  @JsonKey(ignore: true)
-  _$$_PermissionStateCopyWith<_$_PermissionState> get copyWith =>
-      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() completed,
+    required TResult Function() initial,
+  }) {
+    return initial();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? completed,
+    TResult? Function()? initial,
+  }) {
+    return initial?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? completed,
+    TResult Function()? initial,
+    required TResult orElse(),
+  }) {
+    if (initial != null) {
+      return initial();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Completed value) completed,
+    required TResult Function(_Initial value) initial,
+  }) {
+    return initial(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Completed value)? completed,
+    TResult? Function(_Initial value)? initial,
+  }) {
+    return initial?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Completed value)? completed,
+    TResult Function(_Initial value)? initial,
+    required TResult orElse(),
+  }) {
+    if (initial != null) {
+      return initial(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _Initial implements PermissionState {
+  const factory _Initial() = _$_Initial;
 }

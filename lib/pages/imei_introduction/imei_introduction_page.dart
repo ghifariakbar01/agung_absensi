@@ -1,38 +1,18 @@
-import 'package:face_net_authentication/application/routes/route_names.dart';
 import 'package:face_net_authentication/constants/assets.dart';
 import 'package:face_net_authentication/pages/widgets/v_button.dart';
 import 'package:face_net_authentication/pages/widgets/v_dialogs.dart';
 import 'package:face_net_authentication/style/style.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-final imeiIntroductionPreference =
-    FutureProvider.family<void, BuildContext>((ref, context) async {
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
-
-  final bool? hasUnderstood = prefs.getBool('imei_introduction');
-
-  if (hasUnderstood == null || hasUnderstood == false) {
-    return;
-  } else {
-    context.replaceNamed(RouteNames.welcomeNameRoute);
-  }
-});
+import '../../application/imei_introduction/shared/imei_introduction_providers.dart';
 
 class ImeiIntroductionPage extends ConsumerWidget {
-  const ImeiIntroductionPage({Key? key, required this.isIntro})
-      : super(key: key);
-
-  final bool isIntro;
+  const ImeiIntroductionPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (isIntro) {
-      ref.listen(imeiIntroductionPreference(context), (_, __) {});
-    }
-
     return Scaffold(
         body: SafeArea(
             child: Padding(
@@ -61,59 +41,52 @@ class ImeiIntroductionPage extends ConsumerWidget {
           ),
           Center(
             child: Text(
-              'Agung Logistics HRMS Online menyimpan UID untuk validasi data absen. Jika ingin melakukan uninstall, lakukan UNLINK DEVICE di Setting aplikasi ini.',
+              'Agung Logistics HRMS Online menyimpan UID untuk validasi data absen. Jika ingin melakukan uninstall, lakukan UNLINK DEVICE di Setting aplikasi ini. Baru lakukan UNINSTALL aplikasi.',
               textAlign: TextAlign.justify,
               style: Themes.customColor(FontWeight.normal, 15, Colors.black),
             ),
           ),
-          Visibility(
-              visible: isIntro == false,
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 4,
-                  ),
-                  Text('Untuk petunjuk, ikuti instruksi dibawah.',
-                      style: Themes.customColor(
-                          FontWeight.normal, 15, Colors.black)),
-                  SizedBox(
-                    height: 4,
-                  ),
-                  instructionImage(1),
-                  SizedBox(
-                    height: 8,
-                  ),
-                  instructionImage(2),
-                  SizedBox(
-                    height: 4,
-                  ),
-                  instructionImage(3),
-                  SizedBox(
-                    height: 4,
-                  ),
-                  instructionImage(4),
-                  SizedBox(
-                    height: 4,
-                  ),
-                  VButton(
-                      label: 'OK, SAYA MENGERTI.',
-                      onPressed: () => showDialog(
-                          context: context,
-                          builder: (_) => VAlertDialog(
-                              label: 'Apakah anda yakin?',
-                              labelDescription:
-                                  'Jika anda sudah mengerti instruksi di atas, tap YA',
-                              onPressed: () {
-                                context.pop();
-
-                                context
-                                    .replaceNamed(RouteNames.welcomeNameRoute);
-                              })))
-                ],
-              )),
-          Visibility(
-            visible: isIntro,
-            child: VButton(
+          Column(
+            children: [
+              SizedBox(
+                height: 4,
+              ),
+              Text('Untuk petunjuk, ikuti instruksi dibawah.',
+                  style:
+                      Themes.customColor(FontWeight.normal, 15, Colors.black)),
+              SizedBox(
+                height: 4,
+              ),
+              instructionImage(1),
+              SizedBox(
+                height: 8,
+              ),
+              instructionImage(2),
+              SizedBox(
+                height: 4,
+              ),
+              instructionImage(3),
+              SizedBox(
+                height: 4,
+              ),
+              instructionImage(4),
+              SizedBox(
+                height: 4,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(32.0),
+                child: Center(
+                  child: Text(
+                      'Langkah terakhir, UNINSTALL aplikasi Agung HRMS Online.',
+                      textAlign: TextAlign.center,
+                      style:
+                          Themes.customColor(FontWeight.bold, 15, Palette.red)),
+                ),
+              ),
+              SizedBox(
+                height: 4,
+              ),
+              VButton(
                 label: 'OK, SAYA MENGERTI.',
                 onPressed: () => showDialog(
                     context: context,
@@ -122,14 +95,17 @@ class ImeiIntroductionPage extends ConsumerWidget {
                         labelDescription:
                             'Jika anda sudah mengerti instruksi di atas, tap YA',
                         onPressed: () async {
-                          context.pop();
+                          await ref
+                              .read(imeiIntroductionNotifierProvider.notifier)
+                              .saveVisitedIMEIIntroduction('${DateTime.now()}');
 
-                          await understood(
-                              true,
-                              () => ref.refresh(
-                                  imeiIntroductionPreference(context)));
-                        }))),
-          )
+                          await ref
+                              .read(imeiIntroductionNotifierProvider.notifier)
+                              .checkAndUpdateStatusIMEIIntroduction();
+                        })),
+              )
+            ],
+          ),
         ],
       ),
     )));

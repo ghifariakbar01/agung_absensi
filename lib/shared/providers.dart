@@ -1,6 +1,3 @@
-import 'dart:developer';
-
-import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:face_net_authentication/application/absen/absen_auth_notifier.dart';
 import 'package:face_net_authentication/application/absen/absen_state.dart';
@@ -29,17 +26,12 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../application/absen/absen_auth_state.dart';
-import '../application/absen/absen_enum.dart';
 import '../application/absen/absen_notifier.dart';
 import '../application/auth/auth_notifier.dart';
-import '../application/background_service/background_item_state.dart';
 import '../application/edit_profile/edit_profile_state.dart';
 import '../application/geofence/geofence_notifier.dart';
 import '../application/geofence/geofence_state.dart';
 import '../application/imei/imei_notifier.dart';
-import '../application/permission/permission_notifier.dart';
-import '../application/permission/permission_state.dart';
-import '../application/routes/route_names.dart';
 import '../application/routes/route_notifier.dart';
 import '../application/sign_in_form/sign_in_form_notifier.dart';
 import '../application/timer/timer_notifier.dart';
@@ -68,9 +60,8 @@ final dioRequestProvider = Provider<Map<String, String>>(
 final routerProvider = Provider<GoRouter>((ref) {
   final router = RouterNotifier(ref);
   return GoRouter(
-    initialLocation: RouteNames.permissionRoute,
     refreshListenable: router,
-    // redirect: router.redirectLogic, Z
+    redirect: router.redirectLogic,
     routes: router.routes,
   );
 });
@@ -211,10 +202,6 @@ final imeiAuthNotifierProvider =
 // Misc
 
 final passwordVisibleProvider = StateProvider.autoDispose<bool>((ref) => false);
-
-final permissionProvider =
-    StateNotifierProvider<PermissionNotifier, PermissionState>(
-        (ref) => PermissionNotifier());
 
 final timerProvider = StateNotifierProvider<TimerNotifier, TimerModel>(
   (ref) => TimerNotifier(),

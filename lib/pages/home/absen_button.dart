@@ -2,8 +2,10 @@ import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/application/absen/absen_enum.dart';
+import 'package:face_net_authentication/application/absen/absen_request.dart';
 import 'package:face_net_authentication/application/absen/absen_state.dart';
 import 'package:face_net_authentication/application/routes/route_names.dart';
+import 'package:face_net_authentication/infrastructure/remote_response.dart';
 import 'package:face_net_authentication/shared/providers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,11 +13,9 @@ import 'package:geocoding/geocoding.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../application/absen/absen_request.dart';
 import '../../application/background_service/saved_location.dart';
 import '../../constants/assets.dart';
 import '../../domain/absen_failure.dart';
-import '../../infrastructure/remote_response.dart';
 import '../../style/style.dart';
 import '../../utils/geofence_utils.dart';
 import '../../utils/string_utils.dart';
@@ -28,15 +28,16 @@ class AbsenButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // LAT, LONG
     final currentLocationLatitude = ref.watch(
         geofenceProvider.select((value) => value.currentLocation.latitude));
     final currentLocationLongitude = ref.watch(
         geofenceProvider.select((value) => value.currentLocation.longitude));
 
-    final absen = ref.watch(absenNotifierProvidier);
     final nearest = ref.watch(geofenceProvider
         .select((value) => value.nearestCoordinates.remainingDistance));
 
+    // JARAK MAKSIMUM
     final minDistance = ref.watch(geofenceProvider
         .select((value) => value.nearestCoordinates.minDistance));
 
@@ -45,68 +46,65 @@ class AbsenButton extends ConsumerWidget {
 
     final isOfflineMode = ref.watch(absenOfflineModeProvider);
 
+    // ID GEOF, IMEI field
+    final idGeof =
+        ref.read(geofenceProvider.select((value) => value.nearestCoordinates));
+    final imei =
+        ref.read(imeiAuthNotifierProvider.select((value) => value.imei));
+
+    // GET ID
     ref.listen<RemoteResponse<AbsenRequest>>(
         absenAuthNotifierProvidier.select((value) => value.absenId),
-        (__, absenAuth) {
-      absenAuth.map(withNewData: (id) async {
-        log('data $id');
+        (_, ID) async {
+      ID.when(withNewData: (IDResponse) async {
+        final absenAuthNotifier = ref.read(absenAuthNotifierProvidier.notifier);
 
         final lokasi = await getLokasi(
             latitude: currentLocationLatitude,
             longitude: currentLocationLongitude);
 
-        id.when(
-          withNewData: (absenRequest) => absenRequest.when(
-              absenIn: (id) async => await ref
-                  .read(absenAuthNotifierProvidier.notifier)
-                  .absen(
-                      idAbsenMnl: '${id + 1}',
-                      lokasi:
-                          '${lokasi?.street}, ${lokasi?.subAdministrativeArea}, ${lokasi?.postalCode}.',
-                      date: DateTime.now(),
-                      latitude: '$currentLocationLatitude',
-                      longitude: '$currentLocationLongitude',
-                      inOrOut: JenisAbsen.absenIn),
-              absenOut: (id) async => await ref
-                  .read(absenAuthNotifierProvidier.notifier)
-                  .absen(
-                      idAbsenMnl: '${id + 1}',
-                      lokasi:
-                          '${lokasi?.street}, ${lokasi?.subAdministrativeArea}, ${lokasi?.postalCode}.',
-                      date: DateTime.now(),
-                      latitude: '$currentLocationLatitude',
-                      longitude: '$currentLocationLongitude',
-                      inOrOut: JenisAbsen.absenOut),
-              absenUnknown: () {}),
-          failure: (_, __) => {},
-        );
+        final lokasiString =
+            '${lokasi?.street}, ${lokasi?.locality}, ${lokasi?.administrativeArea}. ${lokasi?.postalCode}';
 
-        debugger(message: 'called');
+        IDResponse.maybeWhen(
+            // ABSEN IN
+            absenIn: (IDWhen) async => await absenAuthNotifier.absen(
+                  idAbsenMnl: '${IDWhen + 1}',
+                  lokasi: lokasiString,
+                  latitude: currentLocationLatitude.toString(),
+                  longitude: currentLocationLongitude.toString(),
+                  idGeof: idGeof.id.toString(),
+                  imei: imei,
+                  date: DateTime.now(),
+                  inOrOut: JenisAbsen.absenIn,
+                ),
+            // ABSEN OUT
+            absenOut: (IDWhen) async => await absenAuthNotifier.absen(
+                  idAbsenMnl: '${IDWhen + 1}',
+                  lokasi: lokasiString,
+                  latitude: currentLocationLatitude.toString(),
+                  longitude: currentLocationLongitude.toString(),
+                  idGeof: idGeof.id.toString(),
+                  imei: imei,
+                  date: DateTime.now(),
+                  inOrOut: JenisAbsen.absenOut,
+                ),
+            orElse: () {});
+      }, failure: (errorCode, message) async {
+        if (errorCode == 500) {
+          // NO CONNECTION
 
-        await ref.read(absenNotifierProvidier.notifier).getAbsen(
-            date: DateTime.now(),
-            onAbsen: (absen) async {
-              ref.read(absenNotifierProvidier.notifier).changeAbsen(absen);
+          // ALAMAT GEOFENCE
+          final alamat = ref.watch(
+              geofenceProvider.select((value) => value.nearestCoordinates));
 
-              ref.read(absenOfflineModeProvider.notifier).state = false;
-            },
-            onNoConnection: () =>
-                ref.read(absenOfflineModeProvider.notifier).state = true);
-      }, failure: (failure) async {
-        // no connection
-        if (failure.errorCode == 500) {
-          debugger(message: 'called');
-
-          final absen = SavedLocation(
-              latitude: currentLocationLatitude,
-              longitude: currentLocationLongitude,
-              alamat: 'N/A',
-              date: DateTime.now());
-
-          // save absen
-          await ref
-              .read(backgroundNotifierProvider.notifier)
-              .addSavedLocation(savedLocation: absen);
+          // SAVE ABSEN
+          await ref.read(backgroundNotifierProvider.notifier).addSavedLocation(
+              savedLocation: SavedLocation(
+                  latitude: currentLocationLatitude,
+                  longitude: currentLocationLongitude,
+                  alamat: alamat.nama,
+                  date: DateTime.now()));
 
           await showDialog(
               context: context,
@@ -125,16 +123,21 @@ class AbsenButton extends ConsumerWidget {
                     labelDescription: 'Absen tersimpan',
                   )));
 
-          await ref
-              .read(backgroundNotifierProvider.notifier)
-              .getSavedLocations();
-          await ref
-              .read(geofenceProvider.notifier)
-              .getGeofenceListFromStorage();
+          return Future.value(true);
+        } else {
+          await showDialog(
+              context: context,
+              barrierDismissible: true,
+              builder: (_) => VSimpleDialog(
+                    asset: Assets.iconCrossed,
+                    label: '$errorCode',
+                    labelDescription: '$message',
+                  ));
         }
       });
     });
 
+    // GET ABSEN
     ref.listen<Option<Either<AbsenFailure, Unit>>>(
         absenAuthNotifierProvidier
             .select((value) => value.failureOrSuccessOption),
@@ -151,18 +154,18 @@ class AbsenButton extends ConsumerWidget {
                                     labelDescription: '$message',
                                   )),
                           noConnection: () async {
-                            debugger(message: 'called');
+                            // ALAMAT GEOFENCE
+                            final alamat = ref.watch(geofenceProvider
+                                .select((value) => value.nearestCoordinates));
 
-                            final alamat = 'N/A';
-
-                            // save absen
+                            // SAVE ABSEN
                             await ref
                                 .read(backgroundNotifierProvider.notifier)
                                 .addSavedLocation(
                                     savedLocation: SavedLocation(
                                         latitude: currentLocationLatitude,
                                         longitude: currentLocationLongitude,
-                                        alamat: alamat,
+                                        alamat: alamat.nama,
                                         date: DateTime.now()));
 
                             await showDialog(
@@ -185,21 +188,20 @@ class AbsenButton extends ConsumerWidget {
                             return Future.value(true);
                           },
                         ), (_) async {
+                  // IF SUCCESS, GET RECENT ABSEN
+                  final offlineNotifier =
+                      ref.read(absenOfflineModeProvider.notifier);
+
                   await ref.read(absenNotifierProvidier.notifier).getAbsen(
                         date: DateTime.now(),
-                        onAbsen: (absen) {
-                          debugger(message: 'called');
-
+                        onAbsen: (absenSTATE) {
                           ref
                               .read(absenNotifierProvidier.notifier)
-                              .changeAbsen(absen);
+                              .changeAbsen(absenSTATE);
 
-                          ref.read(absenOfflineModeProvider.notifier).state =
-                              false;
+                          offlineNotifier.state = false;
                         },
-                        onNoConnection: () => ref
-                            .read(absenOfflineModeProvider.notifier)
-                            .state = true,
+                        onNoConnection: () => offlineNotifier.state = true,
                       );
 
                   await showDialog(
@@ -213,6 +215,7 @@ class AbsenButton extends ConsumerWidget {
                           ));
                 })));
 
+    final absen = ref.watch(absenNotifierProvidier);
     log('absen $absen');
 
     return Stack(
@@ -244,7 +247,7 @@ class AbsenButton extends ConsumerWidget {
 
                             await ref
                                 .read(absenAuthNotifierProvidier.notifier)
-                                .absenAndUpdate(JenisAbsen.absenIn);
+                                .absenAndUpdate(jenisAbsen: JenisAbsen.absenIn);
                           }))),
             ),
 
@@ -253,15 +256,9 @@ class AbsenButton extends ConsumerWidget {
               visible: !isOfflineMode,
               child: VButton(
                   label: 'ABSEN OUT',
-                  isEnabled: absen == AbsenState.empty() &&
-                          nearest < minDistance &&
-                          nearest != 0 ||
-                      absen == AbsenState.incomplete() &&
-                          nearest < minDistance &&
-                          nearest != 0 ||
-                      absen == AbsenState.absenIn() &&
-                          nearest < minDistance &&
-                          nearest != 0,
+                  isEnabled: absen == AbsenState.absenIn() &&
+                      nearest < minDistance &&
+                      nearest != 0,
                   onPressed: () => showCupertinoDialog(
                       context: context,
                       builder: (_) => VAlertDialog(
@@ -273,7 +270,8 @@ class AbsenButton extends ConsumerWidget {
 
                               await ref
                                   .read(absenAuthNotifierProvidier.notifier)
-                                  .absenAndUpdate(JenisAbsen.absenOut);
+                                  .absenAndUpdate(
+                                      jenisAbsen: JenisAbsen.absenOut);
                             },
                           ))),
             ),
@@ -283,6 +281,10 @@ class AbsenButton extends ConsumerWidget {
                 child: VButton(
                     label: 'SIMPAN ABSEN',
                     onPressed: () async {
+                      // ALAMAT GEOFENCE
+                      final alamat = ref.watch(geofenceProvider
+                          .select((value) => value.nearestCoordinates));
+
                       // save absen
                       await ref
                           .read(backgroundNotifierProvider.notifier)
@@ -290,7 +292,7 @@ class AbsenButton extends ConsumerWidget {
                               savedLocation: SavedLocation(
                                   latitude: currentLocationLatitude,
                                   longitude: currentLocationLongitude,
-                                  alamat: 'N/A',
+                                  alamat: alamat.nama,
                                   date: DateTime.now()));
 
                       await ref

@@ -33,14 +33,9 @@ class _WelcomeSavedState extends ConsumerState<WelcomeSaved> {
                                 label: '$code',
                                 labelDescription: '$message',
                               )),
-                      noConnection: () => showDialog(
-                          context: context,
-                          barrierDismissible: true,
-                          builder: (_) => VSimpleDialog(
-                                asset: Assets.iconCrossed,
-                                label: 'NoConnection',
-                                labelDescription: 'Tidak ada koneksi',
-                              )),
+                      noConnection: () => ref
+                          .read(absenOfflineModeProvider.notifier)
+                          .state = true,
                     ),
                 (_) {})));
 

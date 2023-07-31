@@ -70,6 +70,8 @@ class EditProfileNotifier extends StateNotifier<EditProfileState> {
 
         case false:
           await onImeiAlreadyRegistered();
+          // await onImeiNotRegistered();
+
           break;
       }
     }
@@ -79,6 +81,8 @@ class EditProfileNotifier extends StateNotifier<EditProfileState> {
         case true:
           debugger(message: 'called');
           await onImeiAlreadyRegistered();
+          // await onImeiNotRegistered();
+
           break;
         case false:
           () async {
@@ -88,6 +92,8 @@ class EditProfileNotifier extends StateNotifier<EditProfileState> {
               debugger(message: 'called');
 
               await onImeiAlreadyRegistered();
+
+              // await onImeiNotRegistered();
             }
           }();
           break;

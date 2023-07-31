@@ -1,5 +1,4 @@
 class Assets {
-  static const String appLogo = 'assets/ic_logo.svg';
   static const String iconLogo = 'assets/app_logo.png';
   static const String iconChecked = 'assets/ic_checked.svg';
   static const String iconCrossed = 'assets/ic_crossed.svg';

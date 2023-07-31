@@ -22,6 +22,7 @@ class StringUtils {
     return '${dateTimeParse.year}${dateTimeParse.month.toString().padLeft(2, '0')}${dateTimeParse.day.toString().padLeft(2, '0')}';
   }
 
+  // OUTPUT: YYYY-MM-DD 00:00:00.000
   static String midnightDate(DateTime dateTime) {
     DateTime dateToParse = DateTime.parse(dateTime.toString());
     DateTime midnightDateTime =

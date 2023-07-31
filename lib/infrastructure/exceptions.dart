@@ -6,6 +6,13 @@ class RestApiException implements Exception {
   final int? errorCode;
 }
 
+class RestApiExceptionWithMessage implements Exception {
+  RestApiExceptionWithMessage(this.errorCode, this.message);
+
+  final int? errorCode;
+  final String? message;
+}
+
 class NoConnectionException implements Exception {}
 
 class UnknownException implements Exception {}

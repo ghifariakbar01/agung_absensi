@@ -67,7 +67,8 @@ class AbsenBackground extends ConsumerWidget {
         () {},
         (either) => either.fold(
             (failure) => failure.maybeWhen(
-                  noConnection: () => {},
+                  noConnection: () =>
+                      ref.read(absenOfflineModeProvider.notifier).state = true,
                   orElse: () => failure.maybeWhen(
                     orElse: () {},
                     server: (errorCode, message) => showCupertinoDialog(

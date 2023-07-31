@@ -226,8 +226,15 @@ class _WelcomePageState extends ConsumerState<WelcomePage> {
                           // used for Absen Out
                           final lastAbsen = absensInDateLen - 1;
 
+                          // ID GEOF, IMEI field
+                          final idGeof = ref.read(geofenceProvider.select(
+                              (value) => value.nearestCoordinatesSaved));
+                          final imei = ref.read(imeiAuthNotifierProvider
+                              .select((value) => value.imei));
+
                           for (int i = 0; i < absensInDateLen; i++) {
                             final absenSaved = absensInDate[i];
+                            final idGeofSaved = idGeof[i].id;
 
                             await ref
                                 .read(absenNotifierProvidier.notifier)
@@ -279,6 +286,8 @@ class _WelcomePageState extends ConsumerState<WelcomePage> {
                                                   backgroundItemState:
                                                       absenSaved,
                                                   jenisAbsen: jenisAbsen,
+                                                  idGeof: idGeofSaved,
+                                                  imei: imei,
                                                   onAbsen: () async {
                                                     await ref
                                                         .read(
@@ -472,6 +481,8 @@ class _WelcomePageState extends ConsumerState<WelcomePage> {
                                               .absenOneLiner(
                                                 backgroundItemState: absenSaved,
                                                 jenisAbsen: jenisAbsen,
+                                                idGeof: idGeofSaved,
+                                                imei: imei,
                                                 onAbsen: () async {
                                                   await ref
                                                       .read(

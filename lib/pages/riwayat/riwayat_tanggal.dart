@@ -14,7 +14,6 @@ class RiwayatTanggal extends ConsumerWidget {
     final width = MediaQuery.of(context).size.width;
 
     return Container(
-        height: 100,
         width: width,
         padding: EdgeInsets.all(4),
         decoration: BoxDecoration(

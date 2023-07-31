@@ -1,24 +1,31 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:face_net_authentication/application/absen/absen_enum.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../style/style.dart';
 
 class RiwayatItem extends ConsumerWidget {
-  const RiwayatItem({required this.jam, required this.alamat});
+  const RiwayatItem({
+    required this.jam,
+    required this.alamat,
+    required this.jenisAbsen,
+  });
 
+  final JenisAbsen jenisAbsen;
   final String jam;
   final String alamat;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final width = MediaQuery.of(context).size.width;
+    final coancenate = jenisAbsen == JenisAbsen.absenIn ? 'In' : 'Out';
 
     return Column(
       children: [
         if (alamat.isNotEmpty) ...[
           Flexible(
-            flex: 1,
+            flex: 0,
             child: Container(
               width: width,
               padding: EdgeInsets.all(4),
@@ -42,7 +49,7 @@ class RiwayatItem extends ConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Jam',
+                            'Jam $coancenate',
                             style: Themes.white(FontWeight.bold, 12),
                           ),
                           Text(
@@ -71,7 +78,7 @@ class RiwayatItem extends ConsumerWidget {
               child: Row(
                 children: [
                   Flexible(
-                    flex: 1,
+                    flex: 0,
                     child: Icon(
                       Icons.pin_drop_rounded,
                       color: Colors.white,
@@ -89,7 +96,7 @@ class RiwayatItem extends ConsumerWidget {
                         Flexible(
                           flex: 1,
                           child: Text(
-                            'Lokasi',
+                            'Lokasi $coancenate',
                             style: Themes.white(FontWeight.bold, 12),
                           ),
                         ),
@@ -99,7 +106,7 @@ class RiwayatItem extends ConsumerWidget {
                             style: Themes.white(FontWeight.bold, 10),
                             minFontSize: 5,
                             maxFontSize: 10,
-                            maxLines: 2,
+                            maxLines: 5,
                           ),
                         ),
                       ],

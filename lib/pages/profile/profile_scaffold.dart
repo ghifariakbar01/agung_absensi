@@ -59,22 +59,6 @@ class ProfileScaffold extends ConsumerWidget {
                             await ref
                                 .read(editProfileNotifierProvider.notifier)
                                 .clearImei();
-
-                            await ref
-                                .read(userNotifierProvider.notifier)
-                                .logout(UserModelWithPassword.initial());
-
-                            await ref
-                                .read(authNotifierProvider.notifier)
-                                .checkAndUpdateAuthStatus();
-
-                            final isLoggedIn = ref.watch(authNotifierProvider);
-
-                            if (isLoggedIn == AuthState.authenticated()) {
-                              context.replaceNamed(RouteNames.welcomeNameRoute);
-                            } else {
-                              context.replaceNamed(RouteNames.signInNameRoute);
-                            }
                           })))
             ],
           ),

@@ -2,20 +2,26 @@ class RouteNames {
   static const defaultRoute = '/';
   static const defaultNameRoute = '/';
 
-  static const permissionNameRoute = 'permission';
+  static const permissionNameRoute = '/permission';
   static const permissionRoute = '/permission';
 
-  static const signInRoute = 'login';
-  static const signInNameRoute = 'login';
+  static const signInRoute = '/login';
+  static const signInNameRoute = '/login';
+
+  static const termsAndConditionNameRoute = '/termsAndCondition';
+  static const termsAndConditionRoute = '/termsAndCondition';
+
+  static const imeiInstructionNameRoute = '/imeiInstruction';
+  static const imeiInstructionRoute = '/imeiInstruction';
+
+  static const welcomeNameRoute = '/welcome';
+  static const welcomeRoute = '/welcome';
 
   static const signUpRoute = 'register';
   static const signUpNameRoute = 'register';
 
   static const changePassNameRoute = 'changePass';
   static const changePassRoute = 'changePass';
-
-  static const welcomeNameRoute = 'welcome';
-  static const welcomeRoute = 'welcome';
 
   static const absenNameRoute = 'absen';
   static const absenRoute = 'absen';
@@ -38,9 +44,9 @@ class RouteNames {
   static const editProfileNameRoute = 'editProfile';
   static const editProfileRoute = 'editProfile';
 
-  static const imeiInstructionNameRoute = 'imeiInstruction';
-  static const imeiInstructionRoute = 'imeiInstruction';
-
   static const absenTersimpanNameRoute = 'absenTersimpan';
   static const absenTersimpanRoute = 'absenTersimpan';
+
+  static const copyrightNameRoute = 'copyright';
+  static const copyrightRoute = 'copyright';
 }

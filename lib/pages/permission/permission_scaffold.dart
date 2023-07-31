@@ -1,7 +1,8 @@
+import 'package:face_net_authentication/application/permission/permission_state.dart';
+import 'package:face_net_authentication/application/permission/shared/permission_introduction_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../shared/providers.dart';
 import '../absen/widgets/user_info.dart';
 
 import '../widgets/app_logo.dart';
@@ -12,7 +13,7 @@ class PermissionScaffold extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final permission = ref.watch(permissionProvider);
+    final permission = ref.watch(permissionNotifierProvider);
 
     return Scaffold(
       body: SafeArea(
@@ -37,14 +38,21 @@ class PermissionScaffold extends ConsumerWidget {
             //       )),
             // ),
             Visibility(
-              visible: !permission.locationAuthorized,
+              visible: permission == PermissionState.initial(),
               child: Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: PermissionItem(
                     label:
                         'Lokasi dibutuhkan untuk memastikan anda berada di lokasi kantor agung group.',
-                    onPressed: () =>
-                        ref.read(permissionProvider.notifier).askLocation(),
+                    onPressed: () async {
+                      await ref
+                          .read(permissionNotifierProvider.notifier)
+                          .requestLocation();
+
+                      await ref
+                          .read(permissionNotifierProvider.notifier)
+                          .checkAndUpdateLocation();
+                    },
                     title: 'Nyalakan lokasi anda',
                   )),
             ),

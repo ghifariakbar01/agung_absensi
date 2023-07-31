@@ -23,6 +23,8 @@ class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
     required String longitude,
     required DateTime date,
     required JenisAbsen inOrOut,
+    required String idGeof,
+    required String imei,
     String jenisAbsen = 'MNL',
   }) async {
     Either<AbsenFailure, Unit> failureOrSuccess;
@@ -30,14 +32,15 @@ class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
     state = state.copyWith(isSubmitting: true, failureOrSuccessOption: none());
 
     failureOrSuccess = await _absenRepository.absen(
-      idAbsenMnl: idAbsenMnl,
-      lokasi: lokasi,
-      latitude: latitude,
-      longitude: longitude,
-      inOrOut: inOrOut,
-      date: date,
-      jenisAbsen: jenisAbsen,
-    );
+        idAbsenMnl: idAbsenMnl,
+        lokasi: lokasi,
+        latitude: latitude,
+        longitude: longitude,
+        inOrOut: inOrOut,
+        date: date,
+        jenisAbsen: jenisAbsen,
+        idGeof: idGeof,
+        imei: imei);
 
     debugger(message: 'called');
 
@@ -55,6 +58,8 @@ class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
     required String longitude,
     required DateTime date,
     required JenisAbsen inOrOut,
+    required String idGeof,
+    required String imei,
     String jenisAbsen = 'MNL',
   }) async {
     Either<AbsenFailure, Unit> failureOrSuccess;
@@ -65,14 +70,15 @@ class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
     debugger(message: 'called');
 
     failureOrSuccess = await _absenRepository.absen(
-      idAbsenMnl: idAbsenMnl,
-      lokasi: lokasi,
-      latitude: latitude,
-      longitude: longitude,
-      inOrOut: inOrOut,
-      date: date,
-      jenisAbsen: jenisAbsen,
-    );
+        idAbsenMnl: idAbsenMnl,
+        lokasi: lokasi,
+        latitude: latitude,
+        longitude: longitude,
+        inOrOut: inOrOut,
+        date: date,
+        jenisAbsen: jenisAbsen,
+        idGeof: idGeof,
+        imei: imei);
 
     log('failureOrSuccess $failureOrSuccess');
 
@@ -85,46 +91,37 @@ class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
     try {
       final response = await _absenRepository.getAbsenId(jenisAbsen);
 
-      log('response $response');
-
-      debugger(message: 'called');
-
+      log('ABSEN ID: $response');
       return response;
     } catch (e) {
-      log('response error $e');
-
-      debugger(message: 'called');
+      log('ABSEN ID ERROR: $e');
     }
 
     return RemoteResponse.failure();
   }
 
   void changeAbsenState(RemoteResponse<AbsenRequest> absenId) {
-    log('absenId $absenId');
-
-    debugger(message: 'called');
+    log('ABSEN ID CHANGE: $absenId');
 
     state = state.copyWith(absenId: absenId);
   }
 
   void changeIDAbsenStateSaved(RemoteResponse<AbsenRequest> absenId) {
-    debugger(message: 'called');
-
-    log('absenId $absenId');
+    log('ABSEN ID SAVED CHANGE: $absenId');
 
     state = state.copyWith(backgroundIdSaved: absenId);
   }
 
   void changeBackgroundAbsenStateSaved(
       BackgroundItemState backgroundItemState) {
-    debugger(message: 'called');
-
     state = state.copyWith(backgroundItemState: backgroundItemState);
   }
 
   Future<void> absenOneLiner({
     required BackgroundItemState backgroundItemState,
     required JenisAbsen jenisAbsen,
+    required String idGeof,
+    required String imei,
     required Future<void> Function() onAbsen,
     required Future<void> Function() deleteSaved,
     required Future<void> Function() reinitializeDependencies,
@@ -146,6 +143,8 @@ class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
                 date: location.date,
                 latitude: '${location.latitude ?? 0}',
                 longitude: '${location.longitude ?? 0}',
+                idGeof: idGeof,
+                imei: imei,
                 inOrOut: JenisAbsen.absenIn);
 
             await onAbsen();
@@ -161,6 +160,8 @@ class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
                 date: location.date,
                 latitude: '${location.latitude ?? 0}',
                 longitude: '${location.longitude ?? 0}',
+                idGeof: idGeof,
+                imei: imei,
                 inOrOut: JenisAbsen.absenOut);
 
             await onAbsen();
@@ -174,13 +175,15 @@ class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
     );
   }
 
-  Future<void> absenAndUpdate(JenisAbsen jenisAbsen) async {
+  Future<void> absenAndUpdate({
+    required JenisAbsen jenisAbsen,
+  }) async {
     state = state.copyWith(
         absenId: RemoteResponse.withNewData(AbsenRequest.absenUnknown()));
 
-    final absen = await getAbsenID(jenisAbsen);
+    final idResponse = await getAbsenID(jenisAbsen);
 
-    state = state.copyWith(absenId: absen);
+    state = state.copyWith(absenId: idResponse);
   }
 
   Future<void> absenAndUpdateSaved({

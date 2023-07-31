@@ -27,23 +27,28 @@ class AbsenRepository {
     required String jenisAbsen,
     required JenisAbsen inOrOut,
     required DateTime date,
+    required String idGeof,
+    required String imei,
   }) async {
     try {
       await _remoteService.absen(
-        idAbsenMnl: idAbsenMnl,
-        date: date,
-        lokasi: lokasi,
-        latitude: latitude,
-        longitude: longitude,
-        inOrOut: inOrOut,
-        jenisAbsen: jenisAbsen,
-      );
+          idAbsenMnl: idAbsenMnl,
+          date: date,
+          lokasi: lokasi,
+          latitude: latitude,
+          longitude: longitude,
+          inOrOut: inOrOut,
+          jenisAbsen: jenisAbsen,
+          idGeof: idGeof,
+          imei: imei);
 
       return right(unit);
     } on NoConnectionException {
       return left(AbsenFailure.noConnection());
-    } on RestApiException {
-      return left(AbsenFailure.server(503, 'Error rest api exception'));
+    } on RestApiException catch (error) {
+      return left(AbsenFailure.server(error.errorCode));
+    } on RestApiExceptionWithMessage catch (error) {
+      return left(AbsenFailure.server(error.errorCode, error.message));
     }
   }
 

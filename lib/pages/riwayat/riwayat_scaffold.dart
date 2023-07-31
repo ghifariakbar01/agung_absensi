@@ -82,7 +82,9 @@ class _RiwayatAbsenScaffoldState extends ConsumerState<RiwayatAbsenScaffold> {
             StringUtils.formatTanggal('${endDate.subtract(Duration(days: 6))}');
 
         await ref.read(riwayatAbsenNotifierProvider.notifier).startFilter(
-            changePage: () => {},
+            changePage: () => ref
+                .read(riwayatAbsenNotifierProvider.notifier)
+                .changePage(page + 1),
             changeFilter: () => ref
                 .read(riwayatAbsenNotifierProvider.notifier)
                 .changeFilter(start, end),
@@ -123,11 +125,11 @@ class _RiwayatAbsenScaffoldState extends ConsumerState<RiwayatAbsenScaffold> {
                   ),
                   for (var riwayat in list) ...[
                     RiwayatList(
-                      jamKeluar: riwayat.jamAkhir,
-                      jamMasuk: riwayat.jamAwal,
+                      lokasiMasuk: riwayat.lokasiMasuk ?? '',
+                      lokasiPulang: riwayat.lokasiKeluar ?? '',
+                      masuk: riwayat.masuk ?? '',
+                      pulang: riwayat.pulang ?? '',
                       tanggal: riwayat.tgl ?? '',
-                      alamatKeluar: riwayat.lokasiKeluar,
-                      alamatMasuk: riwayat.lokasiMasuk,
                     ),
                     SizedBox(
                       height: 4,

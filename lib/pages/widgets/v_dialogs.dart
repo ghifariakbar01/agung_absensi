@@ -11,11 +11,14 @@ class VAlertDialog extends StatelessWidget {
     required this.onPressed,
     this.onBackPressed,
     this.backPressedLabel,
+    this.pressedLabel,
   }) : super(key: key);
 
   final String label;
   final String labelDescription;
   final String? backPressedLabel;
+  final String? pressedLabel;
+
   final Function() onPressed;
   final Function()? onBackPressed;
 
@@ -55,7 +58,7 @@ class VAlertDialog extends StatelessWidget {
           TextButton(
             onPressed: onPressed,
             child: Text(
-              'YA',
+              pressedLabel ?? 'YA',
               style: Themes.white(
                 FontWeight.bold,
                 15,

@@ -29,12 +29,17 @@ class WelcomeImeiScaffold extends ConsumerWidget {
             failureOrSuccessOptionGettingImei.fold(
               () {},
               (either) => either.fold(
-                  (failure) => AlertHelper.showSnackBar(
-                        context,
-                        message: failure.map(
-                          server: (value) =>
-                              '${value.message} ${value.errorCode}',
-                          noConnection: (_) => 'tidak ada koneksi',
+                  (failure) => failure.maybeMap(
+                        noConnection: (_) => ref
+                            .read(absenOfflineModeProvider.notifier)
+                            .state = true,
+                        orElse: () => AlertHelper.showSnackBar(
+                          context,
+                          message: failure.map(
+                            server: (value) =>
+                                '${value.message} ${value.errorCode}',
+                            noConnection: (_) => 'tidak ada koneksi',
+                          ),
                         ),
                       ), (imeiResponse) async {
                 final savedImei =

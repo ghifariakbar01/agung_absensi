@@ -6,11 +6,8 @@ import 'package:face_net_authentication/style/style.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../application/absen/absen_enum.dart';
-import '../../application/absen/absen_request.dart';
 import '../../constants/assets.dart';
 import '../../domain/absen_failure.dart';
-import '../../infrastructure/remote_response.dart';
 import '../../shared/providers.dart';
 import '../../utils/string_utils.dart';
 import '../widgets/v_dialogs.dart';
@@ -20,59 +17,6 @@ class BackgroundScaffold extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen<RemoteResponse<AbsenRequest?>>(
-        absenAuthNotifierProvidier.select((value) => value.backgroundIdSaved),
-        (_, id) async {
-      debugger(message: 'called');
-
-      try {
-        final itemBackgroundState = ref
-            .read(absenAuthNotifierProvidier.notifier)
-            .state
-            .backgroundItemState;
-
-        final location = itemBackgroundState.savedLocations;
-
-        debugger(message: 'called');
-
-        log('location ${location.alamat}');
-
-        id.when(
-          withNewData: (absenRequest) => absenRequest?.when(
-              absenIn: (id) => ref
-                  .read(absenAuthNotifierProvidier.notifier)
-                  .absenSaved(
-                      idAbsenMnl: '${id + 1}',
-                      lokasi: '${location.alamat}',
-                      date: location.date,
-                      latitude: '${location.latitude ?? 0}',
-                      longitude: '${location.longitude ?? 0}',
-                      inOrOut: JenisAbsen.absenIn),
-              absenOut: (id) => ref
-                  .read(absenAuthNotifierProvidier.notifier)
-                  .absenSaved(
-                      idAbsenMnl: '${id + 1}',
-                      lokasi: '${location.alamat}',
-                      date: location.date,
-                      latitude: '${location.latitude ?? 0}',
-                      longitude: '${location.longitude ?? 0}',
-                      inOrOut: JenisAbsen.absenOut),
-              absenUnknown: () {}),
-          failure: (code, message) => showDialog(
-              context: context,
-              barrierDismissible: true,
-              builder: (_) => VSimpleDialog(
-                    asset: Assets.iconCrossed,
-                    label: '$code',
-                    labelDescription: '$message',
-                  )),
-        );
-      } on Exception catch (e) {
-        log('error $e');
-        // TODO
-      }
-    });
-
     ref.listen<Option<Either<AbsenFailure, Unit>>>(
         absenAuthNotifierProvidier
             .select((value) => value.failureOrSuccessOptionSaved),

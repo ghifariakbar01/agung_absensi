@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:face_net_authentication/application/absen/absen_state.dart';
 import 'package:face_net_authentication/infrastructure/remote_response.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
