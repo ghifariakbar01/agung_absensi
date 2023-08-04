@@ -23,7 +23,7 @@ class _IconAnimatedWidgetState extends State<IconAnimatedWidget>
         position: _animation,
         child: const Icon(
           Icons.arrow_forward,
-          color: Palette.secondaryColor,
+          color: Palette.tertiaryColor,
         ));
   }
 

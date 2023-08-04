@@ -25,7 +25,7 @@ class WelcomeDrawer extends ConsumerWidget {
               child: Column(
                 children: [
                   ProfileAvatarItem(
-                    color: Palette.primaryDarker,
+                    color: Colors.white.withOpacity(0.1),
                     url: userProvider.user.photo,
                   ),
                   SizedBox(

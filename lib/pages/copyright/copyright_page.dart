@@ -28,7 +28,7 @@ class CopyRightPage extends ConsumerWidget {
           iconTheme: IconThemeData(color: Palette.primaryColor),
         ),
         body: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(15.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

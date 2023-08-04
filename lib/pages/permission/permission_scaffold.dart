@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../absen/widgets/user_info.dart';
 
 import '../widgets/app_logo.dart';
+import '../widgets/copyright_text.dart';
 import 'widget/permission_item.dart';
 
 class PermissionScaffold extends ConsumerWidget {
@@ -17,44 +18,52 @@ class PermissionScaffold extends ConsumerWidget {
 
     return Scaffold(
       body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.all(16),
+        child: Stack(
           children: [
-            const SizedBox(height: 70),
-            const AppLogo(),
-            const SizedBox(height: 70),
-            const WelcomeLabel(title: 'Selamat datang'),
-            const SizedBox(height: 35),
-            // Visibility(
-            //   visible: !permission.cameraAuthorized,
-            //   child: Padding(
-            //       padding: const EdgeInsets.all(12.0),
-            //       child: PermissionItem(
-            //         label:
-            //             'Kamera dibutuhkan untuk verifikasi wajah. \nPastikan kamera menyala.',
-            //         onPressed: () =>
-            //             ref.read(permissionProvider.notifier).askCamera(),
-            //         title: 'Nyalakan kamera anda',
-            //       )),
-            // ),
-            Visibility(
-              visible: permission == PermissionState.initial(),
-              child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: PermissionItem(
-                    label:
-                        'Lokasi dibutuhkan untuk memastikan anda berada di lokasi kantor agung group.',
-                    onPressed: () async {
-                      await ref
-                          .read(permissionNotifierProvider.notifier)
-                          .requestLocation();
+            ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                const SizedBox(height: 70),
+                const AppLogo(),
+                const SizedBox(height: 70),
+                const WelcomeLabel(title: 'Selamat datang'),
+                const SizedBox(height: 35),
+                // Visibility(
+                //   visible: !permission.cameraAuthorized,
+                //   child: Padding(
+                //       padding: const EdgeInsets.all(12.0),
+                //       child: PermissionItem(
+                //         label:
+                //             'Kamera dibutuhkan untuk verifikasi wajah. \nPastikan kamera menyala.',
+                //         onPressed: () =>
+                //             ref.read(permissionProvider.notifier).askCamera(),
+                //         title: 'Nyalakan kamera anda',
+                //       )),
+                // ),
+                Visibility(
+                  visible: permission == PermissionState.initial(),
+                  child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: PermissionItem(
+                        label:
+                            'Lokasi dibutuhkan untuk memastikan anda berada di lokasi kantor agung group.',
+                        onPressed: () async {
+                          await ref
+                              .read(permissionNotifierProvider.notifier)
+                              .requestLocation();
 
-                      await ref
-                          .read(permissionNotifierProvider.notifier)
-                          .checkAndUpdateLocation();
-                    },
-                    title: 'Nyalakan lokasi anda',
-                  )),
+                          await ref
+                              .read(permissionNotifierProvider.notifier)
+                              .checkAndUpdateLocation();
+                        },
+                        title: 'Nyalakan lokasi anda',
+                      )),
+                ),
+              ],
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: CopyrightAgung(),
             ),
           ],
         ),

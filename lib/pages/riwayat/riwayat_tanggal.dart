@@ -15,15 +15,14 @@ class RiwayatTanggal extends ConsumerWidget {
 
     return Container(
         width: width,
-        padding: EdgeInsets.all(4),
+        padding: EdgeInsets.all(8),
         decoration: BoxDecoration(
-            color: Palette.primaryDarker,
-            borderRadius: BorderRadius.circular(10)),
+            color: Colors.white, borderRadius: BorderRadius.circular(10)),
         child: Row(
           children: [
             Icon(
               Icons.date_range,
-              color: Colors.white,
+              color: Palette.primaryLighter,
             ),
             SizedBox(
               width: 4,
@@ -34,11 +33,13 @@ class RiwayatTanggal extends ConsumerWidget {
               children: [
                 Text(
                   'Tanggal',
-                  style: Themes.white(FontWeight.bold, 12),
+                  style: Themes.customColor(
+                      FontWeight.bold, 12, Palette.primaryLighter),
                 ),
                 Text(
                   StringUtils.formatTanggal(tanggal),
-                  style: Themes.white(FontWeight.bold, 10),
+                  style: Themes.customColor(
+                      FontWeight.bold, 10, Palette.primaryLighter),
                 ),
               ],
             )

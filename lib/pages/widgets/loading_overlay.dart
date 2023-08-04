@@ -1,3 +1,4 @@
+import 'package:face_net_authentication/style/style.dart';
 import 'package:flutter/material.dart';
 
 class LoadingOverlay extends StatelessWidget {
@@ -24,7 +25,9 @@ class LoadingOverlay extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              const CircularProgressIndicator(),
+              const CircularProgressIndicator(
+                color: Colors.white,
+              ),
               const SizedBox(height: 8),
               Text(
                 'Please Wait',

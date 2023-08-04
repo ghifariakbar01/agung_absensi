@@ -8,6 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../style/style.dart';
 
+import '../widgets/copyright_text.dart';
 import '../widgets/location_detail.dart';
 import 'absen_button.dart';
 
@@ -105,13 +106,15 @@ class _MyAbsenPageState extends ConsumerState<MyAbsenPage> {
             // ],
           ),
           body: !loading
-              ? SingleChildScrollView(
-                  child: SafeArea(
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              ? SafeArea(
+                  child: Stack(
+                    children: [
+                      Column(
                         children: <Widget>[
-                          Image(image: AssetImage('assets/logo.png')),
+                          SizedBox(
+                              height: 200,
+                              child:
+                                  Image(image: AssetImage('assets/logo.png'))),
                           SizedBox(
                             height: 24,
                           ),
@@ -134,7 +137,11 @@ class _MyAbsenPageState extends ConsumerState<MyAbsenPage> {
                           AbsenButton(),
                         ],
                       ),
-                    ),
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: CopyrightAgung(),
+                      )
+                    ],
                   ),
                 )
               : Center(

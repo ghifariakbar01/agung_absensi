@@ -20,7 +20,7 @@ class WelcomeItem extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(8),
         decoration: BoxDecoration(
-            color: Palette.primaryColor,
+            color: Palette.primaryLighter,
             borderRadius: BorderRadius.circular(10)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -31,7 +31,11 @@ class WelcomeItem extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                     color: Colors.white),
                 padding: EdgeInsets.all(8),
-                child: SizedBox(child: SvgPicture.asset(homeData.icon))),
+                child: SizedBox(
+                    child: SvgPicture.asset(
+                  homeData.icon,
+                  color: Palette.primaryLighter,
+                ))),
             Text(
               homeData.absen.toUpperCase(),
               style: Themes.customColor(FontWeight.bold, 9, Colors.white),

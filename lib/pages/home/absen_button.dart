@@ -6,6 +6,7 @@ import 'package:face_net_authentication/application/absen/absen_request.dart';
 import 'package:face_net_authentication/application/absen/absen_state.dart';
 import 'package:face_net_authentication/application/routes/route_names.dart';
 import 'package:face_net_authentication/infrastructure/remote_response.dart';
+import 'package:face_net_authentication/pages/widgets/copyright_text.dart';
 import 'package:face_net_authentication/shared/providers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,6 @@ import '../../utils/geofence_utils.dart';
 import '../../utils/string_utils.dart';
 import '../widgets/v_button.dart';
 import '../widgets/v_dialogs.dart';
-import 'absen_background.dart';
 
 class AbsenButton extends ConsumerWidget {
   const AbsenButton({Key? key}) : super(key: key);
@@ -218,110 +218,104 @@ class AbsenButton extends ConsumerWidget {
     final absen = ref.watch(absenNotifierProvidier);
     log('absen $absen');
 
-    return Stack(
+    return Column(
       children: [
-        AbsenBackground(),
-        Column(
-          children: [
-            // Absen Masuk
-            Visibility(
-              visible: !isOfflineMode,
-              child: VButton(
-                  label: 'ABSEN IN',
-                  isEnabled: absen == AbsenState.empty() &&
-                          nearest < minDistance &&
-                          nearest != 0 ||
-                      absen == AbsenState.incomplete() &&
-                          nearest < 100 &&
-                          nearest != 0,
-                  onPressed: () => showCupertinoDialog(
-                      context: context,
-                      builder: (_) => VAlertDialog(
-                          label: 'Ingin absen-in ?',
-                          labelDescription:
-                              'JAM: ${StringUtils.hoursDate(DateTime.now())}',
-                          onPressed: () async {
-                            context.pop();
-
-                            debugger(message: 'called');
-
-                            await ref
-                                .read(absenAuthNotifierProvidier.notifier)
-                                .absenAndUpdate(jenisAbsen: JenisAbsen.absenIn);
-                          }))),
-            ),
-
-            // Absen Keluar
-            Visibility(
-              visible: !isOfflineMode,
-              child: VButton(
-                  label: 'ABSEN OUT',
-                  isEnabled: absen == AbsenState.absenIn() &&
+        // Absen Masuk
+        Visibility(
+          visible: !isOfflineMode,
+          child: VButton(
+              label: 'ABSEN IN',
+              isEnabled: absen == AbsenState.empty() &&
                       nearest < minDistance &&
+                      nearest != 0 ||
+                  absen == AbsenState.incomplete() &&
+                      nearest < 100 &&
                       nearest != 0,
-                  onPressed: () => showCupertinoDialog(
-                      context: context,
-                      builder: (_) => VAlertDialog(
-                            label: 'Ingin absen-out ?',
-                            labelDescription:
-                                'JAM: ${StringUtils.hoursDate(DateTime.now())}',
-                            onPressed: () async {
-                              context.pop();
+              onPressed: () => showCupertinoDialog(
+                  context: context,
+                  builder: (_) => VAlertDialog(
+                      label: 'Ingin absen-in ?',
+                      labelDescription:
+                          'JAM: ${StringUtils.hoursDate(DateTime.now())}',
+                      onPressed: () async {
+                        context.pop();
 
-                              await ref
-                                  .read(absenAuthNotifierProvidier.notifier)
-                                  .absenAndUpdate(
-                                      jenisAbsen: JenisAbsen.absenOut);
-                            },
-                          ))),
-            ),
+                        debugger(message: 'called');
 
-            Visibility(
-                visible: isOfflineMode && nearest < minDistance && nearest != 0,
-                child: VButton(
-                    label: 'SIMPAN ABSEN',
-                    onPressed: () async {
-                      // ALAMAT GEOFENCE
-                      final alamat = ref.watch(geofenceProvider
-                          .select((value) => value.nearestCoordinates));
-
-                      // save absen
-                      await ref
-                          .read(backgroundNotifierProvider.notifier)
-                          .addSavedLocation(
-                              savedLocation: SavedLocation(
-                                  latitude: currentLocationLatitude,
-                                  longitude: currentLocationLongitude,
-                                  alamat: alamat.nama,
-                                  date: DateTime.now()));
-
-                      await ref
-                          .read(backgroundNotifierProvider.notifier)
-                          .getSavedLocations();
-
-                      await showDialog(
-                          context: context,
-                          barrierDismissible: true,
-                          builder: (_) => VSimpleDialog(
-                                asset: Assets.iconChecked,
-                                label: 'Saved',
-                                labelDescription: 'Absen tersimpan',
-                              ));
-                    })),
-
-            Visibility(
-                visible: savedIsNotEmpty,
-                child: VButton(
-                    label: 'ABSEN TERSIMPAN',
-                    onPressed: () async {
-                      await ref
-                          .read(backgroundNotifierProvider.notifier)
-                          .getSavedLocations();
-
-                      context.pushNamed(RouteNames.absenTersimpanNameRoute);
-                    }))
-          ],
+                        await ref
+                            .read(absenAuthNotifierProvidier.notifier)
+                            .absenAndUpdate(jenisAbsen: JenisAbsen.absenIn);
+                      }))),
         ),
+
+        // Absen Keluar
+        Visibility(
+          visible: !isOfflineMode,
+          child: VButton(
+              label: 'ABSEN OUT',
+              isEnabled: absen == AbsenState.absenIn() &&
+                  nearest < minDistance &&
+                  nearest != 0,
+              onPressed: () => showCupertinoDialog(
+                  context: context,
+                  builder: (_) => VAlertDialog(
+                        label: 'Ingin absen-out ?',
+                        labelDescription:
+                            'JAM: ${StringUtils.hoursDate(DateTime.now())}',
+                        onPressed: () async {
+                          context.pop();
+
+                          await ref
+                              .read(absenAuthNotifierProvidier.notifier)
+                              .absenAndUpdate(jenisAbsen: JenisAbsen.absenOut);
+                        },
+                      ))),
+        ),
+
+        Visibility(
+            visible: isOfflineMode && nearest < minDistance && nearest != 0,
+            child: VButton(
+                label: 'SIMPAN ABSEN',
+                onPressed: () async {
+                  // ALAMAT GEOFENCE
+                  final alamat = ref.watch(geofenceProvider
+                      .select((value) => value.nearestCoordinates));
+
+                  // save absen
+                  await ref
+                      .read(backgroundNotifierProvider.notifier)
+                      .addSavedLocation(
+                          savedLocation: SavedLocation(
+                              latitude: currentLocationLatitude,
+                              longitude: currentLocationLongitude,
+                              alamat: alamat.nama,
+                              date: DateTime.now()));
+
+                  await ref
+                      .read(backgroundNotifierProvider.notifier)
+                      .getSavedLocations();
+
+                  await showDialog(
+                      context: context,
+                      barrierDismissible: true,
+                      builder: (_) => VSimpleDialog(
+                            asset: Assets.iconChecked,
+                            label: 'Saved',
+                            labelDescription: 'Absen tersimpan',
+                          ));
+                })),
+
+        Visibility(
+            visible: savedIsNotEmpty,
+            child: VButton(
+                label: 'ABSEN TERSIMPAN',
+                onPressed: () async {
+                  await ref
+                      .read(backgroundNotifierProvider.notifier)
+                      .getSavedLocations();
+
+                  context.pushNamed(RouteNames.absenTersimpanNameRoute);
+                }))
       ],
     );
   }

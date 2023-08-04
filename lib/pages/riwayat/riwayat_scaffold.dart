@@ -99,7 +99,7 @@ class _RiwayatAbsenScaffoldState extends ConsumerState<RiwayatAbsenScaffold> {
         appBar: AppBar(
           iconTheme: IconThemeData(color: Colors.white),
           elevation: 0,
-          backgroundColor: Palette.primaryColor,
+          backgroundColor: Palette.tertiaryColor,
           title: Text(
             'Riwayat Absen',
             style: Themes.customColor(FontWeight.bold, 20, Colors.white),
@@ -110,7 +110,7 @@ class _RiwayatAbsenScaffoldState extends ConsumerState<RiwayatAbsenScaffold> {
           child: Container(
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: Palette.primaryColor.withOpacity(0.1)),
+                color: Palette.containerBackgroundColor.withOpacity(0.1)),
             padding: EdgeInsets.all(8),
             child: ListView(
                 controller: _scrollController,

@@ -69,44 +69,45 @@ class _SignInFormState extends ConsumerState<SignInForm> {
           SizedBox(
             height: 4,
           ),
-          Row(
-            children: [
-              DropdownButton<String>(
-                value: ptDropdownSelected,
-                icon: const Icon(Icons.arrow_downward),
-                elevation: 16,
-                style: const TextStyle(color: Palette.primaryColor),
-                iconSize: 20,
-                // This is called when the user selects an item.
-                onChanged: (String? value) => ref
-                    .read(signInFormNotifierProvider.notifier)
-                    .state
-                    .ptMap
-                    .forEach((serverName, ptNameStrList) {
-                  for (final ptNameStr in ptNameStrList) {
-                    if (value == ptNameStr) {
-                      ref
-                          .read(signInFormNotifierProvider.notifier)
-                          .changePTNameAndDropdown(
-                            changePTName: () => ref
-                                .read(signInFormNotifierProvider.notifier)
-                                .changePTName(serverName),
-                            changeDropdownSelected: () => ref
-                                .read(signInFormNotifierProvider.notifier)
-                                .changeDropdownSelected(value ?? ''),
-                          );
-                    }
-                  }
-                }),
-                items: signInForm.ptDropdownList
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-              ),
-            ],
+          DropdownButtonFormField<String>(
+            decoration: Themes.formStyle('Masukkan PT'),
+            value: ptDropdownSelected,
+            icon: const Icon(Icons.arrow_downward),
+            elevation: 16,
+            style: const TextStyle(color: Palette.primaryColor),
+            iconSize: 20,
+            // This is called when the user selects an item.
+            onChanged: (String? value) => ref
+                .read(signInFormNotifierProvider.notifier)
+                .state
+                .ptMap
+                .forEach((serverName, ptNameStrList) {
+              for (final ptNameStr in ptNameStrList) {
+                if (value == ptNameStr) {
+                  ref
+                      .read(signInFormNotifierProvider.notifier)
+                      .changePTNameAndDropdown(
+                        changePTName: () => ref
+                            .read(signInFormNotifierProvider.notifier)
+                            .changePTName(serverName),
+                        changeDropdownSelected: () => ref
+                            .read(signInFormNotifierProvider.notifier)
+                            .changeDropdownSelected(value ?? ''),
+                      );
+                }
+              }
+            }),
+            items: signInForm.ptDropdownList
+                .map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(
+                  value,
+                  style: Themes.customColor(
+                      FontWeight.bold, 12, Palette.primaryColor),
+                ),
+              );
+            }).toList(),
           ),
           const SizedBox(height: 16),
           ProfileLabel(icon: Icons.person, label: 'Username'),
@@ -118,6 +119,7 @@ class _SignInFormState extends ConsumerState<SignInForm> {
             decoration: Themes.formStyle(userId != ''
                 ? userId + ' (ketik untuk ubah teks)'
                 : 'Masukkan username'),
+            cursorColor: Palette.primaryColor,
             keyboardType: TextInputType.name,
             onChanged: (value) => ref
                 .read(signInFormNotifierProvider.notifier)
@@ -151,6 +153,7 @@ class _SignInFormState extends ConsumerState<SignInForm> {
                     color: Palette.primaryColor,
                   )),
             ),
+            cursorColor: Palette.primaryColor,
             obscureText: !passwordVisible,
             onChanged: (value) => ref
                 .read(signInFormNotifierProvider.notifier)
@@ -180,7 +183,8 @@ class _SignInFormState extends ConsumerState<SignInForm> {
               ),
               Text(
                 'Remember Me',
-                style: Themes.blue(FontWeight.normal, 14),
+                style: Themes.customColor(
+                    FontWeight.normal, 14, Palette.primaryColor),
               )
             ],
           )

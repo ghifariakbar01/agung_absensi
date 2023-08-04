@@ -23,7 +23,7 @@ class ProfileLabel extends StatelessWidget {
         ),
         Text(
           label,
-          style: Themes.blueSpaced(FontWeight.bold, 13),
+          style: Themes.customColor(FontWeight.bold, 13, Palette.primaryColor),
         )
       ],
     );

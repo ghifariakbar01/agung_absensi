@@ -24,10 +24,10 @@ class RiwayatList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 200,
+        height: 208,
         padding: EdgeInsets.all(4),
         decoration: BoxDecoration(
-            color: Palette.primaryColor,
+            color: Palette.primaryLighter,
             borderRadius: BorderRadius.circular(10)),
         child:
             Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
@@ -42,7 +42,7 @@ class RiwayatList extends StatelessWidget {
             ),
           ],
           SizedBox(
-            height: 4,
+            height: 12,
           ),
           if (masuk.isNotEmpty && lokasiMasuk.isNotEmpty) ...[
             Flexible(
@@ -55,7 +55,7 @@ class RiwayatList extends StatelessWidget {
                         child: RiwayatItem(
                           jenisAbsen: JenisAbsen.absenIn,
                           alamat: lokasiMasuk,
-                          jam: masuk.split(" ")[0],
+                          jam: masuk.split(" ")[1],
                         )),
                     SizedBox(
                       width: 4,
@@ -67,7 +67,7 @@ class RiwayatList extends StatelessWidget {
                         child: RiwayatItem(
                           jenisAbsen: JenisAbsen.absenOut,
                           alamat: lokasiPulang,
-                          jam: pulang.split(" ")[0],
+                          jam: pulang.split(" ")[1],
                         )),
                     SizedBox(
                       width: 4,
