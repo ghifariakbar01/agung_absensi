@@ -44,7 +44,7 @@ class CopyRightPage extends ConsumerWidget {
                 height: 16,
               ),
               SelectableText(
-                '© 2023 PT Agung Logistics. All Rights Reserved.',
+                '© 2023 Agung Logistics. All Rights Reserved.',
                 style: Themes.customColor(FontWeight.w500, 14, Colors.black),
               ),
               SizedBox(

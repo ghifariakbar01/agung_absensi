@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../style/style.dart';
-import '../../widgets/proceed_widget.dart';
+import '../../widgets/icon_animated_widget.dart';
 
 class PermissionItem extends StatelessWidget {
   const PermissionItem(
@@ -21,11 +21,28 @@ class PermissionItem extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ProceedWidget(onPressed, title),
+        TextButton(
+          style: TextButton.styleFrom(
+            padding: EdgeInsets.all(0),
+          ),
+          onPressed: onPressed,
+          child: Row(
+            children: [
+              Text(
+                '$title',
+                style: Themes.customColor(
+                    FontWeight.normal, 14, Palette.tertiaryColor),
+              ),
+              const SizedBox(
+                width: 2,
+              ),
+              const IconAnimatedWidget()
+            ],
+          ),
+        ),
         Text(
           label,
-          style:
-              Themes.customColor(FontWeight.normal, 14, Palette.tertiaryColor),
+          style: Themes.customColor(FontWeight.normal, 14, Colors.black),
         ),
       ],
     );
