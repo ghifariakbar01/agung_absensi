@@ -22,7 +22,8 @@ class GeofenceRemoteService {
 
       data.addAll({
         "mode": "SELECT",
-        "command": "SELECT id_geof, nm_lokasi, geof, radius FROM $dbName",
+        "command":
+            "SELECT id_geof, nm_lokasi, geof, radius FROM $dbName WHERE app_sta = '1'",
       });
 
       final response = await _dio.post('',

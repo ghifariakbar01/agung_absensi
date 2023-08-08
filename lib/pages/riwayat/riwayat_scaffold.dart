@@ -39,8 +39,8 @@ class _RiwayatAbsenScaffoldState extends ConsumerState<RiwayatAbsenScaffold> {
     final dateSecond = ref.watch(
         riwayatAbsenNotifierProvider.select((value) => value.dateSecond));
 
-    final list = ref.watch(
-        riwayatAbsenNotifierProvider.select((value) => value.riwayatAbsen));
+    final list = ref.watch(riwayatAbsenNotifierProvider
+        .select((value) => value.riwayatAbsen.reversed));
 
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
