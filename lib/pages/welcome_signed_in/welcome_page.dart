@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:upgrader/upgrader.dart';
 
 import '../../application/absen/absen_enum.dart';
 import '../../application/absen/absen_state.dart';
@@ -716,13 +717,16 @@ class _WelcomePageState extends ConsumerState<WelcomePage> {
       ),
     );
 
-    return Stack(
-      children: [
-        WelcomeSaved(),
-        WelcomeScaffold(),
-        WelcomeImei(),
-        LoadingOverlay(isLoading: false),
-      ],
+    return UpgradeAlert(
+      upgrader: Upgrader(dialogStyle: UpgradeDialogStyle.cupertino),
+      child: Stack(
+        children: [
+          WelcomeSaved(),
+          WelcomeScaffold(),
+          WelcomeImei(),
+          LoadingOverlay(isLoading: false),
+        ],
+      ),
     );
   }
 }

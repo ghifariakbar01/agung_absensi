@@ -83,7 +83,7 @@ class UserId extends ValueObject<String> {
 class Password extends ValueObject<String> {
   factory Password(String input) {
     return Password._(
-      validatePassword(input),
+      validateStringNotEmpty(input),
     );
   }
 

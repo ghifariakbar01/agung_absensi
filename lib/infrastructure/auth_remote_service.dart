@@ -41,7 +41,7 @@ class AuthRemoteService {
         "password": "$password",
         "mode": "SELECT",
         "command":
-            "SELECT *, (select nama from mst_dept where id_dept = A.id_dept) as dept, (select nama from mst_comp where id_comp = A.id_comp) as comp, (select nama from mst_jabatan where id_jbt = A.id_jbt) as jbt FROM mst_user A WHERE nama = '$userId'",
+            "SELECT *, (select nama from mst_dept where id_dept = A.id_dept) as dept, (select nama from mst_comp where id_comp = A.id_comp) as comp, (select nama from mst_jabatan where id_jbt = A.id_jbt) as jbt FROM mst_user A WHERE nama = '$userId'  AND payroll IS NOT NULL AND payroll != ''",
       });
 
       log('data ${jsonEncode(data)}');
