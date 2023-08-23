@@ -2,8 +2,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../credentials_storage/credentials_storage.dart';
 
-class AutoAbsenSecureStorage implements CredentialsStorage {
-  AutoAbsenSecureStorage(this._storage);
+class AutoAbsenStorage implements CredentialsStorage {
+  AutoAbsenStorage(this._storage);
 
   final FlutterSecureStorage _storage;
 

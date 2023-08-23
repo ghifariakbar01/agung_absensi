@@ -6,7 +6,7 @@ import 'package:face_net_authentication/domain/auto_absen_failure.dart';
 import 'package:face_net_authentication/infrastructure/credentials_storage/credentials_storage.dart';
 import 'package:flutter/services.dart';
 
-import '../background_service/recent_absen_state.dart';
+import '../background/recent_absen_state.dart';
 
 class AutoAbsenRepository {
   final CredentialsStorage credentialsStorage;

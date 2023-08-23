@@ -3,8 +3,8 @@ import 'package:dartz/dartz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../domain/auto_absen_failure.dart';
-import '../background_service/background_item_state.dart';
-import '../background_service/recent_absen_state.dart';
+import '../background/background_item_state.dart';
+import '../background/recent_absen_state.dart';
 
 part 'auto_absen_state.freezed.dart';
 

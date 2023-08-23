@@ -4,18 +4,18 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/constants/assets.dart';
 
-import '../../domain/absen_failure.dart';
-import '../../shared/providers.dart';
-import '../widgets/v_dialogs.dart';
+import '../../../domain/absen_failure.dart';
+import '../../../shared/providers.dart';
+import '../../widgets/v_dialogs.dart';
 
-class WelcomeSaved extends ConsumerStatefulWidget {
-  const WelcomeSaved();
+class HomeSaved extends ConsumerStatefulWidget {
+  const HomeSaved();
 
   @override
-  ConsumerState<WelcomeSaved> createState() => _WelcomeSavedState();
+  ConsumerState<HomeSaved> createState() => _HomeSavedState();
 }
 
-class _WelcomeSavedState extends ConsumerState<WelcomeSaved> {
+class _HomeSavedState extends ConsumerState<HomeSaved> {
   @override
   Widget build(BuildContext context) {
     ref.listen<Option<Either<AbsenFailure, Unit>>>(

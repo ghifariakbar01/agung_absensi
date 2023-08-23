@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:face_net_authentication/application/background_service/background_item_state.dart';
+import 'package:face_net_authentication/application/background/background_item_state.dart';
 import 'package:face_net_authentication/style/style.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';

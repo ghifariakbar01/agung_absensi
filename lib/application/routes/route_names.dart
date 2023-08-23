@@ -14,8 +14,8 @@ class RouteNames {
   static const imeiInstructionNameRoute = '/imeiInstruction';
   static const imeiInstructionRoute = '/imeiInstruction';
 
-  static const welcomeNameRoute = '/welcome';
-  static const welcomeRoute = '/welcome';
+  static const homeNameRoute = '/home';
+  static const homeRoute = '/home';
 
   static const signUpRoute = 'register';
   static const signUpNameRoute = 'register';

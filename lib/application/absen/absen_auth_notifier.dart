@@ -8,7 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../domain/absen_failure.dart';
 import '../../infrastructure/remote_response.dart';
-import '../background_service/background_item_state.dart';
+import '../background/background_item_state.dart';
 import 'absen_auth_state.dart';
 
 class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {

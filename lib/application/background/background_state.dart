@@ -10,16 +10,16 @@ part 'background_state.freezed.dart';
 @freezed
 class BackgroundState with _$BackgroundState {
   const factory BackgroundState({
-    required List<BackgroundItemState> savedBackgroundItems,
     required bool isGetting,
+    required List<BackgroundItemState> savedBackgroundItems,
     required Option<Either<BackgroundFailure, List<SavedLocation>>>
         failureOrSuccessOption,
     required Option<Either<BackgroundFailure, Unit>> failureOrSuccessOptionSave,
   }) = _BackgroundState;
 
   factory BackgroundState.initial() => BackgroundState(
-      savedBackgroundItems: [],
       isGetting: false,
+      savedBackgroundItems: [],
       failureOrSuccessOption: none(),
       failureOrSuccessOptionSave: none());
 }

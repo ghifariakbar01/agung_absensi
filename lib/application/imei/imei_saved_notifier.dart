@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:face_net_authentication/application/imei/imei_auth_state.dart';
 
 import '../../domain/imei_failure.dart';
-import '../../infrastructure/imei_repository.dart';
+import '../../infrastructure/imei/imei_repository.dart';
 
 class ImeiAuthNotifier extends StateNotifier<ImeiAuthState> {
   ImeiAuthNotifier(this._imeiRepository) : super(ImeiAuthState.initial());

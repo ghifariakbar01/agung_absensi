@@ -10,7 +10,7 @@ import 'package:flutter/src/widgets/framework.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../application/background_service/saved_location.dart';
+import '../../application/background/saved_location.dart';
 import '../../domain/background_failure.dart';
 import '../widgets/alert_helper.dart';
 import 'background_scaffold.dart';

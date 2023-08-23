@@ -1,52 +1,49 @@
 import 'package:dio/dio.dart';
-import 'package:face_net_authentication/application/absen/absen_auth_notifier.dart';
-import 'package:face_net_authentication/application/absen/absen_state.dart';
-import 'package:face_net_authentication/application/auto_absen/auto_absen_notifier.dart';
-import 'package:face_net_authentication/application/auto_absen/auto_absen_repository.dart';
-import 'package:face_net_authentication/application/auto_absen/auto_absen_state.dart';
-import 'package:face_net_authentication/application/background_service/background_notifier.dart';
-import 'package:face_net_authentication/application/background_service/background_state.dart';
-import 'package:face_net_authentication/application/edit_profile/edit_profile_notifier.dart';
-import 'package:face_net_authentication/application/imei/imei_auth_state.dart';
-import 'package:face_net_authentication/application/imei/imei_saved_notifier.dart';
-import 'package:face_net_authentication/application/imei/imei_state.dart';
-
-import 'package:face_net_authentication/infrastructure/absen/absen_remote_service.dart';
-import 'package:face_net_authentication/infrastructure/absen/absen_repository.dart';
-import 'package:face_net_authentication/infrastructure/auto_absen_secure_storage/auto_absen_secure_storage.dart';
-import 'package:face_net_authentication/infrastructure/background/background_repository.dart';
-import 'package:face_net_authentication/infrastructure/geofence/geofence_remote_service.dart';
-import 'package:face_net_authentication/infrastructure/geofence/geofence_repository.dart';
-import 'package:face_net_authentication/infrastructure/imei_credentials_storage.dart/imei_secure_credentials_storage.dart';
-import 'package:face_net_authentication/infrastructure/imei_repository.dart';
-import 'package:face_net_authentication/infrastructure/profile/edit_profile_remote_service.dart';
-import 'package:face_net_authentication/infrastructure/profile/edit_profile_repository.dart';
 
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../application/absen/absen_auth_notifier.dart';
 import '../application/absen/absen_auth_state.dart';
 import '../application/absen/absen_notifier.dart';
+import '../application/absen/absen_state.dart';
 import '../application/auth/auth_notifier.dart';
+import '../application/auto_absen/auto_absen_notifier.dart';
+import '../application/auto_absen/auto_absen_repository.dart';
+import '../application/auto_absen/auto_absen_state.dart';
+import '../application/background/background_notifier.dart';
+import '../application/background/background_state.dart';
+import '../application/edit_profile/edit_profile_notifier.dart';
 import '../application/edit_profile/edit_profile_state.dart';
 import '../application/geofence/geofence_notifier.dart';
 import '../application/geofence/geofence_state.dart';
+import '../application/imei/imei_auth_state.dart';
 import '../application/imei/imei_notifier.dart';
+import '../application/imei/imei_saved_notifier.dart';
+import '../application/imei/imei_state.dart';
 import '../application/routes/route_notifier.dart';
 import '../application/sign_in_form/sign_in_form_notifier.dart';
-import '../application/timer/timer_notifier.dart';
-import '../application/timer/timer_state.dart';
-
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../application/user/user_notifier.dart';
 import '../application/user/user_state.dart';
-import '../infrastructure/auth_remote_service.dart';
-import '../infrastructure/auth_repository.dart';
+import '../infrastructure/absen/absen_remote_service.dart';
+import '../infrastructure/absen/absen_repository.dart';
+
+import '../infrastructure/auth/auth_remote_service.dart';
+import '../infrastructure/auth/auth_repository.dart';
+import '../infrastructure/cache_storage/auto_absen_storage.dart';
+import '../infrastructure/background/background_repository.dart';
 import '../infrastructure/credentials_storage/credentials_storage.dart';
 import '../infrastructure/credentials_storage/secure_credentials_storage.dart';
 
-import '../infrastructure/geofence_secure_storage/geofence_secure_storage.dart';
+import '../infrastructure/geofence/geofence_remote_service.dart';
+import '../infrastructure/geofence/geofence_repository.dart';
+import '../infrastructure/cache_storage/geofence_storage.dart';
+import '../infrastructure/cache_storage/imei_storage.dart';
+import '../infrastructure/imei/imei_repository.dart';
+import '../infrastructure/profile/edit_profile_remote_service.dart';
+import '../infrastructure/profile/edit_profile_repository.dart';
 import '../utils/string_utils.dart';
 
 // Networking & Router
@@ -69,7 +66,7 @@ final routerProvider = Provider<GoRouter>((ref) {
 // Background
 
 final autoAbsenSecureStorageProvider = Provider<CredentialsStorage>(
-  (ref) => AutoAbsenSecureStorage(ref.watch(flutterSecureStorageProvider)),
+  (ref) => AutoAbsenStorage(ref.watch(flutterSecureStorageProvider)),
 );
 
 final autoAbsenRepositoryProvider = Provider(
@@ -202,9 +199,5 @@ final imeiAuthNotifierProvider =
 // Misc
 
 final passwordVisibleProvider = StateProvider.autoDispose<bool>((ref) => false);
-
-final timerProvider = StateNotifierProvider<TimerNotifier, TimerModel>(
-  (ref) => TimerNotifier(),
-);
 
 final karyawanShiftProvider = StateProvider((ref) => false);

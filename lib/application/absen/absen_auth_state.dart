@@ -4,7 +4,7 @@ import 'package:face_net_authentication/infrastructure/remote_response.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../domain/absen_failure.dart';
-import '../background_service/background_item_state.dart';
+import '../background/background_item_state.dart';
 
 part 'absen_auth_state.freezed.dart';
 

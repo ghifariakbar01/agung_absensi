@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter/services.dart';
 
-import '../domain/imei_failure.dart';
-import 'credentials_storage/credentials_storage.dart';
+import '../../domain/imei_failure.dart';
+import '../credentials_storage/credentials_storage.dart';
 
 class ImeiRepository {
   ImeiRepository(this._credentialsStorage);

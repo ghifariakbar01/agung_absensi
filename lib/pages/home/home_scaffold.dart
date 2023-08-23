@@ -10,24 +10,24 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../application/routes/route_names.dart';
 import '../widgets/app_logo.dart';
-import 'welcome_drawer.dart';
-import 'welcome_item.dart';
+import 'home_drawer.dart';
+import 'home_item.dart';
 
-class HomeData {
+class Item {
   final String absen;
   final String icon;
   final String routeNames;
 
-  HomeData(this.absen, this.icon, this.routeNames);
+  Item(this.absen, this.icon, this.routeNames);
 }
 
-final List<HomeData> items = [
-  HomeData('absen', Assets.iconClock, RouteNames.absenNameRoute),
-  HomeData('riwayat', Assets.iconList, RouteNames.riwayatAbsenNameRoute),
+final List<Item> items = [
+  Item('absen', Assets.iconClock, RouteNames.absenNameRoute),
+  Item('riwayat', Assets.iconList, RouteNames.riwayatAbsenNameRoute),
 ];
 
-class WelcomeScaffold extends ConsumerWidget {
-  const WelcomeScaffold();
+class HomeScaffold extends ConsumerWidget {
+  const HomeScaffold();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -112,7 +112,7 @@ class WelcomeScaffold extends ConsumerWidget {
                             padding: EdgeInsets.all(8),
                             itemCount: items.length,
                             itemBuilder: (_, index) =>
-                                WelcomeItem(homeData: items[index])),
+                                WelcomeItem(item: items[index])),
                       )),
                   const SizedBox(height: 30),
                 ],

@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:face_net_authentication/locator.dart';
+import 'package:face_net_authentication/pages/absen/absen_page.dart';
 
 import 'package:face_net_authentication/pages/widgets/app_button.dart';
 import 'package:face_net_authentication/services/ml_service.dart';
@@ -10,7 +11,6 @@ import '../../application/face_recognition/db/databse_helper.dart';
 import '../../application/face_recognition/models/user.model.dart';
 import '../../application/routes/route_names.dart';
 import '../../style/style.dart';
-import '../home/home.dart';
 import 'app_text_field.dart';
 
 class AuthActionButton extends StatefulWidget {
@@ -50,7 +50,7 @@ class _AuthActionButtonState extends State<AuthActionButton> {
     debugger(message: 'inserted');
     this._mlService.setPredictedData([]);
     Navigator.push(context,
-        MaterialPageRoute(builder: (BuildContext context) => MyAbsenPage()));
+        MaterialPageRoute(builder: (BuildContext context) => AbsenPage()));
   }
 
   Future _signIn(context) async {

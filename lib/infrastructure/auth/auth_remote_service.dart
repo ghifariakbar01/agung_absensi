@@ -5,9 +5,10 @@ import 'package:dio/dio.dart';
 
 import 'package:face_net_authentication/infrastructure/dio_extensions.dart';
 
-import '../application/user/user_model.dart';
+import '../../application/user/user_model.dart';
+
+import '../exceptions.dart';
 import 'auth_response.dart';
-import 'exceptions.dart';
 
 class AuthRemoteService {
   AuthRemoteService(this._dio, this._dioRequestNotifier);

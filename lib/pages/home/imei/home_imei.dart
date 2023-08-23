@@ -4,18 +4,18 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../domain/imei_failure.dart';
-import '../../shared/providers.dart';
-import 'welcome_imei_scaffold.dart';
+import '../../../domain/imei_failure.dart';
+import '../../../shared/providers.dart';
+import 'home_imei_scaffold.dart';
 
-class WelcomeImei extends ConsumerStatefulWidget {
-  const WelcomeImei();
+class HomeImei extends ConsumerStatefulWidget {
+  const HomeImei();
 
   @override
-  ConsumerState<WelcomeImei> createState() => _WelcomeImeiState();
+  ConsumerState<HomeImei> createState() => _HomeImeiState();
 }
 
-class _WelcomeImeiState extends ConsumerState<WelcomeImei> {
+class _HomeImeiState extends ConsumerState<HomeImei> {
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -38,7 +38,7 @@ class _WelcomeImeiState extends ConsumerState<WelcomeImei> {
 
     return Column(
       children: [
-        WelcomeImeiScaffold(),
+        HomeImeiScaffold(),
         Container(),
       ],
     );

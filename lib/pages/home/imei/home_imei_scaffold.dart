@@ -6,18 +6,18 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../application/auth/auth_notifier.dart';
-import '../../application/routes/route_names.dart';
-import '../../application/user/user_model.dart';
-import '../../constants/assets.dart';
-import '../../domain/edit_failure.dart';
-import '../../domain/value_objects_copy.dart';
-import '../../shared/providers.dart';
-import '../widgets/alert_helper.dart';
-import '../widgets/v_dialogs.dart';
+import '../../../application/auth/auth_notifier.dart';
+import '../../../application/routes/route_names.dart';
+import '../../../application/user/user_model.dart';
+import '../../../constants/assets.dart';
+import '../../../domain/edit_failure.dart';
+import '../../../domain/value_objects_copy.dart';
+import '../../../shared/providers.dart';
+import '../../widgets/alert_helper.dart';
+import '../../widgets/v_dialogs.dart';
 
-class WelcomeImeiScaffold extends ConsumerWidget {
-  const WelcomeImeiScaffold();
+class HomeImeiScaffold extends ConsumerWidget {
+  const HomeImeiScaffold();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -101,7 +101,7 @@ class WelcomeImeiScaffold extends ConsumerWidget {
                             final isLoggedIn = ref.watch(authNotifierProvider);
 
                             if (isLoggedIn == AuthState.authenticated()) {
-                              context.replaceNamed(RouteNames.welcomeNameRoute);
+                              context.replaceNamed(RouteNames.homeNameRoute);
                             } else {
                               context.replaceNamed(RouteNames.signInNameRoute);
                             }

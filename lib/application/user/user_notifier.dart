@@ -7,7 +7,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../domain/user_failure.dart';
 import '../../domain/value_objects_copy.dart';
-import '../../infrastructure/auth_repository.dart';
+
+import '../../infrastructure/auth/auth_repository.dart';
 import 'user_model.dart';
 import 'user_state.dart';
 

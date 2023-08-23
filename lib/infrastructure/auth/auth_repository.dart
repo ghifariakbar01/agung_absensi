@@ -4,12 +4,12 @@ import 'dart:developer';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/services.dart';
 
-import '../domain/auth_failure.dart';
-import '../domain/user_failure.dart';
-import '../domain/value_objects_copy.dart';
+import '../../domain/auth_failure.dart';
+import '../../domain/user_failure.dart';
+import '../../domain/value_objects_copy.dart';
+import '../credentials_storage/credentials_storage.dart';
+import '../exceptions.dart';
 import 'auth_remote_service.dart';
-import 'credentials_storage/credentials_storage.dart';
-import 'exceptions.dart';
 
 class AuthRepository {
   AuthRepository(

@@ -1,4 +1,4 @@
-import 'package:face_net_authentication/application/background_service/saved_location.dart';
+import 'package:face_net_authentication/application/background/saved_location.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../absen/absen_state.dart';

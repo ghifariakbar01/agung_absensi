@@ -8,7 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../utils/validator.dart';
 import '../../domain/auth_failure.dart';
 import '../../domain/value_objects_copy.dart';
-import '../../infrastructure/auth_repository.dart';
+
+import '../../infrastructure/auth/auth_repository.dart';
 import '../remember_me/remember_me_state.dart';
 
 part 'sign_in_form_notifier.freezed.dart';

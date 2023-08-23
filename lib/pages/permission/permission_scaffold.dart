@@ -3,10 +3,9 @@ import 'package:face_net_authentication/application/permission/shared/permission
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../absen/widgets/user_info.dart';
-
 import '../widgets/app_logo.dart';
 import '../widgets/copyright_text.dart';
+import '../widgets/welcome_label.dart';
 import 'widget/permission_item.dart';
 
 class PermissionScaffold extends ConsumerWidget {
@@ -51,6 +50,10 @@ class PermissionScaffold extends ConsumerWidget {
                           await ref
                               .read(permissionNotifierProvider.notifier)
                               .requestLocation();
+
+                          await ref
+                              .read(permissionNotifierProvider.notifier)
+                              .requestDenied();
 
                           await ref
                               .read(permissionNotifierProvider.notifier)

@@ -14,7 +14,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../application/background_service/saved_location.dart';
+import '../../application/background/saved_location.dart';
 import '../../constants/assets.dart';
 import '../../domain/absen_failure.dart';
 import '../../style/style.dart';

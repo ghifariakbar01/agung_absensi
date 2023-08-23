@@ -7,8 +7,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../widgets/v_button.dart';
 import '../../widgets/v_dialogs.dart';
 
-class HomeBottomsheet extends ConsumerWidget {
-  const HomeBottomsheet();
+class AbsenBottomsheet extends ConsumerWidget {
+  const AbsenBottomsheet();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -3,20 +3,20 @@ import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../style/style.dart';
-import 'welome_scaffold.dart';
+import 'home_scaffold.dart';
 
 class WelcomeItem extends StatelessWidget {
   const WelcomeItem({
     Key? key,
-    required this.homeData,
+    required this.item,
   }) : super(key: key);
 
-  final HomeData homeData;
+  final Item item;
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: () => context.pushNamed(homeData.routeNames),
+      onPressed: () => context.pushNamed(item.routeNames),
       child: Container(
         padding: EdgeInsets.all(8),
         decoration: BoxDecoration(
@@ -33,11 +33,11 @@ class WelcomeItem extends StatelessWidget {
                 padding: EdgeInsets.all(8),
                 child: SizedBox(
                     child: SvgPicture.asset(
-                  homeData.icon,
+                  item.icon,
                   color: Palette.primaryLighter,
                 ))),
             Text(
-              homeData.absen.toUpperCase(),
+              item.absen.toUpperCase(),
               style: Themes.customColor(FontWeight.bold, 9, Colors.white),
             )
           ],

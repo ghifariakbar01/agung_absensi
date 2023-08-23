@@ -2,14 +2,13 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
-import 'package:face_net_authentication/application/background_service/background_item_state.dart';
-import 'package:face_net_authentication/application/background_service/background_state.dart';
+import 'package:face_net_authentication/application/background/background_item_state.dart';
+import 'package:face_net_authentication/application/background/background_state.dart';
 import 'package:face_net_authentication/domain/background_failure.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../infrastructure/background/background_repository.dart';
-import '../../infrastructure/remote_response.dart';
 import '../absen/absen_state.dart';
 import 'saved_location.dart';
 
@@ -19,6 +18,31 @@ class BackgroundNotifier extends StateNotifier<BackgroundState> {
 
   final BackgroundRepository _backgroundRepository;
 
+  // BG ITEM
+  List<BackgroundItemState>? getBackgroundItemsAsList(
+      List<SavedLocation> items) {
+    List<BackgroundItemState> backgroundItem = [];
+
+    log('items ${items.length}');
+    log('items $items');
+
+    if (items.isNotEmpty) {
+      for (final item in items) {
+        backgroundItem.add(BackgroundItemState(
+            savedLocations: item, abenStates: AbsenState.empty()));
+      }
+
+      return backgroundItem;
+    }
+
+    return null;
+  }
+
+  void changeBackgroundItems(List<BackgroundItemState> backgroundItems) {
+    state = state.copyWith(savedBackgroundItems: [...backgroundItems]);
+  }
+
+  // SVD LOC
   Future<void> addSavedLocation({required SavedLocation savedLocation}) async {
     Either<BackgroundFailure, Unit> failureOrSuccess;
 
@@ -54,13 +78,11 @@ class BackgroundNotifier extends StateNotifier<BackgroundState> {
     List<SavedLocation> locations = [];
 
     log('items ${items.length}');
-
     log('items $items');
 
     if (items.isNotEmpty) {
       for (final location in items) {
         log('items ${location.savedLocations}');
-
         locations.add(location.savedLocations);
       }
 
@@ -70,27 +92,7 @@ class BackgroundNotifier extends StateNotifier<BackgroundState> {
     return null;
   }
 
-  List<BackgroundItemState>? getBackgroundItemsAsList(
-      List<SavedLocation> items) {
-    List<BackgroundItemState> backgroundItem = [];
-
-    log('items ${items.length}');
-
-    log('items $items');
-
-    if (items.isNotEmpty) {
-      for (final item in items) {
-        backgroundItem.add(BackgroundItemState(
-            savedLocations: item, abenStates: AbsenState.empty()));
-      }
-
-      return backgroundItem;
-    }
-
-    return null;
-  }
-
-  Future<List<SavedLocation>> parseLocation(
+  Future<List<SavedLocation>> _parseLocation(
       {required String? savedLocations}) async {
     final parsedData = jsonDecode(savedLocations!);
 
@@ -111,7 +113,7 @@ class BackgroundNotifier extends StateNotifier<BackgroundState> {
     }
   }
 
-  // lazy
+  // TODO: THROW ERROR
   Future<void> removeLocationFromSaved(SavedLocation currentLocation,
       {required Function onSaved}) async {
     debugger(message: 'called');
@@ -121,7 +123,7 @@ class BackgroundNotifier extends StateNotifier<BackgroundState> {
         await SharedPreferences.getInstance(); //Initialize dependency
 
     if (_sharedPreference.getString("locations") != null) {
-      final savedLocations = await parseLocation(
+      final savedLocations = await _parseLocation(
           savedLocations: _sharedPreference.getString("locations"));
 
       final processLocation = savedLocations
@@ -154,17 +156,5 @@ class BackgroundNotifier extends StateNotifier<BackgroundState> {
     if (list.isNotEmpty) {
       onProcessed(items: list);
     }
-  }
-
-  void changeBackgroundItems(List<BackgroundItemState> backgroundItems) {
-    if (backgroundItems.isNotEmpty) {
-      log('changeBackgroundItems: list is ${backgroundItems.length} ${backgroundItems.first.savedLocations.alamat}');
-    } else {
-      log('changeBackgroundItems: list is empty');
-    }
-
-    // debugger(message: 'called');
-
-    state = state.copyWith(savedBackgroundItems: [...backgroundItems]);
   }
 }

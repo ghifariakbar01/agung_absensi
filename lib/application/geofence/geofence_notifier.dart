@@ -1,16 +1,17 @@
 import 'dart:convert';
-import 'dart:developer';
+import 'dart:developer' as log;
 import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:dartz/dartz.dart';
-import 'package:face_net_authentication/application/background_service/saved_location.dart';
+
 import 'package:geofence_service/geofence_service.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../domain/geofence_failure.dart';
 import '../../infrastructure/geofence/geofence_repository.dart';
-import '../background_service/background_item_state.dart';
+import '../background/background_item_state.dart';
+import '../background/saved_location.dart';
 import 'coordinate_state.dart';
 import 'geofence_coordinate_state.dart';
 import 'geofence_response.dart';
@@ -130,6 +131,7 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
         ),
       );
     } else {
+      // log.debugger(message: 'called');
       _geofenceService.addLocationChangeListener(
         (location) => onLocationChanged(location, geofenceListAdditional, null),
       );
@@ -140,7 +142,13 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
     _geofenceService.addGeofenceList([...geofenceListAdditional]);
 
     await _geofenceService
-        .start([...geofenceListAdditional]).catchError(onError ?? () {});
+        .start([...geofenceListAdditional])
+        .catchError(onError ?? () {})
+        .onError((error, stackTrace) {
+          log.debugger(message: 'called');
+
+          log.log('error $error stack $stackTrace');
+        });
   }
 
   GeofenceService initialize() {
@@ -151,7 +159,7 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
         loiteringDelayMs: 60000,
         statusChangeDelayMs: 10000,
         useActivityRecognition: false,
-        allowMockLocations: false,
+        allowMockLocations: true,
         printDevLog: false,
         geofenceRadiusSortType: GeofenceRadiusSortType.DESC);
   }
@@ -176,20 +184,6 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
           designatedCoordinate: designatedCoordinate,
           geofenceCoordinatesSaved: geofenceCoordinatesSaved);
     }
-
-    state = state.copyWith(currentLocation: location);
-
-    final geofenceCoordinates = state.geofenceCoordinates;
-
-    updateAndChangeNearest(
-        coordinates: coordinates,
-        designatedCoordinate: location,
-        geofenceCoordinates: geofenceCoordinates);
-  }
-
-  // This function is to be called when the location has changed.
-  onLocationChangedOnly(Location location, List<Geofence> coordinates) {
-    print('location: ${location.toJson()}');
 
     state = state.copyWith(currentLocation: location);
 
@@ -342,7 +336,7 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
   List<Location> convertSavedLocationsToLocations(
       List<SavedLocation>? locations) {
     if (locations == null) {
-      debugger(message: 'called');
+      log.debugger(message: 'called');
 
       return [];
     }
