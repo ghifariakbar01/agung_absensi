@@ -173,6 +173,8 @@ class _WelcomePageState extends ConsumerState<WelcomePage> {
                 .read(geofenceProvider.notifier)
                 .geofenceResponseToList(geofenceList);
 
+            log('GEOFENCE: $geofence');
+
             final savedItems = ref
                 .read(backgroundNotifierProvider.notifier)
                 .state
@@ -199,7 +201,10 @@ class _WelcomePageState extends ConsumerState<WelcomePage> {
 
                       await ref
                           .read(geofenceProvider.notifier)
-                          .initializeGeoFence(geofence, savedLocations);
+                          .initializeGeoFence(savedLocations, geofence,
+                              onError: () => ref
+                                  .read(geofenceProvider.notifier)
+                                  .getGeofenceListFromStorage());
 
                       log('savedItems $savedItems');
 
@@ -376,8 +381,12 @@ class _WelcomePageState extends ConsumerState<WelcomePage> {
                                                         .read(geofenceProvider
                                                             .notifier)
                                                         .initializeGeoFence(
+                                                            savedLocations,
                                                             geofence,
-                                                            savedLocations);
+                                                            onError: () => ref
+                                                                .read(geofenceProvider
+                                                                    .notifier)
+                                                                .getGeofenceListFromStorage());
                                                   },
                                                   getAbsenState: () async {
                                                     // get absen state
@@ -566,8 +575,13 @@ class _WelcomePageState extends ConsumerState<WelcomePage> {
                                                       .read(geofenceProvider
                                                           .notifier)
                                                       .initializeGeoFence(
+                                                          savedLocations,
                                                           geofence,
-                                                          savedLocations);
+                                                          onError: () => ref
+                                                              .read(
+                                                                  geofenceProvider
+                                                                      .notifier)
+                                                              .getGeofenceListFromStorage());
                                                 },
                                                 getAbsenState: () async {
                                                   // get absen state
@@ -691,9 +705,14 @@ class _WelcomePageState extends ConsumerState<WelcomePage> {
                         }
                       });
                     } else {
-                      await ref
-                          .read(geofenceProvider.notifier)
-                          .initializeGeoFenceOnly(geofence);
+                      if (geofence.isNotEmpty) {
+                        await ref
+                            .read(geofenceProvider.notifier)
+                            .initializeGeoFence(null, geofence,
+                                onError: () => ref
+                                    .read(geofenceProvider.notifier)
+                                    .getGeofenceListFromStorage());
+                      }
 
                       await ref
                           .read(backgroundNotifierProvider.notifier)
@@ -707,6 +726,12 @@ class _WelcomePageState extends ConsumerState<WelcomePage> {
                       log('savedItems: isEmpty $savedItems');
                     }
                   });
+            } else {
+              await ref.read(geofenceProvider.notifier).initializeGeoFence(
+                  null, geofence,
+                  onError: () => ref
+                      .read(geofenceProvider.notifier)
+                      .getGeofenceListFromStorage());
             }
           } else {
             await ref

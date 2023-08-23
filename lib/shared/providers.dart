@@ -206,3 +206,5 @@ final passwordVisibleProvider = StateProvider.autoDispose<bool>((ref) => false);
 final timerProvider = StateNotifierProvider<TimerNotifier, TimerModel>(
   (ref) => TimerNotifier(),
 );
+
+final karyawanShiftProvider = StateProvider((ref) => false);

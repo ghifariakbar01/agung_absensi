@@ -107,41 +107,47 @@ class _MyAbsenPageState extends ConsumerState<MyAbsenPage> {
           ),
           body: !loading
               ? SafeArea(
-                  child: Stack(
-                    children: [
-                      Column(
-                        children: <Widget>[
-                          SizedBox(
-                              height: 200,
-                              child:
-                                  Image(image: AssetImage('assets/logo.png'))),
-                          SizedBox(
-                            height: 24,
+                  child: SingleChildScrollView(
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height,
+                      width: MediaQuery.of(context).size.width,
+                      child: Stack(
+                        children: [
+                          Column(
+                            children: <Widget>[
+                              SizedBox(
+                                  height: 200,
+                                  child: Image(
+                                      image: AssetImage('assets/logo.png'))),
+                              SizedBox(
+                                height: 24,
+                              ),
+                              UserInfo(
+                                title:
+                                    'User ${isOfflineMode ? '(Mode Offline)' : ''}',
+                                user: user ?? '',
+                              ),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: LocationDetail(),
+                              ),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              AbsenButton(),
+                            ],
                           ),
-                          UserInfo(
-                            title:
-                                'User ${isOfflineMode ? '(Mode Offline)' : ''}',
-                            user: user ?? '',
-                          ),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: LocationDetail(),
-                          ),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          AbsenButton(),
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: CopyrightAgung(),
+                          )
                         ],
                       ),
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: CopyrightAgung(),
-                      )
-                    ],
+                    ),
                   ),
                 )
               : Center(

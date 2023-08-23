@@ -63,19 +63,19 @@ class RiwayatAbsenPage extends ConsumerWidget {
                             .page;
 
                         if (list.length < 1 && page != 1) {
-                          debugger(message: 'called');
+                          // debugger(message: 'called');
 
                           ref
                               .read(riwayatAbsenNotifierProvider.notifier)
                               .changeIsMore(false);
                         } else if (list.length > 1 && page == 1) {
-                          debugger(message: 'called');
+                          // debugger(message: 'called');
 
                           ref
                               .read(riwayatAbsenNotifierProvider.notifier)
                               .replaceAbsenRiwayat(list);
                         } else {
-                          debugger(message: 'called');
+                          // debugger(message: 'called');
 
                           ref
                               .read(riwayatAbsenNotifierProvider.notifier)

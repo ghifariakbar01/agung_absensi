@@ -116,37 +116,31 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
 
   // Geofence initializatioin
 
-  Future<void> initializeGeoFence(List<Geofence> geofenceListAdditional,
-      List<SavedLocation>? savedLocations) async {
+  Future<void> initializeGeoFence(List<SavedLocation>? savedLocations,
+      List<Geofence> geofenceListAdditional,
+      {required Function? onError}) async {
     final _geofenceService = initialize();
 
-    _geofenceService.addLocationChangeListener(
-      (location) =>
-          onLocationChanged(location, savedLocations, geofenceListAdditional),
-    );
+    if (savedLocations != null) {
+      _geofenceService.addLocationChangeListener(
+        (location) => onLocationChanged(
+          location,
+          geofenceListAdditional,
+          savedLocations,
+        ),
+      );
+    } else {
+      _geofenceService.addLocationChangeListener(
+        (location) => onLocationChanged(location, geofenceListAdditional, null),
+      );
+    }
 
     _geofenceService.addStreamErrorListener(onErrorStream);
 
     _geofenceService.addGeofenceList([...geofenceListAdditional]);
 
     await _geofenceService
-        .start([...geofenceListAdditional]).catchError(onErrorStream);
-  }
-
-  Future<void> initializeGeoFenceOnly(
-      List<Geofence> geofenceListAdditional) async {
-    final _geofenceService = initialize();
-
-    _geofenceService.addLocationChangeListener(
-      (location) => onLocationChangedOnly(location, geofenceListAdditional),
-    );
-
-    _geofenceService.addStreamErrorListener(onErrorStream);
-
-    _geofenceService.addGeofenceList([...geofenceListAdditional]);
-
-    await _geofenceService
-        .start([...geofenceListAdditional]).catchError(onErrorStream);
+        .start([...geofenceListAdditional]).catchError(onError ?? () {});
   }
 
   GeofenceService initialize() {
@@ -165,8 +159,11 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
   // Geofence listener
 
   // This function is to be called when the location has changed.
-  onLocationChanged(Location location, List<SavedLocation>? locations,
-      List<Geofence> coordinates) {
+  onLocationChanged(
+    Location location,
+    List<Geofence> coordinates,
+    List<SavedLocation>? locations,
+  ) {
     print('location: ${location.toJson()}');
 
     if (locations != null) {
@@ -222,8 +219,11 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
       List<GeofenceResponse> geofenceList,
       List<Geofence> geofence,
       List<SavedLocation> savedLocations) {
-    _geofenceService.removeLocationChangeListener(
-        onLocationChanged(geofenceList as Location, savedLocations, geofence));
+    _geofenceService.removeLocationChangeListener(onLocationChanged(
+      geofenceList as Location,
+      geofence,
+      savedLocations,
+    ));
     _geofenceService.removeStreamErrorListener(onErrorStream);
     _geofenceService.clearAllListeners();
     _geofenceService.stop();

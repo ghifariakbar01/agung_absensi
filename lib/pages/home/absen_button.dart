@@ -20,6 +20,7 @@ import '../../domain/absen_failure.dart';
 import '../../style/style.dart';
 import '../../utils/geofence_utils.dart';
 import '../../utils/string_utils.dart';
+import '../tc/tc_page.dart';
 import '../widgets/v_button.dart';
 import '../widgets/v_dialogs.dart';
 
@@ -218,19 +219,55 @@ class AbsenButton extends ConsumerWidget {
     final absen = ref.watch(absenNotifierProvidier);
     log('absen $absen');
 
+    final karyawanShift = ref.watch(karyawanShiftProvider);
+
     return Column(
       children: [
+        // Karyawan Shift
+        Visibility(
+          visible: !isOfflineMode,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Row(
+              children: [
+                SizedBox(
+                  height: 38.0,
+                  width: 38.0,
+                  child: Checkbox(
+                      key: UniqueKey(),
+                      checkColor: Colors.white,
+                      fillColor: MaterialStateProperty.resolveWith(getColor),
+                      value: karyawanShift,
+                      onChanged: (_) => karyawanShift
+                          ? ref.read(karyawanShiftProvider.notifier).state =
+                              false
+                          : ref.read(karyawanShiftProvider.notifier).state =
+                              true),
+                ),
+                SizedBox(
+                  width: 4,
+                ),
+                Text('Karyawan Shift',
+                    style: Themes.customColor(
+                        FontWeight.bold, 13, Palette.primaryColor))
+              ],
+            ),
+          ),
+        ),
+
         // Absen Masuk
         Visibility(
           visible: !isOfflineMode,
           child: VButton(
               label: 'ABSEN IN',
-              isEnabled: absen == AbsenState.empty() &&
-                      nearest < minDistance &&
-                      nearest != 0 ||
-                  absen == AbsenState.incomplete() &&
-                      nearest < 100 &&
-                      nearest != 0,
+              isEnabled:
+                  karyawanShift && nearest < minDistance && nearest != 0 ||
+                      absen == AbsenState.empty() &&
+                          nearest < minDistance &&
+                          nearest != 0 ||
+                      absen == AbsenState.incomplete() &&
+                          nearest < 100 &&
+                          nearest != 0,
               onPressed: () => showCupertinoDialog(
                   context: context,
                   builder: (_) => VAlertDialog(
@@ -253,9 +290,11 @@ class AbsenButton extends ConsumerWidget {
           visible: !isOfflineMode,
           child: VButton(
               label: 'ABSEN OUT',
-              isEnabled: absen == AbsenState.absenIn() &&
-                  nearest < minDistance &&
-                  nearest != 0,
+              isEnabled:
+                  karyawanShift && nearest < minDistance && nearest != 0 ||
+                      absen == AbsenState.absenIn() &&
+                          nearest < minDistance &&
+                          nearest != 0,
               onPressed: () => showCupertinoDialog(
                   context: context,
                   builder: (_) => VAlertDialog(

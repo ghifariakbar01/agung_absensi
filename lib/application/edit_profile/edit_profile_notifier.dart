@@ -69,6 +69,8 @@ class EditProfileNotifier extends StateNotifier<EditProfileState> {
           break;
 
         case false:
+          // debugger(message: 'called');
+
           await onImeiAlreadyRegistered();
           // await onImeiNotRegistered();
 

@@ -25,9 +25,12 @@ class LocationDetail extends ConsumerWidget {
               ' : ',
               style: Themes.customColor(FontWeight.bold, 13, Colors.black),
             ),
-            Text(
-              ' ${nearest.nama}',
-              style: Themes.customColor(FontWeight.bold, 13, Colors.black),
+            Flexible(
+              child: Text(
+                ' ${nearest.nama}',
+                maxLines: 10,
+                style: Themes.customColor(FontWeight.bold, 13, Colors.black),
+              ),
             ),
           ],
         ),

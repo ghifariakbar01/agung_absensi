@@ -346,7 +346,7 @@ class AbsenRemoteService {
                   RiwayatAbsenModel.fromJson(riwayat as Map<String, dynamic>));
             }
 
-            return riwayatList;
+            return [...riwayatList.reversed];
           }
 
           return [];
