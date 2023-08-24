@@ -145,7 +145,7 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
         .start([...geofenceListAdditional])
         .catchError(onError ?? () {})
         .onError((error, stackTrace) {
-          log.debugger(message: 'called');
+          // log.debugger(message: 'called');
 
           log.log('error $error stack $stackTrace');
         });
@@ -159,7 +159,7 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
         loiteringDelayMs: 60000,
         statusChangeDelayMs: 10000,
         useActivityRecognition: false,
-        allowMockLocations: true,
+        allowMockLocations: false,
         printDevLog: false,
         geofenceRadiusSortType: GeofenceRadiusSortType.DESC);
   }

@@ -16,9 +16,9 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$BackgroundState {
+  bool get isGetting => throw _privateConstructorUsedError;
   List<BackgroundItemState> get savedBackgroundItems =>
       throw _privateConstructorUsedError;
-  bool get isGetting => throw _privateConstructorUsedError;
   Option<Either<BackgroundFailure, List<SavedLocation>>>
       get failureOrSuccessOption => throw _privateConstructorUsedError;
   Option<Either<BackgroundFailure, Unit>> get failureOrSuccessOptionSave =>
@@ -36,8 +36,8 @@ abstract class $BackgroundStateCopyWith<$Res> {
       _$BackgroundStateCopyWithImpl<$Res, BackgroundState>;
   @useResult
   $Res call(
-      {List<BackgroundItemState> savedBackgroundItems,
-      bool isGetting,
+      {bool isGetting,
+      List<BackgroundItemState> savedBackgroundItems,
       Option<Either<BackgroundFailure, List<SavedLocation>>>
           failureOrSuccessOption,
       Option<Either<BackgroundFailure, Unit>> failureOrSuccessOptionSave});
@@ -56,20 +56,20 @@ class _$BackgroundStateCopyWithImpl<$Res, $Val extends BackgroundState>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? savedBackgroundItems = null,
     Object? isGetting = null,
+    Object? savedBackgroundItems = null,
     Object? failureOrSuccessOption = null,
     Object? failureOrSuccessOptionSave = null,
   }) {
     return _then(_value.copyWith(
-      savedBackgroundItems: null == savedBackgroundItems
-          ? _value.savedBackgroundItems
-          : savedBackgroundItems // ignore: cast_nullable_to_non_nullable
-              as List<BackgroundItemState>,
       isGetting: null == isGetting
           ? _value.isGetting
           : isGetting // ignore: cast_nullable_to_non_nullable
               as bool,
+      savedBackgroundItems: null == savedBackgroundItems
+          ? _value.savedBackgroundItems
+          : savedBackgroundItems // ignore: cast_nullable_to_non_nullable
+              as List<BackgroundItemState>,
       failureOrSuccessOption: null == failureOrSuccessOption
           ? _value.failureOrSuccessOption
           : failureOrSuccessOption // ignore: cast_nullable_to_non_nullable
@@ -91,8 +91,8 @@ abstract class _$$_BackgroundStateCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {List<BackgroundItemState> savedBackgroundItems,
-      bool isGetting,
+      {bool isGetting,
+      List<BackgroundItemState> savedBackgroundItems,
       Option<Either<BackgroundFailure, List<SavedLocation>>>
           failureOrSuccessOption,
       Option<Either<BackgroundFailure, Unit>> failureOrSuccessOptionSave});
@@ -109,20 +109,20 @@ class __$$_BackgroundStateCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? savedBackgroundItems = null,
     Object? isGetting = null,
+    Object? savedBackgroundItems = null,
     Object? failureOrSuccessOption = null,
     Object? failureOrSuccessOptionSave = null,
   }) {
     return _then(_$_BackgroundState(
-      savedBackgroundItems: null == savedBackgroundItems
-          ? _value._savedBackgroundItems
-          : savedBackgroundItems // ignore: cast_nullable_to_non_nullable
-              as List<BackgroundItemState>,
       isGetting: null == isGetting
           ? _value.isGetting
           : isGetting // ignore: cast_nullable_to_non_nullable
               as bool,
+      savedBackgroundItems: null == savedBackgroundItems
+          ? _value._savedBackgroundItems
+          : savedBackgroundItems // ignore: cast_nullable_to_non_nullable
+              as List<BackgroundItemState>,
       failureOrSuccessOption: null == failureOrSuccessOption
           ? _value.failureOrSuccessOption
           : failureOrSuccessOption // ignore: cast_nullable_to_non_nullable
@@ -139,12 +139,14 @@ class __$$_BackgroundStateCopyWithImpl<$Res>
 
 class _$_BackgroundState implements _BackgroundState {
   const _$_BackgroundState(
-      {required final List<BackgroundItemState> savedBackgroundItems,
-      required this.isGetting,
+      {required this.isGetting,
+      required final List<BackgroundItemState> savedBackgroundItems,
       required this.failureOrSuccessOption,
       required this.failureOrSuccessOptionSave})
       : _savedBackgroundItems = savedBackgroundItems;
 
+  @override
+  final bool isGetting;
   final List<BackgroundItemState> _savedBackgroundItems;
   @override
   List<BackgroundItemState> get savedBackgroundItems {
@@ -155,8 +157,6 @@ class _$_BackgroundState implements _BackgroundState {
   }
 
   @override
-  final bool isGetting;
-  @override
   final Option<Either<BackgroundFailure, List<SavedLocation>>>
       failureOrSuccessOption;
   @override
@@ -164,7 +164,7 @@ class _$_BackgroundState implements _BackgroundState {
 
   @override
   String toString() {
-    return 'BackgroundState(savedBackgroundItems: $savedBackgroundItems, isGetting: $isGetting, failureOrSuccessOption: $failureOrSuccessOption, failureOrSuccessOptionSave: $failureOrSuccessOptionSave)';
+    return 'BackgroundState(isGetting: $isGetting, savedBackgroundItems: $savedBackgroundItems, failureOrSuccessOption: $failureOrSuccessOption, failureOrSuccessOptionSave: $failureOrSuccessOptionSave)';
   }
 
   @override
@@ -172,10 +172,10 @@ class _$_BackgroundState implements _BackgroundState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_BackgroundState &&
-            const DeepCollectionEquality()
-                .equals(other._savedBackgroundItems, _savedBackgroundItems) &&
             (identical(other.isGetting, isGetting) ||
                 other.isGetting == isGetting) &&
+            const DeepCollectionEquality()
+                .equals(other._savedBackgroundItems, _savedBackgroundItems) &&
             (identical(other.failureOrSuccessOption, failureOrSuccessOption) ||
                 other.failureOrSuccessOption == failureOrSuccessOption) &&
             (identical(other.failureOrSuccessOptionSave,
@@ -187,8 +187,8 @@ class _$_BackgroundState implements _BackgroundState {
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(_savedBackgroundItems),
       isGetting,
+      const DeepCollectionEquality().hash(_savedBackgroundItems),
       failureOrSuccessOption,
       failureOrSuccessOptionSave);
 
@@ -201,17 +201,17 @@ class _$_BackgroundState implements _BackgroundState {
 
 abstract class _BackgroundState implements BackgroundState {
   const factory _BackgroundState(
-      {required final List<BackgroundItemState> savedBackgroundItems,
-      required final bool isGetting,
+      {required final bool isGetting,
+      required final List<BackgroundItemState> savedBackgroundItems,
       required final Option<Either<BackgroundFailure, List<SavedLocation>>>
           failureOrSuccessOption,
       required final Option<Either<BackgroundFailure, Unit>>
           failureOrSuccessOptionSave}) = _$_BackgroundState;
 
   @override
-  List<BackgroundItemState> get savedBackgroundItems;
-  @override
   bool get isGetting;
+  @override
+  List<BackgroundItemState> get savedBackgroundItems;
   @override
   Option<Either<BackgroundFailure, List<SavedLocation>>>
       get failureOrSuccessOption;

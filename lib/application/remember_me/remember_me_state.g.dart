@@ -12,6 +12,7 @@ _$_RememberMeModel _$$_RememberMeModelFromJson(Map<String, dynamic> json) =>
       nama: json['nama'] as String,
       password: json['password'] as String,
       ptName: json['ptName'] as String,
+      isKaryawan: json['isKaryawan'] as bool,
     );
 
 Map<String, dynamic> _$$_RememberMeModelToJson(_$_RememberMeModel instance) =>
@@ -20,4 +21,5 @@ Map<String, dynamic> _$$_RememberMeModelToJson(_$_RememberMeModel instance) =>
       'nama': instance.nama,
       'password': instance.password,
       'ptName': instance.ptName,
+      'isKaryawan': instance.isKaryawan,
     };

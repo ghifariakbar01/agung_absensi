@@ -24,6 +24,7 @@ mixin _$RememberMeModel {
   String get nama => throw _privateConstructorUsedError;
   String get password => throw _privateConstructorUsedError;
   String get ptName => throw _privateConstructorUsedError;
+  bool get isKaryawan => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -37,7 +38,12 @@ abstract class $RememberMeModelCopyWith<$Res> {
           RememberMeModel value, $Res Function(RememberMeModel) then) =
       _$RememberMeModelCopyWithImpl<$Res, RememberMeModel>;
   @useResult
-  $Res call({String nik, String nama, String password, String ptName});
+  $Res call(
+      {String nik,
+      String nama,
+      String password,
+      String ptName,
+      bool isKaryawan});
 }
 
 /// @nodoc
@@ -57,6 +63,7 @@ class _$RememberMeModelCopyWithImpl<$Res, $Val extends RememberMeModel>
     Object? nama = null,
     Object? password = null,
     Object? ptName = null,
+    Object? isKaryawan = null,
   }) {
     return _then(_value.copyWith(
       nik: null == nik
@@ -75,6 +82,10 @@ class _$RememberMeModelCopyWithImpl<$Res, $Val extends RememberMeModel>
           ? _value.ptName
           : ptName // ignore: cast_nullable_to_non_nullable
               as String,
+      isKaryawan: null == isKaryawan
+          ? _value.isKaryawan
+          : isKaryawan // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -87,7 +98,12 @@ abstract class _$$_RememberMeModelCopyWith<$Res>
       __$$_RememberMeModelCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String nik, String nama, String password, String ptName});
+  $Res call(
+      {String nik,
+      String nama,
+      String password,
+      String ptName,
+      bool isKaryawan});
 }
 
 /// @nodoc
@@ -105,6 +121,7 @@ class __$$_RememberMeModelCopyWithImpl<$Res>
     Object? nama = null,
     Object? password = null,
     Object? ptName = null,
+    Object? isKaryawan = null,
   }) {
     return _then(_$_RememberMeModel(
       nik: null == nik
@@ -123,6 +140,10 @@ class __$$_RememberMeModelCopyWithImpl<$Res>
           ? _value.ptName
           : ptName // ignore: cast_nullable_to_non_nullable
               as String,
+      isKaryawan: null == isKaryawan
+          ? _value.isKaryawan
+          : isKaryawan // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -134,7 +155,8 @@ class _$_RememberMeModel implements _RememberMeModel {
       {required this.nik,
       required this.nama,
       required this.password,
-      required this.ptName});
+      required this.ptName,
+      required this.isKaryawan});
 
   factory _$_RememberMeModel.fromJson(Map<String, dynamic> json) =>
       _$$_RememberMeModelFromJson(json);
@@ -147,10 +169,12 @@ class _$_RememberMeModel implements _RememberMeModel {
   final String password;
   @override
   final String ptName;
+  @override
+  final bool isKaryawan;
 
   @override
   String toString() {
-    return 'RememberMeModel(nik: $nik, nama: $nama, password: $password, ptName: $ptName)';
+    return 'RememberMeModel(nik: $nik, nama: $nama, password: $password, ptName: $ptName, isKaryawan: $isKaryawan)';
   }
 
   @override
@@ -162,12 +186,15 @@ class _$_RememberMeModel implements _RememberMeModel {
             (identical(other.nama, nama) || other.nama == nama) &&
             (identical(other.password, password) ||
                 other.password == password) &&
-            (identical(other.ptName, ptName) || other.ptName == ptName));
+            (identical(other.ptName, ptName) || other.ptName == ptName) &&
+            (identical(other.isKaryawan, isKaryawan) ||
+                other.isKaryawan == isKaryawan));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, nik, nama, password, ptName);
+  int get hashCode =>
+      Object.hash(runtimeType, nik, nama, password, ptName, isKaryawan);
 
   @JsonKey(ignore: true)
   @override
@@ -188,7 +215,8 @@ abstract class _RememberMeModel implements RememberMeModel {
       {required final String nik,
       required final String nama,
       required final String password,
-      required final String ptName}) = _$_RememberMeModel;
+      required final String ptName,
+      required final bool isKaryawan}) = _$_RememberMeModel;
 
   factory _RememberMeModel.fromJson(Map<String, dynamic> json) =
       _$_RememberMeModel.fromJson;
@@ -201,6 +229,8 @@ abstract class _RememberMeModel implements RememberMeModel {
   String get password;
   @override
   String get ptName;
+  @override
+  bool get isKaryawan;
   @override
   @JsonKey(ignore: true)
   _$$_RememberMeModelCopyWith<_$_RememberMeModel> get copyWith =>

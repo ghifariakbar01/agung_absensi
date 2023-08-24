@@ -21,6 +21,7 @@ import '../application/imei/imei_auth_state.dart';
 import '../application/imei/imei_notifier.dart';
 import '../application/imei/imei_saved_notifier.dart';
 import '../application/imei/imei_state.dart';
+import '../application/karyawan/karyawan_shift_notifier.dart';
 import '../application/routes/route_notifier.dart';
 import '../application/sign_in_form/sign_in_form_notifier.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -42,6 +43,7 @@ import '../infrastructure/geofence/geofence_repository.dart';
 import '../infrastructure/cache_storage/geofence_storage.dart';
 import '../infrastructure/cache_storage/imei_storage.dart';
 import '../infrastructure/imei/imei_repository.dart';
+import '../infrastructure/karyawan/karyawan_repository.dart';
 import '../infrastructure/profile/edit_profile_remote_service.dart';
 import '../infrastructure/profile/edit_profile_repository.dart';
 import '../utils/string_utils.dart';
@@ -119,6 +121,11 @@ final userNotifierProvider = StateNotifierProvider<UserNotifier, UserState>(
 final signInFormNotifierProvider =
     StateNotifierProvider.autoDispose<SignInFormNotifier, SignInFormState>(
   (ref) => SignInFormNotifier(ref.watch(authRepositoryProvider)),
+);
+
+final isKarwayanShiftNotifierProvider =
+    StateNotifierProvider.autoDispose<KaryawanShiftNotifier, bool>(
+  (ref) => KaryawanShiftNotifier(KaryawanShiftRepository()),
 );
 
 // Edit Profile

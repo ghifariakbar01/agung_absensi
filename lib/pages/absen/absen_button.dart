@@ -1,34 +1,51 @@
 import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
-import 'package:face_net_authentication/application/absen/absen_enum.dart';
-import 'package:face_net_authentication/application/absen/absen_request.dart';
-import 'package:face_net_authentication/application/absen/absen_state.dart';
-import 'package:face_net_authentication/application/routes/route_names.dart';
-import 'package:face_net_authentication/infrastructure/remote_response.dart';
-import 'package:face_net_authentication/pages/widgets/copyright_text.dart';
-import 'package:face_net_authentication/shared/providers.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../application/absen/absen_enum.dart';
+import '../../application/absen/absen_request.dart';
+import '../../application/absen/absen_state.dart';
 import '../../application/background/saved_location.dart';
+import '../../application/routes/route_names.dart';
 import '../../constants/assets.dart';
 import '../../domain/absen_failure.dart';
+import '../../infrastructure/remote_response.dart';
+import '../../shared/providers.dart';
 import '../../style/style.dart';
 import '../../utils/geofence_utils.dart';
 import '../../utils/string_utils.dart';
-import '../tc/tc_page.dart';
 import '../widgets/v_button.dart';
 import '../widgets/v_dialogs.dart';
 
-class AbsenButton extends ConsumerWidget {
+class AbsenButton extends ConsumerStatefulWidget {
   const AbsenButton({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<AbsenButton> createState() => _AbsenButtonState();
+}
+
+class _AbsenButtonState extends ConsumerState<AbsenButton> {
+  bool? karyawanShift;
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      karyawanShift = await ref
+          .read(isKarwayanShiftNotifierProvider.notifier)
+          .isKaryawanShift();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     // LAT, LONG
     final currentLocationLatitude = ref.watch(
         geofenceProvider.select((value) => value.currentLocation.latitude));
@@ -217,51 +234,21 @@ class AbsenButton extends ConsumerWidget {
                 })));
 
     final absen = ref.watch(absenNotifierProvidier);
-    log('absen $absen');
 
-    final karyawanShift = ref.watch(karyawanShiftProvider);
+    final karyawanShiftStr =
+        karyawanShift != null && karyawanShift == true ? 'SHIFT' : '';
+
+    final isKaryawanShift = karyawanShift != null && karyawanShift == true;
 
     return Column(
       children: [
-        // Karyawan Shift
-        Visibility(
-          visible: !isOfflineMode,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Row(
-              children: [
-                SizedBox(
-                  height: 38.0,
-                  width: 38.0,
-                  child: Checkbox(
-                      key: UniqueKey(),
-                      checkColor: Colors.white,
-                      fillColor: MaterialStateProperty.resolveWith(getColor),
-                      value: karyawanShift,
-                      onChanged: (_) => karyawanShift
-                          ? ref.read(karyawanShiftProvider.notifier).state =
-                              false
-                          : ref.read(karyawanShiftProvider.notifier).state =
-                              true),
-                ),
-                SizedBox(
-                  width: 4,
-                ),
-                Text('Karyawan Shift',
-                    style: Themes.customColor(
-                        FontWeight.bold, 13, Palette.primaryColor))
-              ],
-            ),
-          ),
-        ),
-
         // Absen Masuk
         Visibility(
           visible: !isOfflineMode,
           child: VButton(
-              label: 'ABSEN IN',
+              label: 'ABSEN IN $karyawanShiftStr',
               isEnabled:
-                  karyawanShift && nearest < minDistance && nearest != 0 ||
+                  isKaryawanShift && nearest < minDistance && nearest != 0 ||
                       absen == AbsenState.empty() &&
                           nearest < minDistance &&
                           nearest != 0 ||
@@ -289,9 +276,9 @@ class AbsenButton extends ConsumerWidget {
         Visibility(
           visible: !isOfflineMode,
           child: VButton(
-              label: 'ABSEN OUT',
+              label: 'ABSEN OUT $karyawanShiftStr',
               isEnabled:
-                  karyawanShift && nearest < minDistance && nearest != 0 ||
+                  isKaryawanShift && nearest < minDistance && nearest != 0 ||
                       absen == AbsenState.absenIn() &&
                           nearest < minDistance &&
                           nearest != 0,

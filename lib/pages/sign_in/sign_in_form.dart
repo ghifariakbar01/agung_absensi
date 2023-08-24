@@ -28,53 +28,26 @@ class _SignInFormState extends ConsumerState<SignInForm> {
 
       final rememberMe = prefs.getString('remember_me');
 
-      log('rememberMe ${rememberMe != null}');
-
       if (rememberMe != null) {
-        ref.read(signInFormNotifierProvider.notifier).changeRemember(true);
-
         ref.read(passwordVisibleProvider.notifier).state = false;
 
-        final rememberMeModel =
+        RememberMeModel rememberMeModel =
             RememberMeModel.fromJson(jsonDecode(rememberMe));
-
-        log('rememberMeModel.ptName ${rememberMeModel.ptName}');
-
-        ref.read(signInFormNotifierProvider.notifier).changeAllData(
-            ptNameStr: rememberMeModel.ptName,
-            idKaryawanStr: rememberMeModel.nik,
-            passwordStr: rememberMeModel.password,
-            userStr: rememberMeModel.nama);
 
         final namaPT = rememberMeModel.ptName;
 
+        ref.read(signInFormNotifierProvider.notifier).changeAllData(
+            ptNameStr: namaPT,
+            idKaryawanStr: rememberMeModel.nik,
+            passwordStr: rememberMeModel.password,
+            userStr: rememberMeModel.nama,
+            isKaryawan: rememberMeModel.isKaryawan,
+            isChecked: true);
+
         if (namaPT.isNotEmpty) {
-          final ptMapWithName = ref
+          ref
               .read(signInFormNotifierProvider.notifier)
-              .state
-              .ptMap
-              .entries
-              .firstWhereOrNull(
-                (ptMap) =>
-                    ptMap.value
-                        .firstWhereOrNull((ptName) => ptName == namaPT) !=
-                    null,
-              );
-
-          if (ptMapWithName != null) {
-            final serverName = ptMapWithName.key;
-
-            ref
-                .read(signInFormNotifierProvider.notifier)
-                .changePTNameAndDropdown(
-                  changePTName: () => ref
-                      .read(signInFormNotifierProvider.notifier)
-                      .changePTName(serverName),
-                  changeDropdownSelected: () => ref
-                      .read(signInFormNotifierProvider.notifier)
-                      .changeDropdownSelected(namaPT),
-                );
-          }
+              .changeInitializeNamaPT(namaPT: namaPT);
         }
       }
     });
@@ -206,20 +179,20 @@ class _SignInFormState extends ConsumerState<SignInForm> {
                   key: UniqueKey(),
                   checkColor: Colors.white,
                   fillColor: MaterialStateProperty.resolveWith(getColor),
-                  value: signInForm.isChecked,
+                  value: signInForm.isKaryawan,
                   onChanged: (_) => ref
                       .read(signInFormNotifierProvider.notifier)
-                      .changeRemember(toggleBool(signInForm.isChecked))),
+                      .changeIsKaryawan(toggleBool(signInForm.isKaryawan))),
               SizedBox(
                 width: 4,
               ),
               Text(
-                'Remember Me',
+                'Saya Karyawan dengan Jadwal Shift',
                 style: Themes.customColor(
                     FontWeight.normal, 14, Palette.primaryColor),
               )
             ],
-          )
+          ),
         ],
       ),
     );

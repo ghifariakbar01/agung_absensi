@@ -27,6 +27,7 @@ mixin _$SignInFormState {
   bool get showErrorMessages => throw _privateConstructorUsedError;
   bool get isSubmitting => throw _privateConstructorUsedError;
   bool get isChecked => throw _privateConstructorUsedError;
+  bool get isKaryawan => throw _privateConstructorUsedError;
   Option<Either<AuthFailure, Unit>> get failureOrSuccessOption =>
       throw _privateConstructorUsedError;
 
@@ -53,6 +54,7 @@ abstract class $SignInFormStateCopyWith<$Res> {
       bool showErrorMessages,
       bool isSubmitting,
       bool isChecked,
+      bool isKaryawan,
       Option<Either<AuthFailure, Unit>> failureOrSuccessOption});
 }
 
@@ -80,6 +82,7 @@ class _$SignInFormStateCopyWithImpl<$Res, $Val extends SignInFormState>
     Object? showErrorMessages = null,
     Object? isSubmitting = null,
     Object? isChecked = null,
+    Object? isKaryawan = null,
     Object? failureOrSuccessOption = null,
   }) {
     return _then(_value.copyWith(
@@ -127,6 +130,10 @@ class _$SignInFormStateCopyWithImpl<$Res, $Val extends SignInFormState>
           ? _value.isChecked
           : isChecked // ignore: cast_nullable_to_non_nullable
               as bool,
+      isKaryawan: null == isKaryawan
+          ? _value.isKaryawan
+          : isKaryawan // ignore: cast_nullable_to_non_nullable
+              as bool,
       failureOrSuccessOption: null == failureOrSuccessOption
           ? _value.failureOrSuccessOption
           : failureOrSuccessOption // ignore: cast_nullable_to_non_nullable
@@ -155,6 +162,7 @@ abstract class _$$_SignInFormStateCopyWith<$Res>
       bool showErrorMessages,
       bool isSubmitting,
       bool isChecked,
+      bool isKaryawan,
       Option<Either<AuthFailure, Unit>> failureOrSuccessOption});
 }
 
@@ -180,6 +188,7 @@ class __$$_SignInFormStateCopyWithImpl<$Res>
     Object? showErrorMessages = null,
     Object? isSubmitting = null,
     Object? isChecked = null,
+    Object? isKaryawan = null,
     Object? failureOrSuccessOption = null,
   }) {
     return _then(_$_SignInFormState(
@@ -227,6 +236,10 @@ class __$$_SignInFormStateCopyWithImpl<$Res>
           ? _value.isChecked
           : isChecked // ignore: cast_nullable_to_non_nullable
               as bool,
+      isKaryawan: null == isKaryawan
+          ? _value.isKaryawan
+          : isKaryawan // ignore: cast_nullable_to_non_nullable
+              as bool,
       failureOrSuccessOption: null == failureOrSuccessOption
           ? _value.failureOrSuccessOption
           : failureOrSuccessOption // ignore: cast_nullable_to_non_nullable
@@ -250,6 +263,7 @@ class _$_SignInFormState implements _SignInFormState {
       required this.showErrorMessages,
       required this.isSubmitting,
       required this.isChecked,
+      required this.isKaryawan,
       required this.failureOrSuccessOption})
       : _ptDropdownList = ptDropdownList,
         _ptMap = ptMap;
@@ -289,11 +303,13 @@ class _$_SignInFormState implements _SignInFormState {
   @override
   final bool isChecked;
   @override
+  final bool isKaryawan;
+  @override
   final Option<Either<AuthFailure, Unit>> failureOrSuccessOption;
 
   @override
   String toString() {
-    return 'SignInFormState(userId: $userId, email: $email, idKaryawan: $idKaryawan, password: $password, ptServerSelected: $ptServerSelected, ptDropdownSelected: $ptDropdownSelected, ptDropdownList: $ptDropdownList, ptMap: $ptMap, showErrorMessages: $showErrorMessages, isSubmitting: $isSubmitting, isChecked: $isChecked, failureOrSuccessOption: $failureOrSuccessOption)';
+    return 'SignInFormState(userId: $userId, email: $email, idKaryawan: $idKaryawan, password: $password, ptServerSelected: $ptServerSelected, ptDropdownSelected: $ptDropdownSelected, ptDropdownList: $ptDropdownList, ptMap: $ptMap, showErrorMessages: $showErrorMessages, isSubmitting: $isSubmitting, isChecked: $isChecked, isKaryawan: $isKaryawan, failureOrSuccessOption: $failureOrSuccessOption)';
   }
 
   @override
@@ -320,6 +336,8 @@ class _$_SignInFormState implements _SignInFormState {
                 other.isSubmitting == isSubmitting) &&
             (identical(other.isChecked, isChecked) ||
                 other.isChecked == isChecked) &&
+            (identical(other.isKaryawan, isKaryawan) ||
+                other.isKaryawan == isKaryawan) &&
             (identical(other.failureOrSuccessOption, failureOrSuccessOption) ||
                 other.failureOrSuccessOption == failureOrSuccessOption));
   }
@@ -338,6 +356,7 @@ class _$_SignInFormState implements _SignInFormState {
       showErrorMessages,
       isSubmitting,
       isChecked,
+      isKaryawan,
       failureOrSuccessOption);
 
   @JsonKey(ignore: true)
@@ -360,6 +379,7 @@ abstract class _SignInFormState implements SignInFormState {
       required final bool showErrorMessages,
       required final bool isSubmitting,
       required final bool isChecked,
+      required final bool isKaryawan,
       required final Option<Either<AuthFailure, Unit>>
           failureOrSuccessOption}) = _$_SignInFormState;
 
@@ -385,6 +405,8 @@ abstract class _SignInFormState implements SignInFormState {
   bool get isSubmitting;
   @override
   bool get isChecked;
+  @override
+  bool get isKaryawan;
   @override
   Option<Either<AuthFailure, Unit>> get failureOrSuccessOption;
   @override

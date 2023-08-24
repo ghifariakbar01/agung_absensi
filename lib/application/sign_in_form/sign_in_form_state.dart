@@ -14,6 +14,7 @@ class SignInFormState with _$SignInFormState {
     required bool showErrorMessages,
     required bool isSubmitting,
     required bool isChecked,
+    required bool isKaryawan,
     required Option<Either<AuthFailure, Unit>> failureOrSuccessOption,
   }) = _SignInFormState;
 
@@ -44,7 +45,8 @@ class SignInFormState with _$SignInFormState {
         },
         showErrorMessages: false,
         isSubmitting: false,
-        isChecked: false,
+        isChecked: true,
+        isKaryawan: false,
         failureOrSuccessOption: none(),
       );
 }

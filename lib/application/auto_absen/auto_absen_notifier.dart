@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:collection/collection.dart';
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/application/background/saved_location.dart';
 import 'package:face_net_authentication/domain/auto_absen_failure.dart';
@@ -106,7 +107,7 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
     final list = autoAbsenMap.values;
 
     if (list.isNotEmpty) {
-      for (final absensInDate in list) {
+      list.forEach((absensInDate) async {
         /// check if absen [AbsenState.empty()], [AbsenState.absenIn()] or [AbsenState.complete()]
         debugger(message: 'called');
 
@@ -114,12 +115,9 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
           debugger(message: 'called');
 
           // ID GEOF, IMEI field
-          final idGeof = nearestCoordinatesSaved;
-
-          for (int i = 0; i < absensInDate.length; i++) {
-            final absenSaved = absensInDate[i];
-            final idGeofSaved = idGeof[i].id;
-            final date = absensInDate[i].savedLocations.date;
+          absensInDate.forEachIndexed((index, absenSaved) async {
+            final idGeofSaved = nearestCoordinatesSaved[index].id;
+            final date = absensInDate[index].savedLocations.date;
 
             await getAbsenState(date: date);
 
@@ -135,35 +133,34 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
 
             JenisAbsen jenisAbsenShift = JenisAbsen.unknown;
 
-            await showDialog(
-                context: context,
-                barrierDismissible: true,
-                builder: (context) => VAlertDialog(
-                      label: 'KARYAWAN SHIFT ?',
-                      labelDescription: 'PILIH YA JIKA KARYAWAN SHIFT.',
-                      backPressedLabel: 'TIDAK',
-                      onPressed: () => showDialog(
-                          context: context,
-                          barrierDismissible: true,
-                          builder: (context) => VAlertDialog(
-                              label: 'PILIH ABSEN',
-                              labelDescription: 'PILIH ABSEN IN ATAU OUT',
-                              pressedLabel: 'ABSEN IN',
-                              backPressedLabel: 'ABSEN OUT',
-                              onPressed: () {
-                                jenisAbsenShift = JenisAbsen.absenIn;
-                                context.pop();
-                                context.pop();
-                              },
-                              onBackPressed: () {
-                                jenisAbsenShift = JenisAbsen.absenOut;
-                                context.pop();
-                                context.pop();
-                              })),
-                      onBackPressed: () => context.pop(),
-                    ));
+            final karyawanShift = await ref
+                .read(isKarwayanShiftNotifierProvider.notifier)
+                .isKaryawanShift();
 
-            if (belumAbsen || jenisAbsenShift != JenisAbsen.unknown) {
+            if (karyawanShift) {
+              await showDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (context) => VAlertDialog(
+                        label: 'PILIH ABSEN',
+                        labelDescription: 'PILIH ABSEN IN ATAU OUT',
+                        pressedLabel: 'ABSEN IN',
+                        backPressedLabel: 'ABSEN OUT',
+                        onPressed: () {
+                          jenisAbsenShift = JenisAbsen.absenIn;
+                          context.pop();
+                        },
+                        onBackPressed: () {
+                          jenisAbsenShift = JenisAbsen.absenOut;
+                          context.pop();
+                        },
+                      ));
+            }
+
+            log('CONDITION 1 : ${belumAbsen || jenisAbsenShift == JenisAbsen.absenIn}');
+            log('CONDITION 2 : ${udahAbsenMasuk || jenisAbsenShift == JenisAbsen.absenOut}');
+
+            if (belumAbsen || jenisAbsenShift == JenisAbsen.absenIn) {
               debugger(message: 'called');
               final jenisAbsen = jenisAbsenShift == JenisAbsen.unknown
                   ? JenisAbsen.absenIn
@@ -210,7 +207,7 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
                       onBackPressed: () => deleteSavedLocation(
                           savedLocation: absenSaved.savedLocations)));
             } else if (udahAbsenMasuk ||
-                jenisAbsenShift != JenisAbsen.unknown) {
+                jenisAbsenShift == JenisAbsen.absenOut) {
               debugger(message: 'called');
               final jenisAbsen = jenisAbsenShift == JenisAbsen.unknown
                   ? JenisAbsen.absenOut
@@ -258,7 +255,8 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
                               ),
                       onBackPressed: () => deleteSavedLocation(
                           savedLocation: absenSaved.savedLocations)));
-            } else if (udahAbsenMasukSamaKeluar) {
+            } else if (udahAbsenMasukSamaKeluar &&
+                jenisAbsenShift != JenisAbsen.unknown) {
               // delete saved absen as we don't need them.
               await deleteSavedLocation(
                   savedLocation: absenSaved.savedLocations);
@@ -268,9 +266,9 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
               await getSavedLocations();
               await ref.read(geofenceProvider.notifier).getGeofenceList();
             }
-          }
+          });
         }
-      }
+      });
     }
   }
 

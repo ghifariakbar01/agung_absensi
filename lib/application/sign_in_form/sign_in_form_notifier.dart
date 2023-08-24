@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:dartz/dartz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -20,19 +21,37 @@ class SignInFormNotifier extends StateNotifier<SignInFormState> {
 
   final AuthRepository _repository;
 
-  void changeAllData({
-    required String ptNameStr,
-    required String idKaryawanStr,
-    required String userStr,
-    required String passwordStr,
-  }) {
+  void changeAllData(
+      {required String ptNameStr,
+      required String idKaryawanStr,
+      required String userStr,
+      required String passwordStr,
+      required bool isKaryawan,
+      required bool isChecked}) {
     state = state.copyWith(
-      idKaryawan: IdKaryawan(idKaryawanStr),
-      userId: UserId(userStr),
-      password: Password(passwordStr),
-      ptDropdownSelected: ptNameStr,
-      failureOrSuccessOption: none(),
+        idKaryawan: IdKaryawan(idKaryawanStr),
+        userId: UserId(userStr),
+        password: Password(passwordStr),
+        ptDropdownSelected: ptNameStr,
+        failureOrSuccessOption: none(),
+        isKaryawan: isKaryawan,
+        isChecked: isChecked);
+  }
+
+  void changeInitializeNamaPT({required String namaPT}) {
+    final ptMapWithName = state.ptMap.entries.firstWhereOrNull(
+      (ptMap) =>
+          ptMap.value.firstWhereOrNull((ptName) => ptName == namaPT) != null,
     );
+
+    if (ptMapWithName != null) {
+      final serverName = ptMapWithName.key;
+
+      changePTNameAndDropdown(
+        changePTName: () => changePTName(serverName),
+        changeDropdownSelected: () => changeDropdownSelected(namaPT),
+      );
+    }
   }
 
   void changeIdKaryawan(String idKaryawanStr) {
@@ -108,8 +127,8 @@ class SignInFormNotifier extends StateNotifier<SignInFormState> {
     }
   }
 
-  void changeRemember(bool isChecked) {
-    state = state.copyWith(isChecked: isChecked);
+  void changeIsKaryawan(bool isKaryawan) {
+    state = state.copyWith(isKaryawan: isKaryawan);
   }
 
   /// [rememberInfo] and [clearInfo] should use [Either] and handle error when thrown
@@ -123,7 +142,8 @@ class SignInFormNotifier extends StateNotifier<SignInFormState> {
             nik: state.idKaryawan.getOrLeave(''),
             nama: state.userId.getOrLeave(''),
             password: state.password.getOrLeave(''),
-            ptName: state.ptDropdownSelected)));
+            ptName: state.ptDropdownSelected,
+            isKaryawan: state.isKaryawan)));
   }
 
   Future<void> clearInfo() async {

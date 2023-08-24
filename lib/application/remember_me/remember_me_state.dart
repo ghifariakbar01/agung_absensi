@@ -11,6 +11,7 @@ class RememberMeModel with _$RememberMeModel {
     required String nama,
     required String password,
     required String ptName,
+    required bool isKaryawan,
   }) = _RememberMeModel;
 
   factory RememberMeModel.fromJson(Map<String, Object?> json) =>
