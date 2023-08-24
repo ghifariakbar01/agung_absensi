@@ -259,7 +259,12 @@ class _HomePageState extends ConsumerState<HomePage> {
     );
 
     return UpgradeAlert(
-      upgrader: Upgrader(dialogStyle: UpgradeDialogStyle.cupertino),
+      upgrader: Upgrader(
+          dialogStyle: UpgradeDialogStyle.cupertino,
+          showIgnore: false,
+          showLater: false,
+          showReleaseNotes: true,
+          messages: MyUpgraderMessages()),
       child: Stack(
         children: [
           HomeSaved(),
@@ -270,4 +275,12 @@ class _HomePageState extends ConsumerState<HomePage> {
       ),
     );
   }
+}
+
+class MyUpgraderMessages extends UpgraderMessages {
+  @override
+  String get body => 'Lakukan update dengan versi aplikasi FINGER terbaru.';
+
+  @override
+  String get buttonTitleIgnore => '-';
 }
