@@ -73,7 +73,7 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
       geofences.addAll([
         Geofence(
             id: geofence.id.toString(),
-            latitude: -geofenceCoordinates[0],
+            latitude: geofenceCoordinates[0],
             longitude: geofenceCoordinates[1],
             data: geofence.namaLokasi,
             radius: radius),
@@ -109,7 +109,7 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
 
   List<double> coordinates({required String coordinatesString}) {
     return coordinatesString
-        .substring(1, coordinatesString.length - 1)
+        .substring(0, coordinatesString.length - 1)
         .split(',')
         .map((coordinate) => double.parse(coordinate.trim()))
         .toList();
