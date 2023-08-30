@@ -98,8 +98,8 @@ class BackgroundItemDetail extends StatelessWidget {
                                   style: Themes.white(FontWeight.bold, 11),
                                 ),
                                 Text(
-                                  latitude.length > 25
-                                      ? '${latitude.substring(0, 25)}...'
+                                  latitude.length > 10
+                                      ? '${latitude.substring(0, 10)}...'
                                       : latitude,
                                   style: Themes.white(FontWeight.bold, 10),
                                 ),
@@ -138,8 +138,8 @@ class BackgroundItemDetail extends StatelessWidget {
                                   style: Themes.white(FontWeight.bold, 11),
                                 ),
                                 Text(
-                                  longitude.length > 25
-                                      ? '${longitude.substring(0, 25)}...'
+                                  longitude.length > 10
+                                      ? '${longitude.substring(0, 10)}...'
                                       : longitude,
                                   style: Themes.white(FontWeight.bold, 10),
                                 ),

@@ -16,18 +16,37 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$AutoAbsenState {
-  bool get isProcessing => throw _privateConstructorUsedError;
-  List<RecentAbsenState> get recentAbsens => throw _privateConstructorUsedError;
-  List<BackgroundItemState> get backgroundSavedItems =>
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+  }) =>
       throw _privateConstructorUsedError;
-  Map<String, List<BackgroundItemState>> get backgroundSavedItemsByDate =>
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initial,
+  }) =>
       throw _privateConstructorUsedError;
-  Option<Either<AutoAbsenFailure, List<RecentAbsenState>>>
-      get failureOrSuccessOptionRecentAbsen =>
-          throw _privateConstructorUsedError;
-
-  @JsonKey(ignore: true)
-  $AutoAbsenStateCopyWith<AutoAbsenState> get copyWith =>
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Initial value) initial,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Initial value)? initial,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Initial value)? initial,
+    required TResult orElse(),
+  }) =>
       throw _privateConstructorUsedError;
 }
 
@@ -36,14 +55,6 @@ abstract class $AutoAbsenStateCopyWith<$Res> {
   factory $AutoAbsenStateCopyWith(
           AutoAbsenState value, $Res Function(AutoAbsenState) then) =
       _$AutoAbsenStateCopyWithImpl<$Res, AutoAbsenState>;
-  @useResult
-  $Res call(
-      {bool isProcessing,
-      List<RecentAbsenState> recentAbsens,
-      List<BackgroundItemState> backgroundSavedItems,
-      Map<String, List<BackgroundItemState>> backgroundSavedItemsByDate,
-      Option<Either<AutoAbsenFailure, List<RecentAbsenState>>>
-          failureOrSuccessOptionRecentAbsen});
 }
 
 /// @nodoc
@@ -55,212 +66,99 @@ class _$AutoAbsenStateCopyWithImpl<$Res, $Val extends AutoAbsenState>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? isProcessing = null,
-    Object? recentAbsens = null,
-    Object? backgroundSavedItems = null,
-    Object? backgroundSavedItemsByDate = null,
-    Object? failureOrSuccessOptionRecentAbsen = null,
-  }) {
-    return _then(_value.copyWith(
-      isProcessing: null == isProcessing
-          ? _value.isProcessing
-          : isProcessing // ignore: cast_nullable_to_non_nullable
-              as bool,
-      recentAbsens: null == recentAbsens
-          ? _value.recentAbsens
-          : recentAbsens // ignore: cast_nullable_to_non_nullable
-              as List<RecentAbsenState>,
-      backgroundSavedItems: null == backgroundSavedItems
-          ? _value.backgroundSavedItems
-          : backgroundSavedItems // ignore: cast_nullable_to_non_nullable
-              as List<BackgroundItemState>,
-      backgroundSavedItemsByDate: null == backgroundSavedItemsByDate
-          ? _value.backgroundSavedItemsByDate
-          : backgroundSavedItemsByDate // ignore: cast_nullable_to_non_nullable
-              as Map<String, List<BackgroundItemState>>,
-      failureOrSuccessOptionRecentAbsen: null ==
-              failureOrSuccessOptionRecentAbsen
-          ? _value.failureOrSuccessOptionRecentAbsen
-          : failureOrSuccessOptionRecentAbsen // ignore: cast_nullable_to_non_nullable
-              as Option<Either<AutoAbsenFailure, List<RecentAbsenState>>>,
-    ) as $Val);
-  }
 }
 
 /// @nodoc
-abstract class _$$_AutoAbsenStateCopyWith<$Res>
-    implements $AutoAbsenStateCopyWith<$Res> {
-  factory _$$_AutoAbsenStateCopyWith(
-          _$_AutoAbsenState value, $Res Function(_$_AutoAbsenState) then) =
-      __$$_AutoAbsenStateCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {bool isProcessing,
-      List<RecentAbsenState> recentAbsens,
-      List<BackgroundItemState> backgroundSavedItems,
-      Map<String, List<BackgroundItemState>> backgroundSavedItemsByDate,
-      Option<Either<AutoAbsenFailure, List<RecentAbsenState>>>
-          failureOrSuccessOptionRecentAbsen});
+abstract class _$$_InitialCopyWith<$Res> {
+  factory _$$_InitialCopyWith(
+          _$_Initial value, $Res Function(_$_Initial) then) =
+      __$$_InitialCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_AutoAbsenStateCopyWithImpl<$Res>
-    extends _$AutoAbsenStateCopyWithImpl<$Res, _$_AutoAbsenState>
-    implements _$$_AutoAbsenStateCopyWith<$Res> {
-  __$$_AutoAbsenStateCopyWithImpl(
-      _$_AutoAbsenState _value, $Res Function(_$_AutoAbsenState) _then)
+class __$$_InitialCopyWithImpl<$Res>
+    extends _$AutoAbsenStateCopyWithImpl<$Res, _$_Initial>
+    implements _$$_InitialCopyWith<$Res> {
+  __$$_InitialCopyWithImpl(_$_Initial _value, $Res Function(_$_Initial) _then)
       : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? isProcessing = null,
-    Object? recentAbsens = null,
-    Object? backgroundSavedItems = null,
-    Object? backgroundSavedItemsByDate = null,
-    Object? failureOrSuccessOptionRecentAbsen = null,
-  }) {
-    return _then(_$_AutoAbsenState(
-      isProcessing: null == isProcessing
-          ? _value.isProcessing
-          : isProcessing // ignore: cast_nullable_to_non_nullable
-              as bool,
-      recentAbsens: null == recentAbsens
-          ? _value._recentAbsens
-          : recentAbsens // ignore: cast_nullable_to_non_nullable
-              as List<RecentAbsenState>,
-      backgroundSavedItems: null == backgroundSavedItems
-          ? _value._backgroundSavedItems
-          : backgroundSavedItems // ignore: cast_nullable_to_non_nullable
-              as List<BackgroundItemState>,
-      backgroundSavedItemsByDate: null == backgroundSavedItemsByDate
-          ? _value._backgroundSavedItemsByDate
-          : backgroundSavedItemsByDate // ignore: cast_nullable_to_non_nullable
-              as Map<String, List<BackgroundItemState>>,
-      failureOrSuccessOptionRecentAbsen: null ==
-              failureOrSuccessOptionRecentAbsen
-          ? _value.failureOrSuccessOptionRecentAbsen
-          : failureOrSuccessOptionRecentAbsen // ignore: cast_nullable_to_non_nullable
-              as Option<Either<AutoAbsenFailure, List<RecentAbsenState>>>,
-    ));
-  }
 }
 
 /// @nodoc
 
-class _$_AutoAbsenState implements _AutoAbsenState {
-  const _$_AutoAbsenState(
-      {required this.isProcessing,
-      required final List<RecentAbsenState> recentAbsens,
-      required final List<BackgroundItemState> backgroundSavedItems,
-      required final Map<String, List<BackgroundItemState>>
-          backgroundSavedItemsByDate,
-      required this.failureOrSuccessOptionRecentAbsen})
-      : _recentAbsens = recentAbsens,
-        _backgroundSavedItems = backgroundSavedItems,
-        _backgroundSavedItemsByDate = backgroundSavedItemsByDate;
-
-  @override
-  final bool isProcessing;
-  final List<RecentAbsenState> _recentAbsens;
-  @override
-  List<RecentAbsenState> get recentAbsens {
-    if (_recentAbsens is EqualUnmodifiableListView) return _recentAbsens;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_recentAbsens);
-  }
-
-  final List<BackgroundItemState> _backgroundSavedItems;
-  @override
-  List<BackgroundItemState> get backgroundSavedItems {
-    if (_backgroundSavedItems is EqualUnmodifiableListView)
-      return _backgroundSavedItems;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_backgroundSavedItems);
-  }
-
-  final Map<String, List<BackgroundItemState>> _backgroundSavedItemsByDate;
-  @override
-  Map<String, List<BackgroundItemState>> get backgroundSavedItemsByDate {
-    if (_backgroundSavedItemsByDate is EqualUnmodifiableMapView)
-      return _backgroundSavedItemsByDate;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(_backgroundSavedItemsByDate);
-  }
-
-  @override
-  final Option<Either<AutoAbsenFailure, List<RecentAbsenState>>>
-      failureOrSuccessOptionRecentAbsen;
+class _$_Initial implements _Initial {
+  _$_Initial();
 
   @override
   String toString() {
-    return 'AutoAbsenState(isProcessing: $isProcessing, recentAbsens: $recentAbsens, backgroundSavedItems: $backgroundSavedItems, backgroundSavedItemsByDate: $backgroundSavedItemsByDate, failureOrSuccessOptionRecentAbsen: $failureOrSuccessOptionRecentAbsen)';
+    return 'AutoAbsenState.initial()';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$_AutoAbsenState &&
-            (identical(other.isProcessing, isProcessing) ||
-                other.isProcessing == isProcessing) &&
-            const DeepCollectionEquality()
-                .equals(other._recentAbsens, _recentAbsens) &&
-            const DeepCollectionEquality()
-                .equals(other._backgroundSavedItems, _backgroundSavedItems) &&
-            const DeepCollectionEquality().equals(
-                other._backgroundSavedItemsByDate,
-                _backgroundSavedItemsByDate) &&
-            (identical(other.failureOrSuccessOptionRecentAbsen,
-                    failureOrSuccessOptionRecentAbsen) ||
-                other.failureOrSuccessOptionRecentAbsen ==
-                    failureOrSuccessOptionRecentAbsen));
+        (other.runtimeType == runtimeType && other is _$_Initial);
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      isProcessing,
-      const DeepCollectionEquality().hash(_recentAbsens),
-      const DeepCollectionEquality().hash(_backgroundSavedItems),
-      const DeepCollectionEquality().hash(_backgroundSavedItemsByDate),
-      failureOrSuccessOptionRecentAbsen);
+  int get hashCode => runtimeType.hashCode;
 
-  @JsonKey(ignore: true)
   @override
-  @pragma('vm:prefer-inline')
-  _$$_AutoAbsenStateCopyWith<_$_AutoAbsenState> get copyWith =>
-      __$$_AutoAbsenStateCopyWithImpl<_$_AutoAbsenState>(this, _$identity);
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+  }) {
+    return initial();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initial,
+  }) {
+    return initial?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    required TResult orElse(),
+  }) {
+    if (initial != null) {
+      return initial();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Initial value) initial,
+  }) {
+    return initial(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Initial value)? initial,
+  }) {
+    return initial?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Initial value)? initial,
+    required TResult orElse(),
+  }) {
+    if (initial != null) {
+      return initial(this);
+    }
+    return orElse();
+  }
 }
 
-abstract class _AutoAbsenState implements AutoAbsenState {
-  const factory _AutoAbsenState(
-      {required final bool isProcessing,
-      required final List<RecentAbsenState> recentAbsens,
-      required final List<BackgroundItemState> backgroundSavedItems,
-      required final Map<String, List<BackgroundItemState>>
-          backgroundSavedItemsByDate,
-      required final Option<Either<AutoAbsenFailure, List<RecentAbsenState>>>
-          failureOrSuccessOptionRecentAbsen}) = _$_AutoAbsenState;
-
-  @override
-  bool get isProcessing;
-  @override
-  List<RecentAbsenState> get recentAbsens;
-  @override
-  List<BackgroundItemState> get backgroundSavedItems;
-  @override
-  Map<String, List<BackgroundItemState>> get backgroundSavedItemsByDate;
-  @override
-  Option<Either<AutoAbsenFailure, List<RecentAbsenState>>>
-      get failureOrSuccessOptionRecentAbsen;
-  @override
-  @JsonKey(ignore: true)
-  _$$_AutoAbsenStateCopyWith<_$_AutoAbsenState> get copyWith =>
-      throw _privateConstructorUsedError;
+abstract class _Initial implements AutoAbsenState {
+  factory _Initial() = _$_Initial;
 }

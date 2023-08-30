@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ntp/ntp.dart';
 
 import '../application/absen/absen_auth_notifier.dart';
 import '../application/absen/absen_auth_state.dart';
@@ -76,7 +77,7 @@ final autoAbsenRepositoryProvider = Provider(
 
 final autoAbsenNotifierProvider =
     StateNotifierProvider<AutoAbsenNotifier, AutoAbsenState>(
-        (ref) => AutoAbsenNotifier(ref.watch(autoAbsenRepositoryProvider)));
+        (ref) => AutoAbsenNotifier(ref));
 
 final backgroundNotifierProvider =
     StateNotifierProvider<BackgroundNotifier, BackgroundState>(
@@ -172,6 +173,12 @@ final absenOfflineModeProvider = StateProvider<bool>(
 final absenAuthNotifierProvidier =
     StateNotifierProvider<AbsenAuthNotifier, AbsenAuthState>(
         (ref) => AbsenAuthNotifier(ref.watch(absenRepositoryProvider)));
+
+final networkTimeFutureProvider = FutureProvider((ref) async {
+  DateTime startDate = new DateTime.now().toLocal();
+  int offset = await NTP.getNtpOffset(localTime: startDate);
+  return startDate.add(new Duration(milliseconds: offset));
+});
 
 // Geofence
 

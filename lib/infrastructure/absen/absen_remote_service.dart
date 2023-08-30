@@ -29,19 +29,17 @@ class AbsenRemoteService {
   static const String dbNameProd = 'hr_trs_absen';
   static const String dbName = 'hr_trs_absenmnl';
 
-  final currentMonth = StringUtils.monthDate(DateTime.now());
-
   Future<Unit> absen({
     required String idAbsenMnl,
     required String lokasi,
     required String latitude,
     required String longitude,
-    required JenisAbsen inOrOut,
     required String jenisAbsen,
-    required DateTime date,
     required String idGeof,
     required String imei,
-
+    required DateTime date,
+    required DateTime dbDate,
+    required JenisAbsen inOrOut,
     // required String idUser,
     // required String tgl,
     // required String jamAwal,
@@ -57,8 +55,13 @@ class AbsenRemoteService {
     // required int hrdSta,
     // required String periode,
   }) async {
+    final currentMonth = StringUtils.monthDate(dbDate);
+    //
     final currentDate = StringUtils.midnightDate(date);
     final trimmedDate = StringUtils.trimmedDate(date);
+    //
+    final trimmedDateDb = StringUtils.trimmedDate(dbDate);
+    //
     final ket = inOrOut == JenisAbsen.absenIn ? 'MASUK' : 'PULANG';
     final coancenate = inOrOut == JenisAbsen.absenIn ? 'masuk' : 'keluar';
 
@@ -73,15 +76,17 @@ class AbsenRemoteService {
 
       if (inOrOut == JenisAbsen.absenIn) {
         data.addAll({
-          "command":
-              "INSERT INTO $dbName (id_absenmnl, id_user, tgl, jam_awal, ket, c_date, hrd_tgl, c_user, u_date, u_user, spv_sta, spv_tgl, hrd_sta, btl_sta, periode, jenis_absen, latitude_$coancenate, longtitude_$coancenate, lokasi_$coancenate) VALUES ('$idAbsenMnl', '${_userModelWithPassword.idUser}', '$currentDate', '$trimmedDate', 'ABSEN MASUK', '$currentDate', '$currentDate', '${_userModelWithPassword.nama}','$trimmedDate', '${_userModelWithPassword.nama}', 0, '$trimmedDate', 0, 0, '$currentMonth', '$jenisAbsen', '$latitude', '$longitude', '$lokasi')",
+          "command": "INSERT INTO $dbName " +
+              "(id_absenmnl, id_user, tgl, jam_awal, ket, c_date, hrd_tgl, c_user, u_date, u_user, spv_sta, spv_tgl, hrd_sta, btl_sta, periode, jenis_absen, latitude_$coancenate, longtitude_$coancenate, lokasi_$coancenate)" +
+              " VALUES " +
+              "('$idAbsenMnl', '${_userModelWithPassword.idUser}', '$currentDate', '$trimmedDate', 'ABSEN MASUK', '$trimmedDateDb', '$trimmedDateDb', '${_userModelWithPassword.nama}','$trimmedDateDb', '${_userModelWithPassword.nama}', 0, '$trimmedDateDb', 0, 0, '$currentMonth', '$jenisAbsen', '$latitude', '$longitude', '$lokasi')",
         });
       }
 
       if (inOrOut == JenisAbsen.absenOut) {
         data.addAll({
           "command":
-              "UPDATE $dbName SET latitude_keluar = '$latitude', longtitude_keluar = '$longitude', jam_akhir = '$trimmedDate', u_date = '$trimmedDate', lokasi_keluar = '$lokasi', ket = 'ABSEN MASUK DAN ABSEN PULANG' WHERE id_user = '${_userModelWithPassword.idUser}' AND tgl = '$currentDate'",
+              "UPDATE $dbName SET latitude_keluar = '$latitude', longtitude_keluar = '$longitude', jam_akhir = '$trimmedDate', u_date = '$trimmedDateDb', lokasi_keluar = '$lokasi', ket = 'ABSEN MASUK DAN ABSEN PULANG' WHERE id_user = '${_userModelWithPassword.idUser}' AND tgl = '$currentDate'",
         });
       }
 
@@ -94,8 +99,10 @@ class AbsenRemoteService {
 
       dataProd.addAll({
         "mode": 'INSERT',
-        "command":
-            "INSERT INTO $dbNameProd (tgljam, mode, id_user, imei, id_geof, c_date, c_user, latitude_$coancenate, longitude_$coancenate, lokasi_$coancenate) VALUES ('$trimmedDate', '$ket', '${_userModelWithPassword.idUser}', '$imei', '$idGeof', '$trimmedDate', '${_userModelWithPassword.nama}', '$latitude', '$longitude', '$lokasi')",
+        "command": "INSERT INTO $dbNameProd " +
+            "(tgljam, mode, id_user, imei, id_geof, c_date, c_user, latitude_$coancenate, longitude_$coancenate, lokasi_$coancenate)" +
+            " VALUES " +
+            "('$trimmedDate', '$ket', '${_userModelWithPassword.idUser}', '$imei', '$idGeof', '$trimmedDateDb', '${_userModelWithPassword.nama}', '$latitude', '$longitude', '$lokasi')",
       });
 
       debugger(message: 'called');

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/application/absen/absen_enum.dart';
 import 'package:face_net_authentication/application/absen/absen_request.dart';
+import 'package:face_net_authentication/application/background/saved_location.dart';
 import 'package:face_net_authentication/infrastructure/absen/absen_repository.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -21,10 +22,11 @@ class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
     required String lokasi,
     required String latitude,
     required String longitude,
-    required DateTime date,
-    required JenisAbsen inOrOut,
     required String idGeof,
     required String imei,
+    required DateTime date,
+    required DateTime dbDate,
+    required JenisAbsen inOrOut,
     String jenisAbsen = 'MNL',
   }) async {
     Either<AbsenFailure, Unit> failureOrSuccess;
@@ -33,11 +35,12 @@ class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
 
     failureOrSuccess = await _absenRepository.absen(
         idAbsenMnl: idAbsenMnl,
+        date: date,
+        dbDate: dbDate,
         lokasi: lokasi,
         latitude: latitude,
         longitude: longitude,
         inOrOut: inOrOut,
-        date: date,
         jenisAbsen: jenisAbsen,
         idGeof: idGeof,
         imei: imei);
@@ -56,10 +59,11 @@ class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
     required String lokasi,
     required String latitude,
     required String longitude,
-    required DateTime date,
-    required JenisAbsen inOrOut,
     required String idGeof,
     required String imei,
+    required DateTime date,
+    required DateTime dbDate,
+    required JenisAbsen inOrOut,
     String jenisAbsen = 'MNL',
   }) async {
     Either<AbsenFailure, Unit> failureOrSuccess;
@@ -67,7 +71,7 @@ class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
     state =
         state.copyWith(isSubmitting: true, failureOrSuccessOptionSaved: none());
 
-    debugger(message: 'called');
+    debugger();
 
     failureOrSuccess = await _absenRepository.absen(
         idAbsenMnl: idAbsenMnl,
@@ -76,9 +80,12 @@ class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
         longitude: longitude,
         inOrOut: inOrOut,
         date: date,
+        dbDate: dbDate,
         jenisAbsen: jenisAbsen,
         idGeof: idGeof,
         imei: imei);
+
+    debugger();
 
     log('failureOrSuccess $failureOrSuccess');
 
@@ -112,7 +119,7 @@ class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
     state = state.copyWith(backgroundIdSaved: absenId);
   }
 
-  void changeBackgroundAbsenStateSaved(
+  void _changeBackgroundAbsenStateSaved(
       BackgroundItemState backgroundItemState) {
     state = state.copyWith(backgroundItemState: backgroundItemState);
   }
@@ -127,51 +134,114 @@ class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
     required Future<void> Function() reinitializeDependencies,
     required Future<void> Function() getAbsenState,
     required Future<void> Function() showSuccessDialog,
+    required Future<void> Function(String code, String message)
+        showFailureDialog,
   }) async {
-    changeBackgroundAbsenStateSaved(backgroundItemState);
+    this._changeBackgroundAbsenStateSaved(backgroundItemState);
 
-    final id = await absenAndUpdateSavedReturned(jenisAbsen: jenisAbsen);
+    RemoteResponse<AbsenRequest> id =
+        await absenAndUpdateSavedReturned(jenisAbsen: jenisAbsen);
 
-    final location = backgroundItemState.savedLocations;
+    SavedLocation location = backgroundItemState.savedLocations;
+
+    debugger();
 
     id.when(
       withNewData: (absenRequest) => absenRequest.when(
           absenIn: (id) async {
-            await absenSaved(
-                idAbsenMnl: '${id + 1}',
-                lokasi: '${location.alamat}',
-                date: location.date,
-                latitude: '${location.latitude ?? 0}',
-                longitude: '${location.longitude ?? 0}',
-                idGeof: idGeof,
-                imei: imei,
-                inOrOut: JenisAbsen.absenIn);
+            try {
+              await absenSaved(
+                  idAbsenMnl: '${id + 1}',
+                  lokasi: '${location.alamat}',
+                  date: location.date,
+                  dbDate: location.dbDate,
+                  latitude: '${location.latitude ?? 0}',
+                  longitude: '${location.longitude ?? 0}',
+                  idGeof: idGeof,
+                  imei: imei,
+                  inOrOut: JenisAbsen.absenIn);
+            } catch (e) {
+              showFailureDialog('', e.toString());
+              return;
+            }
 
-            await onAbsen();
-            await deleteSaved();
-            await reinitializeDependencies();
-            await getAbsenState();
+            try {
+              await onAbsen();
+            } catch (e) {
+              showFailureDialog('', e.toString());
+              return;
+            }
+            try {
+              await deleteSaved();
+            } catch (e) {
+              showFailureDialog('', e.toString());
+              return;
+            }
+
+            try {
+              await reinitializeDependencies();
+            } catch (e) {
+              showFailureDialog('', e.toString());
+              return;
+            }
+
+            try {
+              await getAbsenState();
+            } catch (e) {
+              showFailureDialog('', e.toString());
+              return;
+            }
             await showSuccessDialog();
           },
           absenOut: (id) async {
-            await absenSaved(
-                idAbsenMnl: '${id + 1}',
-                lokasi: '${location.alamat}',
-                date: location.date,
-                latitude: '${location.latitude ?? 0}',
-                longitude: '${location.longitude ?? 0}',
-                idGeof: idGeof,
-                imei: imei,
-                inOrOut: JenisAbsen.absenOut);
+            try {
+              await absenSaved(
+                  idAbsenMnl: '${id + 1}',
+                  lokasi: '${location.alamat}',
+                  date: location.date,
+                  dbDate: location.dbDate,
+                  latitude: '${location.latitude ?? 0}',
+                  longitude: '${location.longitude ?? 0}',
+                  idGeof: idGeof,
+                  imei: imei,
+                  inOrOut: JenisAbsen.absenOut);
+            } catch (e) {
+              showFailureDialog('', e.toString());
+              return;
+            }
 
-            await onAbsen();
-            await deleteSaved();
-            await reinitializeDependencies();
-            await getAbsenState();
+            try {
+              await onAbsen();
+            } catch (e) {
+              showFailureDialog('', e.toString());
+              return;
+            }
+            try {
+              await deleteSaved();
+            } catch (e) {
+              showFailureDialog('', e.toString());
+              return;
+            }
+
+            try {
+              await reinitializeDependencies();
+            } catch (e) {
+              showFailureDialog('', e.toString());
+              return;
+            }
+
+            try {
+              await getAbsenState();
+            } catch (e) {
+              showFailureDialog('', e.toString());
+              return;
+            }
             await showSuccessDialog();
           },
-          absenUnknown: () {}),
-      failure: (code, message) => {},
+          absenUnknown: () => showFailureDialog('', 'ABSEN UNKNOWN')),
+      failure: (code, message) => {
+        showFailureDialog(code != null ? code.toString() : '', message ?? '')
+      },
     );
   }
 

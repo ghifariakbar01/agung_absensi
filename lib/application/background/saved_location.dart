@@ -11,11 +11,16 @@ class SavedLocation with _$SavedLocation {
     required double? longitude,
     required String? alamat,
     required DateTime date,
+    required DateTime dbDate,
   }) = _SavedLocation;
 
   factory SavedLocation.fromJson(Map<String, Object?> json) =>
       _$SavedLocationFromJson(json);
 
   factory SavedLocation.initial() => SavedLocation(
-      latitude: 0, longitude: 0, alamat: '', date: DateTime.now());
+      latitude: 0,
+      longitude: 0,
+      alamat: '',
+      date: DateTime.now(),
+      dbDate: DateTime.now());
 }

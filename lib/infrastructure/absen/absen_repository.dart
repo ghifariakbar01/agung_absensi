@@ -21,19 +21,21 @@ class AbsenRepository {
 
   Future<Either<AbsenFailure, Unit>> absen({
     required String idAbsenMnl,
+    required String idGeof,
     required String lokasi,
     required String latitude,
     required String longitude,
     required String jenisAbsen,
-    required JenisAbsen inOrOut,
-    required DateTime date,
-    required String idGeof,
     required String imei,
+    required DateTime date,
+    required DateTime dbDate,
+    required JenisAbsen inOrOut,
   }) async {
     try {
       await _remoteService.absen(
           idAbsenMnl: idAbsenMnl,
           date: date,
+          dbDate: dbDate,
           lokasi: lokasi,
           latitude: latitude,
           longitude: longitude,

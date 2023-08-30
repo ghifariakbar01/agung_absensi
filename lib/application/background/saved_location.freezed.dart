@@ -24,6 +24,7 @@ mixin _$SavedLocation {
   double? get longitude => throw _privateConstructorUsedError;
   String? get alamat => throw _privateConstructorUsedError;
   DateTime get date => throw _privateConstructorUsedError;
+  DateTime get dbDate => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -38,7 +39,11 @@ abstract class $SavedLocationCopyWith<$Res> {
       _$SavedLocationCopyWithImpl<$Res, SavedLocation>;
   @useResult
   $Res call(
-      {double? latitude, double? longitude, String? alamat, DateTime date});
+      {double? latitude,
+      double? longitude,
+      String? alamat,
+      DateTime date,
+      DateTime dbDate});
 }
 
 /// @nodoc
@@ -58,6 +63,7 @@ class _$SavedLocationCopyWithImpl<$Res, $Val extends SavedLocation>
     Object? longitude = freezed,
     Object? alamat = freezed,
     Object? date = null,
+    Object? dbDate = null,
   }) {
     return _then(_value.copyWith(
       latitude: freezed == latitude
@@ -76,6 +82,10 @@ class _$SavedLocationCopyWithImpl<$Res, $Val extends SavedLocation>
           ? _value.date
           : date // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      dbDate: null == dbDate
+          ? _value.dbDate
+          : dbDate // ignore: cast_nullable_to_non_nullable
+              as DateTime,
     ) as $Val);
   }
 }
@@ -89,7 +99,11 @@ abstract class _$$_SavedLocationCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {double? latitude, double? longitude, String? alamat, DateTime date});
+      {double? latitude,
+      double? longitude,
+      String? alamat,
+      DateTime date,
+      DateTime dbDate});
 }
 
 /// @nodoc
@@ -107,6 +121,7 @@ class __$$_SavedLocationCopyWithImpl<$Res>
     Object? longitude = freezed,
     Object? alamat = freezed,
     Object? date = null,
+    Object? dbDate = null,
   }) {
     return _then(_$_SavedLocation(
       latitude: freezed == latitude
@@ -125,6 +140,10 @@ class __$$_SavedLocationCopyWithImpl<$Res>
           ? _value.date
           : date // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      dbDate: null == dbDate
+          ? _value.dbDate
+          : dbDate // ignore: cast_nullable_to_non_nullable
+              as DateTime,
     ));
   }
 }
@@ -136,7 +155,8 @@ class _$_SavedLocation implements _SavedLocation {
       {required this.latitude,
       required this.longitude,
       required this.alamat,
-      required this.date});
+      required this.date,
+      required this.dbDate});
 
   factory _$_SavedLocation.fromJson(Map<String, dynamic> json) =>
       _$$_SavedLocationFromJson(json);
@@ -149,10 +169,12 @@ class _$_SavedLocation implements _SavedLocation {
   final String? alamat;
   @override
   final DateTime date;
+  @override
+  final DateTime dbDate;
 
   @override
   String toString() {
-    return 'SavedLocation(latitude: $latitude, longitude: $longitude, alamat: $alamat, date: $date)';
+    return 'SavedLocation(latitude: $latitude, longitude: $longitude, alamat: $alamat, date: $date, dbDate: $dbDate)';
   }
 
   @override
@@ -165,13 +187,14 @@ class _$_SavedLocation implements _SavedLocation {
             (identical(other.longitude, longitude) ||
                 other.longitude == longitude) &&
             (identical(other.alamat, alamat) || other.alamat == alamat) &&
-            (identical(other.date, date) || other.date == date));
+            (identical(other.date, date) || other.date == date) &&
+            (identical(other.dbDate, dbDate) || other.dbDate == dbDate));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, latitude, longitude, alamat, date);
+      Object.hash(runtimeType, latitude, longitude, alamat, date, dbDate);
 
   @JsonKey(ignore: true)
   @override
@@ -192,7 +215,8 @@ abstract class _SavedLocation implements SavedLocation {
       {required final double? latitude,
       required final double? longitude,
       required final String? alamat,
-      required final DateTime date}) = _$_SavedLocation;
+      required final DateTime date,
+      required final DateTime dbDate}) = _$_SavedLocation;
 
   factory _SavedLocation.fromJson(Map<String, dynamic> json) =
       _$_SavedLocation.fromJson;
@@ -205,6 +229,8 @@ abstract class _SavedLocation implements SavedLocation {
   String? get alamat;
   @override
   DateTime get date;
+  @override
+  DateTime get dbDate;
   @override
   @JsonKey(ignore: true)
   _$$_SavedLocationCopyWith<_$_SavedLocation> get copyWith =>

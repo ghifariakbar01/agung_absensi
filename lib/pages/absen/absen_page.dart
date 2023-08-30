@@ -1,13 +1,20 @@
+import 'dart:developer';
+
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../constants/assets.dart';
+import '../../domain/background_failure.dart';
 import '../../shared/providers.dart';
 import '../../style/style.dart';
 
 import '../widgets/copyright_text.dart';
 import '../widgets/location_detail.dart';
 import '../widgets/user_info.dart';
+import '../widgets/v_dialogs.dart';
 import 'absen_button.dart';
+import 'absen_button_page.dart';
 
 class AbsenPage extends ConsumerStatefulWidget {
   AbsenPage({Key? key}) : super(key: key);
@@ -133,7 +140,7 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
                           SizedBox(
                             height: 8,
                           ),
-                          AbsenButton(),
+                          AbsenButtonPage(),
                         ],
                       ),
                       Align(

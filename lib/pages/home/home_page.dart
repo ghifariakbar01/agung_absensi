@@ -13,6 +13,7 @@ import '../../domain/background_failure.dart';
 import '../../domain/geofence_failure.dart';
 import '../../domain/user_failure.dart';
 import '../../shared/providers.dart';
+import '../../utils/network_utils.dart';
 import '../widgets/alert_helper.dart';
 import '../widgets/loading_overlay.dart';
 import '../widgets/v_dialogs.dart';
@@ -114,7 +115,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                           ),
                         ), (savedLocations) {
                   if (savedLocations.isNotEmpty) {
-                    // debugger(message: 'called');
+                    //
 
                     log('savedLocations $savedLocations');
 
@@ -142,11 +143,11 @@ class _HomePageState extends ConsumerState<HomePage> {
         (either) => either.fold(
             (failure) => failure.maybeWhen(
                 noConnection: () async {
+                  ref.read(absenOfflineModeProvider.notifier).state = true;
+
                   await ref
                       .read(geofenceProvider.notifier)
                       .getGeofenceListFromStorage();
-
-                  ref.read(absenOfflineModeProvider.notifier).state = true;
 
                   return await Future.value(true);
                 },
@@ -183,6 +184,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                   startAbsen: (savedItems) async {
                     // ABSEN TERSIMPAN
                     if (savedItems.isNotEmpty) {
+                      debugger();
+
                       final savedLocations = ref
                           .read(backgroundNotifierProvider.notifier)
                           .getSavedLocationsAsList(savedItems);
@@ -196,32 +199,39 @@ class _HomePageState extends ConsumerState<HomePage> {
                               onError: () => ref
                                   .read(geofenceProvider.notifier)
                                   .getGeofenceListFromStorage());
-                      debugger(message: 'called');
 
                       log('savedItems $savedItems');
                       // [AUTO ABSEN]
-                      final autoAbsen = ref
-                          .read(autoAbsenNotifierProvider.notifier)
-                          .sortAbsenMap(savedItems);
-                      log('autoAbsen: map $autoAbsen');
-                      debugger(message: 'called');
-
                       final nearestCoordinatesSaved = ref.read(geofenceProvider
                           .select((value) => value.nearestCoordinatesSaved));
                       final imei = ref.read(imeiAuthNotifierProvider
                           .select((value) => value.imei));
 
-                      debugger(message: 'called');
+                      final dbDate =
+                          await ref.refresh(networkTimeFutureProvider.future);
+
+                      // GET CURRENT NETWORK TIME
+                      await ref.read(networkTimeFutureProvider.future);
+
+                      final savedItemsCurrent = ref
+                          .read(autoAbsenNotifierProvider.notifier)
+                          .currentNetworkTimeForSavedAbsen(
+                              dbDate: dbDate, savedItems: savedItems);
+
+                      final autoAbsen = ref
+                          .read(autoAbsenNotifierProvider.notifier)
+                          .sortAbsenMap(savedItemsCurrent);
+
+                      debugger();
 
                       await ref
                           .read(autoAbsenNotifierProvider.notifier)
                           .processAutoAbsen(
                               imei: imei,
-                              ref: ref,
                               context: context,
                               autoAbsenMap: autoAbsen,
                               geofence: geofence,
-                              savedItems: savedItems,
+                              savedItems: savedItemsCurrent,
                               nearestCoordinatesSaved: nearestCoordinatesSaved);
                     } else {
                       if (geofence.isNotEmpty) {

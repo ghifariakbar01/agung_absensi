@@ -127,7 +127,7 @@ class BackgroundNotifier extends StateNotifier<BackgroundState> {
           savedLocations: _sharedPreference.getString("locations"));
 
       final processLocation = savedLocations
-          .where((location) => location != currentLocation)
+          .where((location) => location.date != currentLocation.date)
           .toSet()
           .toList();
 

@@ -12,6 +12,7 @@ _$_SavedLocation _$$_SavedLocationFromJson(Map<String, dynamic> json) =>
       longitude: (json['longitude'] as num?)?.toDouble(),
       alamat: json['alamat'] as String?,
       date: DateTime.parse(json['date'] as String),
+      dbDate: DateTime.parse(json['dbDate'] as String),
     );
 
 Map<String, dynamic> _$$_SavedLocationToJson(_$_SavedLocation instance) =>
@@ -20,4 +21,5 @@ Map<String, dynamic> _$$_SavedLocationToJson(_$_SavedLocation instance) =>
       'longitude': instance.longitude,
       'alamat': instance.alamat,
       'date': instance.date.toIso8601String(),
+      'dbDate': instance.dbDate.toIso8601String(),
     };

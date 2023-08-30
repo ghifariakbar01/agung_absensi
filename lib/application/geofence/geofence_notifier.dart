@@ -109,7 +109,6 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
 
   List<double> coordinates({required String coordinatesString}) {
     return coordinatesString
-        .substring(0, coordinatesString.length - 1)
         .split(',')
         .map((coordinate) => double.parse(coordinate.trim()))
         .toList();
