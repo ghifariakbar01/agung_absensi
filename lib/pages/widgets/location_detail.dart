@@ -45,7 +45,12 @@ class LocationDetail extends ConsumerWidget {
               ' : ',
               style: Themes.customColor(FontWeight.bold, 13, Colors.black),
             ),
-            if (nearest.minDistance != null) ...[
+            if (nearest.minDistance != null && nearest.minDistance == 0) ...[
+              Text('....Loading....',
+                  style: Themes.customColor(
+                      FontWeight.bold, 13, Palette.primaryColor))
+            ],
+            if (nearest.minDistance != null && nearest.minDistance != 0) ...[
               Text(' ${nearest.minDistance.round()} m',
                   style: Themes.customColor(
                       FontWeight.bold, 13, Palette.primaryColor))
@@ -64,7 +69,14 @@ class LocationDetail extends ConsumerWidget {
               ' : ',
               style: Themes.customColor(FontWeight.bold, 13, Colors.black),
             ),
-            if (nearest.remainingDistance != null) ...[
+            if (nearest.remainingDistance != null &&
+                nearest.remainingDistance == 0) ...[
+              Text('....Loading....',
+                  style: Themes.customColor(
+                      FontWeight.bold, 13, Palette.primaryColor))
+            ],
+            if (nearest.remainingDistance != null &&
+                nearest.remainingDistance != 0) ...[
               Text(' ${nearest.remainingDistance.round()} m',
                   style: nearest.remainingDistance < nearest.minDistance
                       ? Themes.customColor(FontWeight.bold, 14, Colors.green)

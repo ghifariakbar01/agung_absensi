@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:face_net_authentication/application/imei_introduction/shared/imei_introduction_providers.dart';
@@ -8,7 +6,6 @@ import 'package:face_net_authentication/locator.dart';
 import 'package:face_net_authentication/style/style.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ntp/ntp.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 import 'application/permission/shared/permission_introduction_providers.dart';
@@ -18,7 +15,7 @@ import 'shared/providers.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 Future<void> main() async {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  // WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
 
   Themes.initUiOverlayStyle();
 
@@ -26,7 +23,7 @@ Future<void> main() async {
 
   setupServices();
 
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   runApp(ProviderScope(child: MyApp()));
 }
@@ -65,7 +62,7 @@ final initializationProvider = FutureProvider<Unit>((ref) async {
   await imeiInstructionNotifier.checkAndUpdateStatusIMEIIntroduction();
 
   // whenever your initialization is completed, remove the splash screen:
-  FlutterNativeSplash.remove();
+  // FlutterNativeSplash.remove();
 
   return unit;
 });

@@ -13,7 +13,9 @@ part 'geofence_state.freezed.dart';
 @freezed
 class GeofenceState with _$GeofenceState {
   const factory GeofenceState(
-      {required List<GeofenceCoordinate> geofenceCoordinates,
+      {required GeofenceService geofenceService,
+      //
+      required List<GeofenceCoordinate> geofenceCoordinates,
       required GeofenceCoordinate nearestCoordinates,
       required Location currentLocation,
       //
@@ -28,12 +30,22 @@ class GeofenceState with _$GeofenceState {
           failureOrSuccessOptionStorage}) = _GeofenceState;
 
   factory GeofenceState.initial() => GeofenceState(
-      geofenceCoordinates: [],
-      nearestCoordinates: GeofenceCoordinate.initial(),
-      geofenceCoordinatesSaved: [],
-      nearestCoordinatesSaved: [],
-      currentLocation: Location.fromJson(dummyLocation),
-      isGetting: false,
-      failureOrSuccessOption: none(),
-      failureOrSuccessOptionStorage: none());
+        isGetting: false,
+        geofenceCoordinates: [],
+        geofenceCoordinatesSaved: [],
+        nearestCoordinatesSaved: [],
+        failureOrSuccessOption: none(),
+        failureOrSuccessOptionStorage: none(),
+        nearestCoordinates: GeofenceCoordinate.initial(),
+        currentLocation: Location.fromJson(dummyLocation),
+        geofenceService: GeofenceService.instance.setup(
+            interval: 5000,
+            accuracy: 100,
+            loiteringDelayMs: 60000,
+            statusChangeDelayMs: 10000,
+            useActivityRecognition: false,
+            allowMockLocations: false,
+            printDevLog: false,
+            geofenceRadiusSortType: GeofenceRadiusSortType.DESC),
+      );
 }

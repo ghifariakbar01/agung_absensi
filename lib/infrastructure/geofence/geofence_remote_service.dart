@@ -49,13 +49,22 @@ class GeofenceRemoteService {
 
             return geofences;
           } else {
-            throw RestApiException(09);
+            throw RestApiExceptionWithMessage(
+              items['errornum'] as int?,
+              items['error'] as String?,
+            );
           }
         } else {
-          throw RestApiException(09);
+          throw RestApiExceptionWithMessage(
+            items['errornum'] as int?,
+            items['error'] as String?,
+          );
         }
       } else {
-        throw RestApiException(10);
+        throw RestApiExceptionWithMessage(
+          items['errornum'] as int?,
+          items['error'] as String?,
+        );
       }
     } on FormatException {
       throw FormatException();

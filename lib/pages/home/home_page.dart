@@ -13,7 +13,6 @@ import '../../domain/background_failure.dart';
 import '../../domain/geofence_failure.dart';
 import '../../domain/user_failure.dart';
 import '../../shared/providers.dart';
-import '../../utils/network_utils.dart';
 import '../widgets/alert_helper.dart';
 import '../widgets/loading_overlay.dart';
 import '../widgets/v_dialogs.dart';
@@ -157,7 +156,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                     builder: (_) => VSimpleDialog(
                         label: 'Error',
                         labelDescription: failure.maybeWhen(
-                            server: (_, __) => 'Error server geofence',
+                            server: (error, stacktrace) =>
+                                'Error geofence: ($error) $stacktrace',
                             wrongFormat: () => 'Error parsing geofence',
                             orElse: () => ''),
                         asset: Assets.iconCrossed,
@@ -196,9 +196,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                       await ref
                           .read(geofenceProvider.notifier)
                           .initializeGeoFence(savedLocations, geofence,
-                              onError: () => ref
-                                  .read(geofenceProvider.notifier)
-                                  .getGeofenceListFromStorage());
+                              onError: (e) => log('error geofence $e'));
 
                       log('savedItems $savedItems');
                       // [AUTO ABSEN]
@@ -234,18 +232,23 @@ class _HomePageState extends ConsumerState<HomePage> {
                               savedItems: savedItemsCurrent,
                               nearestCoordinatesSaved: nearestCoordinatesSaved);
                     } else {
+                      // debugger();
+
                       if (geofence.isNotEmpty) {
+                        // debugger();
+
                         await ref
                             .read(geofenceProvider.notifier)
                             .initializeGeoFence(null, geofence,
-                                onError: () => ref
-                                    .read(geofenceProvider.notifier)
-                                    .getGeofenceListFromStorage());
+                                onError: (e) => log('error geofence $e'));
                       } else {
+                        // debugger();
+
                         await ref
                             .read(geofenceProvider.notifier)
                             .getGeofenceListFromStorage();
                       }
+                      // debugger();
 
                       await ref
                           .read(backgroundNotifierProvider.notifier)
@@ -253,13 +256,15 @@ class _HomePageState extends ConsumerState<HomePage> {
                     }
                   });
             } else {
+              debugger();
+
               await ref.read(geofenceProvider.notifier).initializeGeoFence(
                   null, geofence,
-                  onError: () => ref
-                      .read(geofenceProvider.notifier)
-                      .getGeofenceListFromStorage());
+                  onError: (e) => log('error geofence $e'));
             }
           } else {
+            debugger();
+
             await ref
                 .read(geofenceProvider.notifier)
                 .getGeofenceListFromStorage();

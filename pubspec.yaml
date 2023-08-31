@@ -15,7 +15,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.1+7
+version: 1.0.1+8
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -29,33 +29,29 @@ dependencies:
   cupertino_icons: ^1.0.4
   tflite_flutter: ^0.9.0
 
+  permission_handler: ^10.3.0
+
   #* Background service
   # workmanager: ^0.5.1
 
-  # iOS : microphone access required
-  camera: ^0.9.4+19
-
+  #* Machine Learrning
   path_provider: ^2.0.9
   path: ^1.8.0
   google_ml_kit: ^0.13.0
   image: ^3.0.2
-  font_awesome_flutter: ^9.0.0
-  sqflite: ^2.0.2
-  get_it: ^7.2.0
-  permission_handler: ^10.3.0
+  # iOS : microphone access required
+  camera: ^0.9.4+19
 
   #* Maps
   geocoding: ^2.1.0
   geofence_service: ^4.0.0
-  geolocator: ^9.0.2
 
   #* UI
-  auto_size_text: ^3.0.0
-  cached_network_image: ^3.2.2
   flash: ^2.0.5
-  flutter_keyboard_visibility: ^5.4.0
   flutter_svg: ^2.0.0
   google_fonts: ^3.0.1
+  auto_size_text: ^3.0.0
+  flutter_keyboard_visibility: ^5.4.0
 
   #* Network
   dio: ^4.0.6
@@ -69,6 +65,9 @@ dependencies:
   #* State management
   hooks_riverpod: ^2.1.0
 
+  #* Service Locator
+  get_it: ^7.2.0
+
   #* Logging
   logging: ^1.1.0
 
@@ -78,6 +77,7 @@ dependencies:
   #* Persistent storage
   flutter_secure_storage: ^6.0.0
   shared_preferences: ^2.2.0
+  sqflite: ^2.0.2
 
   #* UUID
   uuid: ^3.0.7

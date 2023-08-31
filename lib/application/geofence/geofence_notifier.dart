@@ -24,6 +24,8 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
 
   final GeofenceRepository _repository;
 
+  GeofenceService get geofenceservice => state.geofenceService;
+
   Future<void> getGeofenceList() async {
     Either<GeofenceFailure, List<GeofenceResponse>> failureOrSuccess;
 
@@ -118,11 +120,11 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
 
   Future<void> initializeGeoFence(List<SavedLocation>? savedLocations,
       List<Geofence> geofenceListAdditional,
-      {required Function? onError}) async {
-    final _geofenceService = initialize();
+      {required Function(Object a) onError}) async {
+    if (geofenceservice.isRunningService) return;
 
     if (savedLocations != null) {
-      _geofenceService.addLocationChangeListener(
+      geofenceservice.addLocationChangeListener(
         (location) => onLocationChanged(
           location,
           geofenceListAdditional,
@@ -130,37 +132,26 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
         ),
       );
     } else {
+      // log.debugger();
+
       // log.debugger(message: 'called');
-      _geofenceService.addLocationChangeListener(
+      geofenceservice.addLocationChangeListener(
         (location) => onLocationChanged(location, geofenceListAdditional, null),
       );
     }
 
-    _geofenceService.addStreamErrorListener(onErrorStream);
+    geofenceservice.addStreamErrorListener(onErrorStream);
 
-    _geofenceService.addGeofenceList([...geofenceListAdditional]);
+    geofenceservice.addGeofenceList([...geofenceListAdditional]);
 
-    await _geofenceService
+    await geofenceservice
         .start([...geofenceListAdditional])
-        .catchError(onError ?? () {})
+        .catchError(onError)
         .onError((error, stackTrace) {
           // log.debugger(message: 'called');
 
           log.log('error $error stack $stackTrace');
         });
-  }
-
-  GeofenceService initialize() {
-    // Create a [GeofenceService] instance and set options.
-    return GeofenceService.instance.setup(
-        interval: 5000,
-        accuracy: 100,
-        loiteringDelayMs: 60000,
-        statusChangeDelayMs: 10000,
-        useActivityRecognition: false,
-        allowMockLocations: false,
-        printDevLog: false,
-        geofenceRadiusSortType: GeofenceRadiusSortType.DESC);
   }
 
   // Geofence listener
@@ -173,7 +164,7 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
   ) {
     print('location: ${location.toJson()}');
 
-    if (locations != null) {
+    if (locations != null && coordinates.isNotEmpty) {
       final geofenceCoordinatesSaved = state.geofenceCoordinatesSaved;
 
       final designatedCoordinate = convertSavedLocationsToLocations(locations);
@@ -188,10 +179,12 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
 
     final geofenceCoordinates = state.geofenceCoordinates;
 
-    updateAndChangeNearest(
-        coordinates: coordinates,
-        designatedCoordinate: location,
-        geofenceCoordinates: geofenceCoordinates);
+    if (coordinates.isNotEmpty) {
+      updateAndChangeNearest(
+          coordinates: coordinates,
+          designatedCoordinate: location,
+          geofenceCoordinates: geofenceCoordinates);
+    }
   }
 
   // This function is used to handle errors that occur in the service.
@@ -361,10 +354,14 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
       {required Location designatedCoordinate,
       required List<Geofence> coordinates,
       required List<GeofenceCoordinate> geofenceCoordinates}) {
-    changeGeofenceCoordinates(
-        updateCoordinatesFromGeofence(designatedCoordinate, coordinates));
+    if (coordinates.isNotEmpty) {
+      changeGeofenceCoordinates(
+          updateCoordinatesFromGeofence(designatedCoordinate, coordinates));
+    }
 
-    changeNearest(getSmallestDistance(geofenceCoordinates));
+    if (geofenceCoordinates.isNotEmpty) {
+      changeNearest(getSmallestDistance(geofenceCoordinates));
+    }
   }
 
   void updateAndChangeNearestSaved(

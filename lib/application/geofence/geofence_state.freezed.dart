@@ -16,6 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$GeofenceState {
+  GeofenceService get geofenceService => throw _privateConstructorUsedError; //
   List<GeofenceCoordinate> get geofenceCoordinates =>
       throw _privateConstructorUsedError;
   GeofenceCoordinate get nearestCoordinates =>
@@ -44,7 +45,8 @@ abstract class $GeofenceStateCopyWith<$Res> {
       _$GeofenceStateCopyWithImpl<$Res, GeofenceState>;
   @useResult
   $Res call(
-      {List<GeofenceCoordinate> geofenceCoordinates,
+      {GeofenceService geofenceService,
+      List<GeofenceCoordinate> geofenceCoordinates,
       GeofenceCoordinate nearestCoordinates,
       Location currentLocation,
       List<GeofenceCoordinate> geofenceCoordinatesSaved,
@@ -70,6 +72,7 @@ class _$GeofenceStateCopyWithImpl<$Res, $Val extends GeofenceState>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? geofenceService = null,
     Object? geofenceCoordinates = null,
     Object? nearestCoordinates = null,
     Object? currentLocation = null,
@@ -80,6 +83,10 @@ class _$GeofenceStateCopyWithImpl<$Res, $Val extends GeofenceState>
     Object? failureOrSuccessOptionStorage = null,
   }) {
     return _then(_value.copyWith(
+      geofenceService: null == geofenceService
+          ? _value.geofenceService
+          : geofenceService // ignore: cast_nullable_to_non_nullable
+              as GeofenceService,
       geofenceCoordinates: null == geofenceCoordinates
           ? _value.geofenceCoordinates
           : geofenceCoordinates // ignore: cast_nullable_to_non_nullable
@@ -134,7 +141,8 @@ abstract class _$$_GeofenceStateCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {List<GeofenceCoordinate> geofenceCoordinates,
+      {GeofenceService geofenceService,
+      List<GeofenceCoordinate> geofenceCoordinates,
       GeofenceCoordinate nearestCoordinates,
       Location currentLocation,
       List<GeofenceCoordinate> geofenceCoordinatesSaved,
@@ -159,6 +167,7 @@ class __$$_GeofenceStateCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? geofenceService = null,
     Object? geofenceCoordinates = null,
     Object? nearestCoordinates = null,
     Object? currentLocation = null,
@@ -169,6 +178,10 @@ class __$$_GeofenceStateCopyWithImpl<$Res>
     Object? failureOrSuccessOptionStorage = null,
   }) {
     return _then(_$_GeofenceState(
+      geofenceService: null == geofenceService
+          ? _value.geofenceService
+          : geofenceService // ignore: cast_nullable_to_non_nullable
+              as GeofenceService,
       geofenceCoordinates: null == geofenceCoordinates
           ? _value._geofenceCoordinates
           : geofenceCoordinates // ignore: cast_nullable_to_non_nullable
@@ -209,7 +222,8 @@ class __$$_GeofenceStateCopyWithImpl<$Res>
 
 class _$_GeofenceState implements _GeofenceState {
   const _$_GeofenceState(
-      {required final List<GeofenceCoordinate> geofenceCoordinates,
+      {required this.geofenceService,
+      required final List<GeofenceCoordinate> geofenceCoordinates,
       required this.nearestCoordinates,
       required this.currentLocation,
       required final List<GeofenceCoordinate> geofenceCoordinatesSaved,
@@ -221,7 +235,11 @@ class _$_GeofenceState implements _GeofenceState {
         _geofenceCoordinatesSaved = geofenceCoordinatesSaved,
         _nearestCoordinatesSaved = nearestCoordinatesSaved;
 
+  @override
+  final GeofenceService geofenceService;
+//
   final List<GeofenceCoordinate> _geofenceCoordinates;
+//
   @override
   List<GeofenceCoordinate> get geofenceCoordinates {
     if (_geofenceCoordinates is EqualUnmodifiableListView)
@@ -266,7 +284,7 @@ class _$_GeofenceState implements _GeofenceState {
 
   @override
   String toString() {
-    return 'GeofenceState(geofenceCoordinates: $geofenceCoordinates, nearestCoordinates: $nearestCoordinates, currentLocation: $currentLocation, geofenceCoordinatesSaved: $geofenceCoordinatesSaved, nearestCoordinatesSaved: $nearestCoordinatesSaved, isGetting: $isGetting, failureOrSuccessOption: $failureOrSuccessOption, failureOrSuccessOptionStorage: $failureOrSuccessOptionStorage)';
+    return 'GeofenceState(geofenceService: $geofenceService, geofenceCoordinates: $geofenceCoordinates, nearestCoordinates: $nearestCoordinates, currentLocation: $currentLocation, geofenceCoordinatesSaved: $geofenceCoordinatesSaved, nearestCoordinatesSaved: $nearestCoordinatesSaved, isGetting: $isGetting, failureOrSuccessOption: $failureOrSuccessOption, failureOrSuccessOptionStorage: $failureOrSuccessOptionStorage)';
   }
 
   @override
@@ -274,6 +292,8 @@ class _$_GeofenceState implements _GeofenceState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_GeofenceState &&
+            (identical(other.geofenceService, geofenceService) ||
+                other.geofenceService == geofenceService) &&
             const DeepCollectionEquality()
                 .equals(other._geofenceCoordinates, _geofenceCoordinates) &&
             (identical(other.nearestCoordinates, nearestCoordinates) ||
@@ -297,6 +317,7 @@ class _$_GeofenceState implements _GeofenceState {
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      geofenceService,
       const DeepCollectionEquality().hash(_geofenceCoordinates),
       nearestCoordinates,
       currentLocation,
@@ -315,7 +336,8 @@ class _$_GeofenceState implements _GeofenceState {
 
 abstract class _GeofenceState implements GeofenceState {
   const factory _GeofenceState(
-      {required final List<GeofenceCoordinate> geofenceCoordinates,
+      {required final GeofenceService geofenceService,
+      required final List<GeofenceCoordinate> geofenceCoordinates,
       required final GeofenceCoordinate nearestCoordinates,
       required final Location currentLocation,
       required final List<GeofenceCoordinate> geofenceCoordinatesSaved,
@@ -327,6 +349,8 @@ abstract class _GeofenceState implements GeofenceState {
           failureOrSuccessOptionStorage}) = _$_GeofenceState;
 
   @override
+  GeofenceService get geofenceService;
+  @override //
   List<GeofenceCoordinate> get geofenceCoordinates;
   @override
   GeofenceCoordinate get nearestCoordinates;
