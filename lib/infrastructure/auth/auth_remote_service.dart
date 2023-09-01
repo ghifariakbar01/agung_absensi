@@ -78,6 +78,7 @@ class AuthRemoteService {
                   noTelp2: listSelected['no_telp2'] ?? '',
                   photo: listSelected['picture'],
                   password: password,
+                  passwordUpdate: listSelected['pass_update'] ?? '',
                   ptServer: server);
 
               return AuthResponse.withUser(user);

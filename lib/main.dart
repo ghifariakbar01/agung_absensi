@@ -9,6 +9,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 import 'application/permission/shared/permission_introduction_providers.dart';
+import 'application/reminder/reminder_provider.dart';
 import 'config/configuration.dart';
 import 'shared/providers.dart';
 
@@ -63,7 +64,6 @@ final initializationProvider = FutureProvider<Unit>((ref) async {
 
   // whenever your initialization is completed, remove the splash screen:
   // FlutterNativeSplash.remove();
-
   return unit;
 });
 

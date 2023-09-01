@@ -65,11 +65,13 @@ class UserNotifier extends StateNotifier<UserState> {
   Future<void> onUserParsed({
     required UserModelWithPassword user,
     required Function initializeDioRequest,
+    required Function checkReminderStatus,
     required Function checkAndUpdateStatus,
     required Function checkAndUpdateImei,
   }) async {
     setUser(user);
     await initializeDioRequest();
+    await checkReminderStatus();
     await checkAndUpdateStatus();
     await checkAndUpdateImei();
   }

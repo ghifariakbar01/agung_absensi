@@ -8,11 +8,13 @@ import 'package:upgrader/upgrader.dart';
 
 import '../../application/background/saved_location.dart';
 import '../../application/geofence/geofence_response.dart';
+import '../../application/reminder/reminder_provider.dart';
 import '../../constants/assets.dart';
 import '../../domain/background_failure.dart';
 import '../../domain/geofence_failure.dart';
 import '../../domain/user_failure.dart';
 import '../../shared/providers.dart';
+import '../../utils/string_utils.dart';
 import '../widgets/alert_helper.dart';
 import '../widgets/loading_overlay.dart';
 import '../widgets/v_dialogs.dart';
@@ -76,24 +78,45 @@ class _HomePageState extends ConsumerState<HomePage> {
                       asset: Assets.iconCrossed,
                     ),
                   ),
-              (userParsed) =>
-                  ref.read(userNotifierProvider.notifier).onUserParsed(
-                        user: userParsed,
-                        initializeDioRequest: () {
-                          ref.read(dioRequestProvider).addAll({
-                            "username": "${userParsed.nama}",
-                            "password": "${userParsed.password}",
-                            "server": "${userParsed.ptServer}"
-                          });
-                          log('dioRequestProvider ${ref.read(dioRequestProvider)}');
-                        },
-                        checkAndUpdateStatus: () => ref
-                            .read(authNotifierProvider.notifier)
-                            .checkAndUpdateAuthStatus(),
-                        checkAndUpdateImei: () => ref
-                            .read(imeiNotifierProvider.notifier)
-                            .checkAndUpdateImei(user: userParsed),
-                      ));
+              (userParsed) => ref
+                  .read(userNotifierProvider.notifier)
+                  .onUserParsed(
+                    user: userParsed,
+                    initializeDioRequest: () {
+                      ref.read(dioRequestProvider).addAll({
+                        "kode": "${StringUtils.formatDate(DateTime.now())}",
+                        "username": "${userParsed.nama}",
+                        "password": "${userParsed.password}",
+                        "server": "${userParsed.ptServer}"
+                      });
+                      log('dioRequestProvider kode ${StringUtils.formatDate(DateTime.now())} ${ref.read(dioRequestProvider)}');
+                    },
+                    checkReminderStatus: () {
+                      if (userParsed.passwordUpdate!.isNotEmpty) {
+                        DateTime passwordUpdate = ref
+                            .read(reminderNotifierProvider.notifier)
+                            .convertToDateTime(
+                                passUpdate: userParsed.passwordUpdate ?? '');
+                        int daysLeft = ref
+                            .read(reminderNotifierProvider.notifier)
+                            .getDaysLeft(
+                                passUpdate: DateTime(
+                                    passwordUpdate.year,
+                                    passwordUpdate.month + 1,
+                                    passwordUpdate.day));
+
+                        ref
+                            .read(reminderNotifierProvider.notifier)
+                            .changeDaysLeft(daysLeft);
+                      }
+                    },
+                    checkAndUpdateStatus: () => ref
+                        .read(authNotifierProvider.notifier)
+                        .checkAndUpdateAuthStatus(),
+                    checkAndUpdateImei: () => ref
+                        .read(imeiNotifierProvider.notifier)
+                        .checkAndUpdateImei(user: userParsed),
+                  ));
         }),
       ),
     );

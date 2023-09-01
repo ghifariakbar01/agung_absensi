@@ -24,6 +24,7 @@ _$_UserModelWithPassword _$$_UserModelWithPasswordFromJson(
       email2: json['email2'] as String?,
       photo: json['photo'] as String?,
       password: json['password'] as String?,
+      passwordUpdate: json['pass_update'] as String?,
       ptServer: json['ptServer'] as String,
     );
 
@@ -45,5 +46,6 @@ Map<String, dynamic> _$$_UserModelWithPasswordToJson(
       'email2': instance.email2,
       'photo': instance.photo,
       'password': instance.password,
+      'pass_update': instance.passwordUpdate,
       'ptServer': instance.ptServer,
     };

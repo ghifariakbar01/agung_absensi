@@ -18,6 +18,8 @@ class RiwayatHeader extends ConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         TextButton(
+          style:
+              ButtonStyle(padding: MaterialStatePropertyAll(EdgeInsets.all(4))),
           onPressed: () async {
             final picked = await showDateRangePicker(
               context: context,
@@ -61,6 +63,8 @@ class RiwayatHeader extends ConsumerWidget {
           ),
         ),
         TextButton(
+          style:
+              ButtonStyle(padding: MaterialStatePropertyAll(EdgeInsets.all(4))),
           onPressed: () async {
             final picked = await showDateRangePicker(
               context: context,

@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../domain/auth_failure.dart';
 import '../../shared/providers.dart';
+import '../../utils/string_utils.dart';
 import '../widgets/alert_helper.dart';
 import '../widgets/loading_overlay.dart';
 import '../widgets/v_button.dart';
@@ -103,6 +104,7 @@ class SignInPage extends HookConsumerWidget {
                               .getOrLeave('');
 
                           ref.read(dioRequestProvider).addAll({
+                            "kode": "${StringUtils.formatDate(DateTime.now())}",
                             "server": server,
                             "username": username,
                             "password": password

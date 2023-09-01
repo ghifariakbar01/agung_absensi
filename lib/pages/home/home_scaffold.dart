@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:face_net_authentication/application/imei_introduction/shared/imei_introduction_providers.dart';
+import 'package:face_net_authentication/application/reminder/reminder_provider.dart';
 import 'package:face_net_authentication/constants/assets.dart';
 import 'package:face_net_authentication/pages/widgets/copyright_text.dart';
 import 'package:face_net_authentication/style/style.dart';
@@ -32,6 +33,9 @@ class HomeScaffold extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final width = MediaQuery.of(context).size.width;
+    final reminder = ref.watch(reminderNotifierProvider);
+
+    log('reminder.daysLeft ${reminder.daysLeft}');
 
     return Scaffold(
       drawer: WelcomeDrawer(),
@@ -114,12 +118,37 @@ class HomeScaffold extends ConsumerWidget {
                             itemBuilder: (_, index) =>
                                 WelcomeItem(item: items[index])),
                       )),
+                  if (reminder.daysLeft < 8) ...[
+                    const SizedBox(height: 8),
+                    //
+                    Text(
+                      reminder.daysLeft == 0
+                          ? ref
+                              .read(reminderNotifierProvider.notifier)
+                              .daysLeftStringDue
+                          : reminder.daysLeft < 0
+                              ? ref
+                                  .read(reminderNotifierProvider.notifier)
+                                  .daysLeftStringPass
+                              : ref
+                                  .read(reminderNotifierProvider.notifier)
+                                  .daysLeftString,
+                      style:
+                          Themes.customColor(FontWeight.bold, 9, Palette.red),
+                    ),
+                  ],
                   const SizedBox(height: 30),
                 ],
               ),
               Align(
                 alignment: Alignment.bottomCenter,
-                child: CopyrightAgung(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    CopyrightAgung(),
+                  ],
+                ),
               )
             ],
           ),
