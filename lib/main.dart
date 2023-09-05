@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
@@ -11,12 +10,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 import 'application/permission/shared/permission_introduction_providers.dart';
-import 'application/reminder/reminder_provider.dart';
 import 'config/configuration.dart';
-import 'domain/value_objects_copy.dart';
 import 'shared/providers.dart';
 
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 Future<void> main() async {
   // WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();

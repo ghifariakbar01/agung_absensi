@@ -21,8 +21,7 @@ class RiwayatAbsenPage extends ConsumerWidget {
     ref.listen<Option<Either<RiwayatAbsenFailure, List<RiwayatAbsenModel>>>>(
         riwayatAbsenNotifierProvider
             .select((value) => value.failureOrSuccessOption),
-        (_, failureOrSuccessOption) => {
-              failureOrSuccessOption.fold(
+        (_, failureOrSuccessOption) => failureOrSuccessOption.fold(
                   () {},
                   (either) => either.fold(
                           (error) => error.maybeWhen(
@@ -76,7 +75,7 @@ class RiwayatAbsenPage extends ConsumerWidget {
                               .changeAbsenRiwayat(oldList, list);
                         }
                       }))
-            });
+            );
 
     final isLoading = ref
         .watch(riwayatAbsenNotifierProvider.select((value) => value.isGetting));

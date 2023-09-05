@@ -1,7 +1,5 @@
 import 'dart:convert';
-import 'dart:developer';
 
-import 'package:collection/collection.dart';
 import 'package:face_net_authentication/application/remember_me/remember_me_state.dart';
 import 'package:face_net_authentication/pages/profile/widgets/profile_label.dart';
 import 'package:flutter/material.dart';

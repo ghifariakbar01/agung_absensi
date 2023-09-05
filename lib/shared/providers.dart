@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:face_net_authentication/application/routes/route_names.dart';
 
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';

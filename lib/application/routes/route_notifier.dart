@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:face_net_authentication/application/init_user/init_user_status.dart';
 import 'package:flutter/material.dart';

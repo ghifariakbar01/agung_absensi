@@ -1,14 +1,11 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../application/remember_me/remember_me_state.dart';
-import '../../domain/imei_failure.dart';
 import '../../domain/user_failure.dart';
-import '../credentials_storage/credentials_storage.dart';
 
 class KaryawanShiftRepository {
   KaryawanShiftRepository();

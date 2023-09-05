@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../application/auth/auth_notifier.dart';
-import '../../application/user/user_model.dart';
 import '../../style/style.dart';
 import '../widgets/v_button.dart';
 import 'profile_view.dart';

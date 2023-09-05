@@ -7,7 +7,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../application/tc/shared/tc_providers.dart';
-import '../../utils/string_utils.dart';
 import '../widgets/v_dialogs.dart';
 
 final CB1 = StateProvider<bool>((ref) => false);

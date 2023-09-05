@@ -1,14 +1,11 @@
-import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/application/imei/imei_state.dart';
 import 'package:face_net_authentication/application/init_imei/init_imei_status.dart';
 import 'package:face_net_authentication/style/style.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../application/routes/route_names.dart';
 import '../../../application/user/user_model.dart';
 import '../../../constants/assets.dart';
 import '../../../domain/edit_failure.dart';

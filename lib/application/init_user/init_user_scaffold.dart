@@ -2,7 +2,6 @@ import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/application/init_user/init_user_status.dart';
 import 'package:face_net_authentication/pages/widgets/loading_overlay.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../constants/assets.dart';
@@ -11,7 +10,6 @@ import '../../domain/user_failure.dart';
 import '../../domain/value_objects_copy.dart';
 import '../../pages/widgets/v_dialogs.dart';
 import '../../shared/providers.dart';
-import '../routes/route_names.dart';
 
 class InitUserScaffold extends ConsumerStatefulWidget {
   const InitUserScaffold();

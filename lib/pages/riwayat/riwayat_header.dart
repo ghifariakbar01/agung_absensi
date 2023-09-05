@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:face_net_authentication/application/riwayat_absen/riwayat_absen_notifier.dart';
 import 'package:face_net_authentication/utils/string_utils.dart';

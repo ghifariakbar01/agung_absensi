@@ -14,7 +14,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../application/face_recognition/models/user.model.dart';
-import '../../application/routes/route_names.dart';
 import '../widgets/alert_helper.dart';
 import '../widgets/v_button.dart';
 

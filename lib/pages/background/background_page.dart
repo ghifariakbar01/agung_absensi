@@ -5,8 +5,6 @@ import 'package:face_net_authentication/pages/widgets/loading_overlay.dart';
 import 'package:face_net_authentication/shared/providers.dart';
 import 'package:flutter/material.dart';
 
-import 'package:flutter/src/widgets/basic.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
