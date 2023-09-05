@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/application/imei/imei_state.dart';
+import 'package:face_net_authentication/application/init_imei/init_imei_status.dart';
 import 'package:face_net_authentication/domain/edit_failure.dart';
 import 'package:face_net_authentication/domain/value_objects_copy.dart';
 import 'package:face_net_authentication/infrastructure/profile/edit_profile_repository.dart';
@@ -55,6 +56,7 @@ class EditProfileNotifier extends StateNotifier<EditProfileState> {
     required ImeiState imeiDBState,
     required String? savedImei,
     required String? imeiDBString,
+    required InitImeiStatus onImeiOK(),
     required Future<void> onImeiNotRegistered(),
     required Future<void> onImeiAlreadyRegistered(),
   }) async {
@@ -82,6 +84,7 @@ class EditProfileNotifier extends StateNotifier<EditProfileState> {
       switch (savedImei.isEmpty) {
         case true:
           debugger(message: 'called');
+
           await onImeiAlreadyRegistered();
           // await onImeiNotRegistered();
 
@@ -89,7 +92,9 @@ class EditProfileNotifier extends StateNotifier<EditProfileState> {
         case false:
           () async {
             if (imeiDBString == savedImei) {
-              return;
+              debugger(message: 'called');
+
+              onImeiOK();
             } else if (imeiDBString != savedImei) {
               debugger(message: 'called');
 

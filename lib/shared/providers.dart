@@ -82,10 +82,14 @@ final routerProvider = Provider<GoRouter>((ref) {
 // Init page
 
 final resetInitProvider = FutureProvider((ref) {
+  //
   ref.read(initUserStatusProvider.notifier).state = InitUserStatus.init();
+  //
   ref.read(initGeofenceStatusProvider.notifier).state =
       InitGeofenceStatus.init();
+  //
   ref.read(initImeiStatusProvider.notifier).state = InitImeiStatus.init();
+  //
   ref.read(initPasswordExpiredStatusProvider.notifier).state =
       InitPasswordExpiredStatus.init();
 });

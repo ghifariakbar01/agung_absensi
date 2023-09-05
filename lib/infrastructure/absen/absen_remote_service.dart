@@ -384,8 +384,6 @@ class AbsenRemoteService {
 
       final items = response.data?[0];
 
-      debugger();
-
       if (items['status'] == 'Success') {
         final riwayatExist = items['items'] != null && items['items'] is List;
 

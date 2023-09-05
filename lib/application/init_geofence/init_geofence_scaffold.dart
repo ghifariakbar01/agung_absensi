@@ -38,6 +38,7 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
 
   @override
   Widget build(BuildContext context) {
+    // SAVED ABSEN
     ref.listen<Option<Either<BackgroundFailure, List<SavedLocation>>>>(
         backgroundNotifierProvider.select(
           (state) => state.failureOrSuccessOption,
@@ -71,6 +72,7 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
                   }
                 })));
 
+    // GEOFENCE
     ref.listen<Option<Either<GeofenceFailure, List<GeofenceResponse>>>>(
       geofenceProvider.select(
         (state) => state.failureOrSuccessOption,

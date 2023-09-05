@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:face_net_authentication/application/init_password_expired/init_password_expired_status.dart';
 import 'package:face_net_authentication/pages/widgets/loading_overlay.dart';
 import 'package:flutter/material.dart';
@@ -36,6 +38,8 @@ class _InitPasswordExpiredScaffoldState
           },
           orElse: () => null);
 
+      debugger();
+
       ref.read(initPasswordExpiredStatusProvider.notifier).state =
           InitPasswordExpiredStatus.success();
     });
@@ -43,14 +47,10 @@ class _InitPasswordExpiredScaffoldState
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = ref.watch(
-        editProfileNotifierProvider.select((value) => value.isSubmitting));
-
     return Scaffold(
       body: Stack(children: [
         LoadingOverlay(
-            loadingMessage: 'Initializing Password Expired...',
-            isLoading: isLoading)
+            loadingMessage: 'Initializing Password Expired...', isLoading: true)
       ]),
       backgroundColor: Colors.white.withOpacity(0.9),
     );

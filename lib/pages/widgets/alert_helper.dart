@@ -7,13 +7,11 @@ class AlertHelper {
       context: context,
       duration: const Duration(seconds: 2),
       builder: (context, controller) {
-        return Flash<FlashBar>(
+        return FlashBar(
           controller: controller,
           position: FlashPosition.bottom,
           behavior: FlashBehavior.floating,
-          child: FlashBar(
-            content: Text(message),
-          ),
+          content: Text(message),
         );
       },
     );

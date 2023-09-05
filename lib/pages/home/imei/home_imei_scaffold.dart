@@ -1,11 +1,13 @@
-
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/application/imei/imei_state.dart';
 import 'package:face_net_authentication/application/init_imei/init_imei_status.dart';
+import 'package:face_net_authentication/application/init_user/init_user_status.dart';
 import 'package:face_net_authentication/style/style.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../application/init_geofence/init_geofence_status.dart';
+import '../../../application/init_password_expired/init_password_expired_status.dart';
 import '../../../application/user/user_model.dart';
 import '../../../constants/assets.dart';
 import '../../../domain/edit_failure.dart';
@@ -29,8 +31,8 @@ class HomeImeiScaffold extends ConsumerWidget {
               (either) => either.fold(
                   (failure) => failure.maybeMap(
                         noConnection: (_) => ref
-                            .read(absenOfflineModeProvider.notifier)
-                            .state = true,
+                            .read(initImeiStatusProvider.notifier)
+                            .state = InitImeiStatus.success(),
                         passwordExpired: (_) => ref
                             .read(passwordExpiredNotifierProvider.notifier)
                             .savePasswordExpired(),
@@ -90,6 +92,9 @@ class HomeImeiScaffold extends ConsumerWidget {
                       ref.read(initImeiStatusProvider.notifier).state =
                           InitImeiStatus.success();
                     },
+                    onImeiOK: () => ref
+                        .read(initImeiStatusProvider.notifier)
+                        .state = InitImeiStatus.success(),
                     onImeiAlreadyRegistered: () async {
                       await ref
                           .read(editProfileNotifierProvider.notifier)
@@ -99,8 +104,20 @@ class HomeImeiScaffold extends ConsumerWidget {
                                 .read(userNotifierProvider.notifier)
                                 .logout(),
                           );
+                      ref.read(userNotifierProvider.notifier).setUserInitial();
                       //
-                      ref.invalidate(resetInitProvider);
+                      ref.read(initUserStatusProvider.notifier).state =
+                          InitUserStatus.init();
+                      //
+                      ref.read(initGeofenceStatusProvider.notifier).state =
+                          InitGeofenceStatus.init();
+                      //
+                      ref.read(initImeiStatusProvider.notifier).state =
+                          InitImeiStatus.init();
+                      //
+                      ref
+                          .read(initPasswordExpiredStatusProvider.notifier)
+                          .state = InitPasswordExpiredStatus.init();
                     });
               }),
             ));

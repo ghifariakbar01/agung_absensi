@@ -19,6 +19,7 @@ class _HomeImeiState extends ConsumerState<HomeImei> {
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await ref.read(imeiNotifierProvider.notifier).checkAndUpdateImei();
       await ref.read(imeiAuthNotifierProvider.notifier).getImeiCredentials();
       await ref.read(editProfileNotifierProvider.notifier).getImei();
     });
@@ -37,11 +38,6 @@ class _HomeImeiState extends ConsumerState<HomeImei> {
                   .changeSavedImei(imei ?? ''))),
     );
 
-    return Column(
-      children: [
-        HomeImeiScaffold(),
-        Container(),
-      ],
-    );
+    return HomeImeiScaffold();
   }
 }

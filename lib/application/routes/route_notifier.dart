@@ -1,4 +1,3 @@
-
 import 'package:face_net_authentication/application/init_user/init_user_status.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -29,7 +28,7 @@ import '../init_geofence/init_geofence_scaffold.dart';
 import '../init_geofence/init_geofence_status.dart';
 import '../init_imei/init_imei_scaffold.dart';
 import '../init_imei/init_imei_status.dart';
-import '../init_password_expired/init_password_expired.dart';
+import '../init_password_expired/init_password_expired_scaffold.dart';
 import '../init_password_expired/init_password_expired_status.dart';
 import '../init_user/init_user_scaffold.dart';
 import '../permission/permission_state.dart';
@@ -160,18 +159,18 @@ class RouterNotifier extends ChangeNotifier {
 
         if (areWeInitializingGeofence) {
           if (weInitializedGeofence) {
-            return RouteNames.initImeiNameRoute;
-          }
-        }
-
-        if (areWeInitializingImei) {
-          if (weInitializedImei) {
             return RouteNames.initPasswordExpiredNameRoute;
           }
         }
 
         if (areWeInitializingPasswordExpired) {
           if (weInitializedPasswordExpired) {
+            return RouteNames.initImeiNameRoute;
+          }
+        }
+
+        if (areWeInitializingImei) {
+          if (weInitializedImei) {
             return RouteNames.homeNameRoute;
           }
         }

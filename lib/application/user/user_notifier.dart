@@ -132,4 +132,8 @@ class UserNotifier extends StateNotifier<UserState> {
   setUserInitial() {
     state = UserState.initial();
   }
+
+  resetUserImei() {
+    state = state.copyWith(user: state.user.copyWith(imeiHp: ''));
+  }
 }
