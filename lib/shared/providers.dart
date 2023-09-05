@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:face_net_authentication/application/routes/route_names.dart';
 
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -20,9 +21,19 @@ import '../application/geofence/geofence_notifier.dart';
 import '../application/geofence/geofence_state.dart';
 import '../application/imei/imei_auth_state.dart';
 import '../application/imei/imei_notifier.dart';
-import '../application/imei/imei_saved_notifier.dart';
+import '../application/imei/imei_reset_notifier.dart';
+import '../application/imei/imei_auth_notifier.dart';
+import '../application/imei/imei_reset_state.dart';
 import '../application/imei/imei_state.dart';
+import '../application/init_geofence/init_geofence_status.dart';
+import '../application/init_imei/init_imei_status.dart';
+import '../application/init_password_expired/init_password_expired_status.dart';
+import '../application/init_user/init_user_status.dart';
 import '../application/karyawan/karyawan_shift_notifier.dart';
+import '../application/password_expired/password_expired_notifier.dart';
+import '../application/password_expired/password_expired_notifier_state.dart';
+import '../application/password_expired/password_expired_notifier_status.dart';
+import '../application/password_expired/password_expired_state.dart';
 import '../application/routes/route_notifier.dart';
 import '../application/sign_in_form/sign_in_form_notifier.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -32,10 +43,12 @@ import '../application/user/user_state.dart';
 import '../infrastructure/absen/absen_remote_service.dart';
 import '../infrastructure/absen/absen_repository.dart';
 
+import '../infrastructure/auth/auth_interceptor.dart';
 import '../infrastructure/auth/auth_remote_service.dart';
 import '../infrastructure/auth/auth_repository.dart';
 import '../infrastructure/cache_storage/auto_absen_storage.dart';
 import '../infrastructure/background/background_repository.dart';
+import '../infrastructure/cache_storage/password_expired_storage.dart';
 import '../infrastructure/credentials_storage/credentials_storage.dart';
 import '../infrastructure/credentials_storage/secure_credentials_storage.dart';
 
@@ -45,6 +58,7 @@ import '../infrastructure/cache_storage/geofence_storage.dart';
 import '../infrastructure/cache_storage/imei_storage.dart';
 import '../infrastructure/imei/imei_repository.dart';
 import '../infrastructure/karyawan/karyawan_repository.dart';
+import '../infrastructure/password_expired_repository.dart';
 import '../infrastructure/profile/edit_profile_remote_service.dart';
 import '../infrastructure/profile/edit_profile_repository.dart';
 import '../utils/string_utils.dart';
@@ -65,6 +79,27 @@ final routerProvider = Provider<GoRouter>((ref) {
     routes: router.routes,
   );
 });
+
+// Init page
+
+final resetInitProvider = FutureProvider((ref) {
+  ref.read(initUserStatusProvider.notifier).state = InitUserStatus.init();
+  ref.read(initGeofenceStatusProvider.notifier).state =
+      InitGeofenceStatus.init();
+  ref.read(initImeiStatusProvider.notifier).state = InitImeiStatus.init();
+  ref.read(initPasswordExpiredStatusProvider.notifier).state =
+      InitPasswordExpiredStatus.init();
+});
+
+final initUserStatusProvider = StateProvider((ref) => InitUserStatus.init());
+
+final initGeofenceStatusProvider =
+    StateProvider((ref) => InitGeofenceStatus.init());
+
+final initImeiStatusProvider = StateProvider((ref) => InitImeiStatus.init());
+
+final initPasswordExpiredStatusProvider =
+    StateProvider((ref) => InitPasswordExpiredStatus.init());
 
 // Background
 
@@ -90,8 +125,7 @@ final flutterSecureStorageProvider = Provider(
 );
 
 final credentialsStorageProvider = Provider<CredentialsStorage>(
-  (ref) => SecureCredentialsStorage(ref.watch(flutterSecureStorageProvider)),
-);
+    (ref) => SecureCredentialsStorage(ref.watch(flutterSecureStorageProvider)));
 
 final imeiCredentialsStorageProvider = Provider<CredentialsStorage>(
   (ref) =>
@@ -108,12 +142,12 @@ final authRepositoryProvider = Provider((ref) => AuthRepository(
       ref.watch(authRemoteServiceProvider),
     ));
 
-// final authInterceptorProvider = Provider(
-//   (ref) => AuthInterceptor(ref.watch(authRepositoryProvider)),
-// );
+final authInterceptorProvider = Provider(
+  (ref) => AuthInterceptor(ref),
+);
 
 final authNotifierProvider = StateNotifierProvider<AuthNotifier, AuthState>(
-  (ref) => AuthNotifier(ref.watch(authRepositoryProvider)),
+  (ref) => AuthNotifier(ref, ref.watch(authRepositoryProvider)),
 );
 
 final userNotifierProvider = StateNotifierProvider<UserNotifier, UserState>(
@@ -203,12 +237,36 @@ final geofenceProvider = StateNotifierProvider<GeofenceNotifier, GeofenceState>(
 final imeiRepositoryProvider = Provider(
     (ref) => ImeiRepository(ref.watch(imeiCredentialsStorageProvider)));
 
-final imeiNotifierProvider =
-    StateNotifierProvider<ImeiNotifier, ImeiState>((ref) => ImeiNotifier());
+final imeiNotifierProvider = StateNotifierProvider<ImeiNotifier, ImeiState>(
+    (ref) => ImeiNotifier(
+        ref.watch(userNotifierProvider.select((value) => value.user))));
 
 final imeiAuthNotifierProvider =
     StateNotifierProvider<ImeiAuthNotifier, ImeiAuthState>(
         (ref) => ImeiAuthNotifier(ref.watch(imeiRepositoryProvider)));
+
+final imeiResetNotifierProvider =
+    StateNotifierProvider<ImeiResetNotifier, ImeiResetState>(
+        (ref) => ImeiResetNotifier(ref, ref.watch(imeiRepositoryProvider)));
+
+// Pass Expired
+
+final passwordExpiredStorageProvider = Provider<CredentialsStorage>(
+  (ref) => PasswordExpiredStorage(ref.watch(flutterSecureStorageProvider)),
+);
+
+final passwordExpiredRepositoryProvider = Provider((ref) =>
+    PasswordExpiredRepository(ref.watch(passwordExpiredStorageProvider)));
+
+final passwordExpiredNotifierProvider = StateNotifierProvider<
+        PasswordExpiredNotifier, PasswordExpiredNotifierState>(
+    (ref) => PasswordExpiredNotifier(
+        ref, ref.watch(passwordExpiredRepositoryProvider)));
+
+final passwordExpiredNotifierStatusProvider =
+    StateNotifierProvider<PasswordExpiredNotifierStatus, PasswordExpiredState>(
+        (ref) => PasswordExpiredNotifierStatus(
+            ref, ref.watch(passwordExpiredRepositoryProvider)));
 
 // Misc
 

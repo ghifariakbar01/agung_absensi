@@ -7,6 +7,7 @@ import 'package:face_net_authentication/application/imei/imei_register_state.dar
 import 'package:face_net_authentication/infrastructure/dio_extensions.dart';
 
 import '../../application/user/user_model.dart';
+import '../../constants/constants.dart';
 import '../exceptions.dart';
 
 class EditProfileRemoteService {
@@ -21,6 +22,7 @@ class EditProfileRemoteService {
 
   Future<String?> getImei() async {
     try {
+      // debugger();
       final data = _dioRequest;
 
       final commandUpdate =
@@ -40,6 +42,8 @@ class EditProfileRemoteService {
 
       log('response $response');
 
+      // debugger();
+
       final items = response.data?[0];
 
       if (items['status'] == 'Success') {
@@ -49,10 +53,17 @@ class EditProfileRemoteService {
           return '';
         }
       } else {
-        throw RestApiException(10);
+        final message = items['error'] as String?;
+        final errorCode = items['errornum'] as int;
+
+        if (errorCode == Constants.passExpCode) {
+          throw PasswordExpiredException(errorCode, message);
+        } else {
+          throw RestApiExceptionWithMessage(errorCode, message);
+        }
       }
-    } on FormatException {
-      throw FormatException();
+    } on FormatException catch (e) {
+      throw FormatException(e.message);
     } on DioError catch (e) {
       if (e.isNoConnectionError || e.isConnectionTimeout) {
         throw NoConnectionException();
@@ -84,6 +95,8 @@ class EditProfileRemoteService {
       log('data ${jsonEncode(data)}');
 
       log('response $response');
+
+      // debugger();
 
       final items = response.data?[0];
 

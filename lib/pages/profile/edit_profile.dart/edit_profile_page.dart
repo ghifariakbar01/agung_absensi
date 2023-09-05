@@ -7,9 +7,10 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../application/routes/route_names.dart';
+import '../../../constants/assets.dart';
 import '../../../domain/value_objects_copy.dart';
 import '../../../shared/providers.dart';
-import '../../widgets/alert_helper.dart';
+import '../../widgets/v_dialogs.dart';
 
 class EditProfilePage extends ConsumerStatefulWidget {
   const EditProfilePage();
@@ -30,11 +31,21 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
       (_, failureOrSuccessOption) => failureOrSuccessOption.fold(
           () {},
           (either) => either.fold(
-              (failure) => AlertHelper.showSnackBar(
-                    context,
-                    message: failure.map(
-                      server: (value) => '${value.message} ${value.errorCode}',
-                      noConnection: (_) => 'tidak ada koneksi',
+              (failure) => failure.maybeMap(
+                    passwordExpired: (_) => ref
+                        .read(passwordExpiredNotifierProvider.notifier)
+                        .savePasswordExpired(),
+                    orElse: () => showDialog(
+                      context: context,
+                      barrierDismissible: true,
+                      builder: (_) => VSimpleDialog(
+                        label: 'Error',
+                        labelDescription: failure.maybeMap(
+                            server: (server) => 'error server $server',
+                            noConnection: (_) => 'no connection',
+                            orElse: () => ''),
+                        asset: Assets.iconCrossed,
+                      ),
                     ),
                   ),
               (_) => ref

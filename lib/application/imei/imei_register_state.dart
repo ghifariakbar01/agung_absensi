@@ -8,6 +8,5 @@ class ImeiRegisterResponse with _$ImeiRegisterResponse {
       _WithImei;
   const factory ImeiRegisterResponse.failure(
       [int? errorCode, String? message]) = _ImeiFailure;
-
   const ImeiRegisterResponse._();
 }

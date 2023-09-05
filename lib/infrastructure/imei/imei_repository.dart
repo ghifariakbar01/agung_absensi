@@ -27,4 +27,20 @@ class ImeiRepository {
       return left(ImeiFailure.unknown(0, 'Platform exception while reading'));
     }
   }
+
+  Future<Either<ImeiFailure, Unit?>> clearImeiCredentials() async {
+    try {
+      final storedCredentials = await _credentialsStorage.read();
+
+      if (storedCredentials == null) {
+        return left(const ImeiFailure.empty());
+      }
+
+      await _credentialsStorage.clear();
+
+      return right(unit);
+    } on PlatformException {
+      return left(const ImeiFailure.storage());
+    }
+  }
 }

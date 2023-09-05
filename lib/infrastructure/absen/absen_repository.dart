@@ -45,6 +45,8 @@ class AbsenRepository {
           imei: imei);
 
       return right(unit);
+    } on PasswordExpiredException {
+      return left(AbsenFailure.passwordExpired());
     } on NoConnectionException {
       return left(AbsenFailure.noConnection());
     } on RestApiException catch (error) {
@@ -89,15 +91,18 @@ class AbsenRepository {
     }
   }
 
-  Future<RemoteResponse<AbsenState>> getAbsen({required DateTime date}) async {
+  Future<AbsenState> getAbsen({required DateTime date}) async {
     try {
-      return RemoteResponse.withNewData(
-          await _remoteService.getAbsen(date: date));
+      return await _remoteService.getAbsen(date: date);
+    } on PasswordExpiredException {
+      return AbsenState.failure(errorCode: 4, message: 'Password Expired');
     } on NoConnectionException {
-      return RemoteResponse.failure(errorCode: 500, message: 'no connection');
-    } on RestApiException {
-      return RemoteResponse.failure(
-          errorCode: 502, message: 'Error rest api exception');
+      return AbsenState.failure(message: 'no connection');
+    } on RestApiExceptionWithMessage catch (e) {
+      return AbsenState.failure(errorCode: e.errorCode, message: e.message);
+    } on RestApiException catch (e) {
+      return AbsenState.failure(
+          errorCode: e.errorCode, message: 'RestApiException getAbsen');
     }
   }
 
@@ -108,12 +113,16 @@ class AbsenRepository {
     try {
       return right(await _remoteService.getRiwayatAbsen(
           page: page, dateFirst: dateFirst, dateSecond: dateSecond));
-    } on FormatException {
-      return left(RiwayatAbsenFailure.wrongFormat());
+    } on PasswordExpiredException {
+      return left(RiwayatAbsenFailure.passwordExpired());
     } on NoConnectionException {
       return left(RiwayatAbsenFailure.noConnection());
-    } on RestApiException {
-      return left(RiwayatAbsenFailure.server());
+    } on FormatException catch (e) {
+      return left(RiwayatAbsenFailure.wrongFormat(e.message));
+    } on RestApiException catch (e) {
+      return left(RiwayatAbsenFailure.server(e.errorCode));
+    } on RestApiExceptionWithMessage catch (e) {
+      return left(RiwayatAbsenFailure.server(e.errorCode, e.message));
     }
   }
 }

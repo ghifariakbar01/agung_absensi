@@ -58,7 +58,7 @@ class ProfileScaffold extends ConsumerWidget {
 
                             await ref
                                 .read(editProfileNotifierProvider.notifier)
-                                .clearImei();
+                                .clearImeiFromDB();
                           })))
             ],
           ),

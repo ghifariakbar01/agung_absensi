@@ -6,7 +6,8 @@ part 'riwayat_absen_failure.freezed.dart';
 class RiwayatAbsenFailure with _$RiwayatAbsenFailure {
   const factory RiwayatAbsenFailure.server([int? errorCode, String? message]) =
       _Server;
-  const factory RiwayatAbsenFailure.wrongFormat() = _WrongFormat;
-
+  const factory RiwayatAbsenFailure.wrongFormat([String? message]) =
+      _WrongFormat;
+  const factory RiwayatAbsenFailure.passwordExpired() = _PasswordExpired;
   const factory RiwayatAbsenFailure.noConnection() = _NoConnection;
 }

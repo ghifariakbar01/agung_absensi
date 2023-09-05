@@ -1,19 +1,12 @@
-import 'dart:developer';
-
-import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../constants/assets.dart';
-import '../../domain/background_failure.dart';
 import '../../shared/providers.dart';
 import '../../style/style.dart';
 
 import '../widgets/copyright_text.dart';
 import '../widgets/location_detail.dart';
 import '../widgets/user_info.dart';
-import '../widgets/v_dialogs.dart';
-import 'absen_button.dart';
 import 'absen_button_page.dart';
 
 class AbsenPage extends ConsumerStatefulWidget {
@@ -26,7 +19,6 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
   // MLService _mlService = locator<MLService>();
   // FaceDetectorService _mlKitService = locator<FaceDetectorService>();
   // CameraService _cameraService = locator<CameraService>();
-
   // bool loading = false;
 
   @override
@@ -35,14 +27,8 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
     // _initializeServices();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await ref.read(absenNotifierProvidier.notifier).getAbsen(
-          date: DateTime.now(),
-          onAbsen: (absen) {
-            ref.read(absenNotifierProvidier.notifier).changeAbsen(absen);
-            ref.read(absenOfflineModeProvider.notifier).state = false;
-          },
-          onNoConnection: () =>
-              ref.read(absenOfflineModeProvider.notifier).state = true);
-      //
+            date: DateTime.now(),
+          );
       await ref.read(userNotifierProvider.notifier).getUser();
       await ref.read(backgroundNotifierProvider.notifier).getSavedLocations();
       await ref.read(geofenceProvider.notifier).getGeofenceList();

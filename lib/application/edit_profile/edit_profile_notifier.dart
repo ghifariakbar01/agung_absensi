@@ -11,8 +11,9 @@ import '../../utils/validator.dart';
 import 'edit_profile_state.dart';
 
 class EditProfileNotifier extends StateNotifier<EditProfileState> {
-  EditProfileNotifier(this._editProfileRepostiroy)
-      : super(EditProfileState.initial());
+  EditProfileNotifier(
+    this._editProfileRepostiroy,
+  ) : super(EditProfileState.initial());
 
   final EditProfileRepostiroy _editProfileRepostiroy;
 
@@ -42,15 +43,12 @@ class EditProfileNotifier extends StateNotifier<EditProfileState> {
     await onUser();
   }
 
-  Future<void> onImeiAlreadyRegistered(
-      {required Function showDialog,
-      required Function logout,
-      required Function checkAndUpdateAuthStatus,
-      required Function redirect}) async {
+  Future<void> onImeiAlreadyRegistered({
+    required Function showDialog,
+    required Function logout,
+  }) async {
     await showDialog();
     await logout();
-    await checkAndUpdateAuthStatus();
-    await redirect();
   }
 
   Future<void> onImei({
@@ -65,11 +63,13 @@ class EditProfileNotifier extends StateNotifier<EditProfileState> {
     if (imeiDBState == ImeiState.empty()) {
       switch (savedImei.isEmpty) {
         case true:
+          debugger(message: 'called');
+
           await onImeiNotRegistered();
           break;
 
         case false:
-          // debugger(message: 'called');
+          debugger(message: 'called');
 
           await onImeiAlreadyRegistered();
           // await onImeiNotRegistered();
@@ -142,7 +142,7 @@ class EditProfileNotifier extends StateNotifier<EditProfileState> {
         failureOrSuccessOptionGettingImei: optionOf(failureOrSuccess));
   }
 
-  Future<void> clearImei() async {
+  Future<void> clearImeiFromDB() async {
     Either<EditFailure, Unit>? failureOrSuccess;
 
     state = state.copyWith(isSubmitting: true, failureOrSuccessOption: none());

@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:face_net_authentication/infrastructure/dio_extensions.dart';
 
 import '../../application/geofence/geofence_response.dart';
+import '../../constants/constants.dart';
 import '../exceptions.dart';
 
 class GeofenceRemoteService {
@@ -36,9 +37,9 @@ class GeofenceRemoteService {
       final items = response.data?[0];
 
       if (items['status'] == 'Success') {
-        final userExist = items['items'] != null && items['items'] is List;
+        final listExist = items['items'] != null && items['items'] is List;
 
-        if (userExist) {
+        if (listExist) {
           final list = items['items'] as List;
 
           if (list.isNotEmpty) {
@@ -49,22 +50,34 @@ class GeofenceRemoteService {
 
             return geofences;
           } else {
-            throw RestApiExceptionWithMessage(
-              items['errornum'] as int?,
-              items['error'] as String?,
-            );
+            final message = items['error'] as String?;
+            final errorCode = items['errornum'] as int;
+
+            if (errorCode == Constants.passExpCode) {
+              throw PasswordExpiredException(errorCode, message);
+            } else {
+              throw RestApiExceptionWithMessage(errorCode, message);
+            }
           }
         } else {
-          throw RestApiExceptionWithMessage(
-            items['errornum'] as int?,
-            items['error'] as String?,
-          );
+          final message = items['error'] as String?;
+          final errorCode = items['errornum'] as int;
+
+          if (errorCode == Constants.passExpCode) {
+            throw PasswordExpiredException(errorCode, message);
+          } else {
+            throw RestApiExceptionWithMessage(errorCode, message);
+          }
         }
       } else {
-        throw RestApiExceptionWithMessage(
-          items['errornum'] as int?,
-          items['error'] as String?,
-        );
+        final message = items['error'] as String?;
+        final errorCode = items['errornum'] as int;
+
+        if (errorCode == Constants.passExpCode) {
+          throw PasswordExpiredException(errorCode, message);
+        } else {
+          throw RestApiExceptionWithMessage(errorCode, message);
+        }
       }
     } on FormatException {
       throw FormatException();

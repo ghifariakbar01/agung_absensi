@@ -2,11 +2,10 @@ import 'package:face_net_authentication/style/style.dart';
 import 'package:flutter/material.dart';
 
 class LoadingOverlay extends StatelessWidget {
-  const LoadingOverlay({
-    required this.isLoading,
-  });
+  const LoadingOverlay({required this.isLoading, this.loadingMessage});
 
   final bool isLoading;
+  final String? loadingMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +29,7 @@ class LoadingOverlay extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                'Please Wait',
+                loadingMessage ?? 'Please Wait',
                 style: theme.textTheme.bodyMedium!.copyWith(
                   color: Colors.white,
                   fontSize: 16,

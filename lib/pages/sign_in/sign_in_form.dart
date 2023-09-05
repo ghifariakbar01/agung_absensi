@@ -63,7 +63,6 @@ class _SignInFormState extends ConsumerState<SignInForm> {
     final password = signInForm.password.getOrLeave('');
 
     final ptDropdownSelected = signInForm.ptDropdownSelected;
-
     return Form(
       autovalidateMode: signInForm.showErrorMessages
           ? AutovalidateMode.always

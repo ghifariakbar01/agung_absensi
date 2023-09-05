@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:face_net_authentication/application/imei_introduction/shared/imei_introduction_providers.dart';
@@ -11,6 +13,7 @@ import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'application/permission/shared/permission_introduction_providers.dart';
 import 'application/reminder/reminder_provider.dart';
 import 'config/configuration.dart';
+import 'domain/value_objects_copy.dart';
 import 'shared/providers.dart';
 
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -39,8 +42,8 @@ final initializationProvider = FutureProvider<Unit>((ref) async {
         return true;
       },
       baseUrl: BuildConfig.get().baseUrl,
-    );
-  // ..interceptors.add(ref.read(authInterceptorProvider));
+    )
+    ..interceptors.add(ref.read(authInterceptorProvider));
 
   if (!BuildConfig.isProduction) {
     ref.read(dioProvider).interceptors.add(PrettyDioLogger(
@@ -62,8 +65,13 @@ final initializationProvider = FutureProvider<Unit>((ref) async {
       ref.read(imeiIntroductionNotifierProvider.notifier);
   await imeiInstructionNotifier.checkAndUpdateStatusIMEIIntroduction();
 
+  final passwordExpiredNotifier =
+      ref.read(passwordExpiredNotifierStatusProvider.notifier);
+  await passwordExpiredNotifier.checkAndUpdateExpired();
+
   // whenever your initialization is completed, remove the splash screen:
   // FlutterNativeSplash.remove();
+
   return unit;
 });
 

@@ -41,8 +41,9 @@ class AuthRemoteService {
         "username": "$userId",
         "password": "$password",
         "mode": "SELECT",
-        "command":
-            "SELECT *, (select nama from mst_dept where id_dept = A.id_dept) as dept, (select nama from mst_comp where id_comp = A.id_comp) as comp, (select nama from mst_jabatan where id_jbt = A.id_jbt) as jbt FROM mst_user A WHERE nama = '$userId'  AND payroll IS NOT NULL AND payroll != ''",
+        "command": "SELECT *, (select nama from mst_dept where id_dept = A.id_dept) as dept, " +
+            " (select nama from mst_comp where id_comp = A.id_comp) as comp, (select nama from mst_jabatan where id_jbt = A.id_jbt) as jbt" +
+            " FROM mst_user A WHERE nama = '$userId'  AND payroll IS NOT NULL AND payroll != ''",
       });
 
       log('data ${jsonEncode(data)}');
@@ -51,6 +52,8 @@ class AuthRemoteService {
           data: jsonEncode(data), options: Options(contentType: 'text/plain'));
 
       final items = response.data?[0];
+
+      // debugger();
 
       if (items['status'] == 'Success') {
         final userExist = items['items'] != null && items['items'] is List;
@@ -102,8 +105,10 @@ class AuthRemoteService {
         }
       } else {
         final message = items['error'] as String?;
+        final errorCode = items['errornum'] as int;
+
         return AuthResponse.failure(
-          errorCode: items['errornum'],
+          errorCode: errorCode,
           message: message,
         );
       }

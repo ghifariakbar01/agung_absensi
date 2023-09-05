@@ -21,6 +21,7 @@ mixin _$ImeiFailure {
     required TResult Function(String? message) errorParsing,
     required TResult Function() empty,
     required TResult Function(int? errorCode, String? message) unknown,
+    required TResult Function() storage,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -28,6 +29,7 @@ mixin _$ImeiFailure {
     TResult? Function(String? message)? errorParsing,
     TResult? Function()? empty,
     TResult? Function(int? errorCode, String? message)? unknown,
+    TResult? Function()? storage,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -35,6 +37,7 @@ mixin _$ImeiFailure {
     TResult Function(String? message)? errorParsing,
     TResult Function()? empty,
     TResult Function(int? errorCode, String? message)? unknown,
+    TResult Function()? storage,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -43,6 +46,7 @@ mixin _$ImeiFailure {
     required TResult Function(_ErrorParsing value) errorParsing,
     required TResult Function(_Empty value) empty,
     required TResult Function(_Unknown value) unknown,
+    required TResult Function(_Storage value) storage,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -50,6 +54,7 @@ mixin _$ImeiFailure {
     TResult? Function(_ErrorParsing value)? errorParsing,
     TResult? Function(_Empty value)? empty,
     TResult? Function(_Unknown value)? unknown,
+    TResult? Function(_Storage value)? storage,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -57,6 +62,7 @@ mixin _$ImeiFailure {
     TResult Function(_ErrorParsing value)? errorParsing,
     TResult Function(_Empty value)? empty,
     TResult Function(_Unknown value)? unknown,
+    TResult Function(_Storage value)? storage,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -147,6 +153,7 @@ class _$_ErrorParsing implements _ErrorParsing {
     required TResult Function(String? message) errorParsing,
     required TResult Function() empty,
     required TResult Function(int? errorCode, String? message) unknown,
+    required TResult Function() storage,
   }) {
     return errorParsing(message);
   }
@@ -157,6 +164,7 @@ class _$_ErrorParsing implements _ErrorParsing {
     TResult? Function(String? message)? errorParsing,
     TResult? Function()? empty,
     TResult? Function(int? errorCode, String? message)? unknown,
+    TResult? Function()? storage,
   }) {
     return errorParsing?.call(message);
   }
@@ -167,6 +175,7 @@ class _$_ErrorParsing implements _ErrorParsing {
     TResult Function(String? message)? errorParsing,
     TResult Function()? empty,
     TResult Function(int? errorCode, String? message)? unknown,
+    TResult Function()? storage,
     required TResult orElse(),
   }) {
     if (errorParsing != null) {
@@ -181,6 +190,7 @@ class _$_ErrorParsing implements _ErrorParsing {
     required TResult Function(_ErrorParsing value) errorParsing,
     required TResult Function(_Empty value) empty,
     required TResult Function(_Unknown value) unknown,
+    required TResult Function(_Storage value) storage,
   }) {
     return errorParsing(this);
   }
@@ -191,6 +201,7 @@ class _$_ErrorParsing implements _ErrorParsing {
     TResult? Function(_ErrorParsing value)? errorParsing,
     TResult? Function(_Empty value)? empty,
     TResult? Function(_Unknown value)? unknown,
+    TResult? Function(_Storage value)? storage,
   }) {
     return errorParsing?.call(this);
   }
@@ -201,6 +212,7 @@ class _$_ErrorParsing implements _ErrorParsing {
     TResult Function(_ErrorParsing value)? errorParsing,
     TResult Function(_Empty value)? empty,
     TResult Function(_Unknown value)? unknown,
+    TResult Function(_Storage value)? storage,
     required TResult orElse(),
   }) {
     if (errorParsing != null) {
@@ -258,6 +270,7 @@ class _$_Empty implements _Empty {
     required TResult Function(String? message) errorParsing,
     required TResult Function() empty,
     required TResult Function(int? errorCode, String? message) unknown,
+    required TResult Function() storage,
   }) {
     return empty();
   }
@@ -268,6 +281,7 @@ class _$_Empty implements _Empty {
     TResult? Function(String? message)? errorParsing,
     TResult? Function()? empty,
     TResult? Function(int? errorCode, String? message)? unknown,
+    TResult? Function()? storage,
   }) {
     return empty?.call();
   }
@@ -278,6 +292,7 @@ class _$_Empty implements _Empty {
     TResult Function(String? message)? errorParsing,
     TResult Function()? empty,
     TResult Function(int? errorCode, String? message)? unknown,
+    TResult Function()? storage,
     required TResult orElse(),
   }) {
     if (empty != null) {
@@ -292,6 +307,7 @@ class _$_Empty implements _Empty {
     required TResult Function(_ErrorParsing value) errorParsing,
     required TResult Function(_Empty value) empty,
     required TResult Function(_Unknown value) unknown,
+    required TResult Function(_Storage value) storage,
   }) {
     return empty(this);
   }
@@ -302,6 +318,7 @@ class _$_Empty implements _Empty {
     TResult? Function(_ErrorParsing value)? errorParsing,
     TResult? Function(_Empty value)? empty,
     TResult? Function(_Unknown value)? unknown,
+    TResult? Function(_Storage value)? storage,
   }) {
     return empty?.call(this);
   }
@@ -312,6 +329,7 @@ class _$_Empty implements _Empty {
     TResult Function(_ErrorParsing value)? errorParsing,
     TResult Function(_Empty value)? empty,
     TResult Function(_Unknown value)? unknown,
+    TResult Function(_Storage value)? storage,
     required TResult orElse(),
   }) {
     if (empty != null) {
@@ -400,6 +418,7 @@ class _$_Unknown implements _Unknown {
     required TResult Function(String? message) errorParsing,
     required TResult Function() empty,
     required TResult Function(int? errorCode, String? message) unknown,
+    required TResult Function() storage,
   }) {
     return unknown(errorCode, message);
   }
@@ -410,6 +429,7 @@ class _$_Unknown implements _Unknown {
     TResult? Function(String? message)? errorParsing,
     TResult? Function()? empty,
     TResult? Function(int? errorCode, String? message)? unknown,
+    TResult? Function()? storage,
   }) {
     return unknown?.call(errorCode, message);
   }
@@ -420,6 +440,7 @@ class _$_Unknown implements _Unknown {
     TResult Function(String? message)? errorParsing,
     TResult Function()? empty,
     TResult Function(int? errorCode, String? message)? unknown,
+    TResult Function()? storage,
     required TResult orElse(),
   }) {
     if (unknown != null) {
@@ -434,6 +455,7 @@ class _$_Unknown implements _Unknown {
     required TResult Function(_ErrorParsing value) errorParsing,
     required TResult Function(_Empty value) empty,
     required TResult Function(_Unknown value) unknown,
+    required TResult Function(_Storage value) storage,
   }) {
     return unknown(this);
   }
@@ -444,6 +466,7 @@ class _$_Unknown implements _Unknown {
     TResult? Function(_ErrorParsing value)? errorParsing,
     TResult? Function(_Empty value)? empty,
     TResult? Function(_Unknown value)? unknown,
+    TResult? Function(_Storage value)? storage,
   }) {
     return unknown?.call(this);
   }
@@ -454,6 +477,7 @@ class _$_Unknown implements _Unknown {
     TResult Function(_ErrorParsing value)? errorParsing,
     TResult Function(_Empty value)? empty,
     TResult Function(_Unknown value)? unknown,
+    TResult Function(_Storage value)? storage,
     required TResult orElse(),
   }) {
     if (unknown != null) {
@@ -472,4 +496,117 @@ abstract class _Unknown implements ImeiFailure {
   @JsonKey(ignore: true)
   _$$_UnknownCopyWith<_$_Unknown> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$_StorageCopyWith<$Res> {
+  factory _$$_StorageCopyWith(
+          _$_Storage value, $Res Function(_$_Storage) then) =
+      __$$_StorageCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$_StorageCopyWithImpl<$Res>
+    extends _$ImeiFailureCopyWithImpl<$Res, _$_Storage>
+    implements _$$_StorageCopyWith<$Res> {
+  __$$_StorageCopyWithImpl(_$_Storage _value, $Res Function(_$_Storage) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$_Storage implements _Storage {
+  const _$_Storage();
+
+  @override
+  String toString() {
+    return 'ImeiFailure.storage()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$_Storage);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String? message) errorParsing,
+    required TResult Function() empty,
+    required TResult Function(int? errorCode, String? message) unknown,
+    required TResult Function() storage,
+  }) {
+    return storage();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String? message)? errorParsing,
+    TResult? Function()? empty,
+    TResult? Function(int? errorCode, String? message)? unknown,
+    TResult? Function()? storage,
+  }) {
+    return storage?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String? message)? errorParsing,
+    TResult Function()? empty,
+    TResult Function(int? errorCode, String? message)? unknown,
+    TResult Function()? storage,
+    required TResult orElse(),
+  }) {
+    if (storage != null) {
+      return storage();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_ErrorParsing value) errorParsing,
+    required TResult Function(_Empty value) empty,
+    required TResult Function(_Unknown value) unknown,
+    required TResult Function(_Storage value) storage,
+  }) {
+    return storage(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_ErrorParsing value)? errorParsing,
+    TResult? Function(_Empty value)? empty,
+    TResult? Function(_Unknown value)? unknown,
+    TResult? Function(_Storage value)? storage,
+  }) {
+    return storage?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_ErrorParsing value)? errorParsing,
+    TResult Function(_Empty value)? empty,
+    TResult Function(_Unknown value)? unknown,
+    TResult Function(_Storage value)? storage,
+    required TResult orElse(),
+  }) {
+    if (storage != null) {
+      return storage(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _Storage implements ImeiFailure {
+  const factory _Storage() = _$_Storage;
 }

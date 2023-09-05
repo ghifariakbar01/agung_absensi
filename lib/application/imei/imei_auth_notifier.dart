@@ -27,7 +27,12 @@ class ImeiAuthNotifier extends StateNotifier<ImeiAuthState> {
         failureOrSuccessOption: optionOf(failureOrSuccessOption));
   }
 
-  void changeSavedImei(String imei) {
+  changeSavedImei(String imei) {
+    // debugger();
     state = state.copyWith(imei: imei);
+  }
+
+  resetSavedImei() {
+    state = state.copyWith(imei: '');
   }
 }

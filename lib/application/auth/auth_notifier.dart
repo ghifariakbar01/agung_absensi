@@ -1,3 +1,4 @@
+import 'package:face_net_authentication/shared/providers.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -8,8 +9,18 @@ part 'auth_notifier.freezed.dart';
 part 'auth_state.dart';
 
 class AuthNotifier extends StateNotifier<AuthState> {
-  AuthNotifier(this._repository) : super(const AuthState.initial());
+  AuthNotifier(
+    this._ref,
+    this._repository,
+  ) : super(AuthState.initial()) {
+    _ref.listen(userNotifierProvider, (__, _) => checkAndUpdateAuthStatus());
+    _ref.listen(
+        imeiResetNotifierProvider, (__, _) => checkAndUpdateAuthStatus());
+    _ref.listen(
+        editProfileNotifierProvider, (__, _) => checkAndUpdateAuthStatus());
+  }
 
+  final Ref _ref;
   final AuthRepository _repository;
 
   Future<void> checkAndUpdateAuthStatus() async {

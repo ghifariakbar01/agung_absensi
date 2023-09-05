@@ -3,19 +3,26 @@ import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/domain/auth_failure.dart';
+import 'package:face_net_authentication/shared/providers.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../domain/user_failure.dart';
 import '../../domain/value_objects_copy.dart';
 
 import '../../infrastructure/auth/auth_repository.dart';
+import '../../utils/string_utils.dart';
+import '../reminder/reminder_provider.dart';
 import 'user_model.dart';
 import 'user_state.dart';
 
 class UserNotifier extends StateNotifier<UserState> {
-  UserNotifier(this._repository) : super(UserState.initial());
+  UserNotifier(
+    this._repository,
+  ) : super(UserState.initial());
 
   final AuthRepository _repository;
+
+  Future<String> getUserString() => _repository.getUserString();
 
   Future<void> getUser() async {
     Either<UserFailure, String?> failureOrSuccess;
@@ -57,28 +64,73 @@ class UserNotifier extends StateNotifier<UserState> {
     }
   }
 
-  void setUser(UserModelWithPassword user) {
-    log('user ${user.noTelp1}');
+  setUser(UserModelWithPassword user) {
+    // debugger();
     state = state.copyWith(user: user);
   }
 
   Future<void> onUserParsed({
-    required UserModelWithPassword user,
+    required Function initializeUser,
     required Function initializeDioRequest,
     required Function checkReminderStatus,
     required Function checkAndUpdateStatus,
     required Function checkAndUpdateImei,
   }) async {
-    setUser(user);
+    initializeUser();
     await initializeDioRequest();
     await checkReminderStatus();
     await checkAndUpdateStatus();
     await checkAndUpdateImei();
   }
 
-  Future<void> logout(UserModelWithPassword user) async {
-    final logout = await _repository.clearCredentialsStorage();
+  Future<void> onUserParsedRaw(
+      {required WidgetRef ref,
+      required UserModelWithPassword userModelWithPassword}) async {
+    await onUserParsed(
+        initializeUser: () => setUser(userModelWithPassword),
+        initializeDioRequest: () {
+          ref.read(dioRequestProvider).addAll({
+            "kode": "${StringUtils.formatDate(DateTime.now())}",
+            "username": "${userModelWithPassword.nama}",
+            "password": "${userModelWithPassword.password}",
+            "server": "${userModelWithPassword.ptServer}"
+          });
+        },
+        checkReminderStatus: () async {
+          if (userModelWithPassword.passwordUpdate!.isNotEmpty) {
+            await Future.delayed(Duration(seconds: 1));
+            DateTime passwordUpdate = ref
+                .read(reminderNotifierProvider.notifier)
+                .convertToDateTime(
+                    passUpdate: userModelWithPassword.passwordUpdate ?? '');
+            int daysLeft = ref
+                .read(reminderNotifierProvider.notifier)
+                .getDaysLeft(
+                    passUpdate: DateTime(passwordUpdate.year,
+                        passwordUpdate.month + 1, passwordUpdate.day));
 
-    logout.fold((_) => log('error logging out'), (_) => setUser(user));
+            ref
+                .read(reminderNotifierProvider.notifier)
+                .changeDaysLeft(daysLeft);
+          }
+        },
+        checkAndUpdateStatus: () async => await ref
+            .read(authNotifierProvider.notifier)
+            .checkAndUpdateAuthStatus(),
+        checkAndUpdateImei: () async =>
+            await ref.read(imeiNotifierProvider.notifier).checkAndUpdateImei());
+  }
+
+  Future<void> logout() async {
+    Either<AuthFailure, Unit> failureOrSuccessOption;
+
+    failureOrSuccessOption = await _repository.clearCredentialsStorage();
+
+    state = state.copyWith(
+        failureOrSuccessOptionUpdate: optionOf(failureOrSuccessOption));
+  }
+
+  setUserInitial() {
+    state = UserState.initial();
   }
 }

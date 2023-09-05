@@ -1,19 +1,19 @@
 import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
+import 'package:face_net_authentication/application/imei/imei_state.dart';
+import 'package:face_net_authentication/application/init_imei/init_imei_status.dart';
 import 'package:face_net_authentication/style/style.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../application/auth/auth_notifier.dart';
 import '../../../application/routes/route_names.dart';
 import '../../../application/user/user_model.dart';
 import '../../../constants/assets.dart';
 import '../../../domain/edit_failure.dart';
 import '../../../domain/value_objects_copy.dart';
 import '../../../shared/providers.dart';
-import '../../widgets/alert_helper.dart';
 import '../../widgets/v_dialogs.dart';
 
 class HomeImeiScaffold extends ConsumerWidget {
@@ -21,6 +21,7 @@ class HomeImeiScaffold extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // GET IMEI INTERNET
     ref.listen<Option<Either<EditFailure, String?>>>(
         editProfileNotifierProvider.select(
           (state) => state.failureOrSuccessOptionGettingImei,
@@ -33,31 +34,33 @@ class HomeImeiScaffold extends ConsumerWidget {
                         noConnection: (_) => ref
                             .read(absenOfflineModeProvider.notifier)
                             .state = true,
-                        orElse: () => AlertHelper.showSnackBar(
-                          context,
-                          message: failure.map(
-                            server: (value) =>
-                                '${value.message} ${value.errorCode}',
-                            noConnection: (_) => 'tidak ada koneksi',
+                        passwordExpired: (_) => ref
+                            .read(passwordExpiredNotifierProvider.notifier)
+                            .savePasswordExpired(),
+                        orElse: () => showDialog(
+                          context: context,
+                          barrierDismissible: true,
+                          builder: (_) => VSimpleDialog(
+                            label: 'Error',
+                            labelDescription: failure.maybeMap(
+                                server: (server) => 'error server $server',
+                                orElse: () => ''),
+                            asset: Assets.iconCrossed,
                           ),
                         ),
                       ), (imeiResponse) async {
-                final savedImei =
-                    ref.read(imeiAuthNotifierProvider.notifier).state.imei;
-
-                final imeiDBState =
-                    ref.read(imeiNotifierProvider.notifier).state;
-
-                final user = ref.read(userNotifierProvider.notifier).state.user;
-
-                log('savedImei imeiDBState imeiResponse user $savedImei $imeiDBState $imeiResponse ${user.imeiHp}');
+                ImeiState imeiDBState = ref.read(imeiNotifierProvider);
+                String savedImei = ref.read(
+                    imeiAuthNotifierProvider.select((value) => value.imei));
+                UserModelWithPassword user = ref
+                    .read(userNotifierProvider.select((value) => value.user));
 
                 await ref.read(editProfileNotifierProvider.notifier).onImei(
                     savedImei: savedImei,
                     imeiDBState: imeiDBState,
                     imeiDBString: imeiResponse,
                     onImeiNotRegistered: () async {
-                      final generatedImei = await ref
+                      String generatedImei = ref
                           .read(imeiNotifierProvider.notifier)
                           .generateImei();
 
@@ -86,27 +89,22 @@ class HomeImeiScaffold extends ConsumerWidget {
                                           .read(userNotifierProvider.notifier)
                                           .getUser()),
                               showDialog: () => showSuccessDialog(context));
-                    },
-                    onImeiAlreadyRegistered: () async => ref
-                        .read(editProfileNotifierProvider.notifier)
-                        .onImeiAlreadyRegistered(
-                          showDialog: () => showFailedDialog(context),
-                          logout: () => ref
-                              .read(userNotifierProvider.notifier)
-                              .logout(UserModelWithPassword.initial()),
-                          checkAndUpdateAuthStatus: () => ref
-                              .read(authNotifierProvider.notifier)
-                              .checkAndUpdateAuthStatus(),
-                          redirect: () {
-                            final isLoggedIn = ref.watch(authNotifierProvider);
 
-                            if (isLoggedIn == AuthState.authenticated()) {
-                              context.replaceNamed(RouteNames.homeNameRoute);
-                            } else {
-                              context.replaceNamed(RouteNames.signInNameRoute);
-                            }
-                          },
-                        ));
+                      ref.read(initImeiStatusProvider.notifier).state =
+                          InitImeiStatus.success();
+                    },
+                    onImeiAlreadyRegistered: () async {
+                      await ref
+                          .read(editProfileNotifierProvider.notifier)
+                          .onImeiAlreadyRegistered(
+                            showDialog: () => showFailedDialog(context),
+                            logout: () => ref
+                                .read(userNotifierProvider.notifier)
+                                .logout(),
+                          );
+                      //
+                      ref.invalidate(resetInitProvider);
+                    });
               }),
             ));
 

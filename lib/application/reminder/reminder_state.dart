@@ -6,5 +6,5 @@ part 'reminder_state.freezed.dart';
 class ReminderState with _$ReminderState {
   const factory ReminderState({required int daysLeft}) = _ReminderState;
 
-  factory ReminderState.initial() => ReminderState(daysLeft: 0);
+  factory ReminderState.initial() => ReminderState(daysLeft: 9);
 }

@@ -144,6 +144,9 @@ class AbsenButtonPage extends ConsumerWidget {
                                     label: '$code',
                                     labelDescription: '$message',
                                   )),
+                          passwordExpired: () => ref
+                              .read(passwordExpiredNotifierProvider.notifier)
+                              .savePasswordExpired(),
                           noConnection: () async {
                             // ALAMAT GEOFENCE
                             final alamat = ref.watch(geofenceProvider
@@ -186,15 +189,9 @@ class AbsenButtonPage extends ConsumerWidget {
 
                   await ref.read(absenNotifierProvidier.notifier).getAbsen(
                         date: DateTime.now(),
-                        onAbsen: (absenSTATE) {
-                          ref
-                              .read(absenNotifierProvidier.notifier)
-                              .changeAbsen(absenSTATE);
-
-                          offlineNotifier.state = false;
-                        },
-                        onNoConnection: () => offlineNotifier.state = true,
                       );
+
+                  offlineNotifier.state = false;
 
                   await showDialog(
                       context: context,

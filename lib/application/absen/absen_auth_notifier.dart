@@ -71,8 +71,6 @@ class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
     state =
         state.copyWith(isSubmitting: true, failureOrSuccessOptionSaved: none());
 
-    debugger();
-
     failureOrSuccess = await _absenRepository.absen(
         idAbsenMnl: idAbsenMnl,
         lokasi: lokasi,
@@ -84,8 +82,6 @@ class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
         jenisAbsen: jenisAbsen,
         idGeof: idGeof,
         imei: imei);
-
-    debugger();
 
     log('failureOrSuccess $failureOrSuccess');
 

@@ -8,6 +8,7 @@ import 'package:face_net_authentication/domain/riwayat_absen_failure.dart';
 import 'package:face_net_authentication/pages/riwayat/riwayat_scaffold.dart';
 import 'package:face_net_authentication/pages/widgets/loading_overlay.dart';
 import 'package:face_net_authentication/pages/widgets/v_dialogs.dart';
+import 'package:face_net_authentication/shared/providers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -16,6 +17,7 @@ class RiwayatAbsenPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Either<PasswordExpiredFailure, Unit>?
     ref.listen<Option<Either<RiwayatAbsenFailure, List<RiwayatAbsenModel>>>>(
         riwayatAbsenNotifierProvider
             .select((value) => value.failureOrSuccessOption),
@@ -23,33 +25,25 @@ class RiwayatAbsenPage extends ConsumerWidget {
               failureOrSuccessOption.fold(
                   () {},
                   (either) => either.fold(
-                          (error) => error.when(
-                                server: ((errorCode, message) =>
-                                    showCupertinoDialog(
-                                        context: context,
-                                        barrierDismissible: true,
-                                        builder: (builder) => VSimpleDialog(
-                                              label: 'Error $errorCode',
-                                              labelDescription: '$message',
-                                              asset: Assets.iconCrossed,
-                                            ))),
-                                wrongFormat: () => showCupertinoDialog(
-                                    context: context,
-                                    barrierDismissible: true,
-                                    builder: (builder) => VSimpleDialog(
-                                          label: 'FormatException',
-                                          labelDescription: 'Error parsing',
-                                          asset: Assets.iconCrossed,
-                                        )),
-                                noConnection: () => showCupertinoDialog(
-                                    context: context,
-                                    barrierDismissible: true,
-                                    builder: (builder) => VSimpleDialog(
-                                          label: 'NoConnection',
-                                          labelDescription: 'no internet',
-                                          asset: Assets.iconCrossed,
-                                        )),
-                              ), (list) {
+                          (error) => error.maybeWhen(
+                              passwordExpired: () => ref
+                                  .read(
+                                      passwordExpiredNotifierProvider.notifier)
+                                  .savePasswordExpired(),
+                              orElse: () => showCupertinoDialog(
+                                  context: context,
+                                  barrierDismissible: true,
+                                  builder: (builder) => VSimpleDialog(
+                                        label: 'Error',
+                                        labelDescription: error.maybeWhen(
+                                            noConnection: () => 'no connection',
+                                            wrongFormat: (message) =>
+                                                'wrong format $message',
+                                            server: (errorCode, message) =>
+                                                'error server $errorCode $message',
+                                            orElse: () => ''),
+                                        asset: Assets.iconCrossed,
+                                      ))), (list) {
                         log('list.length ${list.length}');
 
                         final oldList = ref

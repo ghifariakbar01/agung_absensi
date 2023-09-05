@@ -23,6 +23,9 @@ class AuthRepository {
   Future<bool> isSignedIn() => getSignedInCredentials()
       .then((credentials) => credentials.fold((_) => false, (_) => true));
 
+  Future<String> getUserString() => getSignedInCredentials()
+      .then((value) => value.fold((_) => '', (userString) => userString ?? ''));
+
   Future<Either<AuthFailure, Unit>> signOut() async {
     // try {
     //   await _remoteService.signOut();
@@ -84,7 +87,7 @@ class AuthRepository {
           password: passwordStr,
           server: serverStr);
 
-      return authResponse.when(
+      return await authResponse.when(
         withUser: (user) async {
           final userSave = jsonEncode(user);
 

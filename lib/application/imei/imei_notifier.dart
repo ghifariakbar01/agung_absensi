@@ -4,19 +4,19 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
 class ImeiNotifier extends StateNotifier<ImeiState> {
-  ImeiNotifier() : super(ImeiState.initial());
+  ImeiNotifier(this.user) : super(ImeiState.initial());
 
-  void checkAndUpdateImei({required UserModelWithPassword user}) {
-    if (user.imeiHp != null && user.imeiHp != '') {
+  final UserModelWithPassword user;
+
+  checkAndUpdateImei() {
+    bool isRegistered = user.imeiHp != null && user.imeiHp != '';
+
+    if (isRegistered) {
       state = ImeiState.registered();
     } else {
       state = ImeiState.empty();
     }
   }
 
-  Future<String> generateImei() async {
-    var uuid = Uuid();
-
-    return uuid.v4();
-  }
+  String generateImei() => Uuid().v4();
 }

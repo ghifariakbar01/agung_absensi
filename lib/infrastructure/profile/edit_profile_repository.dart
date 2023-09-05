@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/domain/edit_failure.dart';
 import 'package:face_net_authentication/infrastructure/profile/edit_profile_remote_service.dart';
@@ -16,13 +18,17 @@ class EditProfileRepostiroy {
       final response = await _profileRemoteService.getImei();
 
       return right(response);
-    } on RestApiException catch (restApi) {
+    } on RestApiExceptionWithMessage catch (e) {
+      return left(EditFailure.server(e.errorCode, e.message));
+    } on RestApiException catch (e) {
       return left(
-          EditFailure.server(restApi.errorCode, 'RestApi exception get imei'));
-    } on FormatException {
-      return left(EditFailure.server(1, 'Error parse get imei'));
+          EditFailure.server(e.errorCode, 'RestApi exception get imei'));
+    } on FormatException catch (e) {
+      return left(EditFailure.server(0, e.message));
+    } on PasswordExpiredException {
+      return left(const EditFailure.passwordExpired());
     } on NoConnectionException {
-      return left(EditFailure.noConnection());
+      return left(const EditFailure.noConnection());
     }
   }
 

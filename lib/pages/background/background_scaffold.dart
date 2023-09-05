@@ -32,6 +32,9 @@ class BackgroundScaffold extends ConsumerWidget {
                                     label: '$code',
                                     labelDescription: '$message',
                                   )),
+                          passwordExpired: () => ref
+                              .read(passwordExpiredNotifierProvider.notifier)
+                              .savePasswordExpired(),
                           noConnection: () => showDialog(
                               context: context,
                               barrierDismissible: true,
@@ -44,13 +47,8 @@ class BackgroundScaffold extends ConsumerWidget {
                   debugger(message: 'called');
 
                   await ref.read(absenNotifierProvidier.notifier).getAbsen(
-                      date: DateTime.now(),
-                      onAbsen: (absen) => ref
-                          .read(absenNotifierProvidier.notifier)
-                          .changeAbsen(absen),
-                      onNoConnection: () => ref
-                          .read(absenOfflineModeProvider.notifier)
-                          .state = true);
+                        date: DateTime.now(),
+                      );
 
                   await showDialog(
                       context: context,

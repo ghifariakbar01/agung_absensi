@@ -3,15 +3,14 @@ import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:face_net_authentication/application/absen/absen_response.dart';
-import 'package:face_net_authentication/application/absen/absen_state.dart';
-import 'package:face_net_authentication/application/user/user_model.dart';
-import 'package:face_net_authentication/domain/absen_failure.dart';
 
 import 'package:face_net_authentication/infrastructure/dio_extensions.dart';
 
 import '../../application/absen/absen_enum.dart';
+import '../../application/absen/absen_state.dart';
 import '../../application/riwayat_absen/riwayat_absen_model.dart';
+import '../../application/user/user_model.dart';
+import '../../constants/constants.dart';
 import '../../utils/string_utils.dart';
 import '../exceptions.dart';
 
@@ -131,18 +130,26 @@ class AbsenRemoteService {
           if (items['errornum'] != null && items['errornum'] as int != 0) {
             debugger(message: 'called');
 
-            throw RestApiExceptionWithMessage(
-              items['errornum'] as int?,
-              items['error'] as String?,
-            );
+            final message = items['error'] as String?;
+            final errorCode = items['errornum'] as int;
+
+            if (errorCode == Constants.passExpCode) {
+              throw PasswordExpiredException(errorCode, message);
+            } else {
+              throw RestApiExceptionWithMessage(errorCode, message);
+            }
           } else if (itemsProd['errornum'] != null &&
               itemsProd['errornum'] as int != 0) {
             debugger(message: 'called');
 
-            throw RestApiExceptionWithMessage(
-              itemsProd['errornum'] as int?,
-              itemsProd['error'] as String?,
-            );
+            final message = itemsProd['error'] as String?;
+            final errorCode = itemsProd['errornum'] as int;
+
+            if (errorCode == Constants.passExpCode) {
+              throw PasswordExpiredException(errorCode, message);
+            } else {
+              throw RestApiExceptionWithMessage(errorCode, message);
+            }
           }
 
           debugger(message: 'called');
@@ -150,15 +157,23 @@ class AbsenRemoteService {
           return unit;
         } else {
           if (items['errornum'] != null && items['errornum'] as int != 0) {
-            throw RestApiExceptionWithMessage(
-              items['errornum'] as int?,
-              items['error'] as String?,
-            );
+            final message = items['error'] as String?;
+            final errorCode = items['errornum'] as int;
+
+            if (errorCode == Constants.passExpCode) {
+              throw PasswordExpiredException(errorCode, message);
+            } else {
+              throw RestApiExceptionWithMessage(errorCode, message);
+            }
           } else {
-            throw RestApiExceptionWithMessage(
-              itemsProd['errornum'] as int?,
-              itemsProd['error'] as String?,
-            );
+            final message = itemsProd['error'] as String?;
+            final errorCode = itemsProd['errornum'] as int;
+
+            if (errorCode == Constants.passExpCode) {
+              throw PasswordExpiredException(errorCode, message);
+            } else {
+              throw RestApiExceptionWithMessage(errorCode, message);
+            }
           }
         }
       } else {
@@ -167,17 +182,25 @@ class AbsenRemoteService {
         if (items['errornum'] != null && items['errornum'] as int != 0) {
           debugger(message: 'called');
 
-          throw RestApiExceptionWithMessage(
-            items['errornum'] as int?,
-            items['error'] as String?,
-          );
+          final message = items['error'] as String?;
+          final errorCode = items['errornum'] as int;
+
+          if (errorCode == Constants.passExpCode) {
+            throw PasswordExpiredException(errorCode, message);
+          } else {
+            throw RestApiExceptionWithMessage(errorCode, message);
+          }
         } else {
           debugger(message: 'called');
 
-          throw RestApiExceptionWithMessage(
-            itemsProd['errornum'] as int?,
-            itemsProd['error'] as String?,
-          );
+          final message = itemsProd['error'] as String?;
+          final errorCode = itemsProd['errornum'] as int;
+
+          if (errorCode == Constants.passExpCode) {
+            throw PasswordExpiredException(errorCode, message);
+          } else {
+            throw RestApiExceptionWithMessage(errorCode, message);
+          }
         }
       }
     } on DioError catch (e) {
@@ -222,10 +245,14 @@ class AbsenRemoteService {
             final item = list[0];
 
             return item['id_absenmnl'];
+          } else {
+            throw RestApiExceptionWithMessage(
+                items['errornum'] as int, items['error'] as String?);
           }
-          throw RestApiException(0);
         }
-        throw RestApiException(1);
+      } else {
+        throw RestApiExceptionWithMessage(
+            items['errornum'] as int, items['error'] as String?);
       }
 
       return null;
@@ -253,10 +280,14 @@ class AbsenRemoteService {
 
       final data = _dioRequest;
 
+      // debugger();
+
       data.addAll({
         "mode": "SELECT",
         "command": command,
       });
+
+      // debugger();
 
       log('data ${jsonEncode(data)}');
 
@@ -265,7 +296,11 @@ class AbsenRemoteService {
 
       final items = response.data?[0];
 
+      // debugger();
+
       if (items['status'] == 'Success') {
+        // debugger();
+
         final absenExist = items['items'] != null && items['items'] is List;
 
         if (absenExist) {
@@ -284,25 +319,37 @@ class AbsenRemoteService {
               return AbsenState.absenIn();
             }
           } else {
-            // debugger(message: 'called');
+            // debugger();
 
             return AbsenState.empty();
           }
         } else {
+          // debugger();
+
           return AbsenState.empty();
         }
       } else {
-        return AbsenState.failure(
-          errorCode: items['errornum'] as int?,
-          message: items['error'] as String?,
-        );
-      }
-      debugger(message: 'called');
+        // debugger();
 
-      return AbsenState.failure(
-        errorCode: items['errornum'] as int?,
-        message: items['error'] as String?,
-      );
+        final message = items['error'] as String?;
+        final errorCode = items['errornum'] as int;
+
+        // debugger();
+
+        if (errorCode == Constants.passExpCode) {
+          throw PasswordExpiredException(errorCode, message);
+        } else {
+          throw RestApiExceptionWithMessage(errorCode, message);
+        }
+      }
+      final message = items['error'] as String?;
+      final errorCode = items['errornum'] as int;
+
+      if (errorCode == Constants.passExpCode) {
+        throw PasswordExpiredException(errorCode, message);
+      } else {
+        throw RestApiExceptionWithMessage(errorCode, message);
+      }
     } on DioError catch (e) {
       if (e.isNoConnectionError || e.isConnectionTimeout) {
         throw NoConnectionException();
@@ -337,6 +384,8 @@ class AbsenRemoteService {
 
       final items = response.data?[0];
 
+      debugger();
+
       if (items['status'] == 'Success') {
         final riwayatExist = items['items'] != null && items['items'] is List;
 
@@ -363,7 +412,16 @@ class AbsenRemoteService {
           return [];
         }
       } else {
-        throw RestApiException(5);
+        // debugger();
+
+        final message = items['error'] as String?;
+        final errorCode = items['errornum'] as int;
+
+        if (errorCode == Constants.passExpCode) {
+          throw PasswordExpiredException(errorCode, message);
+        } else {
+          throw RestApiExceptionWithMessage(errorCode, message);
+        }
       }
     } on FormatException {
       throw FormatException();

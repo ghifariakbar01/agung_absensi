@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:face_net_authentication/application/init_user/init_user_status.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -23,6 +26,13 @@ import '../auth/auth_notifier.dart';
 
 import '../imei_introduction/imei_state.dart';
 import '../imei_introduction/shared/imei_introduction_providers.dart';
+import '../init_geofence/init_geofence_scaffold.dart';
+import '../init_geofence/init_geofence_status.dart';
+import '../init_imei/init_imei_scaffold.dart';
+import '../init_imei/init_imei_status.dart';
+import '../init_password_expired/init_password_expired.dart';
+import '../init_password_expired/init_password_expired_status.dart';
+import '../init_user/init_user_scaffold.dart';
 import '../permission/permission_state.dart';
 import '../permission/shared/permission_introduction_providers.dart';
 import '../tc/shared/tc_providers.dart';
@@ -50,6 +60,18 @@ class RouterNotifier extends ChangeNotifier {
       imeiIntroductionNotifierProvider,
       (_, __) => notifyListeners(),
     );
+
+    _ref.listen<InitUserStatus>(
+        initUserStatusProvider, (__, _) => notifyListeners());
+
+    _ref.listen<InitGeofenceStatus>(
+        initGeofenceStatusProvider, (__, _) => notifyListeners());
+
+    _ref.listen<InitImeiStatus>(
+        initImeiStatusProvider, (__, _) => notifyListeners());
+
+    _ref.listen<InitPasswordExpiredStatus>(
+        initPasswordExpiredStatusProvider, (__, _) => notifyListeners());
   }
 
   final Ref _ref;
@@ -60,16 +82,46 @@ class RouterNotifier extends ChangeNotifier {
     final imeiIntroState = _ref.read(imeiIntroductionNotifierProvider);
     final permissionState = _ref.read(permissionNotifierProvider);
 
+    final initializationUserState = _ref.read(initUserStatusProvider);
+    final initializationGeofenceState = _ref.read(initGeofenceStatusProvider);
+    final initializationImeiState = _ref.read(initImeiStatusProvider);
+    final initializationPasswordExpiredState =
+        _ref.read(initPasswordExpiredStatusProvider);
+
+    final areWeInitializingUser =
+        state.location == RouteNames.initUserNameRoute;
+    final areWeInitializingGeofence =
+        state.location == RouteNames.initGeofenceNameRoute;
+    final areWeInitializingImei =
+        state.location == RouteNames.initImeiNameRoute;
+    final areWeInitializingPasswordExpired =
+        state.location == RouteNames.initPasswordExpiredNameRoute;
+
     final areWeSigningIn = state.location == RouteNames.signInRoute;
     final areWeReadingTC = state.location == RouteNames.termsAndConditionRoute;
     final areWeReadingImei = state.location == RouteNames.imeiInstructionRoute;
     final areWeGranting = state.location == RouteNames.permissionRoute;
 
+    final weInitializedUser =
+        initializationUserState == InitUserStatus.success();
+    final weInitializedGeofence =
+        initializationGeofenceState == InitGeofenceStatus.success();
+    final weInitializedImei =
+        initializationImeiState == InitImeiStatus.success();
+    final weInitializedPasswordExpired = initializationPasswordExpiredState ==
+        InitPasswordExpiredStatus.success();
+
     final weGranted = permissionState == PermissionState.completed();
     final weVisitedTC = tcState == TCState.visited();
     final weVisitedImei = imeiIntroState == ImeiIntroductionState.visited();
 
-    final weAlreadyDidAllProcedures = weGranted && weVisitedTC && weVisitedImei;
+    final weAlreadyDidAllProcedures = weGranted &&
+        weVisitedTC &&
+        weVisitedImei &&
+        weInitializedUser &&
+        weInitializedGeofence &&
+        weInitializedImei &&
+        weInitializedPasswordExpired;
 
     return authState.maybeMap(
       authenticated: (_) {
@@ -79,7 +131,7 @@ class RouterNotifier extends ChangeNotifier {
 
         if (areWeSigningIn) {
           if (weGranted && weVisitedTC && weVisitedImei) {
-            return RouteNames.homeNameRoute;
+            return RouteNames.initUserNameRoute;
           }
 
           return RouteNames.termsAndConditionNameRoute;
@@ -90,15 +142,39 @@ class RouterNotifier extends ChangeNotifier {
         }
 
         if (areWeReadingImei && weVisitedImei) {
-          return RouteNames.homeNameRoute;
+          return RouteNames.initUserNameRoute;
         }
 
         if (areWeGranting && weAlreadyDidAllProcedures) {
-          return RouteNames.homeNameRoute;
+          return RouteNames.initUserNameRoute;
         }
 
         if (areWeGranting && weGranted) {
           return RouteNames.signInRoute;
+        }
+
+        if (areWeInitializingUser) {
+          if (weInitializedUser) {
+            return RouteNames.initGeofenceNameRoute;
+          }
+        }
+
+        if (areWeInitializingGeofence) {
+          if (weInitializedGeofence) {
+            return RouteNames.initImeiNameRoute;
+          }
+        }
+
+        if (areWeInitializingImei) {
+          if (weInitializedImei) {
+            return RouteNames.initPasswordExpiredNameRoute;
+          }
+        }
+
+        if (areWeInitializingPasswordExpired) {
+          if (weInitializedPasswordExpired) {
+            return RouteNames.homeNameRoute;
+          }
         }
 
         return null;
@@ -142,7 +218,27 @@ class RouterNotifier extends ChangeNotifier {
           name: RouteNames.permissionNameRoute,
           path: RouteNames.permissionRoute,
           builder: (context, state) => const PermissionPage()),
-
+      //
+      GoRoute(
+          name: RouteNames.initUserNameRoute,
+          path: RouteNames.initUserRoute,
+          builder: (context, state) => const InitUserScaffold()),
+      //
+      GoRoute(
+          name: RouteNames.initGeofenceNameRoute,
+          path: RouteNames.initGeofenceRoute,
+          builder: (context, state) => const InitGeofenceScaffold()),
+      //
+      GoRoute(
+          name: RouteNames.initImeiNameRoute,
+          path: RouteNames.initImeiRoute,
+          builder: (context, state) => const InitImeiScaffold()),
+      //
+      GoRoute(
+          name: RouteNames.initPasswordExpiredNameRoute,
+          path: RouteNames.initPasswordExpiredRoute,
+          builder: (context, state) => const InitPasswordExpiredScaffold()),
+      //
       GoRoute(
           name: RouteNames.homeNameRoute,
           path: RouteNames.homeRoute,

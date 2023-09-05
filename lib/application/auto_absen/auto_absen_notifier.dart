@@ -271,17 +271,7 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
   }
 
   Future<void> getAbsenState({required DateTime date}) async {
-    await this.ref.read(absenNotifierProvidier.notifier).getAbsen(
-        date: date,
-        onAbsen: (absen) {
-          ref.read(absenNotifierProvidier.notifier).changeAbsen(absen);
-
-          ref.read(absenOfflineModeProvider.notifier).state = false;
-        },
-        onNoConnection: () {
-          ref.read(absenOfflineModeProvider.notifier).state = true;
-          return;
-        });
+    await this.ref.read(absenNotifierProvidier.notifier).getAbsen(date: date);
   }
 
   Future<void> getSavedLocations() async {

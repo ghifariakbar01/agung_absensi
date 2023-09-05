@@ -17,9 +17,9 @@ class UserState with _$UserState {
   }) = _UserState;
 
   factory UserState.initial() => UserState(
-        user: UserModelWithPassword.initial(),
         isGetting: false,
         failureOrSuccessOption: none(),
         failureOrSuccessOptionUpdate: none(),
+        user: UserModelWithPassword.initial(),
       );
 }

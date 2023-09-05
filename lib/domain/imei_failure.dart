@@ -8,4 +8,5 @@ class ImeiFailure with _$ImeiFailure {
   const factory ImeiFailure.empty() = _Empty;
   const factory ImeiFailure.unknown([int? errorCode, String? message]) =
       _Unknown;
+  const factory ImeiFailure.storage() = _Storage;
 }
