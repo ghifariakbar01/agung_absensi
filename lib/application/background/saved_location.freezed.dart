@@ -20,6 +20,7 @@ SavedLocation _$SavedLocationFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$SavedLocation {
+  String? get idGeof => throw _privateConstructorUsedError;
   double? get latitude => throw _privateConstructorUsedError;
   double? get longitude => throw _privateConstructorUsedError;
   String? get alamat => throw _privateConstructorUsedError;
@@ -39,7 +40,8 @@ abstract class $SavedLocationCopyWith<$Res> {
       _$SavedLocationCopyWithImpl<$Res, SavedLocation>;
   @useResult
   $Res call(
-      {double? latitude,
+      {String? idGeof,
+      double? latitude,
       double? longitude,
       String? alamat,
       DateTime date,
@@ -59,6 +61,7 @@ class _$SavedLocationCopyWithImpl<$Res, $Val extends SavedLocation>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? idGeof = freezed,
     Object? latitude = freezed,
     Object? longitude = freezed,
     Object? alamat = freezed,
@@ -66,6 +69,10 @@ class _$SavedLocationCopyWithImpl<$Res, $Val extends SavedLocation>
     Object? dbDate = null,
   }) {
     return _then(_value.copyWith(
+      idGeof: freezed == idGeof
+          ? _value.idGeof
+          : idGeof // ignore: cast_nullable_to_non_nullable
+              as String?,
       latitude: freezed == latitude
           ? _value.latitude
           : latitude // ignore: cast_nullable_to_non_nullable
@@ -99,7 +106,8 @@ abstract class _$$_SavedLocationCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {double? latitude,
+      {String? idGeof,
+      double? latitude,
       double? longitude,
       String? alamat,
       DateTime date,
@@ -117,6 +125,7 @@ class __$$_SavedLocationCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? idGeof = freezed,
     Object? latitude = freezed,
     Object? longitude = freezed,
     Object? alamat = freezed,
@@ -124,6 +133,10 @@ class __$$_SavedLocationCopyWithImpl<$Res>
     Object? dbDate = null,
   }) {
     return _then(_$_SavedLocation(
+      idGeof: freezed == idGeof
+          ? _value.idGeof
+          : idGeof // ignore: cast_nullable_to_non_nullable
+              as String?,
       latitude: freezed == latitude
           ? _value.latitude
           : latitude // ignore: cast_nullable_to_non_nullable
@@ -152,7 +165,8 @@ class __$$_SavedLocationCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_SavedLocation implements _SavedLocation {
   const _$_SavedLocation(
-      {required this.latitude,
+      {required this.idGeof,
+      required this.latitude,
       required this.longitude,
       required this.alamat,
       required this.date,
@@ -161,6 +175,8 @@ class _$_SavedLocation implements _SavedLocation {
   factory _$_SavedLocation.fromJson(Map<String, dynamic> json) =>
       _$$_SavedLocationFromJson(json);
 
+  @override
+  final String? idGeof;
   @override
   final double? latitude;
   @override
@@ -174,7 +190,7 @@ class _$_SavedLocation implements _SavedLocation {
 
   @override
   String toString() {
-    return 'SavedLocation(latitude: $latitude, longitude: $longitude, alamat: $alamat, date: $date, dbDate: $dbDate)';
+    return 'SavedLocation(idGeof: $idGeof, latitude: $latitude, longitude: $longitude, alamat: $alamat, date: $date, dbDate: $dbDate)';
   }
 
   @override
@@ -182,6 +198,7 @@ class _$_SavedLocation implements _SavedLocation {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_SavedLocation &&
+            (identical(other.idGeof, idGeof) || other.idGeof == idGeof) &&
             (identical(other.latitude, latitude) ||
                 other.latitude == latitude) &&
             (identical(other.longitude, longitude) ||
@@ -193,8 +210,8 @@ class _$_SavedLocation implements _SavedLocation {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, latitude, longitude, alamat, date, dbDate);
+  int get hashCode => Object.hash(
+      runtimeType, idGeof, latitude, longitude, alamat, date, dbDate);
 
   @JsonKey(ignore: true)
   @override
@@ -212,7 +229,8 @@ class _$_SavedLocation implements _SavedLocation {
 
 abstract class _SavedLocation implements SavedLocation {
   const factory _SavedLocation(
-      {required final double? latitude,
+      {required final String? idGeof,
+      required final double? latitude,
       required final double? longitude,
       required final String? alamat,
       required final DateTime date,
@@ -221,6 +239,8 @@ abstract class _SavedLocation implements SavedLocation {
   factory _SavedLocation.fromJson(Map<String, dynamic> json) =
       _$_SavedLocation.fromJson;
 
+  @override
+  String? get idGeof;
   @override
   double? get latitude;
   @override

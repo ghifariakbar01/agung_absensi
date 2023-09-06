@@ -7,6 +7,7 @@ import 'package:face_net_authentication/infrastructure/dio_extensions.dart';
 
 import '../../application/user/user_model.dart';
 
+import '../../constants/constants.dart';
 import '../exceptions.dart';
 import 'auth_response.dart';
 
@@ -98,19 +99,30 @@ class AuthRemoteService {
             );
           }
         } else {
-          return AuthResponse.failure(
-            errorCode: items['errornum'] as int?,
-            message: items['error'] as String?,
-          );
+          final message = items['error'] as String?;
+          final errorCode = items['errornum'] as int;
+
+          if (errorCode == Constants.passExpCode) {
+            throw PasswordExpiredException(errorCode, message);
+          } else {
+            return AuthResponse.failure(
+              errorCode: errorCode,
+              message: message,
+            );
+          }
         }
       } else {
         final message = items['error'] as String?;
         final errorCode = items['errornum'] as int;
 
-        return AuthResponse.failure(
-          errorCode: errorCode,
-          message: message,
-        );
+        if (errorCode == Constants.passExpCode) {
+          throw PasswordExpiredException(errorCode, message);
+        } else {
+          return AuthResponse.failure(
+            errorCode: errorCode,
+            message: message,
+          );
+        }
       }
     } on DioError catch (e) {
       if (e.isNoConnectionError || e.isConnectionTimeout) {

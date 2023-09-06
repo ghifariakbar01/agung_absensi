@@ -153,25 +153,33 @@ class RouterNotifier extends ChangeNotifier {
 
         if (areWeInitializingUser) {
           if (weInitializedUser) {
-            return RouteNames.initGeofenceNameRoute;
-          }
-        }
-
-        if (areWeInitializingGeofence) {
-          if (weInitializedGeofence) {
             return RouteNames.initPasswordExpiredNameRoute;
           }
         }
 
+        // if (areWeInitializingGeofence) {
+        //   if (weInitializedGeofence) {
+        //     return RouteNames.initPasswordExpiredNameRoute;
+        //   }
+        // }
+
         if (areWeInitializingPasswordExpired) {
           if (weInitializedPasswordExpired) {
             return RouteNames.initImeiNameRoute;
+          }
+
+          if (!weInitializedUser) {
+            return RouteNames.initUserNameRoute;
           }
         }
 
         if (areWeInitializingImei) {
           if (weInitializedImei) {
             return RouteNames.homeNameRoute;
+          }
+
+          if (!weInitializedUser) {
+            return RouteNames.initUserNameRoute;
           }
         }
 

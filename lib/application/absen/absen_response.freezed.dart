@@ -255,19 +255,14 @@ class _$_Absen implements _Absen {
 
 abstract class _Absen implements Absen {
   const factory _Absen(
-      {@JsonKey(name: 'id_absenmnl')
-          required final int idAbsenmnl,
-      @JsonKey(name: 'id_user')
-          required final int idUser,
+      {@JsonKey(name: 'id_absenmnl') required final int idAbsenmnl,
+      @JsonKey(name: 'id_user') required final int idUser,
       required final String? tgl,
-      @JsonKey(name: 'latitude_masuk')
-          required final String? latitudeMasuk,
-      @JsonKey(name: 'longtitude_masuk')
-          required final String? longtitudeMasuk,
-      @JsonKey(name: 'latitude_keluar')
-          required final String? latitudeKeluar,
+      @JsonKey(name: 'latitude_masuk') required final String? latitudeMasuk,
+      @JsonKey(name: 'longtitude_masuk') required final String? longtitudeMasuk,
+      @JsonKey(name: 'latitude_keluar') required final String? latitudeKeluar,
       @JsonKey(name: 'longtitude_keluar')
-          required final String? longtitudeKeluar}) = _$_Absen;
+      required final String? longtitudeKeluar}) = _$_Absen;
 
   factory _Absen.fromJson(Map<String, dynamic> json) = _$_Absen.fromJson;
 

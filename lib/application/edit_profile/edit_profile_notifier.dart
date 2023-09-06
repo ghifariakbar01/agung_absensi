@@ -73,8 +73,8 @@ class EditProfileNotifier extends StateNotifier<EditProfileState> {
         case false:
           debugger(message: 'called');
 
-          await onImeiAlreadyRegistered();
-          // await onImeiNotRegistered();
+          // await onImeiAlreadyRegistered();
+          await onImeiNotRegistered();
 
           break;
       }
@@ -85,8 +85,8 @@ class EditProfileNotifier extends StateNotifier<EditProfileState> {
         case true:
           debugger(message: 'called');
 
-          await onImeiAlreadyRegistered();
-          // await onImeiNotRegistered();
+          // await onImeiAlreadyRegistered();
+          await onImeiNotRegistered();
 
           break;
         case false:
@@ -98,8 +98,8 @@ class EditProfileNotifier extends StateNotifier<EditProfileState> {
             } else if (imeiDBString != savedImei) {
               debugger(message: 'called');
 
-              await onImeiAlreadyRegistered();
-              // await onImeiNotRegistered();
+              // await onImeiAlreadyRegistered();
+              await onImeiNotRegistered();
             }
           }();
           break;

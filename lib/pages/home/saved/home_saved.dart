@@ -7,6 +7,7 @@ import 'package:face_net_authentication/constants/assets.dart';
 import '../../../domain/absen_failure.dart';
 import '../../../shared/providers.dart';
 import '../../widgets/v_dialogs.dart';
+import '../home_scaffold.dart';
 
 class HomeSaved extends ConsumerStatefulWidget {
   const HomeSaved();
@@ -42,6 +43,6 @@ class _HomeSavedState extends ConsumerState<HomeSaved> {
                     ),
                 (_) {})));
 
-    return Container();
+    return HomeScaffold();
   }
 }

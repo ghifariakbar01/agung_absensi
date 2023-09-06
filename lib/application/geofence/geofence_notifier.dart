@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer' as log;
+import 'dart:developer';
 import 'dart:math';
 
 import 'package:collection/collection.dart';
@@ -132,9 +133,7 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
         ),
       );
     } else {
-      // log.debugger();
-
-      // log.debugger(message: 'called');
+      debugger();
       geofenceservice.addLocationChangeListener(
         (location) => onLocationChanged(location, geofenceListAdditional, null),
       );
@@ -365,8 +364,8 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
   }
 
   void updateAndChangeNearestSaved(
-      {required List<Location> designatedCoordinate,
-      required List<Geofence> coordinates,
+      {required List<Geofence> coordinates,
+      required List<Location> designatedCoordinate,
       required List<GeofenceCoordinate> geofenceCoordinatesSaved}) {
     changeGeofenceCoordinatesSaved(
         updateCoordinatesSavedFromGeofence(designatedCoordinate, coordinates));

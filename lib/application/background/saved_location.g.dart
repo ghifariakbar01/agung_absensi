@@ -8,6 +8,7 @@ part of 'saved_location.dart';
 
 _$_SavedLocation _$$_SavedLocationFromJson(Map<String, dynamic> json) =>
     _$_SavedLocation(
+      idGeof: json['idGeof'] as String?,
       latitude: (json['latitude'] as num?)?.toDouble(),
       longitude: (json['longitude'] as num?)?.toDouble(),
       alamat: json['alamat'] as String?,
@@ -17,6 +18,7 @@ _$_SavedLocation _$$_SavedLocationFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$$_SavedLocationToJson(_$_SavedLocation instance) =>
     <String, dynamic>{
+      'idGeof': instance.idGeof,
       'latitude': instance.latitude,
       'longitude': instance.longitude,
       'alamat': instance.alamat,

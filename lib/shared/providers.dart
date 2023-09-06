@@ -28,7 +28,6 @@ import '../application/init_geofence/init_geofence_status.dart';
 import '../application/init_imei/init_imei_status.dart';
 import '../application/init_password_expired/init_password_expired_status.dart';
 import '../application/init_user/init_user_status.dart';
-import '../application/karyawan/karyawan_shift_notifier.dart';
 import '../application/password_expired/password_expired_notifier.dart';
 import '../application/password_expired/password_expired_notifier_state.dart';
 import '../application/password_expired/password_expired_notifier_status.dart';
@@ -62,8 +61,7 @@ import '../infrastructure/profile/edit_profile_remote_service.dart';
 import '../infrastructure/profile/edit_profile_repository.dart';
 import '../utils/string_utils.dart';
 
-// Networking & Router
-
+// NETWORKING & ROUTER
 final dioProvider = Provider((ref) => Dio());
 
 final dioRequestProvider = Provider<Map<String, String>>(
@@ -79,8 +77,7 @@ final routerProvider = Provider<GoRouter>((ref) {
   );
 });
 
-// Init page
-
+// INIT PAGE
 final resetInitProvider = FutureProvider((ref) {
   //
   ref.read(initUserStatusProvider.notifier).state = InitUserStatus.init();
@@ -104,8 +101,7 @@ final initImeiStatusProvider = StateProvider((ref) => InitImeiStatus.init());
 final initPasswordExpiredStatusProvider =
     StateProvider((ref) => InitPasswordExpiredStatus.init());
 
-// Background
-
+// BACKGROUND
 final autoAbsenSecureStorageProvider = Provider<CredentialsStorage>(
   (ref) => AutoAbsenStorage(ref.watch(flutterSecureStorageProvider)),
 );
@@ -121,8 +117,7 @@ final backgroundNotifierProvider =
     StateNotifierProvider<BackgroundNotifier, BackgroundState>(
         (ref) => BackgroundNotifier(BackgroundRepository()));
 
-// Auth
-
+// AUTH
 final flutterSecureStorageProvider = Provider(
   (ref) => const FlutterSecureStorage(),
 );
@@ -161,13 +156,7 @@ final signInFormNotifierProvider =
   (ref) => SignInFormNotifier(ref.watch(authRepositoryProvider)),
 );
 
-final isKarwayanShiftNotifierProvider =
-    StateNotifierProvider.autoDispose<KaryawanShiftNotifier, bool>(
-  (ref) => KaryawanShiftNotifier(KaryawanShiftRepository()),
-);
-
-// Edit Profile
-
+// EDIT PROFILE
 final editProfileRemoteServiceProvider = Provider(
   (ref) => EditProfileRemoteService(
       ref.watch(dioProvider),
@@ -185,8 +174,7 @@ final editProfileNotifierProvider =
   (ref) => EditProfileNotifier(ref.watch(editProfileRepositoryProvider)),
 );
 
-// Absen
-
+// ABSEN
 final absenRemoteServiceProvider = Provider((ref) => AbsenRemoteService(
     ref.watch(dioProvider),
     ref.watch(userNotifierProvider.select((value) => value.user)),
@@ -205,8 +193,7 @@ final absenOfflineModeProvider = StateProvider<bool>(
   (ref) => false,
 );
 
-// Absen auth
-
+// ABSEN AUTH
 final absenAuthNotifierProvidier =
     StateNotifierProvider<AbsenAuthNotifier, AbsenAuthState>(
         (ref) => AbsenAuthNotifier(ref.watch(absenRepositoryProvider)));
@@ -217,8 +204,7 @@ final networkTimeFutureProvider = FutureProvider((ref) async {
   return startDate.add(new Duration(milliseconds: offset));
 });
 
-// Geofence
-
+// GEOFENCE
 final geofenceSecureStorageProvider = Provider<CredentialsStorage>(
     (ref) => GeofenceSecureStorage(ref.watch(flutterSecureStorageProvider)));
 
@@ -235,8 +221,17 @@ final geofenceProvider = StateNotifierProvider<GeofenceNotifier, GeofenceState>(
           ref.watch(geofenceRepositoryProvider),
         ));
 
-// Imei
+// KARYAWAN SHIFT
+final karyawanShiftRepositoryProvider =
+    Provider((ref) => KaryawanShiftRepository());
 
+final karyawanShiftFutureProvider = FutureProvider<bool>((ref) async {
+  final _repository = ref.watch(karyawanShiftRepositoryProvider);
+
+  return await _repository.isKaryawanShift();
+});
+
+// IMEI
 final imeiRepositoryProvider = Provider(
     (ref) => ImeiRepository(ref.watch(imeiCredentialsStorageProvider)));
 
@@ -252,8 +247,7 @@ final imeiResetNotifierProvider =
     StateNotifierProvider<ImeiResetNotifier, ImeiResetState>(
         (ref) => ImeiResetNotifier(ref, ref.watch(imeiRepositoryProvider)));
 
-// Pass Expired
-
+// PASS EXPIRED
 final passwordExpiredStorageProvider = Provider<CredentialsStorage>(
   (ref) => PasswordExpiredStorage(ref.watch(flutterSecureStorageProvider)),
 );
@@ -271,8 +265,5 @@ final passwordExpiredNotifierStatusProvider =
         (ref) => PasswordExpiredNotifierStatus(
             ref, ref.watch(passwordExpiredRepositoryProvider)));
 
-// Misc
-
+// MISC
 final passwordVisibleProvider = StateProvider.autoDispose<bool>((ref) => false);
-
-final karyawanShiftProvider = StateProvider((ref) => false);

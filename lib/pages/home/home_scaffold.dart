@@ -23,8 +23,8 @@ class Item {
 }
 
 final List<Item> items = [
-  Item('absen', Assets.iconClock, RouteNames.absenNameRoute),
-  Item('riwayat', Assets.iconList, RouteNames.riwayatAbsenNameRoute),
+  Item('ABSEN', Assets.iconClock, RouteNames.absenNameRoute),
+  Item('RIWAYAT', Assets.iconList, RouteNames.riwayatAbsenNameRoute),
 ];
 
 class HomeScaffold extends ConsumerWidget {

@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:face_net_authentication/application/init_password_expired/init_password_expired_status.dart';
+import 'package:face_net_authentication/application/init_user/init_user_status.dart';
 import 'package:face_net_authentication/pages/widgets/loading_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -35,6 +36,12 @@ class _InitPasswordExpiredScaffoldState
             await ref
                 .read(passwordExpiredNotifierProvider.notifier)
                 .clearPasswordExpired();
+
+            // RELOAD USER
+            ref.read(initUserStatusProvider.notifier).state =
+                InitUserStatus.init();
+
+            debugger();
           },
           orElse: () => null);
 

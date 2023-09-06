@@ -179,6 +179,8 @@ class EditProfileRemoteService {
         'mode': 'UPDATE'
       };
 
+      debugger();
+
       data.addAll(edit);
 
       final response = await _dio.post('',
@@ -191,9 +193,20 @@ class EditProfileRemoteService {
       final items = response.data?[0];
 
       if (items['status'] == 'Success') {
+        debugger();
+
         return unit;
       } else {
-        throw RestApiException(10);
+        debugger();
+
+        final message = items['error'] as String?;
+        final errorCode = items['errornum'] as int;
+
+        if (errorCode == Constants.passExpCode) {
+          throw PasswordExpiredException(errorCode, message);
+        } else {
+          throw RestApiExceptionWithMessage(errorCode, message);
+        }
       }
     } on FormatException {
       throw FormatException();

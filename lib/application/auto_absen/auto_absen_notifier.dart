@@ -16,7 +16,6 @@ import '../absen/absen_enum.dart';
 import '../absen/absen_state.dart';
 import '../background/background_item_state.dart';
 import '../background/saved_location.dart';
-import '../geofence/geofence_coordinate_state.dart';
 import 'auto_absen_state.dart';
 
 class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
@@ -30,7 +29,6 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
     required Map<String, List<BackgroundItemState>> autoAbsenMap,
     required List<Geofence> geofence,
     required List<BackgroundItemState> savedItems,
-    required List<GeofenceCoordinate> nearestCoordinatesSaved,
   }) async {
     //
 
@@ -46,7 +44,7 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
 
           // ID GEOF, IMEI field
           absensInDate.forEachIndexed((index, absenSaved) async {
-            final idGeofSaved = nearestCoordinatesSaved[index].id;
+            final idGeofSaved = absensInDate[index].savedLocations.idGeof;
             final date = absensInDate[index].savedLocations.date;
 
             await getAbsenState(date: date);
@@ -63,9 +61,8 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
 
             JenisAbsen jenisAbsenShift = JenisAbsen.unknown;
 
-            final karyawanShift = await ref
-                .read(isKarwayanShiftNotifierProvider.notifier)
-                .isKaryawanShift();
+            final karyawanShift =
+                await ref.read(karyawanShiftFutureProvider.future);
 
             if (karyawanShift) {
               await showDialog(
@@ -86,6 +83,8 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
                         },
                       ));
             }
+
+            debugger();
 
             log('CONDITION 1 : ${belumAbsen || jenisAbsenShift == JenisAbsen.absenIn}');
             log('CONDITION 2 : ${udahAbsenMasuk || jenisAbsenShift == JenisAbsen.absenOut}');
@@ -112,7 +111,7 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
                               .absenOneLiner(
                                 backgroundItemState: absenSaved,
                                 jenisAbsen: jenisAbsen,
-                                idGeof: idGeofSaved,
+                                idGeof: idGeofSaved ?? '',
                                 imei: imei,
                                 onAbsen: () async {
                                   await getAbsenState(date: date);
@@ -174,7 +173,7 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
                               .absenOneLiner(
                                 backgroundItemState: absenSaved,
                                 jenisAbsen: jenisAbsen,
-                                idGeof: idGeofSaved,
+                                idGeof: idGeofSaved ?? '',
                                 imei: imei,
                                 onAbsen: () async {
                                   await getAbsenState(date: date);
@@ -214,8 +213,9 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
                       onBackPressed: () => deleteSavedLocation(
                           savedLocation: absenSaved.savedLocations,
                           context: context)));
-            } else if (udahAbsenMasukSamaKeluar &&
-                jenisAbsenShift != JenisAbsen.unknown) {
+            } else if (udahAbsenMasukSamaKeluar) {
+              debugger();
+
               // delete saved absen as we don't need them.
               await deleteSavedLocation(
                   savedLocation: absenSaved.savedLocations, context: context);
@@ -225,6 +225,8 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
               await getSavedLocations();
               await ref.read(geofenceProvider.notifier).getGeofenceList();
             }
+
+            debugger();
           });
         }
       });
@@ -241,6 +243,7 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
       locations.add(BackgroundItemState(
           abenStates: element.abenStates,
           savedLocations: SavedLocation(
+              idGeof: element.savedLocations.idGeof,
               latitude: element.savedLocations.latitude,
               longitude: element.savedLocations.longitude,
               alamat: element.savedLocations.alamat,

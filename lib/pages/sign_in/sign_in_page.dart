@@ -1,4 +1,3 @@
-
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -55,6 +54,7 @@ class SignInPage extends HookConsumerWidget {
                       storage: (_) => 'storage penuh',
                       server: (value) => value.message ?? 'server error',
                       noConnection: (_) => 'tidak ada koneksi',
+                      passwordExpired: (_) => 'Password Expired',
                     ),
                   );
                 },

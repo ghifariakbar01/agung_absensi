@@ -95,6 +95,9 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
                   (failure) => failure.maybeMap(
                         noConnection: (_) =>
                             ref.read(userNotifierProvider.notifier).getUser(),
+                        passwordExpired: (_) => ref
+                            .read(passwordExpiredNotifierProvider.notifier)
+                            .savePasswordExpired(),
                         orElse: () => showDialog(
                           context: context,
                           barrierDismissible: true,

@@ -1,13 +1,71 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../application/init_geofence/init_geofence_status.dart';
 import '../../shared/providers.dart';
 import '../../style/style.dart';
 
 import '../widgets/copyright_text.dart';
 import '../widgets/location_detail.dart';
 import '../widgets/user_info.dart';
-import 'absen_button_page.dart';
+import 'absen_button.dart';
+
+// CLASS
+// MLService _mlService = locator<MLService>();
+// FaceDetectorService _mlKitService = locator<FaceDetectorService>();
+// CameraService _cameraService = locator<CameraService>();
+// bool loading = false;
+
+// _initializeServices() async {
+//   if (_cameraService.cameraController == null) {
+//     try {
+//       setState(() => loading = true);
+//       await _cameraService.initialize(context);
+//       await _mlService.initialize(context);
+//       _mlKitService.initialize();
+//       setState(() => loading = false);
+//     } catch (_) {
+//       AlertHelper.showSnackBar(context,
+//           message: 'Kamera tidak bisa digunakan.');
+//       context.pop();
+//     }
+//   }
+// }
+
+// INIT STATE
+// _initializeServices();
+
+// WIDGET
+// actions: <Widget>[
+//   Padding(
+//     padding: EdgeInsets.only(right: 20, top: 20),
+//     child: PopupMenuButton<String>(
+//       child: Icon(
+//         Icons.more_vert,
+//         color: Colors.black,
+//       ),
+//       onSelected: (value) {
+//         switch (value) {
+//           case 'Clear DB':
+//             DatabaseHelper _dataBaseHelper =
+//                 DatabaseHelper.instance;
+//             _dataBaseHelper.deleteAll();
+//             break;
+//         }
+//       },
+//       itemBuilder: (BuildContext context) {
+//         return {'Clear DB'}.map((String choice) {
+//           return PopupMenuItem<String>(
+//             value: choice,
+//             child: Text(choice),
+//           );
+//         }).toList();
+//       },
+//     ),
+//   ),
+// ],
 
 class AbsenPage extends ConsumerStatefulWidget {
   AbsenPage({Key? key}) : super(key: key);
@@ -16,40 +74,17 @@ class AbsenPage extends ConsumerStatefulWidget {
 }
 
 class _AbsenPageState extends ConsumerState<AbsenPage> {
-  // MLService _mlService = locator<MLService>();
-  // FaceDetectorService _mlKitService = locator<FaceDetectorService>();
-  // CameraService _cameraService = locator<CameraService>();
-  // bool loading = false;
-
   @override
   void initState() {
     super.initState();
-    // _initializeServices();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await ref.read(backgroundNotifierProvider.notifier).getSavedLocations();
+      await ref.read(geofenceProvider.notifier).getGeofenceList();
       await ref.read(absenNotifierProvidier.notifier).getAbsen(
             date: DateTime.now(),
           );
-      await ref.read(userNotifierProvider.notifier).getUser();
-      await ref.read(backgroundNotifierProvider.notifier).getSavedLocations();
-      await ref.read(geofenceProvider.notifier).getGeofenceList();
     });
   }
-
-  // _initializeServices() async {
-  //   if (_cameraService.cameraController == null) {
-  //     try {
-  //       setState(() => loading = true);
-  //       await _cameraService.initialize(context);
-  //       await _mlService.initialize(context);
-  //       _mlKitService.initialize();
-  //       setState(() => loading = false);
-  //     } catch (_) {
-  //       AlertHelper.showSnackBar(context,
-  //           message: 'Kamera tidak bisa digunakan.');
-  //       context.pop();
-  //     }
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -62,37 +97,9 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
       children: [
         Scaffold(
             appBar: AppBar(
-              iconTheme: IconThemeData(color: Palette.primaryColor),
               elevation: 0,
               backgroundColor: Colors.transparent,
-              // actions: <Widget>[
-              //   Padding(
-              //     padding: EdgeInsets.only(right: 20, top: 20),
-              //     child: PopupMenuButton<String>(
-              //       child: Icon(
-              //         Icons.more_vert,
-              //         color: Colors.black,
-              //       ),
-              //       onSelected: (value) {
-              //         switch (value) {
-              //           case 'Clear DB':
-              //             DatabaseHelper _dataBaseHelper =
-              //                 DatabaseHelper.instance;
-              //             _dataBaseHelper.deleteAll();
-              //             break;
-              //         }
-              //       },
-              //       itemBuilder: (BuildContext context) {
-              //         return {'Clear DB'}.map((String choice) {
-              //           return PopupMenuItem<String>(
-              //             value: choice,
-              //             child: Text(choice),
-              //           );
-              //         }).toList();
-              //       },
-              //     ),
-              //   ),
-              // ],
+              iconTheme: IconThemeData(color: Palette.primaryColor),
             ),
             body: SafeArea(
               child: SingleChildScrollView(
@@ -126,7 +133,7 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
                           SizedBox(
                             height: 8,
                           ),
-                          AbsenButtonPage(),
+                          AbsenButton(),
                         ],
                       ),
                       Align(
