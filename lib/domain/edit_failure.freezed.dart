@@ -21,6 +21,7 @@ mixin _$EditFailure {
     required TResult Function(int? errorCode, String? message) server,
     required TResult Function() noConnection,
     required TResult Function() passwordExpired,
+    required TResult Function() passwordWrong,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -28,6 +29,7 @@ mixin _$EditFailure {
     TResult? Function(int? errorCode, String? message)? server,
     TResult? Function()? noConnection,
     TResult? Function()? passwordExpired,
+    TResult? Function()? passwordWrong,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -35,6 +37,7 @@ mixin _$EditFailure {
     TResult Function(int? errorCode, String? message)? server,
     TResult Function()? noConnection,
     TResult Function()? passwordExpired,
+    TResult Function()? passwordWrong,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -43,6 +46,7 @@ mixin _$EditFailure {
     required TResult Function(_Server value) server,
     required TResult Function(_NoConnection value) noConnection,
     required TResult Function(_PasswordExpired value) passwordExpired,
+    required TResult Function(_PasswordWrong value) passwordWrong,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -50,6 +54,7 @@ mixin _$EditFailure {
     TResult? Function(_Server value)? server,
     TResult? Function(_NoConnection value)? noConnection,
     TResult? Function(_PasswordExpired value)? passwordExpired,
+    TResult? Function(_PasswordWrong value)? passwordWrong,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -57,6 +62,7 @@ mixin _$EditFailure {
     TResult Function(_Server value)? server,
     TResult Function(_NoConnection value)? noConnection,
     TResult Function(_PasswordExpired value)? passwordExpired,
+    TResult Function(_PasswordWrong value)? passwordWrong,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -154,6 +160,7 @@ class _$_Server implements _Server {
     required TResult Function(int? errorCode, String? message) server,
     required TResult Function() noConnection,
     required TResult Function() passwordExpired,
+    required TResult Function() passwordWrong,
   }) {
     return server(errorCode, message);
   }
@@ -164,6 +171,7 @@ class _$_Server implements _Server {
     TResult? Function(int? errorCode, String? message)? server,
     TResult? Function()? noConnection,
     TResult? Function()? passwordExpired,
+    TResult? Function()? passwordWrong,
   }) {
     return server?.call(errorCode, message);
   }
@@ -174,6 +182,7 @@ class _$_Server implements _Server {
     TResult Function(int? errorCode, String? message)? server,
     TResult Function()? noConnection,
     TResult Function()? passwordExpired,
+    TResult Function()? passwordWrong,
     required TResult orElse(),
   }) {
     if (server != null) {
@@ -188,6 +197,7 @@ class _$_Server implements _Server {
     required TResult Function(_Server value) server,
     required TResult Function(_NoConnection value) noConnection,
     required TResult Function(_PasswordExpired value) passwordExpired,
+    required TResult Function(_PasswordWrong value) passwordWrong,
   }) {
     return server(this);
   }
@@ -198,6 +208,7 @@ class _$_Server implements _Server {
     TResult? Function(_Server value)? server,
     TResult? Function(_NoConnection value)? noConnection,
     TResult? Function(_PasswordExpired value)? passwordExpired,
+    TResult? Function(_PasswordWrong value)? passwordWrong,
   }) {
     return server?.call(this);
   }
@@ -208,6 +219,7 @@ class _$_Server implements _Server {
     TResult Function(_Server value)? server,
     TResult Function(_NoConnection value)? noConnection,
     TResult Function(_PasswordExpired value)? passwordExpired,
+    TResult Function(_PasswordWrong value)? passwordWrong,
     required TResult orElse(),
   }) {
     if (server != null) {
@@ -269,6 +281,7 @@ class _$_NoConnection implements _NoConnection {
     required TResult Function(int? errorCode, String? message) server,
     required TResult Function() noConnection,
     required TResult Function() passwordExpired,
+    required TResult Function() passwordWrong,
   }) {
     return noConnection();
   }
@@ -279,6 +292,7 @@ class _$_NoConnection implements _NoConnection {
     TResult? Function(int? errorCode, String? message)? server,
     TResult? Function()? noConnection,
     TResult? Function()? passwordExpired,
+    TResult? Function()? passwordWrong,
   }) {
     return noConnection?.call();
   }
@@ -289,6 +303,7 @@ class _$_NoConnection implements _NoConnection {
     TResult Function(int? errorCode, String? message)? server,
     TResult Function()? noConnection,
     TResult Function()? passwordExpired,
+    TResult Function()? passwordWrong,
     required TResult orElse(),
   }) {
     if (noConnection != null) {
@@ -303,6 +318,7 @@ class _$_NoConnection implements _NoConnection {
     required TResult Function(_Server value) server,
     required TResult Function(_NoConnection value) noConnection,
     required TResult Function(_PasswordExpired value) passwordExpired,
+    required TResult Function(_PasswordWrong value) passwordWrong,
   }) {
     return noConnection(this);
   }
@@ -313,6 +329,7 @@ class _$_NoConnection implements _NoConnection {
     TResult? Function(_Server value)? server,
     TResult? Function(_NoConnection value)? noConnection,
     TResult? Function(_PasswordExpired value)? passwordExpired,
+    TResult? Function(_PasswordWrong value)? passwordWrong,
   }) {
     return noConnection?.call(this);
   }
@@ -323,6 +340,7 @@ class _$_NoConnection implements _NoConnection {
     TResult Function(_Server value)? server,
     TResult Function(_NoConnection value)? noConnection,
     TResult Function(_PasswordExpired value)? passwordExpired,
+    TResult Function(_PasswordWrong value)? passwordWrong,
     required TResult orElse(),
   }) {
     if (noConnection != null) {
@@ -377,6 +395,7 @@ class _$_PasswordExpired implements _PasswordExpired {
     required TResult Function(int? errorCode, String? message) server,
     required TResult Function() noConnection,
     required TResult Function() passwordExpired,
+    required TResult Function() passwordWrong,
   }) {
     return passwordExpired();
   }
@@ -387,6 +406,7 @@ class _$_PasswordExpired implements _PasswordExpired {
     TResult? Function(int? errorCode, String? message)? server,
     TResult? Function()? noConnection,
     TResult? Function()? passwordExpired,
+    TResult? Function()? passwordWrong,
   }) {
     return passwordExpired?.call();
   }
@@ -397,6 +417,7 @@ class _$_PasswordExpired implements _PasswordExpired {
     TResult Function(int? errorCode, String? message)? server,
     TResult Function()? noConnection,
     TResult Function()? passwordExpired,
+    TResult Function()? passwordWrong,
     required TResult orElse(),
   }) {
     if (passwordExpired != null) {
@@ -411,6 +432,7 @@ class _$_PasswordExpired implements _PasswordExpired {
     required TResult Function(_Server value) server,
     required TResult Function(_NoConnection value) noConnection,
     required TResult Function(_PasswordExpired value) passwordExpired,
+    required TResult Function(_PasswordWrong value) passwordWrong,
   }) {
     return passwordExpired(this);
   }
@@ -421,6 +443,7 @@ class _$_PasswordExpired implements _PasswordExpired {
     TResult? Function(_Server value)? server,
     TResult? Function(_NoConnection value)? noConnection,
     TResult? Function(_PasswordExpired value)? passwordExpired,
+    TResult? Function(_PasswordWrong value)? passwordWrong,
   }) {
     return passwordExpired?.call(this);
   }
@@ -431,6 +454,7 @@ class _$_PasswordExpired implements _PasswordExpired {
     TResult Function(_Server value)? server,
     TResult Function(_NoConnection value)? noConnection,
     TResult Function(_PasswordExpired value)? passwordExpired,
+    TResult Function(_PasswordWrong value)? passwordWrong,
     required TResult orElse(),
   }) {
     if (passwordExpired != null) {
@@ -442,4 +466,118 @@ class _$_PasswordExpired implements _PasswordExpired {
 
 abstract class _PasswordExpired implements EditFailure {
   const factory _PasswordExpired() = _$_PasswordExpired;
+}
+
+/// @nodoc
+abstract class _$$_PasswordWrongCopyWith<$Res> {
+  factory _$$_PasswordWrongCopyWith(
+          _$_PasswordWrong value, $Res Function(_$_PasswordWrong) then) =
+      __$$_PasswordWrongCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$_PasswordWrongCopyWithImpl<$Res>
+    extends _$EditFailureCopyWithImpl<$Res, _$_PasswordWrong>
+    implements _$$_PasswordWrongCopyWith<$Res> {
+  __$$_PasswordWrongCopyWithImpl(
+      _$_PasswordWrong _value, $Res Function(_$_PasswordWrong) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$_PasswordWrong implements _PasswordWrong {
+  const _$_PasswordWrong();
+
+  @override
+  String toString() {
+    return 'EditFailure.passwordWrong()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$_PasswordWrong);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(int? errorCode, String? message) server,
+    required TResult Function() noConnection,
+    required TResult Function() passwordExpired,
+    required TResult Function() passwordWrong,
+  }) {
+    return passwordWrong();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(int? errorCode, String? message)? server,
+    TResult? Function()? noConnection,
+    TResult? Function()? passwordExpired,
+    TResult? Function()? passwordWrong,
+  }) {
+    return passwordWrong?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(int? errorCode, String? message)? server,
+    TResult Function()? noConnection,
+    TResult Function()? passwordExpired,
+    TResult Function()? passwordWrong,
+    required TResult orElse(),
+  }) {
+    if (passwordWrong != null) {
+      return passwordWrong();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Server value) server,
+    required TResult Function(_NoConnection value) noConnection,
+    required TResult Function(_PasswordExpired value) passwordExpired,
+    required TResult Function(_PasswordWrong value) passwordWrong,
+  }) {
+    return passwordWrong(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Server value)? server,
+    TResult? Function(_NoConnection value)? noConnection,
+    TResult? Function(_PasswordExpired value)? passwordExpired,
+    TResult? Function(_PasswordWrong value)? passwordWrong,
+  }) {
+    return passwordWrong?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Server value)? server,
+    TResult Function(_NoConnection value)? noConnection,
+    TResult Function(_PasswordExpired value)? passwordExpired,
+    TResult Function(_PasswordWrong value)? passwordWrong,
+    required TResult orElse(),
+  }) {
+    if (passwordWrong != null) {
+      return passwordWrong(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _PasswordWrong implements EditFailure {
+  const factory _PasswordWrong() = _$_PasswordWrong;
 }

@@ -20,6 +20,7 @@ mixin _$GeofenceFailure {
   TResult when<TResult extends Object?>({
     required TResult Function(int? errorCode, String? message) server,
     required TResult Function() passwordExpired,
+    required TResult Function() passwordWrong,
     required TResult Function() wrongFormat,
     required TResult Function() noConnection,
   }) =>
@@ -28,6 +29,7 @@ mixin _$GeofenceFailure {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int? errorCode, String? message)? server,
     TResult? Function()? passwordExpired,
+    TResult? Function()? passwordWrong,
     TResult? Function()? wrongFormat,
     TResult? Function()? noConnection,
   }) =>
@@ -36,6 +38,7 @@ mixin _$GeofenceFailure {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int? errorCode, String? message)? server,
     TResult Function()? passwordExpired,
+    TResult Function()? passwordWrong,
     TResult Function()? wrongFormat,
     TResult Function()? noConnection,
     required TResult orElse(),
@@ -45,6 +48,7 @@ mixin _$GeofenceFailure {
   TResult map<TResult extends Object?>({
     required TResult Function(_Server value) server,
     required TResult Function(_PasswordExpired value) passwordExpired,
+    required TResult Function(_PasswordWrong value) passwordWrong,
     required TResult Function(_WrongFormat value) wrongFormat,
     required TResult Function(_NoConnection value) noConnection,
   }) =>
@@ -53,6 +57,7 @@ mixin _$GeofenceFailure {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Server value)? server,
     TResult? Function(_PasswordExpired value)? passwordExpired,
+    TResult? Function(_PasswordWrong value)? passwordWrong,
     TResult? Function(_WrongFormat value)? wrongFormat,
     TResult? Function(_NoConnection value)? noConnection,
   }) =>
@@ -61,6 +66,7 @@ mixin _$GeofenceFailure {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Server value)? server,
     TResult Function(_PasswordExpired value)? passwordExpired,
+    TResult Function(_PasswordWrong value)? passwordWrong,
     TResult Function(_WrongFormat value)? wrongFormat,
     TResult Function(_NoConnection value)? noConnection,
     required TResult orElse(),
@@ -159,6 +165,7 @@ class _$_Server implements _Server {
   TResult when<TResult extends Object?>({
     required TResult Function(int? errorCode, String? message) server,
     required TResult Function() passwordExpired,
+    required TResult Function() passwordWrong,
     required TResult Function() wrongFormat,
     required TResult Function() noConnection,
   }) {
@@ -170,6 +177,7 @@ class _$_Server implements _Server {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int? errorCode, String? message)? server,
     TResult? Function()? passwordExpired,
+    TResult? Function()? passwordWrong,
     TResult? Function()? wrongFormat,
     TResult? Function()? noConnection,
   }) {
@@ -181,6 +189,7 @@ class _$_Server implements _Server {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int? errorCode, String? message)? server,
     TResult Function()? passwordExpired,
+    TResult Function()? passwordWrong,
     TResult Function()? wrongFormat,
     TResult Function()? noConnection,
     required TResult orElse(),
@@ -196,6 +205,7 @@ class _$_Server implements _Server {
   TResult map<TResult extends Object?>({
     required TResult Function(_Server value) server,
     required TResult Function(_PasswordExpired value) passwordExpired,
+    required TResult Function(_PasswordWrong value) passwordWrong,
     required TResult Function(_WrongFormat value) wrongFormat,
     required TResult Function(_NoConnection value) noConnection,
   }) {
@@ -207,6 +217,7 @@ class _$_Server implements _Server {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Server value)? server,
     TResult? Function(_PasswordExpired value)? passwordExpired,
+    TResult? Function(_PasswordWrong value)? passwordWrong,
     TResult? Function(_WrongFormat value)? wrongFormat,
     TResult? Function(_NoConnection value)? noConnection,
   }) {
@@ -218,6 +229,7 @@ class _$_Server implements _Server {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Server value)? server,
     TResult Function(_PasswordExpired value)? passwordExpired,
+    TResult Function(_PasswordWrong value)? passwordWrong,
     TResult Function(_WrongFormat value)? wrongFormat,
     TResult Function(_NoConnection value)? noConnection,
     required TResult orElse(),
@@ -280,6 +292,7 @@ class _$_PasswordExpired implements _PasswordExpired {
   TResult when<TResult extends Object?>({
     required TResult Function(int? errorCode, String? message) server,
     required TResult Function() passwordExpired,
+    required TResult Function() passwordWrong,
     required TResult Function() wrongFormat,
     required TResult Function() noConnection,
   }) {
@@ -291,6 +304,7 @@ class _$_PasswordExpired implements _PasswordExpired {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int? errorCode, String? message)? server,
     TResult? Function()? passwordExpired,
+    TResult? Function()? passwordWrong,
     TResult? Function()? wrongFormat,
     TResult? Function()? noConnection,
   }) {
@@ -302,6 +316,7 @@ class _$_PasswordExpired implements _PasswordExpired {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int? errorCode, String? message)? server,
     TResult Function()? passwordExpired,
+    TResult Function()? passwordWrong,
     TResult Function()? wrongFormat,
     TResult Function()? noConnection,
     required TResult orElse(),
@@ -317,6 +332,7 @@ class _$_PasswordExpired implements _PasswordExpired {
   TResult map<TResult extends Object?>({
     required TResult Function(_Server value) server,
     required TResult Function(_PasswordExpired value) passwordExpired,
+    required TResult Function(_PasswordWrong value) passwordWrong,
     required TResult Function(_WrongFormat value) wrongFormat,
     required TResult Function(_NoConnection value) noConnection,
   }) {
@@ -328,6 +344,7 @@ class _$_PasswordExpired implements _PasswordExpired {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Server value)? server,
     TResult? Function(_PasswordExpired value)? passwordExpired,
+    TResult? Function(_PasswordWrong value)? passwordWrong,
     TResult? Function(_WrongFormat value)? wrongFormat,
     TResult? Function(_NoConnection value)? noConnection,
   }) {
@@ -339,6 +356,7 @@ class _$_PasswordExpired implements _PasswordExpired {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Server value)? server,
     TResult Function(_PasswordExpired value)? passwordExpired,
+    TResult Function(_PasswordWrong value)? passwordWrong,
     TResult Function(_WrongFormat value)? wrongFormat,
     TResult Function(_NoConnection value)? noConnection,
     required TResult orElse(),
@@ -352,6 +370,126 @@ class _$_PasswordExpired implements _PasswordExpired {
 
 abstract class _PasswordExpired implements GeofenceFailure {
   const factory _PasswordExpired() = _$_PasswordExpired;
+}
+
+/// @nodoc
+abstract class _$$_PasswordWrongCopyWith<$Res> {
+  factory _$$_PasswordWrongCopyWith(
+          _$_PasswordWrong value, $Res Function(_$_PasswordWrong) then) =
+      __$$_PasswordWrongCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$_PasswordWrongCopyWithImpl<$Res>
+    extends _$GeofenceFailureCopyWithImpl<$Res, _$_PasswordWrong>
+    implements _$$_PasswordWrongCopyWith<$Res> {
+  __$$_PasswordWrongCopyWithImpl(
+      _$_PasswordWrong _value, $Res Function(_$_PasswordWrong) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$_PasswordWrong implements _PasswordWrong {
+  const _$_PasswordWrong();
+
+  @override
+  String toString() {
+    return 'GeofenceFailure.passwordWrong()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$_PasswordWrong);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(int? errorCode, String? message) server,
+    required TResult Function() passwordExpired,
+    required TResult Function() passwordWrong,
+    required TResult Function() wrongFormat,
+    required TResult Function() noConnection,
+  }) {
+    return passwordWrong();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(int? errorCode, String? message)? server,
+    TResult? Function()? passwordExpired,
+    TResult? Function()? passwordWrong,
+    TResult? Function()? wrongFormat,
+    TResult? Function()? noConnection,
+  }) {
+    return passwordWrong?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(int? errorCode, String? message)? server,
+    TResult Function()? passwordExpired,
+    TResult Function()? passwordWrong,
+    TResult Function()? wrongFormat,
+    TResult Function()? noConnection,
+    required TResult orElse(),
+  }) {
+    if (passwordWrong != null) {
+      return passwordWrong();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Server value) server,
+    required TResult Function(_PasswordExpired value) passwordExpired,
+    required TResult Function(_PasswordWrong value) passwordWrong,
+    required TResult Function(_WrongFormat value) wrongFormat,
+    required TResult Function(_NoConnection value) noConnection,
+  }) {
+    return passwordWrong(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Server value)? server,
+    TResult? Function(_PasswordExpired value)? passwordExpired,
+    TResult? Function(_PasswordWrong value)? passwordWrong,
+    TResult? Function(_WrongFormat value)? wrongFormat,
+    TResult? Function(_NoConnection value)? noConnection,
+  }) {
+    return passwordWrong?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Server value)? server,
+    TResult Function(_PasswordExpired value)? passwordExpired,
+    TResult Function(_PasswordWrong value)? passwordWrong,
+    TResult Function(_WrongFormat value)? wrongFormat,
+    TResult Function(_NoConnection value)? noConnection,
+    required TResult orElse(),
+  }) {
+    if (passwordWrong != null) {
+      return passwordWrong(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _PasswordWrong implements GeofenceFailure {
+  const factory _PasswordWrong() = _$_PasswordWrong;
 }
 
 /// @nodoc
@@ -394,6 +532,7 @@ class _$_WrongFormat implements _WrongFormat {
   TResult when<TResult extends Object?>({
     required TResult Function(int? errorCode, String? message) server,
     required TResult Function() passwordExpired,
+    required TResult Function() passwordWrong,
     required TResult Function() wrongFormat,
     required TResult Function() noConnection,
   }) {
@@ -405,6 +544,7 @@ class _$_WrongFormat implements _WrongFormat {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int? errorCode, String? message)? server,
     TResult? Function()? passwordExpired,
+    TResult? Function()? passwordWrong,
     TResult? Function()? wrongFormat,
     TResult? Function()? noConnection,
   }) {
@@ -416,6 +556,7 @@ class _$_WrongFormat implements _WrongFormat {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int? errorCode, String? message)? server,
     TResult Function()? passwordExpired,
+    TResult Function()? passwordWrong,
     TResult Function()? wrongFormat,
     TResult Function()? noConnection,
     required TResult orElse(),
@@ -431,6 +572,7 @@ class _$_WrongFormat implements _WrongFormat {
   TResult map<TResult extends Object?>({
     required TResult Function(_Server value) server,
     required TResult Function(_PasswordExpired value) passwordExpired,
+    required TResult Function(_PasswordWrong value) passwordWrong,
     required TResult Function(_WrongFormat value) wrongFormat,
     required TResult Function(_NoConnection value) noConnection,
   }) {
@@ -442,6 +584,7 @@ class _$_WrongFormat implements _WrongFormat {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Server value)? server,
     TResult? Function(_PasswordExpired value)? passwordExpired,
+    TResult? Function(_PasswordWrong value)? passwordWrong,
     TResult? Function(_WrongFormat value)? wrongFormat,
     TResult? Function(_NoConnection value)? noConnection,
   }) {
@@ -453,6 +596,7 @@ class _$_WrongFormat implements _WrongFormat {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Server value)? server,
     TResult Function(_PasswordExpired value)? passwordExpired,
+    TResult Function(_PasswordWrong value)? passwordWrong,
     TResult Function(_WrongFormat value)? wrongFormat,
     TResult Function(_NoConnection value)? noConnection,
     required TResult orElse(),
@@ -508,6 +652,7 @@ class _$_NoConnection implements _NoConnection {
   TResult when<TResult extends Object?>({
     required TResult Function(int? errorCode, String? message) server,
     required TResult Function() passwordExpired,
+    required TResult Function() passwordWrong,
     required TResult Function() wrongFormat,
     required TResult Function() noConnection,
   }) {
@@ -519,6 +664,7 @@ class _$_NoConnection implements _NoConnection {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int? errorCode, String? message)? server,
     TResult? Function()? passwordExpired,
+    TResult? Function()? passwordWrong,
     TResult? Function()? wrongFormat,
     TResult? Function()? noConnection,
   }) {
@@ -530,6 +676,7 @@ class _$_NoConnection implements _NoConnection {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int? errorCode, String? message)? server,
     TResult Function()? passwordExpired,
+    TResult Function()? passwordWrong,
     TResult Function()? wrongFormat,
     TResult Function()? noConnection,
     required TResult orElse(),
@@ -545,6 +692,7 @@ class _$_NoConnection implements _NoConnection {
   TResult map<TResult extends Object?>({
     required TResult Function(_Server value) server,
     required TResult Function(_PasswordExpired value) passwordExpired,
+    required TResult Function(_PasswordWrong value) passwordWrong,
     required TResult Function(_WrongFormat value) wrongFormat,
     required TResult Function(_NoConnection value) noConnection,
   }) {
@@ -556,6 +704,7 @@ class _$_NoConnection implements _NoConnection {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Server value)? server,
     TResult? Function(_PasswordExpired value)? passwordExpired,
+    TResult? Function(_PasswordWrong value)? passwordWrong,
     TResult? Function(_WrongFormat value)? wrongFormat,
     TResult? Function(_NoConnection value)? noConnection,
   }) {
@@ -567,6 +716,7 @@ class _$_NoConnection implements _NoConnection {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Server value)? server,
     TResult Function(_PasswordExpired value)? passwordExpired,
+    TResult Function(_PasswordWrong value)? passwordWrong,
     TResult Function(_WrongFormat value)? wrongFormat,
     TResult Function(_NoConnection value)? noConnection,
     required TResult orElse(),

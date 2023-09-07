@@ -7,13 +7,13 @@ class ReminderNotifier extends StateNotifier<ReminderState> {
   String get stateToString => state.daysLeft.toString();
 
   String get daysLeftString =>
-      'Waktu tersisa ${state.daysLeft} hari. Segera update password E-HRMS, unlink dan uninstall.';
+      'Waktu tersisa ${state.daysLeft} hari. Segera Ubah Password ERP Anda.';
 
   String get daysLeftStringDue =>
-      'Anda memasuki waktu tenggang. Update password E-HRMS, unlink dan uninstall hari ini.';
+      'Anda memasuki waktu tenggang Expired Password, Ubah Password ERP Anda.';
 
   String get daysLeftStringPass =>
-      'Anda melewati ${stateToString.substring(1, stateToString.length)} hari. Update password E-HRMS, unlink dan uninstall. ';
+      'Anda melewati ${stateToString.substring(1, stateToString.length)} hari. Segera Ubah Password ERP Anda. ';
 
   int getDaysLeft({required DateTime passUpdate}) {
     DateTime now = DateTime.now();

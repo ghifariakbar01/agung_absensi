@@ -1,6 +1,8 @@
 class Constants {
   static String githubURL =
       "https://github.com/MCarlomagno/FaceRecognitionAuth/tree/master";
-  static int passExpCode = 4;
-  static String passExpString = 'Password Expired';
+  static const int passExpCode = 4;
+  static const int passWrongCode = 3;
+  static const String passWrong = 'Password Wrong';
+  static const String passExpString = 'Password Expired';
 }

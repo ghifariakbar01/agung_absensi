@@ -19,6 +19,8 @@ class GeofenceRepository {
       getGeofenceList() async {
     try {
       return right(await _remoteService.getGeofenceList());
+    } on PasswordWrongException {
+      return left(const GeofenceFailure.passwordWrong());
     } on PasswordExpiredException {
       return left(const GeofenceFailure.passwordExpired());
     } on FormatException {

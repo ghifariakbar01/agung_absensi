@@ -1,4 +1,3 @@
-
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/domain/edit_failure.dart';
 import 'package:face_net_authentication/infrastructure/profile/edit_profile_remote_service.dart';
@@ -24,6 +23,8 @@ class EditProfileRepostiroy {
           EditFailure.server(e.errorCode, 'RestApi exception get imei'));
     } on FormatException catch (e) {
       return left(EditFailure.server(0, e.message));
+    } on PasswordWrongException {
+      return left(const EditFailure.passwordWrong());
     } on PasswordExpiredException {
       return left(const EditFailure.passwordExpired());
     } on NoConnectionException {

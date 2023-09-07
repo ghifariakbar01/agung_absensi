@@ -133,7 +133,6 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
         ),
       );
     } else {
-      debugger();
       geofenceservice.addLocationChangeListener(
         (location) => onLocationChanged(location, geofenceListAdditional, null),
       );

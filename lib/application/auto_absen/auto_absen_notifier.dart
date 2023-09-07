@@ -25,7 +25,7 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
 
   Future<void> processAutoAbsen({
     required String imei,
-    required BuildContext context,
+    required BuildContext buildContext,
     required Map<String, List<BackgroundItemState>> autoAbsenMap,
     required List<Geofence> geofence,
     required List<BackgroundItemState> savedItems,
@@ -66,7 +66,7 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
 
             if (karyawanShift) {
               await showDialog(
-                  context: context,
+                  context: buildContext,
                   barrierDismissible: true,
                   builder: (context) => VAlertDialog(
                         label: 'PILIH ABSEN',
@@ -75,11 +75,11 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
                         backPressedLabel: 'ABSEN OUT',
                         onPressed: () {
                           jenisAbsenShift = JenisAbsen.absenIn;
-                          context.pop();
+                          buildContext.pop();
                         },
                         onBackPressed: () {
                           jenisAbsenShift = JenisAbsen.absenOut;
-                          context.pop();
+                          buildContext.pop();
                         },
                       ));
             }
@@ -98,58 +98,64 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
               final date = absenSaved.savedLocations.date;
 
               await showDialog(
-                  context: context,
+                  context: buildContext,
                   barrierDismissible: true,
                   builder: (context) => VAlertDialog(
                       label: 'ABSEN MASUK ?',
                       labelDescription:
                           'TANGGAL ${StringUtils.yyyyMMddWithStripe(date)}: JAM ${StringUtils.hoursDate(date)}',
                       backPressedLabel: 'TIDAK & HAPUS ABSEN',
-                      onPressed: () async => // absen one liner
-                          await ref
-                              .read(absenAuthNotifierProvidier.notifier)
-                              .absenOneLiner(
-                                backgroundItemState: absenSaved,
-                                jenisAbsen: jenisAbsen,
-                                idGeof: idGeofSaved ?? '',
-                                imei: imei,
-                                onAbsen: () async {
-                                  await getAbsenState(date: date);
-                                  await getSavedLocations();
-                                },
-                                deleteSaved: () => deleteSavedLocation(
-                                    savedLocation: absenSaved.savedLocations,
-                                    context: context),
-                                reinitializeDependencies: () =>
-                                    reinitializeDependencies(
-                                        geofence: geofence,
-                                        savedItems: savedItems),
-                                getAbsenState: () => getAbsenState(
-                                    date: absenSaved.savedLocations.date),
-                                showSuccessDialog: () => showDialog(
-                                    context: context,
-                                    barrierDismissible: true,
-                                    builder: (_) => VSimpleDialog(
-                                          asset: Assets.iconChecked,
-                                          label:
-                                              'JAM ${StringUtils.hoursDate(absenSaved.savedLocations.date)}',
-                                          labelDescription:
-                                              'TANGGAL ${StringUtils.yyyyMMddWithStripe(absenSaved.savedLocations.date)}',
-                                        )),
-                                showFailureDialog: (code, message) =>
-                                    showDialog(
-                                        context: context,
-                                        barrierDismissible: true,
-                                        builder: (_) => VSimpleDialog(
-                                              color: Palette.red,
-                                              asset: Assets.iconCrossed,
-                                              label: code,
-                                              labelDescription: message,
-                                            )),
-                              ),
-                      onBackPressed: () => deleteSavedLocation(
-                          savedLocation: absenSaved.savedLocations,
-                          context: context)));
+                      onPressed: () async {
+                        // absen one liner
+                        buildContext.pop();
+
+                        await ref
+                            .read(absenAuthNotifierProvidier.notifier)
+                            .absenOneLiner(
+                              backgroundItemState: absenSaved,
+                              jenisAbsen: jenisAbsen,
+                              idGeof: idGeofSaved ?? '',
+                              imei: imei,
+                              onAbsen: () async {
+                                await getAbsenState(date: date);
+                                await getSavedLocations();
+                              },
+                              deleteSaved: () => deleteSavedLocation(
+                                  savedLocation: absenSaved.savedLocations,
+                                  context: buildContext),
+                              reinitializeDependencies: () =>
+                                  reinitializeDependencies(
+                                      geofence: geofence,
+                                      savedItems: savedItems),
+                              getAbsenState: () => getAbsenState(
+                                  date: absenSaved.savedLocations.date),
+                              showSuccessDialog: () => showDialog(
+                                  context: buildContext,
+                                  barrierDismissible: true,
+                                  builder: (_) => VSimpleDialog(
+                                        asset: Assets.iconChecked,
+                                        label:
+                                            'JAM ${StringUtils.hoursDate(absenSaved.savedLocations.date)}',
+                                        labelDescription:
+                                            'TANGGAL ${StringUtils.yyyyMMddWithStripe(absenSaved.savedLocations.date)}',
+                                      )),
+                              showFailureDialog: (code, message) => showDialog(
+                                  context: buildContext,
+                                  barrierDismissible: true,
+                                  builder: (_) => VSimpleDialog(
+                                        color: Palette.red,
+                                        asset: Assets.iconCrossed,
+                                        label: code,
+                                        labelDescription: message,
+                                      )),
+                            );
+                      },
+                      onBackPressed: () async {
+                        buildContext.pop();
+                        await deleteSavedLocation(
+                            savedLocation: absenSaved.savedLocations,
+                            context: context);
+                      }));
             } else if (udahAbsenMasuk ||
                 jenisAbsenShift == JenisAbsen.absenOut) {
               debugger(message: 'called');
@@ -160,65 +166,72 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
               final date = absenSaved.savedLocations.date;
 
               await showDialog(
-                  context: context,
+                  context: buildContext,
                   barrierDismissible: true,
                   builder: (context) => VAlertDialog(
                       label: 'ABSEN KELUAR ? ',
                       labelDescription:
                           'TANGGAL ${StringUtils.yyyyMMddWithStripe(date)}: JAM ${StringUtils.hoursDate(date)}',
                       backPressedLabel: 'TIDAK & HAPUS ABSEN',
-                      onPressed: () async => // absen one liner
-                          await ref
-                              .read(absenAuthNotifierProvidier.notifier)
-                              .absenOneLiner(
-                                backgroundItemState: absenSaved,
-                                jenisAbsen: jenisAbsen,
-                                idGeof: idGeofSaved ?? '',
-                                imei: imei,
-                                onAbsen: () async {
-                                  await getAbsenState(date: date);
-                                  await getSavedLocations();
-                                },
-                                deleteSaved: () => deleteSavedLocation(
-                                    savedLocation: absenSaved.savedLocations,
-                                    context: context),
-                                reinitializeDependencies: () =>
-                                    reinitializeDependencies(
-                                        geofence: geofence,
-                                        savedItems: savedItems),
-                                getAbsenState: () => getAbsenState(
-                                    date: absenSaved.savedLocations.date),
-                                showSuccessDialog: () => showDialog(
-                                  context: context,
+                      onPressed: () async {
+                        // absen one liner
+                        buildContext.pop();
+
+                        await ref
+                            .read(absenAuthNotifierProvidier.notifier)
+                            .absenOneLiner(
+                              backgroundItemState: absenSaved,
+                              jenisAbsen: jenisAbsen,
+                              idGeof: idGeofSaved ?? '',
+                              imei: imei,
+                              onAbsen: () async {
+                                await getAbsenState(date: date);
+                                await getSavedLocations();
+                              },
+                              deleteSaved: () => deleteSavedLocation(
+                                  savedLocation: absenSaved.savedLocations,
+                                  context: context),
+                              reinitializeDependencies: () =>
+                                  reinitializeDependencies(
+                                      geofence: geofence,
+                                      savedItems: savedItems),
+                              getAbsenState: () => getAbsenState(
+                                  date: absenSaved.savedLocations.date),
+                              showSuccessDialog: () => showDialog(
+                                context: buildContext,
+                                barrierDismissible: true,
+                                builder: (_) => VSimpleDialog(
+                                  asset: Assets.iconChecked,
+                                  label:
+                                      'JAM ${StringUtils.hoursDate(absenSaved.savedLocations.date)}',
+                                  labelDescription:
+                                      'TANGGAL ${StringUtils.yyyyMMddWithStripe(absenSaved.savedLocations.date)}',
+                                ),
+                              ),
+                              showFailureDialog: (code, message) => showDialog(
+                                  context: buildContext,
                                   barrierDismissible: true,
                                   builder: (_) => VSimpleDialog(
-                                    asset: Assets.iconChecked,
-                                    label:
-                                        'JAM ${StringUtils.hoursDate(absenSaved.savedLocations.date)}',
-                                    labelDescription:
-                                        'TANGGAL ${StringUtils.yyyyMMddWithStripe(absenSaved.savedLocations.date)}',
-                                  ),
-                                ),
-                                showFailureDialog: (code, message) =>
-                                    showDialog(
-                                        context: context,
-                                        barrierDismissible: true,
-                                        builder: (_) => VSimpleDialog(
-                                              color: Palette.red,
-                                              asset: Assets.iconCrossed,
-                                              label: code,
-                                              labelDescription: message,
-                                            )),
-                              ),
-                      onBackPressed: () => deleteSavedLocation(
-                          savedLocation: absenSaved.savedLocations,
-                          context: context)));
+                                        color: Palette.red,
+                                        asset: Assets.iconCrossed,
+                                        label: code,
+                                        labelDescription: message,
+                                      )),
+                            );
+                      },
+                      onBackPressed: () async {
+                        buildContext.pop();
+                        await deleteSavedLocation(
+                            savedLocation: absenSaved.savedLocations,
+                            context: context);
+                      }));
             } else if (udahAbsenMasukSamaKeluar) {
               debugger();
 
               // delete saved absen as we don't need them.
               await deleteSavedLocation(
-                  savedLocation: absenSaved.savedLocations, context: context);
+                  savedLocation: absenSaved.savedLocations,
+                  context: buildContext);
 
               // Trigger another build [FOR DELETION]
               await ref.read(userNotifierProvider.notifier).getUser();
@@ -308,8 +321,6 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
 
       await ref.read(geofenceProvider.notifier).getGeofenceList();
     });
-
-    context.pop();
   }
 
   Future<void> reinitializeDependencies({

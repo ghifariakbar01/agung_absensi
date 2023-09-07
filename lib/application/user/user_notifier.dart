@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/domain/auth_failure.dart';
@@ -64,7 +65,7 @@ class UserNotifier extends StateNotifier<UserState> {
   }
 
   setUser(UserModelWithPassword user) {
-    // debugger();
+    debugger();
     state = state.copyWith(user: user);
   }
 
@@ -75,7 +76,7 @@ class UserNotifier extends StateNotifier<UserState> {
     required Function checkAndUpdateStatus,
     required Function checkAndUpdateImei,
   }) async {
-    initializeUser();
+    await initializeUser();
     await initializeDioRequest();
     await checkReminderStatus();
     await checkAndUpdateStatus();
@@ -86,7 +87,7 @@ class UserNotifier extends StateNotifier<UserState> {
       {required WidgetRef ref,
       required UserModelWithPassword userModelWithPassword}) async {
     await onUserParsed(
-        initializeUser: () => setUser(userModelWithPassword),
+        initializeUser: () async => await setUser(userModelWithPassword),
         initializeDioRequest: () {
           ref.read(dioRequestProvider).addAll({
             "kode": "${StringUtils.formatDate(DateTime.now())}",

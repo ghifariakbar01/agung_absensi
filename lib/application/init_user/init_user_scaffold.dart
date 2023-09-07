@@ -12,6 +12,7 @@ import '../../domain/user_failure.dart';
 import '../../domain/value_objects_copy.dart';
 import '../../pages/widgets/v_dialogs.dart';
 import '../../shared/providers.dart';
+import '../init_password_expired/init_password_expired_status.dart';
 
 class InitUserScaffold extends ConsumerStatefulWidget {
   const InitUserScaffold();
@@ -56,8 +57,10 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
                       .read(userNotifierProvider.notifier)
                       .parseUser(userString);
 
+                  debugger();
+
                   // GET RECENT USER VALUES FROM DB
-                  userParsed.fold(
+                  await userParsed.fold(
                       (failure) => showDialog(
                             context: context,
                             barrierDismissible: true,
@@ -98,6 +101,9 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
                         passwordExpired: (_) => ref
                             .read(passwordExpiredNotifierProvider.notifier)
                             .savePasswordExpired(),
+                        passwordWrong: (_) => ref
+                            .read(passwordExpiredNotifierProvider.notifier)
+                            .savePasswordExpired(),
                         orElse: () => showDialog(
                           context: context,
                           barrierDismissible: true,
@@ -120,6 +126,8 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
                     .read(userNotifierProvider.notifier)
                     .parseUser(userString);
 
+                debugger();
+
                 //
                 await userParsed.fold(
                     (failure) => showDialog(
@@ -141,6 +149,8 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
 
                 ref.read(initUserStatusProvider.notifier).state =
                     InitUserStatus.success();
+                ref.read(initPasswordExpiredStatusProvider.notifier).state =
+                    InitPasswordExpiredStatus.init();
               })),
     );
 

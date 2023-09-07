@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:face_net_authentication/application/init_user/init_user_status.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -152,7 +154,7 @@ class RouterNotifier extends ChangeNotifier {
         }
 
         if (areWeInitializingUser) {
-          if (weInitializedUser) {
+          if (weInitializedUser || !weInitializedPasswordExpired) {
             return RouteNames.initPasswordExpiredNameRoute;
           }
         }
@@ -168,7 +170,14 @@ class RouterNotifier extends ChangeNotifier {
             return RouteNames.initImeiNameRoute;
           }
 
+          if (!weInitializedPasswordExpired) {
+            debugger();
+
+            return RouteNames.initPasswordExpiredNameRoute;
+          }
+
           if (!weInitializedUser) {
+            debugger();
             return RouteNames.initUserNameRoute;
           }
         }

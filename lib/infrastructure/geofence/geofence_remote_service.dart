@@ -6,7 +6,6 @@ import 'package:dio/dio.dart';
 import 'package:face_net_authentication/infrastructure/dio_extensions.dart';
 
 import '../../application/geofence/geofence_response.dart';
-import '../../constants/constants.dart';
 import '../exceptions.dart';
 
 class GeofenceRemoteService {
@@ -53,31 +52,34 @@ class GeofenceRemoteService {
             final message = items['error'] as String?;
             final errorCode = items['errornum'] as int;
 
-            if (errorCode == Constants.passExpCode) {
-              throw PasswordExpiredException(errorCode, message);
-            } else {
-              throw RestApiExceptionWithMessage(errorCode, message);
-            }
+            Exception? exception = ExceptionDeterminate.throwByCode(
+              errorCode: errorCode,
+              message: message ?? '',
+            );
+
+            throw exception ?? RestApiExceptionWithMessage(errorCode, message);
           }
         } else {
           final message = items['error'] as String?;
           final errorCode = items['errornum'] as int;
 
-          if (errorCode == Constants.passExpCode) {
-            throw PasswordExpiredException(errorCode, message);
-          } else {
-            throw RestApiExceptionWithMessage(errorCode, message);
-          }
+          Exception? exception = ExceptionDeterminate.throwByCode(
+            errorCode: errorCode,
+            message: message ?? '',
+          );
+
+          throw exception ?? RestApiExceptionWithMessage(errorCode, message);
         }
       } else {
         final message = items['error'] as String?;
         final errorCode = items['errornum'] as int;
 
-        if (errorCode == Constants.passExpCode) {
-          throw PasswordExpiredException(errorCode, message);
-        } else {
-          throw RestApiExceptionWithMessage(errorCode, message);
-        }
+        Exception? exception = ExceptionDeterminate.throwByCode(
+          errorCode: errorCode,
+          message: message ?? '',
+        );
+
+        throw exception ?? RestApiExceptionWithMessage(errorCode, message);
       }
     } on FormatException {
       throw FormatException();

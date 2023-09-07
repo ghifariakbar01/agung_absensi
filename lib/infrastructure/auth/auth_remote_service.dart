@@ -7,7 +7,6 @@ import 'package:face_net_authentication/infrastructure/dio_extensions.dart';
 
 import '../../application/user/user_model.dart';
 
-import '../../constants/constants.dart';
 import '../exceptions.dart';
 import 'auth_response.dart';
 
@@ -102,8 +101,13 @@ class AuthRemoteService {
           final message = items['error'] as String?;
           final errorCode = items['errornum'] as int;
 
-          if (errorCode == Constants.passExpCode) {
-            throw PasswordExpiredException(errorCode, message);
+          Exception? exception = ExceptionDeterminate.throwByCode(
+            errorCode: errorCode,
+            message: message ?? '',
+          );
+
+          if (exception != null) {
+            throw exception;
           } else {
             return AuthResponse.failure(
               errorCode: errorCode,
@@ -115,8 +119,13 @@ class AuthRemoteService {
         final message = items['error'] as String?;
         final errorCode = items['errornum'] as int;
 
-        if (errorCode == Constants.passExpCode) {
-          throw PasswordExpiredException(errorCode, message);
+        Exception? exception = ExceptionDeterminate.throwByCode(
+          errorCode: errorCode,
+          message: message ?? '',
+        );
+
+        if (exception != null) {
+          throw exception;
         } else {
           return AuthResponse.failure(
             errorCode: errorCode,

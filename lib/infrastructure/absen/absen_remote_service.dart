@@ -129,15 +129,15 @@ class AbsenRemoteService {
         if (absenExist || absenProdExist) {
           if (items['errornum'] != null && items['errornum'] as int != 0) {
             debugger(message: 'called');
-
             final message = items['error'] as String?;
             final errorCode = items['errornum'] as int;
 
-            if (errorCode == Constants.passExpCode) {
-              throw PasswordExpiredException(errorCode, message);
-            } else {
-              throw RestApiExceptionWithMessage(errorCode, message);
-            }
+            Exception? exception = ExceptionDeterminate.throwByCode(
+              errorCode: errorCode,
+              message: message ?? '',
+            );
+
+            throw exception ?? RestApiExceptionWithMessage(errorCode, message);
           } else if (itemsProd['errornum'] != null &&
               itemsProd['errornum'] as int != 0) {
             debugger(message: 'called');
@@ -145,11 +145,12 @@ class AbsenRemoteService {
             final message = itemsProd['error'] as String?;
             final errorCode = itemsProd['errornum'] as int;
 
-            if (errorCode == Constants.passExpCode) {
-              throw PasswordExpiredException(errorCode, message);
-            } else {
-              throw RestApiExceptionWithMessage(errorCode, message);
-            }
+            Exception? exception = ExceptionDeterminate.throwByCode(
+              errorCode: errorCode,
+              message: message ?? '',
+            );
+
+            throw exception ?? RestApiExceptionWithMessage(errorCode, message);
           }
 
           debugger(message: 'called');
@@ -160,20 +161,22 @@ class AbsenRemoteService {
             final message = items['error'] as String?;
             final errorCode = items['errornum'] as int;
 
-            if (errorCode == Constants.passExpCode) {
-              throw PasswordExpiredException(errorCode, message);
-            } else {
-              throw RestApiExceptionWithMessage(errorCode, message);
-            }
+            Exception? exception = ExceptionDeterminate.throwByCode(
+              errorCode: errorCode,
+              message: message ?? '',
+            );
+
+            throw exception ?? RestApiExceptionWithMessage(errorCode, message);
           } else {
             final message = itemsProd['error'] as String?;
             final errorCode = itemsProd['errornum'] as int;
 
-            if (errorCode == Constants.passExpCode) {
-              throw PasswordExpiredException(errorCode, message);
-            } else {
-              throw RestApiExceptionWithMessage(errorCode, message);
-            }
+            Exception? exception = ExceptionDeterminate.throwByCode(
+              errorCode: errorCode,
+              message: message ?? '',
+            );
+
+            throw exception ?? RestApiExceptionWithMessage(errorCode, message);
           }
         }
       } else {
@@ -185,22 +188,24 @@ class AbsenRemoteService {
           final message = items['error'] as String?;
           final errorCode = items['errornum'] as int;
 
-          if (errorCode == Constants.passExpCode) {
-            throw PasswordExpiredException(errorCode, message);
-          } else {
-            throw RestApiExceptionWithMessage(errorCode, message);
-          }
+          Exception? exception = ExceptionDeterminate.throwByCode(
+            errorCode: errorCode,
+            message: message ?? '',
+          );
+
+          throw exception ?? RestApiExceptionWithMessage(errorCode, message);
         } else {
           debugger(message: 'called');
 
           final message = itemsProd['error'] as String?;
           final errorCode = itemsProd['errornum'] as int;
 
-          if (errorCode == Constants.passExpCode) {
-            throw PasswordExpiredException(errorCode, message);
-          } else {
-            throw RestApiExceptionWithMessage(errorCode, message);
-          }
+          Exception? exception = ExceptionDeterminate.throwByCode(
+            errorCode: errorCode,
+            message: message ?? '',
+          );
+
+          throw exception ?? RestApiExceptionWithMessage(errorCode, message);
         }
       }
     } on DioError catch (e) {
@@ -246,13 +251,27 @@ class AbsenRemoteService {
 
             return item['id_absenmnl'];
           } else {
-            throw RestApiExceptionWithMessage(
-                items['errornum'] as int, items['error'] as String?);
+            final message = items['error'] as String?;
+            final errorCode = items['errornum'] as int;
+
+            Exception? exception = ExceptionDeterminate.throwByCode(
+              errorCode: errorCode,
+              message: message ?? '',
+            );
+
+            throw exception ?? RestApiExceptionWithMessage(errorCode, message);
           }
         }
       } else {
-        throw RestApiExceptionWithMessage(
-            items['errornum'] as int, items['error'] as String?);
+        final message = items['error'] as String?;
+        final errorCode = items['errornum'] as int;
+
+        Exception? exception = ExceptionDeterminate.throwByCode(
+          errorCode: errorCode,
+          message: message ?? '',
+        );
+
+        throw exception ?? RestApiExceptionWithMessage(errorCode, message);
       }
 
       return null;
@@ -329,27 +348,25 @@ class AbsenRemoteService {
           return AbsenState.empty();
         }
       } else {
-        // debugger();
-
         final message = items['error'] as String?;
         final errorCode = items['errornum'] as int;
 
-        // debugger();
+        Exception? exception = ExceptionDeterminate.throwByCode(
+          errorCode: errorCode,
+          message: message ?? '',
+        );
 
-        if (errorCode == Constants.passExpCode) {
-          throw PasswordExpiredException(errorCode, message);
-        } else {
-          throw RestApiExceptionWithMessage(errorCode, message);
-        }
+        throw exception ?? RestApiExceptionWithMessage(errorCode, message);
       }
       final message = items['error'] as String?;
       final errorCode = items['errornum'] as int;
 
-      if (errorCode == Constants.passExpCode) {
-        throw PasswordExpiredException(errorCode, message);
-      } else {
-        throw RestApiExceptionWithMessage(errorCode, message);
-      }
+      Exception? exception = ExceptionDeterminate.throwByCode(
+        errorCode: errorCode,
+        message: message ?? '',
+      );
+
+      throw exception ?? RestApiExceptionWithMessage(errorCode, message);
     } on DioError catch (e) {
       if (e.isNoConnectionError || e.isConnectionTimeout) {
         throw NoConnectionException();
@@ -415,11 +432,12 @@ class AbsenRemoteService {
         final message = items['error'] as String?;
         final errorCode = items['errornum'] as int;
 
-        if (errorCode == Constants.passExpCode) {
-          throw PasswordExpiredException(errorCode, message);
-        } else {
-          throw RestApiExceptionWithMessage(errorCode, message);
-        }
+        Exception? exception = ExceptionDeterminate.throwByCode(
+          errorCode: errorCode,
+          message: message ?? '',
+        );
+
+        throw exception ?? RestApiExceptionWithMessage(errorCode, message);
       }
     } on FormatException {
       throw FormatException();

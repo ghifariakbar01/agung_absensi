@@ -1,12 +1,15 @@
 import 'dart:developer';
 
+import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/application/init_password_expired/init_password_expired_status.dart';
 import 'package:face_net_authentication/application/init_user/init_user_status.dart';
+import 'package:face_net_authentication/application/user/user_model.dart';
 import 'package:face_net_authentication/pages/widgets/loading_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../application/password_expired/password_expired_state.dart';
+import '../../domain/user_failure.dart';
 import '../../shared/providers.dart';
 
 class InitPasswordExpiredScaffold extends ConsumerStatefulWidget {
@@ -27,8 +30,20 @@ class _InitPasswordExpiredScaffoldState
       PasswordExpiredState passwordExpired =
           ref.read(passwordExpiredNotifierStatusProvider.notifier).state;
 
-      await passwordExpired.maybeWhen(
+      passwordExpired.maybeWhen(
           expired: () async {
+            // SET USER
+            final userNotifier = ref.read(userNotifierProvider.notifier);
+
+            String userInString = await userNotifier.getUserString();
+            Either<UserFailure, UserModelWithPassword> userWithPassword =
+                userNotifier.parseUser(userInString);
+
+            debugger();
+
+            await userWithPassword.fold(
+                (_) => null, (user) => userNotifier.setUser(user));
+
             await ref
                 .read(editProfileNotifierProvider.notifier)
                 .clearImeiFromDB();
@@ -41,14 +56,14 @@ class _InitPasswordExpiredScaffoldState
             ref.read(initUserStatusProvider.notifier).state =
                 InitUserStatus.init();
 
-            debugger();
+            ref.read(initPasswordExpiredStatusProvider.notifier).state =
+                InitPasswordExpiredStatus.success();
           },
-          orElse: () => null);
+          orElse: () => ref
+              .read(initPasswordExpiredStatusProvider.notifier)
+              .state = InitPasswordExpiredStatus.success());
 
       debugger();
-
-      ref.read(initPasswordExpiredStatusProvider.notifier).state =
-          InitPasswordExpiredStatus.success();
     });
   }
 

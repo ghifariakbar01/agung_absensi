@@ -35,6 +35,9 @@ class BackgroundScaffold extends ConsumerWidget {
                           passwordExpired: () => ref
                               .read(passwordExpiredNotifierProvider.notifier)
                               .savePasswordExpired(),
+                          passwordWrong: () => ref
+                              .read(passwordExpiredNotifierProvider.notifier)
+                              .savePasswordExpired(),
                           noConnection: () => showDialog(
                               context: context,
                               barrierDismissible: true,

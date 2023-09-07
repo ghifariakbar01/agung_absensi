@@ -37,6 +37,9 @@ class _HomeSavedState extends ConsumerState<HomeSaved> {
                       passwordExpired: () => ref
                           .read(passwordExpiredNotifierProvider.notifier)
                           .savePasswordExpired(),
+                      passwordWrong: () => ref
+                          .read(passwordExpiredNotifierProvider.notifier)
+                          .savePasswordExpired(),
                       noConnection: () => ref
                           .read(absenOfflineModeProvider.notifier)
                           .state = true,

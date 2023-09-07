@@ -67,6 +67,8 @@ class AuthRepository {
       );
     } on RestApiException catch (e) {
       return left(AuthFailure.server(e.errorCode));
+    } on PasswordWrongException {
+      return left(const AuthFailure.passwordWrong());
     } on PasswordExpiredException {
       return left(const AuthFailure.passwordExpired());
     } on NoConnectionException {
@@ -106,6 +108,8 @@ class AuthRepository {
       );
     } on RestApiException catch (e) {
       return left(AuthFailure.server(e.errorCode));
+    } on PasswordWrongException {
+      return left(const AuthFailure.passwordWrong());
     } on PasswordExpiredException {
       return left(const AuthFailure.passwordExpired());
     } on NoConnectionException {

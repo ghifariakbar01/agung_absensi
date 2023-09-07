@@ -55,6 +55,7 @@ class SignInPage extends HookConsumerWidget {
                       server: (value) => value.message ?? 'server error',
                       noConnection: (_) => 'tidak ada koneksi',
                       passwordExpired: (_) => 'Password Expired',
+                      passwordWrong: (_) => 'Password Salah',
                     ),
                   );
                 },

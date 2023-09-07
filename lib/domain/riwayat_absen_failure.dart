@@ -9,5 +9,7 @@ class RiwayatAbsenFailure with _$RiwayatAbsenFailure {
   const factory RiwayatAbsenFailure.wrongFormat([String? message]) =
       _WrongFormat;
   const factory RiwayatAbsenFailure.passwordExpired() = _PasswordExpired;
+  const factory RiwayatAbsenFailure.passwordWrong() = _PasswordWrong;
+
   const factory RiwayatAbsenFailure.noConnection() = _NoConnection;
 }

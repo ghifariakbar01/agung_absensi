@@ -22,60 +22,61 @@ class RiwayatAbsenPage extends ConsumerWidget {
         riwayatAbsenNotifierProvider
             .select((value) => value.failureOrSuccessOption),
         (_, failureOrSuccessOption) => failureOrSuccessOption.fold(
-                  () {},
-                  (either) => either.fold(
-                          (error) => error.maybeWhen(
-                              passwordExpired: () => ref
-                                  .read(
-                                      passwordExpiredNotifierProvider.notifier)
-                                  .savePasswordExpired(),
-                              orElse: () => showCupertinoDialog(
-                                  context: context,
-                                  barrierDismissible: true,
-                                  builder: (builder) => VSimpleDialog(
-                                        label: 'Error',
-                                        labelDescription: error.maybeWhen(
-                                            noConnection: () => 'no connection',
-                                            wrongFormat: (message) =>
-                                                'wrong format $message',
-                                            server: (errorCode, message) =>
-                                                'error server $errorCode $message',
-                                            orElse: () => ''),
-                                        asset: Assets.iconCrossed,
-                                      ))), (list) {
-                        log('list.length ${list.length}');
+            () {},
+            (either) => either.fold(
+                    (error) => error.maybeWhen(
+                        passwordExpired: () => ref
+                            .read(passwordExpiredNotifierProvider.notifier)
+                            .savePasswordExpired(),
+                        passwordWrong: () => ref
+                            .read(passwordExpiredNotifierProvider.notifier)
+                            .savePasswordExpired(),
+                        orElse: () => showCupertinoDialog(
+                            context: context,
+                            barrierDismissible: true,
+                            builder: (builder) => VSimpleDialog(
+                                  label: 'Error',
+                                  labelDescription: error.maybeWhen(
+                                      noConnection: () => 'no connection',
+                                      wrongFormat: (message) =>
+                                          'wrong format $message',
+                                      server: (errorCode, message) =>
+                                          'error server $errorCode $message',
+                                      orElse: () => ''),
+                                  asset: Assets.iconCrossed,
+                                ))), (list) {
+                  log('list.length ${list.length}');
 
-                        final oldList = ref
-                            .read(riwayatAbsenNotifierProvider.notifier)
-                            .state
-                            .riwayatAbsen;
+                  final oldList = ref
+                      .read(riwayatAbsenNotifierProvider.notifier)
+                      .state
+                      .riwayatAbsen;
 
-                        final page = ref
-                            .read(riwayatAbsenNotifierProvider.notifier)
-                            .state
-                            .page;
+                  final page = ref
+                      .read(riwayatAbsenNotifierProvider.notifier)
+                      .state
+                      .page;
 
-                        if (list.length < 1 && page != 1) {
-                          // debugger(message: 'called');
+                  if (list.length < 1 && page != 1) {
+                    // debugger(message: 'called');
 
-                          ref
-                              .read(riwayatAbsenNotifierProvider.notifier)
-                              .changeIsMore(false);
-                        } else if (list.length > 1 && page == 1) {
-                          // debugger(message: 'called');
+                    ref
+                        .read(riwayatAbsenNotifierProvider.notifier)
+                        .changeIsMore(false);
+                  } else if (list.length > 1 && page == 1) {
+                    // debugger(message: 'called');
 
-                          ref
-                              .read(riwayatAbsenNotifierProvider.notifier)
-                              .replaceAbsenRiwayat(list);
-                        } else {
-                          // debugger(message: 'called');
+                    ref
+                        .read(riwayatAbsenNotifierProvider.notifier)
+                        .replaceAbsenRiwayat(list);
+                  } else {
+                    // debugger(message: 'called');
 
-                          ref
-                              .read(riwayatAbsenNotifierProvider.notifier)
-                              .changeAbsenRiwayat(oldList, list);
-                        }
-                      }))
-            );
+                    ref
+                        .read(riwayatAbsenNotifierProvider.notifier)
+                        .changeAbsenRiwayat(oldList, list);
+                  }
+                })));
 
     final isLoading = ref
         .watch(riwayatAbsenNotifierProvider.select((value) => value.isGetting));

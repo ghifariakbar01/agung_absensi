@@ -7,7 +7,6 @@ import 'package:face_net_authentication/application/imei/imei_register_state.dar
 import 'package:face_net_authentication/infrastructure/dio_extensions.dart';
 
 import '../../application/user/user_model.dart';
-import '../../constants/constants.dart';
 import '../exceptions.dart';
 
 class EditProfileRemoteService {
@@ -56,11 +55,12 @@ class EditProfileRemoteService {
         final message = items['error'] as String?;
         final errorCode = items['errornum'] as int;
 
-        if (errorCode == Constants.passExpCode) {
-          throw PasswordExpiredException(errorCode, message);
-        } else {
-          throw RestApiExceptionWithMessage(errorCode, message);
-        }
+        Exception? exception = ExceptionDeterminate.throwByCode(
+          errorCode: errorCode,
+          message: message ?? '',
+        );
+
+        throw exception ?? RestApiExceptionWithMessage(errorCode, message);
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);
@@ -101,6 +101,8 @@ class EditProfileRemoteService {
       final items = response.data?[0];
 
       if (items['status'] == 'Success') {
+        debugger();
+
         return unit;
       } else {
         throw RestApiException(10);
@@ -202,11 +204,12 @@ class EditProfileRemoteService {
         final message = items['error'] as String?;
         final errorCode = items['errornum'] as int;
 
-        if (errorCode == Constants.passExpCode) {
-          throw PasswordExpiredException(errorCode, message);
-        } else {
-          throw RestApiExceptionWithMessage(errorCode, message);
-        }
+        Exception? exception = ExceptionDeterminate.throwByCode(
+          errorCode: errorCode,
+          message: message ?? '',
+        );
+
+        throw exception ?? RestApiExceptionWithMessage(errorCode, message);
       }
     } on FormatException {
       throw FormatException();

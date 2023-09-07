@@ -71,6 +71,9 @@ class ProfilePage extends HookConsumerWidget {
                         passwordExpired: (_) => ref
                             .read(passwordExpiredNotifierProvider.notifier)
                             .savePasswordExpired(),
+                        passwordWrong: (_) => ref
+                            .read(passwordExpiredNotifierProvider.notifier)
+                            .savePasswordExpired(),
                         orElse: () => showDialog(
                           context: context,
                           barrierDismissible: true,

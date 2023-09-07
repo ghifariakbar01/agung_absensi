@@ -158,6 +158,9 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                           passwordExpired: () => ref
                               .read(passwordExpiredNotifierProvider.notifier)
                               .savePasswordExpired(),
+                          passwordWrong: () => ref
+                              .read(passwordExpiredNotifierProvider.notifier)
+                              .savePasswordExpired(),
                           noConnection: () async {
                             // ALAMAT GEOFENCE
                             final alamat = ref.watch(geofenceProvider
@@ -384,7 +387,7 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                               date: DateTime.now(),
                               dbDate: DateTime.now()));
 
-                  debugger();
+                  // debugger();
                 })),
 
         Visibility(

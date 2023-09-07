@@ -38,7 +38,7 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext buildContext) {
     // SAVED ABSEN
     ref.listen<Option<Either<BackgroundFailure, List<SavedLocation>>>>(
         backgroundNotifierProvider.select(
@@ -86,6 +86,9 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
                           .read(geofenceProvider.notifier)
                           .getGeofenceListFromStorage(),
                       passwordExpired: () => ref
+                          .read(passwordExpiredNotifierProvider.notifier)
+                          .savePasswordExpired(),
+                      passwordWrong: () => ref
                           .read(passwordExpiredNotifierProvider.notifier)
                           .savePasswordExpired(),
                       orElse: () => showCupertinoDialog(
@@ -164,7 +167,7 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
                                 .read(autoAbsenNotifierProvider.notifier)
                                 .processAutoAbsen(
                                   imei: imei,
-                                  context: context,
+                                  buildContext: buildContext,
                                   autoAbsenMap: autoAbsen,
                                   geofence: geofence,
                                   savedItems: savedItemsCurrent,
@@ -172,30 +175,24 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
 
                             debugger();
                           } else {
-                            //
-
                             if (geofence.isNotEmpty) {
                               //
-
                               await ref
                                   .read(geofenceProvider.notifier)
                                   .initializeGeoFence(null, geofence,
                                       onError: (e) => log('error geofence $e'));
                             } else {
                               //
-
                               await ref
                                   .read(geofenceProvider.notifier)
                                   .getGeofenceListFromStorage();
                             }
                             //
-
                             await ref
                                 .read(backgroundNotifierProvider.notifier)
                                 .getSavedLocations();
                           }
                         });
-
                     // debugger();
                   } else {
                     //
@@ -204,14 +201,14 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
                         .initializeGeoFence(null, geofence,
                             onError: (e) => log('error geofence $e'));
 
-                    debugger();
+                    // debugger();
                   }
                 } else {
                   await ref
                       .read(geofenceProvider.notifier)
                       .getGeofenceListFromStorage();
 
-                  debugger();
+                  // debugger();
                   // }
                 }
               })),

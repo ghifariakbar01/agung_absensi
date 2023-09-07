@@ -35,6 +35,9 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                     passwordExpired: (_) => ref
                         .read(passwordExpiredNotifierProvider.notifier)
                         .savePasswordExpired(),
+                    passwordWrong: (_) => ref
+                        .read(passwordExpiredNotifierProvider.notifier)
+                        .savePasswordExpired(),
                     orElse: () => showDialog(
                       context: context,
                       barrierDismissible: true,
