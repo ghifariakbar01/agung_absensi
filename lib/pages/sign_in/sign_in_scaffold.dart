@@ -25,7 +25,7 @@ class SignInScaffold extends HookConsumerWidget {
                   expired: () => Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                         child: Text(
-                          'Password Anda expired. Pastikan Password sudah diubah di E-HRMS dan di unlink oleh staff pihak berwenang.',
+                          'Password Anda expired. Pastikan Password sudah diubah di E-HRMS dan login kembali.',
                           style: Themes.customColor(
                               FontWeight.bold, 11, Palette.red),
                         ),

@@ -17,15 +17,6 @@ class RouteNames {
   static const initUserNameRoute = '/initUser';
   static const initUserRoute = '/initUser';
 
-  static const initGeofenceNameRoute = '/initGeofence';
-  static const initGeofenceRoute = '/initGeofence';
-
-  static const initImeiNameRoute = '/initImei';
-  static const initImeiRoute = '/initImei';
-
-  static const initPasswordExpiredNameRoute = '/initPasswordExpired';
-  static const initPasswordExpiredRoute = '/initPasswordExpired';
-
   static const homeNameRoute = '/home';
   static const homeRoute = '/home';
 

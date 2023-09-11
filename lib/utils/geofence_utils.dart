@@ -12,7 +12,6 @@ class GeofenceUtil {
     return null;
   }
 
-//
   static Future<Placemark?> getLokasi({
     required double? latitude,
     required double? longitude,

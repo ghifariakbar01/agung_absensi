@@ -6,14 +6,11 @@ class CopyrightAgung extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: Text(
-        'FILL IN AND GENERAL EMPLOYEE INFORMATION\n © M.I.S AGUNG LOGISTICS 2023',
-        textAlign: TextAlign.center,
-        maxLines: 2,
-        style: Themes.customColor(FontWeight.bold, 8, Palette.greyThree),
-      ),
+    return Text(
+      'FILL IN AND GENERAL EMPLOYEE INFORMATION\n © M.I.S AGUNG LOGISTICS 2023',
+      textAlign: TextAlign.center,
+      maxLines: 2,
+      style: Themes.customColor(FontWeight.bold, 8, Palette.greyThree),
     );
   }
 }

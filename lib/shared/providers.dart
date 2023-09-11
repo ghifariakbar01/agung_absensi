@@ -1,4 +1,11 @@
+import 'dart:convert';
+import 'dart:developer';
+
+import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:face_net_authentication/application/user/user_model.dart';
+import 'package:face_net_authentication/domain/auth_failure.dart';
+import 'package:flutter/material.dart';
 
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -18,12 +25,12 @@ import '../application/edit_profile/edit_profile_notifier.dart';
 import '../application/edit_profile/edit_profile_state.dart';
 import '../application/geofence/geofence_notifier.dart';
 import '../application/geofence/geofence_state.dart';
-import '../application/imei/imei_auth_state.dart';
-import '../application/imei/imei_notifier.dart';
-import '../application/imei/imei_reset_notifier.dart';
-import '../application/imei/imei_auth_notifier.dart';
-import '../application/imei/imei_reset_state.dart';
 import '../application/imei/imei_state.dart';
+import '../application/imei/imei_auth_notifier.dart';
+import '../application/imei/imei_reset_notifier.dart';
+import '../application/imei/imei_notifier.dart';
+import '../application/imei/imei_reset_state.dart';
+import '../application/imei/imei_auth_state.dart';
 import '../application/init_geofence/init_geofence_status.dart';
 import '../application/init_imei/init_imei_status.dart';
 import '../application/init_password_expired/init_password_expired_status.dart';
@@ -38,6 +45,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../application/user/user_notifier.dart';
 import '../application/user/user_state.dart';
+import '../constants/assets.dart';
+import '../domain/user_failure.dart';
+import '../domain/value_objects_copy.dart';
 import '../infrastructure/absen/absen_remote_service.dart';
 import '../infrastructure/absen/absen_repository.dart';
 
@@ -59,6 +69,7 @@ import '../infrastructure/karyawan/karyawan_repository.dart';
 import '../infrastructure/password_expired_repository.dart';
 import '../infrastructure/profile/edit_profile_remote_service.dart';
 import '../infrastructure/profile/edit_profile_repository.dart';
+import '../pages/widgets/v_dialogs.dart';
 import '../utils/string_utils.dart';
 
 // NETWORKING & ROUTER
@@ -78,28 +89,7 @@ final routerProvider = Provider<GoRouter>((ref) {
 });
 
 // INIT PAGE
-final resetInitProvider = FutureProvider((ref) {
-  //
-  ref.read(initUserStatusProvider.notifier).state = InitUserStatus.init();
-  //
-  ref.read(initGeofenceStatusProvider.notifier).state =
-      InitGeofenceStatus.init();
-  //
-  ref.read(initImeiStatusProvider.notifier).state = InitImeiStatus.init();
-  //
-  ref.read(initPasswordExpiredStatusProvider.notifier).state =
-      InitPasswordExpiredStatus.init();
-});
-
 final initUserStatusProvider = StateProvider((ref) => InitUserStatus.init());
-
-final initGeofenceStatusProvider =
-    StateProvider((ref) => InitGeofenceStatus.init());
-
-final initImeiStatusProvider = StateProvider((ref) => InitImeiStatus.init());
-
-final initPasswordExpiredStatusProvider =
-    StateProvider((ref) => InitPasswordExpiredStatus.init());
 
 // BACKGROUND
 final autoAbsenSecureStorageProvider = Provider<CredentialsStorage>(
@@ -236,8 +226,8 @@ final imeiRepositoryProvider = Provider(
     (ref) => ImeiRepository(ref.watch(imeiCredentialsStorageProvider)));
 
 final imeiNotifierProvider = StateNotifierProvider<ImeiNotifier, ImeiState>(
-    (ref) => ImeiNotifier(
-        ref.watch(userNotifierProvider.select((value) => value.user))));
+    (ref) => ImeiNotifier(ref.watch(editProfileRepositoryProvider),
+        ref.watch(imeiRepositoryProvider)));
 
 final imeiAuthNotifierProvider =
     StateNotifierProvider<ImeiAuthNotifier, ImeiAuthState>(

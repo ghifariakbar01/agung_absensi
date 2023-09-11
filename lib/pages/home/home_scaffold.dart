@@ -10,6 +10,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../application/routes/route_names.dart';
+import '../copyright/copyright_page.dart';
 import '../widgets/app_logo.dart';
 import 'home_drawer.dart';
 import 'home_item.dart';
@@ -32,6 +33,7 @@ class HomeScaffold extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final packageInfo = ref.watch(packageInfoProvider);
     final width = MediaQuery.of(context).size.width;
     final reminder = ref.watch(reminderNotifierProvider);
 
@@ -146,7 +148,16 @@ class HomeScaffold extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    CopyrightAgung(),
+                    Center(child: CopyrightAgung()),
+                    Center(
+                      child: SelectableText(
+                        'APP VERSION: ${packageInfo.when(data: (packageInfo) => packageInfo, error: (error, stackTrace) => 'Error: $error StackTrace: $stackTrace', loading: () => '')}',
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                        style: Themes.customColor(
+                            FontWeight.bold, 8, Palette.greyThree),
+                      ),
+                    ),
                   ],
                 ),
               )

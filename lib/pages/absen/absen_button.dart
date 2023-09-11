@@ -43,8 +43,7 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
     // ID GEOF, IMEI field
     final idGeof =
         ref.read(geofenceProvider.select((value) => value.nearestCoordinates));
-    final imei =
-        ref.read(imeiAuthNotifierProvider.select((value) => value.imei));
+    final imei = ref.read(imeiNotifierProvider.select((value) => value.imei));
 
     // GET ID
     ref.listen<RemoteResponse<AbsenRequest>>(
@@ -146,21 +145,7 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
         (_, failureOrSuccessOption) => failureOrSuccessOption.fold(
             () {},
             (either) => either.fold(
-                    (failure) => failure.when(
-                          server: (code, message) => showDialog(
-                              context: context,
-                              barrierDismissible: true,
-                              builder: (_) => VSimpleDialog(
-                                    asset: Assets.iconCrossed,
-                                    label: '$code',
-                                    labelDescription: '$message',
-                                  )),
-                          passwordExpired: () => ref
-                              .read(passwordExpiredNotifierProvider.notifier)
-                              .savePasswordExpired(),
-                          passwordWrong: () => ref
-                              .read(passwordExpiredNotifierProvider.notifier)
-                              .savePasswordExpired(),
+                    (failure) => failure.maybeWhen(
                           noConnection: () async {
                             // ALAMAT GEOFENCE
                             final alamat = ref.watch(geofenceProvider
@@ -197,6 +182,20 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
 
                             return Future.value(true);
                           },
+                          orElse: () => showDialog(
+                              context: context,
+                              barrierDismissible: true,
+                              builder: (_) => VSimpleDialog(
+                                    asset: Assets.iconCrossed,
+                                    label: 'Error',
+                                    labelDescription: failure.maybeWhen(
+                                        server: (code, message) =>
+                                            'Error $code $message',
+                                        passwordExpired: () =>
+                                            'Password Expired',
+                                        passwordWrong: () => 'Password Wrong',
+                                        orElse: () => ''),
+                                  )),
                         ), (_) async {
                   // IF SUCCESS, GET RECENT ABSEN
                   final offlineNotifier =
@@ -252,6 +251,10 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                             label: 'Saved',
                             labelDescription: 'Absen tersimpan',
                           ));
+
+                  await ref
+                      .read(backgroundNotifierProvider.notifier)
+                      .getSavedLocations();
                 })));
 
     // IS OFFLINE MODE
@@ -364,12 +367,12 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
             },
             error: ((error, stackTrace) => Text('ERROR: $error $stackTrace')),
             loading: () => Container()),
-
+        // nearest < minDistance && nearest != 0
         Visibility(
             visible: isOfflineMode,
             child: VButton(
                 label: 'SIMPAN ABSEN',
-                isEnabled: nearest < minDistance && nearest != 0,
+                isEnabled: true,
                 onPressed: () async {
                   // ALAMAT GEOFENCE
                   final alamat = ref.watch(geofenceProvider

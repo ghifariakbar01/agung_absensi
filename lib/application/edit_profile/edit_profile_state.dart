@@ -16,8 +16,6 @@ class EditProfileState with _$EditProfileState {
           required NoHP telp2,
           required bool isSubmitting,
           required bool showErrorMessages,
-          required Option<Either<EditFailure, String?>>
-              failureOrSuccessOptionGettingImei,
           required Option<Either<EditFailure, Unit>> failureOrSuccessOption}) =
       _EditProfileState;
 
@@ -29,7 +27,6 @@ class EditProfileState with _$EditProfileState {
         telp2: NoHP(''),
         isSubmitting: false,
         showErrorMessages: false,
-        failureOrSuccessOptionGettingImei: none(),
         failureOrSuccessOption: none(),
       );
 }

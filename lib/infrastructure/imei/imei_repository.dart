@@ -21,10 +21,10 @@ class ImeiRepository {
       }
 
       return right(storedCredentials);
-    } on FormatException {
-      return left(ImeiFailure.errorParsing('Error while parsing'));
+    } on FormatException catch (e) {
+      return left(ImeiFailure.errorParsing(e.message));
     } on PlatformException {
-      return left(ImeiFailure.unknown(0, 'Platform exception while reading'));
+      return left(ImeiFailure.storage());
     }
   }
 

@@ -16,13 +16,49 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$ImeiAuthState {
-  String get imei => throw _privateConstructorUsedError;
-  bool get isGetting => throw _privateConstructorUsedError;
-  Option<Either<ImeiFailure, String?>> get failureOrSuccessOption =>
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() registered,
+    required TResult Function() empty,
+    required TResult Function() initial,
+  }) =>
       throw _privateConstructorUsedError;
-
-  @JsonKey(ignore: true)
-  $ImeiAuthStateCopyWith<ImeiAuthState> get copyWith =>
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? registered,
+    TResult? Function()? empty,
+    TResult? Function()? initial,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? registered,
+    TResult Function()? empty,
+    TResult Function()? initial,
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Registered value) registered,
+    required TResult Function(_Empty value) empty,
+    required TResult Function(_Initial value) initial,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Registered value)? registered,
+    TResult? Function(_Empty value)? empty,
+    TResult? Function(_Initial value)? initial,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Registered value)? registered,
+    TResult Function(_Empty value)? empty,
+    TResult Function(_Initial value)? initial,
+    required TResult orElse(),
+  }) =>
       throw _privateConstructorUsedError;
 }
 
@@ -31,11 +67,6 @@ abstract class $ImeiAuthStateCopyWith<$Res> {
   factory $ImeiAuthStateCopyWith(
           ImeiAuthState value, $Res Function(ImeiAuthState) then) =
       _$ImeiAuthStateCopyWithImpl<$Res, ImeiAuthState>;
-  @useResult
-  $Res call(
-      {String imei,
-      bool isGetting,
-      Option<Either<ImeiFailure, String?>> failureOrSuccessOption});
 }
 
 /// @nodoc
@@ -47,135 +78,325 @@ class _$ImeiAuthStateCopyWithImpl<$Res, $Val extends ImeiAuthState>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? imei = null,
-    Object? isGetting = null,
-    Object? failureOrSuccessOption = null,
-  }) {
-    return _then(_value.copyWith(
-      imei: null == imei
-          ? _value.imei
-          : imei // ignore: cast_nullable_to_non_nullable
-              as String,
-      isGetting: null == isGetting
-          ? _value.isGetting
-          : isGetting // ignore: cast_nullable_to_non_nullable
-              as bool,
-      failureOrSuccessOption: null == failureOrSuccessOption
-          ? _value.failureOrSuccessOption
-          : failureOrSuccessOption // ignore: cast_nullable_to_non_nullable
-              as Option<Either<ImeiFailure, String?>>,
-    ) as $Val);
-  }
 }
 
 /// @nodoc
-abstract class _$$_ImeiAuthStateCopyWith<$Res>
-    implements $ImeiAuthStateCopyWith<$Res> {
-  factory _$$_ImeiAuthStateCopyWith(
-          _$_ImeiAuthState value, $Res Function(_$_ImeiAuthState) then) =
-      __$$_ImeiAuthStateCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {String imei,
-      bool isGetting,
-      Option<Either<ImeiFailure, String?>> failureOrSuccessOption});
+abstract class _$$_RegisteredCopyWith<$Res> {
+  factory _$$_RegisteredCopyWith(
+          _$_Registered value, $Res Function(_$_Registered) then) =
+      __$$_RegisteredCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_ImeiAuthStateCopyWithImpl<$Res>
-    extends _$ImeiAuthStateCopyWithImpl<$Res, _$_ImeiAuthState>
-    implements _$$_ImeiAuthStateCopyWith<$Res> {
-  __$$_ImeiAuthStateCopyWithImpl(
-      _$_ImeiAuthState _value, $Res Function(_$_ImeiAuthState) _then)
+class __$$_RegisteredCopyWithImpl<$Res>
+    extends _$ImeiAuthStateCopyWithImpl<$Res, _$_Registered>
+    implements _$$_RegisteredCopyWith<$Res> {
+  __$$_RegisteredCopyWithImpl(
+      _$_Registered _value, $Res Function(_$_Registered) _then)
       : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? imei = null,
-    Object? isGetting = null,
-    Object? failureOrSuccessOption = null,
-  }) {
-    return _then(_$_ImeiAuthState(
-      imei: null == imei
-          ? _value.imei
-          : imei // ignore: cast_nullable_to_non_nullable
-              as String,
-      isGetting: null == isGetting
-          ? _value.isGetting
-          : isGetting // ignore: cast_nullable_to_non_nullable
-              as bool,
-      failureOrSuccessOption: null == failureOrSuccessOption
-          ? _value.failureOrSuccessOption
-          : failureOrSuccessOption // ignore: cast_nullable_to_non_nullable
-              as Option<Either<ImeiFailure, String?>>,
-    ));
-  }
 }
 
 /// @nodoc
 
-class _$_ImeiAuthState implements _ImeiAuthState {
-  const _$_ImeiAuthState(
-      {required this.imei,
-      required this.isGetting,
-      required this.failureOrSuccessOption});
-
-  @override
-  final String imei;
-  @override
-  final bool isGetting;
-  @override
-  final Option<Either<ImeiFailure, String?>> failureOrSuccessOption;
+class _$_Registered implements _Registered {
+  const _$_Registered();
 
   @override
   String toString() {
-    return 'ImeiAuthState(imei: $imei, isGetting: $isGetting, failureOrSuccessOption: $failureOrSuccessOption)';
+    return 'ImeiAuthState.registered()';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$_ImeiAuthState &&
-            (identical(other.imei, imei) || other.imei == imei) &&
-            (identical(other.isGetting, isGetting) ||
-                other.isGetting == isGetting) &&
-            (identical(other.failureOrSuccessOption, failureOrSuccessOption) ||
-                other.failureOrSuccessOption == failureOrSuccessOption));
+        (other.runtimeType == runtimeType && other is _$_Registered);
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, imei, isGetting, failureOrSuccessOption);
+  int get hashCode => runtimeType.hashCode;
 
-  @JsonKey(ignore: true)
   @override
-  @pragma('vm:prefer-inline')
-  _$$_ImeiAuthStateCopyWith<_$_ImeiAuthState> get copyWith =>
-      __$$_ImeiAuthStateCopyWithImpl<_$_ImeiAuthState>(this, _$identity);
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() registered,
+    required TResult Function() empty,
+    required TResult Function() initial,
+  }) {
+    return registered();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? registered,
+    TResult? Function()? empty,
+    TResult? Function()? initial,
+  }) {
+    return registered?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? registered,
+    TResult Function()? empty,
+    TResult Function()? initial,
+    required TResult orElse(),
+  }) {
+    if (registered != null) {
+      return registered();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Registered value) registered,
+    required TResult Function(_Empty value) empty,
+    required TResult Function(_Initial value) initial,
+  }) {
+    return registered(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Registered value)? registered,
+    TResult? Function(_Empty value)? empty,
+    TResult? Function(_Initial value)? initial,
+  }) {
+    return registered?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Registered value)? registered,
+    TResult Function(_Empty value)? empty,
+    TResult Function(_Initial value)? initial,
+    required TResult orElse(),
+  }) {
+    if (registered != null) {
+      return registered(this);
+    }
+    return orElse();
+  }
 }
 
-abstract class _ImeiAuthState implements ImeiAuthState {
-  const factory _ImeiAuthState(
-      {required final String imei,
-      required final bool isGetting,
-      required final Option<Either<ImeiFailure, String?>>
-          failureOrSuccessOption}) = _$_ImeiAuthState;
+abstract class _Registered implements ImeiAuthState {
+  const factory _Registered() = _$_Registered;
+}
+
+/// @nodoc
+abstract class _$$_EmptyCopyWith<$Res> {
+  factory _$$_EmptyCopyWith(_$_Empty value, $Res Function(_$_Empty) then) =
+      __$$_EmptyCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$_EmptyCopyWithImpl<$Res>
+    extends _$ImeiAuthStateCopyWithImpl<$Res, _$_Empty>
+    implements _$$_EmptyCopyWith<$Res> {
+  __$$_EmptyCopyWithImpl(_$_Empty _value, $Res Function(_$_Empty) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$_Empty implements _Empty {
+  const _$_Empty();
 
   @override
-  String get imei;
+  String toString() {
+    return 'ImeiAuthState.empty()';
+  }
+
   @override
-  bool get isGetting;
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$_Empty);
+  }
+
   @override
-  Option<Either<ImeiFailure, String?>> get failureOrSuccessOption;
+  int get hashCode => runtimeType.hashCode;
+
   @override
-  @JsonKey(ignore: true)
-  _$$_ImeiAuthStateCopyWith<_$_ImeiAuthState> get copyWith =>
-      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() registered,
+    required TResult Function() empty,
+    required TResult Function() initial,
+  }) {
+    return empty();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? registered,
+    TResult? Function()? empty,
+    TResult? Function()? initial,
+  }) {
+    return empty?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? registered,
+    TResult Function()? empty,
+    TResult Function()? initial,
+    required TResult orElse(),
+  }) {
+    if (empty != null) {
+      return empty();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Registered value) registered,
+    required TResult Function(_Empty value) empty,
+    required TResult Function(_Initial value) initial,
+  }) {
+    return empty(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Registered value)? registered,
+    TResult? Function(_Empty value)? empty,
+    TResult? Function(_Initial value)? initial,
+  }) {
+    return empty?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Registered value)? registered,
+    TResult Function(_Empty value)? empty,
+    TResult Function(_Initial value)? initial,
+    required TResult orElse(),
+  }) {
+    if (empty != null) {
+      return empty(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _Empty implements ImeiAuthState {
+  const factory _Empty() = _$_Empty;
+}
+
+/// @nodoc
+abstract class _$$_InitialCopyWith<$Res> {
+  factory _$$_InitialCopyWith(
+          _$_Initial value, $Res Function(_$_Initial) then) =
+      __$$_InitialCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$_InitialCopyWithImpl<$Res>
+    extends _$ImeiAuthStateCopyWithImpl<$Res, _$_Initial>
+    implements _$$_InitialCopyWith<$Res> {
+  __$$_InitialCopyWithImpl(_$_Initial _value, $Res Function(_$_Initial) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$_Initial implements _Initial {
+  const _$_Initial();
+
+  @override
+  String toString() {
+    return 'ImeiAuthState.initial()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$_Initial);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() registered,
+    required TResult Function() empty,
+    required TResult Function() initial,
+  }) {
+    return initial();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? registered,
+    TResult? Function()? empty,
+    TResult? Function()? initial,
+  }) {
+    return initial?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? registered,
+    TResult Function()? empty,
+    TResult Function()? initial,
+    required TResult orElse(),
+  }) {
+    if (initial != null) {
+      return initial();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Registered value) registered,
+    required TResult Function(_Empty value) empty,
+    required TResult Function(_Initial value) initial,
+  }) {
+    return initial(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Registered value)? registered,
+    TResult? Function(_Empty value)? empty,
+    TResult? Function(_Initial value)? initial,
+  }) {
+    return initial?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Registered value)? registered,
+    TResult Function(_Empty value)? empty,
+    TResult Function(_Initial value)? initial,
+    required TResult orElse(),
+  }) {
+    if (initial != null) {
+      return initial(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _Initial implements ImeiAuthState {
+  const factory _Initial() = _$_Initial;
 }

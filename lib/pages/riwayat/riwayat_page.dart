@@ -8,7 +8,6 @@ import 'package:face_net_authentication/domain/riwayat_absen_failure.dart';
 import 'package:face_net_authentication/pages/riwayat/riwayat_scaffold.dart';
 import 'package:face_net_authentication/pages/widgets/loading_overlay.dart';
 import 'package:face_net_authentication/pages/widgets/v_dialogs.dart';
-import 'package:face_net_authentication/shared/providers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -25,12 +24,6 @@ class RiwayatAbsenPage extends ConsumerWidget {
             () {},
             (either) => either.fold(
                     (error) => error.maybeWhen(
-                        passwordExpired: () => ref
-                            .read(passwordExpiredNotifierProvider.notifier)
-                            .savePasswordExpired(),
-                        passwordWrong: () => ref
-                            .read(passwordExpiredNotifierProvider.notifier)
-                            .savePasswordExpired(),
                         orElse: () => showCupertinoDialog(
                             context: context,
                             barrierDismissible: true,
@@ -42,6 +35,8 @@ class RiwayatAbsenPage extends ConsumerWidget {
                                           'wrong format $message',
                                       server: (errorCode, message) =>
                                           'error server $errorCode $message',
+                                      passwordExpired: () => 'Password Expired',
+                                      passwordWrong: () => 'Password Wrong',
                                       orElse: () => ''),
                                   asset: Assets.iconCrossed,
                                 ))), (list) {

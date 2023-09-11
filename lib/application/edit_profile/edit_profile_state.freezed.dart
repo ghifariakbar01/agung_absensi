@@ -23,8 +23,6 @@ mixin _$EditProfileState {
   NoHP get telp2 => throw _privateConstructorUsedError;
   bool get isSubmitting => throw _privateConstructorUsedError;
   bool get showErrorMessages => throw _privateConstructorUsedError;
-  Option<Either<EditFailure, String?>> get failureOrSuccessOptionGettingImei =>
-      throw _privateConstructorUsedError;
   Option<Either<EditFailure, Unit>> get failureOrSuccessOption =>
       throw _privateConstructorUsedError;
 
@@ -47,7 +45,6 @@ abstract class $EditProfileStateCopyWith<$Res> {
       NoHP telp2,
       bool isSubmitting,
       bool showErrorMessages,
-      Option<Either<EditFailure, String?>> failureOrSuccessOptionGettingImei,
       Option<Either<EditFailure, Unit>> failureOrSuccessOption});
 }
 
@@ -71,7 +68,6 @@ class _$EditProfileStateCopyWithImpl<$Res, $Val extends EditProfileState>
     Object? telp2 = null,
     Object? isSubmitting = null,
     Object? showErrorMessages = null,
-    Object? failureOrSuccessOptionGettingImei = null,
     Object? failureOrSuccessOption = null,
   }) {
     return _then(_value.copyWith(
@@ -103,11 +99,6 @@ class _$EditProfileStateCopyWithImpl<$Res, $Val extends EditProfileState>
           ? _value.showErrorMessages
           : showErrorMessages // ignore: cast_nullable_to_non_nullable
               as bool,
-      failureOrSuccessOptionGettingImei: null ==
-              failureOrSuccessOptionGettingImei
-          ? _value.failureOrSuccessOptionGettingImei
-          : failureOrSuccessOptionGettingImei // ignore: cast_nullable_to_non_nullable
-              as Option<Either<EditFailure, String?>>,
       failureOrSuccessOption: null == failureOrSuccessOption
           ? _value.failureOrSuccessOption
           : failureOrSuccessOption // ignore: cast_nullable_to_non_nullable
@@ -132,7 +123,6 @@ abstract class _$$_EditProfileStateCopyWith<$Res>
       NoHP telp2,
       bool isSubmitting,
       bool showErrorMessages,
-      Option<Either<EditFailure, String?>> failureOrSuccessOptionGettingImei,
       Option<Either<EditFailure, Unit>> failureOrSuccessOption});
 }
 
@@ -154,7 +144,6 @@ class __$$_EditProfileStateCopyWithImpl<$Res>
     Object? telp2 = null,
     Object? isSubmitting = null,
     Object? showErrorMessages = null,
-    Object? failureOrSuccessOptionGettingImei = null,
     Object? failureOrSuccessOption = null,
   }) {
     return _then(_$_EditProfileState(
@@ -186,11 +175,6 @@ class __$$_EditProfileStateCopyWithImpl<$Res>
           ? _value.showErrorMessages
           : showErrorMessages // ignore: cast_nullable_to_non_nullable
               as bool,
-      failureOrSuccessOptionGettingImei: null ==
-              failureOrSuccessOptionGettingImei
-          ? _value.failureOrSuccessOptionGettingImei
-          : failureOrSuccessOptionGettingImei // ignore: cast_nullable_to_non_nullable
-              as Option<Either<EditFailure, String?>>,
       failureOrSuccessOption: null == failureOrSuccessOption
           ? _value.failureOrSuccessOption
           : failureOrSuccessOption // ignore: cast_nullable_to_non_nullable
@@ -210,7 +194,6 @@ class _$_EditProfileState implements _EditProfileState {
       required this.telp2,
       required this.isSubmitting,
       required this.showErrorMessages,
-      required this.failureOrSuccessOptionGettingImei,
       required this.failureOrSuccessOption});
 
   @override
@@ -228,13 +211,11 @@ class _$_EditProfileState implements _EditProfileState {
   @override
   final bool showErrorMessages;
   @override
-  final Option<Either<EditFailure, String?>> failureOrSuccessOptionGettingImei;
-  @override
   final Option<Either<EditFailure, Unit>> failureOrSuccessOption;
 
   @override
   String toString() {
-    return 'EditProfileState(fullname: $fullname, email1: $email1, email2: $email2, telp1: $telp1, telp2: $telp2, isSubmitting: $isSubmitting, showErrorMessages: $showErrorMessages, failureOrSuccessOptionGettingImei: $failureOrSuccessOptionGettingImei, failureOrSuccessOption: $failureOrSuccessOption)';
+    return 'EditProfileState(fullname: $fullname, email1: $email1, email2: $email2, telp1: $telp1, telp2: $telp2, isSubmitting: $isSubmitting, showErrorMessages: $showErrorMessages, failureOrSuccessOption: $failureOrSuccessOption)';
   }
 
   @override
@@ -252,26 +233,13 @@ class _$_EditProfileState implements _EditProfileState {
                 other.isSubmitting == isSubmitting) &&
             (identical(other.showErrorMessages, showErrorMessages) ||
                 other.showErrorMessages == showErrorMessages) &&
-            (identical(other.failureOrSuccessOptionGettingImei,
-                    failureOrSuccessOptionGettingImei) ||
-                other.failureOrSuccessOptionGettingImei ==
-                    failureOrSuccessOptionGettingImei) &&
             (identical(other.failureOrSuccessOption, failureOrSuccessOption) ||
                 other.failureOrSuccessOption == failureOrSuccessOption));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      fullname,
-      email1,
-      email2,
-      telp1,
-      telp2,
-      isSubmitting,
-      showErrorMessages,
-      failureOrSuccessOptionGettingImei,
-      failureOrSuccessOption);
+  int get hashCode => Object.hash(runtimeType, fullname, email1, email2, telp1,
+      telp2, isSubmitting, showErrorMessages, failureOrSuccessOption);
 
   @JsonKey(ignore: true)
   @override
@@ -289,8 +257,6 @@ abstract class _EditProfileState implements EditProfileState {
       required final NoHP telp2,
       required final bool isSubmitting,
       required final bool showErrorMessages,
-      required final Option<Either<EditFailure, String?>>
-          failureOrSuccessOptionGettingImei,
       required final Option<Either<EditFailure, Unit>>
           failureOrSuccessOption}) = _$_EditProfileState;
 
@@ -308,8 +274,6 @@ abstract class _EditProfileState implements EditProfileState {
   bool get isSubmitting;
   @override
   bool get showErrorMessages;
-  @override
-  Option<Either<EditFailure, String?>> get failureOrSuccessOptionGettingImei;
   @override
   Option<Either<EditFailure, Unit>> get failureOrSuccessOption;
   @override

@@ -234,7 +234,6 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
                   context: buildContext);
 
               // Trigger another build [FOR DELETION]
-              await ref.read(userNotifierProvider.notifier).getUser();
               await getSavedLocations();
               await ref.read(geofenceProvider.notifier).getGeofenceList();
             }
@@ -316,9 +315,7 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
           .changeBackgroundItems(bgItems ?? []);
 
       // Trigger another build [FOR DELETION]
-      await ref.read(userNotifierProvider.notifier).getUser();
       await getSavedLocations();
-
       await ref.read(geofenceProvider.notifier).getGeofenceList();
     });
   }

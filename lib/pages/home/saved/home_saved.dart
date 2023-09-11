@@ -25,24 +25,23 @@ class _HomeSavedState extends ConsumerState<HomeSaved> {
         (_, failureOrSuccessOptionSaved) => failureOrSuccessOptionSaved.fold(
             () {},
             (either) => either.fold(
-                (failure) => failure.when(
-                      server: (code, message) => showDialog(
+                (failure) => failure.maybeWhen(
+                      noConnection: () => ref
+                          .read(absenOfflineModeProvider.notifier)
+                          .state = true,
+                      orElse: () => showDialog(
                           context: context,
                           barrierDismissible: true,
                           builder: (_) => VSimpleDialog(
                                 asset: Assets.iconCrossed,
-                                label: '$code',
-                                labelDescription: '$message',
+                                label: 'Error',
+                                labelDescription: failure.maybeMap(
+                                  server: (server) => 'Error $server',
+                                  passwordExpired: (password) => '$password',
+                                  passwordWrong: (password) => '$password',
+                                  orElse: () => '',
+                                ),
                               )),
-                      passwordExpired: () => ref
-                          .read(passwordExpiredNotifierProvider.notifier)
-                          .savePasswordExpired(),
-                      passwordWrong: () => ref
-                          .read(passwordExpiredNotifierProvider.notifier)
-                          .savePasswordExpired(),
-                      noConnection: () => ref
-                          .read(absenOfflineModeProvider.notifier)
-                          .state = true,
                     ),
                 (_) {})));
 

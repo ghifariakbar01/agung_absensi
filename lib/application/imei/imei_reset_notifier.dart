@@ -5,9 +5,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../domain/imei_failure.dart';
 import '../../domain/password_expired_failure.dart';
 import '../../infrastructure/imei/imei_repository.dart';
-import '../init_geofence/init_geofence_status.dart';
-import '../init_imei/init_imei_status.dart';
-import '../init_password_expired/init_password_expired_status.dart';
 import '../init_user/init_user_status.dart';
 import 'imei_reset_state.dart';
 
@@ -23,22 +20,7 @@ class ImeiResetNotifier extends StateNotifier<ImeiResetState> {
         (__, failureOrSuccess) => failureOrSuccess.fold(() => null, (_) async {
               _ref.read(initUserStatusProvider.notifier).state =
                   InitUserStatus.init();
-
-              _ref.read(initGeofenceStatusProvider.notifier).state =
-                  InitGeofenceStatus.init();
-
-              _ref.read(initImeiStatusProvider.notifier).state =
-                  InitImeiStatus.init();
-
-              _ref.read(initPasswordExpiredStatusProvider.notifier).state =
-                  InitPasswordExpiredStatus.init();
-              //
-              await _ref
-                  .read(imeiAuthNotifierProvider.notifier)
-                  .resetSavedImei();
-              await clearImeiFromStorage();
-              //
-              await _ref.read(userNotifierProvider.notifier).resetUserImei();
+              // await this.clearImeiFromStorage();
               await _ref.read(userNotifierProvider.notifier).setUserInitial();
               await _ref.read(userNotifierProvider.notifier).logout();
             }));

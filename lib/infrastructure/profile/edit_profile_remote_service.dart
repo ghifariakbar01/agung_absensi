@@ -41,7 +41,7 @@ class EditProfileRemoteService {
 
       log('response $response');
 
-      // debugger();
+      debugger();
 
       final items = response.data?[0];
 

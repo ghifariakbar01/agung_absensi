@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/domain/edit_failure.dart';
-import 'package:face_net_authentication/pages/profile/edit_profile.dart/edit_profile_scaffold.dart';
+import 'package:face_net_authentication/pages/profile/edit_profile/edit_profile_scaffold.dart';
 import 'package:face_net_authentication/pages/widgets/loading_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -8,7 +8,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../application/routes/route_names.dart';
 import '../../../constants/assets.dart';
-import '../../../domain/value_objects_copy.dart';
 import '../../../shared/providers.dart';
 import '../../widgets/v_dialogs.dart';
 
@@ -32,12 +31,6 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
           () {},
           (either) => either.fold(
               (failure) => failure.maybeMap(
-                    passwordExpired: (_) => ref
-                        .read(passwordExpiredNotifierProvider.notifier)
-                        .savePasswordExpired(),
-                    passwordWrong: (_) => ref
-                        .read(passwordExpiredNotifierProvider.notifier)
-                        .savePasswordExpired(),
                     orElse: () => showDialog(
                       context: context,
                       barrierDismissible: true,
@@ -45,6 +38,8 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                         label: 'Error',
                         labelDescription: failure.maybeMap(
                             server: (server) => 'error server $server',
+                            passwordExpired: (value) => '$value',
+                            passwordWrong: (value) => '$value',
                             noConnection: (_) => 'no connection',
                             orElse: () => ''),
                         asset: Assets.iconCrossed,
@@ -56,11 +51,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                   .onEditProfile(
                       saveUser: () => ref
                           .read(userNotifierProvider.notifier)
-                          .saveUserAfterUpdate(
-                              idKaryawan: IdKaryawan(user.idKary ?? ''),
-                              password: Password(user.password ?? ''),
-                              userId: UserId(user.nama ?? ''),
-                              server: PTName(user.ptServer)),
+                          .saveUserAfterUpdate(user: user),
                       onUser: () =>
                           context.replaceNamed(RouteNames.profileNameRoute)))),
     );

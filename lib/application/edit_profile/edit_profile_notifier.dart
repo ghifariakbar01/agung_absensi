@@ -1,8 +1,4 @@
-import 'dart:developer';
-
 import 'package:dartz/dartz.dart';
-import 'package:face_net_authentication/application/imei/imei_state.dart';
-import 'package:face_net_authentication/application/init_imei/init_imei_status.dart';
 import 'package:face_net_authentication/domain/edit_failure.dart';
 import 'package:face_net_authentication/domain/value_objects_copy.dart';
 import 'package:face_net_authentication/infrastructure/profile/edit_profile_repository.dart';
@@ -44,71 +40,6 @@ class EditProfileNotifier extends StateNotifier<EditProfileState> {
     await onUser();
   }
 
-  Future<void> onImeiAlreadyRegistered({
-    required Function showDialog,
-    required Function logout,
-  }) async {
-    await showDialog();
-    await logout();
-  }
-
-  Future<void> onImei({
-    required ImeiState imeiDBState,
-    required String? savedImei,
-    required String? imeiDBString,
-    required InitImeiStatus onImeiOK(),
-    required Future<void> onImeiNotRegistered(),
-    required Future<void> onImeiAlreadyRegistered(),
-  }) async {
-    log('imei condition ${savedImei != null} ${savedImei!.isEmpty} ');
-
-    if (imeiDBState == ImeiState.empty()) {
-      switch (savedImei.isEmpty) {
-        case true:
-          debugger(message: 'called');
-
-          await onImeiNotRegistered();
-          break;
-
-        case false:
-          debugger(message: 'called');
-
-          await onImeiAlreadyRegistered();
-          // await onImeiNotRegistered();
-
-          break;
-      }
-    }
-
-    if (imeiDBState == ImeiState.registered()) {
-      switch (savedImei.isEmpty) {
-        case true:
-          debugger(message: 'called');
-
-          await onImeiAlreadyRegistered();
-          // await onImeiNotRegistered();
-
-          break;
-        case false:
-          () async {
-            if (imeiDBString == savedImei) {
-              debugger(message: 'called');
-
-              onImeiOK();
-            } else if (imeiDBString != savedImei) {
-              debugger(message: 'called');
-
-              await onImeiAlreadyRegistered();
-              // await onImeiNotRegistered();
-            }
-          }();
-          break;
-
-        default:
-      }
-    }
-  }
-
   void changeEditProfile(
       {required String noTelp1,
       required String noTelp2,
@@ -132,43 +63,6 @@ class EditProfileNotifier extends StateNotifier<EditProfileState> {
     await getImeiCredentials();
     await onImeiComplete();
     await showDialog();
-  }
-
-  Future<void> getImei() async {
-    Either<EditFailure, String?> failureOrSuccess;
-
-    state = state.copyWith(
-        isSubmitting: true, failureOrSuccessOptionGettingImei: none());
-
-    failureOrSuccess = await _editProfileRepostiroy.getImei();
-
-    state = state.copyWith(
-        isSubmitting: false,
-        failureOrSuccessOptionGettingImei: optionOf(failureOrSuccess));
-  }
-
-  Future<void> clearImeiFromDB() async {
-    Either<EditFailure, Unit>? failureOrSuccess;
-
-    state = state.copyWith(isSubmitting: true, failureOrSuccessOption: none());
-
-    failureOrSuccess = await _editProfileRepostiroy.clearImei();
-
-    state = state.copyWith(
-        isSubmitting: false,
-        failureOrSuccessOption: optionOf(failureOrSuccess));
-  }
-
-  Future<void> registerImei({required String imei}) async {
-    Either<EditFailure, Unit>? failureOrSuccess;
-
-    state = state.copyWith(isSubmitting: true, failureOrSuccessOption: none());
-
-    failureOrSuccess = await _editProfileRepostiroy.registerImei(imei: imei);
-
-    state = state.copyWith(
-        isSubmitting: false,
-        failureOrSuccessOption: optionOf(failureOrSuccess));
   }
 
   Future<void> submitEdit() async {

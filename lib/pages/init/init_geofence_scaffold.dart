@@ -85,12 +85,6 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
                       noConnection: () => ref
                           .read(geofenceProvider.notifier)
                           .getGeofenceListFromStorage(),
-                      passwordExpired: () => ref
-                          .read(passwordExpiredNotifierProvider.notifier)
-                          .savePasswordExpired(),
-                      passwordWrong: () => ref
-                          .read(passwordExpiredNotifierProvider.notifier)
-                          .savePasswordExpired(),
                       orElse: () => showCupertinoDialog(
                           context: context,
                           barrierDismissible: true,
@@ -143,7 +137,7 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
                             log('savedItems $savedItems');
                             // [AUTO ABSEN]
 
-                            final imei = ref.read(imeiAuthNotifierProvider
+                            final imei = ref.read(imeiNotifierProvider
                                 .select((value) => value.imei));
 
                             final dbDate = await ref

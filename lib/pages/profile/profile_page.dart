@@ -20,60 +20,16 @@ class ProfilePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final user = ref.read(userNotifierProvider.select((value) => value.user));
-
-      // Get user
-      await ref.read(userNotifierProvider.notifier).saveUserAfterUpdate(
-          idKaryawan: IdKaryawan(user.idKary ?? ''),
-          password: Password(user.password ?? ''),
-          userId: UserId(user.nama ?? ''),
-          server: PTName(user.ptServer));
-    });
-
-    ref.listen<Option<Either<AuthFailure, Unit?>>>(
-      userNotifierProvider.select(
-        (state) => state.failureOrSuccessOptionUpdate,
-      ),
-      (_, failureOrSuccessOptionUpdate) => failureOrSuccessOptionUpdate.fold(
-        () {},
-        (either) => either.fold(
-            (failure) => failure.maybeMap(
-                  noConnection: (_) => null,
-                  orElse: () => showDialog(
-                    context: context,
-                    barrierDismissible: true,
-                    builder: (_) => VSimpleDialog(
-                      label: 'Error',
-                      labelDescription: failure.maybeMap(
-                          server: (server) =>
-                              '${server.errorCode} ${server.message}',
-                          storage: (_) => 'storage penuh',
-                          orElse: () => ''),
-                      asset: Assets.iconCrossed,
-                    ),
-                  ),
-                ),
-            (_) => ref.read(userNotifierProvider.notifier).getUser()),
-      ),
-    );
-
     // FOR UNLINK DEVICE
-    ref.listen<Option<Either<EditFailure, Unit>>>(
-      editProfileNotifierProvider.select(
-        (state) => state.failureOrSuccessOption,
+    ref.listen<Option<Either<EditFailure, Unit?>>>(
+      imeiNotifierProvider.select(
+        (state) => state.failureOrSuccessOptionClearRegisterImei,
       ),
       (_, failureOrSuccessOption) => failureOrSuccessOption.fold(
           () {},
           (either) => either.fold(
                   (failure) => failure.maybeMap(
                         noConnection: (_) => null,
-                        passwordExpired: (_) => ref
-                            .read(passwordExpiredNotifierProvider.notifier)
-                            .savePasswordExpired(),
-                        passwordWrong: (_) => ref
-                            .read(passwordExpiredNotifierProvider.notifier)
-                            .savePasswordExpired(),
                         orElse: () => showDialog(
                           context: context,
                           barrierDismissible: true,
@@ -81,24 +37,16 @@ class ProfilePage extends HookConsumerWidget {
                             label: 'Error',
                             labelDescription: failure.maybeMap(
                                 server: (server) => 'error server $server',
+                                passwordExpired: (password) => '$password',
+                                passwordWrong: (password) => '$password',
                                 orElse: () => ''),
                             asset: Assets.iconCrossed,
                           ),
                         ),
                       ), (_) async {
                 ref.read(userNotifierProvider.notifier).setUserInitial();
-                //
                 ref.read(initUserStatusProvider.notifier).state =
                     InitUserStatus.init();
-                //
-                ref.read(initGeofenceStatusProvider.notifier).state =
-                    InitGeofenceStatus.init();
-                //
-                ref.read(initImeiStatusProvider.notifier).state =
-                    InitImeiStatus.init();
-                //
-                ref.read(initPasswordExpiredStatusProvider.notifier).state =
-                    InitPasswordExpiredStatus.init();
                 await ref.read(userNotifierProvider.notifier).logout();
               })),
     );

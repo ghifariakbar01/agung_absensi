@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:upgrader/upgrader.dart';
 
-import '../../application/init_geofence/init_geofence_scaffold.dart';
+import '../init/init_geofence_scaffold.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage();

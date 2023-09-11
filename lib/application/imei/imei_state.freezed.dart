@@ -16,49 +16,18 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$ImeiState {
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() registered,
-    required TResult Function() empty,
-    required TResult Function() initial,
-  }) =>
+  String get imei => throw _privateConstructorUsedError;
+  bool get isGetting => throw _privateConstructorUsedError;
+  Option<Either<ImeiFailure, String?>> get failureOrSuccessOption =>
       throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? registered,
-    TResult? Function()? empty,
-    TResult? Function()? initial,
-  }) =>
+  Option<Either<EditFailure, String?>> get failureOrSuccessOptionGetImei =>
       throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? registered,
-    TResult Function()? empty,
-    TResult Function()? initial,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Registered value) registered,
-    required TResult Function(_Empty value) empty,
-    required TResult Function(_Initial value) initial,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Registered value)? registered,
-    TResult? Function(_Empty value)? empty,
-    TResult? Function(_Initial value)? initial,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Registered value)? registered,
-    TResult Function(_Empty value)? empty,
-    TResult Function(_Initial value)? initial,
-    required TResult orElse(),
-  }) =>
+  Option<Either<EditFailure, Unit?>>
+      get failureOrSuccessOptionClearRegisterImei =>
+          throw _privateConstructorUsedError;
+
+  @JsonKey(ignore: true)
+  $ImeiStateCopyWith<ImeiState> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -66,6 +35,14 @@ mixin _$ImeiState {
 abstract class $ImeiStateCopyWith<$Res> {
   factory $ImeiStateCopyWith(ImeiState value, $Res Function(ImeiState) then) =
       _$ImeiStateCopyWithImpl<$Res, ImeiState>;
+  @useResult
+  $Res call(
+      {String imei,
+      bool isGetting,
+      Option<Either<ImeiFailure, String?>> failureOrSuccessOption,
+      Option<Either<EditFailure, String?>> failureOrSuccessOptionGetImei,
+      Option<Either<EditFailure, Unit?>>
+          failureOrSuccessOptionClearRegisterImei});
 }
 
 /// @nodoc
@@ -77,325 +54,188 @@ class _$ImeiStateCopyWithImpl<$Res, $Val extends ImeiState>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? imei = null,
+    Object? isGetting = null,
+    Object? failureOrSuccessOption = null,
+    Object? failureOrSuccessOptionGetImei = null,
+    Object? failureOrSuccessOptionClearRegisterImei = null,
+  }) {
+    return _then(_value.copyWith(
+      imei: null == imei
+          ? _value.imei
+          : imei // ignore: cast_nullable_to_non_nullable
+              as String,
+      isGetting: null == isGetting
+          ? _value.isGetting
+          : isGetting // ignore: cast_nullable_to_non_nullable
+              as bool,
+      failureOrSuccessOption: null == failureOrSuccessOption
+          ? _value.failureOrSuccessOption
+          : failureOrSuccessOption // ignore: cast_nullable_to_non_nullable
+              as Option<Either<ImeiFailure, String?>>,
+      failureOrSuccessOptionGetImei: null == failureOrSuccessOptionGetImei
+          ? _value.failureOrSuccessOptionGetImei
+          : failureOrSuccessOptionGetImei // ignore: cast_nullable_to_non_nullable
+              as Option<Either<EditFailure, String?>>,
+      failureOrSuccessOptionClearRegisterImei: null ==
+              failureOrSuccessOptionClearRegisterImei
+          ? _value.failureOrSuccessOptionClearRegisterImei
+          : failureOrSuccessOptionClearRegisterImei // ignore: cast_nullable_to_non_nullable
+              as Option<Either<EditFailure, Unit?>>,
+    ) as $Val);
+  }
 }
 
 /// @nodoc
-abstract class _$$_RegisteredCopyWith<$Res> {
-  factory _$$_RegisteredCopyWith(
-          _$_Registered value, $Res Function(_$_Registered) then) =
-      __$$_RegisteredCopyWithImpl<$Res>;
+abstract class _$$_ImeiStateCopyWith<$Res> implements $ImeiStateCopyWith<$Res> {
+  factory _$$_ImeiStateCopyWith(
+          _$_ImeiState value, $Res Function(_$_ImeiState) then) =
+      __$$_ImeiStateCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {String imei,
+      bool isGetting,
+      Option<Either<ImeiFailure, String?>> failureOrSuccessOption,
+      Option<Either<EditFailure, String?>> failureOrSuccessOptionGetImei,
+      Option<Either<EditFailure, Unit?>>
+          failureOrSuccessOptionClearRegisterImei});
 }
 
 /// @nodoc
-class __$$_RegisteredCopyWithImpl<$Res>
-    extends _$ImeiStateCopyWithImpl<$Res, _$_Registered>
-    implements _$$_RegisteredCopyWith<$Res> {
-  __$$_RegisteredCopyWithImpl(
-      _$_Registered _value, $Res Function(_$_Registered) _then)
+class __$$_ImeiStateCopyWithImpl<$Res>
+    extends _$ImeiStateCopyWithImpl<$Res, _$_ImeiState>
+    implements _$$_ImeiStateCopyWith<$Res> {
+  __$$_ImeiStateCopyWithImpl(
+      _$_ImeiState _value, $Res Function(_$_ImeiState) _then)
       : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? imei = null,
+    Object? isGetting = null,
+    Object? failureOrSuccessOption = null,
+    Object? failureOrSuccessOptionGetImei = null,
+    Object? failureOrSuccessOptionClearRegisterImei = null,
+  }) {
+    return _then(_$_ImeiState(
+      imei: null == imei
+          ? _value.imei
+          : imei // ignore: cast_nullable_to_non_nullable
+              as String,
+      isGetting: null == isGetting
+          ? _value.isGetting
+          : isGetting // ignore: cast_nullable_to_non_nullable
+              as bool,
+      failureOrSuccessOption: null == failureOrSuccessOption
+          ? _value.failureOrSuccessOption
+          : failureOrSuccessOption // ignore: cast_nullable_to_non_nullable
+              as Option<Either<ImeiFailure, String?>>,
+      failureOrSuccessOptionGetImei: null == failureOrSuccessOptionGetImei
+          ? _value.failureOrSuccessOptionGetImei
+          : failureOrSuccessOptionGetImei // ignore: cast_nullable_to_non_nullable
+              as Option<Either<EditFailure, String?>>,
+      failureOrSuccessOptionClearRegisterImei: null ==
+              failureOrSuccessOptionClearRegisterImei
+          ? _value.failureOrSuccessOptionClearRegisterImei
+          : failureOrSuccessOptionClearRegisterImei // ignore: cast_nullable_to_non_nullable
+              as Option<Either<EditFailure, Unit?>>,
+    ));
+  }
 }
 
 /// @nodoc
 
-class _$_Registered implements _Registered {
-  const _$_Registered();
+class _$_ImeiState implements _ImeiState {
+  const _$_ImeiState(
+      {required this.imei,
+      required this.isGetting,
+      required this.failureOrSuccessOption,
+      required this.failureOrSuccessOptionGetImei,
+      required this.failureOrSuccessOptionClearRegisterImei});
+
+  @override
+  final String imei;
+  @override
+  final bool isGetting;
+  @override
+  final Option<Either<ImeiFailure, String?>> failureOrSuccessOption;
+  @override
+  final Option<Either<EditFailure, String?>> failureOrSuccessOptionGetImei;
+  @override
+  final Option<Either<EditFailure, Unit?>>
+      failureOrSuccessOptionClearRegisterImei;
 
   @override
   String toString() {
-    return 'ImeiState.registered()';
+    return 'ImeiState(imei: $imei, isGetting: $isGetting, failureOrSuccessOption: $failureOrSuccessOption, failureOrSuccessOptionGetImei: $failureOrSuccessOptionGetImei, failureOrSuccessOptionClearRegisterImei: $failureOrSuccessOptionClearRegisterImei)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$_Registered);
+        (other.runtimeType == runtimeType &&
+            other is _$_ImeiState &&
+            (identical(other.imei, imei) || other.imei == imei) &&
+            (identical(other.isGetting, isGetting) ||
+                other.isGetting == isGetting) &&
+            (identical(other.failureOrSuccessOption, failureOrSuccessOption) ||
+                other.failureOrSuccessOption == failureOrSuccessOption) &&
+            (identical(other.failureOrSuccessOptionGetImei,
+                    failureOrSuccessOptionGetImei) ||
+                other.failureOrSuccessOptionGetImei ==
+                    failureOrSuccessOptionGetImei) &&
+            (identical(other.failureOrSuccessOptionClearRegisterImei,
+                    failureOrSuccessOptionClearRegisterImei) ||
+                other.failureOrSuccessOptionClearRegisterImei ==
+                    failureOrSuccessOptionClearRegisterImei));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode => Object.hash(
+      runtimeType,
+      imei,
+      isGetting,
+      failureOrSuccessOption,
+      failureOrSuccessOptionGetImei,
+      failureOrSuccessOptionClearRegisterImei);
 
+  @JsonKey(ignore: true)
   @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() registered,
-    required TResult Function() empty,
-    required TResult Function() initial,
-  }) {
-    return registered();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? registered,
-    TResult? Function()? empty,
-    TResult? Function()? initial,
-  }) {
-    return registered?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? registered,
-    TResult Function()? empty,
-    TResult Function()? initial,
-    required TResult orElse(),
-  }) {
-    if (registered != null) {
-      return registered();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Registered value) registered,
-    required TResult Function(_Empty value) empty,
-    required TResult Function(_Initial value) initial,
-  }) {
-    return registered(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Registered value)? registered,
-    TResult? Function(_Empty value)? empty,
-    TResult? Function(_Initial value)? initial,
-  }) {
-    return registered?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Registered value)? registered,
-    TResult Function(_Empty value)? empty,
-    TResult Function(_Initial value)? initial,
-    required TResult orElse(),
-  }) {
-    if (registered != null) {
-      return registered(this);
-    }
-    return orElse();
-  }
+  @pragma('vm:prefer-inline')
+  _$$_ImeiStateCopyWith<_$_ImeiState> get copyWith =>
+      __$$_ImeiStateCopyWithImpl<_$_ImeiState>(this, _$identity);
 }
 
-abstract class _Registered implements ImeiState {
-  const factory _Registered() = _$_Registered;
-}
-
-/// @nodoc
-abstract class _$$_EmptyCopyWith<$Res> {
-  factory _$$_EmptyCopyWith(_$_Empty value, $Res Function(_$_Empty) then) =
-      __$$_EmptyCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$_EmptyCopyWithImpl<$Res>
-    extends _$ImeiStateCopyWithImpl<$Res, _$_Empty>
-    implements _$$_EmptyCopyWith<$Res> {
-  __$$_EmptyCopyWithImpl(_$_Empty _value, $Res Function(_$_Empty) _then)
-      : super(_value, _then);
-}
-
-/// @nodoc
-
-class _$_Empty implements _Empty {
-  const _$_Empty();
+abstract class _ImeiState implements ImeiState {
+  const factory _ImeiState(
+      {required final String imei,
+      required final bool isGetting,
+      required final Option<Either<ImeiFailure, String?>>
+          failureOrSuccessOption,
+      required final Option<Either<EditFailure, String?>>
+          failureOrSuccessOptionGetImei,
+      required final Option<Either<EditFailure, Unit?>>
+          failureOrSuccessOptionClearRegisterImei}) = _$_ImeiState;
 
   @override
-  String toString() {
-    return 'ImeiState.empty()';
-  }
-
+  String get imei;
   @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$_Empty);
-  }
-
+  bool get isGetting;
   @override
-  int get hashCode => runtimeType.hashCode;
-
+  Option<Either<ImeiFailure, String?>> get failureOrSuccessOption;
   @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() registered,
-    required TResult Function() empty,
-    required TResult Function() initial,
-  }) {
-    return empty();
-  }
-
+  Option<Either<EditFailure, String?>> get failureOrSuccessOptionGetImei;
   @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? registered,
-    TResult? Function()? empty,
-    TResult? Function()? initial,
-  }) {
-    return empty?.call();
-  }
-
+  Option<Either<EditFailure, Unit?>>
+      get failureOrSuccessOptionClearRegisterImei;
   @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? registered,
-    TResult Function()? empty,
-    TResult Function()? initial,
-    required TResult orElse(),
-  }) {
-    if (empty != null) {
-      return empty();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Registered value) registered,
-    required TResult Function(_Empty value) empty,
-    required TResult Function(_Initial value) initial,
-  }) {
-    return empty(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Registered value)? registered,
-    TResult? Function(_Empty value)? empty,
-    TResult? Function(_Initial value)? initial,
-  }) {
-    return empty?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Registered value)? registered,
-    TResult Function(_Empty value)? empty,
-    TResult Function(_Initial value)? initial,
-    required TResult orElse(),
-  }) {
-    if (empty != null) {
-      return empty(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _Empty implements ImeiState {
-  const factory _Empty() = _$_Empty;
-}
-
-/// @nodoc
-abstract class _$$_InitialCopyWith<$Res> {
-  factory _$$_InitialCopyWith(
-          _$_Initial value, $Res Function(_$_Initial) then) =
-      __$$_InitialCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$_InitialCopyWithImpl<$Res>
-    extends _$ImeiStateCopyWithImpl<$Res, _$_Initial>
-    implements _$$_InitialCopyWith<$Res> {
-  __$$_InitialCopyWithImpl(_$_Initial _value, $Res Function(_$_Initial) _then)
-      : super(_value, _then);
-}
-
-/// @nodoc
-
-class _$_Initial implements _Initial {
-  const _$_Initial();
-
-  @override
-  String toString() {
-    return 'ImeiState.initial()';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$_Initial);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() registered,
-    required TResult Function() empty,
-    required TResult Function() initial,
-  }) {
-    return initial();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? registered,
-    TResult? Function()? empty,
-    TResult? Function()? initial,
-  }) {
-    return initial?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? registered,
-    TResult Function()? empty,
-    TResult Function()? initial,
-    required TResult orElse(),
-  }) {
-    if (initial != null) {
-      return initial();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Registered value) registered,
-    required TResult Function(_Empty value) empty,
-    required TResult Function(_Initial value) initial,
-  }) {
-    return initial(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Registered value)? registered,
-    TResult? Function(_Empty value)? empty,
-    TResult? Function(_Initial value)? initial,
-  }) {
-    return initial?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Registered value)? registered,
-    TResult Function(_Empty value)? empty,
-    TResult Function(_Initial value)? initial,
-    required TResult orElse(),
-  }) {
-    if (initial != null) {
-      return initial(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _Initial implements ImeiState {
-  const factory _Initial() = _$_Initial;
+  @JsonKey(ignore: true)
+  _$$_ImeiStateCopyWith<_$_ImeiState> get copyWith =>
+      throw _privateConstructorUsedError;
 }

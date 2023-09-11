@@ -36,11 +36,13 @@ class UserNotifier extends StateNotifier<UserState> {
   }
 
   Future<void> saveUserAfterUpdate(
-      {required IdKaryawan idKaryawan,
-      required UserId userId,
-      required Password password,
-      required PTName server}) async {
+      {required UserModelWithPassword user}) async {
     Either<AuthFailure, Unit?> failureOrSuccess;
+
+    final idKaryawan = IdKaryawan(user.idKary ?? '');
+    final userId = UserId(user.nama ?? '');
+    final password = Password(user.password ?? '');
+    final server = PTName(user.ptServer);
 
     state =
         state.copyWith(isGetting: true, failureOrSuccessOptionUpdate: none());
@@ -58,15 +60,26 @@ class UserNotifier extends StateNotifier<UserState> {
 
   Either<UserFailure, UserModelWithPassword> parseUser(String? user) {
     try {
-      return right(UserModelWithPassword.fromJson(jsonDecode(user ?? '')));
-    } on FormatException {
-      return left(UserFailure.errorParsing('Error while parse'));
+      Map<String, Object?> userJson = jsonDecode(user ?? '');
+
+      if (userJson.isNotEmpty) {
+        return right(UserModelWithPassword.fromJson(userJson));
+      }
+
+      return left(UserFailure.errorParsing('userJson is Empty'));
+      //
+    } on FormatException catch (e) {
+      return left(UserFailure.errorParsing('$e'));
     }
   }
 
   setUser(UserModelWithPassword user) {
     debugger();
     state = state.copyWith(user: user);
+  }
+
+  setUserInitial() {
+    state = UserState.initial();
   }
 
   Future<void> onUserParsed({
@@ -84,10 +97,10 @@ class UserNotifier extends StateNotifier<UserState> {
   }
 
   Future<void> onUserParsedRaw(
-      {required WidgetRef ref,
+      {required Ref ref,
       required UserModelWithPassword userModelWithPassword}) async {
     await onUserParsed(
-        initializeUser: () async => await setUser(userModelWithPassword),
+        initializeUser: () => setUser(userModelWithPassword),
         initializeDioRequest: () {
           ref.read(dioRequestProvider).addAll({
             "kode": "${StringUtils.formatDate(DateTime.now())}",
@@ -114,11 +127,10 @@ class UserNotifier extends StateNotifier<UserState> {
                 .changeDaysLeft(daysLeft);
           }
         },
-        checkAndUpdateStatus: () async => await ref
-            .read(authNotifierProvider.notifier)
-            .checkAndUpdateAuthStatus(),
-        checkAndUpdateImei: () async =>
-            await ref.read(imeiNotifierProvider.notifier).checkAndUpdateImei());
+        checkAndUpdateStatus: () =>
+            ref.read(authNotifierProvider.notifier).checkAndUpdateAuthStatus(),
+        checkAndUpdateImei: () =>
+            ref.read(imeiAuthNotifierProvider.notifier).checkAndUpdateImei());
   }
 
   Future<void> logout() async {
@@ -128,13 +140,5 @@ class UserNotifier extends StateNotifier<UserState> {
 
     state = state.copyWith(
         failureOrSuccessOptionUpdate: optionOf(failureOrSuccessOption));
-  }
-
-  setUserInitial() {
-    state = UserState.initial();
-  }
-
-  resetUserImei() {
-    state = state.copyWith(user: state.user.copyWith(imeiHp: ''));
   }
 }

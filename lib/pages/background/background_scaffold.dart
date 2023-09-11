@@ -23,43 +23,30 @@ class BackgroundScaffold extends ConsumerWidget {
         (_, failureOrSuccessOptionSaved) => failureOrSuccessOptionSaved.fold(
             () {},
             (either) => either.fold(
-                    (failure) => failure.when(
-                          server: (code, message) => showDialog(
-                              context: context,
-                              barrierDismissible: true,
-                              builder: (_) => VSimpleDialog(
-                                    asset: Assets.iconCrossed,
-                                    label: '$code',
-                                    labelDescription: '$message',
-                                  )),
-                          passwordExpired: () => ref
-                              .read(passwordExpiredNotifierProvider.notifier)
-                              .savePasswordExpired(),
-                          passwordWrong: () => ref
-                              .read(passwordExpiredNotifierProvider.notifier)
-                              .savePasswordExpired(),
-                          noConnection: () => showDialog(
-                              context: context,
-                              barrierDismissible: true,
-                              builder: (_) => VSimpleDialog(
-                                    asset: Assets.iconCrossed,
-                                    label: 'NoConnection',
-                                    labelDescription: 'Tidak ada koneksi',
-                                  )),
-                        ), (_) async {
+                    (failure) => showDialog(
+                        context: context,
+                        barrierDismissible: true,
+                        builder: (_) => VSimpleDialog(
+                              asset: Assets.iconCrossed,
+                              label: 'Error',
+                              labelDescription: failure.when(
+                                  server: (code, message) =>
+                                      'Error $code $message',
+                                  passwordExpired: () => 'Password Expired',
+                                  passwordWrong: () => 'Password Wrong',
+                                  noConnection: () => 'Tidak Ada Koneksi'),
+                            )), (_) async {
                   debugger(message: 'called');
-
                   await ref.read(absenNotifierProvidier.notifier).getAbsen(
                         date: DateTime.now(),
                       );
-
+                  String jam = StringUtils.hoursDate(DateTime.now());
                   await showDialog(
                       context: context,
                       barrierDismissible: true,
                       builder: (_) => VSimpleDialog(
                             asset: Assets.iconChecked,
-                            label:
-                                'JAM ${StringUtils.hoursDate(DateTime.now())}',
+                            label: 'JAM $jam',
                             labelDescription: 'BERHASIL',
                           ));
 

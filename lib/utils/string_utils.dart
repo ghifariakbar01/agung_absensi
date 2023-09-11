@@ -30,12 +30,14 @@ class StringUtils {
     return midnightDateTime.toString();
   }
 
+  // OUTPUT: MMMM
   static String monthDate(DateTime dateTime) {
     DateTime dateToParse = DateTime.parse(dateTime.toString());
     DateFormat monthDate = DateFormat('MMMM');
     return monthDate.format(dateToParse);
   }
 
+  // OUTUPUT: HH:MM
   static String hoursDate(DateTime dateTime) {
     String dateTimeString = dateTime.toString();
     DateTime dateToParse = DateTime.parse(dateTimeString);
