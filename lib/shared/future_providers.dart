@@ -131,9 +131,6 @@ final userFOSOUpdateProvider =
 
                 // TRIGGER IMEI FUTURE PROVIDERS
                 await ref
-                    .read(imeiAuthNotifierProvider.notifier)
-                    .checkAndUpdateImei();
-                await ref
                     .read(imeiNotifierProvider.notifier)
                     .getImeiCredentials();
                 await ref.read(imeiNotifierProvider.notifier).getImei();
@@ -210,6 +207,10 @@ final imeiFOSOGetProvider =
                         ),
                       ),
                     ), (imeiResponse) async {
+              await ref
+                  .read(imeiAuthNotifierProvider.notifier)
+                  .checkAndUpdateImei();
+
               ImeiAuthState imeiAuthState = ref.read(imeiAuthNotifierProvider);
               String savedImei =
                   ref.read(imeiNotifierProvider.select((value) => value.imei));

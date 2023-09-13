@@ -9,9 +9,6 @@ class ImeiRepository {
 
   final CredentialsStorage _credentialsStorage;
 
-  Future<bool> hasImei() => getImeiCredentials()
-      .then((credentials) => credentials.fold((_) => false, (_) => true));
-
   Future<Either<ImeiFailure, String?>> getImeiCredentials() async {
     try {
       final storedCredentials = await _credentialsStorage.read();
