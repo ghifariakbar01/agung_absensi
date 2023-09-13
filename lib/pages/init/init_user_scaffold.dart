@@ -36,7 +36,7 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
     return Scaffold(
       body: Stack(children: [
         LoadingOverlay(
-            loadingMessage: 'Initializing User & Installl ID...',
+            loadingMessage: 'Initializing User & Installation ID...',
             isLoading: true)
       ]),
       backgroundColor: Colors.white.withOpacity(0.9),

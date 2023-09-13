@@ -130,7 +130,7 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
 
                             await ref
                                 .read(geofenceProvider.notifier)
-                                .initializeGeoFence(savedLocations, geofence,
+                                .initializeGeoFence(geofence,
                                     onError: (e) => log('error geofence $e'));
 
                             debugger();
@@ -173,7 +173,7 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
                               //
                               await ref
                                   .read(geofenceProvider.notifier)
-                                  .initializeGeoFence(null, geofence,
+                                  .initializeGeoFence(geofence,
                                       onError: (e) => log('error geofence $e'));
                             } else {
                               //
@@ -192,7 +192,7 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
                     //
                     await ref
                         .read(geofenceProvider.notifier)
-                        .initializeGeoFence(null, geofence,
+                        .initializeGeoFence(geofence,
                             onError: (e) => log('error geofence $e'));
 
                     // debugger();

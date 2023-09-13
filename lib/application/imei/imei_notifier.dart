@@ -61,7 +61,21 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
     state = state.copyWith(
         isGetting: true, failureOrSuccessOptionClearRegisterImei: none());
 
-    failureOrSuccess = await _editProfileRepostiroy.clearImei();
+    failureOrSuccess = await _editProfileRepostiroy.clearImei(imei: state.imei);
+
+    state = state.copyWith(
+        isGetting: false,
+        failureOrSuccessOptionClearRegisterImei: optionOf(failureOrSuccess));
+  }
+
+  Future<void> logClearImeiFromDB() async {
+    Either<EditFailure, Unit>? failureOrSuccess;
+
+    state = state.copyWith(
+        isGetting: true, failureOrSuccessOptionClearRegisterImei: none());
+
+    failureOrSuccess =
+        await _editProfileRepostiroy.logClearImei(imei: state.imei);
 
     state = state.copyWith(
         isGetting: false,
@@ -137,7 +151,9 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
             } else if (imeiDBString != savedImei) {
               debugger(message: 'called');
 
-              await onImeiAlreadyRegistered();
+              onImeiOK();
+
+              // await onImeiAlreadyRegistered();
               // await onImeiNotRegistered();
             }
           }();

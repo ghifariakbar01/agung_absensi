@@ -22,10 +22,6 @@ mixin _$GeofenceState {
   GeofenceCoordinate get nearestCoordinates =>
       throw _privateConstructorUsedError;
   Location get currentLocation => throw _privateConstructorUsedError; //
-  List<GeofenceCoordinate> get geofenceCoordinatesSaved =>
-      throw _privateConstructorUsedError;
-  List<GeofenceCoordinate> get nearestCoordinatesSaved =>
-      throw _privateConstructorUsedError; //
   bool get isGetting => throw _privateConstructorUsedError;
   Option<Either<GeofenceFailure, List<GeofenceResponse>>>
       get failureOrSuccessOption =>
@@ -49,8 +45,6 @@ abstract class $GeofenceStateCopyWith<$Res> {
       List<GeofenceCoordinate> geofenceCoordinates,
       GeofenceCoordinate nearestCoordinates,
       Location currentLocation,
-      List<GeofenceCoordinate> geofenceCoordinatesSaved,
-      List<GeofenceCoordinate> nearestCoordinatesSaved,
       bool isGetting,
       Option<Either<GeofenceFailure, List<GeofenceResponse>>>
           failureOrSuccessOption,
@@ -76,8 +70,6 @@ class _$GeofenceStateCopyWithImpl<$Res, $Val extends GeofenceState>
     Object? geofenceCoordinates = null,
     Object? nearestCoordinates = null,
     Object? currentLocation = null,
-    Object? geofenceCoordinatesSaved = null,
-    Object? nearestCoordinatesSaved = null,
     Object? isGetting = null,
     Object? failureOrSuccessOption = null,
     Object? failureOrSuccessOptionStorage = null,
@@ -99,14 +91,6 @@ class _$GeofenceStateCopyWithImpl<$Res, $Val extends GeofenceState>
           ? _value.currentLocation
           : currentLocation // ignore: cast_nullable_to_non_nullable
               as Location,
-      geofenceCoordinatesSaved: null == geofenceCoordinatesSaved
-          ? _value.geofenceCoordinatesSaved
-          : geofenceCoordinatesSaved // ignore: cast_nullable_to_non_nullable
-              as List<GeofenceCoordinate>,
-      nearestCoordinatesSaved: null == nearestCoordinatesSaved
-          ? _value.nearestCoordinatesSaved
-          : nearestCoordinatesSaved // ignore: cast_nullable_to_non_nullable
-              as List<GeofenceCoordinate>,
       isGetting: null == isGetting
           ? _value.isGetting
           : isGetting // ignore: cast_nullable_to_non_nullable
@@ -145,8 +129,6 @@ abstract class _$$_GeofenceStateCopyWith<$Res>
       List<GeofenceCoordinate> geofenceCoordinates,
       GeofenceCoordinate nearestCoordinates,
       Location currentLocation,
-      List<GeofenceCoordinate> geofenceCoordinatesSaved,
-      List<GeofenceCoordinate> nearestCoordinatesSaved,
       bool isGetting,
       Option<Either<GeofenceFailure, List<GeofenceResponse>>>
           failureOrSuccessOption,
@@ -171,8 +153,6 @@ class __$$_GeofenceStateCopyWithImpl<$Res>
     Object? geofenceCoordinates = null,
     Object? nearestCoordinates = null,
     Object? currentLocation = null,
-    Object? geofenceCoordinatesSaved = null,
-    Object? nearestCoordinatesSaved = null,
     Object? isGetting = null,
     Object? failureOrSuccessOption = null,
     Object? failureOrSuccessOptionStorage = null,
@@ -194,14 +174,6 @@ class __$$_GeofenceStateCopyWithImpl<$Res>
           ? _value.currentLocation
           : currentLocation // ignore: cast_nullable_to_non_nullable
               as Location,
-      geofenceCoordinatesSaved: null == geofenceCoordinatesSaved
-          ? _value._geofenceCoordinatesSaved
-          : geofenceCoordinatesSaved // ignore: cast_nullable_to_non_nullable
-              as List<GeofenceCoordinate>,
-      nearestCoordinatesSaved: null == nearestCoordinatesSaved
-          ? _value._nearestCoordinatesSaved
-          : nearestCoordinatesSaved // ignore: cast_nullable_to_non_nullable
-              as List<GeofenceCoordinate>,
       isGetting: null == isGetting
           ? _value.isGetting
           : isGetting // ignore: cast_nullable_to_non_nullable
@@ -226,14 +198,10 @@ class _$_GeofenceState implements _GeofenceState {
       required final List<GeofenceCoordinate> geofenceCoordinates,
       required this.nearestCoordinates,
       required this.currentLocation,
-      required final List<GeofenceCoordinate> geofenceCoordinatesSaved,
-      required final List<GeofenceCoordinate> nearestCoordinatesSaved,
       required this.isGetting,
       required this.failureOrSuccessOption,
       required this.failureOrSuccessOptionStorage})
-      : _geofenceCoordinates = geofenceCoordinates,
-        _geofenceCoordinatesSaved = geofenceCoordinatesSaved,
-        _nearestCoordinatesSaved = nearestCoordinatesSaved;
+      : _geofenceCoordinates = geofenceCoordinates;
 
   @override
   final GeofenceService geofenceService;
@@ -253,26 +221,6 @@ class _$_GeofenceState implements _GeofenceState {
   @override
   final Location currentLocation;
 //
-  final List<GeofenceCoordinate> _geofenceCoordinatesSaved;
-//
-  @override
-  List<GeofenceCoordinate> get geofenceCoordinatesSaved {
-    if (_geofenceCoordinatesSaved is EqualUnmodifiableListView)
-      return _geofenceCoordinatesSaved;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_geofenceCoordinatesSaved);
-  }
-
-  final List<GeofenceCoordinate> _nearestCoordinatesSaved;
-  @override
-  List<GeofenceCoordinate> get nearestCoordinatesSaved {
-    if (_nearestCoordinatesSaved is EqualUnmodifiableListView)
-      return _nearestCoordinatesSaved;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_nearestCoordinatesSaved);
-  }
-
-//
   @override
   final bool isGetting;
   @override
@@ -284,7 +232,7 @@ class _$_GeofenceState implements _GeofenceState {
 
   @override
   String toString() {
-    return 'GeofenceState(geofenceService: $geofenceService, geofenceCoordinates: $geofenceCoordinates, nearestCoordinates: $nearestCoordinates, currentLocation: $currentLocation, geofenceCoordinatesSaved: $geofenceCoordinatesSaved, nearestCoordinatesSaved: $nearestCoordinatesSaved, isGetting: $isGetting, failureOrSuccessOption: $failureOrSuccessOption, failureOrSuccessOptionStorage: $failureOrSuccessOptionStorage)';
+    return 'GeofenceState(geofenceService: $geofenceService, geofenceCoordinates: $geofenceCoordinates, nearestCoordinates: $nearestCoordinates, currentLocation: $currentLocation, isGetting: $isGetting, failureOrSuccessOption: $failureOrSuccessOption, failureOrSuccessOptionStorage: $failureOrSuccessOptionStorage)';
   }
 
   @override
@@ -300,10 +248,6 @@ class _$_GeofenceState implements _GeofenceState {
                 other.nearestCoordinates == nearestCoordinates) &&
             (identical(other.currentLocation, currentLocation) ||
                 other.currentLocation == currentLocation) &&
-            const DeepCollectionEquality().equals(
-                other._geofenceCoordinatesSaved, _geofenceCoordinatesSaved) &&
-            const DeepCollectionEquality().equals(
-                other._nearestCoordinatesSaved, _nearestCoordinatesSaved) &&
             (identical(other.isGetting, isGetting) ||
                 other.isGetting == isGetting) &&
             (identical(other.failureOrSuccessOption, failureOrSuccessOption) ||
@@ -321,8 +265,6 @@ class _$_GeofenceState implements _GeofenceState {
       const DeepCollectionEquality().hash(_geofenceCoordinates),
       nearestCoordinates,
       currentLocation,
-      const DeepCollectionEquality().hash(_geofenceCoordinatesSaved),
-      const DeepCollectionEquality().hash(_nearestCoordinatesSaved),
       isGetting,
       failureOrSuccessOption,
       failureOrSuccessOptionStorage);
@@ -340,8 +282,6 @@ abstract class _GeofenceState implements GeofenceState {
       required final List<GeofenceCoordinate> geofenceCoordinates,
       required final GeofenceCoordinate nearestCoordinates,
       required final Location currentLocation,
-      required final List<GeofenceCoordinate> geofenceCoordinatesSaved,
-      required final List<GeofenceCoordinate> nearestCoordinatesSaved,
       required final bool isGetting,
       required final Option<Either<GeofenceFailure, List<GeofenceResponse>>>
           failureOrSuccessOption,
@@ -356,10 +296,6 @@ abstract class _GeofenceState implements GeofenceState {
   GeofenceCoordinate get nearestCoordinates;
   @override
   Location get currentLocation;
-  @override //
-  List<GeofenceCoordinate> get geofenceCoordinatesSaved;
-  @override
-  List<GeofenceCoordinate> get nearestCoordinatesSaved;
   @override //
   bool get isGetting;
   @override

@@ -334,6 +334,6 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
 
     await ref
         .read(geofenceProvider.notifier)
-        .initializeGeoFence(savedLocations, geofence, onError: (e) {});
+        .initializeGeoFence(geofence, onError: (e) {});
   }
 }

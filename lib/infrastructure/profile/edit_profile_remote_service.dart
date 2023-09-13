@@ -7,6 +7,7 @@ import 'package:face_net_authentication/application/imei/imei_register_state.dar
 import 'package:face_net_authentication/infrastructure/dio_extensions.dart';
 
 import '../../application/user/user_model.dart';
+import '../../utils/string_utils.dart';
 import '../exceptions.dart';
 
 class EditProfileRemoteService {
@@ -18,6 +19,7 @@ class EditProfileRemoteService {
   final Map<String, String> _dioRequest;
 
   static const String dbName = 'mst_user';
+  static const String dbLogName = 'log_unlink_mobile';
 
   Future<String?> getImei() async {
     try {
@@ -105,7 +107,76 @@ class EditProfileRemoteService {
 
         return unit;
       } else {
-        throw RestApiException(10);
+        final message = items['error'] as String?;
+        final errorCode = items['errornum'] as int;
+
+        Exception? exception = ExceptionDeterminate.throwByCode(
+          errorCode: errorCode,
+          message: message ?? '',
+        );
+
+        throw exception ?? RestApiExceptionWithMessage(errorCode, message);
+      }
+    } on FormatException {
+      throw FormatException();
+    } on DioError catch (e) {
+      if (e.isNoConnectionError || e.isConnectionTimeout) {
+        throw NoConnectionException();
+      } else if (e.response != null) {
+        throw RestApiException(e.response?.statusCode);
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  Future<Unit> logClearImei({required String imei}) async {
+    try {
+      final data = _dioRequest;
+      final dateNow = DateTime.now();
+
+      final commandInsert = "INSERT INTO $dbLogName " +
+          " (id_user, tgl, imei_lama, tipe) " +
+          " VALUES " +
+          " ( " +
+          " ${_userModelWithPassword.idUser}, " +
+          " '${StringUtils.trimmedDate(dateNow)}', " +
+          " '$imei', "
+              " 'Mobile' "
+              " ) ";
+
+      final Map<String, String> edit = {
+        'command': commandInsert,
+        'mode': 'INSERT'
+      };
+
+      data.addAll(edit);
+
+      final response = await _dio.post('',
+          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
+
+      log('data ${jsonEncode(data)}');
+
+      log('response $response');
+
+      // debugger();
+
+      final items = response.data?[0];
+
+      if (items['status'] == 'Success') {
+        debugger();
+
+        return unit;
+      } else {
+        final message = items['error'] as String?;
+        final errorCode = items['errornum'] as int;
+
+        Exception? exception = ExceptionDeterminate.throwByCode(
+          errorCode: errorCode,
+          message: message ?? '',
+        );
+
+        throw exception ?? RestApiExceptionWithMessage(errorCode, message);
       }
     } on FormatException {
       throw FormatException();

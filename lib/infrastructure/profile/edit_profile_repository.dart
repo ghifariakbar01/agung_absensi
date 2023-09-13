@@ -32,11 +32,31 @@ class EditProfileRepostiroy {
     }
   }
 
-  Future<Either<EditFailure, Unit>> clearImei() async {
+  Future<Either<EditFailure, Unit>> clearImei({required String imei}) async {
     try {
-      final response = await _profileRemoteService.clearImei();
+      await _profileRemoteService.clearImei();
+      await _profileRemoteService.logClearImei(imei: imei);
+
+      return right(unit);
+    } on RestApiExceptionWithMessage catch (restApi) {
+      return left(EditFailure.server(restApi.errorCode, restApi.message));
+    } on RestApiException catch (restApi) {
+      return left(EditFailure.server(
+          restApi.errorCode, 'RestApi exception clearing imei'));
+    } on FormatException {
+      return left(EditFailure.server(1, 'Error parse clearing imei'));
+    } on NoConnectionException {
+      return left(EditFailure.noConnection());
+    }
+  }
+
+  Future<Either<EditFailure, Unit>> logClearImei({required String imei}) async {
+    try {
+      final response = await _profileRemoteService.logClearImei(imei: imei);
 
       return right(response);
+    } on RestApiExceptionWithMessage catch (restApi) {
+      return left(EditFailure.server(restApi.errorCode, restApi.message));
     } on RestApiException catch (restApi) {
       return left(EditFailure.server(
           restApi.errorCode, 'RestApi exception clearing imei'));
