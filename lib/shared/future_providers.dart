@@ -24,7 +24,7 @@ import 'providers.dart';
 // USER FUTURE PROVIDERS
 final userFOSOProvider =
     FutureProvider.family<void, BuildContext>((ref, context) async {
-  debugger();
+  // debugger();
 
   ref.listen<Option<Either<UserFailure, String?>>>(
       userNotifierProvider.select(
@@ -72,7 +72,7 @@ final userFOSOProvider =
 
 final userFOSOUpdateProvider =
     FutureProvider.family<void, BuildContext>((ref, context) async {
-  debugger();
+  // debugger();
 
   //
   void letYouThrough() {
@@ -107,7 +107,7 @@ final userFOSOUpdateProvider =
               final parseEither =
                   ref.read(userNotifierProvider.notifier).parseUser(userString);
 
-              debugger();
+              // debugger();
 
               // PARSE USER SUCCESS / FAILURE
               await parseEither.fold(
@@ -123,7 +123,7 @@ final userFOSOUpdateProvider =
                           asset: Assets.iconCrossed,
                         ),
                       ), (userUpdated) async {
-                debugger();
+                // debugger();
 
                 // FINALIZE USER
                 await ref.read(userNotifierProvider.notifier).onUserParsedRaw(
@@ -185,7 +185,7 @@ final imeiFOSOGetProvider =
     ref.read(initUserStatusProvider.notifier).state = InitUserStatus.init();
   }
 
-  debugger();
+  // debugger();
   ref.listen<Option<Either<EditFailure, String?>>>(
       imeiNotifierProvider.select(
         (state) => state.failureOrSuccessOptionGetImei,
@@ -217,7 +217,7 @@ final imeiFOSOGetProvider =
               UserModelWithPassword user =
                   ref.read(userNotifierProvider.select((value) => value.user));
 
-              debugger();
+              // debugger();
 
               await ref.read(imeiNotifierProvider.notifier).onImei(
                   savedImei: savedImei,
@@ -247,7 +247,7 @@ final imeiFOSOGetProvider =
                                         .getUser()),
                             showDialog: () => showSuccessDialog(context));
 
-                    debugger();
+                    // debugger();
                     letYouThrough();
                   },
                   onImeiOK: () => letYouThrough(),
@@ -261,7 +261,7 @@ final imeiFOSOGetProvider =
                         );
 
                     hold();
-                    debugger();
+                    // debugger();
                   });
             }),
           ));
@@ -304,7 +304,7 @@ final passwordExpProvider = FutureProvider<PasswordExpiredState>((ref) {
   PasswordExpiredState passwordExpired =
       ref.watch(passwordExpiredNotifierStatusProvider);
 
-  debugger();
+  // debugger();
 
   passwordExpired.maybeWhen(
       expired: () async {
@@ -326,13 +326,13 @@ final passwordExpProvider = FutureProvider<PasswordExpiredState>((ref) {
             .checkAndUpdateExpired();
 
         // RELOAD USER
-        debugger();
+        // debugger();
       },
-      orElse: () => debugger());
+      orElse: () => {});
 
   log('passwordExpired $passwordExpired');
 
-  debugger();
+  // debugger();
 
   return passwordExpired;
 });

@@ -2,10 +2,14 @@ import 'package:face_net_authentication/style/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class VAlertDialog extends StatelessWidget {
+import '../../shared/providers.dart';
+
+class VAlertDialog extends ConsumerWidget {
   const VAlertDialog({
     Key? key,
+    this.isLoading = false,
     required this.label,
     required this.labelDescription,
     required this.onPressed,
@@ -13,6 +17,8 @@ class VAlertDialog extends StatelessWidget {
     this.backPressedLabel,
     this.pressedLabel,
   }) : super(key: key);
+
+  final bool isLoading;
 
   final String label;
   final String labelDescription;
@@ -23,7 +29,10 @@ class VAlertDialog extends StatelessWidget {
   final Function()? onBackPressed;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    bool isLoading = ref.watch(
+        absenAuthNotifierProvidier.select((value) => value.isSubmitting));
+
     return Center(
       child: AlertDialog(
         backgroundColor: Palette.primaryColor,
@@ -45,26 +54,37 @@ class VAlertDialog extends StatelessWidget {
           ),
         ),
         actions: [
-          TextButton(
-            onPressed: onBackPressed ?? () => context.pop(),
-            child: Text(
-              backPressedLabel ?? 'TIDAK',
-              style: Themes.white(
-                FontWeight.bold,
-                15,
+          if (isLoading) ...[
+            Center(
+              child: SizedBox(
+                width: 10,
+                height: 10,
+                child: CircularProgressIndicator(),
+              ),
+            )
+          ],
+          if (!isLoading) ...[
+            TextButton(
+              onPressed: onBackPressed ?? () => context.pop(),
+              child: Text(
+                backPressedLabel ?? 'TIDAK',
+                style: Themes.white(
+                  FontWeight.bold,
+                  15,
+                ),
               ),
             ),
-          ),
-          TextButton(
-            onPressed: onPressed,
-            child: Text(
-              pressedLabel ?? 'YA',
-              style: Themes.white(
-                FontWeight.bold,
-                15,
+            TextButton(
+              onPressed: onPressed,
+              child: Text(
+                pressedLabel ?? 'YA',
+                style: Themes.white(
+                  FontWeight.bold,
+                  15,
+                ),
               ),
             ),
-          ),
+          ]
         ],
       ),
     );

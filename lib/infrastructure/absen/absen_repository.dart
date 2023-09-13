@@ -62,7 +62,7 @@ class AbsenRepository {
     try {
       final response = await _remoteService.getAbsenID();
 
-      debugger(message: 'called');
+      // debugger(message: 'called');
 
       log('respones $response');
 

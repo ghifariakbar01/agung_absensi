@@ -116,7 +116,7 @@ class BackgroundNotifier extends StateNotifier<BackgroundState> {
   // TODO: THROW ERROR
   Future<void> removeLocationFromSaved(SavedLocation currentLocation,
       {required Function onSaved}) async {
-    debugger(message: 'called');
+    // debugger(message: 'called');
 
     // String? locations;
     final _sharedPreference =

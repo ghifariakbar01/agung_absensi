@@ -68,8 +68,7 @@ class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
   }) async {
     Either<AbsenFailure, Unit> failureOrSuccess;
 
-    state =
-        state.copyWith(isSubmitting: true, failureOrSuccessOptionSaved: none());
+    state = state.copyWith(failureOrSuccessOptionSaved: none());
 
     failureOrSuccess = await _absenRepository.absen(
         idAbsenMnl: idAbsenMnl,
@@ -85,9 +84,8 @@ class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
 
     log('failureOrSuccess $failureOrSuccess');
 
-    state = state.copyWith(
-        isSubmitting: false,
-        failureOrSuccessOptionSaved: optionOf(failureOrSuccess));
+    state =
+        state.copyWith(failureOrSuccessOptionSaved: optionOf(failureOrSuccess));
   }
 
   Future<RemoteResponse<AbsenRequest>> getAbsenID(JenisAbsen jenisAbsen) async {
@@ -127,12 +125,13 @@ class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
     required String imei,
     required Future<void> Function() onAbsen,
     required Future<void> Function() deleteSaved,
-    required Future<void> Function() reinitializeDependencies,
     required Future<void> Function() getAbsenState,
     required Future<void> Function() showSuccessDialog,
     required Future<void> Function(String code, String message)
         showFailureDialog,
   }) async {
+    state = state.copyWith(isSubmitting: true);
+
     this._changeBackgroundAbsenStateSaved(backgroundItemState);
 
     RemoteResponse<AbsenRequest> id =
@@ -140,7 +139,7 @@ class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
 
     SavedLocation location = backgroundItemState.savedLocations;
 
-    debugger();
+    // debugger();
 
     id.when(
       withNewData: (absenRequest) => absenRequest.when(
@@ -174,12 +173,12 @@ class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
               return;
             }
 
-            try {
-              await reinitializeDependencies();
-            } catch (e) {
-              showFailureDialog('', e.toString());
-              return;
-            }
+            // try {
+            //   await reinitializeDependencies();
+            // } catch (e) {
+            //   showFailureDialog('', e.toString());
+            //   return;
+            // }
 
             try {
               await getAbsenState();
@@ -187,6 +186,8 @@ class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
               showFailureDialog('', e.toString());
               return;
             }
+
+            state = state.copyWith(isSubmitting: false);
             await showSuccessDialog();
           },
           absenOut: (id) async {
@@ -219,12 +220,12 @@ class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
               return;
             }
 
-            try {
-              await reinitializeDependencies();
-            } catch (e) {
-              showFailureDialog('', e.toString());
-              return;
-            }
+            // try {
+            //   await reinitializeDependencies();
+            // } catch (e) {
+            //   showFailureDialog('', e.toString());
+            //   return;
+            // }
 
             try {
               await getAbsenState();
@@ -232,11 +233,16 @@ class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
               showFailureDialog('', e.toString());
               return;
             }
+
+            state = state.copyWith(isSubmitting: false);
             await showSuccessDialog();
           },
           absenUnknown: () => showFailureDialog('', 'ABSEN UNKNOWN')),
-      failure: (code, message) => {
-        showFailureDialog(code != null ? code.toString() : '', message ?? '')
+      failure: (code, message) {
+        state = state.copyWith(isSubmitting: false);
+
+        return showFailureDialog(
+            code != null ? code.toString() : '', message ?? '');
       },
     );
   }

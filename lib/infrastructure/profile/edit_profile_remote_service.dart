@@ -43,15 +43,29 @@ class EditProfileRemoteService {
 
       log('response $response');
 
-      debugger();
+      // debugger();
 
       final items = response.data?[0];
 
       if (items['status'] == 'Success') {
         if (items['items'][0]['imei_hp'] != null) {
-          return items['items'][0]['imei_hp'];
+          String imei = items['items'][0]['imei_hp'];
+          //
+          if (imei.isNotEmpty) {
+            return imei;
+          } else {
+            return null;
+          }
         } else {
-          return '';
+          final message = items['error'] as String?;
+          final errorCode = items['errornum'] as int;
+
+          Exception? exception = ExceptionDeterminate.throwByCode(
+            errorCode: errorCode,
+            message: message ?? '',
+          );
+
+          throw exception ?? RestApiExceptionWithMessage(errorCode, message);
         }
       } else {
         final message = items['error'] as String?;

@@ -126,14 +126,14 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
                                 .getSavedLocationsAsList(savedItems);
 
                             log('savedLocations ${savedLocations?.length}');
-                            debugger(message: 'called');
+                            // debugger(message: 'called');
 
                             await ref
                                 .read(geofenceProvider.notifier)
                                 .initializeGeoFence(geofence,
                                     onError: (e) => log('error geofence $e'));
 
-                            debugger();
+                            // debugger();
                             log('savedItems $savedItems');
                             // [AUTO ABSEN]
 
@@ -167,7 +167,7 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
                                   savedItems: savedItemsCurrent,
                                 );
 
-                            debugger();
+                            // debugger();
                           } else {
                             if (geofence.isNotEmpty) {
                               //

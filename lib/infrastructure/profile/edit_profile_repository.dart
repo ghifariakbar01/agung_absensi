@@ -11,8 +11,8 @@ class EditProfileRepostiroy {
   final CredentialsStorage _credentialsStorage;
   final EditProfileRemoteService _profileRemoteService;
 
-  Future<bool> hasImei() => getImei()
-      .then((credentials) => credentials.fold((_) => false, (_) => true));
+  Future<bool> hasImei() => getImei().then((credentials) =>
+      credentials.fold((_) => false, (imei) => imei != null ? true : false));
 
   Future<Either<EditFailure, String?>> getImei() async {
     try {

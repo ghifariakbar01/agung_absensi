@@ -367,12 +367,12 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
             },
             error: ((error, stackTrace) => Text('ERROR: $error $stackTrace')),
             loading: () => Container()),
-        // nearest < minDistance && nearest != 0
+
         Visibility(
             visible: isOfflineMode,
             child: VButton(
                 label: 'SIMPAN ABSEN',
-                isEnabled: true,
+                isEnabled: nearest < minDistance && nearest != 0,
                 onPressed: () async {
                   // ALAMAT GEOFENCE
                   final alamat = ref.watch(geofenceProvider
