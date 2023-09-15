@@ -19,18 +19,18 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await ref.read(userInitFutureProvider(context).future);
+      await ref.read(imeiInitFutureProvider(context).future);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     //
-    final userInitFuture = ref.watch(userInitFutureProvider(context));
+    final imeiInitFuture = ref.watch(imeiInitFutureProvider(context));
 
     return Scaffold(
       body: Stack(children: [
-        userInitFuture.when(
+        imeiInitFuture.when(
             data: (_) =>
                 LoadingOverlay(loadingMessage: 'Tunggu ya...', isLoading: true),
             error: ((error, stackTrace) =>

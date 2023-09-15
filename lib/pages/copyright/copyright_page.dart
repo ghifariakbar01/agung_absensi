@@ -9,9 +9,9 @@ final packageInfoProvider = FutureProvider((ref) async {
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
   String version = packageInfo.version;
-  String buildNumber = packageInfo.buildNumber;
+  // String buildNumber = packageInfo.buildNumber;
 
-  return 'V$version+$buildNumber';
+  return 'V$version';
 });
 
 class CopyRightPage extends ConsumerWidget {

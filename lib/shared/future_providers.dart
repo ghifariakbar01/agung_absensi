@@ -17,14 +17,6 @@ import '../domain/auth_failure.dart';
 import '../pages/widgets/v_dialogs.dart';
 import 'providers.dart';
 
-// final userInitProvider = Provider.family<UserInit, BuildContext>((
-//   ref,
-//   context,
-// ) =>
-//     UserInit(ref: ref, context: context));
-
-//
-
 final getUserFutureProvider = FutureProvider<Unit>((ref) async {
   debugger();
   UserNotifier userNotifier = ref.read(userNotifierProvider.notifier);
@@ -39,7 +31,43 @@ final getUserFutureProvider = FutureProvider<Unit>((ref) async {
       debugger();
 
       userNotifier.setUser(user);
-      await userNotifier.saveUserAfterUpdate(user: user);
+      await ref
+          .read(userNotifierProvider.notifier)
+          .onUserParsedRaw(ref: ref, userModelWithPassword: user);
+
+      // DON'T REMOVE
+      //
+    }
+  }
+
+  return unit;
+});
+
+final imeiInitFutureProvider =
+    FutureProvider.family<Unit, BuildContext>((ref, context) async {
+  await ref.read(getUserFutureProvider.future);
+
+  final user = ref.read(userNotifierProvider).user;
+
+  if (user.idKary != null) {
+    if (user.idKary!.isNotEmpty) {
+      ImeiNotifier imeiNotifier = ref.read(imeiNotifierProvider.notifier);
+      String imei = await imeiNotifier.getImeiString();
+      imeiNotifier.changeSavedImei(imei);
+
+      await ref.read(imeiAuthNotifierProvider.notifier).checkAndUpdateImei();
+
+      String imeiDb =
+          await ref.read(imeiNotifierProvider.notifier).getImeiStringDb();
+
+      debugger();
+      await ref
+          .read(imeiNotifierProvider.notifier)
+          .processImei(imei: imeiDb, ref: ref, context: context);
+    } else {
+      debugger();
+
+      await ref.read(getUserFutureProvider.future);
     }
   }
 
@@ -104,47 +132,6 @@ final userInitFutureProvider =
   // IMEI
 
   debugger();
-
-  return unit;
-});
-
-final imeiInitFutureProvider =
-    FutureProvider.family<Unit, BuildContext>((ref, context) async {
-  final user = ref.read(userNotifierProvider).user;
-
-  if (user.idKary != null) {
-    if (user.idKary!.isNotEmpty) {
-      ImeiNotifier imeiNotifier = ref.read(imeiNotifierProvider.notifier);
-      String imei = await imeiNotifier.getImeiString();
-      imeiNotifier.changeSavedImei(imei);
-
-      await ref.read(imeiAuthNotifierProvider.notifier).checkAndUpdateImei();
-
-      String imeiDb =
-          await ref.read(imeiNotifierProvider.notifier).getImeiStringDb();
-
-      debugger();
-      await ref
-          .read(imeiNotifierProvider.notifier)
-          .processImei(imei: imeiDb, ref: ref, context: context);
-    } else {
-      debugger();
-
-      UserNotifier userNotifier = ref.read(userNotifierProvider.notifier);
-      String userString = await userNotifier.getUserString();
-
-      // PARSE USER SUCCESS / FAILURE
-      if (userString.isNotEmpty) {
-        final json = jsonDecode(userString) as Map<String, Object?>;
-        final user = UserModelWithPassword.fromJson(json);
-
-        if (json.isNotEmpty) {
-          userNotifier.setUser(user);
-          await userNotifier.saveUserAfterUpdate(user: user);
-        }
-      }
-    }
-  }
 
   return unit;
 });
