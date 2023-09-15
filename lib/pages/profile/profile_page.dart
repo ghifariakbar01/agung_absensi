@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/pages/profile/profile_scaffold.dart';
 import 'package:face_net_authentication/pages/widgets/loading_overlay.dart';
@@ -44,10 +46,18 @@ class ProfilePage extends HookConsumerWidget {
                           ),
                         ),
                       ), (_) async {
-                ref.read(userNotifierProvider.notifier).setUserInitial();
-                ref.read(initUserStatusProvider.notifier).state =
-                    InitUserStatus.init();
-                await ref.read(userNotifierProvider.notifier).logout();
+                final isSuccess = await ref
+                    .read(imeiNotifierProvider.notifier)
+                    .logImeiSucces();
+
+                if (isSuccess) {
+                  debugger();
+                  ref.read(userNotifierProvider.notifier).setUserInitial();
+                  ref.read(initUserStatusProvider.notifier).state =
+                      InitUserStatus.init();
+                  await ref.read(userNotifierProvider.notifier).logout();
+                  debugger();
+                }
               })),
     );
 

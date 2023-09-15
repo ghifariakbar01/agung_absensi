@@ -25,6 +25,8 @@ class UserNotifier extends StateNotifier<UserState> {
   Future<String> getUserString() => _repository.getUserString();
 
   Future<void> getUser() async {
+    debugger();
+
     Either<UserFailure, String?> failureOrSuccess;
 
     state = state.copyWith(isGetting: true, failureOrSuccessOption: none());
@@ -46,12 +48,14 @@ class UserNotifier extends StateNotifier<UserState> {
 
     state =
         state.copyWith(isGetting: true, failureOrSuccessOptionUpdate: none());
-
+    debugger();
     failureOrSuccess = await _repository.saveUserAfterUpdate(
         idKaryawan: idKaryawan,
         password: password,
         userId: userId,
         server: server);
+
+    debugger();
 
     state = state.copyWith(
         isGetting: false,
@@ -60,14 +64,14 @@ class UserNotifier extends StateNotifier<UserState> {
 
   Either<UserFailure, UserModelWithPassword> parseUser(String? user) {
     try {
-      Map<String, Object?> userJson = jsonDecode(user ?? '');
+      if (user != null) {
+        Map<String, Object?> userJson = jsonDecode(user);
 
-      if (userJson.isNotEmpty) {
-        return right(UserModelWithPassword.fromJson(userJson));
+        if (userJson.isNotEmpty) {
+          return right(UserModelWithPassword.fromJson(userJson));
+        }
       }
-
       return left(UserFailure.errorParsing('userJson is Empty'));
-      //
     } on FormatException catch (e) {
       return left(UserFailure.errorParsing('$e'));
     }
@@ -86,13 +90,11 @@ class UserNotifier extends StateNotifier<UserState> {
     required Function initializeUser,
     required Function initializeDioRequest,
     required Function checkReminderStatus,
-    required Function checkAndUpdateStatus,
     required Function checkAndUpdateImei,
   }) async {
     await initializeUser();
     await initializeDioRequest();
     await checkReminderStatus();
-    await checkAndUpdateStatus();
     await checkAndUpdateImei();
   }
 
@@ -127,8 +129,6 @@ class UserNotifier extends StateNotifier<UserState> {
                 .changeDaysLeft(daysLeft);
           }
         },
-        checkAndUpdateStatus: () =>
-            ref.read(authNotifierProvider.notifier).checkAndUpdateAuthStatus(),
         checkAndUpdateImei: () =>
             ref.read(imeiAuthNotifierProvider.notifier).checkAndUpdateImei());
   }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/domain/edit_failure.dart';
 import 'package:face_net_authentication/infrastructure/profile/edit_profile_remote_service.dart';
@@ -14,6 +16,10 @@ class EditProfileRepostiroy {
   Future<bool> hasImei() => getImei().then((credentials) =>
       credentials.fold((_) => false, (imei) => imei != null ? true : false));
 
+  Future<bool> logImeiSuccess(String imei) => logClearImei(imei: imei).then(
+        (value) => value.fold((l) => false, (r) => true),
+      );
+
   Future<Either<EditFailure, String?>> getImei() async {
     try {
       final response = await _profileRemoteService.getImei();
@@ -26,19 +32,16 @@ class EditProfileRepostiroy {
           EditFailure.server(e.errorCode, 'RestApi exception get imei'));
     } on FormatException catch (e) {
       return left(EditFailure.server(0, e.message));
-    } on PasswordWrongException {
-      return left(const EditFailure.passwordWrong());
-    } on PasswordExpiredException {
-      return left(const EditFailure.passwordExpired());
     } on NoConnectionException {
       return left(const EditFailure.noConnection());
     }
   }
 
-  Future<Either<EditFailure, Unit>> clearImei({required String imei}) async {
+  Future<Either<EditFailure, Unit>> clearImei() async {
     try {
       await _profileRemoteService.clearImei();
-      await _profileRemoteService.logClearImei(imei: imei);
+
+      debugger();
 
       return right(unit);
     } on RestApiExceptionWithMessage catch (restApi) {

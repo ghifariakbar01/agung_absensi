@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:flutter/services.dart';
@@ -50,12 +49,11 @@ class AuthRepository {
       final authResponse = await _remoteService.signIn(
           userId: userIdStr, password: passwordStr, server: serverStr);
 
-      return authResponse.when(
+      return await authResponse.when(
         withUser: (user) async {
-          final userSave = jsonEncode(user);
-
-          log('jsonEncode(user) ${jsonEncode(user)}');
-
+          String userSave = jsonEncode(user);
+          await _credentialsStorage.save(userSave);
+          await _credentialsStorage.save(userSave);
           await _credentialsStorage.save(userSave);
 
           return right(unit);
@@ -67,10 +65,6 @@ class AuthRepository {
       );
     } on RestApiException catch (e) {
       return left(AuthFailure.server(e.errorCode));
-    } on PasswordWrongException {
-      return left(const AuthFailure.passwordWrong());
-    } on PasswordExpiredException {
-      return left(const AuthFailure.passwordExpired());
     } on NoConnectionException {
       return left(const AuthFailure.noConnection());
     }
@@ -93,10 +87,9 @@ class AuthRepository {
 
       return await authResponse.when(
         withUser: (user) async {
-          final userSave = jsonEncode(user);
-
-          log('jsonEncode(user) ${jsonEncode(user)}');
-
+          String userSave = jsonEncode(user);
+          await _credentialsStorage.save(userSave);
+          await _credentialsStorage.save(userSave);
           await _credentialsStorage.save(userSave);
 
           return right(unit);
@@ -108,10 +101,6 @@ class AuthRepository {
       );
     } on RestApiException catch (e) {
       return left(AuthFailure.server(e.errorCode));
-    } on PasswordWrongException {
-      return left(const AuthFailure.passwordWrong());
-    } on PasswordExpiredException {
-      return left(const AuthFailure.passwordExpired());
     } on NoConnectionException {
       return left(const AuthFailure.noConnection());
     }

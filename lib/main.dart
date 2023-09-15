@@ -1,8 +1,13 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:face_net_authentication/application/imei_introduction/shared/imei_introduction_providers.dart';
 import 'package:face_net_authentication/application/tc/shared/tc_providers.dart';
-import 'package:face_net_authentication/locator.dart';
+import 'package:face_net_authentication/application/user/user_model.dart';
+import 'package:face_net_authentication/application/user/user_notifier.dart';
+// import 'package:face_net_authentication/locator.dart';
 import 'package:face_net_authentication/style/style.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -10,23 +15,24 @@ import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 import 'application/permission/shared/permission_introduction_providers.dart';
 import 'config/configuration.dart';
+import 'shared/future_providers.dart';
 import 'shared/providers.dart';
 
 Future<void> main() async {
-  // WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
 
   Themes.initUiOverlayStyle();
 
   BuildConfig.init(flavor: const String.fromEnvironment('flavor'));
 
-  setupServices();
-
-  // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-
   runApp(ProviderScope(child: MyApp()));
 }
 
-final initializationProvider = FutureProvider<Unit>((ref) async {
+final initializationProvider =
+    FutureProvider.family<Unit, BuildContext>((ref, context) async {
+  // await Future.delayed(
+  //     Duration(seconds: 2), () => ref.read(userInitProvider(context)));
+
   // await ref.read(hiveProvider).init();
   ref.read(dioProvider)
     ..options = BaseOptions(
@@ -59,20 +65,13 @@ final initializationProvider = FutureProvider<Unit>((ref) async {
       ref.read(imeiIntroductionNotifierProvider.notifier);
   await imeiInstructionNotifier.checkAndUpdateStatusIMEIIntroduction();
 
-  final passwordExpiredNotifier =
-      ref.read(passwordExpiredNotifierStatusProvider.notifier);
-  await passwordExpiredNotifier.checkAndUpdateExpired();
-
-  // whenever your initialization is completed, remove the splash screen:
-  // FlutterNativeSplash.remove();
-
   return unit;
 });
 
 class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen(initializationProvider, (_, __) {});
+    ref.listen(initializationProvider(context), (_, __) {});
 
     final router = ref.watch(routerProvider);
 

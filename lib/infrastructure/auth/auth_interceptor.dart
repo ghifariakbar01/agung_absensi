@@ -1,18 +1,7 @@
-import 'dart:developer';
-
-import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:face_net_authentication/infrastructure/dio_extensions.dart';
 import 'package:face_net_authentication/shared/providers.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-import '../../application/init_password_expired/init_password_expired_status.dart';
-import '../../application/init_user/init_user_status.dart';
-import '../../application/password_expired/password_expired_notifier.dart';
-import '../../application/password_expired/password_expired_state.dart';
-import '../../application/user/user_model.dart';
-import '../../constants/constants.dart';
-import '../../domain/user_failure.dart';
 
 class AuthInterceptor extends Interceptor {
   AuthInterceptor(this._ref);
@@ -25,44 +14,43 @@ class AuthInterceptor extends Interceptor {
 
     final items = response.data?[0];
 
-    // final message = items['error'] as String?;
-    final errorNum = items['errornum'] as int?;
+    // // final message = items['error'] as String?;
+    // final errorNum = items['errornum'] as int?;
 
-    PasswordExpiredState passwordExpired =
-        _ref.read(passwordExpiredNotifierStatusProvider);
-    PasswordExpiredNotifier passwordExpiredNotifier =
-        _ref.read(passwordExpiredNotifierProvider.notifier);
+    // PasswordExpiredState passwordExpired =
+    //     _ref.read(passwordExpiredNotifierStatusProvider);
+    // PasswordExpiredNotifier passwordExpiredNotifier =
+    //     _ref.read(passwordExpiredNotifierProvider.notifier);
 
-    // SET USER
-    final userNotifier = _ref.watch(userNotifierProvider.notifier);
+    // // SET USER
+    // final userNotifier = _ref.watch(userNotifierProvider.notifier);
 
-    if (errorNum == null) {
-      await passwordExpired.maybeWhen(
-          expired: () async {
-            await passwordExpiredNotifier.clearPasswordExpired();
+    // if (errorNum == null) {
+    //   await passwordExpired.maybeWhen(
+    //       expired: () async {
+    //         await passwordExpiredNotifier.clearPasswordExpired();
 
-            String userInString = await userNotifier.getUserString();
-            Either<UserFailure, UserModelWithPassword> userWithPassword =
-                userNotifier.parseUser(userInString);
+    //         String userInString = await userNotifier.getUserString();
+    //         final userWithPassword = userNotifier.parseUser(userInString);
 
-            await userWithPassword.fold(
-                (_) => null, (user) => userNotifier.setUser(user));
-            await _ref
-                .read(passwordExpiredNotifierProvider.notifier)
-                .clearPasswordExpired();
+    //         await userWithPassword.fold(
+    //             (_) => null, (user) => userNotifier.setUser(user));
+    //         await _ref
+    //             .read(passwordExpiredNotifierProvider.notifier)
+    //             .clearPasswordExpired();
 
-            // RELOAD USER
-            _ref.read(initUserStatusProvider.notifier).state =
-                InitUserStatus.init();
-            debugger();
-          },
-          orElse: () {});
-    }
+    //         // RELOAD USER
+    //         _ref.read(initUserStatusProvider.notifier).state =
+    //             InitUserStatus.init();
+    //         debugger();
+    //       },
+    //       orElse: () {});
+    // }
 
-    if (errorNum == Constants.passWrongCode ||
-        errorNum == Constants.passExpCode) {
-      await passwordExpiredNotifier.savePasswordExpired();
-    }
+    // if (errorNum == Constants.passWrongCode ||
+    //     errorNum == Constants.passExpCode) {
+    //   await passwordExpiredNotifier.savePasswordExpired();
+    // }
 
     if (items != null) {
       _ref.read(absenOfflineModeProvider.notifier).state = false;

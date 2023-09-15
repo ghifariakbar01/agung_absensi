@@ -45,10 +45,6 @@ class AbsenRepository {
           imei: imei);
 
       return right(unit);
-    } on PasswordWrongException {
-      return left(AbsenFailure.passwordWrong());
-    } on PasswordExpiredException {
-      return left(AbsenFailure.passwordExpired());
     } on NoConnectionException {
       return left(AbsenFailure.noConnection());
     } on RestApiException catch (error) {
@@ -96,10 +92,6 @@ class AbsenRepository {
   Future<AbsenState> getAbsen({required DateTime date}) async {
     try {
       return await _remoteService.getAbsen(date: date);
-    } on PasswordWrongException {
-      return AbsenState.failure(errorCode: 3, message: 'Password Wrong');
-    } on PasswordExpiredException {
-      return AbsenState.failure(errorCode: 4, message: 'Password Expired');
     } on NoConnectionException {
       return AbsenState.failure(message: 'no connection');
     } on RestApiExceptionWithMessage catch (e) {
@@ -117,10 +109,6 @@ class AbsenRepository {
     try {
       return right(await _remoteService.getRiwayatAbsen(
           page: page, dateFirst: dateFirst, dateSecond: dateSecond));
-    } on PasswordWrongException {
-      return left(RiwayatAbsenFailure.passwordWrong());
-    } on PasswordExpiredException {
-      return left(RiwayatAbsenFailure.passwordExpired());
     } on NoConnectionException {
       return left(RiwayatAbsenFailure.noConnection());
     } on FormatException catch (e) {

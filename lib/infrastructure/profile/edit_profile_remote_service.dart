@@ -60,23 +60,13 @@ class EditProfileRemoteService {
           final message = items['error'] as String?;
           final errorCode = items['errornum'] as int;
 
-          Exception? exception = ExceptionDeterminate.throwByCode(
-            errorCode: errorCode,
-            message: message ?? '',
-          );
-
-          throw exception ?? RestApiExceptionWithMessage(errorCode, message);
+          throw RestApiExceptionWithMessage(errorCode, message);
         }
       } else {
         final message = items['error'] as String?;
         final errorCode = items['errornum'] as int;
 
-        Exception? exception = ExceptionDeterminate.throwByCode(
-          errorCode: errorCode,
-          message: message ?? '',
-        );
-
-        throw exception ?? RestApiExceptionWithMessage(errorCode, message);
+        throw RestApiExceptionWithMessage(errorCode, message);
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);
@@ -124,12 +114,7 @@ class EditProfileRemoteService {
         final message = items['error'] as String?;
         final errorCode = items['errornum'] as int;
 
-        Exception? exception = ExceptionDeterminate.throwByCode(
-          errorCode: errorCode,
-          message: message ?? '',
-        );
-
-        throw exception ?? RestApiExceptionWithMessage(errorCode, message);
+        throw RestApiExceptionWithMessage(errorCode, message);
       }
     } on FormatException {
       throw FormatException();
@@ -185,12 +170,7 @@ class EditProfileRemoteService {
         final message = items['error'] as String?;
         final errorCode = items['errornum'] as int;
 
-        Exception? exception = ExceptionDeterminate.throwByCode(
-          errorCode: errorCode,
-          message: message ?? '',
-        );
-
-        throw exception ?? RestApiExceptionWithMessage(errorCode, message);
+        throw RestApiExceptionWithMessage(errorCode, message);
       }
     } on FormatException {
       throw FormatException();
@@ -289,12 +269,7 @@ class EditProfileRemoteService {
         final message = items['error'] as String?;
         final errorCode = items['errornum'] as int;
 
-        Exception? exception = ExceptionDeterminate.throwByCode(
-          errorCode: errorCode,
-          message: message ?? '',
-        );
-
-        throw exception ?? RestApiExceptionWithMessage(errorCode, message);
+        throw RestApiExceptionWithMessage(errorCode, message);
       }
     } on FormatException {
       throw FormatException();

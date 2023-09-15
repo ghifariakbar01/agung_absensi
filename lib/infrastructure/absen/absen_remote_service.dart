@@ -132,12 +132,7 @@ class AbsenRemoteService {
             final message = items['error'] as String?;
             final errorCode = items['errornum'] as int;
 
-            Exception? exception = ExceptionDeterminate.throwByCode(
-              errorCode: errorCode,
-              message: message ?? '',
-            );
-
-            throw exception ?? RestApiExceptionWithMessage(errorCode, message);
+            throw RestApiExceptionWithMessage(errorCode, message);
           } else if (itemsProd['errornum'] != null &&
               itemsProd['errornum'] as int != 0) {
             debugger(message: 'called');
@@ -145,12 +140,7 @@ class AbsenRemoteService {
             final message = itemsProd['error'] as String?;
             final errorCode = itemsProd['errornum'] as int;
 
-            Exception? exception = ExceptionDeterminate.throwByCode(
-              errorCode: errorCode,
-              message: message ?? '',
-            );
-
-            throw exception ?? RestApiExceptionWithMessage(errorCode, message);
+            throw RestApiExceptionWithMessage(errorCode, message);
           }
 
           debugger(message: 'called');
@@ -161,22 +151,12 @@ class AbsenRemoteService {
             final message = items['error'] as String?;
             final errorCode = items['errornum'] as int;
 
-            Exception? exception = ExceptionDeterminate.throwByCode(
-              errorCode: errorCode,
-              message: message ?? '',
-            );
-
-            throw exception ?? RestApiExceptionWithMessage(errorCode, message);
+            throw RestApiExceptionWithMessage(errorCode, message);
           } else {
             final message = itemsProd['error'] as String?;
             final errorCode = itemsProd['errornum'] as int;
 
-            Exception? exception = ExceptionDeterminate.throwByCode(
-              errorCode: errorCode,
-              message: message ?? '',
-            );
-
-            throw exception ?? RestApiExceptionWithMessage(errorCode, message);
+            throw RestApiExceptionWithMessage(errorCode, message);
           }
         }
       } else {
@@ -188,24 +168,14 @@ class AbsenRemoteService {
           final message = items['error'] as String?;
           final errorCode = items['errornum'] as int;
 
-          Exception? exception = ExceptionDeterminate.throwByCode(
-            errorCode: errorCode,
-            message: message ?? '',
-          );
-
-          throw exception ?? RestApiExceptionWithMessage(errorCode, message);
+          throw RestApiExceptionWithMessage(errorCode, message);
         } else {
           debugger(message: 'called');
 
           final message = itemsProd['error'] as String?;
           final errorCode = itemsProd['errornum'] as int;
 
-          Exception? exception = ExceptionDeterminate.throwByCode(
-            errorCode: errorCode,
-            message: message ?? '',
-          );
-
-          throw exception ?? RestApiExceptionWithMessage(errorCode, message);
+          throw RestApiExceptionWithMessage(errorCode, message);
         }
       }
     } on DioError catch (e) {
@@ -254,24 +224,14 @@ class AbsenRemoteService {
             final message = items['error'] as String?;
             final errorCode = items['errornum'] as int;
 
-            Exception? exception = ExceptionDeterminate.throwByCode(
-              errorCode: errorCode,
-              message: message ?? '',
-            );
-
-            throw exception ?? RestApiExceptionWithMessage(errorCode, message);
+            throw RestApiExceptionWithMessage(errorCode, message);
           }
         }
       } else {
         final message = items['error'] as String?;
         final errorCode = items['errornum'] as int;
 
-        Exception? exception = ExceptionDeterminate.throwByCode(
-          errorCode: errorCode,
-          message: message ?? '',
-        );
-
-        throw exception ?? RestApiExceptionWithMessage(errorCode, message);
+        throw RestApiExceptionWithMessage(errorCode, message);
       }
 
       return null;
@@ -351,22 +311,12 @@ class AbsenRemoteService {
         final message = items['error'] as String?;
         final errorCode = items['errornum'] as int;
 
-        Exception? exception = ExceptionDeterminate.throwByCode(
-          errorCode: errorCode,
-          message: message ?? '',
-        );
-
-        throw exception ?? RestApiExceptionWithMessage(errorCode, message);
+        throw RestApiExceptionWithMessage(errorCode, message);
       }
       final message = items['error'] as String?;
       final errorCode = items['errornum'] as int;
 
-      Exception? exception = ExceptionDeterminate.throwByCode(
-        errorCode: errorCode,
-        message: message ?? '',
-      );
-
-      throw exception ?? RestApiExceptionWithMessage(errorCode, message);
+      throw RestApiExceptionWithMessage(errorCode, message);
     } on DioError catch (e) {
       if (e.isNoConnectionError || e.isConnectionTimeout) {
         throw NoConnectionException();
@@ -432,12 +382,7 @@ class AbsenRemoteService {
         final message = items['error'] as String?;
         final errorCode = items['errornum'] as int;
 
-        Exception? exception = ExceptionDeterminate.throwByCode(
-          errorCode: errorCode,
-          message: message ?? '',
-        );
-
-        throw exception ?? RestApiExceptionWithMessage(errorCode, message);
+        throw RestApiExceptionWithMessage(errorCode, message);
       }
     } on FormatException {
       throw FormatException();

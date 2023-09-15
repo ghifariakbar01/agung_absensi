@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -12,9 +10,6 @@ import '../../pages/camera/camera_page.dart';
 import '../../pages/camera/camera_signup.dart';
 import '../../pages/copyright/copyright_page.dart';
 import '../../pages/imei_introduction/imei_introduction_page.dart';
-import '../../pages/init/init_geofence_scaffold.dart';
-import '../../pages/init/init_imei_scaffold.dart';
-import '../../pages/init/init_password_expired_scaffold.dart';
 import '../../pages/init/init_user_scaffold.dart';
 import '../../pages/permission/permission_page.dart';
 import '../../pages/profile/edit_profile/edit_profile_page.dart';
@@ -29,9 +24,6 @@ import '../auth/auth_notifier.dart';
 
 import '../imei_introduction/imei_state.dart';
 import '../imei_introduction/shared/imei_introduction_providers.dart';
-import '../init_geofence/init_geofence_status.dart';
-import '../init_imei/init_imei_status.dart';
-import '../init_password_expired/init_password_expired_status.dart';
 import '../init_user/init_user_status.dart';
 import '../permission/permission_state.dart';
 import '../permission/shared/permission_introduction_providers.dart';
@@ -174,7 +166,7 @@ class RouterNotifier extends ChangeNotifier {
       GoRoute(
         name: RouteNames.initUserNameRoute,
         path: RouteNames.initUserRoute,
-        builder: (context, state) => const InitUserScaffold(),
+        builder: (context, state) => InitUserScaffold(),
       ),
 
       GoRoute(
@@ -187,21 +179,21 @@ class RouterNotifier extends ChangeNotifier {
               path: RouteNames.changePassRoute,
               builder: (context, state) => const ChangePasswordPage(),
             ),
-            GoRoute(
-              name: RouteNames.signUpNameRoute,
-              path: RouteNames.signUpRoute,
-              builder: (context, state) => const SignUp(),
-            ),
+            // GoRoute(
+            //   name: RouteNames.signUpNameRoute,
+            //   path: RouteNames.signUpRoute,
+            //   builder: (context, state) => const SignUp(),
+            // ),
             GoRoute(
               name: RouteNames.riwayatAbsenNameRoute,
               path: RouteNames.riwayatAbsenRoute,
               builder: (context, state) => const RiwayatAbsenPage(),
             ),
-            GoRoute(
-              name: RouteNames.cameraNameRoute,
-              path: RouteNames.cameraRoute,
-              builder: (context, state) => const CameraPage(),
-            ),
+            // GoRoute(
+            //   name: RouteNames.cameraNameRoute,
+            //   path: RouteNames.cameraRoute,
+            //   builder: (context, state) => const CameraPage(),
+            // ),
             GoRoute(
               name: RouteNames.editProfileNameRoute,
               path: RouteNames.editProfileRoute,

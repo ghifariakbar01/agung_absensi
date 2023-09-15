@@ -101,37 +101,19 @@ class AuthRemoteService {
           final message = items['error'] as String?;
           final errorCode = items['errornum'] as int;
 
-          Exception? exception = ExceptionDeterminate.throwByCode(
-            errorCode: errorCode,
-            message: message ?? '',
-          );
-
-          if (exception != null) {
-            throw exception;
-          } else {
-            return AuthResponse.failure(
-              errorCode: errorCode,
-              message: message,
-            );
-          }
-        }
-      } else {
-        final message = items['error'] as String?;
-        final errorCode = items['errornum'] as int;
-
-        Exception? exception = ExceptionDeterminate.throwByCode(
-          errorCode: errorCode,
-          message: message ?? '',
-        );
-
-        if (exception != null) {
-          throw exception;
-        } else {
           return AuthResponse.failure(
             errorCode: errorCode,
             message: message,
           );
         }
+      } else {
+        final message = items['error'] as String?;
+        final errorCode = items['errornum'] as int;
+
+        return AuthResponse.failure(
+          errorCode: errorCode,
+          message: message,
+        );
       }
     } on DioError catch (e) {
       if (e.isNoConnectionError || e.isConnectionTimeout) {

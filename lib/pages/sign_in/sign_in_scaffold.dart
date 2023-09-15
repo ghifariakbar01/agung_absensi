@@ -12,7 +12,7 @@ class SignInScaffold extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isPasswordExpired = ref.watch(passwordExpiredNotifierStatusProvider);
+    // final isPasswordExpired = ref.watch(passwordExpiredNotifierStatusProvider);
 
     return KeyboardDismissOnTap(
       child: Scaffold(
@@ -21,16 +21,6 @@ class SignInScaffold extends HookConsumerWidget {
             padding: const EdgeInsets.all(16),
             children: [
               const AppLogo(),
-              isPasswordExpired.maybeWhen(
-                  expired: () => Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Text(
-                          'Password Anda expired. Pastikan Password sudah diubah di E-HRMS dan login kembali.',
-                          style: Themes.customColor(
-                              FontWeight.bold, 11, Palette.red),
-                        ),
-                      ),
-                  orElse: () => Container()),
               const SizedBox(height: 8),
               const SignInForm(),
               const SizedBox(height: 8),

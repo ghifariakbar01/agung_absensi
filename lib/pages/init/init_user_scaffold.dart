@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../shared/future_providers.dart';
-import '../../shared/providers.dart';
 import '../widgets/loading_overlay.dart';
 
 class InitUserScaffold extends ConsumerStatefulWidget {
@@ -13,31 +12,33 @@ class InitUserScaffold extends ConsumerStatefulWidget {
 }
 
 class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
+  bool isLoadingUser = true;
+
   @override
   void initState() {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await ref.read(userNotifierProvider.notifier).getUser();
+      await ref.read(userInitFutureProvider(context).future);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      await ref.read(userFOSOProvider(context).future);
-      await ref.read(userFOSOUpdateProvider(context).future);
-      await ref.read(imeiFOSOProvder(context).future);
-      await ref.read(imeiFOSOGetProvider(context).future);
-      await ref.read(passwordExpProvider.future);
-      //
-    });
+    //
+    final userInitFuture = ref.watch(userInitFutureProvider(context));
 
     return Scaffold(
       body: Stack(children: [
-        LoadingOverlay(
-            loadingMessage: 'Initializing User & Installation ID...',
-            isLoading: true)
+        userInitFuture.when(
+            data: (_) =>
+                LoadingOverlay(loadingMessage: 'Tunggu ya...', isLoading: true),
+            error: ((error, stackTrace) =>
+                Text('Error stack trace $error $stackTrace')),
+            loading: () => LoadingOverlay(
+                loadingMessage: 'Initializing User & Installatin ID...',
+                isLoading: true)),
+        //
       ]),
       backgroundColor: Colors.white.withOpacity(0.9),
     );
