@@ -8,6 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../application/routes/route_names.dart';
 import '../../../constants/assets.dart';
+import '../../../shared/future_providers.dart';
 import '../../../shared/providers.dart';
 import '../../widgets/v_dialogs.dart';
 

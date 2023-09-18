@@ -12,8 +12,6 @@ class InitUserScaffold extends ConsumerStatefulWidget {
 }
 
 class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
-  bool isLoadingUser = true;
-
   @override
   void initState() {
     super.initState();

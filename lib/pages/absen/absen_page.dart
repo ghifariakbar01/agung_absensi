@@ -1,9 +1,6 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../application/init_geofence/init_geofence_status.dart';
 import '../../shared/providers.dart';
 import '../../style/style.dart';
 
@@ -138,7 +135,10 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
                       ),
                       Align(
                         alignment: Alignment.bottomCenter,
-                        child: CopyrightAgung(),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: CopyrightAgung(),
+                        ),
                       )
                     ],
                   ),

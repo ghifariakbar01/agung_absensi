@@ -234,7 +234,7 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
     UserModelWithPassword user =
         ref.read(userNotifierProvider.select((value) => value.user));
 
-    debugger();
+    // debugger();
 
     await ref.read(imeiNotifierProvider.notifier).onImei(
         savedImei: savedImei,
@@ -244,7 +244,7 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
           final generatedImeiString =
               ref.read(imeiNotifierProvider.notifier).generateImei();
 
-          debugger();
+          // debugger();
 
           await ref
               .read(editProfileNotifierProvider.notifier)
@@ -267,7 +267,7 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
                               .getUser()),
                   showDialog: () => showSuccessDialog(context));
 
-          debugger();
+          // debugger();
           letYouThrough();
         },
         onImeiOK: () => letYouThrough(),
@@ -278,7 +278,7 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
               );
 
           hold();
-          debugger();
+          // debugger();
         });
   }
 }

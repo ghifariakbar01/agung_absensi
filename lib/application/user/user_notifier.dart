@@ -11,7 +11,6 @@ import '../../domain/value_objects_copy.dart';
 
 import '../../infrastructure/auth/auth_repository.dart';
 import '../../utils/string_utils.dart';
-import '../reminder/reminder_provider.dart';
 import 'user_model.dart';
 import 'user_state.dart';
 
@@ -78,7 +77,7 @@ class UserNotifier extends StateNotifier<UserState> {
   }
 
   setUser(UserModelWithPassword user) {
-    // debugger();
+    debugger();
     state = state.copyWith(user: user);
   }
 
@@ -89,12 +88,10 @@ class UserNotifier extends StateNotifier<UserState> {
   Future<void> onUserParsed({
     required Function initializeUser,
     required Function initializeDioRequest,
-    required Function checkReminderStatus,
     required Function checkAndUpdateImei,
   }) async {
     await initializeUser();
     await initializeDioRequest();
-    await checkReminderStatus();
     await checkAndUpdateImei();
   }
 
@@ -102,33 +99,17 @@ class UserNotifier extends StateNotifier<UserState> {
       {required Ref ref,
       required UserModelWithPassword userModelWithPassword}) async {
     await onUserParsed(
-        initializeUser: () => setUser(userModelWithPassword),
-        initializeDioRequest: () {
-          ref.read(dioRequestProvider).addAll({
-            "kode": "${StringUtils.formatDate(DateTime.now())}",
-            "username": "${userModelWithPassword.nama}",
-            "password": "${userModelWithPassword.password}",
-            "server": "${userModelWithPassword.ptServer}"
-          });
-        },
-        checkReminderStatus: () async {
-          if (userModelWithPassword.passwordUpdate!.isNotEmpty) {
-            await Future.delayed(Duration(seconds: 1));
-            DateTime passwordUpdate = ref
-                .read(reminderNotifierProvider.notifier)
-                .convertToDateTime(
-                    passUpdate: userModelWithPassword.passwordUpdate ?? '');
-            int daysLeft = ref
-                .read(reminderNotifierProvider.notifier)
-                .getDaysLeft(
-                    passUpdate: DateTime(passwordUpdate.year,
-                        passwordUpdate.month + 1, passwordUpdate.day));
-
-            ref
-                .read(reminderNotifierProvider.notifier)
-                .changeDaysLeft(daysLeft);
-          }
-        },
+        initializeUser: () => Future.delayed(
+            Duration(seconds: 1), () => setUser(userModelWithPassword)),
+        initializeDioRequest: () => Future.delayed(
+              Duration(seconds: 1),
+              () => ref.read(dioRequestProvider).addAll({
+                "kode": "${StringUtils.formatDate(DateTime.now())}",
+                "username": "${userModelWithPassword.nama}",
+                "password": "${userModelWithPassword.password}",
+                "server": "${userModelWithPassword.ptServer}"
+              }),
+            ),
         checkAndUpdateImei: () =>
             ref.read(imeiAuthNotifierProvider.notifier).checkAndUpdateImei());
   }

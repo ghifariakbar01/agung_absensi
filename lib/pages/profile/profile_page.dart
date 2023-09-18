@@ -6,22 +6,33 @@ import 'package:face_net_authentication/pages/widgets/loading_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../application/init_geofence/init_geofence_status.dart';
-import '../../application/init_imei/init_imei_status.dart';
-import '../../application/init_password_expired/init_password_expired_status.dart';
 import '../../application/init_user/init_user_status.dart';
 import '../../constants/assets.dart';
-import '../../domain/auth_failure.dart';
 import '../../domain/edit_failure.dart';
-import '../../domain/value_objects_copy.dart';
+import '../../shared/future_providers.dart';
 import '../../shared/providers.dart';
 import '../widgets/v_dialogs.dart';
 
-class ProfilePage extends HookConsumerWidget {
+class ProfilePage extends ConsumerStatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends ConsumerState<ProfilePage> {
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await ref.read(userInitFutureProvider(context).future);
+      // await ref.read(getUserFutureProvider.future);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     // FOR UNLINK DEVICE
     ref.listen<Option<Either<EditFailure, Unit?>>>(
       imeiNotifierProvider.select(

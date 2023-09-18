@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:face_net_authentication/application/routes/route_names.dart';
 import 'package:face_net_authentication/pages/widgets/v_dialogs.dart';
 import 'package:face_net_authentication/shared/providers.dart';
@@ -14,7 +16,8 @@ class ProfileScaffold extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(userNotifierProvider.select((value) => value.user));
+    final userProvider = ref.watch(userNotifierProvider);
+    final user = userProvider.user;
 
     return Scaffold(
       appBar: AppBar(

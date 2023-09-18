@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:developer';
+// import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/application/user/user_model.dart';
@@ -12,33 +12,36 @@ import '../application/imei/imei_notifier.dart';
 import '../application/init_user/init_user_status.dart';
 import '../application/user/user_notifier.dart';
 import '../constants/assets.dart';
-import '../domain/auth_failure.dart';
 
 import '../pages/widgets/v_dialogs.dart';
 import 'providers.dart';
 
 final getUserFutureProvider = FutureProvider<Unit>((ref) async {
-  debugger();
+  // debugger();
   UserNotifier userNotifier = ref.read(userNotifierProvider.notifier);
   String userString = await userNotifier.getUserString();
+
+  // debugger();
 
   // PARSE USER SUCCESS / FAILURE
   if (userString.isNotEmpty) {
     final json = jsonDecode(userString) as Map<String, Object?>;
     final user = UserModelWithPassword.fromJson(json);
 
-    if (json.isNotEmpty) {
-      debugger();
+    // debugger();
 
-      userNotifier.setUser(user);
+    if (json.isNotEmpty) {
+      // debugger();
+
       await ref
           .read(userNotifierProvider.notifier)
           .onUserParsedRaw(ref: ref, userModelWithPassword: user);
-
       // DON'T REMOVE
       //
     }
   }
+
+  // debugger();
 
   return unit;
 });
@@ -60,12 +63,12 @@ final imeiInitFutureProvider =
       String imeiDb =
           await ref.read(imeiNotifierProvider.notifier).getImeiStringDb();
 
-      debugger();
+      // debugger();
       await ref
           .read(imeiNotifierProvider.notifier)
           .processImei(imei: imeiDb, ref: ref, context: context);
     } else {
-      debugger();
+      // debugger();
 
       await ref.read(getUserFutureProvider.future);
     }
@@ -76,9 +79,7 @@ final imeiInitFutureProvider =
 
 final userInitFutureProvider =
     FutureProvider.family<Unit, BuildContext>((ref, context) async {
-  await ref.read(getUserFutureProvider.future);
-
-  debugger();
+  // debugger();
 
   bool doNeedProcess = false;
   //
@@ -115,73 +116,15 @@ final userInitFutureProvider =
   }
 
   if (doNeedProcess) {
-    debugger();
-    final user = ref.read(userNotifierProvider).user;
-
-    debugger();
-
-    await ref
-        .read(userNotifierProvider.notifier)
-        .onUserParsedRaw(ref: ref, userModelWithPassword: user);
-
+    // debugger();
+    ref.invalidate(getUserFutureProvider);
+    await ref.read(getUserFutureProvider.future);
     // DON'T REMOVE
     //
-    await ref.read(imeiInitFutureProvider(context).future);
+    // await ref.read(imeiInitFutureProvider(context).future);
   }
 
-  // IMEI
-
-  debugger();
+  // debugger();
 
   return unit;
 });
-
-class UserInit {
-  final Ref ref;
-  final BuildContext context;
-
-  UserInit({required this.ref, required this.context}) {
-    _init();
-  }
-
-  void _init() {
-    //
-
-    //
-    void letYouThrough() {
-      ref.read(initUserStatusProvider.notifier).state =
-          InitUserStatus.success();
-    }
-
-    ref.listen<Option<Either<AuthFailure, Unit?>>>(
-      userNotifierProvider.select(
-        (state) => state.failureOrSuccessOptionUpdate,
-      ),
-      (_, failureOrSuccessOptionUpdate) => failureOrSuccessOptionUpdate.fold(
-          () {},
-          (either) => either.fold(
-                  (failure) => failure.maybeMap(
-                        noConnection: (_) => letYouThrough(),
-                        orElse: () => showDialog(
-                          context: context,
-                          barrierDismissible: true,
-                          builder: (_) => VSimpleDialog(
-                            label: 'Error',
-                            labelDescription: failure.maybeMap(
-                                server: (server) =>
-                                    '${server.errorCode} ${server.message}',
-                                storage: (_) => 'storage penuh',
-                                orElse: () => ''),
-                            asset: Assets.iconCrossed,
-                          ),
-                        ),
-                      ), (_) async {
-                // final user = ref.read(userNotifierProvider).user;
-
-                // await ref
-                //     .read(userNotifierProvider.notifier)
-                //     .onUserParsedRaw(ref: ref, userModelWithPassword: user);
-              })),
-    );
-  }
-}
