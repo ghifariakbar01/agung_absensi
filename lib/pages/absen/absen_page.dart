@@ -77,9 +77,7 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await ref.read(backgroundNotifierProvider.notifier).getSavedLocations();
       await ref.read(geofenceProvider.notifier).getGeofenceList();
-      await ref.read(absenNotifierProvidier.notifier).getAbsen(
-            date: DateTime.now(),
-          );
+      await ref.read(absenNotifierProvidier.notifier).getAbsenToday();
     });
   }
 

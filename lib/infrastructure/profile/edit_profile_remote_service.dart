@@ -135,10 +135,11 @@ class EditProfileRemoteService {
       final dateNow = DateTime.now();
 
       final commandInsert = "INSERT INTO $dbLogName " +
-          " (id_user, tgl, imei_lama, tipe) " +
+          " (id_user, tgl, imei_lama, unlink_by, tipe) " +
           " VALUES " +
           " ( " +
           " ${_userModelWithPassword.idUser}, " +
+          " ${_userModelWithPassword.nama}, " +
           " '${StringUtils.trimmedDate(dateNow)}', " +
           " '$imei', "
               " 'Mobile' "

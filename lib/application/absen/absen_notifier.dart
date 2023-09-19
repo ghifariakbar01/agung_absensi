@@ -14,5 +14,9 @@ class AbsenNotifier extends StateNotifier<AbsenState> {
     state = await _absenRepository.getAbsen(date: date);
   }
 
+  Future<void> getAbsenToday() async {
+    state = await _absenRepository.getAbsen(date: DateTime.now());
+  }
+
   setAbsenInitial() => state = AbsenState.empty();
 }

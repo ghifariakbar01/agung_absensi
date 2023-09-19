@@ -37,9 +37,10 @@ class BackgroundScaffold extends ConsumerWidget {
                                   noConnection: () => 'Tidak Ada Koneksi'),
                             )), (_) async {
                   debugger(message: 'called');
-                  await ref.read(absenNotifierProvidier.notifier).getAbsen(
-                        date: DateTime.now(),
-                      );
+                  await ref
+                      .read(absenNotifierProvidier.notifier)
+                      .getAbsenToday();
+                  //
                   String jam = StringUtils.hoursDate(DateTime.now());
                   await showDialog(
                       context: context,

@@ -19,10 +19,6 @@ mixin _$AbsenAuthState {
   bool get isSubmitting => throw _privateConstructorUsedError;
   BackgroundItemState get backgroundItemState =>
       throw _privateConstructorUsedError;
-  RemoteResponse<AbsenRequest> get absenId =>
-      throw _privateConstructorUsedError;
-  RemoteResponse<AbsenRequest> get backgroundIdSaved =>
-      throw _privateConstructorUsedError;
   Option<Either<AbsenFailure, Unit>> get failureOrSuccessOption =>
       throw _privateConstructorUsedError;
   Option<Either<AbsenFailure, Unit>> get failureOrSuccessOptionSaved =>
@@ -42,14 +38,10 @@ abstract class $AbsenAuthStateCopyWith<$Res> {
   $Res call(
       {bool isSubmitting,
       BackgroundItemState backgroundItemState,
-      RemoteResponse<AbsenRequest> absenId,
-      RemoteResponse<AbsenRequest> backgroundIdSaved,
       Option<Either<AbsenFailure, Unit>> failureOrSuccessOption,
       Option<Either<AbsenFailure, Unit>> failureOrSuccessOptionSaved});
 
   $BackgroundItemStateCopyWith<$Res> get backgroundItemState;
-  $RemoteResponseCopyWith<AbsenRequest, $Res> get absenId;
-  $RemoteResponseCopyWith<AbsenRequest, $Res> get backgroundIdSaved;
 }
 
 /// @nodoc
@@ -67,8 +59,6 @@ class _$AbsenAuthStateCopyWithImpl<$Res, $Val extends AbsenAuthState>
   $Res call({
     Object? isSubmitting = null,
     Object? backgroundItemState = null,
-    Object? absenId = null,
-    Object? backgroundIdSaved = null,
     Object? failureOrSuccessOption = null,
     Object? failureOrSuccessOptionSaved = null,
   }) {
@@ -81,14 +71,6 @@ class _$AbsenAuthStateCopyWithImpl<$Res, $Val extends AbsenAuthState>
           ? _value.backgroundItemState
           : backgroundItemState // ignore: cast_nullable_to_non_nullable
               as BackgroundItemState,
-      absenId: null == absenId
-          ? _value.absenId
-          : absenId // ignore: cast_nullable_to_non_nullable
-              as RemoteResponse<AbsenRequest>,
-      backgroundIdSaved: null == backgroundIdSaved
-          ? _value.backgroundIdSaved
-          : backgroundIdSaved // ignore: cast_nullable_to_non_nullable
-              as RemoteResponse<AbsenRequest>,
       failureOrSuccessOption: null == failureOrSuccessOption
           ? _value.failureOrSuccessOption
           : failureOrSuccessOption // ignore: cast_nullable_to_non_nullable
@@ -108,23 +90,6 @@ class _$AbsenAuthStateCopyWithImpl<$Res, $Val extends AbsenAuthState>
       return _then(_value.copyWith(backgroundItemState: value) as $Val);
     });
   }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $RemoteResponseCopyWith<AbsenRequest, $Res> get absenId {
-    return $RemoteResponseCopyWith<AbsenRequest, $Res>(_value.absenId, (value) {
-      return _then(_value.copyWith(absenId: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $RemoteResponseCopyWith<AbsenRequest, $Res> get backgroundIdSaved {
-    return $RemoteResponseCopyWith<AbsenRequest, $Res>(_value.backgroundIdSaved,
-        (value) {
-      return _then(_value.copyWith(backgroundIdSaved: value) as $Val);
-    });
-  }
 }
 
 /// @nodoc
@@ -138,17 +103,11 @@ abstract class _$$_AbsenAuthCopyWith<$Res>
   $Res call(
       {bool isSubmitting,
       BackgroundItemState backgroundItemState,
-      RemoteResponse<AbsenRequest> absenId,
-      RemoteResponse<AbsenRequest> backgroundIdSaved,
       Option<Either<AbsenFailure, Unit>> failureOrSuccessOption,
       Option<Either<AbsenFailure, Unit>> failureOrSuccessOptionSaved});
 
   @override
   $BackgroundItemStateCopyWith<$Res> get backgroundItemState;
-  @override
-  $RemoteResponseCopyWith<AbsenRequest, $Res> get absenId;
-  @override
-  $RemoteResponseCopyWith<AbsenRequest, $Res> get backgroundIdSaved;
 }
 
 /// @nodoc
@@ -164,8 +123,6 @@ class __$$_AbsenAuthCopyWithImpl<$Res>
   $Res call({
     Object? isSubmitting = null,
     Object? backgroundItemState = null,
-    Object? absenId = null,
-    Object? backgroundIdSaved = null,
     Object? failureOrSuccessOption = null,
     Object? failureOrSuccessOptionSaved = null,
   }) {
@@ -178,14 +135,6 @@ class __$$_AbsenAuthCopyWithImpl<$Res>
           ? _value.backgroundItemState
           : backgroundItemState // ignore: cast_nullable_to_non_nullable
               as BackgroundItemState,
-      absenId: null == absenId
-          ? _value.absenId
-          : absenId // ignore: cast_nullable_to_non_nullable
-              as RemoteResponse<AbsenRequest>,
-      backgroundIdSaved: null == backgroundIdSaved
-          ? _value.backgroundIdSaved
-          : backgroundIdSaved // ignore: cast_nullable_to_non_nullable
-              as RemoteResponse<AbsenRequest>,
       failureOrSuccessOption: null == failureOrSuccessOption
           ? _value.failureOrSuccessOption
           : failureOrSuccessOption // ignore: cast_nullable_to_non_nullable
@@ -204,8 +153,6 @@ class _$_AbsenAuth implements _AbsenAuth {
   const _$_AbsenAuth(
       {required this.isSubmitting,
       required this.backgroundItemState,
-      required this.absenId,
-      required this.backgroundIdSaved,
       required this.failureOrSuccessOption,
       required this.failureOrSuccessOptionSaved});
 
@@ -214,17 +161,13 @@ class _$_AbsenAuth implements _AbsenAuth {
   @override
   final BackgroundItemState backgroundItemState;
   @override
-  final RemoteResponse<AbsenRequest> absenId;
-  @override
-  final RemoteResponse<AbsenRequest> backgroundIdSaved;
-  @override
   final Option<Either<AbsenFailure, Unit>> failureOrSuccessOption;
   @override
   final Option<Either<AbsenFailure, Unit>> failureOrSuccessOptionSaved;
 
   @override
   String toString() {
-    return 'AbsenAuthState(isSubmitting: $isSubmitting, backgroundItemState: $backgroundItemState, absenId: $absenId, backgroundIdSaved: $backgroundIdSaved, failureOrSuccessOption: $failureOrSuccessOption, failureOrSuccessOptionSaved: $failureOrSuccessOptionSaved)';
+    return 'AbsenAuthState(isSubmitting: $isSubmitting, backgroundItemState: $backgroundItemState, failureOrSuccessOption: $failureOrSuccessOption, failureOrSuccessOptionSaved: $failureOrSuccessOptionSaved)';
   }
 
   @override
@@ -236,9 +179,6 @@ class _$_AbsenAuth implements _AbsenAuth {
                 other.isSubmitting == isSubmitting) &&
             (identical(other.backgroundItemState, backgroundItemState) ||
                 other.backgroundItemState == backgroundItemState) &&
-            (identical(other.absenId, absenId) || other.absenId == absenId) &&
-            (identical(other.backgroundIdSaved, backgroundIdSaved) ||
-                other.backgroundIdSaved == backgroundIdSaved) &&
             (identical(other.failureOrSuccessOption, failureOrSuccessOption) ||
                 other.failureOrSuccessOption == failureOrSuccessOption) &&
             (identical(other.failureOrSuccessOptionSaved,
@@ -248,14 +188,8 @@ class _$_AbsenAuth implements _AbsenAuth {
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      isSubmitting,
-      backgroundItemState,
-      absenId,
-      backgroundIdSaved,
-      failureOrSuccessOption,
-      failureOrSuccessOptionSaved);
+  int get hashCode => Object.hash(runtimeType, isSubmitting,
+      backgroundItemState, failureOrSuccessOption, failureOrSuccessOptionSaved);
 
   @JsonKey(ignore: true)
   @override
@@ -268,8 +202,6 @@ abstract class _AbsenAuth implements AbsenAuthState {
   const factory _AbsenAuth(
       {required final bool isSubmitting,
       required final BackgroundItemState backgroundItemState,
-      required final RemoteResponse<AbsenRequest> absenId,
-      required final RemoteResponse<AbsenRequest> backgroundIdSaved,
       required final Option<Either<AbsenFailure, Unit>> failureOrSuccessOption,
       required final Option<Either<AbsenFailure, Unit>>
           failureOrSuccessOptionSaved}) = _$_AbsenAuth;
@@ -278,10 +210,6 @@ abstract class _AbsenAuth implements AbsenAuthState {
   bool get isSubmitting;
   @override
   BackgroundItemState get backgroundItemState;
-  @override
-  RemoteResponse<AbsenRequest> get absenId;
-  @override
-  RemoteResponse<AbsenRequest> get backgroundIdSaved;
   @override
   Option<Either<AbsenFailure, Unit>> get failureOrSuccessOption;
   @override
