@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 // import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
@@ -56,14 +57,15 @@ final imeiInitFutureProvider =
     if (user.idKary!.isNotEmpty) {
       ImeiNotifier imeiNotifier = ref.read(imeiNotifierProvider.notifier);
       String imei = await imeiNotifier.getImeiString();
-      imeiNotifier.changeSavedImei(imei);
+      await Future.delayed(
+          Duration(seconds: 1), () => imeiNotifier.changeSavedImei(imei));
 
       await ref.read(imeiAuthNotifierProvider.notifier).checkAndUpdateImei();
 
       String imeiDb =
           await ref.read(imeiNotifierProvider.notifier).getImeiStringDb();
 
-      // debugger();
+      debugger();
       await ref
           .read(imeiNotifierProvider.notifier)
           .processImei(imei: imeiDb, ref: ref, context: context);

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 
 import 'package:go_router/go_router.dart';
@@ -7,8 +9,6 @@ import 'package:ntp/ntp.dart';
 import '../application/absen/absen_auth_notifier.dart';
 import '../application/absen/absen_auth_state.dart';
 import '../application/absen/absen_notifier.dart';
-import '../application/absen/absen_prep_notifier.dart';
-import '../application/absen/absen_prep_state.dart';
 import '../application/absen/absen_state.dart';
 import '../application/auth/auth_notifier.dart';
 import '../application/auto_absen/auto_absen_notifier.dart';
@@ -170,9 +170,9 @@ final absenAuthNotifierProvidier =
     StateNotifierProvider<AbsenAuthNotifier, AbsenAuthState>(
         (ref) => AbsenAuthNotifier(ref.watch(absenRepositoryProvider)));
 
-final absenPrepNotifierProvider =
-    StateNotifierProvider<AbsenPrepNotifier, AbsenPrepState>(
-        (ref) => AbsenPrepNotifier(ref));
+// final absenPrepNotifierProvider =
+//     StateNotifierProvider<AbsenPrepNotifier, AbsenPrepState>(
+//         (ref) => AbsenPrepNotifier(ref));
 
 final networkTimeFutureProvider = FutureProvider((ref) async {
   DateTime startDate = new DateTime.now().toLocal();

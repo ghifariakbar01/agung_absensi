@@ -77,7 +77,7 @@ class UserNotifier extends StateNotifier<UserState> {
   }
 
   setUser(UserModelWithPassword user) {
-    debugger();
+    // debugger();
     state = state.copyWith(user: user);
   }
 

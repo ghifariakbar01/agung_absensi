@@ -59,7 +59,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                       ), (_) async {
                 final isSuccess = await ref
                     .read(imeiNotifierProvider.notifier)
-                    .logImeiSucces();
+                    .clearImeiSuccess();
 
                 if (isSuccess) {
                   debugger();

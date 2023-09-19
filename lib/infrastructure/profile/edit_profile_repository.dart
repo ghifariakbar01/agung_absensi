@@ -16,7 +16,7 @@ class EditProfileRepostiroy {
   Future<bool> hasImei() => getImei().then((credentials) =>
       credentials.fold((_) => false, (imei) => imei != null ? true : false));
 
-  Future<bool> logImeiSuccess(String imei) => logClearImei(imei: imei).then(
+  Future<bool> clearImeiSuccess() => clearImei().then(
         (value) => value.fold((l) => false, (r) => true),
       );
 
@@ -80,6 +80,8 @@ class EditProfileRepostiroy {
       return response.when(
           withImei: (imei) async {
             await _credentialsStorage.save(imei);
+
+            debugger();
 
             return right(unit);
           },

@@ -139,10 +139,10 @@ class EditProfileRemoteService {
           " VALUES " +
           " ( " +
           " ${_userModelWithPassword.idUser}, " +
-          " ${_userModelWithPassword.nama}, " +
           " '${StringUtils.trimmedDate(dateNow)}', " +
           " '$imei', "
-              " 'Mobile' "
+              " '${_userModelWithPassword.nama}', " +
+          " 'Mobile' "
               " ) ";
 
       final Map<String, String> edit = {

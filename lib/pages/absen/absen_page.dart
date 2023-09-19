@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../application/imei/imei_notifier.dart';
 import '../../shared/providers.dart';
 import '../../style/style.dart';
 
@@ -75,6 +76,11 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      ImeiNotifier imeiNotifier = ref.read(imeiNotifierProvider.notifier);
+      String imei = await imeiNotifier.getImeiString();
+      await Future.delayed(
+          Duration(seconds: 1), () => imeiNotifier.changeSavedImei(imei));
+
       await ref.read(backgroundNotifierProvider.notifier).getSavedLocations();
       await ref.read(geofenceProvider.notifier).getGeofenceList();
       await ref.read(absenNotifierProvidier.notifier).getAbsenToday();

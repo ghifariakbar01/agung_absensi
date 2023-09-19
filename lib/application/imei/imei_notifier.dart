@@ -34,8 +34,8 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
       .getImei()
       .then((value) => value.fold((l) => '', (imei) => imei ?? ''));
 
-  Future<bool> logImeiSucces() async =>
-      _editProfileRepostiroy.logImeiSuccess(state.imei);
+  Future<bool> clearImeiSuccess() async =>
+      await _editProfileRepostiroy.clearImeiSuccess();
 
   String generateImei() => Uuid().v4();
 
@@ -138,23 +138,25 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
           break;
 
         case false:
-          // debugger(message: 'called');
+          debugger(message: 'called');
 
-          // onImeiOK();
           await onImeiAlreadyRegistered();
+          // onImeiOK();
           // await onImeiNotRegistered();
 
           break;
       }
     }
 
-    debugger();
+    // debugger();
 
     if (imeiAuthState == ImeiAuthState.registered()) {
       switch (savedImei.isEmpty) {
         case true:
-          // onImeiOK();
+          debugger(message: 'called');
+
           await onImeiAlreadyRegistered();
+          // onImeiOK();
           // await onImeiNotRegistered();
 
           break;
@@ -167,8 +169,8 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
             } else if (imeiDBString != savedImei) {
               debugger(message: 'called');
 
-              // onImeiOK();
               await onImeiAlreadyRegistered();
+              // onImeiOK();
               // await onImeiNotRegistered();
             }
           }();
@@ -237,7 +239,7 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
     UserModelWithPassword user =
         ref.read(userNotifierProvider.select((value) => value.user));
 
-    // debugger();
+    debugger();
 
     await ref.read(imeiNotifierProvider.notifier).onImei(
         savedImei: savedImei,

@@ -17,6 +17,7 @@ import '../../domain/background_failure.dart';
 import '../../shared/providers.dart';
 import '../../style/style.dart';
 
+import '../../utils/geofence_utils.dart';
 import '../../utils/string_utils.dart';
 import '../widgets/v_button.dart';
 import '../widgets/v_dialogs.dart';
@@ -104,8 +105,8 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                       .read(absenNotifierProvidier.notifier)
                       .getAbsenToday();
 
-                  final jamBerhasil = ref.read(absenPrepNotifierProvider
-                      .select((value) => value.networkTime));
+                  final jamBerhasil =
+                      await ref.refresh(networkTimeFutureProvider.future);
                   String jamBerhasilStr = StringUtils.hoursDate(jamBerhasil);
 
                   offlineNotifier.state = false;
@@ -117,7 +118,8 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                             asset: Assets.iconChecked,
                             label: 'JAM $jamBerhasilStr',
                             labelDescription: 'BERHASIL',
-                          ));
+                          )).then((_) =>
+                      context.pushNamed(RouteNames.riwayatAbsenNameRoute));
                 })));
 
     // ABSEN MODE OFFLINE
@@ -180,9 +182,6 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
     // KARYAWAN SHIFT
     final karyawanShift = ref.watch(karyawanShiftFutureProvider);
 
-    // CURRENT NETWORK TIME
-    final networkTime = ref.watch(networkTimeFutureProvider);
-
     return Column(
       children: [
         // Karyawan Shift
@@ -206,48 +205,50 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                             absen == AbsenState.incomplete() &&
                                 nearest < 100 &&
                                 nearest != 0,
-                        onPressed: () => showCupertinoDialog(
-                            context: context,
-                            builder: (_) => VAlertDialog(
-                                label: 'Ingin absen-in ?',
-                                labelDescription: 'JAM : ' +
-                                    networkTime.when(
-                                      data: (data) =>
-                                          StringUtils.hoursDate(data),
-                                      loading: () => '...Loading...',
-                                      error: (error, stackTrace) =>
-                                          '$error $stackTrace',
-                                    ),
-                                onPressed: () async {
-                                  debugger(message: 'called');
-                                  await ref
-                                      .read(absenPrepNotifierProvider.notifier)
-                                      .setup(
-                                          lat: currentLocationLatitude,
-                                          long: currentLocationLongitude);
+                        onPressed: () async {
+                          DateTime refreshed = await ref
+                              .refresh(networkTimeFutureProvider.future);
+                          String idGeof = ref.read(geofenceProvider
+                              .select((value) => value.nearestCoordinates.id));
+                          String imei = ref.read(imeiNotifierProvider
+                              .select((value) => value.imei));
+                          String lokasi = await GeofenceUtil.getLokasiStr(
+                              lat: currentLocationLatitude,
+                              long: currentLocationLongitude);
 
-                                  final absenPrep =
-                                      ref.read(absenPrepNotifierProvider);
+                          if (imei.isEmpty) {
+                            return;
+                          }
 
-                                  debugger(message: 'called');
+                          return await showCupertinoDialog(
+                              context: context,
+                              builder: (_) => VAlertDialog(
+                                  label: 'Ingin absen-in ?',
+                                  labelDescription: 'JAM : ' +
+                                      StringUtils.hoursDate(refreshed),
+                                  onPressed: () async {
+                                    debugger(message: 'called');
 
-                                  await ref
-                                      .read(absenAuthNotifierProvidier.notifier)
-                                      .absen(
-                                        idGeof: absenPrep.idGeofence,
-                                        imei: absenPrep.imei,
-                                        lokasi: absenPrep.lokasi,
-                                        latitude: '$currentLocationLatitude',
-                                        longitude: '$currentLocationLongitude',
-                                        date: absenPrep.networkTime,
-                                        dbDate: absenPrep.networkTime,
-                                        inOrOut: JenisAbsen.absenIn,
-                                      );
+                                    await ref
+                                        .read(
+                                            absenAuthNotifierProvidier.notifier)
+                                        .absen(
+                                          idGeof: idGeof,
+                                          imei: imei,
+                                          lokasi: lokasi,
+                                          latitude: '$currentLocationLatitude',
+                                          longitude:
+                                              '$currentLocationLongitude',
+                                          date: refreshed,
+                                          dbDate: refreshed,
+                                          inOrOut: JenisAbsen.absenIn,
+                                        );
 
-                                  debugger(message: 'called');
+                                    debugger(message: 'called');
 
-                                  context.pop();
-                                }))),
+                                    context.pop();
+                                  }));
+                        }),
                   ),
 
                   // Absen Keluar
@@ -261,52 +262,50 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                             absen == AbsenState.absenIn() &&
                                 nearest < minDistance &&
                                 nearest != 0,
-                        onPressed: () => showCupertinoDialog(
-                            context: context,
-                            builder: (_) => VAlertDialog(
+                        onPressed: () async {
+                          DateTime refreshed = await ref
+                              .refresh(networkTimeFutureProvider.future);
+                          String idGeof = ref.read(geofenceProvider
+                              .select((value) => value.nearestCoordinates.id));
+                          String imei = ref.read(imeiNotifierProvider
+                              .select((value) => value.imei));
+                          String lokasi = await GeofenceUtil.getLokasiStr(
+                              lat: currentLocationLatitude,
+                              long: currentLocationLongitude);
+
+                          if (imei.isEmpty) {
+                            return;
+                          }
+
+                          return await showCupertinoDialog(
+                              context: context,
+                              builder: (_) => VAlertDialog(
                                   label: 'Ingin absen-out ?',
                                   labelDescription: 'JAM : ' +
-                                      networkTime.when(
-                                        data: (data) =>
-                                            StringUtils.hoursDate(data),
-                                        loading: () => '...Loading...',
-                                        error: (error, stackTrace) =>
-                                            '$error $stackTrace',
-                                      ),
+                                      StringUtils.hoursDate(refreshed),
                                   onPressed: () async {
-                                    debugger(message: 'called');
-                                    await ref
-                                        .read(
-                                            absenPrepNotifierProvider.notifier)
-                                        .setup(
-                                            lat: currentLocationLatitude,
-                                            long: currentLocationLongitude);
-
-                                    final absenPrep =
-                                        ref.read(absenPrepNotifierProvider);
-
                                     debugger(message: 'called');
 
                                     await ref
                                         .read(
                                             absenAuthNotifierProvidier.notifier)
                                         .absen(
-                                          idGeof: absenPrep.idGeofence,
-                                          imei: absenPrep.imei,
-                                          lokasi: absenPrep.lokasi,
+                                          idGeof: idGeof,
+                                          imei: imei,
+                                          lokasi: lokasi,
                                           latitude: '$currentLocationLatitude',
                                           longitude:
                                               '$currentLocationLongitude',
-                                          date: absenPrep.networkTime,
-                                          dbDate: absenPrep.networkTime,
+                                          date: refreshed,
+                                          dbDate: refreshed,
                                           inOrOut: JenisAbsen.absenOut,
                                         );
 
                                     debugger(message: 'called');
 
                                     context.pop();
-                                  },
-                                ))),
+                                  }));
+                        }),
                   ),
                 ],
               );

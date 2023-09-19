@@ -26,4 +26,15 @@ class GeofenceUtil {
 
     return lokasi;
   }
+
+  static Future<String> getLokasiStr(
+      {required double lat, required double long}) async {
+    Placemark? placeMark = await getLokasi(latitude: lat, longitude: long);
+
+    if (placeMark != null) {
+      return '${placeMark.street}, ${placeMark.locality}, ${placeMark.administrativeArea}. ${placeMark.postalCode}';
+    } else {
+      return 'LOCATION UNKNOWN';
+    }
+  }
 }

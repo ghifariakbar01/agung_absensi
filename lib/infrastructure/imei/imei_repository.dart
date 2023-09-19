@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dartz/dartz.dart';
 import 'package:flutter/services.dart';
 
@@ -11,11 +13,16 @@ class ImeiRepository {
 
   Future<Either<ImeiFailure, String?>> getImeiCredentials() async {
     try {
+      // debugger();
       final storedCredentials = await _credentialsStorage.read();
 
       if (storedCredentials == null) {
+        // debugger();
+
         return left(ImeiFailure.empty());
       }
+
+      // debugger();
 
       return right(storedCredentials);
     } on FormatException catch (e) {
