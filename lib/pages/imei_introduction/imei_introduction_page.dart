@@ -41,7 +41,7 @@ class ImeiIntroductionPage extends ConsumerWidget {
           ),
           Center(
             child: Text(
-              'Agung Logistics HRMS Online menyimpan UID untuk validasi data absen. Jika ingin melakukan uninstall, lakukan UNLINK DEVICE di Setting aplikasi ini. Baru lakukan UNINSTALL aplikasi.',
+              'FINGRE menyimpan UID untuk memastikan user hanya menginstall aplikasi di satu device. User yang sudah memiliki UID di satu device tidak dapat melakukan instalasi aplikasi di device kedua. Jika ingin melakukan instalasi E-FINGER di device kedua lakukan Unlink Deivce diikuti dengan melakukan uninstall aplikasi.',
               textAlign: TextAlign.justify,
               style: Themes.customColor(FontWeight.normal, 15, Colors.black),
             ),
@@ -51,9 +51,12 @@ class ImeiIntroductionPage extends ConsumerWidget {
               SizedBox(
                 height: 4,
               ),
-              Text('Untuk petunjuk, ikuti instruksi dibawah.',
-                  style:
-                      Themes.customColor(FontWeight.normal, 15, Colors.black)),
+              Center(
+                child: Text(
+                    'Untuk petunjuk melakukan Unlink Device ikuti langkah di bawah ini.',
+                    style: Themes.customColor(
+                        FontWeight.normal, 15, Colors.black)),
+              ),
               SizedBox(
                 height: 4,
               ),
@@ -76,8 +79,7 @@ class ImeiIntroductionPage extends ConsumerWidget {
               Padding(
                 padding: const EdgeInsets.all(32.0),
                 child: Center(
-                  child: Text(
-                      'Langkah terakhir, UNINSTALL aplikasi Agung HRMS Online.',
+                  child: Text('Langkah terakhir, UNINSTALL aplikasi E-FINGER.',
                       textAlign: TextAlign.center,
                       style:
                           Themes.customColor(FontWeight.bold, 15, Palette.red)),
@@ -93,7 +95,7 @@ class ImeiIntroductionPage extends ConsumerWidget {
                     builder: (_) => VAlertDialog(
                         label: 'Apakah anda yakin?',
                         labelDescription:
-                            'Jika anda sudah mengerti instruksi di atas, tap YA',
+                            'Jika anda sudah mengerti instruksi di atas, tap Ya',
                         onPressed: () async {
                           await ref
                               .read(imeiIntroductionNotifierProvider.notifier)

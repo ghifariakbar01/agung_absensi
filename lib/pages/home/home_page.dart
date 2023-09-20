@@ -28,7 +28,7 @@ class _HomePageState extends ConsumerState<HomePage> {
 
 class MyUpgraderMessages extends UpgraderMessages {
   @override
-  String get body => 'Lakukan update dengan versi aplikasi FINGER terbaru.';
+  String get body => 'Lakukan update dengan versi aplikasi E-FINGER terbaru.';
 
   @override
   String get buttonTitleIgnore => '-';
