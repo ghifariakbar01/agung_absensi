@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:face_net_authentication/application/routes/route_names.dart';
 import 'package:face_net_authentication/pages/widgets/v_dialogs.dart';
@@ -51,16 +52,29 @@ class ProfileScaffold extends ConsumerWidget {
                   color: Palette.red,
                   onPressed: () => showDialog(
                       context: context,
-                      builder: (_) => VAlertDialog(
-                          label: 'Unlink HP & Logout ?',
-                          labelDescription: 'Hapus INSTALLATION ID\n & Logout ',
-                          onPressed: () async {
-                            context.pop();
+                      builder: (_) => Platform.isIOS
+                          ? VAlertDialog(
+                              label: 'Unlink HP & Logout ?',
+                              labelDescription:
+                                  'Hapus INSTALLATION ID\n & Logout Akun\n\n Anda tidak akan bisa menggunakan device ini kembali.',
+                              onPressed: () async {
+                                context.pop();
 
-                            await ref
-                                .read(imeiNotifierProvider.notifier)
-                                .logClearImeiFromDB();
-                          })))
+                                await ref
+                                    .read(imeiNotifierProvider.notifier)
+                                    .logClearImeiFromDB();
+                              })
+                          : VAlertDialog(
+                              label: 'Unlink HP & Logout ?',
+                              labelDescription:
+                                  'Hapus INSTALLATION ID\n & Logout Akun',
+                              onPressed: () async {
+                                context.pop();
+
+                                await ref
+                                    .read(imeiNotifierProvider.notifier)
+                                    .logClearImeiFromDB();
+                              })))
             ],
           ),
         ),

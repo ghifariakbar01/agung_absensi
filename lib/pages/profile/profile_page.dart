@@ -63,11 +63,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                     .clearImeiSuccess();
 
                 if (Platform.isIOS) {
-                  bool isImeiClearedFromSaved = await ref
-                      .read(imeiNotifierProvider.notifier)
-                      .clearImeiSaved();
-
-                  if (isSuccess && isImeiClearedFromSaved) {
+                  if (isSuccess) {
                     await ref
                         .read(imeiNotifierProvider.notifier)
                         .clearImeiFromDBAndLogoutiOS(ref);
