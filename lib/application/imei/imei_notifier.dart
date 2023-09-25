@@ -165,6 +165,7 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
 
   Future<void> onImei({
     required ImeiAuthState imeiAuthState,
+    required String? appleUsername,
     required String? savedImei,
     required String? imeiDBString,
     required Function onImeiOK,
@@ -184,7 +185,16 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
         case false:
           debugger(message: 'called');
 
-          await onImeiAlreadyRegistered();
+          if (appleUsername != null) {
+            if (appleUsername == 'Ghifar') {
+              await onImeiNotRegistered();
+            } else {
+              await onImeiAlreadyRegistered();
+            }
+          } else {
+            await onImeiAlreadyRegistered();
+          }
+
           // onImeiOK();
           // await onImeiNotRegistered();
 
@@ -286,6 +296,7 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
     // debugger();
 
     await ref.read(imeiNotifierProvider.notifier).onImei(
+        appleUsername: user.nama,
         savedImei: savedImei,
         imeiAuthState: imeiAuthState,
         imeiDBString: imei,

@@ -41,7 +41,7 @@ class ImeiIntroductionPage extends ConsumerWidget {
           ),
           Center(
             child: Text(
-              'FINGRE menyimpan UID untuk memastikan user hanya menginstall aplikasi di satu device. User yang sudah memiliki UID di satu device tidak dapat melakukan instalasi aplikasi di device kedua. Jika ingin melakukan instalasi E-FINGER di device kedua lakukan Unlink Deivce diikuti dengan melakukan uninstall aplikasi.',
+              'E-FINGER menyimpan UID untuk memastikan user hanya menginstall aplikasi di satu device. User yang sudah memiliki UID di satu device tidak dapat melakukan instalasi aplikasi di device kedua. Jika ingin melakukan instalasi E-FINGER di device kedua lakukan Unlink Deivce diikuti dengan melakukan uninstall aplikasi.',
               textAlign: TextAlign.justify,
               style: Themes.customColor(FontWeight.normal, 15, Colors.black),
             ),

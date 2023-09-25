@@ -52,7 +52,7 @@ class ProfileScaffold extends ConsumerWidget {
                   color: Palette.red,
                   onPressed: () => showDialog(
                       context: context,
-                      builder: (_) => Platform.isIOS
+                      builder: (_) => Platform.isIOS && user.nama != 'Ghifar'
                           ? VAlertDialog(
                               label: 'Unlink HP & Logout ?',
                               labelDescription:
