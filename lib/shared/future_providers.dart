@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 // import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
@@ -18,22 +17,15 @@ import '../pages/widgets/v_dialogs.dart';
 import 'providers.dart';
 
 final getUserFutureProvider = FutureProvider<Unit>((ref) async {
-  // debugger();
   UserNotifier userNotifier = ref.read(userNotifierProvider.notifier);
   String userString = await userNotifier.getUserString();
-
-  // debugger();
 
   // PARSE USER SUCCESS / FAILURE
   if (userString.isNotEmpty) {
     final json = jsonDecode(userString) as Map<String, Object?>;
     final user = UserModelWithPassword.fromJson(json);
 
-    // debugger();
-
     if (json.isNotEmpty) {
-      // debugger();
-
       await ref
           .read(userNotifierProvider.notifier)
           .onUserParsedRaw(ref: ref, userModelWithPassword: user);
@@ -42,13 +34,12 @@ final getUserFutureProvider = FutureProvider<Unit>((ref) async {
     }
   }
 
-  // debugger();
-
   return unit;
 });
 
 final imeiInitFutureProvider =
     FutureProvider.family<Unit, BuildContext>((ref, context) async {
+  ref.invalidate(getUserFutureProvider);
   await ref.read(getUserFutureProvider.future);
 
   final user = ref.read(userNotifierProvider).user;
@@ -65,13 +56,10 @@ final imeiInitFutureProvider =
       String imeiDb =
           await ref.read(imeiNotifierProvider.notifier).getImeiStringDb();
 
-      debugger();
       await ref
           .read(imeiNotifierProvider.notifier)
           .processImei(imei: imeiDb, ref: ref, context: context);
     } else {
-      // debugger();
-
       await ref.read(getUserFutureProvider.future);
     }
   }
@@ -81,8 +69,6 @@ final imeiInitFutureProvider =
 
 final userInitFutureProvider =
     FutureProvider.family<Unit, BuildContext>((ref, context) async {
-  // debugger();
-
   bool doNeedProcess = false;
   //
   final userFOSOUpdate = ref.watch(userNotifierProvider
@@ -118,15 +104,12 @@ final userInitFutureProvider =
   }
 
   if (doNeedProcess) {
-    // debugger();
     ref.invalidate(getUserFutureProvider);
     await ref.read(getUserFutureProvider.future);
     // DON'T REMOVE
     //
     // await ref.read(imeiInitFutureProvider(context).future);
   }
-
-  // debugger();
 
   return unit;
 });

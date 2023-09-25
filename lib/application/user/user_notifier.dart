@@ -24,8 +24,6 @@ class UserNotifier extends StateNotifier<UserState> {
   Future<String> getUserString() => _repository.getUserString();
 
   Future<void> getUser() async {
-    debugger();
-
     Either<UserFailure, String?> failureOrSuccess;
 
     state = state.copyWith(isGetting: true, failureOrSuccessOption: none());
@@ -47,14 +45,12 @@ class UserNotifier extends StateNotifier<UserState> {
 
     state =
         state.copyWith(isGetting: true, failureOrSuccessOptionUpdate: none());
-    debugger();
+
     failureOrSuccess = await _repository.saveUserAfterUpdate(
         idKaryawan: idKaryawan,
         password: password,
         userId: userId,
         server: server);
-
-    debugger();
 
     state = state.copyWith(
         isGetting: false,
@@ -104,7 +100,6 @@ class UserNotifier extends StateNotifier<UserState> {
         initializeDioRequest: () => Future.delayed(
               Duration(seconds: 1),
               () => ref.read(dioRequestProvider).addAll({
-                "kode": "${StringUtils.formatDate(DateTime.now())}",
                 "username": "${userModelWithPassword.nama}",
                 "password": "${userModelWithPassword.password}",
                 "server": "${userModelWithPassword.ptServer}"

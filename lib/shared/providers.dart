@@ -1,4 +1,4 @@
-import 'dart:developer';
+// import 'dart:developer';
 
 import 'package:dio/dio.dart';
 
@@ -52,13 +52,13 @@ import '../infrastructure/imei/imei_repository.dart';
 import '../infrastructure/karyawan/karyawan_repository.dart';
 import '../infrastructure/profile/edit_profile_remote_service.dart';
 import '../infrastructure/profile/edit_profile_repository.dart';
-import '../utils/string_utils.dart';
+// import '../utils/string_utils.dart';
 
 // NETWORKING & ROUTER
 final dioProvider = Provider((ref) => Dio());
 
 final dioRequestProvider = Provider<Map<String, String>>(
-  (ref) => {"kode": "${StringUtils.formatDate(DateTime.now())}"},
+  (ref) => {"kode": "110011"},
 );
 
 final routerProvider = Provider<GoRouter>((ref) {

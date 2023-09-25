@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -17,6 +19,8 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      // await Future.delayed(Duration(seconds: 1),
+      //     () => ref.invalidate(imeiInitFutureProvider(context)));
       await ref.read(imeiInitFutureProvider(context).future);
     });
   }

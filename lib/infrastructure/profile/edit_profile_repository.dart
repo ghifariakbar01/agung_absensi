@@ -41,7 +41,7 @@ class EditProfileRepostiroy {
     try {
       await _profileRemoteService.clearImei();
 
-      debugger();
+      // debugger();
 
       return right(unit);
     } on RestApiExceptionWithMessage catch (restApi) {
@@ -80,8 +80,6 @@ class EditProfileRepostiroy {
       return response.when(
           withImei: (imei) async {
             await _credentialsStorage.save(imei);
-
-            debugger();
 
             return right(unit);
           },

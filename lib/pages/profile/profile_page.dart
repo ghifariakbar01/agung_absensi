@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/pages/profile/profile_scaffold.dart';
@@ -57,17 +58,26 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                           ),
                         ),
                       ), (_) async {
-                final isSuccess = await ref
+                bool isSuccess = await ref
                     .read(imeiNotifierProvider.notifier)
                     .clearImeiSuccess();
 
-                if (isSuccess) {
-                  debugger();
-                  ref.read(userNotifierProvider.notifier).setUserInitial();
-                  ref.read(initUserStatusProvider.notifier).state =
-                      InitUserStatus.init();
-                  await ref.read(userNotifierProvider.notifier).logout();
-                  debugger();
+                if (Platform.isIOS) {
+                  bool isImeiClearedFromSaved = await ref
+                      .read(imeiNotifierProvider.notifier)
+                      .clearImeiSaved();
+
+                  if (isSuccess && isImeiClearedFromSaved) {
+                    await ref
+                        .read(imeiNotifierProvider.notifier)
+                        .clearImeiFromDBAndLogout(ref);
+                  }
+                } else {
+                  if (isSuccess) {
+                    await ref
+                        .read(imeiNotifierProvider.notifier)
+                        .clearImeiFromDBAndLogout(ref);
+                  }
                 }
               })),
     );

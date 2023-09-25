@@ -30,6 +30,10 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
       .getImeiCredentials()
       .then((value) => value.fold((l) => '', (imei) => imei ?? ''));
 
+  Future<bool> clearImeiSaved() => _imeiRepository
+      .clearImeiCredentials()
+      .then((value) => value.fold((_) => false, (_) => true));
+
   Future<String> getImeiStringDb() => _editProfileRepostiroy
       .getImei()
       .then((value) => value.fold((l) => '', (imei) => imei ?? ''));
@@ -46,6 +50,14 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
 
   resetSavedImei() {
     state = state.copyWith(imei: '');
+  }
+
+  Future<void> clearImeiFromDBAndLogout(WidgetRef ref) async {
+    // debugger();
+    ref.read(userNotifierProvider.notifier).setUserInitial();
+    ref.read(initUserStatusProvider.notifier).state = InitUserStatus.init();
+    await ref.read(userNotifierProvider.notifier).logout();
+    // debugger();
   }
 
   Future<void> getImeiCredentials() async {
