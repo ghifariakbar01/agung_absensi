@@ -56,7 +56,7 @@ class ProfileScaffold extends ConsumerWidget {
                           ? VAlertDialog(
                               label: 'Unlink HP & Logout ?',
                               labelDescription:
-                                  'Hapus INSTALLATION ID\n & Logout Akun\n\n Anda tidak akan bisa menggunakan device ini kembali.',
+                                  'Mohon Dibaca: Setelah Hapus Installation ID\n & Logout Akun Anda tidak akan bisa menggunakan device ini kembali.',
                               onPressed: () async {
                                 context.pop();
 
@@ -67,7 +67,7 @@ class ProfileScaffold extends ConsumerWidget {
                           : VAlertDialog(
                               label: 'Unlink HP & Logout ?',
                               labelDescription:
-                                  'Hapus INSTALLATION ID\n & Logout Akun',
+                                  'Hapus Installation ID\n & Logout',
                               onPressed: () async {
                                 context.pop();
 
