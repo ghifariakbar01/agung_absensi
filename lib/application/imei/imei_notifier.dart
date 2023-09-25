@@ -1,8 +1,11 @@
 import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
+import 'package:face_net_authentication/application/permission/permission_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:uuid/uuid.dart';
 
@@ -14,7 +17,10 @@ import '../../infrastructure/profile/edit_profile_repository.dart';
 import '../../pages/widgets/v_dialogs.dart';
 import '../../shared/providers.dart';
 import '../../style/style.dart';
+import '../imei_introduction/shared/imei_introduction_providers.dart';
 import '../init_user/init_user_status.dart';
+import '../permission/shared/permission_introduction_providers.dart';
+import '../tc/shared/tc_providers.dart';
 import '../user/user_model.dart';
 import 'imei_auth_state.dart';
 import 'imei_state.dart';
@@ -52,12 +58,38 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
     state = state.copyWith(imei: '');
   }
 
-  Future<void> clearImeiFromDBAndLogout(WidgetRef ref) async {
+  Future<void> clearImeiFromDBAndLogoutiOS(WidgetRef ref) async {
     // debugger();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+
+    await ref.read(tcNotifierProvider.notifier).clearVisitedTC();
+    await ref
+        .read(imeiIntroductionNotifierProvider.notifier)
+        .clearVisitedIMEIIntroduction();
+
+    ref.read(userNotifierProvider.notifier).setUserInitial();
+    ref.read(initUserStatusProvider.notifier).state = InitUserStatus.init();
+
+    // reset route
+    final permissionNotifier = ref.read(permissionNotifierProvider.notifier);
+    await permissionNotifier.checkAndUpdateLocation();
+
+    final tcNotifier = ref.read(tcNotifierProvider.notifier);
+    await tcNotifier.checkAndUpdateStatusTC();
+
+    final imeiInstructionNotifier =
+        ref.read(imeiIntroductionNotifierProvider.notifier);
+    await imeiInstructionNotifier.checkAndUpdateStatusIMEIIntroduction();
+
+    await ref.read(userNotifierProvider.notifier).logout();
+    // debugger();
+  }
+
+  Future<void> clearImeiFromDBAndLogout(WidgetRef ref) async {
     ref.read(userNotifierProvider.notifier).setUserInitial();
     ref.read(initUserStatusProvider.notifier).state = InitUserStatus.init();
     await ref.read(userNotifierProvider.notifier).logout();
-    // debugger();
   }
 
   Future<void> getImeiCredentials() async {
@@ -144,7 +176,7 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
     if (imeiAuthState == ImeiAuthState.empty()) {
       switch (savedImei.isEmpty) {
         case true:
-          debugger(message: 'called');
+          // debugger(message: 'called');
 
           await onImeiNotRegistered();
           break;
@@ -175,7 +207,7 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
         case false:
           () async {
             if (imeiDBString == savedImei) {
-              debugger(message: 'called');
+              // debugger(message: 'called');
 
               onImeiOK();
             } else if (imeiDBString != savedImei) {
@@ -251,7 +283,7 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
     UserModelWithPassword user =
         ref.read(userNotifierProvider.select((value) => value.user));
 
-    debugger();
+    // debugger();
 
     await ref.read(imeiNotifierProvider.notifier).onImei(
         savedImei: savedImei,

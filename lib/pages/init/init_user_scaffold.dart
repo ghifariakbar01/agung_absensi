@@ -38,7 +38,7 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
             error: ((error, stackTrace) =>
                 Text('Error stack trace $error $stackTrace')),
             loading: () => LoadingOverlay(
-                loadingMessage: 'Initializing User & Installatin ID...',
+                loadingMessage: 'Initializing User & Installation ID...',
                 isLoading: true)),
         //
       ]),

@@ -20,4 +20,8 @@ class TCNotifier extends StateNotifier<TCState> {
   Future<void> saveVisitedTC(String visited) async {
     await _repository.save(visited);
   }
+
+  Future<void> clearVisitedTC() async {
+    await _repository.clear();
+  }
 }

@@ -24,10 +24,6 @@ Future<void> main() async {
 
 final initializationProvider =
     FutureProvider.family<Unit, BuildContext>((ref, context) async {
-  // await Future.delayed(
-  //     Duration(seconds: 2), () => ref.read(userInitProvider(context)));
-
-  // await ref.read(hiveProvider).init();
   ref.read(dioProvider)
     ..options = BaseOptions(
       connectTimeout: BuildConfig.get().connectTimeout,
