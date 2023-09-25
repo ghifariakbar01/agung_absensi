@@ -1,4 +1,3 @@
-
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -8,7 +7,8 @@ class PermissionNotifier extends StateNotifier<PermissionState> {
   PermissionNotifier() : super(PermissionState.initial());
 
   Future<void> checkAndUpdateLocation() async {
-    if (await Permission.location.status.isGranted) {
+    if (await Permission.location.status.isGranted &&
+        await Permission.location.serviceStatus.isEnabled) {
       state = PermissionState.completed();
     } else {
       state = PermissionState.initial();
