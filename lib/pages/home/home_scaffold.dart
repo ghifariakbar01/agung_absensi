@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:face_net_authentication/shared/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -13,6 +14,8 @@ import '../widgets/app_logo.dart';
 import '../widgets/copyright_text.dart';
 import 'home_drawer.dart';
 import 'home_item.dart';
+import 'home_tester_off.dart';
+import 'home_tester_on.dart';
 
 class Item {
   final String absen;
@@ -34,6 +37,8 @@ class HomeScaffold extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final packageInfo = ref.watch(packageInfoProvider);
     final width = MediaQuery.of(context).size.width;
+    final isTester = ref.watch(testerNotifierProvider);
+    final user = ref.watch(userNotifierProvider);
 
     return Scaffold(
       drawer: WelcomeDrawer(),
@@ -105,16 +110,21 @@ class HomeScaffold extends ConsumerWidget {
                         decoration: BoxDecoration(
                             color: Palette.primaryColor.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(10)),
-                        child: GridView.builder(
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                              childAspectRatio: 16 / 19,
-                              crossAxisCount: 4,
-                            ),
-                            padding: EdgeInsets.all(8),
-                            itemCount: items.length,
-                            itemBuilder: (_, index) =>
-                                WelcomeItem(item: items[index])),
+                        child: GridView(
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            childAspectRatio: 16 / 19,
+                            crossAxisCount: 4,
+                          ),
+                          padding: EdgeInsets.all(8),
+                          children: [
+                            ...isTester.maybeWhen(
+                                tester: testerMode,
+                                orElse: user.user.nama == 'Ghifar'
+                                    ? testerMode2
+                                    : regularMode)
+                          ],
+                        ),
                       )),
                   const SizedBox(height: 30),
                 ],
@@ -145,3 +155,12 @@ class HomeScaffold extends ConsumerWidget {
     );
   }
 }
+
+List<Widget> testerMode() =>
+    [HomeTesterOn(), WelcomeItem(item: items[0]), WelcomeItem(item: items[1])];
+
+List<Widget> testerMode2() =>
+    [HomeTesterOff(), WelcomeItem(item: items[0]), WelcomeItem(item: items[1])];
+
+List<Widget> regularMode() =>
+    [WelcomeItem(item: items[0]), WelcomeItem(item: items[1])];

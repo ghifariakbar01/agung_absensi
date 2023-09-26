@@ -23,6 +23,23 @@ class UserNotifier extends StateNotifier<UserState> {
 
   Future<String> getUserString() => _repository.getUserString();
 
+  Future<bool> getIsTester() async {
+    // debugger();
+    String userString = await getUserString();
+
+    // PARSE USER SUCCESS / FAILURE
+    if (userString.isNotEmpty) {
+      final json = jsonDecode(userString) as Map<String, Object?>;
+      final user = UserModelWithPassword.fromJson(json);
+
+      if (user.nama != null) {
+        return user.nama == 'Ghifar';
+      }
+    }
+
+    return false;
+  }
+
   Future<void> getUser() async {
     Either<UserFailure, String?> failureOrSuccess;
 

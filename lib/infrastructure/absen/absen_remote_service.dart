@@ -274,11 +274,7 @@ class AbsenRemoteService {
 
       final items = response.data?[0];
 
-      debugger();
-
       if (items['status'] == 'Success') {
-        // debugger();
-
         final absenExist = items['items'] != null && items['items'] is List;
 
         if (absenExist) {
@@ -287,8 +283,6 @@ class AbsenRemoteService {
           log('GET ABSEN TODAY LIST: $list');
 
           if (list.isEmpty) {
-            debugger();
-
             return AbsenState.empty();
           }
 
@@ -302,17 +296,11 @@ class AbsenRemoteService {
             final absenMasuk = map['masuk'] != null;
 
             if (sudahAbsen) {
-              debugger();
-
               return AbsenState.complete();
             } else if (absenMasuk) {
-              debugger();
-
               return AbsenState.absenIn();
             }
           } else {
-            debugger();
-
             return AbsenState.empty();
           }
         } else {

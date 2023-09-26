@@ -1,29 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../application/permission/shared/permission_introduction_providers.dart';
+import '../../shared/providers.dart';
 import '../../style/style.dart';
-import 'home_scaffold.dart';
+import '../widgets/v_dialogs.dart';
 
-class WelcomeItem extends ConsumerWidget {
-  const WelcomeItem({
-    Key? key,
-    required this.item,
-  }) : super(key: key);
-
-  final Item item;
+class HomeTesterOn extends ConsumerWidget {
+  const HomeTesterOn();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return TextButton(
       onPressed: () async {
-        // final permissionNotifier =
-        //     ref.read(permissionNotifierProvider.notifier);
-        // await permissionNotifier.checkAndUpdateLocation();
+        await showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) => VAlertDialog(
+                label: 'TURN ON LOCATION ?',
+                labelDescription:
+                    'Select if you want to turn on and use location mode.',
+                pressedLabel: 'Yes',
+                backPressedLabel: 'No',
+                onPressed: () async {
+                  await ref
+                      .read(testerNotifierProvider.notifier)
+                      .forceChangeToRegular();
 
-        await context.pushNamed(item.routeNames);
+                  context.pop();
+                },
+                onBackPressed: () => context.pop()));
       },
       child: Container(
         padding: EdgeInsets.all(8),
@@ -40,12 +46,12 @@ class WelcomeItem extends ConsumerWidget {
                     color: Colors.white),
                 padding: EdgeInsets.all(8),
                 child: SizedBox(
-                    child: SvgPicture.asset(
-                  item.icon,
+                    child: Icon(
+                  Icons.location_off,
                   color: Palette.primaryLighter,
                 ))),
             Text(
-              item.absen.toUpperCase(),
+              'LOKASI',
               style: Themes.customColor(FontWeight.bold, 9, Colors.white),
             )
           ],

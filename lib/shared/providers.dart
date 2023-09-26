@@ -32,6 +32,8 @@ import '../application/routes/route_notifier.dart';
 import '../application/sign_in_form/sign_in_form_notifier.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+import '../application/tester/tester_notifier.dart';
+import '../application/tester/tester_state.dart';
 import '../application/user/user_notifier.dart';
 import '../application/user/user_state.dart';
 import '../infrastructure/absen/absen_remote_service.dart';
@@ -244,3 +246,7 @@ final imeiResetNotifierProvider =
 
 // MISC
 final passwordVisibleProvider = StateProvider.autoDispose<bool>((ref) => false);
+
+final testerNotifierProvider =
+    StateNotifierProvider<TesterhNotifier, TesterState>(
+        (ref) => TesterhNotifier(ref));

@@ -76,14 +76,27 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      ImeiNotifier imeiNotifier = ref.read(imeiNotifierProvider.notifier);
-      String imei = await imeiNotifier.getImeiString();
-      await Future.delayed(
-          Duration(seconds: 1), () => imeiNotifier.changeSavedImei(imei));
+      await ref.read(testerNotifierProvider).maybeWhen(
+          forcedRegularUser: () {},
+          orElse: () => ref
+              .read(testerNotifierProvider.notifier)
+              .checkAndUpdateTesterState());
 
-      await ref.read(backgroundNotifierProvider.notifier).getSavedLocations();
-      await ref.read(geofenceProvider.notifier).getGeofenceList();
-      await ref.read(absenNotifierProvidier.notifier).getAbsenToday();
+      final testerState = ref.read(testerNotifierProvider);
+
+      await testerState.maybeWhen(
+          tester: () {},
+          orElse: () async {
+            ImeiNotifier imeiNotifier = ref.read(imeiNotifierProvider.notifier);
+            String imei = await imeiNotifier.getImeiString();
+            await Future.delayed(
+                Duration(seconds: 1), () => imeiNotifier.changeSavedImei(imei));
+            await ref
+                .read(backgroundNotifierProvider.notifier)
+                .getSavedLocations();
+            await ref.read(geofenceProvider.notifier).getGeofenceList();
+            await ref.read(absenNotifierProvidier.notifier).getAbsenToday();
+          });
     });
   }
 
@@ -93,6 +106,7 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
         ref.watch(userNotifierProvider.select((value) => value.user.nama));
 
     final isOfflineMode = ref.watch(absenOfflineModeProvider);
+    final isTester = ref.watch(testerNotifierProvider);
 
     return Stack(
       children: [
@@ -129,7 +143,10 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
                           Padding(
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: LocationDetail(),
+                            child: isTester.maybeWhen(
+                              tester: () => Container(),
+                              orElse: () => LocationDetail(),
+                            ),
                           ),
                           SizedBox(
                             height: 8,

@@ -6,6 +6,8 @@ import 'permission_state.dart';
 class PermissionNotifier extends StateNotifier<PermissionState> {
   PermissionNotifier() : super(PermissionState.initial());
 
+  letYouThrough() => state = PermissionState.completed();
+
   Future<void> checkAndUpdateLocation() async {
     if (await Permission.location.status.isGranted &&
         await Permission.location.serviceStatus.isEnabled) {

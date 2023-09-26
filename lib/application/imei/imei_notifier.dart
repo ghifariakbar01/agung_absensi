@@ -1,9 +1,7 @@
 import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
-import 'package:face_net_authentication/application/permission/permission_state.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

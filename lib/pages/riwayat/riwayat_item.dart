@@ -23,51 +23,51 @@ class RiwayatItem extends ConsumerWidget {
 
     return Column(
       children: [
-        if (alamat.isNotEmpty) ...[
-          Flexible(
-            flex: 0,
-            child: Container(
-              width: width,
-              padding: EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(10)),
-              child: Column(
-                children: [
-                  // Jam Masuk
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.alarm,
-                        color: Palette.primaryLighter,
-                      ),
-                      SizedBox(
-                        width: 4,
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Jam $coancenate',
-                            style: Themes.customColor(
-                                FontWeight.bold, 12, Palette.primaryLighter),
-                          ),
-                          Text(
-                            jam,
-                            style: Themes.customColor(
-                                FontWeight.bold, 10, Palette.primaryLighter),
-                          ),
-                        ],
-                      )
-                    ],
-                  )
-                ],
-              ),
+        Flexible(
+          flex: 0,
+          child: Container(
+            width: width,
+            padding: EdgeInsets.all(4),
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(10)),
+            child: Column(
+              children: [
+                // Jam Masuk
+                Row(
+                  children: [
+                    Icon(
+                      Icons.alarm,
+                      color: Palette.primaryLighter,
+                    ),
+                    SizedBox(
+                      width: 4,
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Jam $coancenate',
+                          style: Themes.customColor(
+                              FontWeight.bold, 12, Palette.primaryLighter),
+                        ),
+                        Text(
+                          jam,
+                          style: Themes.customColor(
+                              FontWeight.bold, 10, Palette.primaryLighter),
+                        ),
+                      ],
+                    )
+                  ],
+                )
+              ],
             ),
           ),
-          SizedBox(
-            height: 4,
-          ),
+        ),
+        SizedBox(
+          height: 4,
+        ),
+        if (alamat.isNotEmpty && alamat != 'NULL (APPLE REVIEW)') ...[
           Flexible(
             flex: 1,
             child: Container(
