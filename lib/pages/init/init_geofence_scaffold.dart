@@ -4,6 +4,7 @@ import 'package:dartz/dartz.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geofence_service/geofence_service.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -97,6 +98,9 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
                                   orElse: () => ''),
                               asset: Assets.iconCrossed,
                               color: Colors.red))), (geofenceList) async {
+                final Function(Location location) mockListener = ref
+                    .read(mockLocationNotifierProvider.notifier)
+                    .addMockLocationListener;
                 //
                 if (geofenceList.isNotEmpty) {
                   final geofence = ref
@@ -132,6 +136,10 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
                                 .read(geofenceProvider.notifier)
                                 .initializeGeoFence(geofence,
                                     onError: (e) => log('error geofence $e'));
+                            await ref
+                                .read(geofenceProvider.notifier)
+                                .addGeofenceMockListener(
+                                    mockListener: mockListener);
 
                             // debugger();
                             log('savedItems $savedItems');
@@ -175,6 +183,11 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
                                   .read(geofenceProvider.notifier)
                                   .initializeGeoFence(geofence,
                                       onError: (e) => log('error geofence $e'));
+
+                              await ref
+                                  .read(geofenceProvider.notifier)
+                                  .addGeofenceMockListener(
+                                      mockListener: mockListener);
                             } else {
                               //
                               await ref
@@ -194,6 +207,10 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
                         .read(geofenceProvider.notifier)
                         .initializeGeoFence(geofence,
                             onError: (e) => log('error geofence $e'));
+
+                    await ref
+                        .read(geofenceProvider.notifier)
+                        .addGeofenceMockListener(mockListener: mockListener);
 
                     // debugger();
                   }

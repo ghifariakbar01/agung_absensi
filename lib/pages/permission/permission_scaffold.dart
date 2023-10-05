@@ -1,6 +1,8 @@
 import 'package:face_net_authentication/application/permission/permission_state.dart';
 import 'package:face_net_authentication/application/permission/shared/permission_introduction_providers.dart';
+import 'package:face_net_authentication/pages/widgets/v_dialogs.dart';
 import 'package:flutter/material.dart';
+import 'package:geofence_service/geofence_service.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../widgets/app_logo.dart';
@@ -47,17 +49,28 @@ class PermissionScaffold extends ConsumerWidget {
                         label:
                             'Lokasi dibutuhkan untuk memastikan anda berada di lokasi kantor agung group.',
                         onPressed: () async {
-                          await ref
-                              .read(permissionNotifierProvider.notifier)
-                              .requestLocation();
+                          if (!await FlLocation.isLocationServicesEnabled) {
+                            showDialog(
+                              context: context,
+                              builder: (context) => VSimpleDialog(
+                                  label: 'GPS Tidak Berfungsi',
+                                  labelDescription:
+                                      'Mohon nyalakan GPS pada device anda. Terimakasih',
+                                  asset: 'assets/ic_location_off.svg'),
+                            );
+                          } else {
+                            await ref
+                                .read(permissionNotifierProvider.notifier)
+                                .requestLocation();
 
-                          await ref
-                              .read(permissionNotifierProvider.notifier)
-                              .requestDenied();
+                            await ref
+                                .read(permissionNotifierProvider.notifier)
+                                .requestDenied();
 
-                          await ref
-                              .read(permissionNotifierProvider.notifier)
-                              .checkAndUpdateLocation();
+                            await ref
+                                .read(permissionNotifierProvider.notifier)
+                                .checkAndUpdateLocation();
+                          }
                         },
                         title: 'Nyalakan lokasi anda',
                       )),

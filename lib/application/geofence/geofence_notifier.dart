@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:developer' as log;
-import 'dart:developer';
 import 'dart:math';
 
 import 'package:collection/collection.dart';
@@ -99,6 +98,10 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
 
   // Geofence initializatioin
 
+  addGeofenceMockListener(
+          {required Function(Location location) mockListener}) =>
+      geofenceservice.addLocationChangeListener(mockListener);
+
   Future<void> initializeGeoFence(
       //
       List<Geofence> geofenceList,
@@ -128,8 +131,6 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
     Location location,
     List<Geofence> coordinates,
   ) {
-    // debugger();
-
     print('location: ${location.toJson()}');
 
     state = state.copyWith(currentLocation: location);
@@ -201,18 +202,10 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
     print('ErrorCode: $errorCode');
   }
 
-  stop(
-    List<Geofence> geofence,
-    GeofenceService _geofenceService,
-    List<GeofenceResponse> geofenceList,
-  ) {
-    _geofenceService.removeLocationChangeListener(onLocationChanged(
-      geofenceList as Location,
-      geofence,
-    ));
-    _geofenceService.removeStreamErrorListener(onErrorStream);
-    _geofenceService.clearAllListeners();
-    _geofenceService.stop();
+  stop() {
+    state.geofenceService.removeStreamErrorListener(onErrorStream);
+    state.geofenceService.clearAllListeners();
+    state.geofenceService.stop();
   }
 
   List<GeofenceCoordinate> updateCoordinatesFromGeofence(

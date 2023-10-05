@@ -29,8 +29,6 @@ final getUserFutureProvider = FutureProvider<Unit>((ref) async {
       await ref
           .read(userNotifierProvider.notifier)
           .onUserParsedRaw(ref: ref, userModelWithPassword: user);
-      // DON'T REMOVE
-      //
     }
   }
 

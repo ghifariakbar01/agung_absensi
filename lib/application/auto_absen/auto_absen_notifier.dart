@@ -1,22 +1,19 @@
 import 'dart:developer';
 
-import 'package:collection/collection.dart';
-
-import 'package:face_net_authentication/style/style.dart';
-import 'package:flutter/material.dart';
-import 'package:geofence_service/models/geofence.dart';
-import 'package:go_router/go_router.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-import '../../constants/assets.dart';
-import '../../pages/widgets/v_dialogs.dart';
-import '../../shared/providers.dart';
-import '../../utils/string_utils.dart';
+import 'auto_absen_state.dart';
 import '../absen/absen_enum.dart';
 import '../absen/absen_state.dart';
-import '../background/background_item_state.dart';
+import '../../constants/assets.dart';
+import '../../shared/providers.dart';
+import '../../utils/string_utils.dart';
+import 'package:flutter/material.dart';
 import '../background/saved_location.dart';
-import 'auto_absen_state.dart';
+import 'package:go_router/go_router.dart';
+import '../../pages/widgets/v_dialogs.dart';
+import '../background/background_item_state.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:geofence_service/geofence_service.dart';
+import 'package:face_net_authentication/style/style.dart';
 
 class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
   AutoAbsenNotifier(this.ref) : super(AutoAbsenState.initial());
@@ -246,8 +243,13 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
             // debugger();
           }
 
+          final Function(Location location) mockListener = ref
+              .read(mockLocationNotifierProvider.notifier)
+              .addMockLocationListener;
+
           // REINITIALIZE
-          await reinitializeDependencies(geofence: geofence);
+          await reinitializeDependencies(
+              geofence: geofence, mockListener: mockListener);
         }
       });
     }
@@ -330,10 +332,14 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
 
   Future<void> reinitializeDependencies({
     required List<Geofence> geofence,
+    required Function(Location location) mockListener,
   }) async {
     await getSavedLocations();
     await ref
         .read(geofenceProvider.notifier)
         .initializeGeoFence(geofence, onError: (e) {});
+    await ref
+        .read(geofenceProvider.notifier)
+        .addGeofenceMockListener(mockListener: mockListener);
   }
 }

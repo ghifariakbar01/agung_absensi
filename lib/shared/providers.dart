@@ -28,6 +28,8 @@ import '../application/imei/imei_notifier.dart';
 import '../application/imei/imei_reset_state.dart';
 import '../application/imei/imei_auth_state.dart';
 import '../application/init_user/init_user_status.dart';
+import '../application/mock_location/mock_location_notifier.dart';
+import '../application/mock_location/mock_location_state.dart';
 import '../application/routes/route_notifier.dart';
 import '../application/sign_in_form/sign_in_form_notifier.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -243,6 +245,12 @@ final imeiResetNotifierProvider =
 //     StateNotifierProvider<PasswordExpiredNotifierStatus, PasswordExpiredState>(
 //         (ref) => PasswordExpiredNotifierStatus(
 //             ref, ref.watch(passwordExpiredRepositoryProvider)));
+
+// MOCK LOCATION
+final mockLocationNotifierProvider =
+    StateNotifierProvider<MockLocationNotifier, MockLocationState>(
+  (ref) => MockLocationNotifier(),
+);
 
 // MISC
 final passwordVisibleProvider = StateProvider.autoDispose<bool>((ref) => false);

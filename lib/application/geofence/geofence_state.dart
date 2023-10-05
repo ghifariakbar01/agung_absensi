@@ -1,10 +1,10 @@
 import 'package:dartz/dartz.dart';
-import 'package:face_net_authentication/application/geofence/geofence_response.dart';
-import 'package:face_net_authentication/domain/geofence_failure.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:geofence_service/geofence_service.dart';
-
+import '../../domain/geofence_failure.dart';
 import 'geofence_coordinate_state.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+import 'geofence_response.dart';
 
 part 'geofence_dummy.dart';
 
@@ -36,11 +36,11 @@ class GeofenceState with _$GeofenceState {
         geofenceService: GeofenceService.instance.setup(
             interval: 5000,
             accuracy: 100,
+            printDevLog: false,
             loiteringDelayMs: 60000,
+            allowMockLocations: true,
             statusChangeDelayMs: 10000,
             useActivityRecognition: false,
-            allowMockLocations: false,
-            printDevLog: false,
             geofenceRadiusSortType: GeofenceRadiusSortType.DESC),
       );
 }

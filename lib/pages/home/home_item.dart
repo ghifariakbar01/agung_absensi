@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:geofence_service/geofence_service.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../application/permission/shared/permission_introduction_providers.dart';
+import '../../application/routes/route_names.dart';
 import '../../style/style.dart';
+import '../widgets/v_dialogs.dart';
 import 'home_scaffold.dart';
 
 class WelcomeItem extends ConsumerWidget {
@@ -19,11 +21,22 @@ class WelcomeItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return TextButton(
       onPressed: () async {
-        // final permissionNotifier =
-        //     ref.read(permissionNotifierProvider.notifier);
-        // await permissionNotifier.checkAndUpdateLocation();
-
-        await context.pushNamed(item.routeNames);
+        if (item.routeNames == RouteNames.absenRoute) {
+          if (!await FlLocation.isLocationServicesEnabled) {
+            showDialog(
+              context: context,
+              builder: (context) => VSimpleDialog(
+                  label: 'GPS Tidak Berfungsi',
+                  labelDescription:
+                      'Mohon nyalakan GPS pada device anda. Terimakasih',
+                  asset: 'assets/ic_location_off.svg'),
+            );
+          } else {
+            await context.pushNamed(item.routeNames);
+          }
+        } else {
+          await context.pushNamed(item.routeNames);
+        }
       },
       child: Container(
         padding: EdgeInsets.all(8),

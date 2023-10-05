@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -108,6 +110,10 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
     final isOfflineMode = ref.watch(absenOfflineModeProvider);
     final isTester = ref.watch(testerNotifierProvider);
 
+    final mockLocation = ref.watch(mockLocationNotifierProvider);
+
+    log('mockLocation $mockLocation');
+
     return Stack(
       children: [
         Scaffold(
@@ -140,18 +146,29 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
                           SizedBox(
                             height: 8,
                           ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: isTester.maybeWhen(
-                              tester: () => Container(),
-                              orElse: () => LocationDetail(),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          AbsenButton(),
+                          isTester.maybeWhen(
+                            tester: () => AbsenButton(),
+                            orElse: () => mockLocation.maybeWhen(
+                                mocked: () => Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                          'Anda diduga mengunakan Fake GPS. Harap matikan Fake GPS agar bisa menggunakan aplikasi.'),
+                                    ),
+                                original: () => Column(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 8.0),
+                                          child: LocationDetail(),
+                                        ),
+                                        SizedBox(
+                                          height: 8,
+                                        ),
+                                        AbsenButton(),
+                                      ],
+                                    ),
+                                orElse: () => Container()),
+                          )
                         ],
                       ),
                       Align(
