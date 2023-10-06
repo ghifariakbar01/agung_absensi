@@ -60,7 +60,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                       ), (_) async {
                 bool isSuccess = await ref
                     .read(imeiNotifierProvider.notifier)
-                    .clearImeiSuccess();
+                    .clearImeiSuccess(
+                        idKary: ref.read(userNotifierProvider).user.idKary ??
+                            'null');
 
                 if (Platform.isIOS) {
                   if (isSuccess) {

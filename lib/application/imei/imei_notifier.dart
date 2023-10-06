@@ -32,18 +32,19 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
 
   Future<String> getImeiString() => _imeiRepository
       .getImeiCredentials()
-      .then((value) => value.fold((l) => '', (imei) => imei ?? ''));
+      .then((value) => value.fold((_) => '', (imei) => imei ?? ''));
 
   Future<bool> clearImeiSaved() => _imeiRepository
       .clearImeiCredentials()
       .then((value) => value.fold((_) => false, (_) => true));
 
-  Future<String> getImeiStringDb() => _editProfileRepostiroy
-      .getImei()
-      .then((value) => value.fold((l) => '', (imei) => imei ?? ''));
+  Future<String> getImeiStringDb({required String idKary}) =>
+      _editProfileRepostiroy
+          .getImei(idKary: idKary)
+          .then((value) => value.fold((_) => '', (imei) => imei ?? ''));
 
-  Future<bool> clearImeiSuccess() async =>
-      await _editProfileRepostiroy.clearImeiSuccess();
+  Future<bool> clearImeiSuccess({required String idKary}) async =>
+      await _editProfileRepostiroy.clearImeiSuccess(idKary: idKary);
 
   String generateImei() => Uuid().v4();
 
@@ -101,52 +102,57 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
         isGetting: false, failureOrSuccessOption: optionOf(failureOrSuccess));
   }
 
-  Future<void> getImei() async {
+  Future<void> getImei({required String idKary}) async {
     Either<EditFailure, String?> failureOrSuccess;
 
     state =
         state.copyWith(isGetting: true, failureOrSuccessOptionGetImei: none());
 
-    failureOrSuccess = await _editProfileRepostiroy.getImei();
+    failureOrSuccess = await _editProfileRepostiroy.getImei(idKary: idKary);
 
     state = state.copyWith(
         isGetting: false,
         failureOrSuccessOptionGetImei: optionOf(failureOrSuccess));
   }
 
-  Future<void> clearImeiFromDB() async {
+  Future<void> clearImeiFromDB({required String idKary}) async {
     Either<EditFailure, Unit>? failureOrSuccess;
 
     state = state.copyWith(
         isGetting: true, failureOrSuccessOptionClearRegisterImei: none());
 
-    failureOrSuccess = await _editProfileRepostiroy.clearImei();
+    failureOrSuccess = await _editProfileRepostiroy.clearImei(idKary: idKary);
 
     state = state.copyWith(
         isGetting: false,
         failureOrSuccessOptionClearRegisterImei: optionOf(failureOrSuccess));
   }
 
-  Future<void> logClearImeiFromDB() async {
+  Future<void> logClearImeiFromDB({
+    required String nama,
+    required String idUser,
+  }) async {
     Either<EditFailure, Unit>? failureOrSuccess;
 
     state = state.copyWith(isGetting: true);
 
-    failureOrSuccess =
-        await _editProfileRepostiroy.logClearImei(imei: state.imei);
+    failureOrSuccess = await _editProfileRepostiroy.logClearImei(
+        imei: state.imei, nama: nama, idUser: idUser);
 
     state = state.copyWith(
         isGetting: false,
         failureOrSuccessOptionClearRegisterImei: optionOf(failureOrSuccess));
   }
 
-  Future<void> registerImei({required String imei}) async {
+  Future<void> registerImei(
+      {required String imei, required String idKary}) async {
     Either<EditFailure, Unit>? failureOrSuccess;
 
     state = state.copyWith(
         isGetting: true, failureOrSuccessOptionClearRegisterImei: none());
 
-    failureOrSuccess = await _editProfileRepostiroy.registerImei(imei: imei);
+    failureOrSuccess =
+        await _editProfileRepostiroy.registerImei(imei: imei, idKary: idKary);
 
     state = state.copyWith(
         isGetting: false,
@@ -162,11 +168,11 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
   }
 
   Future<void> onImei({
-    required ImeiAuthState imeiAuthState,
-    required String? appleUsername,
+    required Function onImeiOK,
     required String? savedImei,
     required String? imeiDBString,
-    required Function onImeiOK,
+    required String? appleUsername,
+    required ImeiAuthState imeiAuthState,
     required Future<void> onImeiNotRegistered(),
     required Future<void> onImeiAlreadyRegistered(),
   }) async {
@@ -207,8 +213,8 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
         case true:
           debugger(message: 'called');
 
-          // await onImeiAlreadyRegistered();
-          onImeiOK();
+          await onImeiAlreadyRegistered();
+          // onImeiOK();
           // await onImeiNotRegistered();
 
           break;
@@ -221,8 +227,8 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
             } else if (imeiDBString != savedImei) {
               debugger(message: 'called');
 
-              // await onImeiAlreadyRegistered();
-              onImeiOK();
+              await onImeiAlreadyRegistered();
+              // onImeiOK();
               // await onImeiNotRegistered();
             }
           }();
@@ -233,110 +239,127 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
     }
   }
 
-  Future<void> showSuccessDialog(BuildContext context) {
-    return showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (_) => VSimpleDialog(
-        label: 'Berhasil',
-        labelDescription: 'Sukses daftar INSTALLATION ID',
-        asset: Assets.iconChecked,
-      ),
-    ).then((_) => showDialog(
-          context: context,
-          barrierDismissible: true,
-          builder: (_) => VSimpleDialog(
-            color: Palette.red,
-            label: 'Warning',
-            labelDescription: 'Jika uninstall, unlink hp di setting profil',
-            asset: Assets.iconChecked,
-          ),
-        ));
-  }
+  Future<void> showSuccessDialog(BuildContext context) => showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (_) => VSimpleDialog(
+          label: 'Berhasil',
+          labelDescription: 'Sukses daftar INSTALLATION ID',
+          asset: Assets.iconChecked,
+        ),
+      ).then((_) => showDialog(
+            context: context,
+            barrierDismissible: true,
+            builder: (_) => VSimpleDialog(
+              color: Palette.red,
+              label: 'Warning',
+              labelDescription: 'Jika uninstall, unlink hp di setting profil',
+              asset: Assets.iconChecked,
+            ),
+          ));
 
-  Future<void> showFailedDialog(BuildContext context) {
-    return showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (_) => VSimpleDialog(
-        label: 'Gagal',
-        labelDescription: 'Sudah punya INSTALLATION ID',
-        asset: Assets.iconCrossed,
-      ),
-    );
-  }
+  Future<void> showFailedDialog(BuildContext context) => showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (_) => VSimpleDialog(
+          label: 'Gagal',
+          labelDescription: 'Sudah punya INSTALLATION ID',
+          asset: Assets.iconCrossed,
+        ),
+      );
 
-  // TAU LAH SUSAH KONTOL
   Future<void> processImei(
-      //
-      {
-      //
+      {required Ref ref,
       required String imei,
-      required Ref ref,
       required BuildContext context}) async {
     //
-    void letYouThrough() {
-      ref.read(initUserStatusProvider.notifier).state =
-          InitUserStatus.success();
+    letYouThrough() => ref.read(initUserStatusProvider.notifier).state =
+        InitUserStatus.success();
+
+    hold() =>
+        ref.read(initUserStatusProvider.notifier).state = InitUserStatus.init();
+
+    holdAndlogYouOut() async {
+      hold();
+      await ref.read(userNotifierProvider.notifier).logout();
     }
 
-    void hold() {
-      ref.read(initUserStatusProvider.notifier).state = InitUserStatus.init();
-    }
-    //
-
+    UserModelWithPassword user = ref.read(userNotifierProvider).user;
     ImeiAuthState imeiAuthState = ref.read(imeiAuthNotifierProvider);
-    String savedImei =
-        ref.read(imeiNotifierProvider.select((value) => value.imei));
-    UserModelWithPassword user =
-        ref.read(userNotifierProvider.select((value) => value.user));
+
+    String generatedImeiString =
+        ref.read(imeiNotifierProvider.notifier).generateImei();
+    String savedImei = ref.read(imeiNotifierProvider).imei;
 
     // debugger();
 
     await ref.read(imeiNotifierProvider.notifier).onImei(
-        appleUsername: user.nama,
-        savedImei: savedImei,
-        imeiAuthState: imeiAuthState,
         imeiDBString: imei,
-        onImeiNotRegistered: () async {
-          final generatedImeiString =
-              ref.read(imeiNotifierProvider.notifier).generateImei();
-
-          // debugger();
-
-          await ref
-              .read(editProfileNotifierProvider.notifier)
-              .registerAndShowDialog(
-                  register: () =>
-                      ref.read(imeiNotifierProvider.notifier).registerImei(
-                          imei: generatedImeiString),
-                  getImeiCredentials: () =>
-                      ref
-                          .read(imeiNotifierProvider.notifier)
-                          .getImeiCredentials(),
-                  onImeiComplete: () => ref
-                      .read(editProfileNotifierProvider.notifier)
-                      .onEditProfile(
-                          saveUser: () => ref
-                              .read(userNotifierProvider.notifier)
-                              .saveUserAfterUpdate(user: user),
-                          onUser: () => ref
-                              .read(userNotifierProvider.notifier)
-                              .getUser()),
-                  showDialog: () => showSuccessDialog(context));
-
-          // debugger();
-          letYouThrough();
-        },
+        savedImei: savedImei,
+        appleUsername: user.nama,
+        imeiAuthState: imeiAuthState,
         onImeiOK: () => letYouThrough(),
-        onImeiAlreadyRegistered: () async {
-          await ref.read(imeiNotifierProvider.notifier).onImeiAlreadyRegistered(
-                showDialog: () => showFailedDialog(context),
-                logout: () => ref.read(userNotifierProvider.notifier).logout(),
-              );
+        onImeiNotRegistered: () => ref
+            .read(editProfileNotifierProvider.notifier)
+            .registerAndShowDialog(
+                signUp: () => ref
+                    .read(imeiNotifierProvider.notifier)
+                    .registerImei(
+                        imei: generatedImeiString,
+                        idKary: user.idKary ?? 'null'),
+                getImei: () => ref
+                    .read(imeiNotifierProvider.notifier)
+                    .getImeiCredentials(),
+                onImeiComplete: () => ref
+                    .read(editProfileNotifierProvider.notifier)
+                    .onEditProfile(
+                        saveUser: () => ref
+                            .read(userNotifierProvider.notifier)
+                            .saveUserAfterUpdate(user: user),
+                        onUser: () =>
+                            ref.read(userNotifierProvider.notifier).getUser()),
+                areYouSuccessOrNot: () async {
+                  await ref
+                      .read(userNotifierProvider.notifier)
+                      .saveUserAfterUpdate(user: user);
 
-          hold();
-          // debugger();
-        });
+                  ref
+                      .read(userNotifierProvider)
+                      .failureOrSuccessOptionUpdate
+                      .fold(
+                          () {},
+                          (either) => either.fold(
+                              (failure) => failure.maybeWhen(
+                                  noConnection: () => letYouThrough(),
+                                  orElse: () => showDialog(
+                                        context: context,
+                                        barrierDismissible: true,
+                                        builder: (_) => VSimpleDialog(
+                                          label: 'Error',
+                                          labelDescription: failure.maybeWhen(
+                                            orElse: () => '',
+                                            server: (errorCode, message) =>
+                                                'Error Kode $errorCode : $message',
+                                            passwordWrong: () =>
+                                                'Password yang anda masukkan salah',
+                                            storage: () =>
+                                                'Mohon maaf storage anda penuh. Mohon luangkan storage anda agar bisa menyimpan Installation ID. Terimakasih',
+                                          ),
+                                          asset: Assets.iconCrossed,
+                                        ),
+                                      ).then((_) => holdAndlogYouOut())),
+                              (_) => ref
+                                  .read(userNotifierProvider.notifier)
+                                  .getUser()
+                                  .then((_) => showSuccessDialog(context)
+                                      .then((_) => letYouThrough()))));
+                }),
+        onImeiAlreadyRegistered: () => ref
+            .read(imeiNotifierProvider.notifier)
+            .onImeiAlreadyRegistered(
+              showDialog: () => showFailedDialog(context),
+              logout: () => ref.read(userNotifierProvider.notifier).logout(),
+            )
+            .then((_) => hold()));
   }
 }

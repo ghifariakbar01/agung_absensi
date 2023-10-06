@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/domain/auth_failure.dart';
@@ -10,7 +9,6 @@ import '../../domain/user_failure.dart';
 import '../../domain/value_objects_copy.dart';
 
 import '../../infrastructure/auth/auth_repository.dart';
-import '../../utils/string_utils.dart';
 import 'user_model.dart';
 import 'user_state.dart';
 
@@ -109,22 +107,23 @@ class UserNotifier extends StateNotifier<UserState> {
   }
 
   Future<void> onUserParsedRaw(
-      {required Ref ref,
-      required UserModelWithPassword userModelWithPassword}) async {
-    await onUserParsed(
-        initializeUser: () => Future.delayed(
-            Duration(seconds: 1), () => setUser(userModelWithPassword)),
-        initializeDioRequest: () => Future.delayed(
-              Duration(seconds: 1),
-              () => ref.read(dioRequestProvider).addAll({
-                "username": "${userModelWithPassword.nama}",
-                "password": "${userModelWithPassword.password}",
-                "server": "${userModelWithPassword.ptServer}"
-              }),
-            ),
-        checkAndUpdateImei: () =>
-            ref.read(imeiAuthNotifierProvider.notifier).checkAndUpdateImei());
-  }
+          {required Ref ref,
+          required UserModelWithPassword userModelWithPassword}) =>
+      onUserParsed(
+          initializeUser: () => Future.delayed(
+              Duration(seconds: 2), () => setUser(userModelWithPassword)),
+          initializeDioRequest: () => Future.delayed(
+                Duration(seconds: 1),
+                () => ref.read(dioRequestProvider).addAll({
+                  "username": "${userModelWithPassword.nama}",
+                  "password": "${userModelWithPassword.password}",
+                  "server": "${userModelWithPassword.ptServer}"
+                }),
+              ),
+          checkAndUpdateImei: () => ref
+              .read(imeiAuthNotifierProvider.notifier)
+              .checkAndUpdateImei(
+                  idKary: userModelWithPassword.idKary ?? 'null'));
 
   Future<void> logout() async {
     Either<AuthFailure, Unit> failureOrSuccessOption;

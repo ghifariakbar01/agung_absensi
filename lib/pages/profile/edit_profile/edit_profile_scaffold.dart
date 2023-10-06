@@ -20,8 +20,10 @@ class EditProfileScaffold extends ConsumerWidget {
       ),
       floatingActionButton: VButton(
         label: 'SAVE PROFILE',
-        onPressed: () =>
-            ref.read(editProfileNotifierProvider.notifier).submitEdit(),
+        onPressed: () => ref
+            .read(editProfileNotifierProvider.notifier)
+            .submitEdit(
+                idKary: ref.read(userNotifierProvider).user.idKary ?? 'null'),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: KeyboardDismissOnTap(

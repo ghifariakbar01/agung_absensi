@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+// ignore: unused_import
 import '../application/imei/imei_notifier.dart';
 import '../application/init_user/init_user_status.dart';
 import '../application/user/user_notifier.dart';
@@ -16,6 +17,7 @@ import '../constants/assets.dart';
 import '../pages/widgets/v_dialogs.dart';
 import 'providers.dart';
 
+// 1. GET AND SET USER
 final getUserFutureProvider = FutureProvider<Unit>((ref) async {
   UserNotifier userNotifier = ref.read(userNotifierProvider.notifier);
   String userString = await userNotifier.getUserString();
@@ -35,6 +37,7 @@ final getUserFutureProvider = FutureProvider<Unit>((ref) async {
   return unit;
 });
 
+// 2. INIT IMEI WITH USER
 final imeiInitFutureProvider =
     FutureProvider.family<Unit, BuildContext>((ref, context) async {
   ref.invalidate(getUserFutureProvider);
@@ -44,15 +47,19 @@ final imeiInitFutureProvider =
 
   if (user.idKary != null) {
     if (user.idKary!.isNotEmpty) {
-      ImeiNotifier imeiNotifier = ref.read(imeiNotifierProvider.notifier);
+      final imeiNotifier = ref.read(imeiNotifierProvider.notifier);
+
       String imei = await imeiNotifier.getImeiString();
       await Future.delayed(
           Duration(seconds: 1), () => imeiNotifier.changeSavedImei(imei));
 
-      await ref.read(imeiAuthNotifierProvider.notifier).checkAndUpdateImei();
+      await ref
+          .read(imeiAuthNotifierProvider.notifier)
+          .checkAndUpdateImei(idKary: user.idKary ?? 'null');
 
-      String imeiDb =
-          await ref.read(imeiNotifierProvider.notifier).getImeiStringDb();
+      String imeiDb = await ref
+          .read(imeiNotifierProvider.notifier)
+          .getImeiStringDb(idKary: user.idKary ?? 'null');
 
       await ref
           .read(imeiNotifierProvider.notifier)
@@ -92,7 +99,7 @@ final userInitFutureProvider =
                           labelDescription: failure.maybeMap(
                               server: (server) =>
                                   '${server.errorCode} ${server.message}',
-                              storage: (_) => 'storage penuh',
+                              storage: (_) => 'Storage Penuh',
                               orElse: () => ''),
                           asset: Assets.iconCrossed,
                         ),

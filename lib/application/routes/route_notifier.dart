@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geofence_service/geofence_service.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -6,8 +7,6 @@ import '../../../pages/change_pass/change_password_page.dart';
 
 import '../../pages/absen/absen_page.dart';
 import '../../pages/background/background_page.dart';
-import '../../pages/camera/camera_page.dart';
-import '../../pages/camera/camera_signup.dart';
 import '../../pages/copyright/copyright_page.dart';
 import '../../pages/imei_introduction/imei_introduction_page.dart';
 import '../../pages/init/init_user_scaffold.dart';

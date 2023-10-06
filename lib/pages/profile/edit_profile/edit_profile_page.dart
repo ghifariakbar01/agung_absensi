@@ -1,16 +1,16 @@
 import 'package:dartz/dartz.dart';
-import 'package:face_net_authentication/domain/edit_failure.dart';
-import 'package:face_net_authentication/pages/profile/edit_profile/edit_profile_scaffold.dart';
-import 'package:face_net_authentication/pages/widgets/loading_overlay.dart';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../application/routes/route_names.dart';
 import '../../../constants/assets.dart';
-import '../../../shared/future_providers.dart';
+import '../../../domain/edit_failure.dart';
 import '../../../shared/providers.dart';
+import '../../widgets/loading_overlay.dart';
 import '../../widgets/v_dialogs.dart';
+import 'edit_profile_scaffold.dart';
 
 class EditProfilePage extends ConsumerStatefulWidget {
   const EditProfilePage();

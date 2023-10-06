@@ -2,8 +2,12 @@ import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/domain/edit_failure.dart';
 import 'package:face_net_authentication/domain/value_objects_copy.dart';
 import 'package:face_net_authentication/infrastructure/profile/edit_profile_repository.dart';
+import 'package:face_net_authentication/shared/providers.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../constants/assets.dart';
+import '../../domain/auth_failure.dart';
+import '../../pages/widgets/v_dialogs.dart';
 import '../../utils/validator.dart';
 import 'edit_profile_state.dart';
 
@@ -54,18 +58,20 @@ class EditProfileNotifier extends StateNotifier<EditProfileState> {
   }
 
   Future<void> registerAndShowDialog({
-    required Function register,
-    required Function getImeiCredentials,
+    required Function signUp,
+    required Function getImei,
     required Function onImeiComplete,
-    required Function showDialog,
+    required Function areYouSuccessOrNot,
   }) async {
-    await register();
-    await getImeiCredentials();
+    await signUp();
+    await getImei();
     await onImeiComplete();
-    await showDialog();
+    await areYouSuccessOrNot();
+
+    // READ FROM failureOrSuccessOptionUpdate
   }
 
-  Future<void> submitEdit() async {
+  Future<void> submitEdit({required String idKary}) async {
     Either<EditFailure, Unit>? failureOrSuccess;
 
     if (isValid) {
@@ -80,6 +86,7 @@ class EditProfileNotifier extends StateNotifier<EditProfileState> {
           failureOrSuccessOption: none());
 
       failureOrSuccess = await _editProfileRepostiroy.submitEdit(
+          idKary: idKary,
           noTelp1: noTelp1Str,
           noTelp2: noTelp2Str,
           email1: email1Str,

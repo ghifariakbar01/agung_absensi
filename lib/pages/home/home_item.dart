@@ -3,7 +3,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:geofence_service/geofence_service.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:permission_handler/permission_handler.dart';
 
+import '../../application/permission/shared/permission_introduction_providers.dart';
 import '../../application/routes/route_names.dart';
 import '../../style/style.dart';
 import '../widgets/v_dialogs.dart';
@@ -21,9 +23,15 @@ class WelcomeItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return TextButton(
       onPressed: () async {
-        if (item.routeNames == RouteNames.absenRoute) {
-          if (!await FlLocation.isLocationServicesEnabled) {
-            showDialog(
+        bool isAbsenRoute = item.routeNames == RouteNames.absenRoute;
+        bool isLocationOn = await FlLocation.isLocationServicesEnabled;
+        bool isLocationDenied = await ref
+            .read(permissionNotifierProvider.notifier)
+            .isLocationDenied();
+
+        if (isAbsenRoute) {
+          if (!isLocationOn) {
+            await showDialog(
               context: context,
               builder: (context) => VSimpleDialog(
                   label: 'GPS Tidak Berfungsi',
@@ -32,7 +40,18 @@ class WelcomeItem extends ConsumerWidget {
                   asset: 'assets/ic_location_off.svg'),
             );
           } else {
-            await context.pushNamed(item.routeNames);
+            if (isLocationDenied) {
+              await showDialog(
+                context: context,
+                builder: (context) => VSimpleDialog(
+                    label: 'Izin Lokasi Tidak Aktif',
+                    labelDescription:
+                        'Mohon nyalakan Izin Lokasi untuk E-FINGER. Terimakasih',
+                    asset: 'assets/ic_location_off.svg'),
+              ).then((_) => openAppSettings);
+            } else {
+              await context.pushNamed(item.routeNames);
+            }
           }
         } else {
           await context.pushNamed(item.routeNames);

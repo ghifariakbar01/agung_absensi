@@ -7,8 +7,8 @@ class ImeiAuthNotifier extends StateNotifier<ImeiAuthState> {
 
   final EditProfileRepostiroy _repository;
 
-  Future<void> checkAndUpdateImei() async {
-    bool isRegistered = await _repository.hasImei();
+  Future<void> checkAndUpdateImei({required String idKary}) async {
+    bool isRegistered = await _repository.hasImei(idKary: idKary);
 
     if (isRegistered) {
       state = const ImeiAuthState.registered();

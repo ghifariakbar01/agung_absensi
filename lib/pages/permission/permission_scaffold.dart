@@ -50,7 +50,7 @@ class PermissionScaffold extends ConsumerWidget {
                             'Lokasi dibutuhkan untuk memastikan anda berada di lokasi kantor agung group.',
                         onPressed: () async {
                           if (!await FlLocation.isLocationServicesEnabled) {
-                            showDialog(
+                            await showDialog(
                               context: context,
                               builder: (context) => VSimpleDialog(
                                   label: 'GPS Tidak Berfungsi',

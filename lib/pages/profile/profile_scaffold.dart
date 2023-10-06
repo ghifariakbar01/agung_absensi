@@ -62,7 +62,9 @@ class ProfileScaffold extends ConsumerWidget {
 
                                 await ref
                                     .read(imeiNotifierProvider.notifier)
-                                    .logClearImeiFromDB();
+                                    .logClearImeiFromDB(
+                                        nama: user.nama ?? '',
+                                        idUser: user.idUser.toString());
                               })
                           : VAlertDialog(
                               label: 'Unlink HP & Logout ?',
@@ -73,7 +75,9 @@ class ProfileScaffold extends ConsumerWidget {
 
                                 await ref
                                     .read(imeiNotifierProvider.notifier)
-                                    .logClearImeiFromDB();
+                                    .logClearImeiFromDB(
+                                        nama: user.nama ?? '',
+                                        idUser: user.idUser.toString());
                               })))
             ],
           ),

@@ -11,6 +11,12 @@ class PermissionNotifier extends StateNotifier<PermissionState> {
 
   letYouThrough() => state = PermissionState.completed();
 
+  Future<bool> isLocationDenied() async {
+    final status = await Permission.location.status;
+
+    return status.isPermanentlyDenied || status.isDenied;
+  }
+
   Future<void> checkAndUpdateLocation() async {
     if (await Permission.location.status.isGranted &&
         await Permission.location.serviceStatus.isEnabled) {

@@ -1,11 +1,9 @@
-import 'dart:developer';
-
 import 'package:dartz/dartz.dart';
-import 'package:face_net_authentication/domain/edit_failure.dart';
-import 'package:face_net_authentication/infrastructure/profile/edit_profile_remote_service.dart';
 
-import '../credentials_storage/credentials_storage.dart';
 import '../exceptions.dart';
+import '../../domain/edit_failure.dart';
+import 'edit_profile_remote_service.dart';
+import '../credentials_storage/credentials_storage.dart';
 
 class EditProfileRepostiroy {
   EditProfileRepostiroy(this._profileRemoteService, this._credentialsStorage);
@@ -13,16 +11,18 @@ class EditProfileRepostiroy {
   final CredentialsStorage _credentialsStorage;
   final EditProfileRemoteService _profileRemoteService;
 
-  Future<bool> hasImei() => getImei().then((credentials) =>
-      credentials.fold((_) => false, (imei) => imei != null ? true : false));
+  Future<bool> hasImei({required String idKary}) =>
+      getImei(idKary: idKary).then((credentials) => credentials.fold(
+          (_) => false, (imei) => imei != null ? true : false));
 
-  Future<bool> clearImeiSuccess() => clearImei().then(
-        (value) => value.fold((l) => false, (r) => true),
+  Future<bool> clearImeiSuccess({required String idKary}) =>
+      clearImei(idKary: idKary).then(
+        (value) => value.fold((_) => false, (_) => true),
       );
 
-  Future<Either<EditFailure, String?>> getImei() async {
+  Future<Either<EditFailure, String?>> getImei({required String idKary}) async {
     try {
-      final response = await _profileRemoteService.getImei();
+      final response = await _profileRemoteService.getImei(idKary: idKary);
 
       return right(response);
     } on RestApiExceptionWithMessage catch (e) {
@@ -37,9 +37,9 @@ class EditProfileRepostiroy {
     }
   }
 
-  Future<Either<EditFailure, Unit>> clearImei() async {
+  Future<Either<EditFailure, Unit>> clearImei({required String idKary}) async {
     try {
-      await _profileRemoteService.clearImei();
+      await _profileRemoteService.clearImei(idKary: idKary);
 
       // debugger();
 
@@ -56,9 +56,14 @@ class EditProfileRepostiroy {
     }
   }
 
-  Future<Either<EditFailure, Unit>> logClearImei({required String imei}) async {
+  Future<Either<EditFailure, Unit>> logClearImei({
+    required String imei,
+    required String nama,
+    required String idUser,
+  }) async {
     try {
-      final response = await _profileRemoteService.logClearImei(imei: imei);
+      final response = await _profileRemoteService.logClearImei(
+          imei: imei, nama: nama, idUser: idUser);
 
       return right(response);
     } on RestApiExceptionWithMessage catch (restApi) {
@@ -73,9 +78,11 @@ class EditProfileRepostiroy {
     }
   }
 
-  Future<Either<EditFailure, Unit>> registerImei({required String imei}) async {
+  Future<Either<EditFailure, Unit>> registerImei(
+      {required String imei, required String idKary}) async {
     try {
-      final response = await _profileRemoteService.registerImei(imei: imei);
+      final response =
+          await _profileRemoteService.registerImei(imei: imei, idKary: idKary);
 
       return response.when(
           withImei: (imei) async {
@@ -96,14 +103,20 @@ class EditProfileRepostiroy {
   }
 
   Future<Either<EditFailure, Unit>> submitEdit({
-    required String noTelp1,
-    required String noTelp2,
+    required String idKary,
     required String email1,
     required String email2,
+    required String noTelp1,
+    required String noTelp2,
   }) async {
     try {
       final response = await _profileRemoteService.submitEdit(
-          noTelp1: noTelp1, noTelp2: noTelp2, email1: email1, email2: email2);
+        idKary: idKary,
+        email1: email1,
+        email2: email2,
+        noTelp1: noTelp1,
+        noTelp2: noTelp2,
+      );
 
       return right(response);
     } on RestApiException catch (restApi) {

@@ -6,28 +6,28 @@ import 'package:dio/dio.dart';
 import 'package:face_net_authentication/application/imei/imei_register_state.dart';
 import 'package:face_net_authentication/infrastructure/dio_extensions.dart';
 
-import '../../application/user/user_model.dart';
 import '../../utils/string_utils.dart';
 import '../exceptions.dart';
 
 class EditProfileRemoteService {
   EditProfileRemoteService(
-      this._dio, this._userModelWithPassword, this._dioRequest);
+    this._dio,
+    this._dioRequest,
+  );
 
   final Dio _dio;
-  final UserModelWithPassword _userModelWithPassword;
   final Map<String, String> _dioRequest;
 
   static const String dbName = 'mst_user';
   static const String dbLogName = 'log_unlink_mobile';
 
-  Future<String?> getImei() async {
+  Future<String?> getImei({required String idKary}) async {
     try {
       // debugger();
       final data = _dioRequest;
 
       final commandUpdate =
-          "SELECT imei_hp FROM $dbName WHERE idKary = '${_userModelWithPassword.idKary}'";
+          "SELECT imei_hp FROM $dbName WHERE idKary = '$idKary'";
 
       final Map<String, String> select = {
         'command': commandUpdate,
@@ -81,12 +81,12 @@ class EditProfileRemoteService {
     }
   }
 
-  Future<Unit> clearImei() async {
+  Future<Unit> clearImei({required String idKary}) async {
     try {
       final data = _dioRequest;
 
       final commandUpdate =
-          "UPDATE $dbName SET imei_hp = '' WHERE idKary = '${_userModelWithPassword.idKary}'";
+          "UPDATE $dbName SET imei_hp = '' WHERE idKary = '$idKary'";
 
       final Map<String, String> edit = {
         'command': commandUpdate,
@@ -129,7 +129,11 @@ class EditProfileRemoteService {
     }
   }
 
-  Future<Unit> logClearImei({required String imei}) async {
+  Future<Unit> logClearImei({
+    required String imei,
+    required String nama,
+    required String idUser,
+  }) async {
     try {
       final data = _dioRequest;
       final dateNow = DateTime.now();
@@ -138,10 +142,10 @@ class EditProfileRemoteService {
           " (id_user, tgl, imei_lama, unlink_by, tipe) " +
           " VALUES " +
           " ( " +
-          " ${_userModelWithPassword.idUser}, " +
+          " $idUser, " +
           " '${StringUtils.trimmedDate(dateNow)}', " +
           " '$imei', "
-              " '${_userModelWithPassword.nama}', " +
+              " '$nama', " +
           " 'Mobile' "
               " ) ";
 
@@ -182,12 +186,13 @@ class EditProfileRemoteService {
     }
   }
 
-  Future<ImeiRegisterResponse> registerImei({required String imei}) async {
+  Future<ImeiRegisterResponse> registerImei(
+      {required String imei, required String idKary}) async {
     try {
       final data = _dioRequest;
 
       final commandUpdate =
-          "UPDATE $dbName SET imei_hp = '$imei' WHERE idKary = '${_userModelWithPassword.idKary}'";
+          "UPDATE $dbName SET imei_hp = '$imei' WHERE idKary = '$idKary'";
 
       final Map<String, String> edit = {
         'command': commandUpdate,
@@ -226,17 +231,17 @@ class EditProfileRemoteService {
     }
   }
 
-  Future<Unit> submitEdit({
-    required String noTelp1,
-    required String noTelp2,
-    required String email1,
-    required String email2,
-  }) async {
+  Future<Unit> submitEdit(
+      {required String noTelp1,
+      required String noTelp2,
+      required String email1,
+      required String email2,
+      required String idKary}) async {
     try {
       final data = _dioRequest;
 
       final commandUpdate =
-          "UPDATE $dbName SET no_telp1 = '$noTelp1', no_telp2 = '$noTelp2', email = '$email1', email2 = '$email2' WHERE idKary = '${_userModelWithPassword.idKary}'";
+          "UPDATE $dbName SET no_telp1 = '$noTelp1', no_telp2 = '$noTelp2', email = '$email1', email2 = '$email2' WHERE idKary = '$idKary'";
 
       final Map<String, String> edit = {
         'command': commandUpdate,

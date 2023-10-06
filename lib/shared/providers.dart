@@ -136,9 +136,9 @@ final backgroundNotifierProvider =
 // EDIT PROFILE
 final editProfileRemoteServiceProvider = Provider(
   (ref) => EditProfileRemoteService(
-      ref.watch(dioProvider),
-      ref.watch(userNotifierProvider.select((value) => value.user)),
-      ref.watch(dioRequestProvider)),
+    ref.watch(dioProvider),
+    ref.watch(dioRequestProvider),
+  ),
 );
 
 final editProfileRepositoryProvider = Provider(

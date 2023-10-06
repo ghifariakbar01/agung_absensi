@@ -70,11 +70,12 @@ class AuthRepository {
     }
   }
 
-  Future<Either<AuthFailure, Unit>> saveUserAfterUpdate(
-      {required IdKaryawan idKaryawan,
-      required UserId userId,
-      required Password password,
-      required PTName server}) async {
+  Future<Either<AuthFailure, Unit>> saveUserAfterUpdate({
+    required PTName server,
+    required UserId userId,
+    required Password password,
+    required IdKaryawan idKaryawan,
+  }) async {
     try {
       final userIdStr = userId.getOrCrash();
       final passwordStr = password.getOrCrash();
@@ -103,6 +104,8 @@ class AuthRepository {
       return left(AuthFailure.server(e.errorCode));
     } on NoConnectionException {
       return left(const AuthFailure.noConnection());
+    } on PlatformException {
+      return left(const AuthFailure.storage());
     }
   }
 

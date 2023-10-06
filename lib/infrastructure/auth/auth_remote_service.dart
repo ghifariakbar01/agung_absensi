@@ -66,23 +66,24 @@ class AuthRemoteService {
               final listSelected = list[0];
 
               final UserModelWithPassword user = UserModelWithPassword(
-                  idUser: listSelected['id_user'] ?? '',
-                  idKary: listSelected['IdKary'] ?? '',
-                  company: listSelected['comp'] ?? '',
-                  deptList: listSelected['dept'] ?? '',
-                  email2: listSelected['email2'] ?? '',
-                  email: listSelected['email'] ?? '',
-                  fullname: listSelected['fullname'] ?? '',
-                  imeiHp: listSelected['imei_hp'] ?? '',
-                  jabatan: listSelected['jbt'] ?? '',
-                  ktp: listSelected['ktp'] ?? '',
-                  nama: listSelected['nama'] ?? '',
-                  noTelp1: listSelected['no_telp1'] ?? '',
-                  noTelp2: listSelected['no_telp2'] ?? '',
-                  photo: listSelected['picture'],
-                  password: password,
-                  passwordUpdate: listSelected['pass_update'] ?? '',
-                  ptServer: server);
+                ptServer: server,
+                password: password,
+                ktp: listSelected['ktp'] ?? '',
+                nama: listSelected['nama'] ?? '',
+                jabatan: listSelected['jbt'] ?? '',
+                email: listSelected['email'] ?? '',
+                company: listSelected['comp'] ?? '',
+                photo: listSelected['picture'],
+                idKary: listSelected['IdKary'] ?? '',
+                deptList: listSelected['dept'] ?? '',
+                email2: listSelected['email2'] ?? '',
+                imeiHp: listSelected['imei_hp'] ?? '',
+                idUser: listSelected['id_user'] ?? '',
+                noTelp1: listSelected['no_telp1'] ?? '',
+                noTelp2: listSelected['no_telp2'] ?? '',
+                fullname: listSelected['fullname'] ?? '',
+                passwordUpdate: listSelected['pass_update'] ?? '',
+              );
 
               return AuthResponse.withUser(user);
             } catch (_) {
