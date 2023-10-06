@@ -12,9 +12,7 @@ final networkStateNotifierProvider =
 class NetworkStateNotifier extends StateNotifier<NetworkState> {
   get controller => StreamController<ConnectivityResult>();
 
-  NetworkState lastResult = NetworkState.online();
-
-  NetworkStateNotifier() : super(NetworkState.online()) {
+  NetworkStateNotifier() : super(NetworkState.offline()) {
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       if (result == ConnectivityResult.none) {
         if (state != NetworkState.offline()) state = NetworkState.offline();
