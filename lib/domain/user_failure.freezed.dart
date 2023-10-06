@@ -18,44 +18,44 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$UserFailure {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String? message) errorParsing,
     required TResult Function() empty,
+    required TResult Function(String? message) errorParsing,
     required TResult Function(int? errorCode, String? message) unknown,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String? message)? errorParsing,
     TResult? Function()? empty,
+    TResult? Function(String? message)? errorParsing,
     TResult? Function(int? errorCode, String? message)? unknown,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String? message)? errorParsing,
     TResult Function()? empty,
+    TResult Function(String? message)? errorParsing,
     TResult Function(int? errorCode, String? message)? unknown,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_ErrorParsing value) errorParsing,
     required TResult Function(_Empty value) empty,
+    required TResult Function(_ErrorParsing value) errorParsing,
     required TResult Function(_Unknown value) unknown,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_ErrorParsing value)? errorParsing,
     TResult? Function(_Empty value)? empty,
+    TResult? Function(_ErrorParsing value)? errorParsing,
     TResult? Function(_Unknown value)? unknown,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_ErrorParsing value)? errorParsing,
     TResult Function(_Empty value)? empty,
+    TResult Function(_ErrorParsing value)? errorParsing,
     TResult Function(_Unknown value)? unknown,
     required TResult orElse(),
   }) =>
@@ -78,6 +78,112 @@ class _$UserFailureCopyWithImpl<$Res, $Val extends UserFailure>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+}
+
+/// @nodoc
+abstract class _$$_EmptyCopyWith<$Res> {
+  factory _$$_EmptyCopyWith(_$_Empty value, $Res Function(_$_Empty) then) =
+      __$$_EmptyCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$_EmptyCopyWithImpl<$Res>
+    extends _$UserFailureCopyWithImpl<$Res, _$_Empty>
+    implements _$$_EmptyCopyWith<$Res> {
+  __$$_EmptyCopyWithImpl(_$_Empty _value, $Res Function(_$_Empty) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$_Empty implements _Empty {
+  const _$_Empty();
+
+  @override
+  String toString() {
+    return 'UserFailure.empty()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$_Empty);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() empty,
+    required TResult Function(String? message) errorParsing,
+    required TResult Function(int? errorCode, String? message) unknown,
+  }) {
+    return empty();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? empty,
+    TResult? Function(String? message)? errorParsing,
+    TResult? Function(int? errorCode, String? message)? unknown,
+  }) {
+    return empty?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? empty,
+    TResult Function(String? message)? errorParsing,
+    TResult Function(int? errorCode, String? message)? unknown,
+    required TResult orElse(),
+  }) {
+    if (empty != null) {
+      return empty();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Empty value) empty,
+    required TResult Function(_ErrorParsing value) errorParsing,
+    required TResult Function(_Unknown value) unknown,
+  }) {
+    return empty(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Empty value)? empty,
+    TResult? Function(_ErrorParsing value)? errorParsing,
+    TResult? Function(_Unknown value)? unknown,
+  }) {
+    return empty?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Empty value)? empty,
+    TResult Function(_ErrorParsing value)? errorParsing,
+    TResult Function(_Unknown value)? unknown,
+    required TResult orElse(),
+  }) {
+    if (empty != null) {
+      return empty(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _Empty implements UserFailure {
+  const factory _Empty() = _$_Empty;
 }
 
 /// @nodoc
@@ -144,8 +250,8 @@ class _$_ErrorParsing implements _ErrorParsing {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String? message) errorParsing,
     required TResult Function() empty,
+    required TResult Function(String? message) errorParsing,
     required TResult Function(int? errorCode, String? message) unknown,
   }) {
     return errorParsing(message);
@@ -154,8 +260,8 @@ class _$_ErrorParsing implements _ErrorParsing {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String? message)? errorParsing,
     TResult? Function()? empty,
+    TResult? Function(String? message)? errorParsing,
     TResult? Function(int? errorCode, String? message)? unknown,
   }) {
     return errorParsing?.call(message);
@@ -164,8 +270,8 @@ class _$_ErrorParsing implements _ErrorParsing {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String? message)? errorParsing,
     TResult Function()? empty,
+    TResult Function(String? message)? errorParsing,
     TResult Function(int? errorCode, String? message)? unknown,
     required TResult orElse(),
   }) {
@@ -178,8 +284,8 @@ class _$_ErrorParsing implements _ErrorParsing {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_ErrorParsing value) errorParsing,
     required TResult Function(_Empty value) empty,
+    required TResult Function(_ErrorParsing value) errorParsing,
     required TResult Function(_Unknown value) unknown,
   }) {
     return errorParsing(this);
@@ -188,8 +294,8 @@ class _$_ErrorParsing implements _ErrorParsing {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_ErrorParsing value)? errorParsing,
     TResult? Function(_Empty value)? empty,
+    TResult? Function(_ErrorParsing value)? errorParsing,
     TResult? Function(_Unknown value)? unknown,
   }) {
     return errorParsing?.call(this);
@@ -198,8 +304,8 @@ class _$_ErrorParsing implements _ErrorParsing {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_ErrorParsing value)? errorParsing,
     TResult Function(_Empty value)? empty,
+    TResult Function(_ErrorParsing value)? errorParsing,
     TResult Function(_Unknown value)? unknown,
     required TResult orElse(),
   }) {
@@ -217,112 +323,6 @@ abstract class _ErrorParsing implements UserFailure {
   @JsonKey(ignore: true)
   _$$_ErrorParsingCopyWith<_$_ErrorParsing> get copyWith =>
       throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class _$$_EmptyCopyWith<$Res> {
-  factory _$$_EmptyCopyWith(_$_Empty value, $Res Function(_$_Empty) then) =
-      __$$_EmptyCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$_EmptyCopyWithImpl<$Res>
-    extends _$UserFailureCopyWithImpl<$Res, _$_Empty>
-    implements _$$_EmptyCopyWith<$Res> {
-  __$$_EmptyCopyWithImpl(_$_Empty _value, $Res Function(_$_Empty) _then)
-      : super(_value, _then);
-}
-
-/// @nodoc
-
-class _$_Empty implements _Empty {
-  const _$_Empty();
-
-  @override
-  String toString() {
-    return 'UserFailure.empty()';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$_Empty);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(String? message) errorParsing,
-    required TResult Function() empty,
-    required TResult Function(int? errorCode, String? message) unknown,
-  }) {
-    return empty();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String? message)? errorParsing,
-    TResult? Function()? empty,
-    TResult? Function(int? errorCode, String? message)? unknown,
-  }) {
-    return empty?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String? message)? errorParsing,
-    TResult Function()? empty,
-    TResult Function(int? errorCode, String? message)? unknown,
-    required TResult orElse(),
-  }) {
-    if (empty != null) {
-      return empty();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_ErrorParsing value) errorParsing,
-    required TResult Function(_Empty value) empty,
-    required TResult Function(_Unknown value) unknown,
-  }) {
-    return empty(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_ErrorParsing value)? errorParsing,
-    TResult? Function(_Empty value)? empty,
-    TResult? Function(_Unknown value)? unknown,
-  }) {
-    return empty?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_ErrorParsing value)? errorParsing,
-    TResult Function(_Empty value)? empty,
-    TResult Function(_Unknown value)? unknown,
-    required TResult orElse(),
-  }) {
-    if (empty != null) {
-      return empty(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _Empty implements UserFailure {
-  const factory _Empty() = _$_Empty;
 }
 
 /// @nodoc
@@ -397,8 +397,8 @@ class _$_Unknown implements _Unknown {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String? message) errorParsing,
     required TResult Function() empty,
+    required TResult Function(String? message) errorParsing,
     required TResult Function(int? errorCode, String? message) unknown,
   }) {
     return unknown(errorCode, message);
@@ -407,8 +407,8 @@ class _$_Unknown implements _Unknown {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String? message)? errorParsing,
     TResult? Function()? empty,
+    TResult? Function(String? message)? errorParsing,
     TResult? Function(int? errorCode, String? message)? unknown,
   }) {
     return unknown?.call(errorCode, message);
@@ -417,8 +417,8 @@ class _$_Unknown implements _Unknown {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String? message)? errorParsing,
     TResult Function()? empty,
+    TResult Function(String? message)? errorParsing,
     TResult Function(int? errorCode, String? message)? unknown,
     required TResult orElse(),
   }) {
@@ -431,8 +431,8 @@ class _$_Unknown implements _Unknown {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_ErrorParsing value) errorParsing,
     required TResult Function(_Empty value) empty,
+    required TResult Function(_ErrorParsing value) errorParsing,
     required TResult Function(_Unknown value) unknown,
   }) {
     return unknown(this);
@@ -441,8 +441,8 @@ class _$_Unknown implements _Unknown {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_ErrorParsing value)? errorParsing,
     TResult? Function(_Empty value)? empty,
+    TResult? Function(_ErrorParsing value)? errorParsing,
     TResult? Function(_Unknown value)? unknown,
   }) {
     return unknown?.call(this);
@@ -451,8 +451,8 @@ class _$_Unknown implements _Unknown {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_ErrorParsing value)? errorParsing,
     TResult Function(_Empty value)? empty,
+    TResult Function(_ErrorParsing value)? errorParsing,
     TResult Function(_Unknown value)? unknown,
     required TResult orElse(),
   }) {

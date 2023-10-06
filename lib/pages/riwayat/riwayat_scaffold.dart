@@ -7,6 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../application/riwayat_absen/riwayat_absen_notifier.dart';
 import '../../shared/providers.dart';
+import '../widgets/network_widget.dart';
 import 'riwayat_header.dart';
 import 'riwayat_list.dart';
 
@@ -111,6 +112,10 @@ class _RiwayatAbsenScaffoldState extends ConsumerState<RiwayatAbsenScaffold> {
             'Riwayat Absen',
             style: Themes.customColor(FontWeight.bold, 20, Colors.white),
           ),
+          toolbarHeight: 45,
+          actions: [
+            NetworkWidget(),
+          ],
         ),
         body: Padding(
           padding: const EdgeInsets.all(10.0),

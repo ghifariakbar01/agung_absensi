@@ -87,6 +87,7 @@ dependencies:
   package_info_plus: ^3.0.1
 
   #* Networking
+  connectivity_plus: ^4.0.2
   ntp: ^2.0.0
 
   #* Misc

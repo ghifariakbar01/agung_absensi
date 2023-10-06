@@ -12,6 +12,7 @@ import '../../style/style.dart';
 import '../copyright/copyright_page.dart';
 import '../widgets/app_logo.dart';
 import '../widgets/copyright_text.dart';
+import '../widgets/network_widget.dart';
 import 'home_drawer.dart';
 import 'home_item.dart';
 import 'home_tester_off.dart';
@@ -35,10 +36,10 @@ class HomeScaffold extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final packageInfo = ref.watch(packageInfoProvider);
+    final user = ref.watch(userNotifierProvider);
     final width = MediaQuery.of(context).size.width;
     final isTester = ref.watch(testerNotifierProvider);
-    final user = ref.watch(userNotifierProvider);
+    final packageInfo = ref.watch(packageInfoProvider);
 
     return Scaffold(
       drawer: WelcomeDrawer(),
@@ -46,7 +47,7 @@ class HomeScaffold extends ConsumerWidget {
         automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leadingWidth: 0,
+        toolbarHeight: 45,
         actions: [
           Builder(
             builder: (context) => TextButton(
@@ -90,7 +91,8 @@ class HomeScaffold extends ConsumerWidget {
                 color: Palette.tertiaryColor,
               ),
             ),
-          )
+          ),
+          NetworkWidget(),
         ],
       ),
       body: SafeArea(

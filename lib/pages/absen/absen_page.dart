@@ -9,6 +9,7 @@ import '../../style/style.dart';
 
 import '../widgets/copyright_text.dart';
 import '../widgets/location_detail.dart';
+import '../widgets/network_widget.dart';
 import '../widgets/user_info.dart';
 import 'absen_button.dart';
 
@@ -121,6 +122,10 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
               elevation: 0,
               backgroundColor: Colors.transparent,
               iconTheme: IconThemeData(color: Palette.primaryColor),
+              toolbarHeight: 45,
+              actions: [
+                NetworkWidget(),
+              ],
             ),
             body: SafeArea(
               child: SingleChildScrollView(

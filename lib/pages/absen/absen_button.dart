@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:face_net_authentication/application/network_state/network_state_notifier.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -185,6 +186,9 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
     final savedIsNotEmpty = ref.watch(backgroundNotifierProvider
         .select((value) => value.savedBackgroundItems.isNotEmpty));
 
+    // NETWORK
+    final network = ref.watch(networkStateNotifierProvider);
+
     return Column(
       children: [
         // Karyawan Shift
@@ -199,21 +203,23 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                     visible: !isOfflineMode,
                     child: VButton(
                         label: 'ABSEN IN $karyawanShiftStr',
-                        isEnabled: isTester.maybeWhen(
-                            tester: () =>
-                                isKaryawanShift ||
-                                absen == AbsenState.empty() ||
-                                absen == AbsenState.incomplete(),
-                            orElse: () =>
-                                isKaryawanShift &&
-                                    nearest < minDistance &&
-                                    nearest != 0 ||
-                                absen == AbsenState.empty() &&
-                                    nearest < minDistance &&
-                                    nearest != 0 ||
-                                absen == AbsenState.incomplete() &&
-                                    nearest < 100 &&
-                                    nearest != 0),
+                        isEnabled: network.when(
+                            online: () => isTester.maybeWhen(
+                                tester: () =>
+                                    isKaryawanShift ||
+                                    absen == AbsenState.empty() ||
+                                    absen == AbsenState.incomplete(),
+                                orElse: () =>
+                                    isKaryawanShift &&
+                                        nearest < minDistance &&
+                                        nearest != 0 ||
+                                    absen == AbsenState.empty() &&
+                                        nearest < minDistance &&
+                                        nearest != 0 ||
+                                    absen == AbsenState.incomplete() &&
+                                        nearest < 100 &&
+                                        nearest != 0),
+                            offline: () => false),
                         onPressed: () async {
                           DateTime refreshed = await ref
                               .refresh(networkTimeFutureProvider.future);
@@ -280,17 +286,19 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                     visible: !isOfflineMode,
                     child: VButton(
                         label: 'ABSEN OUT $karyawanShiftStr',
-                        isEnabled: isTester.maybeWhen(
-                            tester: () =>
-                                isKaryawanShift ||
-                                absen == AbsenState.absenIn(),
-                            orElse: () =>
-                                isKaryawanShift &&
-                                    nearest < minDistance &&
-                                    nearest != 0 ||
-                                absen == AbsenState.absenIn() &&
-                                    nearest < minDistance &&
-                                    nearest != 0),
+                        isEnabled: network.when(
+                            online: () => isTester.maybeWhen(
+                                tester: () =>
+                                    isKaryawanShift ||
+                                    absen == AbsenState.absenIn(),
+                                orElse: () =>
+                                    isKaryawanShift &&
+                                        nearest < minDistance &&
+                                        nearest != 0 ||
+                                    absen == AbsenState.absenIn() &&
+                                        nearest < minDistance &&
+                                        nearest != 0),
+                            offline: () => false),
                         onPressed: () async {
                           DateTime refreshed = await ref
                               .refresh(networkTimeFutureProvider.future);
