@@ -20,7 +20,7 @@ class KaryawanShiftRepository {
       final rememberMe = prefs.getString('remember_me');
 
       if (rememberMe != null) {
-        RememberMeModel rememberMeModel =
+        final rememberMeModel =
             RememberMeModel.fromJson(jsonDecode(rememberMe));
 
         return right(rememberMeModel.isKaryawan);

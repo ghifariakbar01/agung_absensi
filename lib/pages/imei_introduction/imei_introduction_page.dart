@@ -1,11 +1,10 @@
-import 'package:face_net_authentication/constants/assets.dart';
-import 'package:face_net_authentication/pages/widgets/v_button.dart';
-import 'package:face_net_authentication/pages/widgets/v_dialogs.dart';
-import 'package:face_net_authentication/style/style.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../constants/assets.dart';
+import '../../style/style.dart';
+import '../widgets/v_button.dart';
+import '../widgets/v_dialogs.dart';
 import '../../application/imei_introduction/shared/imei_introduction_providers.dart';
 
 class ImeiIntroductionPage extends ConsumerWidget {
@@ -41,7 +40,10 @@ class ImeiIntroductionPage extends ConsumerWidget {
           ),
           Center(
             child: Text(
-              'E-FINGER menyimpan UID untuk memastikan user hanya menginstall aplikasi di satu device. User yang sudah memiliki UID di satu device tidak dapat melakukan instalasi aplikasi di device kedua. Jika ingin melakukan instalasi E-FINGER di device kedua lakukan Unlink Deivce diikuti dengan melakukan uninstall aplikasi.',
+              ' E-FINGER menyimpan UID untuk memastikan user hanya menginstall aplikasi di satu device. ' +
+                  ' User yang sudah memiliki UID di satu device tidak dapat melakukan instalasi aplikasi di device kedua.' +
+                  ' Jika ingin melakukan instalasi E-FINGER di device kedua lakukan Unlink Device pada device pertama dan diikuti dengan melakukan uninstall aplikasi pada device pertama.' +
+                  ' Pengguna iOS tidak bisa melakukan unlink tanpa menggati device. ',
               textAlign: TextAlign.justify,
               style: Themes.customColor(FontWeight.normal, 15, Colors.black),
             ),
@@ -89,7 +91,7 @@ class ImeiIntroductionPage extends ConsumerWidget {
                 height: 4,
               ),
               VButton(
-                label: 'OK, SAYA MENGERTI.',
+                label: 'Ok, Saya Mengerti.',
                 onPressed: () => showDialog(
                     context: context,
                     builder: (_) => VAlertDialog(
@@ -112,14 +114,6 @@ class ImeiIntroductionPage extends ConsumerWidget {
       ),
     )));
   }
-}
-
-Future<void> understood(bool understood, Function onUnderstood) async {
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
-
-  await prefs.setBool('imei_introduction', true);
-
-  await onUnderstood();
 }
 
 Widget instructionImage(int number) => Padding(

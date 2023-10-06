@@ -161,11 +161,17 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                       .getSavedLocations();
                 })));
 
+    // ABSEN STATE
+    final absen = ref.watch(absenNotifierProvidier);
+
+    // IS TESTER
+    final isTester = ref.watch(testerNotifierProvider);
+
     // IS OFFLINE MODE
     final isOfflineMode = ref.watch(absenOfflineModeProvider);
 
-    // ABSEN STATE
-    final absen = ref.watch(absenNotifierProvidier);
+    // KARYAWAN SHIFT
+    final karyawanShift = ref.watch(karyawanShiftFutureProvider);
 
     // LAT, LONG
     final nearest = ref.watch(geofenceProvider
@@ -178,12 +184,6 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
     // SAVED LOCATIONS
     final savedIsNotEmpty = ref.watch(backgroundNotifierProvider
         .select((value) => value.savedBackgroundItems.isNotEmpty));
-
-    // KARYAWAN SHIFT
-    final karyawanShift = ref.watch(karyawanShiftFutureProvider);
-
-    // IS TESTER
-    final isTester = ref.watch(testerNotifierProvider);
 
     return Column(
       children: [

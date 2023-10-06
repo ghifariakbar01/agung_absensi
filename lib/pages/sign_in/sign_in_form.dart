@@ -72,16 +72,14 @@ class _SignInFormState extends ConsumerState<SignInForm> {
             height: 4,
           ),
           DropdownButtonFormField<String>(
-            decoration: Themes.formStyle('Masukkan PT'),
             value: ptDropdownSelected,
-            icon: const Icon(Icons.arrow_downward),
             elevation: 16,
-            style: const TextStyle(color: Palette.primaryColor),
             iconSize: 20,
-            // This is called when the user selects an item.
+            icon: const Icon(Icons.arrow_downward),
+            decoration: Themes.formStyle('Masukkan PT'),
+            style: const TextStyle(color: Palette.primaryColor),
             onChanged: (String? value) => ref
-                .read(signInFormNotifierProvider.notifier)
-                .state
+                .read(signInFormNotifierProvider)
                 .ptMap
                 .forEach((serverName, ptNameStrList) {
               for (final ptNameStr in ptNameStrList) {

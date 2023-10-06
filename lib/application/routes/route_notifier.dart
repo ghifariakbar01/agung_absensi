@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:geofence_service/geofence_service.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -59,10 +58,10 @@ class RouterNotifier extends ChangeNotifier {
   final Ref _ref;
 
   String? redirectLogic(BuildContext context, GoRouterState state) {
-    final authState = _ref.read(authNotifierProvider);
     final tcState = _ref.read(tcNotifierProvider);
-    final imeiIntroState = _ref.read(imeiIntroductionNotifierProvider);
+    final authState = _ref.read(authNotifierProvider);
     final permissionState = _ref.read(permissionNotifierProvider);
+    final imeiIntroState = _ref.read(imeiIntroductionNotifierProvider);
 
     final initializationUserState = _ref.read(initUserStatusProvider);
 

@@ -1,15 +1,13 @@
-import 'dart:developer';
-
-import 'package:geofence_service/geofence_service.dart';
+import 'permission_state.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
-
-import 'permission_state.dart';
 
 class PermissionNotifier extends StateNotifier<PermissionState> {
   PermissionNotifier() : super(PermissionState.initial());
 
   letYouThrough() => state = PermissionState.completed();
+
+  Future<void> requestLocation() => Permission.location.request();
 
   Future<bool> isLocationDenied() async {
     final status = await Permission.location.status;
@@ -29,14 +27,9 @@ class PermissionNotifier extends StateNotifier<PermissionState> {
   Future<void> requestDenied() async {
     final status = await Permission.location.status;
 
-    log('status.isPermanentlyDenied || status.isDenied ${status.isPermanentlyDenied || status.isDenied}');
     if (status.isPermanentlyDenied || status.isDenied) {
       openAppSettings();
     }
-  }
-
-  Future<void> requestLocation() async {
-    await Permission.location.request();
   }
 }
 

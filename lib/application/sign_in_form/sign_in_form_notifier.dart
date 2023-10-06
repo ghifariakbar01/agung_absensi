@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:collection/collection.dart';
 import 'package:dartz/dartz.dart';
@@ -21,6 +20,8 @@ class SignInFormNotifier extends StateNotifier<SignInFormState> {
   SignInFormNotifier(this._repository) : super(SignInFormState.initial());
 
   final AuthRepository _repository;
+
+  String get saveStr => 'remember_me';
 
   void changeAllData(
       {required String ptNameStr,
@@ -114,17 +115,23 @@ class SignInFormNotifier extends StateNotifier<SignInFormState> {
   }
 
   Future<void> signInAndRemember({
-    required Function intializeDioRequest,
+    required Function init,
     required Function signIn,
-    required Function remember,
-    required Function clear,
+    required Function clearSaved,
+    required Function showDialogAndLogout,
+    required Future<Either<AuthFailure, Unit>> Function() remember,
   }) async {
-    await intializeDioRequest();
+    await init();
     await signIn();
-    if (state.isChecked) {
-      await remember();
+    if (!state.isChecked) {
+      await clearSaved();
     } else {
-      await clear();
+      final result = await remember();
+      result.fold(
+          // if remember failed
+          (_) => showDialogAndLogout(),
+          // if remember success
+          (_) {});
     }
   }
 
@@ -132,27 +139,34 @@ class SignInFormNotifier extends StateNotifier<SignInFormState> {
     state = state.copyWith(isKaryawan: isKaryawan);
   }
 
-  /// [rememberInfo] and [clearInfo] should use [Either] and handle error when thrown
+  /// [rememberInfo] and should use [Either] and handle error when thrown
 
-  Future<void> rememberInfo() async {
+  Future<Either<AuthFailure, Unit>> rememberInfo() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    await prefs.setString(
-        'remember_me',
+    final save = await prefs.setString(
+        '$saveStr',
         jsonEncode(RememberMeModel(
-            nik: state.idKaryawan.getOrLeave(''),
-            nama: state.userId.getOrLeave(''),
-            password: state.password.getOrLeave(''),
-            ptName: state.ptDropdownSelected,
-            isKaryawan: state.isKaryawan)));
+          isKaryawan: state.isKaryawan,
+          ptName: state.ptDropdownSelected,
+          nama: state.userId.getOrLeave(''),
+          nik: state.idKaryawan.getOrLeave(''),
+          password: state.password.getOrLeave(''),
+        )));
+
+    if (save == true) {
+      return right(unit);
+    } else {
+      return left(AuthFailure.storage());
+    }
   }
 
   Future<void> clearInfo() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    if (prefs.getString('remember_me') != null) {
+    if (prefs.getString('$saveStr') != null) {
       await prefs.remove(
-        'remember_me',
+        '$saveStr',
       );
     }
   }

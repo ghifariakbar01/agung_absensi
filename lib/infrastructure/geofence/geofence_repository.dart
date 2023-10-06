@@ -32,11 +32,14 @@ class GeofenceRepository {
   Future<Either<GeofenceFailure, Unit>> saveGeofence(
       {required List<GeofenceResponse> geofenceList}) async {
     try {
-      await _credentialsStorage.save(jsonEncode(geofenceList));
+      final String data = jsonEncode(geofenceList);
+
+      await _credentialsStorage.save(data);
 
       return right(unit);
     } on PlatformException {
-      return left(GeofenceFailure.server(0, 'Storage penuh'));
+      return left(GeofenceFailure.server(0,
+          'Mohon Maaf Storage Anda penuh. Mohon luangkan storage Anda agar bisa menyimpan data Geofence.'));
     }
   }
 

@@ -8,16 +8,17 @@ import 'package:geofence_service/geofence_service.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../constants/assets.dart';
+import '../../shared/providers.dart';
+import '../../domain/geofence_failure.dart';
+import '../../pages/widgets/v_dialogs.dart';
+import '../../domain/background_failure.dart';
+import '../../pages/widgets/alert_helper.dart';
+import '../../pages/home/saved/home_saved.dart';
+import '../../pages/widgets/loading_overlay.dart';
 import '../../application/background/saved_location.dart';
 import '../../application/geofence/geofence_response.dart';
-import '../../constants/assets.dart';
-import '../../domain/background_failure.dart';
-import '../../domain/geofence_failure.dart';
-import '../../pages/home/saved/home_saved.dart';
-import '../../pages/widgets/alert_helper.dart';
-import '../../pages/widgets/loading_overlay.dart';
-import '../../pages/widgets/v_dialogs.dart';
-import '../../shared/providers.dart';
+import '../../application/background/background_item_state.dart';
 
 class InitGeofenceScaffold extends ConsumerStatefulWidget {
   const InitGeofenceScaffold();
@@ -103,29 +104,40 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
                     .addMockLocationListener;
                 //
                 if (geofenceList.isNotEmpty) {
-                  final geofence = ref
+                  final bool isOffline =
+                      ref.read(absenOfflineModeProvider.notifier).state;
+                  //
+                  final List<Geofence> geofence = ref
                       .read(geofenceProvider.notifier)
                       .geofenceResponseToList(geofenceList);
-                  final savedItems = ref
-                      .read(backgroundNotifierProvider.notifier)
-                      .state
-                      .savedBackgroundItems;
+                  //
+                  final List<BackgroundItemState> savedItems =
+                      ref.read(backgroundNotifierProvider).savedBackgroundItems;
 
-                  final isOffline =
-                      ref.read(absenOfflineModeProvider.notifier).state;
                   log('isOffline $isOffline');
 
+                  // Is currently offline
                   if (!isOffline) {
+                    //
                     await ref.read(geofenceProvider.notifier).startAutoAbsen(
                         geofenceResponseList: geofenceList,
                         savedBackgroundItems: savedItems,
                         saveGeofence: (geofenceList) => ref
                             .read(geofenceProvider.notifier)
                             .saveGeofence(geofenceList),
+                        showDialogAndLogout: () => showDialog(
+                            context: context,
+                            builder: (context) => VSimpleDialog(
+                                  asset: Assets.iconCrossed,
+                                  label: 'Error',
+                                  labelDescription:
+                                      'Mohon Maaf Storage Anda penuh. Mohon luangkan storage Anda agar bisa menyimpan data Geofence.',
+                                )).then((_) =>
+                            ref.read(userNotifierProvider.notifier).logout()),
                         startAbsen: (savedItems) async {
                           // ABSEN TERSIMPAN
                           if (savedItems.isNotEmpty) {
-                            final savedLocations = ref
+                            final List<SavedLocation>? savedLocations = ref
                                 .read(backgroundNotifierProvider.notifier)
                                 .getSavedLocationsAsList(savedItems);
 
@@ -154,14 +166,16 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
                             // GET CURRENT NETWORK TIME
                             await ref.read(networkTimeFutureProvider.future);
 
-                            final savedItemsCurrent = ref
-                                .read(autoAbsenNotifierProvider.notifier)
-                                .currentNetworkTimeForSavedAbsen(
-                                    dbDate: dbDate, savedItems: savedItems);
+                            final List<BackgroundItemState> savedItemsCurrent =
+                                ref
+                                    .read(autoAbsenNotifierProvider.notifier)
+                                    .currentNetworkTimeForSavedAbsen(
+                                        dbDate: dbDate, savedItems: savedItems);
 
-                            final autoAbsen = ref
-                                .read(autoAbsenNotifierProvider.notifier)
-                                .sortAbsenMap(savedItemsCurrent);
+                            final Map<String, List<BackgroundItemState>>
+                                autoAbsen = ref
+                                    .read(autoAbsenNotifierProvider.notifier)
+                                    .sortAbsenMap(savedItemsCurrent);
 
                             // debugger();
 

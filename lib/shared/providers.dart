@@ -2,10 +2,10 @@
 
 import 'package:dio/dio.dart';
 
+import 'package:ntp/ntp.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ntp/ntp.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../application/absen/absen_auth_notifier.dart';
 import '../application/absen/absen_auth_state.dart';
@@ -32,7 +32,6 @@ import '../application/mock_location/mock_location_notifier.dart';
 import '../application/mock_location/mock_location_state.dart';
 import '../application/routes/route_notifier.dart';
 import '../application/sign_in_form/sign_in_form_notifier.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../application/tester/tester_notifier.dart';
 import '../application/tester/tester_state.dart';

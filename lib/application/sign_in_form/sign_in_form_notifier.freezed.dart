@@ -16,19 +16,21 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$SignInFormState {
-  UserId get userId => throw _privateConstructorUsedError;
   Email get email => throw _privateConstructorUsedError;
-  IdKaryawan get idKaryawan => throw _privateConstructorUsedError;
+  UserId get userId => throw _privateConstructorUsedError;
+  bool get isChecked => throw _privateConstructorUsedError;
+  bool get isKaryawan => throw _privateConstructorUsedError;
+  bool get isSubmitting => throw _privateConstructorUsedError;
   Password get password => throw _privateConstructorUsedError;
+  IdKaryawan get idKaryawan => throw _privateConstructorUsedError;
+  bool get showErrorMessages => throw _privateConstructorUsedError;
   PTName get ptServerSelected => throw _privateConstructorUsedError;
   String get ptDropdownSelected => throw _privateConstructorUsedError;
   List<String> get ptDropdownList => throw _privateConstructorUsedError;
   Map<String, List<String>> get ptMap => throw _privateConstructorUsedError;
-  bool get showErrorMessages => throw _privateConstructorUsedError;
-  bool get isSubmitting => throw _privateConstructorUsedError;
-  bool get isChecked => throw _privateConstructorUsedError;
-  bool get isKaryawan => throw _privateConstructorUsedError;
   Option<Either<AuthFailure, Unit>> get failureOrSuccessOption =>
+      throw _privateConstructorUsedError;
+  Option<Either<AuthFailure, Unit>> get failureOrSuccessOptionRemember =>
       throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -43,19 +45,20 @@ abstract class $SignInFormStateCopyWith<$Res> {
       _$SignInFormStateCopyWithImpl<$Res, SignInFormState>;
   @useResult
   $Res call(
-      {UserId userId,
-      Email email,
-      IdKaryawan idKaryawan,
+      {Email email,
+      UserId userId,
+      bool isChecked,
+      bool isKaryawan,
+      bool isSubmitting,
       Password password,
+      IdKaryawan idKaryawan,
+      bool showErrorMessages,
       PTName ptServerSelected,
       String ptDropdownSelected,
       List<String> ptDropdownList,
       Map<String, List<String>> ptMap,
-      bool showErrorMessages,
-      bool isSubmitting,
-      bool isChecked,
-      bool isKaryawan,
-      Option<Either<AuthFailure, Unit>> failureOrSuccessOption});
+      Option<Either<AuthFailure, Unit>> failureOrSuccessOption,
+      Option<Either<AuthFailure, Unit>> failureOrSuccessOptionRemember});
 }
 
 /// @nodoc
@@ -71,37 +74,54 @@ class _$SignInFormStateCopyWithImpl<$Res, $Val extends SignInFormState>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? userId = null,
     Object? email = null,
-    Object? idKaryawan = null,
+    Object? userId = null,
+    Object? isChecked = null,
+    Object? isKaryawan = null,
+    Object? isSubmitting = null,
     Object? password = null,
+    Object? idKaryawan = null,
+    Object? showErrorMessages = null,
     Object? ptServerSelected = null,
     Object? ptDropdownSelected = null,
     Object? ptDropdownList = null,
     Object? ptMap = null,
-    Object? showErrorMessages = null,
-    Object? isSubmitting = null,
-    Object? isChecked = null,
-    Object? isKaryawan = null,
     Object? failureOrSuccessOption = null,
+    Object? failureOrSuccessOptionRemember = null,
   }) {
     return _then(_value.copyWith(
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as UserId,
       email: null == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as Email,
-      idKaryawan: null == idKaryawan
-          ? _value.idKaryawan
-          : idKaryawan // ignore: cast_nullable_to_non_nullable
-              as IdKaryawan,
+      userId: null == userId
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as UserId,
+      isChecked: null == isChecked
+          ? _value.isChecked
+          : isChecked // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isKaryawan: null == isKaryawan
+          ? _value.isKaryawan
+          : isKaryawan // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isSubmitting: null == isSubmitting
+          ? _value.isSubmitting
+          : isSubmitting // ignore: cast_nullable_to_non_nullable
+              as bool,
       password: null == password
           ? _value.password
           : password // ignore: cast_nullable_to_non_nullable
               as Password,
+      idKaryawan: null == idKaryawan
+          ? _value.idKaryawan
+          : idKaryawan // ignore: cast_nullable_to_non_nullable
+              as IdKaryawan,
+      showErrorMessages: null == showErrorMessages
+          ? _value.showErrorMessages
+          : showErrorMessages // ignore: cast_nullable_to_non_nullable
+              as bool,
       ptServerSelected: null == ptServerSelected
           ? _value.ptServerSelected
           : ptServerSelected // ignore: cast_nullable_to_non_nullable
@@ -118,25 +138,13 @@ class _$SignInFormStateCopyWithImpl<$Res, $Val extends SignInFormState>
           ? _value.ptMap
           : ptMap // ignore: cast_nullable_to_non_nullable
               as Map<String, List<String>>,
-      showErrorMessages: null == showErrorMessages
-          ? _value.showErrorMessages
-          : showErrorMessages // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isSubmitting: null == isSubmitting
-          ? _value.isSubmitting
-          : isSubmitting // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isChecked: null == isChecked
-          ? _value.isChecked
-          : isChecked // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isKaryawan: null == isKaryawan
-          ? _value.isKaryawan
-          : isKaryawan // ignore: cast_nullable_to_non_nullable
-              as bool,
       failureOrSuccessOption: null == failureOrSuccessOption
           ? _value.failureOrSuccessOption
           : failureOrSuccessOption // ignore: cast_nullable_to_non_nullable
+              as Option<Either<AuthFailure, Unit>>,
+      failureOrSuccessOptionRemember: null == failureOrSuccessOptionRemember
+          ? _value.failureOrSuccessOptionRemember
+          : failureOrSuccessOptionRemember // ignore: cast_nullable_to_non_nullable
               as Option<Either<AuthFailure, Unit>>,
     ) as $Val);
   }
@@ -151,19 +159,20 @@ abstract class _$$_SignInFormStateCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {UserId userId,
-      Email email,
-      IdKaryawan idKaryawan,
+      {Email email,
+      UserId userId,
+      bool isChecked,
+      bool isKaryawan,
+      bool isSubmitting,
       Password password,
+      IdKaryawan idKaryawan,
+      bool showErrorMessages,
       PTName ptServerSelected,
       String ptDropdownSelected,
       List<String> ptDropdownList,
       Map<String, List<String>> ptMap,
-      bool showErrorMessages,
-      bool isSubmitting,
-      bool isChecked,
-      bool isKaryawan,
-      Option<Either<AuthFailure, Unit>> failureOrSuccessOption});
+      Option<Either<AuthFailure, Unit>> failureOrSuccessOption,
+      Option<Either<AuthFailure, Unit>> failureOrSuccessOptionRemember});
 }
 
 /// @nodoc
@@ -177,37 +186,54 @@ class __$$_SignInFormStateCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? userId = null,
     Object? email = null,
-    Object? idKaryawan = null,
+    Object? userId = null,
+    Object? isChecked = null,
+    Object? isKaryawan = null,
+    Object? isSubmitting = null,
     Object? password = null,
+    Object? idKaryawan = null,
+    Object? showErrorMessages = null,
     Object? ptServerSelected = null,
     Object? ptDropdownSelected = null,
     Object? ptDropdownList = null,
     Object? ptMap = null,
-    Object? showErrorMessages = null,
-    Object? isSubmitting = null,
-    Object? isChecked = null,
-    Object? isKaryawan = null,
     Object? failureOrSuccessOption = null,
+    Object? failureOrSuccessOptionRemember = null,
   }) {
     return _then(_$_SignInFormState(
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as UserId,
       email: null == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as Email,
-      idKaryawan: null == idKaryawan
-          ? _value.idKaryawan
-          : idKaryawan // ignore: cast_nullable_to_non_nullable
-              as IdKaryawan,
+      userId: null == userId
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as UserId,
+      isChecked: null == isChecked
+          ? _value.isChecked
+          : isChecked // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isKaryawan: null == isKaryawan
+          ? _value.isKaryawan
+          : isKaryawan // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isSubmitting: null == isSubmitting
+          ? _value.isSubmitting
+          : isSubmitting // ignore: cast_nullable_to_non_nullable
+              as bool,
       password: null == password
           ? _value.password
           : password // ignore: cast_nullable_to_non_nullable
               as Password,
+      idKaryawan: null == idKaryawan
+          ? _value.idKaryawan
+          : idKaryawan // ignore: cast_nullable_to_non_nullable
+              as IdKaryawan,
+      showErrorMessages: null == showErrorMessages
+          ? _value.showErrorMessages
+          : showErrorMessages // ignore: cast_nullable_to_non_nullable
+              as bool,
       ptServerSelected: null == ptServerSelected
           ? _value.ptServerSelected
           : ptServerSelected // ignore: cast_nullable_to_non_nullable
@@ -224,25 +250,13 @@ class __$$_SignInFormStateCopyWithImpl<$Res>
           ? _value._ptMap
           : ptMap // ignore: cast_nullable_to_non_nullable
               as Map<String, List<String>>,
-      showErrorMessages: null == showErrorMessages
-          ? _value.showErrorMessages
-          : showErrorMessages // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isSubmitting: null == isSubmitting
-          ? _value.isSubmitting
-          : isSubmitting // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isChecked: null == isChecked
-          ? _value.isChecked
-          : isChecked // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isKaryawan: null == isKaryawan
-          ? _value.isKaryawan
-          : isKaryawan // ignore: cast_nullable_to_non_nullable
-              as bool,
       failureOrSuccessOption: null == failureOrSuccessOption
           ? _value.failureOrSuccessOption
           : failureOrSuccessOption // ignore: cast_nullable_to_non_nullable
+              as Option<Either<AuthFailure, Unit>>,
+      failureOrSuccessOptionRemember: null == failureOrSuccessOptionRemember
+          ? _value.failureOrSuccessOptionRemember
+          : failureOrSuccessOptionRemember // ignore: cast_nullable_to_non_nullable
               as Option<Either<AuthFailure, Unit>>,
     ));
   }
@@ -252,30 +266,39 @@ class __$$_SignInFormStateCopyWithImpl<$Res>
 
 class _$_SignInFormState implements _SignInFormState {
   const _$_SignInFormState(
-      {required this.userId,
-      required this.email,
-      required this.idKaryawan,
+      {required this.email,
+      required this.userId,
+      required this.isChecked,
+      required this.isKaryawan,
+      required this.isSubmitting,
       required this.password,
+      required this.idKaryawan,
+      required this.showErrorMessages,
       required this.ptServerSelected,
       required this.ptDropdownSelected,
       required final List<String> ptDropdownList,
       required final Map<String, List<String>> ptMap,
-      required this.showErrorMessages,
-      required this.isSubmitting,
-      required this.isChecked,
-      required this.isKaryawan,
-      required this.failureOrSuccessOption})
+      required this.failureOrSuccessOption,
+      required this.failureOrSuccessOptionRemember})
       : _ptDropdownList = ptDropdownList,
         _ptMap = ptMap;
 
   @override
+  final Email email;
+  @override
   final UserId userId;
   @override
-  final Email email;
+  final bool isChecked;
+  @override
+  final bool isKaryawan;
+  @override
+  final bool isSubmitting;
+  @override
+  final Password password;
   @override
   final IdKaryawan idKaryawan;
   @override
-  final Password password;
+  final bool showErrorMessages;
   @override
   final PTName ptServerSelected;
   @override
@@ -297,19 +320,13 @@ class _$_SignInFormState implements _SignInFormState {
   }
 
   @override
-  final bool showErrorMessages;
-  @override
-  final bool isSubmitting;
-  @override
-  final bool isChecked;
-  @override
-  final bool isKaryawan;
-  @override
   final Option<Either<AuthFailure, Unit>> failureOrSuccessOption;
+  @override
+  final Option<Either<AuthFailure, Unit>> failureOrSuccessOptionRemember;
 
   @override
   String toString() {
-    return 'SignInFormState(userId: $userId, email: $email, idKaryawan: $idKaryawan, password: $password, ptServerSelected: $ptServerSelected, ptDropdownSelected: $ptDropdownSelected, ptDropdownList: $ptDropdownList, ptMap: $ptMap, showErrorMessages: $showErrorMessages, isSubmitting: $isSubmitting, isChecked: $isChecked, isKaryawan: $isKaryawan, failureOrSuccessOption: $failureOrSuccessOption)';
+    return 'SignInFormState(email: $email, userId: $userId, isChecked: $isChecked, isKaryawan: $isKaryawan, isSubmitting: $isSubmitting, password: $password, idKaryawan: $idKaryawan, showErrorMessages: $showErrorMessages, ptServerSelected: $ptServerSelected, ptDropdownSelected: $ptDropdownSelected, ptDropdownList: $ptDropdownList, ptMap: $ptMap, failureOrSuccessOption: $failureOrSuccessOption, failureOrSuccessOptionRemember: $failureOrSuccessOptionRemember)';
   }
 
   @override
@@ -317,12 +334,20 @@ class _$_SignInFormState implements _SignInFormState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_SignInFormState &&
-            (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.email, email) || other.email == email) &&
-            (identical(other.idKaryawan, idKaryawan) ||
-                other.idKaryawan == idKaryawan) &&
+            (identical(other.userId, userId) || other.userId == userId) &&
+            (identical(other.isChecked, isChecked) ||
+                other.isChecked == isChecked) &&
+            (identical(other.isKaryawan, isKaryawan) ||
+                other.isKaryawan == isKaryawan) &&
+            (identical(other.isSubmitting, isSubmitting) ||
+                other.isSubmitting == isSubmitting) &&
             (identical(other.password, password) ||
                 other.password == password) &&
+            (identical(other.idKaryawan, idKaryawan) ||
+                other.idKaryawan == idKaryawan) &&
+            (identical(other.showErrorMessages, showErrorMessages) ||
+                other.showErrorMessages == showErrorMessages) &&
             (identical(other.ptServerSelected, ptServerSelected) ||
                 other.ptServerSelected == ptServerSelected) &&
             (identical(other.ptDropdownSelected, ptDropdownSelected) ||
@@ -330,34 +355,31 @@ class _$_SignInFormState implements _SignInFormState {
             const DeepCollectionEquality()
                 .equals(other._ptDropdownList, _ptDropdownList) &&
             const DeepCollectionEquality().equals(other._ptMap, _ptMap) &&
-            (identical(other.showErrorMessages, showErrorMessages) ||
-                other.showErrorMessages == showErrorMessages) &&
-            (identical(other.isSubmitting, isSubmitting) ||
-                other.isSubmitting == isSubmitting) &&
-            (identical(other.isChecked, isChecked) ||
-                other.isChecked == isChecked) &&
-            (identical(other.isKaryawan, isKaryawan) ||
-                other.isKaryawan == isKaryawan) &&
             (identical(other.failureOrSuccessOption, failureOrSuccessOption) ||
-                other.failureOrSuccessOption == failureOrSuccessOption));
+                other.failureOrSuccessOption == failureOrSuccessOption) &&
+            (identical(other.failureOrSuccessOptionRemember,
+                    failureOrSuccessOptionRemember) ||
+                other.failureOrSuccessOptionRemember ==
+                    failureOrSuccessOptionRemember));
   }
 
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      userId,
       email,
-      idKaryawan,
+      userId,
+      isChecked,
+      isKaryawan,
+      isSubmitting,
       password,
+      idKaryawan,
+      showErrorMessages,
       ptServerSelected,
       ptDropdownSelected,
       const DeepCollectionEquality().hash(_ptDropdownList),
       const DeepCollectionEquality().hash(_ptMap),
-      showErrorMessages,
-      isSubmitting,
-      isChecked,
-      isKaryawan,
-      failureOrSuccessOption);
+      failureOrSuccessOption,
+      failureOrSuccessOptionRemember);
 
   @JsonKey(ignore: true)
   @override
@@ -368,29 +390,38 @@ class _$_SignInFormState implements _SignInFormState {
 
 abstract class _SignInFormState implements SignInFormState {
   const factory _SignInFormState(
-      {required final UserId userId,
-      required final Email email,
-      required final IdKaryawan idKaryawan,
+      {required final Email email,
+      required final UserId userId,
+      required final bool isChecked,
+      required final bool isKaryawan,
+      required final bool isSubmitting,
       required final Password password,
+      required final IdKaryawan idKaryawan,
+      required final bool showErrorMessages,
       required final PTName ptServerSelected,
       required final String ptDropdownSelected,
       required final List<String> ptDropdownList,
       required final Map<String, List<String>> ptMap,
-      required final bool showErrorMessages,
-      required final bool isSubmitting,
-      required final bool isChecked,
-      required final bool isKaryawan,
+      required final Option<Either<AuthFailure, Unit>> failureOrSuccessOption,
       required final Option<Either<AuthFailure, Unit>>
-          failureOrSuccessOption}) = _$_SignInFormState;
+          failureOrSuccessOptionRemember}) = _$_SignInFormState;
 
-  @override
-  UserId get userId;
   @override
   Email get email;
   @override
-  IdKaryawan get idKaryawan;
+  UserId get userId;
+  @override
+  bool get isChecked;
+  @override
+  bool get isKaryawan;
+  @override
+  bool get isSubmitting;
   @override
   Password get password;
+  @override
+  IdKaryawan get idKaryawan;
+  @override
+  bool get showErrorMessages;
   @override
   PTName get ptServerSelected;
   @override
@@ -400,15 +431,9 @@ abstract class _SignInFormState implements SignInFormState {
   @override
   Map<String, List<String>> get ptMap;
   @override
-  bool get showErrorMessages;
-  @override
-  bool get isSubmitting;
-  @override
-  bool get isChecked;
-  @override
-  bool get isKaryawan;
-  @override
   Option<Either<AuthFailure, Unit>> get failureOrSuccessOption;
+  @override
+  Option<Either<AuthFailure, Unit>> get failureOrSuccessOptionRemember;
   @override
   @JsonKey(ignore: true)
   _$$_SignInFormStateCopyWith<_$_SignInFormState> get copyWith =>

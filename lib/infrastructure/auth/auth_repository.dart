@@ -67,6 +67,8 @@ class AuthRepository {
       return left(AuthFailure.server(e.errorCode));
     } on NoConnectionException {
       return left(const AuthFailure.noConnection());
+    } on PlatformException {
+      return left(const AuthFailure.storage());
     }
   }
 
