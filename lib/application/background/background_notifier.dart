@@ -18,6 +18,8 @@ class BackgroundNotifier extends StateNotifier<BackgroundState> {
 
   final BackgroundRepository _backgroundRepository;
 
+  Future<List<SavedLocation>> getSaved() => _backgroundRepository.getSaved();
+
   // BG ITEM
   List<BackgroundItemState>? getBackgroundItemsAsList(
       List<SavedLocation> items) {
@@ -69,10 +71,6 @@ class BackgroundNotifier extends StateNotifier<BackgroundState> {
         isGetting: false, failureOrSuccessOption: optionOf(failureOrSuccess));
   }
 
-  Future<List<SavedLocation>> getSavedLocationsOneLiner() async {
-    return await _backgroundRepository.getSavedLocationsOneLiner();
-  }
-
   List<SavedLocation>? getSavedLocationsAsList(
       List<BackgroundItemState> items) {
     List<SavedLocation> locations = [];
@@ -113,14 +111,9 @@ class BackgroundNotifier extends StateNotifier<BackgroundState> {
     }
   }
 
-  // TODO: THROW ERROR
   Future<void> removeLocationFromSaved(SavedLocation currentLocation,
       {required Function onSaved}) async {
-    // debugger(message: 'called');
-
-    // String? locations;
-    final _sharedPreference =
-        await SharedPreferences.getInstance(); //Initialize dependency
+    final _sharedPreference = await SharedPreferences.getInstance();
 
     if (_sharedPreference.getString("locations") != null) {
       final savedLocations = await _parseLocation(
@@ -130,8 +123,6 @@ class BackgroundNotifier extends StateNotifier<BackgroundState> {
           .where((location) => location.date != currentLocation.date)
           .toSet()
           .toList();
-
-      log('processLocation savedLocations deleteResult ${processLocation.length} ${savedLocations.length} ${jsonEncode(processLocation)}');
 
       await _sharedPreference.setString(
           "locations", jsonEncode(processLocation));

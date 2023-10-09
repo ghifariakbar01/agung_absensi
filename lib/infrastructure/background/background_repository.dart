@@ -1,103 +1,79 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
-import 'package:face_net_authentication/application/background/saved_location.dart';
-import 'package:flutter/services.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../application/background/saved_location.dart';
 import '../../domain/background_failure.dart';
 
 class BackgroundRepository {
-  Future<List<SavedLocation>> getSavedLocationsOneLiner() async {
-    final _sharedPreference = await SharedPreferences.getInstance();
-
-    final savedLocations = _sharedPreference.getString("locations");
-
-    if (savedLocations != null) {
-      final savedLocations = await parseLocation(
-          savedLocations: _sharedPreference.getString("locations"));
-
-      debugger(message: 'called');
-
-      log('savedLocations $savedLocations');
-
-      return savedLocations;
-    }
-
-    debugger(message: 'called');
-
-    log('savedLocations $savedLocations');
-
-    return [];
-  }
+  Future<List<SavedLocation>> getSaved() => getSavedLocations()
+      .then((value) => value.fold((_) => [], (locations) => locations));
 
   Future<Either<BackgroundFailure, List<SavedLocation>>>
       getSavedLocations() async {
-    try {
-      final _sharedPreference = await SharedPreferences.getInstance();
+    final _sharedPreference = await SharedPreferences.getInstance();
 
-      final savedLocations = _sharedPreference.getString("locations");
+    final String? savedLocations = _sharedPreference.getString("locations");
 
-      if (savedLocations != null) {
-        final savedLocations = await parseLocation(
-            savedLocations: _sharedPreference.getString("locations"));
+    if (savedLocations != null) {
+      final List<SavedLocation> savedLocations = await parseLocation(
+          savedLocations: _sharedPreference.getString("locations"));
 
-        // debugger(message: 'called');
-
-        log('savedLocations $savedLocations');
-
-        return right(savedLocations);
-      }
-
-      log('savedLocations $savedLocations');
-
-      return right([]);
-    } on PlatformException {
-      return left(
-          BackgroundFailure.unknown('PLATFORM_EXCEPTION', 'Storage penuh'));
+      return right(savedLocations);
     }
+
+    return right([]);
   }
 
   Future<Either<BackgroundFailure, Unit>> addBackgroundLocation(
       {required SavedLocation inputData}) async {
-    try {
-      final _sharedPreference = await SharedPreferences.getInstance();
+    final _sharedPreference = await SharedPreferences.getInstance();
 
-      switch (_sharedPreference.getString("locations") != null) {
-        case true:
-          final savedLocations = await parseLocation(
-              savedLocations: _sharedPreference.getString("locations"));
+    switch (_sharedPreference.getString("locations") != null) {
+      case true:
+        final savedLocations = await parseLocation(
+            savedLocations: _sharedPreference.getString("locations"));
 
-          final currentLocations =
-              parseSavedLocation(location: jsonEncode(inputData));
+        final currentLocations =
+            parseSavedLocation(location: jsonEncode(inputData));
 
-          final processLocation =
-              [...savedLocations, currentLocations].toSet().toList();
+        final List<SavedLocation> processLocation =
+            [...savedLocations, currentLocations].toSet().toList();
 
-          await _sharedPreference.setString(
-              "locations", jsonEncode(processLocation));
+        final saveToSharedPrefs = await _sharedPreference.setString(
+            "locations", jsonEncode(processLocation));
 
-          log('savedLocations $savedLocations');
-          log('currentLocations $currentLocations');
-          return right(unit);
+        if (saveToSharedPrefs == false) {
+          return left(BackgroundFailure.unknown(
+              'Memori', 'Memori penuh saat menyimpan absen.'));
+        }
 
-        case false:
-          await _sharedPreference.setString("locations", jsonEncode(inputData));
+        return right(unit);
 
-          log('inputData[locations] type ${inputData.runtimeType} ');
-          log('inputData[locations] $inputData ');
-          log('_sharedPreference.getString("locations") ${_sharedPreference.getString("locations")}');
-          return right(unit);
-      }
+      case false:
+        final saveToSharedPrefs = await _sharedPreference.setString(
+            "locations", jsonEncode(inputData));
 
-      return left(BackgroundFailure.unknown(
-          'UNKNOWN_EXCEPTION', 'Error tidak diketahui'));
-    } on PlatformException {
-      return left(
-          BackgroundFailure.unknown('PLATFORM_EXCEPTION', 'Storage penuh'));
+        if (saveToSharedPrefs == false) {
+          return left(BackgroundFailure.unknown(
+              'Memori', 'Memori penuh saat menyimpan absen.'));
+        }
+
+        return right(unit);
     }
+
+    return left(BackgroundFailure.unknown(
+        'Error', 'Error saat menyimpan absen di addBackgroundLocation'));
   }
+
+// log('savedLocations $savedLocations');
+// log('currentLocations $currentLocations');
+
+// log('inputData[locations] type ${inputData.runtimeType} ');
+// log('inputData[locations] $inputData ');
+// log('_sharedPreference.getString("locations") ${_sharedPreference.getString("locations")}');
 
   Future<List<SavedLocation>> parseLocation(
       {required String? savedLocations}) async {

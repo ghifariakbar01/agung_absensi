@@ -93,10 +93,11 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
                           builder: (_) => VSimpleDialog(
                               label: 'Error',
                               labelDescription: failure.maybeWhen(
-                                  server: (error, stacktrace) =>
-                                      'Error geofence: ($error) $stacktrace',
-                                  wrongFormat: () => 'Error parsing geofence',
-                                  orElse: () => ''),
+                                orElse: () => '',
+                                wrongFormat: () => 'Error parsing geofence',
+                                server: (error, stacktrace) =>
+                                    'Error geofence: ($error) $stacktrace',
+                              ),
                               asset: Assets.iconCrossed,
                               color: Colors.red))), (geofenceList) async {
                 final Function(Location location) mockListener = ref

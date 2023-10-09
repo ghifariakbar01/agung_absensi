@@ -121,9 +121,9 @@ class HomeScaffold extends ConsumerWidget {
                           padding: EdgeInsets.all(8),
                           children: [
                             ...isTester.maybeWhen(
-                                tester: testerMode,
+                                tester: testerModeOn,
                                 orElse: user.user.nama == 'Ghifar'
-                                    ? testerMode2
+                                    ? testerModeOff
                                     : regularMode)
                           ],
                         ),
@@ -140,7 +140,12 @@ class HomeScaffold extends ConsumerWidget {
                     Center(child: CopyrightAgung()),
                     Center(
                       child: SelectableText(
-                        'APP VERSION: ${packageInfo.when(data: (packageInfo) => packageInfo, error: (error, stackTrace) => 'Error: $error StackTrace: $stackTrace', loading: () => '')}',
+                        'APP VERSION: ${packageInfo.when(
+                          loading: () => '',
+                          data: (packageInfo) => packageInfo,
+                          error: (error, stackTrace) =>
+                              'Error: $error StackTrace: $stackTrace',
+                        )}',
                         textAlign: TextAlign.center,
                         maxLines: 2,
                         style: Themes.customColor(
@@ -158,11 +163,9 @@ class HomeScaffold extends ConsumerWidget {
   }
 }
 
-List<Widget> testerMode() =>
-    [HomeTesterOn(), WelcomeItem(item: items[0]), WelcomeItem(item: items[1])];
+List<Widget> testerModeOn() => [HomeTesterOn(), ...regularMode()];
 
-List<Widget> testerMode2() =>
-    [HomeTesterOff(), WelcomeItem(item: items[0]), WelcomeItem(item: items[1])];
+List<Widget> testerModeOff() => [HomeTesterOff(), ...regularMode()];
 
 List<Widget> regularMode() =>
     [WelcomeItem(item: items[0]), WelcomeItem(item: items[1])];

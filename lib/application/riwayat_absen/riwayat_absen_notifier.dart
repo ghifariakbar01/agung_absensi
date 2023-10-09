@@ -70,5 +70,3 @@ class RiwayatAbsenNotifier extends StateNotifier<RiwayatAbsenState> {
 final riwayatAbsenNotifierProvider =
     StateNotifierProvider.autoDispose<RiwayatAbsenNotifier, RiwayatAbsenState>(
         (ref) => RiwayatAbsenNotifier(ref.watch(absenRepositoryProvider)));
-
-final maxScrollExtentProvider = StateProvider<double>((ref) => 0);
