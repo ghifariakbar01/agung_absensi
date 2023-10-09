@@ -1,17 +1,12 @@
 import 'dart:convert';
-// import 'dart:developer';
-
+import 'dart:developer';
 import 'package:dartz/dartz.dart';
-import 'package:face_net_authentication/application/user/user_model.dart';
-
 import 'package:flutter/material.dart';
-
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-// ignore: unused_import
-import '../application/imei/imei_notifier.dart';
 import '../application/init_user/init_user_status.dart';
 import '../application/user/user_notifier.dart';
+import '../application/user/user_model.dart';
 import '../constants/assets.dart';
 
 import '../pages/widgets/v_dialogs.dart';

@@ -53,10 +53,10 @@ class UserNotifier extends StateNotifier<UserState> {
       {required UserModelWithPassword user}) async {
     Either<AuthFailure, Unit?> failureOrSuccess;
 
-    final idKaryawan = IdKaryawan(user.idKary ?? '');
+    final server = PTName(user.ptServer);
     final userId = UserId(user.nama ?? '');
     final password = Password(user.password ?? '');
-    final server = PTName(user.ptServer);
+    final idKaryawan = IdKaryawan(user.idKary ?? '');
 
     state =
         state.copyWith(isGetting: true, failureOrSuccessOptionUpdate: none());
@@ -116,8 +116,8 @@ class UserNotifier extends StateNotifier<UserState> {
                 Duration(seconds: 1),
                 () => ref.read(dioRequestProvider).addAll({
                   "username": "${userModelWithPassword.nama}",
+                  "server": "${userModelWithPassword.ptServer}",
                   "password": "${userModelWithPassword.password}",
-                  "server": "${userModelWithPassword.ptServer}"
                 }),
               ),
           checkAndUpdateImei: () => ref

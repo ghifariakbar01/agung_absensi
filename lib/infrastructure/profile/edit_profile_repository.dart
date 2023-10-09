@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dartz/dartz.dart';
 
 import '../exceptions.dart';
@@ -12,8 +14,8 @@ class EditProfileRepostiroy {
   final EditProfileRemoteService _profileRemoteService;
 
   Future<bool> hasImei({required String idKary}) =>
-      getImei(idKary: idKary).then((credentials) => credentials.fold(
-          (_) => false, (imei) => imei != null ? true : false));
+      getImei(idKary: idKary).then((response) =>
+          response.fold((_) => false, (imei) => imei != null ? true : false));
 
   Future<bool> clearImeiSuccess({required String idKary}) =>
       clearImei(idKary: idKary).then(
@@ -24,16 +26,18 @@ class EditProfileRepostiroy {
     try {
       final response = await _profileRemoteService.getImei(idKary: idKary);
 
+      debugger();
+
       return right(response);
+    } on FormatException catch (e) {
+      return left(EditFailure.server(0, e.message));
+    } on NoConnectionException {
+      return left(const EditFailure.noConnection());
     } on RestApiExceptionWithMessage catch (e) {
       return left(EditFailure.server(e.errorCode, e.message));
     } on RestApiException catch (e) {
       return left(
           EditFailure.server(e.errorCode, 'RestApi exception get imei'));
-    } on FormatException catch (e) {
-      return left(EditFailure.server(0, e.message));
-    } on NoConnectionException {
-      return left(const EditFailure.noConnection());
     }
   }
 
