@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../application/init_user/init_user_status.dart';
 import '../../shared/future_providers.dart';
-import '../../shared/providers.dart';
 import '../widgets/loading_overlay.dart';
 
 class InitUserScaffold extends ConsumerStatefulWidget {
@@ -18,16 +16,8 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final isOffline = ref.read(absenOfflineModeProvider);
-
-      if (!isOffline) {
-        await ref.read(imeiInitFutureProvider(context).future);
-      } else {
-        ref.read(initUserStatusProvider.notifier).state =
-            InitUserStatus.success();
-      }
-    });
+    WidgetsBinding.instance.addPostFrameCallback(
+        (_) => ref.read(imeiInitFutureProvider(context).future));
   }
 
   @override
@@ -38,8 +28,9 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
     return Scaffold(
       body: Stack(children: [
         imeiInitFuture.when(
-            data: (_) =>
-                LoadingOverlay(loadingMessage: 'Tunggu ya...', isLoading: true),
+            data: (_) => LoadingOverlay(
+                loadingMessage: 'Initializing User & Installation ID...',
+                isLoading: true),
             error: ((error, stackTrace) =>
                 Text('Error stack trace $error $stackTrace')),
             loading: () => LoadingOverlay(

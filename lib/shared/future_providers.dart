@@ -56,11 +56,20 @@ final imeiInitFutureProvider =
           .read(imeiNotifierProvider.notifier)
           .getImeiStringDb(idKary: user.idKary ?? 'null');
 
-      await ref
-          .read(imeiNotifierProvider.notifier)
-          .processImei(imei: imeiDb, ref: ref, context: context);
+      final isOffline = ref.read(absenOfflineModeProvider);
+
+      if (!isOffline) {
+        await ref
+            .read(imeiNotifierProvider.notifier)
+            .processImei(imei: imeiDb, ref: ref, context: context);
+      } else {
+        ref.read(initUserStatusProvider.notifier).state =
+            InitUserStatus.success();
+      }
     } else {
       await ref.read(getUserFutureProvider.future);
+      ref.read(initUserStatusProvider.notifier).state =
+          InitUserStatus.success();
     }
   }
 
