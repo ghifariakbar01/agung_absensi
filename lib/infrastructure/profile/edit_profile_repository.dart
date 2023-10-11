@@ -29,8 +29,6 @@ class EditProfileRepostiroy {
     try {
       final response = await _profileRemoteService.getImei(idKary: idKary);
 
-      debugger();
-
       return right(response);
     } on FormatException catch (e) {
       return left(EditFailure.server(0, e.message));

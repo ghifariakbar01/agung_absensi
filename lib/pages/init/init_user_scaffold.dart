@@ -1,13 +1,19 @@
 import 'package:dartz/dartz.dart';
-import 'package:face_net_authentication/pages/widgets/alert_helper.dart';
-import 'package:face_net_authentication/pages/widgets/v_button.dart';
+
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../application/imei_introduction/shared/imei_introduction_providers.dart';
+import '../../application/imei_introduction/imei_state.dart';
+import '../../application/init_user/init_user_status.dart';
+import '../../application/tc/shared/tc_providers.dart';
+import '../../application/tc/tc_state.dart';
 import '../../domain/imei_failure.dart';
 import '../../shared/future_providers.dart';
 import '../../shared/providers.dart';
+import '../widgets/alert_helper.dart';
 import '../widgets/loading_overlay.dart';
+import '../widgets/v_button.dart';
 
 class InitUserScaffold extends ConsumerStatefulWidget {
   const InitUserScaffold();
@@ -46,7 +52,7 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
               loadingMessage: 'Initializing User & Installation ID...',
               isLoading: true),
           loading: () => LoadingOverlay(
-              loadingMessage: 'Initializing User & Installation ID...',
+              loadingMessage: 'Initializing User & Installation ID Loading...',
               isLoading: true),
           error: (error, stackTrace) => ListView(
             children: [

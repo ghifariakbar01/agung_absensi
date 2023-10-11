@@ -172,7 +172,9 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
                                         AbsenButton(),
                                       ],
                                     ),
-                                orElse: () => Container()),
+                                orElse: () => Center(
+                                      child: CircularProgressIndicator(),
+                                    )),
                           )
                         ],
                       ),

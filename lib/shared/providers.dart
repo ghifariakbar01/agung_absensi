@@ -21,12 +21,15 @@ import '../application/edit_profile/edit_profile_notifier.dart';
 import '../application/edit_profile/edit_profile_state.dart';
 import '../application/geofence/geofence_notifier.dart';
 import '../application/geofence/geofence_state.dart';
+import '../application/home/home_notifier.dart';
+import '../application/home/home_state.dart';
 import '../application/imei/imei_state.dart';
 import '../application/imei/imei_auth_notifier.dart';
 import '../application/imei/imei_reset_notifier.dart';
 import '../application/imei/imei_notifier.dart';
 import '../application/imei/imei_reset_state.dart';
 import '../application/imei/imei_auth_state.dart';
+import '../application/init_user/init_user_notifier.dart';
 import '../application/init_user/init_user_status.dart';
 import '../application/mock_location/mock_location_notifier.dart';
 import '../application/mock_location/mock_location_state.dart';
@@ -114,7 +117,9 @@ final signInFormNotifierProvider =
 );
 
 // INIT PAGE
-final initUserStatusProvider = StateProvider((ref) => InitUserStatus.init());
+final initUserStatusNotifierProvider =
+    StateNotifierProvider<InitUserNotifier, InitUserStatus>(
+        (ref) => InitUserNotifier(ref));
 
 // BACKGROUND
 final autoAbsenSecureStorageProvider = Provider<CredentialsStorage>(
@@ -155,8 +160,8 @@ final editProfileNotifierProvider =
 // ABSEN
 final absenRemoteServiceProvider = Provider((ref) => AbsenRemoteService(
     ref.watch(dioProvider),
-    ref.watch(userNotifierProvider.select((value) => value.user)),
-    ref.watch(dioRequestProvider)));
+    ref.watch(dioRequestProvider),
+    ref.watch(userNotifierProvider).user));
 
 final absenRepositoryProvider = Provider(
   (ref) => AbsenRepository(
@@ -229,6 +234,11 @@ final imeiAuthNotifierProvider =
 final imeiResetNotifierProvider =
     StateNotifierProvider<ImeiResetNotifier, ImeiResetState>(
         (ref) => ImeiResetNotifier(ref.watch(imeiRepositoryProvider)));
+
+// HOME
+
+final homeNotifierProvider =
+    StateNotifierProvider<HomeNotifier, HomeState>((ref) => HomeNotifier());
 
 // PASS EXPIRED
 // final passwordExpiredStorageProvider = Provider<CredentialsStorage>(

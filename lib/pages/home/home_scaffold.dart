@@ -5,11 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../application/home/home_state.dart';
 import '../../application/imei_introduction/shared/imei_introduction_providers.dart';
 import '../../application/routes/route_names.dart';
 import '../../constants/assets.dart';
 import '../../style/style.dart';
 import '../copyright/copyright_page.dart';
+import '../widgets/alert_helper.dart';
 import '../widgets/app_logo.dart';
 import '../widgets/copyright_text.dart';
 import '../widgets/network_widget.dart';
@@ -40,6 +42,19 @@ class HomeScaffold extends ConsumerWidget {
     final width = MediaQuery.of(context).size.width;
     final isTester = ref.watch(testerNotifierProvider);
     final packageInfo = ref.watch(packageInfoProvider);
+
+    // REDIRECT FROM HOME
+    ref.listen<HomeState>(
+      homeNotifierProvider,
+      (_, state) => state.maybeWhen(
+        orElse: () => null,
+        success: () => null,
+        failure: () => AlertHelper.showSnackBar(
+            //
+            context,
+            message: 'Error redirecting from Home'),
+      ),
+    );
 
     return Scaffold(
       drawer: WelcomeDrawer(),
@@ -168,4 +183,4 @@ List<Widget> testerModeOn() => [HomeTesterOn(), ...regularMode()];
 List<Widget> testerModeOff() => [HomeTesterOff(), ...regularMode()];
 
 List<Widget> regularMode() =>
-    [WelcomeItem(item: items[0]), WelcomeItem(item: items[1])];
+    [HomeItem(item: items[0]), HomeItem(item: items[1])];

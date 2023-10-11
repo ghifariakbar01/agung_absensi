@@ -2,8 +2,8 @@ class RouteNames {
   static const defaultRoute = '/';
   static const defaultNameRoute = '/';
 
-  static const permissionNameRoute = '/permission';
-  static const permissionRoute = '/permission';
+  static const permissionNameRoute = 'permission';
+  static const permissionRoute = 'permission';
 
   static const signInRoute = '/login';
   static const signInNameRoute = '/login';

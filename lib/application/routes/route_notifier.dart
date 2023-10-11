@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -23,8 +25,6 @@ import '../auth/auth_notifier.dart';
 import '../imei_introduction/imei_state.dart';
 import '../imei_introduction/shared/imei_introduction_providers.dart';
 import '../init_user/init_user_status.dart';
-import '../permission/permission_state.dart';
-import '../permission/shared/permission_introduction_providers.dart';
 import '../tc/shared/tc_providers.dart';
 import '../tc/tc_state.dart';
 import 'route_names.dart';
@@ -33,11 +33,6 @@ class RouterNotifier extends ChangeNotifier {
   RouterNotifier(this._ref) {
     _ref.listen<AuthState>(
       authNotifierProvider,
-      (_, __) => notifyListeners(),
-    );
-
-    _ref.listen<PermissionState>(
-      permissionNotifierProvider,
       (_, __) => notifyListeners(),
     );
 
@@ -52,7 +47,7 @@ class RouterNotifier extends ChangeNotifier {
     );
 
     _ref.listen<InitUserStatus>(
-        initUserStatusProvider, (__, _) => notifyListeners());
+        initUserStatusNotifierProvider, (_, __) => notifyListeners());
   }
 
   final Ref _ref;
@@ -60,37 +55,28 @@ class RouterNotifier extends ChangeNotifier {
   String? redirectLogic(BuildContext context, GoRouterState state) {
     final tcState = _ref.read(tcNotifierProvider);
     final authState = _ref.read(authNotifierProvider);
-    final permissionState = _ref.read(permissionNotifierProvider);
+    final initUserState = _ref.read(initUserStatusNotifierProvider);
     final imeiIntroState = _ref.read(imeiIntroductionNotifierProvider);
-
-    final initializationUserState = _ref.read(initUserStatusProvider);
 
     final areWeSigningIn = state.location == RouteNames.signInRoute;
     final areWeReadingTC = state.location == RouteNames.termsAndConditionRoute;
     final areWeReadingImei = state.location == RouteNames.imeiInstructionRoute;
-    final areWeGranting = state.location == RouteNames.permissionRoute;
 
     final areWeInitializingUser =
         state.location == RouteNames.initUserNameRoute;
 
-    final weInitializedUser =
-        initializationUserState == InitUserStatus.success();
+    final weInitializedUser = initUserState == InitUserStatus.success();
 
-    final weGranted = permissionState == PermissionState.completed();
     final weVisitedTC = tcState == TCState.visited();
     final weVisitedImei = imeiIntroState == ImeiIntroductionState.visited();
 
     final weAlreadyDidAllProcedures =
-        weGranted && weVisitedTC && weVisitedImei && weInitializedUser;
+        weInitializedUser && weVisitedTC && weVisitedImei;
 
     return authState.maybeMap(
       authenticated: (_) {
-        if (!weGranted) {
-          return RouteNames.permissionNameRoute;
-        }
-
         if (areWeSigningIn) {
-          if (weGranted && weVisitedTC && weVisitedImei) {
+          if (weVisitedTC && weVisitedImei) {
             return RouteNames.initUserNameRoute;
           }
 
@@ -105,31 +91,25 @@ class RouterNotifier extends ChangeNotifier {
           return RouteNames.initUserNameRoute;
         }
 
-        if (areWeGranting && weAlreadyDidAllProcedures) {
-          return RouteNames.initUserNameRoute;
-        }
-
-        if (areWeGranting && weGranted) {
-          return RouteNames.signInRoute;
-        }
-
         if (areWeInitializingUser) {
           if (weAlreadyDidAllProcedures) {
             return RouteNames.homeNameRoute;
+          } else {
+            return RouteNames.initUserNameRoute;
           }
         }
 
+        // if (weAlreadyDidAllProcedures) {
+        //   return RouteNames.initUserNameRoute;
+        // }
+
+        // log('state.location ${state.location} weInitializedUser');
+        // log('$initUserState $weInitializedUser weInitializedUser');
+        // log('$imeiIntroState $weVisitedImei weVisitedImei $weVisitedTC');
+
         return null;
       },
-      orElse: () => areWeSigningIn
-          ? null
-          : () {
-              if (weGranted) {
-                return RouteNames.signInRoute;
-              } else {
-                return RouteNames.permissionRoute;
-              }
-            }(),
+      orElse: () => areWeSigningIn ? null : RouteNames.signInRoute,
     );
   }
 
@@ -155,12 +135,6 @@ class RouterNotifier extends ChangeNotifier {
           name: RouteNames.imeiInstructionNameRoute,
           path: RouteNames.imeiInstructionRoute,
           builder: (context, state) => ImeiIntroductionPage()),
-
-      GoRoute(
-          name: RouteNames.permissionNameRoute,
-          path: RouteNames.permissionRoute,
-          builder: (context, state) => const PermissionPage()),
-
       GoRoute(
         name: RouteNames.initUserNameRoute,
         path: RouteNames.initUserRoute,
@@ -182,6 +156,10 @@ class RouterNotifier extends ChangeNotifier {
             //   path: RouteNames.signUpRoute,
             //   builder: (context, state) => const SignUp(),
             // ),
+            GoRoute(
+                name: RouteNames.permissionNameRoute,
+                path: RouteNames.permissionRoute,
+                builder: (context, state) => const PermissionPage()),
             GoRoute(
               name: RouteNames.riwayatAbsenNameRoute,
               path: RouteNames.riwayatAbsenRoute,

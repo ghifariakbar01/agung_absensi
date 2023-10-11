@@ -16,13 +16,13 @@ import '../exceptions.dart';
 class AbsenRemoteService {
   AbsenRemoteService(
     this._dio,
-    this._userModelWithPassword,
     this._dioRequest,
+    this._userModelWithPassword,
   );
 
   final Dio _dio;
-  final UserModelWithPassword _userModelWithPassword;
   final Map<String, String> _dioRequest;
+  final UserModelWithPassword _userModelWithPassword;
 
   static const String dbNameProd = 'hr_trs_absen';
 

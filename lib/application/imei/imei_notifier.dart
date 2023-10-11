@@ -16,7 +16,6 @@ import '../../pages/widgets/v_dialogs.dart';
 import '../../shared/providers.dart';
 import '../../style/style.dart';
 import '../imei_introduction/shared/imei_introduction_providers.dart';
-import '../init_user/init_user_status.dart';
 import '../permission/shared/permission_introduction_providers.dart';
 import '../tc/shared/tc_providers.dart';
 import '../user/user_model.dart';
@@ -64,7 +63,7 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
         .clearVisitedIMEIIntroduction();
 
     ref.read(userNotifierProvider.notifier).setUserInitial();
-    ref.read(initUserStatusProvider.notifier).state = InitUserStatus.init();
+    ref.read(initUserStatusNotifierProvider.notifier).hold();
 
     // reset route
     final permissionNotifier = ref.read(permissionNotifierProvider.notifier);
@@ -83,7 +82,7 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
 
   Future<void> clearImeiFromDBAndLogout(WidgetRef ref) async {
     ref.read(userNotifierProvider.notifier).setUserInitial();
-    ref.read(initUserStatusProvider.notifier).state = InitUserStatus.init();
+    ref.read(initUserStatusNotifierProvider.notifier).hold();
     await ref.read(userNotifierProvider.notifier).logout();
   }
 
@@ -194,24 +193,24 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
     if (imeiAuthState == ImeiAuthState.registered()) {
       switch (savedImei.isEmpty) {
         case true:
-          debugger(message: 'called');
+          // debugger(message: 'called');
 
-          await onImeiAlreadyRegistered();
-          // onImeiOK();
+          // await onImeiAlreadyRegistered();
+          onImeiOK();
           // await onImeiNotRegistered();
 
           break;
         case false:
           () async {
             if (imeiDBString == savedImei) {
-              // debugger(message: 'called');
+              debugger(message: 'called');
 
               onImeiOK();
             } else if (imeiDBString != savedImei) {
               debugger(message: 'called');
 
-              await onImeiAlreadyRegistered();
-              // onImeiOK();
+              // await onImeiAlreadyRegistered();
+              onImeiOK();
               // await onImeiNotRegistered();
             }
           }();
@@ -256,32 +255,34 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
       required String imei,
       required BuildContext context}) async {
     //
-    letYouThrough() => ref.read(initUserStatusProvider.notifier).state =
-        InitUserStatus.success();
-
-    hold() =>
-        ref.read(initUserStatusProvider.notifier).state = InitUserStatus.init();
 
     holdAndlogYouOut() async {
-      hold();
+      ref.read(initUserStatusNotifierProvider.notifier).hold();
       await ref.read(userNotifierProvider.notifier).logout();
     }
 
     UserModelWithPassword user = ref.read(userNotifierProvider).user;
     ImeiAuthState imeiAuthState = ref.read(imeiAuthNotifierProvider);
 
+    String savedImei = ref.read(imeiNotifierProvider).imei;
     String generatedImeiString =
         ref.read(imeiNotifierProvider.notifier).generateImei();
-    String savedImei = ref.read(imeiNotifierProvider).imei;
 
-    // debugger();
-
-    await ref.read(imeiNotifierProvider.notifier).onImei(
+    return ref.read(imeiNotifierProvider.notifier).onImei(
         imeiDBString: imei,
         savedImei: savedImei,
         appleUsername: user.nama,
         imeiAuthState: imeiAuthState,
-        onImeiOK: () => letYouThrough(),
+        onImeiOK: () =>
+            ref.read(initUserStatusNotifierProvider.notifier).letYouThrough(),
+        onImeiAlreadyRegistered: () => ref
+            .read(imeiNotifierProvider.notifier)
+            .onImeiAlreadyRegistered(
+              showDialog: () => showFailedDialog(context),
+              logout: () => ref.read(userNotifierProvider.notifier).logout(),
+            )
+            .then(
+                (_) => ref.read(initUserStatusNotifierProvider.notifier).hold),
         onImeiNotRegistered: () => ref
             .read(editProfileNotifierProvider.notifier)
             .registerAndShowDialog(
@@ -313,7 +314,10 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
                           () {},
                           (either) => either.fold(
                               (failure) => failure.maybeWhen(
-                                  noConnection: () => letYouThrough(),
+                                  noConnection: ref
+                                      .read(initUserStatusNotifierProvider
+                                          .notifier)
+                                      .letYouThrough,
                                   orElse: () => showDialog(
                                         context: context,
                                         barrierDismissible: true,
@@ -334,15 +338,11 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
                               (_) => ref
                                   .read(userNotifierProvider.notifier)
                                   .getUser()
-                                  .then((_) => showSuccessDialog(context)
-                                      .then((_) => letYouThrough()))));
-                }),
-        onImeiAlreadyRegistered: () => ref
-            .read(imeiNotifierProvider.notifier)
-            .onImeiAlreadyRegistered(
-              showDialog: () => showFailedDialog(context),
-              logout: () => ref.read(userNotifierProvider.notifier).logout(),
-            )
-            .then((_) => hold()));
+                                  .then((_) => showSuccessDialog(context).then(
+                                      (_) => ref
+                                          .read(initUserStatusNotifierProvider
+                                              .notifier)
+                                          .letYouThrough()))));
+                }));
   }
 }

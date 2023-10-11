@@ -1,28 +1,42 @@
-import 'package:face_net_authentication/shared/providers.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../application/permission/permission_state.dart';
 import '../../application/permission/shared/permission_introduction_providers.dart';
 import '../widgets/loading_overlay.dart';
 import 'permission_scaffold.dart';
 
-class PermissionPage extends HookConsumerWidget {
+class PermissionPage extends ConsumerStatefulWidget {
   const PermissionPage();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await ref
-          .read(testerNotifierProvider.notifier)
-          .checkAndUpdateTesterState();
+  ConsumerState<PermissionPage> createState() => _PermissionPageState();
+}
 
-      final testerState = ref.read(testerNotifierProvider);
+class _PermissionPageState extends ConsumerState<PermissionPage> {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
 
-      testerState.maybeWhen(
-          tester: () =>
-              ref.read(permissionNotifierProvider.notifier).letYouThrough(),
-          orElse: () {});
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) =>
+        ref.read(permissionNotifierProvider.notifier).checkAndUpdateLocation());
+  }
+
+  @override
+  void didUpdateWidget(covariant PermissionPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) =>
+        ref.read(permissionNotifierProvider.notifier).checkAndUpdateLocation());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    ref.listen<PermissionState>(
+        permissionNotifierProvider,
+        (_, state) => state.maybeMap(
+            completed: (_) => context.pop(), orElse: () => null));
 
     return Stack(
       children: const [

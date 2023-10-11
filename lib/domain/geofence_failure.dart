@@ -4,6 +4,7 @@ part 'geofence_failure.freezed.dart';
 
 @freezed
 class GeofenceFailure with _$GeofenceFailure {
+  const factory GeofenceFailure.empty() = _Empty;
   const factory GeofenceFailure.server([int? errorCode, String? message]) =
       _Server;
   const factory GeofenceFailure.passwordExpired() = _PasswordExpired;

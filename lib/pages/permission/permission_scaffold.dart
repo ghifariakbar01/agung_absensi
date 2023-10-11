@@ -1,10 +1,10 @@
-import 'package:face_net_authentication/application/permission/permission_state.dart';
-import 'package:face_net_authentication/application/permission/shared/permission_introduction_providers.dart';
 import 'package:face_net_authentication/pages/widgets/v_dialogs.dart';
+import 'package:face_net_authentication/style/style.dart';
 import 'package:flutter/material.dart';
 import 'package:geofence_service/geofence_service.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../application/permission/shared/permission_introduction_providers.dart';
 import '../widgets/app_logo.dart';
 import '../widgets/copyright_text.dart';
 import '../widgets/welcome_label.dart';
@@ -18,6 +18,12 @@ class PermissionScaffold extends ConsumerWidget {
     final permission = ref.watch(permissionNotifierProvider);
 
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        automaticallyImplyLeading: true,
+        backgroundColor: Colors.transparent,
+        iconTheme: IconThemeData(color: Palette.primaryColor),
+      ),
       body: SafeArea(
         child: Stack(
           children: [
@@ -41,40 +47,46 @@ class PermissionScaffold extends ConsumerWidget {
                 //         title: 'Nyalakan kamera anda',
                 //       )),
                 // ),
-                Visibility(
-                  visible: permission == PermissionState.initial(),
-                  child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: PermissionItem(
-                        label:
-                            'Lokasi dibutuhkan untuk memastikan anda berada di lokasi kantor agung group.',
-                        onPressed: () async {
-                          if (!await FlLocation.isLocationServicesEnabled) {
-                            await showDialog(
-                              context: context,
-                              builder: (context) => VSimpleDialog(
-                                  label: 'GPS Tidak Berfungsi',
-                                  labelDescription:
-                                      'Mohon nyalakan GPS pada device anda. Terimakasih',
-                                  asset: 'assets/ic_location_off.svg'),
-                            );
-                          } else {
-                            await ref
-                                .read(permissionNotifierProvider.notifier)
-                                .requestLocation();
+                Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: permission.when(
+                        completed: () => PermissionItem(
+                              label: 'Sukses',
+                              title: 'Tap untuk melanjutkan',
+                              onPressed: () => ref
+                                  .read(permissionNotifierProvider.notifier)
+                                  .checkAndUpdateLocation(),
+                            ),
+                        initial: () => PermissionItem(
+                              label:
+                                  'Lokasi dibutuhkan untuk memastikan anda berada di lokasi kantor agung group.',
+                              onPressed: () async {
+                                if (!await FlLocation
+                                    .isLocationServicesEnabled) {
+                                  await showDialog(
+                                    context: context,
+                                    builder: (context) => VSimpleDialog(
+                                        label: 'GPS Tidak Berfungsi',
+                                        labelDescription:
+                                            'Mohon nyalakan GPS pada device anda. Terimakasih',
+                                        asset: 'assets/ic_location_off.svg'),
+                                  );
+                                } else {
+                                  await ref
+                                      .read(permissionNotifierProvider.notifier)
+                                      .requestLocation();
 
-                            await ref
-                                .read(permissionNotifierProvider.notifier)
-                                .requestDenied();
+                                  await ref
+                                      .read(permissionNotifierProvider.notifier)
+                                      .requestDenied();
 
-                            await ref
-                                .read(permissionNotifierProvider.notifier)
-                                .checkAndUpdateLocation();
-                          }
-                        },
-                        title: 'Nyalakan lokasi anda',
-                      )),
-                ),
+                                  await ref
+                                      .read(permissionNotifierProvider.notifier)
+                                      .checkAndUpdateLocation();
+                                }
+                              },
+                              title: 'Nyalakan lokasi anda',
+                            ))),
               ],
             ),
             Align(

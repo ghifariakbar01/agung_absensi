@@ -87,6 +87,16 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
                       noConnection: () => ref
                           .read(geofenceProvider.notifier)
                           .getGeofenceListFromStorage(),
+                      empty: () => showCupertinoDialog(
+                          context: context,
+                          barrierDismissible: true,
+                          builder: (_) => VSimpleDialog(
+                              label: 'Error',
+                              labelDescription:
+                                  "Geofence Belum Disimpan sehingga tidak ada Geofence Offline.",
+                              asset: Assets.iconCrossed,
+                              color: Colors.red)).then((_) =>
+                          ref.read(userNotifierProvider.notifier).logout()),
                       orElse: () => showCupertinoDialog(
                           context: context,
                           barrierDismissible: true,
@@ -99,7 +109,10 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
                                     'Error geofence: ($error) $stacktrace',
                               ),
                               asset: Assets.iconCrossed,
-                              color: Colors.red))), (geofenceList) async {
+                              color: Colors.red)).then((_) => ref
+                          .read(geofenceProvider.notifier)
+                          .getGeofenceListFromStorage())),
+                  (geofenceList) async {
                 final Function(Location location) mockListener = ref
                     .read(mockLocationNotifierProvider.notifier)
                     .addMockLocationListener;

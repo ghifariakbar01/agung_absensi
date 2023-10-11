@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:face_net_authentication/shared/providers.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';

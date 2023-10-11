@@ -4,7 +4,6 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../application/init_user/init_user_status.dart';
 import '../application/user/user_notifier.dart';
 import '../application/user/user_model.dart';
 import '../constants/assets.dart';
@@ -44,6 +43,7 @@ final imeiInitFutureProvider =
     if (user.idKary!.isNotEmpty) {
       final imeiNotifier = ref.read(imeiNotifierProvider.notifier);
 
+      // 3. GET IMEI DATA
       String imei = await imeiNotifier.getImeiString();
       await Future.delayed(
           Duration(seconds: 1), () => imeiNotifier.changeSavedImei(imei));
@@ -56,6 +56,7 @@ final imeiInitFutureProvider =
           .read(imeiNotifierProvider.notifier)
           .getImeiStringDb(idKary: user.idKary ?? 'null');
 
+      // 4. PROCESS IMEI DATA
       final isOffline = ref.read(absenOfflineModeProvider);
 
       if (!isOffline) {
@@ -63,13 +64,11 @@ final imeiInitFutureProvider =
             .read(imeiNotifierProvider.notifier)
             .processImei(imei: imeiDb, ref: ref, context: context);
       } else {
-        ref.read(initUserStatusProvider.notifier).state =
-            InitUserStatus.success();
+        ref.read(initUserStatusNotifierProvider.notifier).letYouThrough();
       }
     } else {
       await ref.read(getUserFutureProvider.future);
-      ref.read(initUserStatusProvider.notifier).state =
-          InitUserStatus.success();
+      ref.read(initUserStatusNotifierProvider.notifier).letYouThrough();
     }
   }
 
@@ -83,10 +82,6 @@ final userInitFutureProvider =
   final userFOSOUpdate = ref.watch(userNotifierProvider
       .select((value) => value.failureOrSuccessOptionUpdate));
 
-  letYouThrough() {
-    ref.read(initUserStatusProvider.notifier).state = InitUserStatus.success();
-  }
-
   if (userFOSOUpdate != none()) {
     await Future.delayed(
         Duration(seconds: 1),
@@ -94,7 +89,9 @@ final userInitFutureProvider =
             () {},
             (either) => either.fold(
                 (failure) => failure.maybeMap(
-                      noConnection: (_) => letYouThrough(),
+                      noConnection: (_) => ref
+                          .read(initUserStatusNotifierProvider.notifier)
+                          .letYouThrough(),
                       orElse: () => showDialog(
                         context: context,
                         barrierDismissible: true,

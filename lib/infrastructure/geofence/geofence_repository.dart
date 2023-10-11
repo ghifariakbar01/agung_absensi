@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/application/geofence/geofence_response.dart';
@@ -25,6 +26,8 @@ class GeofenceRepository {
       return left(const GeofenceFailure.noConnection());
     } on RestApiException {
       return left(const GeofenceFailure.server());
+    } on RestApiExceptionWithMessage catch (e) {
+      return left(GeofenceFailure.server(e.errorCode, e.message));
     }
   }
 
@@ -50,7 +53,7 @@ class GeofenceRepository {
       final list = await _credentialsStorage.read();
 
       if (list == null) {
-        return right([]);
+        return left(GeofenceFailure.empty());
       } else {
         final parsedGeofence = await parseGeofenceSaved(savedGeofence: list);
 
