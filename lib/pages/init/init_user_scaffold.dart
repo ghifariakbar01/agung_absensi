@@ -1,7 +1,12 @@
+import 'package:dartz/dartz.dart';
+import 'package:face_net_authentication/pages/widgets/alert_helper.dart';
+import 'package:face_net_authentication/pages/widgets/v_button.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../domain/imei_failure.dart';
 import '../../shared/future_providers.dart';
+import '../../shared/providers.dart';
 import '../widgets/loading_overlay.dart';
 
 class InitUserScaffold extends ConsumerStatefulWidget {
@@ -22,20 +27,42 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
 
   @override
   Widget build(BuildContext context) {
-    //
     final imeiInitFuture = ref.watch(imeiInitFutureProvider(context));
+
+    ref.listen<Option<Either<ImeiFailure, Unit?>>>(
+        imeiResetNotifierProvider
+            .select((value) => value.failureOrSuccessOption),
+        (_, foso) => foso.fold(
+            () {},
+            (either) => either.fold(
+                (l) => AlertHelper.showSnackBar(context,
+                    message: 'Error Clear Imei $l, FOSO: $foso'),
+                (_) => ref.read(userNotifierProvider.notifier).logout())));
 
     return Scaffold(
       body: Stack(children: [
         imeiInitFuture.when(
-            data: (_) => LoadingOverlay(
-                loadingMessage: 'Initializing User & Installation ID...',
-                isLoading: true),
-            error: ((error, stackTrace) =>
-                Text('Error stack trace $error $stackTrace')),
-            loading: () => LoadingOverlay(
-                loadingMessage: 'Initializing User & Installation ID...',
-                isLoading: true)),
+          data: (_) => LoadingOverlay(
+              loadingMessage: 'Initializing User & Installation ID...',
+              isLoading: true),
+          loading: () => LoadingOverlay(
+              loadingMessage: 'Initializing User & Installation ID...',
+              isLoading: true),
+          error: (error, stackTrace) => ListView(
+            children: [
+              Text('idKary: ${ref.read(userNotifierProvider).user.idKary}\n' +
+                  'Error & Stack Trace : $error $stackTrace'),
+              SizedBox(
+                height: 8,
+              ),
+              VButton(
+                  label: 'Logout & Retry',
+                  onPressed: () => ref
+                      .read(imeiResetNotifierProvider.notifier)
+                      .clearImeiFromStorage())
+            ],
+          ),
+        ),
         //
       ]),
       backgroundColor: Colors.white.withOpacity(0.9),

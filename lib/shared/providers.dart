@@ -141,8 +141,10 @@ final editProfileRemoteServiceProvider = Provider(
 );
 
 final editProfileRepositoryProvider = Provider(
-  (ref) => EditProfileRepostiroy(ref.watch(editProfileRemoteServiceProvider),
-      ref.watch(imeiCredentialsStorageProvider)),
+  (ref) => EditProfileRepostiroy(
+    ref.watch(imeiCredentialsStorageProvider),
+    ref.watch(editProfileRemoteServiceProvider),
+  ),
 );
 
 final editProfileNotifierProvider =
@@ -212,6 +214,7 @@ final karyawanShiftFutureProvider = FutureProvider<bool>((ref) async {
 });
 
 // IMEI
+/// imeiCredentialsStorageProvider is used by [EditProfileRepostiroy] and [ImeiRepository]
 final imeiRepositoryProvider = Provider(
     (ref) => ImeiRepository(ref.watch(imeiCredentialsStorageProvider)));
 

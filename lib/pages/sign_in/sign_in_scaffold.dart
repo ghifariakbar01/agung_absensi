@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../shared/providers.dart';
-import '../../style/style.dart';
 import '../widgets/app_logo.dart';
 import 'sign_in_form.dart';
 

@@ -1,16 +1,17 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:face_net_authentication/application/imei_introduction/shared/imei_introduction_providers.dart';
-import 'package:face_net_authentication/application/tc/shared/tc_providers.dart';
 // import 'package:face_net_authentication/locator.dart';
-import 'package:face_net_authentication/style/style.dart';
+
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
+import 'application/imei_introduction/shared/imei_introduction_providers.dart';
 import 'application/permission/shared/permission_introduction_providers.dart';
+import 'application/tc/shared/tc_providers.dart';
 import 'config/configuration.dart';
 import 'shared/providers.dart';
+import 'style/style.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -8,7 +8,10 @@ import 'edit_profile_remote_service.dart';
 import '../credentials_storage/credentials_storage.dart';
 
 class EditProfileRepostiroy {
-  EditProfileRepostiroy(this._profileRemoteService, this._credentialsStorage);
+  EditProfileRepostiroy(
+    this._credentialsStorage,
+    this._profileRemoteService,
+  );
 
   final CredentialsStorage _credentialsStorage;
   final EditProfileRemoteService _profileRemoteService;

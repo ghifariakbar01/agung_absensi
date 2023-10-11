@@ -34,10 +34,6 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
       .getImeiCredentials()
       .then((value) => value.fold((_) => '', (imei) => imei ?? ''));
 
-  Future<bool> clearImeiSaved() => _imeiRepository
-      .clearImeiCredentials()
-      .then((value) => value.fold((_) => false, (_) => true));
-
   Future<String> getImeiStringDb({required String idKary}) =>
       _editProfileRepostiroy
           .getImei(idKary: idKary)
@@ -100,19 +96,6 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
 
     state = state.copyWith(
         isGetting: false, failureOrSuccessOption: optionOf(failureOrSuccess));
-  }
-
-  Future<void> getImei({required String idKary}) async {
-    Either<EditFailure, String?> failureOrSuccess;
-
-    state =
-        state.copyWith(isGetting: true, failureOrSuccessOptionGetImei: none());
-
-    failureOrSuccess = await _editProfileRepostiroy.getImei(idKary: idKary);
-
-    state = state.copyWith(
-        isGetting: false,
-        failureOrSuccessOptionGetImei: optionOf(failureOrSuccess));
   }
 
   Future<void> clearImeiFromDB({required String idKary}) async {
@@ -213,8 +196,8 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
         case true:
           debugger(message: 'called');
 
-          // await onImeiAlreadyRegistered();
-          onImeiOK();
+          await onImeiAlreadyRegistered();
+          // onImeiOK();
           // await onImeiNotRegistered();
 
           break;
@@ -227,8 +210,8 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
             } else if (imeiDBString != savedImei) {
               debugger(message: 'called');
 
-              // await onImeiAlreadyRegistered();
-              onImeiOK();
+              await onImeiAlreadyRegistered();
+              // onImeiOK();
               // await onImeiNotRegistered();
             }
           }();
