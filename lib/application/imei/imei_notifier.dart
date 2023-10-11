@@ -195,8 +195,8 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
         case true:
           // debugger(message: 'called');
 
-          // await onImeiAlreadyRegistered();
-          onImeiOK();
+          await onImeiAlreadyRegistered();
+          // onImeiOK();
           // await onImeiNotRegistered();
 
           break;
@@ -209,8 +209,8 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
             } else if (imeiDBString != savedImei) {
               debugger(message: 'called');
 
-              // await onImeiAlreadyRegistered();
-              onImeiOK();
+              await onImeiAlreadyRegistered();
+              // onImeiOK();
               // await onImeiNotRegistered();
             }
           }();
