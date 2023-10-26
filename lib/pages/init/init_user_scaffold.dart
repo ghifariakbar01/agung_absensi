@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:face_net_authentication/pages/widgets/async_value_ui.dart';
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -35,6 +36,10 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
   Widget build(BuildContext context) {
     final imeiInitFuture = ref.watch(imeiInitFutureProvider(context));
 
+    ref.listen<AsyncValue>(imeiInitFutureProvider(context), (_, state) {
+      state.showAlertDialogOnError(context);
+    });
+
     ref.listen<Option<Either<ImeiFailure, Unit?>>>(
         imeiResetNotifierProvider
             .select((value) => value.failureOrSuccessOption),
@@ -42,7 +47,12 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
             () {},
             (either) => either.fold(
                 (l) => AlertHelper.showSnackBar(context,
-                    message: 'Error Clear Imei $l, FOSO: $foso'),
+                    message: l.map(
+                      unknown: (value) => 'Error Unknown',
+                      errorParsing: (value) => 'Error Parsing $value',
+                      storage: (value) => 'There is a problem with storage',
+                      empty: (value) => 'There is a problem with connection',
+                    )),
                 (_) => ref.read(userNotifierProvider.notifier).logout())));
 
     return Scaffold(
@@ -52,8 +62,7 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
               loadingMessage: 'Initializing User & Installation ID...',
               isLoading: true),
           loading: () => LoadingOverlay(
-              loadingMessage: 'Initializing User & Installation ID Loading...',
-              isLoading: true),
+              loadingMessage: 'Getting Data...', isLoading: true),
           error: (error, stackTrace) => ListView(
             children: [
               Text('idKary: ${ref.read(userNotifierProvider).user.idKary}\n' +

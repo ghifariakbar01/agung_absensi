@@ -1,11 +1,9 @@
 import 'dart:convert';
 import 'dart:developer' as log;
-import 'dart:developer';
 import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:dartz/dartz.dart';
-import 'package:flutter/gestures.dart';
 import 'package:geofence_service/geofence_service.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';

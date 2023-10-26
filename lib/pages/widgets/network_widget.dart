@@ -10,10 +10,10 @@ class NetworkWidget extends ConsumerWidget {
     final network = ref.watch(networkStateNotifierProvider);
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 15),
+      padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 18),
       child: Container(
-        height: 30,
-        width: 15,
+        height: 25,
+        width: 8,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(2),
           color: network.when(

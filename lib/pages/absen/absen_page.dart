@@ -1,13 +1,11 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../application/imei/imei_notifier.dart';
 import '../../shared/providers.dart';
 import '../../style/style.dart';
 
 import '../widgets/copyright_text.dart';
+import '../widgets/image_absen.dart';
 import '../widgets/location_detail.dart';
 import '../widgets/network_widget.dart';
 import '../widgets/user_info.dart';
@@ -90,7 +88,8 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
       await testerState.maybeWhen(
           tester: () {},
           orElse: () async {
-            ImeiNotifier imeiNotifier = ref.read(imeiNotifierProvider.notifier);
+            final imeiNotifier = ref.read(imeiNotifierProvider.notifier);
+
             String imei = await imeiNotifier.getImeiString();
             await Future.delayed(
                 Duration(seconds: 1), () => imeiNotifier.changeSavedImei(imei));
@@ -105,15 +104,13 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
 
   @override
   Widget build(BuildContext context) {
-    final user =
-        ref.watch(userNotifierProvider.select((value) => value.user.nama));
-
-    final isOfflineMode = ref.watch(absenOfflineModeProvider);
     final isTester = ref.watch(testerNotifierProvider);
-
+    final displayImage = ref.watch(displayImageProvider);
+    final isOfflineMode = ref.watch(absenOfflineModeProvider);
     final mockLocation = ref.watch(mockLocationNotifierProvider);
 
-    log('mockLocation $mockLocation');
+    final user =
+        ref.watch(userNotifierProvider.select((value) => value.user.nama));
 
     return Stack(
       children: [
@@ -129,12 +126,15 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
             ),
             body: SafeArea(
               child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
                 child: SizedBox(
-                  height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width,
-                  child: Stack(
-                    children: [
-                      Column(
+                    height: displayImage == false
+                        ? MediaQuery.of(context).size.height + 200
+                        : MediaQuery.of(context).size.height + 475,
+                    width: MediaQuery.of(context).size.width,
+                    child: Stack(children: [
+                      ListView(
+                        physics: const NeverScrollableScrollPhysics(),
                         children: <Widget>[
                           SizedBox(
                               height: 200,
@@ -151,31 +151,34 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
                           SizedBox(
                             height: 8,
                           ),
-                          isTester.maybeWhen(
-                            tester: () => AbsenButton(),
+                          ...isTester.maybeWhen(
+                            tester: () => [AbsenButton()],
                             orElse: () => mockLocation.maybeWhen(
-                                mocked: () => Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                          'Anda diduga mengunakan Fake GPS. Harap matikan Fake GPS agar bisa menggunakan aplikasi.'),
-                                    ),
-                                original: () => Column(
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 8.0),
-                                          child: LocationDetail(),
-                                        ),
-                                        SizedBox(
-                                          height: 8,
-                                        ),
-                                        AbsenButton(),
-                                      ],
-                                    ),
-                                orElse: () => Center(
-                                      child: CircularProgressIndicator(),
-                                    )),
-                          )
+                              mocked: () => [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                      'Anda diduga mengunakan Fake GPS. Harap matikan Fake GPS agar bisa menggunakan aplikasi.'),
+                                )
+                              ],
+                              original: () => [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: LocationDetail(),
+                                ),
+                                SizedBox(
+                                  height: 8,
+                                ),
+                                AbsenButton(),
+                              ],
+                              orElse: () => [
+                                Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                       Align(
@@ -185,9 +188,7 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
                           child: CopyrightAgung(),
                         ),
                       )
-                    ],
-                  ),
-                ),
+                    ])),
               ),
             )),
       ],

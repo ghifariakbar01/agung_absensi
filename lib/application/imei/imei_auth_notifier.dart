@@ -16,4 +16,12 @@ class ImeiAuthNotifier extends StateNotifier<ImeiAuthState> {
       state = const ImeiAuthState.empty();
     }
   }
+
+  Future<void> checkAndUpdateImeiByGivenParam({required String imeiDb}) async {
+    if (imeiDb.isNotEmpty) {
+      state = const ImeiAuthState.registered();
+    } else {
+      state = const ImeiAuthState.empty();
+    }
+  }
 }

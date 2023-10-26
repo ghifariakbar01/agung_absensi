@@ -22,13 +22,13 @@
 		<string>$(FLUTTER_BUILD_NUMBER)</string>
 		<key>LSRequiresIPhoneOS</key>
 		<true/>
-		<key>LSApplicationQueriesSchemes</key>
-		<array>
-			<string>sms</string>
-			<string>tel</string>
-		</array>
-		<!-- <key>NSCameraUsageDescription</key>
-		<string>This app requires access to your camera to use facial recognition for validating your presence and ensuring security during attendance tracking.</string> -->
+		<key>io.flutter.embedded_views_preview</key>
+  		<true/>
+		<key>NSAppTransportSecurity</key>
+		<dict>
+    	<key>NSAllowsArbitraryLoads</key>
+		<true/>
+		</dict>
 		<key>NSLocationWhenInUseUsageDescription</key>
 		<string>This app requires access to your location to validate your presence within a specific radius for attendance purposes. Your location information will only be used for this purpose and will not be shared with any third parties.</string>
 		<key>NSMotionUsageDescription</key>
@@ -57,3 +57,80 @@
 		<false/>
 	</dict>
 </plist>
+
+<!-- <key>LSApplicationQueriesSchemes</key>
+		<array>
+			<string>sms</string>
+			<string>tel</string>
+		</array> -->
+		<!-- <key>NSCameraUsageDescription</key>
+		<string>This app requires access to your camera to use facial recognition for validating your presence and ensuring security during attendance tracking.</string> -->
+
+
+		
+<!-- 
+<dict>
+					<key>NSExceptionDomains</key>
+					<dict>
+						<!-- 1232 -->
+						<key>agunglogisticsapp.co.id:1232</key>
+						<dict>
+							<!-- add this key to enable subdomains such as sub.yourserver.com -->
+							<key>NSIncludesSubdomains</key>
+							<true/>
+							<!-- add this key to allow standard HTTP requests, thus negating the ATS -->
+							<key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+							<true/>
+							<!-- add this key to specify the minimum TLS version to accept -->
+							<key>NSTemporaryExceptionMinimumTLSVersion</key>
+							<string>TLSv1.1</string>
+						</dict>
+						<!-- END -->
+
+						<!-- 1261 -->
+						<key>agunglogisticsapp.co.id:1261</key>
+						<dict>
+							<!-- add this key to enable subdomains such as sub.yourserver.com -->
+							<key>NSIncludesSubdomains</key>
+							<true/>
+							<!-- add this key to allow standard HTTP requests, thus negating the ATS -->
+							<key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+							<true/>
+							<!-- add this key to specify the minimum TLS version to accept -->
+							<key>NSTemporaryExceptionMinimumTLSVersion</key>
+							<string>TLSv1.1</string>
+						</dict>
+						<!-- END -->
+
+						<!-- 1026 -->
+						<key>agunglogisticsapp.co.id:1026</key>
+						<dict>
+							<!-- add this key to enable subdomains such as sub.yourserver.com -->
+							<key>NSIncludesSubdomains</key>
+							<true/>
+							<!-- add this key to allow standard HTTP requests, thus negating the ATS -->
+							<key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+							<true/>
+							<!-- add this key to specify the minimum TLS version to accept -->
+							<key>NSTemporaryExceptionMinimumTLSVersion</key>
+							<string>TLSv1.1</string>
+						</dict>
+						<!-- END -->
+
+						<!-- 1063 -->
+						<key>agunglogisticsapp.co.id:1063</key>
+						<dict>
+							<!-- add this key to enable subdomains such as sub.yourserver.com -->
+							<key>NSIncludesSubdomains</key>
+							<true/>
+							<!-- add this key to allow standard HTTP requests, thus negating the ATS -->
+							<key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+							<true/>
+							<!-- add this key to specify the minimum TLS version to accept -->
+							<key>NSTemporaryExceptionMinimumTLSVersion</key>
+							<string>TLSv1.1</string>
+						</dict>
+						<!-- END -->
+						
+					</dict>
+				</dict> -->

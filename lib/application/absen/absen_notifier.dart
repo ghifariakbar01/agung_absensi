@@ -4,7 +4,7 @@ import '../../infrastructure/absen/absen_repository.dart';
 import 'absen_state.dart';
 
 class AbsenNotifier extends StateNotifier<AbsenState> {
-  AbsenNotifier(this._absenRepository) : super(AbsenState.empty());
+  AbsenNotifier(this._absenRepository) : super(AbsenState.complete());
 
   final AbsenRepository _absenRepository;
 

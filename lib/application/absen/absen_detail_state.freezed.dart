@@ -575,30 +575,48 @@ class _$_RiwayatAbsenDetailState implements _RiwayatAbsenDetailState {
 
 abstract class _RiwayatAbsenDetailState implements RiwayatAbsenDetailState {
   const factory _RiwayatAbsenDetailState(
-      {@JsonKey(name: 'id_absenmnl') required final int idAbsenmnl,
-      @JsonKey(name: 'id_user') required final int idUser,
+      {@JsonKey(name: 'id_absenmnl')
+          required final int idAbsenmnl,
+      @JsonKey(name: 'id_user')
+          required final int idUser,
       required final String? tgl,
-      @JsonKey(name: 'jam_awal') required final String? jamAwal,
-      @JsonKey(name: 'jam_akhir') required final String? jamAkhir,
+      @JsonKey(name: 'jam_awal')
+          required final String? jamAwal,
+      @JsonKey(name: 'jam_akhir')
+          required final String? jamAkhir,
       required final String? ket,
-      @JsonKey(name: 'c_date') required final String? cDate,
-      @JsonKey(name: 'c_user') required final String? cUser,
-      @JsonKey(name: 'spv_nm') required final String? spvNm,
-      @JsonKey(name: 'spv_tgl') required final String? spvTgl,
-      @JsonKey(name: 'hrd_nm') required final String? hrdNm,
-      @JsonKey(name: 'hrd_tgl') required final String? hrdTgl,
-      @JsonKey(name: 'btl_sta') required final bool? btlSta,
-      @JsonKey(name: 'btl_tgl') required final String? btlTgl,
-      @JsonKey(name: 'spv_note') required final String? spvNote,
-      @JsonKey(name: 'hrd_note') required final String? hrdNote,
-      @JsonKey(name: 'latitude_masuk') required final String? latitudeMasuk,
-      @JsonKey(name: 'longtitude_masuk') required final String? longitudeMasuk,
-      @JsonKey(name: 'latitude_keluar') required final String? latitudeKeluar,
+      @JsonKey(name: 'c_date')
+          required final String? cDate,
+      @JsonKey(name: 'c_user')
+          required final String? cUser,
+      @JsonKey(name: 'spv_nm')
+          required final String? spvNm,
+      @JsonKey(name: 'spv_tgl')
+          required final String? spvTgl,
+      @JsonKey(name: 'hrd_nm')
+          required final String? hrdNm,
+      @JsonKey(name: 'hrd_tgl')
+          required final String? hrdTgl,
+      @JsonKey(name: 'btl_sta')
+          required final bool? btlSta,
+      @JsonKey(name: 'btl_tgl')
+          required final String? btlTgl,
+      @JsonKey(name: 'spv_note')
+          required final String? spvNote,
+      @JsonKey(name: 'hrd_note')
+          required final String? hrdNote,
+      @JsonKey(name: 'latitude_masuk')
+          required final String? latitudeMasuk,
+      @JsonKey(name: 'longtitude_masuk')
+          required final String? longitudeMasuk,
+      @JsonKey(name: 'latitude_keluar')
+          required final String? latitudeKeluar,
       @JsonKey(name: 'longtitude_keluar')
-      required final String? longitudeKeluar,
-      @JsonKey(name: 'lokasi_masuk') required final String? lokasiMasuk,
+          required final String? longitudeKeluar,
+      @JsonKey(name: 'lokasi_masuk')
+          required final String? lokasiMasuk,
       @JsonKey(name: 'lokasi_keluar')
-      required final String? lokasiKeluar}) = _$_RiwayatAbsenDetailState;
+          required final String? lokasiKeluar}) = _$_RiwayatAbsenDetailState;
 
   factory _RiwayatAbsenDetailState.fromJson(Map<String, dynamic> json) =
       _$_RiwayatAbsenDetailState.fromJson;

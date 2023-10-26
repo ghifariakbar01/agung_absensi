@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:flutter/services.dart';
+
 import 'auto_absen_state.dart';
 import '../absen/absen_enum.dart';
 import '../absen/absen_state.dart';
@@ -75,11 +77,13 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
                         labelDescription: 'PILIH ABSEN IN ATAU OUT',
                         pressedLabel: 'ABSEN IN',
                         backPressedLabel: 'ABSEN OUT',
-                        onPressed: () {
+                        onPressed: () async {
+                          await HapticFeedback.vibrate();
                           jenisAbsenShift = JenisAbsen.absenIn;
                           buildContext.pop();
                         },
-                        onBackPressed: () {
+                        onBackPressed: () async {
+                          await HapticFeedback.vibrate();
                           jenisAbsenShift = JenisAbsen.absenOut;
                           buildContext.pop();
                         },
@@ -99,7 +103,7 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
 
               final date = absenSaved.savedLocations.date;
 
-              await showDialog(
+              await HapticFeedback.vibrate().then((_) => showDialog(
                   context: buildContext,
                   barrierDismissible: false,
                   builder: (context) => VAlertDialog(
@@ -126,6 +130,7 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
                                     date: absenSaved.savedLocations.date),
                                 showSuccessDialog: () async {
                                   buildContext.pop();
+                                  await HapticFeedback.vibrate();
                                   await showDialog(
                                       context: buildContext,
                                       barrierDismissible: true,
@@ -139,6 +144,7 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
                                 },
                                 showFailureDialog: (code, message) async {
                                   buildContext.pop();
+                                  await HapticFeedback.vibrate();
                                   await showDialog(
                                       context: buildContext,
                                       barrierDismissible: true,
@@ -155,7 +161,7 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
                         await deleteSavedLocation(
                             savedLocation: absenSaved.savedLocations,
                             context: context);
-                      }));
+                      })));
 
               incrementIndex();
             } else if (udahAbsenMasuk ||
@@ -192,26 +198,34 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
                                   context: context),
                               getAbsenState: () => getAbsenState(
                                   date: absenSaved.savedLocations.date),
-                              showSuccessDialog: () => showDialog(
-                                context: buildContext,
-                                barrierDismissible: true,
-                                builder: (_) => VSimpleDialog(
-                                  asset: Assets.iconChecked,
-                                  label:
-                                      'JAM ${StringUtils.hoursDate(absenSaved.savedLocations.date)}',
-                                  labelDescription:
-                                      'TANGGAL ${StringUtils.yyyyMMddWithStripe(absenSaved.savedLocations.date)}',
-                                ),
-                              ),
-                              showFailureDialog: (code, message) => showDialog(
+                              showSuccessDialog: () async {
+                                buildContext.pop();
+                                await HapticFeedback.vibrate();
+                                await showDialog(
                                   context: buildContext,
                                   barrierDismissible: true,
                                   builder: (_) => VSimpleDialog(
-                                        color: Palette.red,
-                                        asset: Assets.iconCrossed,
-                                        label: code,
-                                        labelDescription: message,
-                                      )),
+                                    asset: Assets.iconChecked,
+                                    label:
+                                        'JAM ${StringUtils.hoursDate(absenSaved.savedLocations.date)}',
+                                    labelDescription:
+                                        'TANGGAL ${StringUtils.yyyyMMddWithStripe(absenSaved.savedLocations.date)}',
+                                  ),
+                                );
+                              },
+                              showFailureDialog: (code, message) async {
+                                buildContext.pop();
+                                await HapticFeedback.vibrate();
+                                await showDialog(
+                                    context: buildContext,
+                                    barrierDismissible: true,
+                                    builder: (_) => VSimpleDialog(
+                                          color: Palette.red,
+                                          asset: Assets.iconCrossed,
+                                          label: code,
+                                          labelDescription: message,
+                                        ));
+                              },
                             );
 
                         // absen one liner
@@ -219,6 +233,7 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
                       },
                       onBackPressed: () async {
                         buildContext.pop();
+                        await HapticFeedback.vibrate();
                         await deleteSavedLocation(
                             savedLocation: absenSaved.savedLocations,
                             context: context);
@@ -227,6 +242,7 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
               incrementIndex();
             } else if (udahAbsenMasukSamaKeluar) {
               // debugger();
+              await HapticFeedback.vibrate();
 
               // delete saved absen as we don't need them.
               await deleteSavedLocation(

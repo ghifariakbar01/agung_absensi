@@ -1,8 +1,10 @@
 import 'dart:developer';
 
-import 'package:face_net_authentication/application/network_state/network_state_notifier.dart';
+import 'package:face_net_authentication/application/tester/tester_state.dart';
+import 'package:face_net_authentication/pages/absen/absen_reset.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -11,6 +13,7 @@ import 'package:dartz/dartz.dart';
 import '../../application/absen/absen_enum.dart';
 import '../../application/absen/absen_state.dart';
 import '../../application/background/saved_location.dart';
+import '../../application/network_state/network_state_notifier.dart';
 import '../../application/routes/route_names.dart';
 import '../../constants/assets.dart';
 import '../../domain/absen_failure.dart';
@@ -22,6 +25,18 @@ import '../../utils/geofence_utils.dart';
 import '../../utils/string_utils.dart';
 import '../widgets/v_button.dart';
 import '../widgets/v_dialogs.dart';
+
+// final buttonInProvider = StateProvider<bool>((ref) {
+//   return false;
+// });
+
+// final buttonOutProvider = StateProvider<bool>((ref) {
+//   return false;
+// });
+
+final buttonResetVisibilityProvider = StateProvider<bool>((ref) {
+  return false;
+});
 
 class AbsenButton extends ConsumerStatefulWidget {
   const AbsenButton();
@@ -38,6 +53,8 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
         geofenceProvider.select((value) => value.currentLocation.latitude));
     final currentLocationLongitude = ref.watch(
         geofenceProvider.select((value) => value.currentLocation.longitude));
+
+    final buttonResetVisibility = ref.watch(buttonResetVisibilityProvider);
 
     // GET ABSEN
     ref.listen<Option<Either<AbsenFailure, Unit>>>(
@@ -102,6 +119,12 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                   final offlineNotifier =
                       ref.read(absenOfflineModeProvider.notifier);
 
+                  // RESET RESET BUTTON
+                  ref.read(buttonResetVisibilityProvider.notifier).state =
+                      false;
+                  // ref.read(buttonInProvider.notifier).state = false;
+                  // ref.read(buttonOutProvider.notifier).state = false;
+
                   await ref
                       .read(absenNotifierProvidier.notifier)
                       .getAbsenToday();
@@ -111,6 +134,8 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                   String jamBerhasilStr = StringUtils.hoursDate(jamBerhasil);
 
                   offlineNotifier.state = false;
+
+                  await HapticFeedback.vibrate();
 
                   await showDialog(
                       context: context,
@@ -147,6 +172,8 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                   await ref
                       .read(backgroundNotifierProvider.notifier)
                       .getSavedLocations();
+
+                  await HapticFeedback.vibrate();
 
                   await showDialog(
                       context: context,
@@ -189,16 +216,42 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
     // NETWORK
     final network = ref.watch(networkStateNotifierProvider);
 
+    // RESET ABSEN
+    // final buttonIn = ref.watch(buttonInProvider);
+    // final buttonOut = ref.watch(buttonOutProvider);
+
     return Column(
       children: [
-        // Karyawan Shift
+        // Load Karyawan Shift
         karyawanShift.when(
             data: (isKaryawanShift) {
-              final karyawanShiftStr = isKaryawanShift ? 'SHIFT' : '';
+              final String karyawanShiftStr = isKaryawanShift ? 'SHIFT' : '';
 
               return Column(
                 children: [
-                  // Absen Masuk
+                  // Toggle
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Reset Absen',
+                          style: Themes.customColor(
+                              FontWeight.bold, 14, Colors.black),
+                        ),
+                        SizedBox(
+                          width: 8,
+                        ),
+                        Switch(
+                          value: buttonResetVisibility,
+                          onChanged: (value) => ref
+                              .read(buttonResetVisibilityProvider.notifier)
+                              .state = value,
+                        ),
+                      ],
+                    ),
+                  ),
                   Visibility(
                     visible: !isOfflineMode,
                     child: VButton(
@@ -206,10 +259,12 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                         isEnabled: network.when(
                             online: () => isTester.maybeWhen(
                                 tester: () =>
+                                    buttonResetVisibility ||
                                     isKaryawanShift ||
                                     absen == AbsenState.empty() ||
                                     absen == AbsenState.incomplete(),
                                 orElse: () =>
+                                    buttonResetVisibility ||
                                     isKaryawanShift &&
                                         nearest < minDistance &&
                                         nearest != 0 ||
@@ -220,68 +275,14 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                                         nearest < 100 &&
                                         nearest != 0),
                             offline: () => false),
-                        onPressed: () async {
-                          DateTime refreshed = await ref
-                              .refresh(networkTimeFutureProvider.future);
-                          String idGeof = ref.read(geofenceProvider
-                              .select((value) => value.nearestCoordinates.id));
-                          String imei = ref.read(imeiNotifierProvider
-                              .select((value) => value.imei));
-                          String lokasi = await GeofenceUtil.getLokasiStr(
-                              lat: currentLocationLatitude,
-                              long: currentLocationLongitude);
-
-                          if (imei.isEmpty) {
-                            return;
-                          }
-
-                          return await showCupertinoDialog(
-                              context: context,
-                              builder: (_) => VAlertDialog(
-                                  label: 'Ingin absen-in ?',
-                                  labelDescription: 'JAM : ' +
-                                      StringUtils.hoursDate(refreshed),
-                                  onPressed: () async {
-                                    debugger(message: 'called');
-
-                                    await isTester.maybeWhen(
-                                        tester: () => ref
-                                            .read(absenAuthNotifierProvidier
-                                                .notifier)
-                                            .absen(
-                                              idGeof: '0',
-                                              imei: imei,
-                                              lokasi: 'NULL (APPLE REVIEW)',
-                                              latitude: '0',
-                                              longitude: '0',
-                                              date: refreshed,
-                                              dbDate: refreshed,
-                                              inOrOut: JenisAbsen.absenIn,
-                                            ),
-                                        orElse: () => ref
-                                            .read(absenAuthNotifierProvidier
-                                                .notifier)
-                                            .absen(
-                                              idGeof: idGeof,
-                                              imei: imei,
-                                              lokasi: lokasi,
-                                              latitude:
-                                                  '$currentLocationLatitude',
-                                              longitude:
-                                                  '$currentLocationLongitude',
-                                              date: refreshed,
-                                              dbDate: refreshed,
-                                              inOrOut: JenisAbsen.absenIn,
-                                            ));
-
-                                    debugger(message: 'called');
-
-                                    context.pop();
-                                  }));
-                        }),
+                        onPressed: () => _absenIn(
+                            context: context,
+                            isTester: isTester,
+                            currentLocationLatitude: currentLocationLatitude,
+                            currentLocationLongitude: currentLocationLongitude
+                            //
+                            )),
                   ),
-
-                  // Absen Keluar
                   Visibility(
                     visible: !isOfflineMode,
                     child: VButton(
@@ -289,9 +290,11 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                         isEnabled: network.when(
                             online: () => isTester.maybeWhen(
                                 tester: () =>
+                                    buttonResetVisibility ||
                                     isKaryawanShift ||
                                     absen == AbsenState.absenIn(),
                                 orElse: () =>
+                                    buttonResetVisibility ||
                                     isKaryawanShift &&
                                         nearest < minDistance &&
                                         nearest != 0 ||
@@ -299,70 +302,19 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                                         nearest < minDistance &&
                                         nearest != 0),
                             offline: () => false),
-                        onPressed: () async {
-                          DateTime refreshed = await ref
-                              .refresh(networkTimeFutureProvider.future);
-                          String idGeof = ref.read(geofenceProvider
-                              .select((value) => value.nearestCoordinates.id));
-                          String imei = ref.read(imeiNotifierProvider
-                              .select((value) => value.imei));
-                          String lokasi = await GeofenceUtil.getLokasiStr(
-                              lat: currentLocationLatitude,
-                              long: currentLocationLongitude);
-
-                          if (imei.isEmpty) {
-                            return;
-                          }
-
-                          return await showCupertinoDialog(
-                              context: context,
-                              builder: (_) => VAlertDialog(
-                                  label: 'Ingin absen-out ?',
-                                  labelDescription: 'JAM : ' +
-                                      StringUtils.hoursDate(refreshed),
-                                  onPressed: () async {
-                                    debugger(message: 'called');
-
-                                    await isTester.maybeWhen(
-                                        tester: () => ref
-                                            .read(absenAuthNotifierProvidier
-                                                .notifier)
-                                            .absen(
-                                              idGeof: '0',
-                                              imei: imei,
-                                              lokasi: 'NULL (APPLE REVIEW)',
-                                              latitude: '0',
-                                              longitude: '0',
-                                              date: refreshed,
-                                              dbDate: refreshed,
-                                              inOrOut: JenisAbsen.absenOut,
-                                            ),
-                                        orElse: () => ref
-                                            .read(absenAuthNotifierProvidier
-                                                .notifier)
-                                            .absen(
-                                              idGeof: idGeof,
-                                              imei: imei,
-                                              lokasi: lokasi,
-                                              latitude:
-                                                  '$currentLocationLatitude',
-                                              longitude:
-                                                  '$currentLocationLongitude',
-                                              date: refreshed,
-                                              dbDate: refreshed,
-                                              inOrOut: JenisAbsen.absenOut,
-                                            ));
-
-                                    debugger(message: 'called');
-
-                                    context.pop();
-                                  }));
-                        }),
+                        onPressed: () => _absenOut(
+                            context: context,
+                            isTester: isTester,
+                            currentLocationLatitude: currentLocationLatitude,
+                            currentLocationLongitude: currentLocationLongitude
+                            //
+                            )),
                   ),
                 ],
               );
             },
-            error: ((error, stackTrace) => Text('ERROR: $error $stackTrace')),
+            error: ((error, stackTrace) =>
+                Text('ERROR: $error \n\n STACK: $stackTrace')),
             loading: () => Container()),
 
         Visibility(
@@ -375,6 +327,8 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                         tester: () => true,
                         orElse: () => nearest < minDistance && nearest != 0),
                     onPressed: () async {
+                      await HapticFeedback.vibrate();
+
                       // ALAMAT GEOFENCE
                       final alamat = ref.watch(geofenceProvider
                           .select((value) => value.nearestCoordinates));
@@ -408,5 +362,126 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                 }))
       ],
     );
+  }
+
+  // Functions
+  Future<dynamic> _absenOut({
+    required BuildContext context,
+    required TesterState isTester,
+    required double currentLocationLatitude,
+    required double currentLocationLongitude,
+  }) async {
+    {
+      await HapticFeedback.vibrate();
+
+      DateTime refreshed = await ref.refresh(networkTimeFutureProvider.future);
+      String idGeof = ref.read(
+          geofenceProvider.select((value) => value.nearestCoordinates.id));
+      String imei =
+          ref.read(imeiNotifierProvider.select((value) => value.imei));
+      String lokasi = await GeofenceUtil.getLokasiStr(
+          lat: currentLocationLatitude, long: currentLocationLongitude);
+
+      if (imei.isEmpty) {
+        return;
+      }
+
+      return await showCupertinoDialog(
+          context: context,
+          builder: (_) => VAlertDialog(
+              label: 'Ingin absen-out ?',
+              labelDescription: 'JAM : ' + StringUtils.hoursDate(refreshed),
+              onPressed: () async {
+                debugger(message: 'called');
+
+                await isTester.maybeWhen(
+                    tester: () =>
+                        ref.read(absenAuthNotifierProvidier.notifier).absen(
+                              idGeof: '0',
+                              imei: imei,
+                              lokasi: 'NULL (APPLE REVIEW)',
+                              latitude: '0',
+                              longitude: '0',
+                              date: refreshed,
+                              dbDate: refreshed,
+                              inOrOut: JenisAbsen.absenOut,
+                            ),
+                    orElse: () =>
+                        ref.read(absenAuthNotifierProvidier.notifier).absen(
+                              idGeof: idGeof,
+                              imei: imei,
+                              lokasi: lokasi,
+                              latitude: '$currentLocationLatitude',
+                              longitude: '$currentLocationLongitude',
+                              date: refreshed,
+                              dbDate: refreshed,
+                              inOrOut: JenisAbsen.absenOut,
+                            ));
+
+                debugger(message: 'called');
+
+                context.pop();
+              }));
+    }
+  }
+
+  Future<dynamic> _absenIn({
+    required BuildContext context,
+    required TesterState isTester,
+    required double currentLocationLatitude,
+    required double currentLocationLongitude,
+  }) async {
+    {
+      await HapticFeedback.vibrate();
+
+      DateTime refreshed = await ref.refresh(networkTimeFutureProvider.future);
+      String idGeof = ref.read(
+          geofenceProvider.select((value) => value.nearestCoordinates.id));
+      String imei =
+          ref.read(imeiNotifierProvider.select((value) => value.imei));
+      String lokasi = await GeofenceUtil.getLokasiStr(
+          lat: currentLocationLatitude, long: currentLocationLongitude);
+
+      if (imei.isEmpty) {
+        return;
+      }
+
+      return await showCupertinoDialog(
+          context: context,
+          builder: (_) => VAlertDialog(
+              label: 'Ingin absen-in ?',
+              labelDescription: 'JAM : ' + StringUtils.hoursDate(refreshed),
+              onPressed: () async {
+                debugger(message: 'called');
+
+                await isTester.maybeWhen(
+                    tester: () =>
+                        ref.read(absenAuthNotifierProvidier.notifier).absen(
+                              idGeof: '0',
+                              imei: imei,
+                              lokasi: 'NULL (APPLE REVIEW)',
+                              latitude: '0',
+                              longitude: '0',
+                              date: refreshed,
+                              dbDate: refreshed,
+                              inOrOut: JenisAbsen.absenIn,
+                            ),
+                    orElse: () =>
+                        ref.read(absenAuthNotifierProvidier.notifier).absen(
+                              idGeof: idGeof,
+                              imei: imei,
+                              lokasi: lokasi,
+                              latitude: '$currentLocationLatitude',
+                              longitude: '$currentLocationLongitude',
+                              date: refreshed,
+                              dbDate: refreshed,
+                              inOrOut: JenisAbsen.absenIn,
+                            ));
+
+                debugger(message: 'called');
+
+                context.pop();
+              }));
+    }
   }
 }

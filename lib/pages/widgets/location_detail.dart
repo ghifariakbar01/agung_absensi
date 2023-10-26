@@ -1,10 +1,9 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../shared/providers.dart';
 import '../../style/style.dart';
+import 'image_absen.dart';
 
 class LocationDetail extends ConsumerWidget {
   const LocationDetail();
@@ -84,6 +83,8 @@ class LocationDetail extends ConsumerWidget {
             ]
           ],
         ),
+
+        ImageAbsen(),
       ],
     );
   }
