@@ -229,29 +229,9 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
 
               return Column(
                 children: [
-                  // Toggle
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Reset Absen',
-                          style: Themes.customColor(
-                              FontWeight.bold, 14, Colors.black),
-                        ),
-                        SizedBox(
-                          width: 8,
-                        ),
-                        Switch(
-                          value: buttonResetVisibility,
-                          onChanged: (value) => ref
-                              .read(buttonResetVisibilityProvider.notifier)
-                              .state = value,
-                        ),
-                      ],
-                    ),
-                  ),
+                  // Toggle Absen Ulang
+                  AbsenReset(),
+
                   Visibility(
                     visible: !isOfflineMode,
                     child: VButton(
@@ -314,40 +294,38 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
               );
             },
             error: ((error, stackTrace) =>
-                Text('ERROR: $error \n\n STACK: $stackTrace')),
+                Text('Error: $error \n StackTrace: $stackTrace')),
             loading: () => Container()),
 
         Visibility(
             visible: isOfflineMode,
-            child: isTester.maybeWhen(
-                tester: () => Container(),
-                orElse: () => VButton(
-                    label: 'SIMPAN ABSEN',
-                    isEnabled: isTester.maybeWhen(
-                        tester: () => true,
-                        orElse: () => nearest < minDistance && nearest != 0),
-                    onPressed: () async {
-                      await HapticFeedback.vibrate();
+            child: VButton(
+                label: 'SIMPAN ABSEN',
+                isEnabled: isTester.maybeWhen(
+                    tester: () => true,
+                    orElse: () => nearest < minDistance && nearest != 0),
+                onPressed: () async {
+                  await HapticFeedback.vibrate();
 
-                      // ALAMAT GEOFENCE
-                      final alamat = ref.watch(geofenceProvider
-                          .select((value) => value.nearestCoordinates));
+                  // ALAMAT GEOFENCE
+                  final alamat = ref.watch(geofenceProvider
+                      .select((value) => value.nearestCoordinates));
 
-                      // SAVE ABSEN
-                      await ref
-                          .read(backgroundNotifierProvider.notifier)
-                          .addSavedLocation(
-                              savedLocation: SavedLocation(
-                            idGeof: alamat.id,
-                            alamat: alamat.nama,
-                            date: DateTime.now(),
-                            dbDate: DateTime.now(),
-                            latitude: currentLocationLatitude,
-                            longitude: currentLocationLongitude,
-                          ));
+                  // SAVE ABSEN
+                  await ref
+                      .read(backgroundNotifierProvider.notifier)
+                      .addSavedLocation(
+                          savedLocation: SavedLocation(
+                        idGeof: alamat.id,
+                        alamat: alamat.nama,
+                        date: DateTime.now(),
+                        dbDate: DateTime.now(),
+                        latitude: currentLocationLatitude,
+                        longitude: currentLocationLongitude,
+                      ));
 
-                      // debugger();
-                    }))),
+                  // debugger();
+                })),
 
         Visibility(
             visible: savedIsNotEmpty,

@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:dartz/dartz.dart';
 import 'package:flutter/services.dart';
@@ -34,6 +35,11 @@ class ImeiRepository {
 
   Future<Either<ImeiFailure, Unit?>> clearImeiCredentials() async {
     try {
+      // Bypass Clear Imei for Android Devices
+      if (Platform.isAndroid) {
+        return right(unit);
+      }
+
       final storedCredentials = await _credentialsStorage.read();
 
       if (storedCredentials == null) {

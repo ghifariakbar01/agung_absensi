@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/pages/widgets/async_value_ui.dart';
+import 'package:face_net_authentication/style/style.dart';
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -28,8 +29,8 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback(
-        (_) => ref.read(imeiInitFutureProvider(context).future));
+    // WidgetsBinding.instance.addPostFrameCallback(
+    //     (_) => ref.read(imeiInitFutureProvider(context).future));
   }
 
   @override
@@ -65,8 +66,64 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
               loadingMessage: 'Getting Data...', isLoading: true),
           error: (error, stackTrace) => ListView(
             children: [
-              Text('idKary: ${ref.read(userNotifierProvider).user.idKary}\n' +
-                  'Error & Stack Trace : $error $stackTrace'),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(
+                    Icons.error,
+                    size: 50,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              Center(
+                  child: Text(
+                'Oops. Something Went Wrong.',
+                style: Themes.customColor(FontWeight.bold, 18, Colors.black),
+              )),
+              SizedBox(
+                height: 8,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  padding: EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: Palette.grey,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Theme(
+                    data: ThemeData(
+                      dividerColor: Colors.transparent,
+                    ),
+                    child: ExpansionTile(
+                      iconColor: Colors.black,
+                      collapsedIconColor: Colors.black,
+                      title: Text(
+                        'Display Error',
+                        style: Themes.customColor(
+                            FontWeight.bold, 14, Colors.black),
+                      ),
+                      subtitle: Text(
+                        'Error & Stack Trace',
+                        style: Themes.customColor(
+                            FontWeight.bold, 14, Colors.white),
+                      ),
+                      children: [
+                        Text(
+                          'idKary: ${ref.read(userNotifierProvider).user.idKary}\n '
+                          'Error: $error \n'
+                          'StackTrace: $stackTrace \n',
+                          style: Themes.customColor(
+                              FontWeight.normal, 12, Colors.white),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
               SizedBox(
                 height: 8,
               ),

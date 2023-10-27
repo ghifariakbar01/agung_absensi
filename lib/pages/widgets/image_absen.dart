@@ -37,7 +37,7 @@ class _ImageAbsenState extends ConsumerState<ImageAbsen> {
     return networkState.when(
         online: () => SizedBox(
             height: displayImage
-                ? 350
+                ? 425
                 : imageError == false
                     ? 50
                     : 1,
@@ -110,38 +110,42 @@ class _ImageAbsenState extends ConsumerState<ImageAbsen> {
                         SizedBox(
                           height: 8,
                         ),
-                        Container(
-                            height: 275,
-                            width: 250,
-                            decoration: BoxDecoration(
-                              color: Palette.secondaryColor,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            padding: EdgeInsets.all(8),
-                            child: IgnorePointer(
-                              ignoring: true,
-                              child: InAppWebView(
-                                onWebViewCreated: (controller) {
-                                  webViewController = controller;
-                                },
-                                initialUrlRequest:
-                                    URLRequest(url: Uri.parse(imageUrl)),
-                                onLoadStop: (controller, url) async {
-                                  String html = await controller.evaluateJavascript(
-                                      source:
-                                          "window.document.getElementsByTagName('html')[0].outerHTML;");
-
-                                  if (html.contains('Runtime Error')) {
-                                    ref
-                                        .read(displayImageProvider.notifier)
-                                        .state = false;
-                                  }
-                                },
-                                onConsoleMessage: (controller, consoleMessage) {
-                                  print(consoleMessage);
-                                },
+                        Center(
+                          child: Container(
+                              height: 350,
+                              width: 300,
+                              decoration: BoxDecoration(
+                                color: Palette.secondaryColor,
+                                borderRadius: BorderRadius.circular(12),
                               ),
-                            ))
+                              padding: EdgeInsets.all(8),
+                              child: IgnorePointer(
+                                ignoring: true,
+                                child: InAppWebView(
+                                  onWebViewCreated: (controller) {
+                                    webViewController = controller;
+                                  },
+                                  initialUrlRequest:
+                                      URLRequest(url: Uri.parse(imageUrl)),
+                                  onLoadStop: (controller, url) async {
+                                    String html =
+                                        await controller.evaluateJavascript(
+                                            source:
+                                                "window.document.getElementsByTagName('html')[0].outerHTML;");
+
+                                    if (html.contains('Runtime Error')) {
+                                      ref
+                                          .read(displayImageProvider.notifier)
+                                          .state = false;
+                                    }
+                                  },
+                                  onConsoleMessage:
+                                      (controller, consoleMessage) {
+                                    print(consoleMessage);
+                                  },
+                                ),
+                              )),
+                        )
                       ]
                     ],
                   ),
