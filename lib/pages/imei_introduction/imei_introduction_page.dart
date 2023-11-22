@@ -23,8 +23,10 @@ class ImeiIntroductionPage extends ConsumerWidget {
           Center(
             child: Text(
               'Device Unlink',
-              style:
-                  Themes.customColor(FontWeight.bold, 40, Palette.primaryColor),
+              style: Themes.customColor(
+                FontWeight.bold,
+                40,
+              ),
             ),
           ),
           SizedBox(
@@ -47,7 +49,10 @@ class ImeiIntroductionPage extends ConsumerWidget {
                   ' Jika ingin melakukan instalasi E-FINGER di device kedua lakukan Unlink Device pada device pertama dan diikuti dengan melakukan uninstall aplikasi pada device pertama.' +
                   ' Pengguna iOS tidak bisa melakukan unlink tanpa menggati device. ',
               textAlign: TextAlign.justify,
-              style: Themes.customColor(FontWeight.normal, 15, Colors.black),
+              style: Themes.customColor(
+                FontWeight.normal,
+                15,
+              ),
             ),
           ),
           Column(
@@ -59,7 +64,9 @@ class ImeiIntroductionPage extends ConsumerWidget {
                 child: Text(
                     'Untuk petunjuk melakukan Unlink Device ikuti langkah di bawah ini.',
                     style: Themes.customColor(
-                        FontWeight.normal, 15, Colors.black)),
+                      FontWeight.normal,
+                      15,
+                    )),
               ),
               SizedBox(
                 height: 4,
@@ -85,8 +92,10 @@ class ImeiIntroductionPage extends ConsumerWidget {
                 child: Center(
                   child: Text('Langkah terakhir, UNINSTALL aplikasi E-FINGER.',
                       textAlign: TextAlign.center,
-                      style:
-                          Themes.customColor(FontWeight.bold, 15, Palette.red)),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                          color: Palette.red)),
                 ),
               ),
               SizedBox(

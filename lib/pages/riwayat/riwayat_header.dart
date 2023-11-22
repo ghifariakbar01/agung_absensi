@@ -16,10 +16,8 @@ class RiwayatHeader extends ConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(
-          child: TextButton(
-            style: ButtonStyle(
-                padding: MaterialStatePropertyAll(EdgeInsets.all(4))),
-            onPressed: () async {
+          child: InkWell(
+            onTap: () async {
               final picked = await showDateRangePicker(
                 context: context,
                 lastDate: DateTime.now(),
@@ -47,31 +45,35 @@ class RiwayatHeader extends ConsumerWidget {
                                 page: 1, dateFirst: end, dateSecond: start));
               }
             },
-            child: Container(
-              height: 45,
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
+            child: Ink(
+              child: Container(
+                height: 45,
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: Palette.primaryColor),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Center(
-                  child: Text(
-                    date,
-                    style:
-                        Themes.customColor(FontWeight.bold, 15, Colors.white),
+                  color: Palette.primaryColor,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Center(
+                    child: Text(
+                      date,
+                      style: Themes.customColor(FontWeight.bold, 15,
+                          color: Colors.white),
+                    ),
                   ),
                 ),
               ),
             ),
           ),
         ),
+        SizedBox(
+          width: 4,
+        ),
         Flexible(
           flex: 0,
-          child: TextButton(
-            style: ButtonStyle(
-                padding: MaterialStatePropertyAll(EdgeInsets.all(4))),
-            onPressed: () async {
+          child: InkWell(
+            onTap: () async {
               final picked = await showDateRangePicker(
                 context: context,
                 lastDate: DateTime.now(),
@@ -99,16 +101,18 @@ class RiwayatHeader extends ConsumerWidget {
                                 page: 1, dateFirst: end, dateSecond: start));
               }
             },
-            child: Container(
-                height: 45,
-                width: 45,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Palette.primaryColor),
-                child: Icon(
-                  Icons.filter_alt_rounded,
-                  color: Colors.white,
-                )),
+            child: Ink(
+              child: Container(
+                  height: 45,
+                  width: 45,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Palette.primaryColor),
+                  child: Icon(
+                    Icons.filter_alt_rounded,
+                    color: Palette.tertiaryColor,
+                  )),
+            ),
           ),
         ),
       ],

@@ -15,14 +15,20 @@ class UserInfo extends StatelessWidget {
         Center(
           child: Text(
             title,
-            style: Themes.grey(FontWeight.normal, 18),
+            style: Themes.customColor(
+              FontWeight.normal,
+              18,
+            ),
           ),
         ),
         const SizedBox(height: 8),
         Center(
           child: Text(
             user,
-            style: Themes.customColor(FontWeight.bold, 24, Colors.black),
+            style: Themes.customColor(
+              FontWeight.bold,
+              24,
+            ),
           ),
         ),
       ],

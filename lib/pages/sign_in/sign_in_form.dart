@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../style/style.dart';
 import '../../shared/providers.dart';
+import '../tc/tc_page.dart';
 
 class SignInForm extends ConsumerStatefulWidget {
   const SignInForm();
@@ -77,7 +78,7 @@ class _SignInFormState extends ConsumerState<SignInForm> {
             iconSize: 20,
             icon: const Icon(Icons.arrow_downward),
             decoration: Themes.formStyle('Masukkan PT'),
-            style: const TextStyle(color: Palette.primaryColor),
+            // style: const TextStyle(color: Palette.primaryColor),
             onChanged: (String? value) => ref
                 .read(signInFormNotifierProvider)
                 .ptMap
@@ -104,7 +105,9 @@ class _SignInFormState extends ConsumerState<SignInForm> {
                 child: Text(
                   value,
                   style: Themes.customColor(
-                      FontWeight.bold, 12, Palette.primaryColor),
+                    FontWeight.bold,
+                    12,
+                  ),
                 ),
               );
             }).toList(),
@@ -116,9 +119,15 @@ class _SignInFormState extends ConsumerState<SignInForm> {
           ),
           TextFormField(
             initialValue: signInForm.userId.getOrLeave(''),
-            decoration: Themes.formStyle(userId != ''
-                ? userId + ' (ketik untuk ubah teks)'
-                : 'Masukkan username'),
+            decoration: Themes.formStyle(
+              userId != ''
+                  ? userId + ' (ketik untuk ubah teks)'
+                  : 'Masukkan username',
+            ),
+            style: Themes.customColor(
+              FontWeight.normal,
+              14,
+            ),
             cursorColor: Palette.primaryColor,
             keyboardType: TextInputType.name,
             onChanged: (value) => ref
@@ -153,6 +162,10 @@ class _SignInFormState extends ConsumerState<SignInForm> {
                     color: Palette.primaryColor,
                   )),
             ),
+            style: Themes.customColor(
+              FontWeight.normal,
+              14,
+            ),
             cursorColor: Palette.primaryColor,
             obscureText: !passwordVisible,
             onChanged: (value) => ref
@@ -172,8 +185,9 @@ class _SignInFormState extends ConsumerState<SignInForm> {
             children: [
               Checkbox(
                   key: UniqueKey(),
-                  checkColor: Colors.white,
-                  fillColor: MaterialStateProperty.resolveWith(getColor),
+                  checkColor: Theme.of(context).primaryColorLight,
+                  fillColor: MaterialStateProperty.resolveWith(
+                      (state) => getColor(state, context)),
                   value: signInForm.isKaryawan,
                   onChanged: (_) => ref
                       .read(signInFormNotifierProvider.notifier)
@@ -184,7 +198,9 @@ class _SignInFormState extends ConsumerState<SignInForm> {
               Text(
                 'Saya Karyawan dengan Jadwal Shift',
                 style: Themes.customColor(
-                    FontWeight.normal, 14, Palette.primaryColor),
+                  FontWeight.normal,
+                  14,
+                ),
               )
             ],
           ),
@@ -195,17 +211,5 @@ class _SignInFormState extends ConsumerState<SignInForm> {
 
   bool toggleBool(bool visibility) {
     return visibility ? false : true;
-  }
-
-  Color getColor(Set<MaterialState> states) {
-    const Set<MaterialState> interactiveStates = <MaterialState>{
-      MaterialState.pressed,
-      MaterialState.hovered,
-      MaterialState.focused,
-    };
-    if (states.any(interactiveStates.contains)) {
-      return Colors.blue;
-    }
-    return Palette.primaryColor;
   }
 }

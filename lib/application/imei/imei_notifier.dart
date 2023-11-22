@@ -175,13 +175,15 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
             if (appleUsername == 'Ghifar') {
               await onImeiNotRegistered();
             } else {
-              await onImeiAlreadyRegistered();
+              // await onImeiAlreadyRegistered();
+              onImeiOK();
             }
           } else {
-            await onImeiAlreadyRegistered();
+            // await onImeiAlreadyRegistered();
+            onImeiOK();
           }
 
-          // onImeiOK();
+          onImeiOK();
           // await onImeiNotRegistered();
 
           break;
@@ -195,8 +197,8 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
         case true:
           // debugger(message: 'called');
 
-          await onImeiAlreadyRegistered();
-          // onImeiOK();
+          // await onImeiAlreadyRegistered();
+          onImeiOK();
           // await onImeiNotRegistered();
 
           break;

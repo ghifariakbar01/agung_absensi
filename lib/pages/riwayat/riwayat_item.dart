@@ -29,16 +29,15 @@ class RiwayatItem extends ConsumerWidget {
             width: width,
             padding: EdgeInsets.all(4),
             decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(10)),
+                color: Theme.of(context).primaryColor,
+                borderRadius: BorderRadius.circular(10)),
             child: Column(
               children: [
                 // Jam Masuk
                 Row(
                   children: [
-                    Icon(
-                      Icons.alarm,
-                      color: Palette.primaryLighter,
-                    ),
+                    Icon(Icons.alarm,
+                        color: Theme.of(context).unselectedWidgetColor),
                     SizedBox(
                       width: 4,
                     ),
@@ -48,13 +47,13 @@ class RiwayatItem extends ConsumerWidget {
                       children: [
                         Text(
                           'Jam $coancenate',
-                          style: Themes.customColor(
-                              FontWeight.bold, 12, Palette.primaryLighter),
+                          style: Themes.customColor(FontWeight.bold, 12,
+                              color: Theme.of(context).unselectedWidgetColor),
                         ),
                         Text(
                           jam,
-                          style: Themes.customColor(
-                              FontWeight.bold, 10, Palette.primaryLighter),
+                          style: Themes.customColor(FontWeight.bold, 10,
+                              color: Theme.of(context).unselectedWidgetColor),
                         ),
                       ],
                     )
@@ -74,22 +73,22 @@ class RiwayatItem extends ConsumerWidget {
               width: width,
               padding: EdgeInsets.all(4),
               decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(10)),
+                  color: Theme.of(context).primaryColor,
+                  borderRadius: BorderRadius.circular(10)),
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Flexible(
                     flex: 0,
-                    child: Icon(
-                      Icons.pin_drop_rounded,
-                      color: Palette.primaryLighter,
-                    ),
+                    child: Icon(Icons.pin_drop_rounded,
+                        color: Theme.of(context).unselectedWidgetColor),
                   ),
                   SizedBox(
-                    width: 4,
+                    width: 8,
                   ),
-                  Expanded(
+                  Flexible(
+                    flex: 1,
                     child: Column(
-                      mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -97,15 +96,15 @@ class RiwayatItem extends ConsumerWidget {
                           flex: 1,
                           child: Text(
                             'Lokasi $coancenate',
-                            style: Themes.customColor(
-                                FontWeight.bold, 12, Palette.primaryLighter),
+                            style: Themes.customColor(FontWeight.bold, 12,
+                                color: Theme.of(context).unselectedWidgetColor),
                           ),
                         ),
                         Expanded(
                           child: AutoSizeText(
                             alamat,
-                            style: Themes.customColor(
-                                FontWeight.bold, 10, Palette.primaryLighter),
+                            style: Themes.customColor(FontWeight.bold, 10,
+                                color: Theme.of(context).unselectedWidgetColor),
                             minFontSize: 5,
                             maxFontSize: 10,
                             maxLines: 5,
@@ -119,23 +118,6 @@ class RiwayatItem extends ConsumerWidget {
             ),
           ),
         ],
-        // Visibility(
-        //   visible: alamat.isEmpty,
-        //   child: Flexible(
-        //     flex: 1,
-        //     child: Container(
-        //       width: width,
-        //       padding: EdgeInsets.all(4),
-        //       decoration: BoxDecoration(
-        //           color: Palette.primaryDarker,
-        //           borderRadius: BorderRadius.circular(10)),
-        //       child: Text(
-        //         'Belum absen',
-        //         style: Themes.white(FontWeight.bold, 15),
-        //       ),
-        //     ),
-        //   ),
-        // ),
       ],
     );
   }

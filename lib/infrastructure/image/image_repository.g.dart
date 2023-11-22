@@ -21,7 +21,7 @@ final imageRepositoryProvider = AutoDisposeProvider<ImageRepository>.internal(
 );
 
 typedef ImageRepositoryRef = AutoDisposeProviderRef<ImageRepository>;
-String _$imageUrlHash() => r'db0025002ed15547839bb746aa132545d11a98f8';
+String _$imageUrlHash() => r'5b5dca134465f933e7dbae27750f38acab827b95';
 
 /// See also [imageUrl].
 @ProviderFor(imageUrl)
@@ -35,4 +35,5 @@ final imageUrlProvider = AutoDisposeProvider<String>.internal(
 );
 
 typedef ImageUrlRef = AutoDisposeProviderRef<String>;
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

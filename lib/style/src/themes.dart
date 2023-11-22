@@ -3,94 +3,17 @@ part of style;
 mixin Themes {
   static void initUiOverlayStyle() {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Palette.primaryColor,
-      statusBarIconBrightness: Brightness.light,
       systemNavigationBarColor: Colors.black,
-      systemNavigationBarIconBrightness: Brightness.light,
     ));
   }
 
-  static ThemeData lightTheme(BuildContext context) {
-    return ThemeData.light().copyWith(
-      visualDensity: VisualDensity.adaptivePlatformDensity,
-      colorScheme: const ColorScheme.light(
-        primary: Palette.primaryColor,
-        secondary: Palette.secondaryColor,
-        onSecondary: Palette.secondaryTextColor,
-      ),
-      textTheme: GoogleFonts.latoTextTheme(
-        Theme.of(context).textTheme,
-      ),
-    );
-  }
-
-  static ThemeData darkTheme(BuildContext context) {
-    return ThemeData.dark().copyWith(
-      visualDensity: VisualDensity.adaptivePlatformDensity,
-      colorScheme: const ColorScheme.dark(
-        primary: Palette.primaryColor,
-        secondary: Palette.secondaryColor,
-        onPrimary: Palette.primaryTextColor,
-        onSecondary: Palette.secondaryTextColor,
-      ),
-      textTheme: GoogleFonts.latoTextTheme(
-        Theme.of(context).textTheme,
-      ),
-    );
-  }
-
-  static TextStyle blue(FontWeight? fontWeight, double fontSize) {
-    return GoogleFonts.poppins(
-        color: Palette.secondaryColor,
-        fontWeight: fontWeight,
-        fontSize: fontSize);
-  }
-
-  static TextStyle white(FontWeight? fontWeight, double fontSize) {
-    return GoogleFonts.poppins(
-        color: Colors.white,
-        fontWeight: fontWeight ?? FontWeight.normal,
-        fontSize: fontSize);
-  }
-
-  static TextStyle blueSpaced(FontWeight fontWeight, double fontSize) {
-    return GoogleFonts.poppins(
-        color: Palette.secondaryColor,
-        fontWeight: fontWeight,
-        fontSize: fontSize,
-        letterSpacing: 4);
-  }
-
-  static TextStyle whiteSpaced(FontWeight fontWeight, double fontSize) {
-    return GoogleFonts.poppins(
-        color: Colors.white,
-        fontWeight: fontWeight,
-        fontSize: fontSize,
-        letterSpacing: 4);
-  }
-
-  static TextStyle grey(FontWeight fontWeight, double fontSize) {
-    return GoogleFonts.poppins(
-        color: Palette.grey,
-        fontWeight: fontWeight,
-        fontSize: fontSize,
-        letterSpacing: 4);
-  }
-
-  static TextStyle greyHint(FontWeight fontWeight, double fontSize) {
-    return GoogleFonts.poppins(
-      color: Palette.greyTwo,
-      fontWeight: fontWeight,
+  static TextStyle customColor(FontWeight? fontWeight, double fontSize,
+      {Color? color}) {
+    return TextStyle(
+      color: color,
       fontSize: fontSize,
+      fontWeight: fontWeight ?? FontWeight.normal,
     );
-  }
-
-  static TextStyle customColor(
-      FontWeight? fontWeight, double fontSize, Color color) {
-    return GoogleFonts.poppins(
-        color: color,
-        fontWeight: fontWeight ?? FontWeight.normal,
-        fontSize: fontSize);
   }
 
   static OutlineInputBorder notFocused() {
@@ -107,22 +30,69 @@ mixin Themes {
 
   static InputDecoration formStyle(String hintText, {Widget? icon}) {
     return InputDecoration(
-      enabledBorder: Themes.notFocused(),
-      focusedBorder: Themes.focused(),
-      contentPadding: const EdgeInsets.all(16),
-      border: InputBorder.none,
-      hintStyle: Themes.greyHint(FontWeight.normal, 16),
       hintText: hintText,
       suffixIcon: icon ?? null,
+      border: InputBorder.none,
+      focusedBorder: Themes.focused(),
+      enabledBorder: Themes.notFocused(),
+      contentPadding: const EdgeInsets.all(16),
+      hintStyle: Themes.customColor(FontWeight.normal, 14),
+      labelStyle: Themes.customColor(FontWeight.normal, 14),
     );
   }
 
-  static TextStyle blackItalic() {
-    return GoogleFonts.poppins(
-      color: Colors.black,
-      fontSize: 12,
-      fontStyle: FontStyle.italic,
-      decoration: TextDecoration.underline,
+  static ThemeData lightTheme(BuildContext context) {
+    return ThemeData.light().copyWith(
+      brightness: Brightness.light,
+      appBarTheme: const AppBarTheme(
+          iconTheme: IconThemeData(color: Colors.black),
+          backgroundColor: Colors.white),
+      scaffoldBackgroundColor: Colors.white,
+      visualDensity: VisualDensity.adaptivePlatformDensity,
+      primaryColor: Colors.white,
+      primaryColorLight: Colors.white,
+      primaryColorDark: Palette.primaryColor,
+      disabledColor: Colors.black.withOpacity(0.15),
+      // Color Icon Lokasi Jarak Terdekat
+      secondaryHeaderColor: Colors.black,
+      // Color Riwayat Absen Text
+      unselectedWidgetColor: Palette.secondaryColor,
+      // Color Riwayat Absen Container
+      cardColor: Palette.secondaryColor,
+      colorScheme: const ColorScheme.dark(
+        primary: Colors.white,
+        secondary: Colors.black,
+        onPrimary: Colors.black,
+        onSecondary: Colors.black,
+      ),
+    );
+  }
+
+  static ThemeData darkTheme(BuildContext context) {
+    return ThemeData.dark().copyWith(
+      brightness: Brightness.dark,
+      appBarTheme: const AppBarTheme(
+          actionsIconTheme: IconThemeData(color: Colors.white),
+          iconTheme: IconThemeData(color: Colors.white),
+          backgroundColor: Colors.black),
+      visualDensity: VisualDensity.adaptivePlatformDensity,
+      scaffoldBackgroundColor: Colors.black,
+      primaryColor: Colors.black,
+      primaryColorLight: Colors.white,
+      // Color Icon Lokasi Jarak Terdekat
+      secondaryHeaderColor: Colors.white,
+      // Color Riwayat Absen Text
+      unselectedWidgetColor: Colors.white,
+      // Color Riwayat Absen Container
+      cardColor: Colors.white.withOpacity(0.05),
+      primaryColorDark: Colors.white.withOpacity(0.05),
+      disabledColor: Colors.white.withOpacity(0.15),
+      colorScheme: const ColorScheme.dark(
+        primary: Colors.white,
+        secondary: Colors.white,
+        onPrimary: Colors.white,
+        onSecondary: Colors.white,
+      ),
     );
   }
 }

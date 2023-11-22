@@ -114,29 +114,3 @@ class SignInPage extends HookConsumerWidget {
     );
   }
 }
-
-// final initializeServices =
-//     FutureProvider.family<Unit, BuildContext>((ref, context) async {
-//   CameraService _cameraService = locator<CameraService>();
-//   MLService _mlService = locator<MLService>();
-//   FaceDetectorService _mlKitService = locator<FaceDetectorService>();
-
-//   if (_cameraService.cameraController == null) {
-//     try {
-//       await _cameraService.initialize(context);
-//       await _mlService.initialize(context);
-//       _mlKitService.initialize();
-//     } catch (_) {
-//       AlertHelper.showSnackBar(context,
-//           message: 'Kamera tidak bisa digunakan.');
-
-//       ref.read(isInitializedProvider.notifier).state = false;
-//     }
-//   } else {
-//     ref.read(isInitializedProvider.notifier).state = true;
-//   }
-
-//   return unit;
-// });
-
-// final isInitializedProvider = StateProvider<bool>((ref) => true);

@@ -118,7 +118,6 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
             appBar: AppBar(
               elevation: 0,
               backgroundColor: Colors.transparent,
-              iconTheme: IconThemeData(color: Palette.primaryColor),
               toolbarHeight: 45,
               actions: [
                 NetworkWidget(),

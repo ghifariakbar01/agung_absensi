@@ -233,28 +233,31 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                   AbsenReset(),
 
                   Visibility(
-                    visible: !isOfflineMode,
+                    visible: true,
                     child: VButton(
                         label: 'ABSEN IN $karyawanShiftStr',
-                        isEnabled: network.when(
-                            online: () => isTester.maybeWhen(
-                                tester: () =>
-                                    buttonResetVisibility ||
-                                    isKaryawanShift ||
-                                    absen == AbsenState.empty() ||
-                                    absen == AbsenState.incomplete(),
-                                orElse: () =>
-                                    buttonResetVisibility ||
-                                    isKaryawanShift &&
-                                        nearest < minDistance &&
-                                        nearest != 0 ||
-                                    absen == AbsenState.empty() &&
-                                        nearest < minDistance &&
-                                        nearest != 0 ||
-                                    absen == AbsenState.incomplete() &&
-                                        nearest < 100 &&
-                                        nearest != 0),
-                            offline: () => false),
+                        isEnabled: true,
+
+                        //  network.when(
+                        //     online: () => isTester.maybeWhen(
+                        //         tester: () =>
+                        //             buttonResetVisibility ||
+                        //             isKaryawanShift ||
+                        //             absen == AbsenState.empty() ||
+                        //             absen == AbsenState.incomplete(),
+                        //         orElse: () =>
+                        //             buttonResetVisibility ||
+                        //             isKaryawanShift &&
+                        //                 nearest < minDistance &&
+                        //                 nearest != 0 ||
+                        //             absen == AbsenState.empty() &&
+                        //                 nearest < minDistance &&
+                        //                 nearest != 0 ||
+                        //             absen == AbsenState.incomplete() &&
+                        //                 nearest < 100 &&
+                        //                 nearest != 0),
+                        //     offline: () => false),
+
                         onPressed: () => _absenIn(
                             context: context,
                             isTester: isTester,
@@ -264,24 +267,26 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                             )),
                   ),
                   Visibility(
-                    visible: !isOfflineMode,
+                    visible: true,
                     child: VButton(
                         label: 'ABSEN OUT $karyawanShiftStr',
-                        isEnabled: network.when(
-                            online: () => isTester.maybeWhen(
-                                tester: () =>
-                                    buttonResetVisibility ||
-                                    isKaryawanShift ||
-                                    absen == AbsenState.absenIn(),
-                                orElse: () =>
-                                    buttonResetVisibility ||
-                                    isKaryawanShift &&
-                                        nearest < minDistance &&
-                                        nearest != 0 ||
-                                    absen == AbsenState.absenIn() &&
-                                        nearest < minDistance &&
-                                        nearest != 0),
-                            offline: () => false),
+                        isEnabled: true,
+
+                        // network.when(
+                        //     online: () => isTester.maybeWhen(
+                        //         tester: () =>
+                        //             buttonResetVisibility ||
+                        //             isKaryawanShift ||
+                        //             absen == AbsenState.absenIn(),
+                        //         orElse: () =>
+                        //             buttonResetVisibility ||
+                        //             isKaryawanShift &&
+                        //                 nearest < minDistance &&
+                        //                 nearest != 0 ||
+                        //             absen == AbsenState.absenIn() &&
+                        //                 nearest < minDistance &&
+                        //                 nearest != 0),
+                        //     offline: () => false),
                         onPressed: () => _absenOut(
                             context: context,
                             isTester: isTester,
@@ -298,7 +303,7 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
             loading: () => Container()),
 
         Visibility(
-            visible: isOfflineMode,
+            visible: true,
             child: VButton(
                 label: 'SIMPAN ABSEN',
                 isEnabled: isTester.maybeWhen(
@@ -328,7 +333,7 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                 })),
 
         Visibility(
-            visible: savedIsNotEmpty,
+            visible: true,
             child: VButton(
                 label: 'ABSEN TERSIMPAN',
                 onPressed: () async {
@@ -420,9 +425,9 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
       String lokasi = await GeofenceUtil.getLokasiStr(
           lat: currentLocationLatitude, long: currentLocationLongitude);
 
-      if (imei.isEmpty) {
-        return;
-      }
+      // if (imei.isEmpty) {
+      //   return;
+      // }
 
       return await showCupertinoDialog(
           context: context,

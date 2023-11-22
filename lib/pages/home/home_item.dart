@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:face_net_authentication/shared/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -34,16 +36,22 @@ class HomeItem extends ConsumerWidget {
             Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: Colors.white),
+                    color: Theme.of(context).primaryColorLight),
                 padding: EdgeInsets.all(8),
                 child: SizedBox(
                     child: SvgPicture.asset(
                   item.icon,
                   color: Palette.primaryLighter,
                 ))),
+            SizedBox(
+              height: 4,
+            ),
             Text(
               item.absen.toUpperCase(),
-              style: Themes.customColor(FontWeight.bold, 9, Colors.white),
+              style: Themes.customColor(
+                FontWeight.bold,
+                9,
+              ),
             )
           ],
         ),

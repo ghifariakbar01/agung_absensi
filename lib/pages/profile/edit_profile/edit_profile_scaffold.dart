@@ -16,7 +16,7 @@ class EditProfileScaffold extends ConsumerWidget {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
-        iconTheme: IconThemeData(color: Palette.primaryColor),
+        // iconTheme: IconThemeData(color: Palette.primaryColor),
       ),
       floatingActionButton: VButton(
         label: 'SAVE PROFILE',

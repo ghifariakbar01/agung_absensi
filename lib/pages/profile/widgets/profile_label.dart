@@ -15,14 +15,17 @@ class ProfileLabel extends StatelessWidget {
       children: [
         Icon(
           icon,
-          color: Palette.primaryColor,
+          // color: Palette.primaryColor,
         ),
         SizedBox(
           width: 4,
         ),
         Text(
           label,
-          style: Themes.customColor(FontWeight.bold, 13, Palette.primaryColor),
+          style: Themes.customColor(
+            FontWeight.bold,
+            13,
+          ),
         )
       ],
     );

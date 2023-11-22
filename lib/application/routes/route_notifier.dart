@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../pages/change_pass/change_password_page.dart';
+// import '../../../pages/change_pass/change_password_page.dart';
 
 import '../../pages/absen/absen_page.dart';
 import '../../pages/background/background_page.dart';
@@ -146,11 +146,11 @@ class RouterNotifier extends ChangeNotifier {
           path: RouteNames.homeRoute,
           builder: (context, state) => const HomePage(),
           routes: [
-            GoRoute(
-              name: RouteNames.changePassNameRoute,
-              path: RouteNames.changePassRoute,
-              builder: (context, state) => const ChangePasswordPage(),
-            ),
+            // GoRoute(
+            //   name: RouteNames.changePassNameRoute,
+            //   path: RouteNames.changePassRoute,
+            //   builder: (context, state) => const ChangePasswordPage(),
+            // ),
             // GoRoute(
             //   name: RouteNames.signUpNameRoute,
             //   path: RouteNames.signUpRoute,

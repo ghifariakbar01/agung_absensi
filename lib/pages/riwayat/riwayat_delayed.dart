@@ -20,7 +20,7 @@ class RiwayatDelayed extends ConsumerWidget {
         width: width,
         padding: EdgeInsets.all(4),
         decoration: BoxDecoration(
-            color: Palette.primaryDarker,
+            // color: Palette.primaryDarker,
             borderRadius: BorderRadius.circular(10)),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -32,7 +32,7 @@ class RiwayatDelayed extends ConsumerWidget {
             ),
             Text(
               'Belum absen\n $coancenate',
-              style: Themes.white(FontWeight.bold, 7),
+              style: Themes.customColor(FontWeight.bold, 7),
               textAlign: TextAlign.center,
             ),
           ],

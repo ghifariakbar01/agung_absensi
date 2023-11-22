@@ -33,12 +33,12 @@ class VButton extends StatelessWidget {
               height: height ?? 56,
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
-                  color: color ?? Palette.primaryColor,
+                  color: color ?? Theme.of(context).primaryColorDark,
                   borderRadius: BorderRadius.circular(10)),
               child: Center(
                 child: Text(label,
                     style: textStyle ??
-                        Themes.whiteSpaced(
+                        Themes.customColor(
                           FontWeight.bold,
                           fontSize ?? 16,
                         ),
@@ -52,13 +52,13 @@ class VButton extends StatelessWidget {
                 height: height ?? 56,
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
-                    color: Palette.greyDisabled,
+                    color: Theme.of(context).disabledColor,
                     borderRadius: BorderRadius.circular(10)),
                 child: Center(
                   child: Text(
                     label,
                     style: textStyle ??
-                        Themes.grey(
+                        Themes.customColor(
                           FontWeight.bold,
                           fontSize ?? 16,
                         ),

@@ -14,7 +14,7 @@ class WelcomeLabel extends StatelessWidget {
         Center(
           child: Text(
             title,
-            style: Themes.grey(FontWeight.normal, 18),
+            style: Themes.customColor(FontWeight.normal, 18),
           ),
         ),
         const SizedBox(height: 8),

@@ -31,7 +31,9 @@ class PermissionItem extends StatelessWidget {
               Text(
                 '$title',
                 style: Themes.customColor(
-                    FontWeight.normal, 14, Palette.tertiaryColor),
+                  FontWeight.normal,
+                  14,
+                ),
               ),
               const SizedBox(
                 width: 2,
@@ -42,7 +44,10 @@ class PermissionItem extends StatelessWidget {
         ),
         Text(
           label,
-          style: Themes.customColor(FontWeight.normal, 14, Colors.black),
+          style: Themes.customColor(
+            FontWeight.normal,
+            14,
+          ),
         ),
       ],
     );

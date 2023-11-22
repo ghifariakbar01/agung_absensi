@@ -2,11 +2,6 @@ part of style;
 
 class Palette {
   static const primaryColor = Color(0xff28244B);
-
-  static const primaryDarker = Color(0xFF005BE4);
-
-  static const primaryDarkerMaximize = Color.fromARGB(255, 0, 74, 184);
-
   static const primaryLighter = Color(0xff1BA6DD);
 
   static const primaryTextColor = Color(0xffffffff);
@@ -31,5 +26,5 @@ class Palette {
 
   static const greyStroke = Color(0xffE5E5E5);
 
-  static const greyDisabled = Color(0xffE5E5E5);
+  static const greyDisabled = Color.fromARGB(255, 130, 130, 130);
 }

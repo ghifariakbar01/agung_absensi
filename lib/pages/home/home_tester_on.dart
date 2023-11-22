@@ -50,9 +50,15 @@ class HomeTesterOn extends ConsumerWidget {
                   Icons.location_off,
                   color: Palette.primaryLighter,
                 ))),
+            SizedBox(
+              height: 4,
+            ),
             Text(
               'LOKASI',
-              style: Themes.customColor(FontWeight.bold, 9, Colors.white),
+              style: Themes.customColor(
+                FontWeight.bold,
+                9,
+              ),
             )
           ],
         ),

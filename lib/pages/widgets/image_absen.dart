@@ -76,34 +76,43 @@ class _ImageAbsenState extends ConsumerState<ImageAbsen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      TextButton(
-                        onPressed: () => displayImage
+                      SizedBox(
+                        height: 16,
+                      ),
+                      InkWell(
+                        onTap: () => displayImage
                             ? ref.read(displayImageProvider.notifier).state =
                                 false
                             : ref.read(displayImageProvider.notifier).state =
                                 true,
-                        style: ButtonStyle(
-                            padding: MaterialStatePropertyAll(EdgeInsets.zero)),
-                        child: Row(
-                          children: [
-                            Text(
-                              'Lokasi Jarak Terdekat',
-                              style: Themes.customColor(
-                                  FontWeight.bold, 13, Colors.black),
-                            ),
-                            Text(
-                              ' : ',
-                              style: Themes.customColor(
-                                  FontWeight.bold, 13, Colors.black),
-                            ),
-                            displayImage
-                                ? Icon(
-                                    Icons.arrow_drop_down_outlined,
-                                    color: Colors.black,
-                                  )
-                                : Icon(Icons.arrow_right_outlined,
-                                    color: Colors.black)
-                          ],
+                        child: Ink(
+                          child: Row(
+                            children: [
+                              Text(
+                                'Lokasi Jarak Terdekat',
+                                style: Themes.customColor(
+                                  FontWeight.bold,
+                                  13,
+                                ),
+                              ),
+                              Text(
+                                ' : ',
+                                style: Themes.customColor(
+                                  FontWeight.bold,
+                                  13,
+                                ),
+                              ),
+                              displayImage
+                                  ? Icon(
+                                      Icons.arrow_drop_down_outlined,
+                                      color: Theme.of(context)
+                                          .secondaryHeaderColor,
+                                    )
+                                  : Icon(Icons.arrow_right_outlined,
+                                      color: Theme.of(context)
+                                          .secondaryHeaderColor)
+                            ],
+                          ),
                         ),
                       ),
                       if (displayImage) ...[

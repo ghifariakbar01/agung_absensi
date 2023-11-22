@@ -25,7 +25,7 @@ class CopyRightPage extends ConsumerWidget {
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
-          iconTheme: IconThemeData(color: Palette.primaryColor),
+          // iconTheme: IconThemeData(color: Palette.primaryColor),
         ),
         body: Padding(
           padding: const EdgeInsets.all(15.0),
@@ -34,7 +34,10 @@ class CopyRightPage extends ConsumerWidget {
             children: [
               SelectableText(
                 'APP VERSION: ${packageInfo.when(data: (packageInfo) => packageInfo, error: (error, stackTrace) => 'Error: $error StackTrace: $stackTrace', loading: () => '')}',
-                style: Themes.customColor(FontWeight.bold, 15, Colors.black),
+                style: Themes.customColor(
+                  FontWeight.bold,
+                  15,
+                ),
               ),
               SizedBox(
                 height: 16,
@@ -45,7 +48,10 @@ class CopyRightPage extends ConsumerWidget {
               ),
               SelectableText(
                 '© 2023 Agung Logistics. All Rights Reserved.',
-                style: Themes.customColor(FontWeight.w500, 14, Colors.black),
+                style: Themes.customColor(
+                  FontWeight.w500,
+                  14,
+                ),
               ),
               SizedBox(
                 height: 16,
@@ -60,8 +66,10 @@ class CopyRightPage extends ConsumerWidget {
                     Text(
                       'CONTACT US',
                       textAlign: TextAlign.center,
-                      style:
-                          Themes.customColor(FontWeight.bold, 14, Colors.black),
+                      style: Themes.customColor(
+                        FontWeight.bold,
+                        14,
+                      ),
                     ),
                     SizedBox(
                       height: 8,

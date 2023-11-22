@@ -17,7 +17,7 @@ class RiwayatID extends StatelessWidget {
       width: width,
       padding: EdgeInsets.all(4),
       decoration: BoxDecoration(
-          color: Palette.primaryDarker,
+          // color: Palette.primaryDarker,
           borderRadius: BorderRadius.circular(10)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -28,11 +28,11 @@ class RiwayatID extends StatelessWidget {
             children: [
               Text(
                 'ID ABSEN',
-                style: Themes.white(FontWeight.bold, 7),
+                style: Themes.customColor(FontWeight.bold, 7),
               ),
               Text(
                 idAbsen,
-                style: Themes.white(FontWeight.bold, 5),
+                style: Themes.customColor(FontWeight.bold, 5),
               ),
             ],
           ),
@@ -42,11 +42,11 @@ class RiwayatID extends StatelessWidget {
             children: [
               Text(
                 'ID USER',
-                style: Themes.white(FontWeight.bold, 7),
+                style: Themes.customColor(FontWeight.bold, 7),
               ),
               Text(
                 idUser,
-                style: Themes.white(FontWeight.bold, 5),
+                style: Themes.customColor(FontWeight.bold, 5),
               ),
             ],
           )

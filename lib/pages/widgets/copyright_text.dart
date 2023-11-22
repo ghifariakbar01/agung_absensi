@@ -10,7 +10,10 @@ class CopyrightAgung extends StatelessWidget {
       'FILL IN AND GENERAL EMPLOYEE INFORMATION\n © M.I.S AGUNG LOGISTICS 2023',
       textAlign: TextAlign.center,
       maxLines: 2,
-      style: Themes.customColor(FontWeight.bold, 8, Palette.greyThree),
+      style: Themes.customColor(
+        FontWeight.bold,
+        8,
+      ),
     );
   }
 }

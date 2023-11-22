@@ -18,7 +18,7 @@ class RiwayatSpvHeader extends StatelessWidget {
       width: width,
       padding: EdgeInsets.all(4),
       decoration: BoxDecoration(
-          color: Palette.primaryDarker,
+          // color: Palette.primaryDarker,
           borderRadius: BorderRadius.circular(10)),
       child: Stack(
         children: [
@@ -28,11 +28,11 @@ class RiwayatSpvHeader extends StatelessWidget {
               children: [
                 Text(
                   'Tanggal',
-                  style: Themes.white(FontWeight.bold, 7),
+                  style: Themes.customColor(FontWeight.bold, 7),
                 ),
                 Text(
                   tanggal,
-                  style: Themes.white(FontWeight.bold, 5),
+                  style: Themes.customColor(FontWeight.bold, 5),
                 ),
               ],
             ),
@@ -41,22 +41,22 @@ class RiwayatSpvHeader extends StatelessWidget {
             children: [
               Text(
                 'SPV',
-                style: Themes.white(FontWeight.bold, 7),
+                style: Themes.customColor(FontWeight.bold, 7),
               ),
               Text(
                 nama,
-                style: Themes.white(FontWeight.bold, 5),
+                style: Themes.customColor(FontWeight.bold, 5),
               ),
               SizedBox(
                 height: 4,
               ),
               Text(
                 'Notes',
-                style: Themes.white(FontWeight.bold, 7),
+                style: Themes.customColor(FontWeight.bold, 7),
               ),
               Text(
                 notes ?? '-',
-                style: Themes.white(FontWeight.bold, 5),
+                style: Themes.customColor(FontWeight.bold, 5),
               ),
             ],
           )

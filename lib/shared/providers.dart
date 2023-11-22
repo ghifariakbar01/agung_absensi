@@ -79,7 +79,11 @@ final routerProvider = Provider<GoRouter>((ref) {
 
 // AUTH
 final flutterSecureStorageProvider = Provider(
-  (ref) => const FlutterSecureStorage(),
+  (ref) => FlutterSecureStorage(
+    aOptions: AndroidOptions(
+      encryptedSharedPreferences: true,
+    ),
+  ),
 );
 
 final credentialsStorageProvider = Provider<CredentialsStorage>(

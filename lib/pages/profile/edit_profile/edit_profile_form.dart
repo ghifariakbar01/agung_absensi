@@ -30,8 +30,11 @@ class EditProfileForm extends ConsumerWidget {
             height: 4,
           ),
           TextFormField(
-            decoration: Themes.formStyle('Masukkan email'),
-            style: Themes.customColor(FontWeight.w500, 15, Colors.black),
+            // decoration: Themes.formStyle('Masukkan email'),
+            style: Themes.customColor(
+              FontWeight.w500,
+              15,
+            ),
             keyboardType: TextInputType.emailAddress,
             initialValue: user.email,
             onChanged: (value) => ref
@@ -56,8 +59,11 @@ class EditProfileForm extends ConsumerWidget {
             height: 4,
           ),
           TextFormField(
-            decoration: Themes.formStyle('Masukkan email 2'),
-            style: Themes.customColor(FontWeight.w500, 15, Colors.black),
+            // decoration: Themes.formStyle('Masukkan email 2'),
+            style: Themes.customColor(
+              FontWeight.w500,
+              15,
+            ),
             keyboardType: TextInputType.emailAddress,
             initialValue: user.email2,
             onChanged: (value) => ref
@@ -82,8 +88,11 @@ class EditProfileForm extends ConsumerWidget {
             height: 4,
           ),
           TextFormField(
-            decoration: Themes.formStyle('Masukkan No. HP 1'),
-            style: Themes.customColor(FontWeight.w500, 15, Colors.black),
+            // decoration: Themes.formStyle('Masukkan No. HP 1'),
+            style: Themes.customColor(
+              FontWeight.w500,
+              15,
+            ),
             keyboardType: TextInputType.phone,
             initialValue: user.noTelp1,
             onChanged: (value) => ref
@@ -108,8 +117,11 @@ class EditProfileForm extends ConsumerWidget {
             height: 4,
           ),
           TextFormField(
-            decoration: Themes.formStyle('Masukkan No. HP 2'),
-            style: Themes.customColor(FontWeight.w500, 15, Colors.black),
+            // decoration: Themes.formStyle('Masukkan No. HP 2'),
+            style: Themes.customColor(
+              FontWeight.w500,
+              15,
+            ),
             keyboardType: TextInputType.phone,
             initialValue: user.noTelp2,
             onChanged: (value) => ref

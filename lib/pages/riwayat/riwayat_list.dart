@@ -36,7 +36,7 @@ class RiwayatList extends ConsumerWidget {
                 : 115),
         padding: EdgeInsets.all(4),
         decoration: BoxDecoration(
-            color: Palette.primaryLighter,
+            color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(10)),
         child:
             Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [

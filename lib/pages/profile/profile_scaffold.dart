@@ -24,7 +24,7 @@ class ProfileScaffold extends ConsumerWidget {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
-        iconTheme: IconThemeData(color: Palette.primaryColor),
+        // iconTheme: IconThemeData(color: Palette.primaryColor),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),

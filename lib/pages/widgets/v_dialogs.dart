@@ -35,20 +35,20 @@ class VAlertDialog extends ConsumerWidget {
 
     return Center(
       child: AlertDialog(
-        backgroundColor: Palette.primaryColor,
+        backgroundColor: Theme.of(context).primaryColor,
         alignment: Alignment.center,
         actionsAlignment: MainAxisAlignment.spaceAround,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         title: Text(
           label,
-          style: Themes.white(
+          style: Themes.customColor(
             FontWeight.bold,
             20,
           ),
         ),
         content: Text(
           labelDescription,
-          style: Themes.white(
+          style: Themes.customColor(
             FontWeight.bold,
             15,
           ),
@@ -64,23 +64,29 @@ class VAlertDialog extends ConsumerWidget {
             )
           ],
           if (!isLoading) ...[
-            TextButton(
-              onPressed: onBackPressed ?? () => context.pop(),
-              child: Text(
-                backPressedLabel ?? 'TIDAK',
-                style: Themes.white(
-                  FontWeight.bold,
-                  15,
+            InkWell(
+              onTap: onBackPressed ?? () => context.pop(),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  backPressedLabel ?? 'TIDAK',
+                  style: Themes.customColor(
+                    FontWeight.bold,
+                    15,
+                  ),
                 ),
               ),
             ),
-            TextButton(
-              onPressed: onPressed,
-              child: Text(
-                pressedLabel ?? 'YA',
-                style: Themes.white(
-                  FontWeight.bold,
-                  15,
+            InkWell(
+              onTap: onPressed,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  pressedLabel ?? 'YA',
+                  style: Themes.customColor(
+                    FontWeight.bold,
+                    15,
+                  ),
                 ),
               ),
             ),
@@ -109,7 +115,7 @@ class VSimpleDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: SimpleDialog(
-        backgroundColor: color ?? Palette.primaryColor,
+        backgroundColor: color ?? Theme.of(context).primaryColor,
         title: SizedBox(height: 28, child: SvgPicture.asset(asset)),
         children: [
           SizedBox(
@@ -118,7 +124,7 @@ class VSimpleDialog extends StatelessWidget {
           Center(
             child: Text(
               label,
-              style: Themes.white(FontWeight.bold, 20),
+              style: Themes.customColor(FontWeight.bold, 20),
             ),
           ),
           SizedBox(
@@ -129,7 +135,7 @@ class VSimpleDialog extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 labelDescription,
-                style: Themes.white(FontWeight.bold, 15),
+                style: Themes.customColor(FontWeight.bold, 15),
               ),
             ),
           )

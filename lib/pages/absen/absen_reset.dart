@@ -29,8 +29,8 @@ class AbsenReset extends ConsumerWidget {
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
             color: nearest < minDistance && nearest != 0
-                ? Colors.transparent
-                : Palette.greyDisabled),
+                ? Theme.of(context).primaryColor
+                : Theme.of(context).disabledColor),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Row(
@@ -38,12 +38,12 @@ class AbsenReset extends ConsumerWidget {
             children: [
               Text(
                 'Absen Ulang',
-                style: Themes.customColor(
-                    FontWeight.bold,
-                    14,
-                    nearest < minDistance && nearest != 0
-                        ? Colors.black
-                        : Palette.grey),
+                style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: nearest < minDistance && nearest != 0
+                        ? Theme.of(context).primaryColorLight
+                        : Theme.of(context).disabledColor),
               ),
               SizedBox(
                 width: 8,

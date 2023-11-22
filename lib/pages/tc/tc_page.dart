@@ -57,7 +57,9 @@ class TCPage extends ConsumerWidget {
                     child: Text(
                       'Google Play Services',
                       style: Themes.customColor(
-                          FontWeight.normal, 12, Palette.primaryColor),
+                        FontWeight.normal,
+                        12,
+                      ),
                     )),
                 SizedBox(
                   height: 8,
@@ -68,7 +70,9 @@ class TCPage extends ConsumerWidget {
                     child: Text(
                       'Apple’s Standard License Agreement',
                       style: Themes.customColor(
-                          FontWeight.normal, 12, Palette.primaryColor),
+                        FontWeight.normal,
+                        12,
+                      ),
                     )),
                 //
                 SizedBox(
@@ -146,7 +150,9 @@ class TCPage extends ConsumerWidget {
                     child: Text(
                       'Google Play Services',
                       style: Themes.customColor(
-                          FontWeight.normal, 12, Palette.primaryColor),
+                        FontWeight.normal,
+                        12,
+                      ),
                     )),
                 SizedBox(
                   height: 8,
@@ -171,8 +177,9 @@ class TCPage extends ConsumerWidget {
             children: [
               Checkbox(
                   key: UniqueKey(),
-                  checkColor: Colors.white,
-                  fillColor: MaterialStateProperty.resolveWith(getColor),
+                  checkColor: Theme.of(context).primaryColorLight,
+                  fillColor: MaterialStateProperty.resolveWith(
+                      (state) => getColor(state, context)),
                   value: isPrivacy,
                   onChanged: (_) =>
                       ref.read(CB1.notifier).state = (toggleBool(isPrivacy))),
@@ -181,7 +188,7 @@ class TCPage extends ConsumerWidget {
               ),
               Text(
                 'Agree to Privacy Policy',
-                style: Themes.blue(FontWeight.normal, 14),
+                style: Themes.customColor(FontWeight.normal, 14),
               )
             ],
           ),
@@ -194,8 +201,9 @@ class TCPage extends ConsumerWidget {
             children: [
               Checkbox(
                   key: UniqueKey(),
-                  checkColor: Colors.white,
-                  fillColor: MaterialStateProperty.resolveWith(getColor),
+                  checkColor: Theme.of(context).primaryColorLight,
+                  fillColor: MaterialStateProperty.resolveWith(
+                      (state) => getColor(state, context)),
                   value: isTerms,
                   onChanged: (_) =>
                       ref.read(CB2.notifier).state = (toggleBool(isTerms))),
@@ -204,7 +212,7 @@ class TCPage extends ConsumerWidget {
               ),
               Text(
                 'Agree to Terms & Conditions',
-                style: Themes.blue(FontWeight.normal, 14),
+                style: Themes.customColor(FontWeight.normal, 14),
               )
             ],
           ),
@@ -214,11 +222,13 @@ class TCPage extends ConsumerWidget {
           Center(
             child: VButton(
                 fontSize: 12,
-                height: 35,
+                height: 50,
                 textAlign: TextAlign.center,
                 label: 'CONTINUE',
-                textStyle:
-                    Themes.customColor(FontWeight.normal, 14, Colors.white),
+                textStyle: Themes.customColor(
+                  FontWeight.normal,
+                  14,
+                ),
                 isEnabled: isPrivacy && isTerms,
                 onPressed: () async {
                   await showDialog(
@@ -250,32 +260,41 @@ class TCPage extends ConsumerWidget {
 
 Widget normalText(String text) => Text(
       text,
-      style: Themes.customColor(FontWeight.normal, 12, Colors.black),
+      style: Themes.customColor(
+        FontWeight.normal,
+        12,
+      ),
       textAlign: TextAlign.justify,
     );
 
 Widget headingText(String text) => Text(
       text,
-      style: Themes.customColor(FontWeight.bold, 12, Colors.black),
+      style: Themes.customColor(
+        FontWeight.bold,
+        12,
+      ),
     );
 
 Widget bigHeadingText(String text) => Text(
       text,
-      style: Themes.customColor(FontWeight.bold, 14, Colors.black),
+      style: Themes.customColor(
+        FontWeight.bold,
+        14,
+      ),
     );
 
 bool toggleBool(bool toggled) {
   return toggled ? false : true;
 }
 
-Color getColor(Set<MaterialState> states) {
+Color getColor(Set<MaterialState> states, BuildContext context) {
   const Set<MaterialState> interactiveStates = <MaterialState>{
     MaterialState.pressed,
     MaterialState.hovered,
     MaterialState.focused,
   };
   if (states.any(interactiveStates.contains)) {
-    return Colors.blue;
+    return Palette.primaryColor;
   }
   return Palette.primaryColor;
 }

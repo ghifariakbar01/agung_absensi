@@ -22,7 +22,7 @@ class PermissionScaffold extends ConsumerWidget {
         elevation: 0,
         automaticallyImplyLeading: true,
         backgroundColor: Colors.transparent,
-        iconTheme: IconThemeData(color: Palette.primaryColor),
+        // iconTheme: IconThemeData(color: Palette.primaryColor),
       ),
       body: SafeArea(
         child: Stack(

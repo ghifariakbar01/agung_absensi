@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../shared/providers.dart';
-import 'widgets/profile_avatar.dart';
 import 'widgets/profile_item.dart';
 
 class ProfileView extends ConsumerWidget {
@@ -15,7 +14,7 @@ class ProfileView extends ConsumerWidget {
 
     return Column(
       children: [
-        ProfileAvatarItem(url: userProvider.user.photo),
+        // ProfileAvatarItem(url: userProvider.user.photo),
         ProfileItem(
           text: userProvider.user.idKary ?? '',
           icon: Icons.person,
