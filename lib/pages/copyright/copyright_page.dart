@@ -11,7 +11,7 @@ final packageInfoProvider = FutureProvider((ref) async {
   String version = packageInfo.version;
   // String buildNumber = packageInfo.buildNumber;
 
-  return 'V$version';
+  return 'V$version'.substring(0, 3);
 });
 
 class CopyRightPage extends ConsumerWidget {
@@ -33,7 +33,12 @@ class CopyRightPage extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SelectableText(
-                'APP VERSION: ${packageInfo.when(data: (packageInfo) => packageInfo, error: (error, stackTrace) => 'Error: $error StackTrace: $stackTrace', loading: () => '')}',
+                'APP VERSION: ${packageInfo.when(
+                  data: (packageInfo) => packageInfo,
+                  loading: () => '',
+                  error: (error, stackTrace) =>
+                      'Error: $error StackTrace: $stackTrace',
+                )}',
                 style: Themes.customColor(
                   FontWeight.bold,
                   15,

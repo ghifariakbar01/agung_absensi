@@ -18,8 +18,8 @@ class _HomePageState extends ConsumerState<HomePage> {
     return UpgradeAlert(
         upgrader: Upgrader(
             dialogStyle: UpgradeDialogStyle.cupertino,
+            showLater: true,
             showIgnore: false,
-            showLater: false,
             showReleaseNotes: true,
             messages: MyUpgraderMessages()),
         child: InitGeofenceScaffold());
