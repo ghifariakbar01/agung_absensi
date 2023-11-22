@@ -19,8 +19,6 @@ class AbsenReset extends ConsumerWidget {
         .select((value) => value.nearestCoordinates.minDistance));
 
     // RESET ABSEN
-    // final buttonIn = ref.watch(buttonInProvider);
-    // final buttonOut = ref.watch(buttonOutProvider);
     final buttonResetVisibility = ref.watch(buttonResetVisibilityProvider);
 
     return Padding(

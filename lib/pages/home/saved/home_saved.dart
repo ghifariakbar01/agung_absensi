@@ -1,3 +1,4 @@
+import 'package:face_net_authentication/pages/widgets/async_value_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -5,7 +6,9 @@ import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/constants/assets.dart';
 
 import '../../../domain/absen_failure.dart';
+import '../../../err_log/application/err_log_notifier.dart';
 import '../../../shared/providers.dart';
+import '../../widgets/v_async_widget.dart';
 import '../../widgets/v_dialogs.dart';
 import '../home_scaffold.dart';
 
@@ -45,6 +48,12 @@ class _HomeSavedState extends ConsumerState<HomeSaved> {
                     ),
                 (_) {})));
 
-    return HomeScaffold();
+    ref.listen<AsyncValue>(errLogControllerProvider, (_, state) {
+      state.showAlertDialogOnError(context);
+    });
+
+    final errLog = ref.watch(errLogControllerProvider);
+
+    return AsyncValueWidget<void>(value: errLog, data: (_) => HomeScaffold());
   }
 }

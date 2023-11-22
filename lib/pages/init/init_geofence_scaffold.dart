@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
+import 'package:face_net_authentication/pages/widgets/async_value_ui.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:geofence_service/geofence_service.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../constants/assets.dart';
+import '../../err_log/application/err_log_notifier.dart';
 import '../../shared/providers.dart';
 import '../../domain/geofence_failure.dart';
 import '../../pages/widgets/v_dialogs.dart';
@@ -19,6 +21,7 @@ import '../../pages/widgets/loading_overlay.dart';
 import '../../application/background/saved_location.dart';
 import '../../application/geofence/geofence_response.dart';
 import '../../application/background/background_item_state.dart';
+import '../widgets/v_async_widget.dart';
 
 class InitGeofenceScaffold extends ConsumerStatefulWidget {
   const InitGeofenceScaffold();
@@ -48,15 +51,28 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
         ),
         (_, failureOrSuccessOption) => failureOrSuccessOption.fold(
             () {},
-            (either) => either.fold(
-                    (failure) => AlertHelper.showSnackBar(
-                          context,
-                          message: failure.map(
-                            empty: (_) => '',
-                            unknown: (value) =>
-                                'Error ${value.errorCode} ${value.message} ',
-                          ),
-                        ), (savedLocations) async {
+            (either) => either.fold((failure) async {
+                  final String errMessage = failure.map(
+                    empty: (_) => '',
+                    unknown: (value) =>
+                        'Error ${value.errorCode} ${value.message} ',
+                  );
+
+                  final String imeiSaved = await ref
+                      .read(imeiNotifierProvider.notifier)
+                      .getImeiString();
+
+                  final String imeiDb = await ref
+                      .read(imeiNotifierProvider.notifier)
+                      .getImeiString();
+
+                  await ref.read(errLogControllerProvider.notifier).sendLog(
+                      imeiDb: imeiDb,
+                      imeiSaved: imeiSaved,
+                      errMessage: errMessage);
+
+                  return AlertHelper.showSnackBar(context, message: errMessage);
+                }, (savedLocations) async {
                   if (savedLocations.isNotEmpty) {
                     //
                     log('savedLocations $savedLocations');
@@ -82,37 +98,72 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
       ),
       (_, failureOrSuccessOption) => failureOrSuccessOption.fold(
           () {},
-          (either) => either.fold(
-                  (failure) => failure.maybeWhen(
-                      noConnection: () => ref
-                          .read(geofenceProvider.notifier)
-                          .getGeofenceListFromStorage(),
-                      empty: () => showCupertinoDialog(
+          (either) => either.fold((failure) async {
+                failure.maybeWhen(
+                    noConnection: () => ref
+                        .read(geofenceProvider.notifier)
+                        .getGeofenceListFromStorage(),
+                    empty: () async {
+                      final String errMessage =
+                          'Geofence Belum Disimpan sehingga tidak ada Geofence Offline.';
+
+                      final String imeiSaved = await ref
+                          .read(imeiNotifierProvider.notifier)
+                          .getImeiString();
+
+                      final String imeiDb = await ref
+                          .read(imeiNotifierProvider.notifier)
+                          .getImeiString();
+
+                      await ref.read(errLogControllerProvider.notifier).sendLog(
+                          imeiDb: imeiDb,
+                          imeiSaved: imeiSaved,
+                          errMessage: errMessage);
+
+                      return showCupertinoDialog(
                           context: context,
                           barrierDismissible: true,
                           builder: (_) => VSimpleDialog(
                               label: 'Error',
-                              labelDescription:
-                                  "Geofence Belum Disimpan sehingga tidak ada Geofence Offline.",
+                              labelDescription: "",
                               asset: Assets.iconCrossed,
                               color: Colors.red)).then((_) =>
-                          ref.read(userNotifierProvider.notifier).logout()),
-                      orElse: () => showCupertinoDialog(
+                          ref.read(userNotifierProvider.notifier).logout());
+                    },
+                    orElse: () async {
+                      final String errMessage = failure.maybeMap(
+                        orElse: () => '',
+                        passwordExpired: (_) => 'Pass Expire',
+                        passwordWrong: (value) => 'Pass Wrong',
+                        server: (error) => 'Error geofence: ($error)',
+                        wrongFormat: (val) => 'Error parsing geofence : $val',
+                      );
+
+                      final String imeiSaved = await ref
+                          .read(imeiNotifierProvider.notifier)
+                          .getImeiString();
+
+                      final String imeiDb = await ref
+                          .read(imeiNotifierProvider.notifier)
+                          .getImeiString();
+
+                      await ref.read(errLogControllerProvider.notifier).sendLog(
+                          imeiDb: imeiDb,
+                          imeiSaved: imeiSaved,
+                          errMessage: errMessage);
+
+                      return showCupertinoDialog(
                           context: context,
                           barrierDismissible: true,
                           builder: (_) => VSimpleDialog(
                               label: 'Error',
-                              labelDescription: failure.maybeWhen(
-                                orElse: () => '',
-                                wrongFormat: () => 'Error parsing geofence',
-                                server: (error, stacktrace) =>
-                                    'Error geofence: ($error) $stacktrace',
-                              ),
+                              labelDescription: errMessage,
                               asset: Assets.iconCrossed,
                               color: Colors.red)).then((_) => ref
                           .read(geofenceProvider.notifier)
-                          .getGeofenceListFromStorage())),
-                  (geofenceList) async {
+                          .getGeofenceListFromStorage());
+                    });
+              }, (geofenceList) async {
                 final Function(Location location) mockListener = ref
                     .read(mockLocationNotifierProvider.notifier)
                     .addMockLocationListener;
@@ -258,14 +309,23 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
             ref.watch(
                 backgroundNotifierProvider.select((value) => value.isGetting));
 
-    return Scaffold(
-      body: Stack(children: [
-        HomeSaved(),
-        LoadingOverlay(
-            loadingMessage: 'Initializing Geofence & Saved Locations...',
-            isLoading: isLoading),
-      ]),
-      backgroundColor: Colors.transparent,
+    ref.listen<AsyncValue>(errLogControllerProvider, (_, state) {
+      state.showAlertDialogOnError(context);
+    });
+
+    final errLog = ref.watch(errLogControllerProvider);
+
+    return AsyncValueWidget<void>(
+      value: errLog,
+      data: (_) => Scaffold(
+        body: Stack(children: [
+          HomeSaved(),
+          LoadingOverlay(
+              loadingMessage: 'Initializing Geofence & Saved Locations...',
+              isLoading: isLoading),
+        ]),
+        backgroundColor: Colors.transparent,
+      ),
     );
   }
 }

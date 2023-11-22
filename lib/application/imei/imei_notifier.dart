@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
+import 'package:face_net_authentication/err_log/application/err_log_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -142,9 +143,11 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
   }
 
   Future<void> onImeiAlreadyRegistered({
+    required Function sendLog,
     required Function showDialog,
     required Function logout,
   }) async {
+    await sendLog();
     await showDialog();
     await logout();
   }
@@ -175,16 +178,16 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
             if (appleUsername == 'Ghifar') {
               await onImeiNotRegistered();
             } else {
-              // await onImeiAlreadyRegistered();
-              onImeiOK();
+              await onImeiAlreadyRegistered();
+              // onImeiOK();
             }
           } else {
-            // await onImeiAlreadyRegistered();
-            onImeiOK();
+            await onImeiAlreadyRegistered();
+            // onImeiOK();
           }
 
-          onImeiOK();
-          // await onImeiNotRegistered();
+          // onImeiOK();
+          await onImeiNotRegistered();
 
           break;
       }
@@ -198,8 +201,8 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
           // debugger(message: 'called');
 
           // await onImeiAlreadyRegistered();
-          onImeiOK();
-          // await onImeiNotRegistered();
+          // onImeiOK();
+          await onImeiNotRegistered();
 
           break;
         case false:
@@ -209,10 +212,10 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
 
               onImeiOK();
             } else if (imeiDBString != savedImei) {
-              debugger(message: 'called');
+              // debugger(message: 'called');
 
-              // await onImeiAlreadyRegistered();
-              onImeiOK();
+              await onImeiAlreadyRegistered();
+              // onImeiOK();
               // await onImeiNotRegistered();
             }
           }();
@@ -280,6 +283,12 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
         onImeiAlreadyRegistered: () => ref
             .read(imeiNotifierProvider.notifier)
             .onImeiAlreadyRegistered(
+              sendLog: () => ref
+                  .read(errLogControllerProvider.notifier)
+                  .sendLog(
+                      imeiDb: imei,
+                      imeiSaved: savedImei,
+                      errMessage: 'Sudah punya INSTALLATION ID'),
               showDialog: () => showFailedDialog(context),
               logout: () => ref.read(userNotifierProvider.notifier).logout(),
             )
@@ -309,42 +318,57 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
                       .read(userNotifierProvider.notifier)
                       .saveUserAfterUpdate(user: user);
 
-                  ref
+                  await ref
                       .read(userNotifierProvider)
                       .failureOrSuccessOptionUpdate
                       .fold(
                           () {},
-                          (either) => either.fold(
-                              (failure) => failure.maybeWhen(
-                                  noConnection: ref
-                                      .read(initUserStatusNotifierProvider
-                                          .notifier)
-                                      .letYouThrough,
-                                  orElse: () => showDialog(
+                          (either) => either.fold((failure) async {
+                                return failure.maybeWhen(
+                                    noConnection: ref
+                                        .read(initUserStatusNotifierProvider
+                                            .notifier)
+                                        .letYouThrough,
+                                    orElse: () async {
+                                      final String errMessage =
+                                          failure.maybeWhen(
+                                        orElse: () => '',
+                                        server: (errorCode, message) =>
+                                            'Error Kode $errorCode : $message',
+                                        passwordWrong: () =>
+                                            'Password yang anda masukkan salah',
+                                        storage: () =>
+                                            'Mohon maaf storage anda penuh. Mohon luangkan storage anda agar bisa menyimpan Installation ID. Terimakasih',
+                                      );
+
+                                      await ref
+                                          .read(
+                                              errLogControllerProvider.notifier)
+                                          .sendLog(
+                                              imeiDb: imei,
+                                              imeiSaved: savedImei,
+                                              errMessage: errMessage);
+
+                                      return showDialog(
                                         context: context,
                                         barrierDismissible: true,
                                         builder: (_) => VSimpleDialog(
                                           label: 'Error',
-                                          labelDescription: failure.maybeWhen(
-                                            orElse: () => '',
-                                            server: (errorCode, message) =>
-                                                'Error Kode $errorCode : $message',
-                                            passwordWrong: () =>
-                                                'Password yang anda masukkan salah',
-                                            storage: () =>
-                                                'Mohon maaf storage anda penuh. Mohon luangkan storage anda agar bisa menyimpan Installation ID. Terimakasih',
-                                          ),
+                                          labelDescription: errMessage,
                                           asset: Assets.iconCrossed,
                                         ),
-                                      ).then((_) => holdAndlogYouOut())),
-                              (_) => ref
-                                  .read(userNotifierProvider.notifier)
-                                  .getUser()
-                                  .then((_) => showSuccessDialog(context).then(
-                                      (_) => ref
-                                          .read(initUserStatusNotifierProvider
-                                              .notifier)
-                                          .letYouThrough()))));
+                                      ).then((_) => holdAndlogYouOut());
+                                    });
+                              },
+                                  (_) => ref
+                                      .read(userNotifierProvider.notifier)
+                                      .getUser()
+                                      .then((_) => showSuccessDialog(context)
+                                          .then((_) => ref
+                                              .read(
+                                                  initUserStatusNotifierProvider
+                                                      .notifier)
+                                              .letYouThrough()))));
                 }));
   }
 }

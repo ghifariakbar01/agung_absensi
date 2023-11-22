@@ -56,9 +56,9 @@ mixin Themes {
       // Color Icon Lokasi Jarak Terdekat
       secondaryHeaderColor: Colors.black,
       // Color Riwayat Absen Text
-      unselectedWidgetColor: Palette.secondaryColor,
+      unselectedWidgetColor: Palette.primaryLighter,
       // Color Riwayat Absen Container
-      cardColor: Palette.secondaryColor,
+      cardColor: Palette.primaryLighter,
       colorScheme: const ColorScheme.dark(
         primary: Colors.white,
         secondary: Colors.black,

@@ -21,7 +21,7 @@ final themeRepositoryProvider = Provider<ThemeRepository>.internal(
 );
 
 typedef ThemeRepositoryRef = ProviderRef<ThemeRepository>;
-String _$themeNotifierHash() => r'5d788d65ce9e28d3d3cd640747bd10605859fd30';
+String _$themeNotifierHash() => r'520a601245037c5711da9c4608b10fc64b698bf7';
 
 /// See also [ThemeNotifier].
 @ProviderFor(ThemeNotifier)

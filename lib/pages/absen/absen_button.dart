@@ -18,6 +18,7 @@ import '../../application/routes/route_names.dart';
 import '../../constants/assets.dart';
 import '../../domain/absen_failure.dart';
 import '../../domain/background_failure.dart';
+import '../../err_log/application/err_log_notifier.dart';
 import '../../shared/providers.dart';
 import '../../style/style.dart';
 
@@ -25,14 +26,6 @@ import '../../utils/geofence_utils.dart';
 import '../../utils/string_utils.dart';
 import '../widgets/v_button.dart';
 import '../widgets/v_dialogs.dart';
-
-// final buttonInProvider = StateProvider<bool>((ref) {
-//   return false;
-// });
-
-// final buttonOutProvider = StateProvider<bool>((ref) {
-//   return false;
-// });
 
 final buttonResetVisibilityProvider = StateProvider<bool>((ref) {
   return false;
@@ -46,6 +39,9 @@ class AbsenButton extends ConsumerStatefulWidget {
 }
 
 class _AbsenButtonState extends ConsumerState<AbsenButton> {
+  // MODIFY WHEN TESTING
+  bool isTesting = false;
+
   @override
   Widget build(BuildContext context) {
     // LAT, LONG
@@ -63,90 +59,11 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
         (_, failureOrSuccessOption) => failureOrSuccessOption.fold(
             () {},
             (either) => either.fold(
-                    (failure) => failure.maybeWhen(
-                          noConnection: () async {
-                            // ALAMAT GEOFENCE
-                            final alamat = ref.watch(geofenceProvider
-                                .select((value) => value.nearestCoordinates));
-
-                            // SAVE ABSEN
-                            await ref
-                                .read(backgroundNotifierProvider.notifier)
-                                .addSavedLocation(
-                                    savedLocation: SavedLocation(
-                                        idGeof: alamat.id,
-                                        latitude: currentLocationLatitude,
-                                        longitude: currentLocationLongitude,
-                                        alamat: alamat.nama,
-                                        date: DateTime.now(),
-                                        dbDate: DateTime.now()));
-
-                            await showDialog(
-                                context: context,
-                                barrierDismissible: true,
-                                builder: (_) => VSimpleDialog(
-                                      color: Palette.red,
-                                      asset: Assets.iconCrossed,
-                                      label: 'NoConnection',
-                                      labelDescription: 'Tidak ada koneksi',
-                                    )).then((_) => showDialog(
-                                context: context,
-                                barrierDismissible: true,
-                                builder: (_) => VSimpleDialog(
-                                      asset: Assets.iconChecked,
-                                      label: 'Saved',
-                                      labelDescription: 'Absen tersimpan',
-                                    )));
-
-                            return Future.value(true);
-                          },
-                          orElse: () => showDialog(
-                              context: context,
-                              barrierDismissible: true,
-                              builder: (_) => VSimpleDialog(
-                                    asset: Assets.iconCrossed,
-                                    label: 'Error',
-                                    labelDescription: failure.maybeWhen(
-                                        server: (code, message) =>
-                                            'Error $code $message',
-                                        passwordExpired: () =>
-                                            'Password Expired',
-                                        passwordWrong: () => 'Password Wrong',
-                                        orElse: () => ''),
-                                  )),
-                        ), (_) async {
-                  // IF SUCCESS, GET RECENT ABSEN
-                  final offlineNotifier =
-                      ref.read(absenOfflineModeProvider.notifier);
-
-                  // RESET RESET BUTTON
-                  ref.read(buttonResetVisibilityProvider.notifier).state =
-                      false;
-                  // ref.read(buttonInProvider.notifier).state = false;
-                  // ref.read(buttonOutProvider.notifier).state = false;
-
-                  await ref
-                      .read(absenNotifierProvidier.notifier)
-                      .getAbsenToday();
-
-                  final jamBerhasil =
-                      await ref.refresh(networkTimeFutureProvider.future);
-                  String jamBerhasilStr = StringUtils.hoursDate(jamBerhasil);
-
-                  offlineNotifier.state = false;
-
-                  await HapticFeedback.vibrate();
-
-                  await showDialog(
-                      context: context,
-                      barrierDismissible: true,
-                      builder: (_) => VSimpleDialog(
-                            asset: Assets.iconChecked,
-                            label: 'JAM $jamBerhasilStr',
-                            labelDescription: 'BERHASIL',
-                          )).then((_) =>
-                      context.pushNamed(RouteNames.riwayatAbsenNameRoute));
-                })));
+                (failure) => failure.maybeWhen(
+                    noConnection: () => _onNoConnection(currentLocationLatitude,
+                        currentLocationLongitude, context),
+                    orElse: () async => _onErrOther(failure, context)),
+                (_) async => _onBerhasilAbsen(context))));
 
     // ABSEN MODE OFFLINE
     ref.listen<Option<Either<BackgroundFailure, Unit>>>(
@@ -156,38 +73,20 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
         (_, failureOrSuccessOptionSave) => failureOrSuccessOptionSave.fold(
             () {},
             (either) => either.fold(
-                    (failure) => showDialog(
-                          context: context,
-                          barrierDismissible: true,
-                          builder: (_) => VSimpleDialog(
-                            label: 'Error',
-                            labelDescription: failure.maybeMap(
-                                empty: (_) => 'No saved found',
-                                unknown: (unkn) =>
-                                    '${unkn.errorCode} ${unkn.message}',
-                                orElse: () => ''),
-                            asset: Assets.iconCrossed,
-                          ),
-                        ), (_) async {
-                  await ref
-                      .read(backgroundNotifierProvider.notifier)
-                      .getSavedLocations();
-
-                  await HapticFeedback.vibrate();
-
-                  await showDialog(
+                (failure) => showDialog(
                       context: context,
                       barrierDismissible: true,
                       builder: (_) => VSimpleDialog(
-                            asset: Assets.iconChecked,
-                            label: 'Saved',
-                            labelDescription: 'Absen tersimpan',
-                          ));
-
-                  await ref
-                      .read(backgroundNotifierProvider.notifier)
-                      .getSavedLocations();
-                })));
+                        label: 'Error',
+                        labelDescription: failure.maybeMap(
+                            empty: (_) => 'No saved found',
+                            unknown: (unkn) =>
+                                '${unkn.errorCode} ${unkn.message}',
+                            orElse: () => ''),
+                        asset: Assets.iconCrossed,
+                      ),
+                    ),
+                (_) async => _onBerhasilSimpanAbsen(context))));
 
     // ABSEN STATE
     final absen = ref.watch(absenNotifierProvidier);
@@ -199,7 +98,7 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
     final isOfflineMode = ref.watch(absenOfflineModeProvider);
 
     // KARYAWAN SHIFT
-    final karyawanShift = ref.watch(karyawanShiftFutureProvider);
+    final karyawanAsync = ref.watch(karyawanShiftFutureProvider);
 
     // LAT, LONG
     final nearest = ref.watch(geofenceProvider
@@ -216,94 +115,92 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
     // NETWORK
     final network = ref.watch(networkStateNotifierProvider);
 
-    // RESET ABSEN
-    // final buttonIn = ref.watch(buttonInProvider);
-    // final buttonOut = ref.watch(buttonOutProvider);
-
     return Column(
       children: [
         // Load Karyawan Shift
-        karyawanShift.when(
-            data: (isKaryawanShift) {
-              final String karyawanShiftStr = isKaryawanShift ? 'SHIFT' : '';
+        karyawanAsync.when(
+          loading: () => Container(),
+          error: ((error, stackTrace) =>
+              Text('Error: $error \n StackTrace: $stackTrace')),
+          data: (isShift) {
+            final String karyawanShiftStr = isShift ? 'SHIFT' : '';
 
-              return Column(
-                children: [
-                  // Toggle Absen Ulang
-                  AbsenReset(),
+            return Column(
+              children: [
+                // Toggle Absen Ulang
+                AbsenReset(),
 
-                  Visibility(
-                    visible: true,
-                    child: VButton(
-                        label: 'ABSEN IN $karyawanShiftStr',
-                        isEnabled: true,
-
-                        //  network.when(
-                        //     online: () => isTester.maybeWhen(
-                        //         tester: () =>
-                        //             buttonResetVisibility ||
-                        //             isKaryawanShift ||
-                        //             absen == AbsenState.empty() ||
-                        //             absen == AbsenState.incomplete(),
-                        //         orElse: () =>
-                        //             buttonResetVisibility ||
-                        //             isKaryawanShift &&
-                        //                 nearest < minDistance &&
-                        //                 nearest != 0 ||
-                        //             absen == AbsenState.empty() &&
-                        //                 nearest < minDistance &&
-                        //                 nearest != 0 ||
-                        //             absen == AbsenState.incomplete() &&
-                        //                 nearest < 100 &&
-                        //                 nearest != 0),
-                        //     offline: () => false),
-
-                        onPressed: () => _absenIn(
-                            context: context,
-                            isTester: isTester,
-                            currentLocationLatitude: currentLocationLatitude,
-                            currentLocationLongitude: currentLocationLongitude
-                            //
-                            )),
-                  ),
-                  Visibility(
-                    visible: true,
-                    child: VButton(
-                        label: 'ABSEN OUT $karyawanShiftStr',
-                        isEnabled: true,
-
-                        // network.when(
-                        //     online: () => isTester.maybeWhen(
-                        //         tester: () =>
-                        //             buttonResetVisibility ||
-                        //             isKaryawanShift ||
-                        //             absen == AbsenState.absenIn(),
-                        //         orElse: () =>
-                        //             buttonResetVisibility ||
-                        //             isKaryawanShift &&
-                        //                 nearest < minDistance &&
-                        //                 nearest != 0 ||
-                        //             absen == AbsenState.absenIn() &&
-                        //                 nearest < minDistance &&
-                        //                 nearest != 0),
-                        //     offline: () => false),
-                        onPressed: () => _absenOut(
-                            context: context,
-                            isTester: isTester,
-                            currentLocationLatitude: currentLocationLatitude,
-                            currentLocationLongitude: currentLocationLongitude
-                            //
-                            )),
-                  ),
-                ],
-              );
-            },
-            error: ((error, stackTrace) =>
-                Text('Error: $error \n StackTrace: $stackTrace')),
-            loading: () => Container()),
+                Visibility(
+                  visible: true,
+                  child: VButton(
+                      label: 'ABSEN IN $karyawanShiftStr',
+                      isEnabled: isTesting
+                          ? true
+                          : network.when(
+                              online: () => isTester.maybeWhen(
+                                  tester: () =>
+                                      buttonResetVisibility ||
+                                      isShift ||
+                                      absen == AbsenState.empty() ||
+                                      absen == AbsenState.incomplete(),
+                                  orElse: () =>
+                                      buttonResetVisibility ||
+                                      isShift &&
+                                          nearest < minDistance &&
+                                          nearest != 0 ||
+                                      absen == AbsenState.empty() &&
+                                          nearest < minDistance &&
+                                          nearest != 0 ||
+                                      absen == AbsenState.incomplete() &&
+                                          nearest < 100 &&
+                                          nearest != 0),
+                              offline: () => false),
+                      onPressed: () => _absenIn(
+                          context: context,
+                          isTester: isTester,
+                          currentLocationLatitude: currentLocationLatitude,
+                          currentLocationLongitude: currentLocationLongitude
+                          //
+                          )),
+                ),
+                Visibility(
+                  visible: true,
+                  child: VButton(
+                      label: 'ABSEN OUT $karyawanShiftStr',
+                      isEnabled: isTesting
+                          ? true
+                          : network.when(
+                              online: () => isTester.maybeWhen(
+                                  tester: () =>
+                                      buttonResetVisibility ||
+                                      isShift ||
+                                      absen == AbsenState.absenIn(),
+                                  orElse: () =>
+                                      buttonResetVisibility ||
+                                      isShift &&
+                                          nearest < minDistance &&
+                                          nearest != 0 ||
+                                      absen == AbsenState.absenIn() &&
+                                          nearest < minDistance &&
+                                          nearest != 0),
+                              offline: () => false),
+                      onPressed: () => _absenOut(
+                          context: context,
+                          isTester: isTester,
+                          currentLocationLatitude: currentLocationLatitude,
+                          currentLocationLongitude: currentLocationLongitude
+                          //
+                          )),
+                ),
+              ],
+            );
+          },
+        ),
 
         Visibility(
-            visible: true,
+            visible: isTesting
+                ? true
+                : isOfflineMode && nearest < minDistance && nearest != 0,
             child: VButton(
                 label: 'SIMPAN ABSEN',
                 isEnabled: isTester.maybeWhen(
@@ -333,7 +230,7 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                 })),
 
         Visibility(
-            visible: true,
+            visible: isTesting ? true : savedIsNotEmpty,
             child: VButton(
                 label: 'ABSEN TERSIMPAN',
                 onPressed: () async {
@@ -345,6 +242,121 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                 }))
       ],
     );
+  }
+
+  Future<void> _onBerhasilSimpanAbsen(BuildContext context) async {
+    {
+      await ref.read(backgroundNotifierProvider.notifier).getSavedLocations();
+
+      await HapticFeedback.vibrate();
+
+      await showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (_) => VSimpleDialog(
+                asset: Assets.iconChecked,
+                label: 'Saved',
+                labelDescription: 'Absen tersimpan',
+              ));
+
+      await ref.read(backgroundNotifierProvider.notifier).getSavedLocations();
+    }
+  }
+
+  Future<void> _onBerhasilAbsen(BuildContext context) async {
+    {
+      // RESET BUTTON
+      ref.read(buttonResetVisibilityProvider.notifier).state = false;
+
+      await ref.read(absenNotifierProvidier.notifier).getAbsenToday();
+
+      String jamBerhasilStr = StringUtils.hoursDate(
+          await ref.refresh(networkTimeFutureProvider.future));
+
+      ref.read(absenOfflineModeProvider.notifier).state = false;
+
+      await HapticFeedback.vibrate();
+
+      await showDialog(
+              context: context,
+              barrierDismissible: true,
+              builder: (_) => VSimpleDialog(
+                    asset: Assets.iconChecked,
+                    label: 'JAM $jamBerhasilStr',
+                    labelDescription: 'BERHASIL',
+                  ))
+          .then((_) => context.pushNamed(RouteNames.riwayatAbsenNameRoute));
+    }
+  }
+
+  _onErrOther(AbsenFailure failure, BuildContext context) async {
+    {
+      final String errMessage = failure.maybeWhen(
+          server: (code, message) => 'Error $code $message',
+          passwordExpired: () => 'Password Expired',
+          passwordWrong: () => 'Password Wrong',
+          orElse: () => '');
+
+      final String imeiSaved =
+          await ref.read(imeiNotifierProvider.notifier).getImeiString();
+
+      final String imeiDb =
+          await ref.read(imeiNotifierProvider.notifier).getImeiString();
+
+      await ref.read(errLogControllerProvider.notifier).sendLog(
+          imeiDb: imeiDb, imeiSaved: imeiSaved, errMessage: errMessage);
+
+      return showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (_) => VSimpleDialog(
+                asset: Assets.iconCrossed,
+                label: 'Error',
+                labelDescription: failure.maybeWhen(
+                    server: (code, message) => 'Error $code $message',
+                    passwordExpired: () => 'Password Expired',
+                    passwordWrong: () => 'Password Wrong',
+                    orElse: () => ''),
+              ));
+    }
+  }
+
+  _onNoConnection(double currentLocationLatitude,
+      double currentLocationLongitude, BuildContext context) async {
+    {
+      // ALAMAT GEOFENCE
+      final alamat = ref
+          .watch(geofenceProvider.select((value) => value.nearestCoordinates));
+
+      // SAVE ABSEN
+      await ref.read(backgroundNotifierProvider.notifier).addSavedLocation(
+          savedLocation: SavedLocation(
+              idGeof: alamat.id,
+              latitude: currentLocationLatitude,
+              longitude: currentLocationLongitude,
+              alamat: alamat.nama,
+              date: DateTime.now(),
+              dbDate: DateTime.now()));
+
+      await showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (_) => VSimpleDialog(
+                color: Palette.red,
+                asset: Assets.iconCrossed,
+                label: 'NoConnection',
+                labelDescription: 'Tidak ada koneksi',
+              )).then((_) => showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (_) => VSimpleDialog(
+                asset: Assets.iconChecked,
+                label: 'Saved',
+                labelDescription: 'Absen tersimpan',
+              )));
+
+      return Future.value(true);
+    }
   }
 
   // Functions
