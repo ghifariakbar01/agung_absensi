@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../shared/providers.dart';
-import '../../style/style.dart';
 import 'absen_button.dart';
 
 class AbsenReset extends ConsumerWidget {
@@ -40,7 +39,7 @@ class AbsenReset extends ConsumerWidget {
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
                     color: nearest < minDistance && nearest != 0
-                        ? Theme.of(context).primaryColorLight
+                        ? Theme.of(context).secondaryHeaderColor
                         : Theme.of(context).disabledColor),
               ),
               SizedBox(

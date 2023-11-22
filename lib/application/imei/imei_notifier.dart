@@ -186,9 +186,6 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
             // onImeiOK();
           }
 
-          // onImeiOK();
-          await onImeiNotRegistered();
-
           break;
       }
     }
@@ -200,9 +197,9 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
         case true:
           // debugger(message: 'called');
 
-          // await onImeiAlreadyRegistered();
+          await onImeiAlreadyRegistered();
           // onImeiOK();
-          await onImeiNotRegistered();
+          // await onImeiNotRegistered();
 
           break;
         case false:
@@ -241,7 +238,7 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
               color: Palette.red,
               label: 'Warning',
               labelDescription: 'Jika uninstall, unlink hp di setting profil',
-              asset: Assets.iconChecked,
+              asset: Assets.iconCrossed,
             ),
           ));
 
