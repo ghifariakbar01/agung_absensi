@@ -20,9 +20,9 @@ class PermissionNotifier extends StateNotifier<PermissionState> {
   Future<void> checkAndUpdateLocation() async {
     if (await Permission.location.status.isGranted &&
         await Permission.location.serviceStatus.isEnabled) {
-      state = PermissionState.completed();
+      state = const PermissionState.completed();
     } else {
-      state = PermissionState.initial();
+      state = const PermissionState.initial();
     }
   }
 

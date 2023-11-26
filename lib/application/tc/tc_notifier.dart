@@ -11,17 +11,17 @@ class TCNotifier extends StateNotifier<TCState> {
     final tcStatus = await _repository.getSaved();
 
     if (tcStatus == null) {
-      state = TCState.initial();
+      state = const TCState.initial();
     } else {
-      state = TCState.visited();
+      state = const TCState.visited();
     }
   }
 
-  Future<void> saveVisitedTC(String visited) async {
-    await _repository.save(visited);
+  Future<void> saveVisitedTC(String visited) {
+    return _repository.save(visited);
   }
 
-  Future<void> clearVisitedTC() async {
-    await _repository.clear();
+  Future<void> clearVisitedTC() {
+    return _repository.clear();
   }
 }

@@ -33,7 +33,7 @@ class VButton extends StatelessWidget {
               height: height ?? 56,
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
-                  color: color ?? Theme.of(context).primaryColorDark,
+                  color: color ?? Palette.primaryColor,
                   borderRadius: BorderRadius.circular(10)),
               child: Center(
                 child: Text(label,

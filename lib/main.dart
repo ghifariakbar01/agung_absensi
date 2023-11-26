@@ -46,19 +46,13 @@ final initializationProvider =
           requestBody: true,
         ));
   }
+  await ref.read(tcNotifierProvider.notifier).checkAndUpdateStatusTC();
+  await ref.read(authNotifierProvider.notifier).checkAndUpdateAuthStatus();
+  await ref.read(permissionNotifierProvider.notifier).checkAndUpdateLocation();
 
-  final authNotifier = ref.read(authNotifierProvider.notifier);
-  await authNotifier.checkAndUpdateAuthStatus();
-
-  final permissionNotifier = ref.read(permissionNotifierProvider.notifier);
-  await permissionNotifier.checkAndUpdateLocation();
-
-  final tcNotifier = ref.read(tcNotifierProvider.notifier);
-  await tcNotifier.checkAndUpdateStatusTC();
-
-  final imeiInstructionNotifier =
-      ref.read(imeiIntroductionNotifierProvider.notifier);
-  await imeiInstructionNotifier.checkAndUpdateStatusIMEIIntroduction();
+  await ref
+      .read(imeiIntroductionNotifierProvider.notifier)
+      .checkAndUpdateStatusIMEIIntroduction();
 
   return unit;
 });
