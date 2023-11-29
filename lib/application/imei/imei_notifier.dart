@@ -196,8 +196,18 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
       switch (savedImei.isEmpty) {
         case true:
           // debugger(message: 'called');
+          // FOR APPLE REVIEW
+          if (appleUsername != null) {
+            if (appleUsername == 'Ghifar') {
+              await onImeiNotRegistered();
+            } else {
+              await onImeiAlreadyRegistered();
+              // onImeiOK();
+            }
+          } else {
+            await onImeiAlreadyRegistered();
+          }
 
-          await onImeiAlreadyRegistered();
           // onImeiOK();
           // await onImeiNotRegistered();
 
@@ -209,9 +219,19 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
 
               onImeiOK();
             } else if (imeiDBString != savedImei) {
+              // FOR APPLE REVIEW
+              if (appleUsername != null) {
+                if (appleUsername == 'Ghifar') {
+                  await onImeiNotRegistered();
+                } else {
+                  await onImeiAlreadyRegistered();
+                  // onImeiOK();
+                }
+              } else {
+                await onImeiAlreadyRegistered();
+              }
               // debugger(message: 'called');
 
-              await onImeiAlreadyRegistered();
               // onImeiOK();
               // await onImeiNotRegistered();
             }
