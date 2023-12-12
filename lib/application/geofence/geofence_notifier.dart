@@ -10,7 +10,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../domain/geofence_failure.dart';
 import '../../infrastructure/geofence/geofence_repository.dart';
-import '../background/background_item_state.dart';
+
+import '../background/saved_location.dart';
 import 'coordinate_state.dart';
 import 'geofence_coordinate_state.dart';
 import 'geofence_response.dart';
@@ -88,10 +89,10 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
 
   Future<void> startAutoAbsen({
     required Function showDialogAndLogout,
+    required List<SavedLocation> savedBackgroundItems,
     required List<GeofenceResponse> geofenceResponseList,
-    required List<BackgroundItemState> savedBackgroundItems,
+    required Future<void> Function(List<SavedLocation>) startAbsen,
     required Future<void> Function(List<GeofenceResponse>) saveGeofence,
-    required Future<void> Function(List<BackgroundItemState>) startAbsen,
   }) async {
     await saveGeofence(geofenceResponseList);
     await this.state.failureOrSuccessOptionStorage.fold(

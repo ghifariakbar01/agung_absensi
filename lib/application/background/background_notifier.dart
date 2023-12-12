@@ -1,15 +1,13 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
-import 'package:face_net_authentication/application/background/background_item_state.dart';
+
 import 'package:face_net_authentication/application/background/background_state.dart';
 import 'package:face_net_authentication/domain/background_failure.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../infrastructure/background/background_repository.dart';
-import '../absen/absen_state.dart';
 import 'saved_location.dart';
 
 class BackgroundNotifier extends StateNotifier<BackgroundState> {
@@ -20,38 +18,20 @@ class BackgroundNotifier extends StateNotifier<BackgroundState> {
 
   Future<List<SavedLocation>> getSaved() => _backgroundRepository.getSaved();
 
-  // BG ITEM
-  List<BackgroundItemState>? getBackgroundItemsAsList(
-      List<SavedLocation> items) {
-    List<BackgroundItemState> backgroundItem = [];
+  List<SavedLocation>? getSavedLocationsAsList(List<SavedLocation> items) =>
+      items.map((e) => e).toList();
 
-    log('items ${items.length}');
-    log('items $items');
-
-    if (items.isNotEmpty) {
-      for (final item in items) {
-        backgroundItem.add(BackgroundItemState(
-            savedLocations: item, abenStates: AbsenState.empty()));
-      }
-
-      return backgroundItem;
-    }
-
-    return null;
-  }
-
-  void changeBackgroundItems(List<BackgroundItemState> backgroundItems) {
+  void changeBackgroundItems(List<SavedLocation> backgroundItems) {
     state = state.copyWith(savedBackgroundItems: [...backgroundItems]);
   }
 
-  // SVD LOC
   Future<void> addSavedLocation({required SavedLocation savedLocation}) async {
     Either<BackgroundFailure, Unit> failureOrSuccess;
 
     state = state.copyWith(isGetting: true, failureOrSuccessOptionSave: none());
 
     failureOrSuccess = await _backgroundRepository.addBackgroundLocation(
-        inputData: savedLocation);
+        savedLocation: savedLocation);
 
     state = state.copyWith(
         isGetting: false,
@@ -65,29 +45,8 @@ class BackgroundNotifier extends StateNotifier<BackgroundState> {
 
     failureOrSuccess = await _backgroundRepository.getSavedLocations();
 
-    log('failureOrSuccess $failureOrSuccess');
-
     state = state.copyWith(
         isGetting: false, failureOrSuccessOption: optionOf(failureOrSuccess));
-  }
-
-  List<SavedLocation>? getSavedLocationsAsList(
-      List<BackgroundItemState> items) {
-    List<SavedLocation> locations = [];
-
-    log('items ${items.length}');
-    log('items $items');
-
-    if (items.isNotEmpty) {
-      for (final location in items) {
-        log('items ${location.savedLocations}');
-        locations.add(location.savedLocations);
-      }
-
-      return locations;
-    }
-
-    return null;
   }
 
   Future<List<SavedLocation>> _parseLocation(
@@ -128,24 +87,6 @@ class BackgroundNotifier extends StateNotifier<BackgroundState> {
           "locations", jsonEncode(processLocation));
 
       await onSaved();
-    }
-  }
-
-  Future<void> processSavedLocations(
-      {required List<SavedLocation> locations,
-      required void onProcessed(
-          {required List<BackgroundItemState> items})}) async {
-    final List<BackgroundItemState> list = [];
-
-    for (int i = 0; i < locations.length; i++) {
-      list.add(BackgroundItemState(
-        savedLocations: locations[i],
-        abenStates: AbsenState.empty(),
-      ));
-    }
-
-    if (list.isNotEmpty) {
-      onProcessed(items: list);
     }
   }
 }

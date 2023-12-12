@@ -17,8 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$AbsenAuthState {
   bool get isSubmitting => throw _privateConstructorUsedError;
-  BackgroundItemState get backgroundItemState =>
-      throw _privateConstructorUsedError;
+  SavedLocation get backgroundItemState => throw _privateConstructorUsedError;
   Option<Either<AbsenFailure, Unit>> get failureOrSuccessOption =>
       throw _privateConstructorUsedError;
   Option<Either<AbsenFailure, Unit>> get failureOrSuccessOptionSaved =>
@@ -37,11 +36,11 @@ abstract class $AbsenAuthStateCopyWith<$Res> {
   @useResult
   $Res call(
       {bool isSubmitting,
-      BackgroundItemState backgroundItemState,
+      SavedLocation backgroundItemState,
       Option<Either<AbsenFailure, Unit>> failureOrSuccessOption,
       Option<Either<AbsenFailure, Unit>> failureOrSuccessOptionSaved});
 
-  $BackgroundItemStateCopyWith<$Res> get backgroundItemState;
+  $SavedLocationCopyWith<$Res> get backgroundItemState;
 }
 
 /// @nodoc
@@ -70,7 +69,7 @@ class _$AbsenAuthStateCopyWithImpl<$Res, $Val extends AbsenAuthState>
       backgroundItemState: null == backgroundItemState
           ? _value.backgroundItemState
           : backgroundItemState // ignore: cast_nullable_to_non_nullable
-              as BackgroundItemState,
+              as SavedLocation,
       failureOrSuccessOption: null == failureOrSuccessOption
           ? _value.failureOrSuccessOption
           : failureOrSuccessOption // ignore: cast_nullable_to_non_nullable
@@ -84,9 +83,8 @@ class _$AbsenAuthStateCopyWithImpl<$Res, $Val extends AbsenAuthState>
 
   @override
   @pragma('vm:prefer-inline')
-  $BackgroundItemStateCopyWith<$Res> get backgroundItemState {
-    return $BackgroundItemStateCopyWith<$Res>(_value.backgroundItemState,
-        (value) {
+  $SavedLocationCopyWith<$Res> get backgroundItemState {
+    return $SavedLocationCopyWith<$Res>(_value.backgroundItemState, (value) {
       return _then(_value.copyWith(backgroundItemState: value) as $Val);
     });
   }
@@ -102,12 +100,12 @@ abstract class _$$_AbsenAuthCopyWith<$Res>
   @useResult
   $Res call(
       {bool isSubmitting,
-      BackgroundItemState backgroundItemState,
+      SavedLocation backgroundItemState,
       Option<Either<AbsenFailure, Unit>> failureOrSuccessOption,
       Option<Either<AbsenFailure, Unit>> failureOrSuccessOptionSaved});
 
   @override
-  $BackgroundItemStateCopyWith<$Res> get backgroundItemState;
+  $SavedLocationCopyWith<$Res> get backgroundItemState;
 }
 
 /// @nodoc
@@ -134,7 +132,7 @@ class __$$_AbsenAuthCopyWithImpl<$Res>
       backgroundItemState: null == backgroundItemState
           ? _value.backgroundItemState
           : backgroundItemState // ignore: cast_nullable_to_non_nullable
-              as BackgroundItemState,
+              as SavedLocation,
       failureOrSuccessOption: null == failureOrSuccessOption
           ? _value.failureOrSuccessOption
           : failureOrSuccessOption // ignore: cast_nullable_to_non_nullable
@@ -159,7 +157,7 @@ class _$_AbsenAuth implements _AbsenAuth {
   @override
   final bool isSubmitting;
   @override
-  final BackgroundItemState backgroundItemState;
+  final SavedLocation backgroundItemState;
   @override
   final Option<Either<AbsenFailure, Unit>> failureOrSuccessOption;
   @override
@@ -201,7 +199,7 @@ class _$_AbsenAuth implements _AbsenAuth {
 abstract class _AbsenAuth implements AbsenAuthState {
   const factory _AbsenAuth(
       {required final bool isSubmitting,
-      required final BackgroundItemState backgroundItemState,
+      required final SavedLocation backgroundItemState,
       required final Option<Either<AbsenFailure, Unit>> failureOrSuccessOption,
       required final Option<Either<AbsenFailure, Unit>>
           failureOrSuccessOptionSaved}) = _$_AbsenAuth;
@@ -209,7 +207,7 @@ abstract class _AbsenAuth implements AbsenAuthState {
   @override
   bool get isSubmitting;
   @override
-  BackgroundItemState get backgroundItemState;
+  SavedLocation get backgroundItemState;
   @override
   Option<Either<AbsenFailure, Unit>> get failureOrSuccessOption;
   @override

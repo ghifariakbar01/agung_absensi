@@ -1,5 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../absen/absen_state.dart';
+
 part 'saved_location.freezed.dart';
 
 part 'saved_location.g.dart';
@@ -7,12 +9,13 @@ part 'saved_location.g.dart';
 @freezed
 class SavedLocation with _$SavedLocation {
   const factory SavedLocation({
+    required DateTime date,
+    required String? alamat,
     required String? idGeof,
+    required DateTime dbDate,
     required double? latitude,
     required double? longitude,
-    required String? alamat,
-    required DateTime date,
-    required DateTime dbDate,
+    required AbsenState absenState,
   }) = _SavedLocation;
 
   factory SavedLocation.fromJson(Map<String, Object?> json) =>
@@ -20,9 +23,10 @@ class SavedLocation with _$SavedLocation {
 
   factory SavedLocation.initial() => SavedLocation(
       idGeof: '',
+      alamat: '',
       latitude: 0,
       longitude: 0,
-      alamat: '',
       date: DateTime.now(),
-      dbDate: DateTime.now());
+      dbDate: DateTime.now(),
+      absenState: AbsenState.empty());
 }

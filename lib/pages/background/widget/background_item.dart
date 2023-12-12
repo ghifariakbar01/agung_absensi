@@ -1,38 +1,32 @@
 import 'dart:developer';
 
-import 'package:face_net_authentication/application/background/background_item_state.dart';
 import 'package:face_net_authentication/style/style.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../application/background/saved_location.dart';
 import 'background_item_detail.dart';
 
 class BackgroundItem extends ConsumerWidget {
-  const BackgroundItem({Key? key, required this.index, required this.item})
+  const BackgroundItem(
+      {
+      //
+      Key? key,
+      required this.index,
+      required this.item})
       : super(key: key);
 
-  final BackgroundItemState item;
   final int index;
+  final SavedLocation item;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final nearest = ref.watch(geofenceProvider.select(
-    //     (value) => value.nearestCoordinatesSaved[index].remainingDistance));
-
-    // final minDistance = ref.watch(geofenceProvider
-    //     .select((value) => value.nearestCoordinatesSaved[index].minDistance));
-
     final width = MediaQuery.of(context).size.width;
-
-    final location = item.savedLocations;
-
-    // log('nearest $nearest');
-    log('item.savedLocations $item');
-
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
-        height: 100,
+        height: 105,
         width: width,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(14),
@@ -41,22 +35,48 @@ class BackgroundItem extends ConsumerWidget {
         padding: EdgeInsets.all(4),
         child: Column(
           children: [
-            SizedBox(
-              width: 4,
-            ),
-
             Flexible(
               flex: 1,
               child: BackgroundItemDetail(
-                alamat: location.alamat ?? '',
-                latitude: location.latitude.toString(),
-                longitude: location.longitude.toString(),
-                date: location.date.toString(),
+                alamat: item.alamat ?? '',
+                date: item.date.toString(),
+                latitude: item.latitude.toString(),
+                longitude: item.longitude.toString(),
               ),
             ),
 
             SizedBox(
-              width: 4,
+              height: 4,
+            ),
+
+            Flexible(
+              flex: 0,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                child: Container(
+                    width: width,
+                    padding: EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                        color: Palette.primaryColor.withOpacity(0.9),
+                        borderRadius: BorderRadius.circular(10)),
+                    child: // Lokasi Masuk
+                        Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 4,
+                        ),
+                        Text(
+                          item.absenState.maybeWhen(
+                              orElse: () => 'NaN',
+                              empty: () => 'Jenis : Absen Masuk',
+                              absenIn: () => 'Jenis : Absen Keluar'),
+                          style: Themes.customColor(FontWeight.bold, 11),
+                        )
+                      ],
+                    )),
+              ),
             ),
 
             //

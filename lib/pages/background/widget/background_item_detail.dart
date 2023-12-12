@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 
+import '../../../application/absen/absen_state.dart';
 import '../../../style/style.dart';
 import '../../../utils/string_utils.dart';
 
 class BackgroundItemDetail extends StatelessWidget {
-  const BackgroundItemDetail(
-      {Key? key,
-      required this.alamat,
-      required this.latitude,
-      required this.longitude,
-      required this.date})
-      : super(key: key);
+  const BackgroundItemDetail({
+    Key? key,
+    required this.alamat,
+    required this.latitude,
+    required this.longitude,
+    required this.date,
+  }) : super(key: key);
 
+  final String date;
   final String alamat;
   final String latitude;
   final String longitude;
-  final String date;
 
   @override
   Widget build(BuildContext context) {
@@ -29,37 +30,37 @@ class BackgroundItemDetail extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 2.0),
             child: Container(
                 width: width,
-                padding: EdgeInsets.all(4),
+                padding: EdgeInsets.all(8),
                 decoration: BoxDecoration(
                     color: Palette.primaryColor.withOpacity(0.9),
                     borderRadius: BorderRadius.circular(10)),
                 child: // Lokasi Masuk
                     Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       children: [
                         Icon(
                           Icons.pin_drop_rounded,
+                          size: 25,
                           color: Theme.of(context).primaryColorLight,
+                        ),
+                        SizedBox(
+                          width: 4,
                         ),
                         Text(
                           'Lokasi',
-                          style: Themes.customColor(FontWeight.bold, 11),
+                          style: Themes.customColor(FontWeight.bold, 10),
                         ),
                       ],
                     ),
                     SizedBox(
                       height: 4,
                     ),
-                    Row(
-                      children: [
-                        Flexible(
-                          child: Text(
-                            alamat,
-                            style: Themes.customColor(FontWeight.bold, 10),
-                          ),
-                        ),
-                      ],
+                    Text(
+                      alamat,
+                      style: Themes.customColor(FontWeight.bold, 9),
                     )
                   ],
                 )),
@@ -102,8 +103,8 @@ class BackgroundItemDetail extends StatelessWidget {
                                   latitude.length > 10
                                       ? '${latitude.substring(0, 10)}...'
                                       : latitude,
-                                  style:
-                                      Themes.customColor(FontWeight.bold, 10),
+                                  maxLines: 1,
+                                  style: Themes.customColor(FontWeight.bold, 8),
                                 ),
                               ],
                             )
@@ -144,8 +145,8 @@ class BackgroundItemDetail extends StatelessWidget {
                                   longitude.length > 10
                                       ? '${longitude.substring(0, 10)}...'
                                       : longitude,
-                                  style:
-                                      Themes.customColor(FontWeight.bold, 10),
+                                  maxLines: 1,
+                                  style: Themes.customColor(FontWeight.bold, 8),
                                 ),
                               ],
                             )
@@ -163,14 +164,12 @@ class BackgroundItemDetail extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 2.0),
               child: Container(
                 width: width,
-                padding: EdgeInsets.all(4),
+                padding: EdgeInsets.all(8),
                 decoration: BoxDecoration(
                     color: Palette.primaryColor.withOpacity(0.9),
                     borderRadius: BorderRadius.circular(10)),
                 child: // Longitude
                     Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       children: [
@@ -178,11 +177,17 @@ class BackgroundItemDetail extends StatelessWidget {
                           Icons.date_range,
                           color: Theme.of(context).primaryColorLight,
                         ),
+                        SizedBox(
+                          width: 4,
+                        ),
                         Text(
                           'Date',
                           style: Themes.customColor(FontWeight.bold, 11),
                         ),
                       ],
+                    ),
+                    SizedBox(
+                      height: 4,
                     ),
                     Row(
                       children: [

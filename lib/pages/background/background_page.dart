@@ -5,7 +5,6 @@ import 'package:face_net_authentication/pages/widgets/loading_overlay.dart';
 import 'package:face_net_authentication/shared/providers.dart';
 import 'package:flutter/material.dart';
 
-
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../application/background/saved_location.dart';
@@ -54,12 +53,7 @@ class _BackgroundPageState extends ConsumerState<BackgroundPage> {
 
                   ref
                       .read(backgroundNotifierProvider.notifier)
-                      .processSavedLocations(
-                        locations: savedLocations,
-                        onProcessed: ({required items}) => ref
-                            .read(backgroundNotifierProvider.notifier)
-                            .changeBackgroundItems(items),
-                      );
+                      .changeBackgroundItems(savedLocations);
                 } else {
                   ref
                       .read(backgroundNotifierProvider.notifier)

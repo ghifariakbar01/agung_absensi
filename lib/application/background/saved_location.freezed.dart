@@ -20,12 +20,13 @@ SavedLocation _$SavedLocationFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$SavedLocation {
+  DateTime get date => throw _privateConstructorUsedError;
+  String? get alamat => throw _privateConstructorUsedError;
   String? get idGeof => throw _privateConstructorUsedError;
+  DateTime get dbDate => throw _privateConstructorUsedError;
   double? get latitude => throw _privateConstructorUsedError;
   double? get longitude => throw _privateConstructorUsedError;
-  String? get alamat => throw _privateConstructorUsedError;
-  DateTime get date => throw _privateConstructorUsedError;
-  DateTime get dbDate => throw _privateConstructorUsedError;
+  AbsenState get absenState => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -40,12 +41,15 @@ abstract class $SavedLocationCopyWith<$Res> {
       _$SavedLocationCopyWithImpl<$Res, SavedLocation>;
   @useResult
   $Res call(
-      {String? idGeof,
+      {DateTime date,
+      String? alamat,
+      String? idGeof,
+      DateTime dbDate,
       double? latitude,
       double? longitude,
-      String? alamat,
-      DateTime date,
-      DateTime dbDate});
+      AbsenState absenState});
+
+  $AbsenStateCopyWith<$Res> get absenState;
 }
 
 /// @nodoc
@@ -61,18 +65,31 @@ class _$SavedLocationCopyWithImpl<$Res, $Val extends SavedLocation>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? date = null,
+    Object? alamat = freezed,
     Object? idGeof = freezed,
+    Object? dbDate = null,
     Object? latitude = freezed,
     Object? longitude = freezed,
-    Object? alamat = freezed,
-    Object? date = null,
-    Object? dbDate = null,
+    Object? absenState = null,
   }) {
     return _then(_value.copyWith(
+      date: null == date
+          ? _value.date
+          : date // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      alamat: freezed == alamat
+          ? _value.alamat
+          : alamat // ignore: cast_nullable_to_non_nullable
+              as String?,
       idGeof: freezed == idGeof
           ? _value.idGeof
           : idGeof // ignore: cast_nullable_to_non_nullable
               as String?,
+      dbDate: null == dbDate
+          ? _value.dbDate
+          : dbDate // ignore: cast_nullable_to_non_nullable
+              as DateTime,
       latitude: freezed == latitude
           ? _value.latitude
           : latitude // ignore: cast_nullable_to_non_nullable
@@ -81,19 +98,19 @@ class _$SavedLocationCopyWithImpl<$Res, $Val extends SavedLocation>
           ? _value.longitude
           : longitude // ignore: cast_nullable_to_non_nullable
               as double?,
-      alamat: freezed == alamat
-          ? _value.alamat
-          : alamat // ignore: cast_nullable_to_non_nullable
-              as String?,
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      dbDate: null == dbDate
-          ? _value.dbDate
-          : dbDate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+      absenState: null == absenState
+          ? _value.absenState
+          : absenState // ignore: cast_nullable_to_non_nullable
+              as AbsenState,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $AbsenStateCopyWith<$Res> get absenState {
+    return $AbsenStateCopyWith<$Res>(_value.absenState, (value) {
+      return _then(_value.copyWith(absenState: value) as $Val);
+    });
   }
 }
 
@@ -106,12 +123,16 @@ abstract class _$$_SavedLocationCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String? idGeof,
+      {DateTime date,
+      String? alamat,
+      String? idGeof,
+      DateTime dbDate,
       double? latitude,
       double? longitude,
-      String? alamat,
-      DateTime date,
-      DateTime dbDate});
+      AbsenState absenState});
+
+  @override
+  $AbsenStateCopyWith<$Res> get absenState;
 }
 
 /// @nodoc
@@ -125,18 +146,31 @@ class __$$_SavedLocationCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? date = null,
+    Object? alamat = freezed,
     Object? idGeof = freezed,
+    Object? dbDate = null,
     Object? latitude = freezed,
     Object? longitude = freezed,
-    Object? alamat = freezed,
-    Object? date = null,
-    Object? dbDate = null,
+    Object? absenState = null,
   }) {
     return _then(_$_SavedLocation(
+      date: null == date
+          ? _value.date
+          : date // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      alamat: freezed == alamat
+          ? _value.alamat
+          : alamat // ignore: cast_nullable_to_non_nullable
+              as String?,
       idGeof: freezed == idGeof
           ? _value.idGeof
           : idGeof // ignore: cast_nullable_to_non_nullable
               as String?,
+      dbDate: null == dbDate
+          ? _value.dbDate
+          : dbDate // ignore: cast_nullable_to_non_nullable
+              as DateTime,
       latitude: freezed == latitude
           ? _value.latitude
           : latitude // ignore: cast_nullable_to_non_nullable
@@ -145,18 +179,10 @@ class __$$_SavedLocationCopyWithImpl<$Res>
           ? _value.longitude
           : longitude // ignore: cast_nullable_to_non_nullable
               as double?,
-      alamat: freezed == alamat
-          ? _value.alamat
-          : alamat // ignore: cast_nullable_to_non_nullable
-              as String?,
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      dbDate: null == dbDate
-          ? _value.dbDate
-          : dbDate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+      absenState: null == absenState
+          ? _value.absenState
+          : absenState // ignore: cast_nullable_to_non_nullable
+              as AbsenState,
     ));
   }
 }
@@ -165,32 +191,35 @@ class __$$_SavedLocationCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_SavedLocation implements _SavedLocation {
   const _$_SavedLocation(
-      {required this.idGeof,
+      {required this.date,
+      required this.alamat,
+      required this.idGeof,
+      required this.dbDate,
       required this.latitude,
       required this.longitude,
-      required this.alamat,
-      required this.date,
-      required this.dbDate});
+      required this.absenState});
 
   factory _$_SavedLocation.fromJson(Map<String, dynamic> json) =>
       _$$_SavedLocationFromJson(json);
 
   @override
+  final DateTime date;
+  @override
+  final String? alamat;
+  @override
   final String? idGeof;
+  @override
+  final DateTime dbDate;
   @override
   final double? latitude;
   @override
   final double? longitude;
   @override
-  final String? alamat;
-  @override
-  final DateTime date;
-  @override
-  final DateTime dbDate;
+  final AbsenState absenState;
 
   @override
   String toString() {
-    return 'SavedLocation(idGeof: $idGeof, latitude: $latitude, longitude: $longitude, alamat: $alamat, date: $date, dbDate: $dbDate)';
+    return 'SavedLocation(date: $date, alamat: $alamat, idGeof: $idGeof, dbDate: $dbDate, latitude: $latitude, longitude: $longitude, absenState: $absenState)';
   }
 
   @override
@@ -198,20 +227,22 @@ class _$_SavedLocation implements _SavedLocation {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_SavedLocation &&
+            (identical(other.date, date) || other.date == date) &&
+            (identical(other.alamat, alamat) || other.alamat == alamat) &&
             (identical(other.idGeof, idGeof) || other.idGeof == idGeof) &&
+            (identical(other.dbDate, dbDate) || other.dbDate == dbDate) &&
             (identical(other.latitude, latitude) ||
                 other.latitude == latitude) &&
             (identical(other.longitude, longitude) ||
                 other.longitude == longitude) &&
-            (identical(other.alamat, alamat) || other.alamat == alamat) &&
-            (identical(other.date, date) || other.date == date) &&
-            (identical(other.dbDate, dbDate) || other.dbDate == dbDate));
+            (identical(other.absenState, absenState) ||
+                other.absenState == absenState));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, idGeof, latitude, longitude, alamat, date, dbDate);
+  int get hashCode => Object.hash(runtimeType, date, alamat, idGeof, dbDate,
+      latitude, longitude, absenState);
 
   @JsonKey(ignore: true)
   @override
@@ -229,28 +260,31 @@ class _$_SavedLocation implements _SavedLocation {
 
 abstract class _SavedLocation implements SavedLocation {
   const factory _SavedLocation(
-      {required final String? idGeof,
+      {required final DateTime date,
+      required final String? alamat,
+      required final String? idGeof,
+      required final DateTime dbDate,
       required final double? latitude,
       required final double? longitude,
-      required final String? alamat,
-      required final DateTime date,
-      required final DateTime dbDate}) = _$_SavedLocation;
+      required final AbsenState absenState}) = _$_SavedLocation;
 
   factory _SavedLocation.fromJson(Map<String, dynamic> json) =
       _$_SavedLocation.fromJson;
 
   @override
+  DateTime get date;
+  @override
+  String? get alamat;
+  @override
   String? get idGeof;
+  @override
+  DateTime get dbDate;
   @override
   double? get latitude;
   @override
   double? get longitude;
   @override
-  String? get alamat;
-  @override
-  DateTime get date;
-  @override
-  DateTime get dbDate;
+  AbsenState get absenState;
   @override
   @JsonKey(ignore: true)
   _$$_SavedLocationCopyWith<_$_SavedLocation> get copyWith =>

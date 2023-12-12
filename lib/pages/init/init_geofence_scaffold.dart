@@ -20,7 +20,7 @@ import '../../pages/home/saved/home_saved.dart';
 import '../../pages/widgets/loading_overlay.dart';
 import '../../application/background/saved_location.dart';
 import '../../application/geofence/geofence_response.dart';
-import '../../application/background/background_item_state.dart';
+
 import '../widgets/v_async_widget.dart';
 
 class InitGeofenceScaffold extends ConsumerStatefulWidget {
@@ -78,12 +78,7 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
                     log('savedLocations $savedLocations');
                     ref
                         .read(backgroundNotifierProvider.notifier)
-                        .processSavedLocations(
-                          locations: savedLocations,
-                          onProcessed: ({required items}) => ref
-                              .read(backgroundNotifierProvider.notifier)
-                              .changeBackgroundItems(items),
-                        );
+                        .changeBackgroundItems(savedLocations);
                   } else {
                     ref
                         .read(backgroundNotifierProvider.notifier)
@@ -176,7 +171,7 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
                       .read(geofenceProvider.notifier)
                       .geofenceResponseToList(geofenceList);
                   //
-                  final List<BackgroundItemState> savedItems =
+                  final List<SavedLocation> savedItems =
                       ref.read(backgroundNotifierProvider).savedBackgroundItems;
 
                   log('isOffline $isOffline');
@@ -202,13 +197,6 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
                         startAbsen: (savedItems) async {
                           // ABSEN TERSIMPAN
                           if (savedItems.isNotEmpty) {
-                            final List<SavedLocation>? savedLocations = ref
-                                .read(backgroundNotifierProvider.notifier)
-                                .getSavedLocationsAsList(savedItems);
-
-                            log('savedLocations ${savedLocations?.length}');
-                            // debugger(message: 'called');
-
                             await ref
                                 .read(geofenceProvider.notifier)
                                 .initializeGeoFence(geofence,
@@ -231,14 +219,13 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
                             // GET CURRENT NETWORK TIME
                             await ref.read(networkTimeFutureProvider.future);
 
-                            final List<BackgroundItemState> savedItemsCurrent =
-                                ref
-                                    .read(autoAbsenNotifierProvider.notifier)
-                                    .currentNetworkTimeForSavedAbsen(
-                                        dbDate: dbDate, savedItems: savedItems);
+                            final List<SavedLocation> savedItemsCurrent = ref
+                                .read(autoAbsenNotifierProvider.notifier)
+                                .currentNetworkTimeForSavedAbsen(
+                                    dbDate: dbDate, savedItems: savedItems);
 
-                            final Map<String, List<BackgroundItemState>>
-                                autoAbsen = ref
+                            final Map<String, List<SavedLocation>> autoAbsen =
+                                ref
                                     .read(autoAbsenNotifierProvider.notifier)
                                     .sortAbsenMap(savedItemsCurrent);
 
@@ -248,9 +235,9 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
                                 .read(autoAbsenNotifierProvider.notifier)
                                 .processAutoAbsen(
                                   imei: imei,
-                                  buildContext: buildContext,
-                                  autoAbsenMap: autoAbsen,
                                   geofence: geofence,
+                                  autoAbsenMap: autoAbsen,
+                                  buildContext: buildContext,
                                   savedItems: savedItemsCurrent,
                                 );
 

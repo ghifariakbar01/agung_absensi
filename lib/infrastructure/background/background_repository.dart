@@ -15,11 +15,11 @@ class BackgroundRepository {
       getSavedLocations() async {
     final _sharedPreference = await SharedPreferences.getInstance();
 
-    final String? savedLocations = _sharedPreference.getString("locations");
+    final String? locations = _sharedPreference.getString("locations");
 
-    if (savedLocations != null) {
-      final List<SavedLocation> savedLocations = await parseLocation(
-          savedLocations: _sharedPreference.getString("locations"));
+    if (locations != null) {
+      final List<SavedLocation> savedLocations =
+          await parseLocationJson(savedLocations: locations);
 
       return right(savedLocations);
     }
@@ -28,75 +28,51 @@ class BackgroundRepository {
   }
 
   Future<Either<BackgroundFailure, Unit>> addBackgroundLocation(
-      {required SavedLocation inputData}) async {
+      {required SavedLocation savedLocation}) async {
     final _sharedPreference = await SharedPreferences.getInstance();
 
-    switch (_sharedPreference.getString("locations") != null) {
-      case true:
-        final savedLocations = await parseLocation(
-            savedLocations: _sharedPreference.getString("locations"));
+    final String? locations = _sharedPreference.getString("locations");
 
-        final currentLocations =
-            parseSavedLocation(location: jsonEncode(inputData));
+    if (locations != null) {
+      final savedLocations = await parseLocationJson(savedLocations: locations);
 
-        final List<SavedLocation> processLocation =
-            [...savedLocations, currentLocations].toSet().toList();
+      final List<SavedLocation> processLocation =
+          [...savedLocations, savedLocation].toSet().toList();
 
-        final saveToSharedPrefs = await _sharedPreference.setString(
-            "locations", jsonEncode(processLocation));
+      final bool isSuccess = await _sharedPreference.setString(
+          "locations", jsonEncode(processLocation));
 
-        if (saveToSharedPrefs == false) {
-          return left(BackgroundFailure.unknown(
-              'Memori', 'Memori penuh saat menyimpan absen.'));
-        }
+      if (isSuccess == false) {
+        return left(BackgroundFailure.unknown(
+            'Memori', 'Memori penuh saat menyimpan absen.'));
+      }
 
-        return right(unit);
-
-      case false:
-        final saveToSharedPrefs = await _sharedPreference.setString(
-            "locations", jsonEncode(inputData));
-
-        if (saveToSharedPrefs == false) {
-          return left(BackgroundFailure.unknown(
-              'Memori', 'Memori penuh saat menyimpan absen.'));
-        }
-
-        return right(unit);
-    }
-
-    return left(BackgroundFailure.unknown(
-        'Error', 'Error saat menyimpan absen di addBackgroundLocation'));
-  }
-
-// log('savedLocations $savedLocations');
-// log('currentLocations $currentLocations');
-
-// log('inputData[locations] type ${inputData.runtimeType} ');
-// log('inputData[locations] $inputData ');
-// log('_sharedPreference.getString("locations") ${_sharedPreference.getString("locations")}');
-
-  Future<List<SavedLocation>> parseLocation(
-      {required String? savedLocations}) async {
-    final parsedData = jsonDecode(savedLocations!);
-
-    // log('parsedData $parsedData ');
-
-    if (parsedData is Map<String, dynamic>) {
-      final location = SavedLocation.fromJson(parsedData);
-
-      final List<SavedLocation> empty = [];
-
-      empty.add(location);
-
-      return empty;
+      return right(unit);
     } else {
-      return (parsedData as List<dynamic>)
-          .map((locationData) => SavedLocation.fromJson(locationData))
-          .toList();
-    }
-  }
+      final isSuccess = await _sharedPreference.setString(
+          "locations", jsonEncode(savedLocation));
 
-  SavedLocation parseSavedLocation({required String location}) {
-    return SavedLocation.fromJson(jsonDecode(location));
+      if (isSuccess == false) {
+        return left(BackgroundFailure.unknown(
+            'Memori', 'Memori penuh saat menyimpan absen.'));
+      }
+    }
+
+    return right(unit);
+  }
+}
+
+Future<List<SavedLocation>> parseLocationJson(
+    {required String? savedLocations}) async {
+  final parsedData = jsonDecode(savedLocations!);
+
+  if (parsedData is Map<String, dynamic>) {
+    final location = SavedLocation.fromJson(parsedData);
+
+    return [location];
+  } else {
+    return (parsedData as List<dynamic>)
+        .map((locationData) => SavedLocation.fromJson(locationData))
+        .toList();
   }
 }

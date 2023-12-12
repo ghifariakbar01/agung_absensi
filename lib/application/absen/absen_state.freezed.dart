@@ -14,6 +14,25 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
+AbsenState _$AbsenStateFromJson(Map<String, dynamic> json) {
+  switch (json['runtimeType']) {
+    case 'empty':
+      return _Empty.fromJson(json);
+    case 'absenIn':
+      return _AbsenIn.fromJson(json);
+    case 'incomplete':
+      return _Incomplete.fromJson(json);
+    case 'complete':
+      return _Complete.fromJson(json);
+    case 'failure':
+      return _Failure.fromJson(json);
+
+    default:
+      throw CheckedFromJsonException(json, 'runtimeType', 'AbsenState',
+          'Invalid union type "${json['runtimeType']}"!');
+  }
+}
+
 /// @nodoc
 mixin _$AbsenState {
   @optionalTypeArgs
@@ -72,6 +91,7 @@ mixin _$AbsenState {
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -107,9 +127,15 @@ class __$$_EmptyCopyWithImpl<$Res>
 }
 
 /// @nodoc
-
+@JsonSerializable()
 class _$_Empty implements _Empty {
-  const _$_Empty();
+  const _$_Empty({final String? $type}) : $type = $type ?? 'empty';
+
+  factory _$_Empty.fromJson(Map<String, dynamic> json) =>
+      _$$_EmptyFromJson(json);
+
+  @JsonKey(name: 'runtimeType')
+  final String $type;
 
   @override
   String toString() {
@@ -122,6 +148,7 @@ class _$_Empty implements _Empty {
         (other.runtimeType == runtimeType && other is _$_Empty);
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode => runtimeType.hashCode;
 
@@ -204,10 +231,19 @@ class _$_Empty implements _Empty {
     }
     return orElse();
   }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$_EmptyToJson(
+      this,
+    );
+  }
 }
 
 abstract class _Empty implements AbsenState {
   const factory _Empty() = _$_Empty;
+
+  factory _Empty.fromJson(Map<String, dynamic> json) = _$_Empty.fromJson;
 }
 
 /// @nodoc
@@ -226,9 +262,15 @@ class __$$_AbsenInCopyWithImpl<$Res>
 }
 
 /// @nodoc
-
+@JsonSerializable()
 class _$_AbsenIn implements _AbsenIn {
-  const _$_AbsenIn();
+  const _$_AbsenIn({final String? $type}) : $type = $type ?? 'absenIn';
+
+  factory _$_AbsenIn.fromJson(Map<String, dynamic> json) =>
+      _$$_AbsenInFromJson(json);
+
+  @JsonKey(name: 'runtimeType')
+  final String $type;
 
   @override
   String toString() {
@@ -241,6 +283,7 @@ class _$_AbsenIn implements _AbsenIn {
         (other.runtimeType == runtimeType && other is _$_AbsenIn);
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode => runtimeType.hashCode;
 
@@ -323,10 +366,19 @@ class _$_AbsenIn implements _AbsenIn {
     }
     return orElse();
   }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$_AbsenInToJson(
+      this,
+    );
+  }
 }
 
 abstract class _AbsenIn implements AbsenState {
   const factory _AbsenIn() = _$_AbsenIn;
+
+  factory _AbsenIn.fromJson(Map<String, dynamic> json) = _$_AbsenIn.fromJson;
 }
 
 /// @nodoc
@@ -346,9 +398,15 @@ class __$$_IncompleteCopyWithImpl<$Res>
 }
 
 /// @nodoc
-
+@JsonSerializable()
 class _$_Incomplete implements _Incomplete {
-  const _$_Incomplete();
+  const _$_Incomplete({final String? $type}) : $type = $type ?? 'incomplete';
+
+  factory _$_Incomplete.fromJson(Map<String, dynamic> json) =>
+      _$$_IncompleteFromJson(json);
+
+  @JsonKey(name: 'runtimeType')
+  final String $type;
 
   @override
   String toString() {
@@ -361,6 +419,7 @@ class _$_Incomplete implements _Incomplete {
         (other.runtimeType == runtimeType && other is _$_Incomplete);
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode => runtimeType.hashCode;
 
@@ -443,10 +502,20 @@ class _$_Incomplete implements _Incomplete {
     }
     return orElse();
   }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$_IncompleteToJson(
+      this,
+    );
+  }
 }
 
 abstract class _Incomplete implements AbsenState {
   const factory _Incomplete() = _$_Incomplete;
+
+  factory _Incomplete.fromJson(Map<String, dynamic> json) =
+      _$_Incomplete.fromJson;
 }
 
 /// @nodoc
@@ -466,9 +535,15 @@ class __$$_CompleteCopyWithImpl<$Res>
 }
 
 /// @nodoc
-
+@JsonSerializable()
 class _$_Complete implements _Complete {
-  const _$_Complete();
+  const _$_Complete({final String? $type}) : $type = $type ?? 'complete';
+
+  factory _$_Complete.fromJson(Map<String, dynamic> json) =>
+      _$$_CompleteFromJson(json);
+
+  @JsonKey(name: 'runtimeType')
+  final String $type;
 
   @override
   String toString() {
@@ -481,6 +556,7 @@ class _$_Complete implements _Complete {
         (other.runtimeType == runtimeType && other is _$_Complete);
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode => runtimeType.hashCode;
 
@@ -563,10 +639,19 @@ class _$_Complete implements _Complete {
     }
     return orElse();
   }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$_CompleteToJson(
+      this,
+    );
+  }
 }
 
 abstract class _Complete implements AbsenState {
   const factory _Complete() = _$_Complete;
+
+  factory _Complete.fromJson(Map<String, dynamic> json) = _$_Complete.fromJson;
 }
 
 /// @nodoc
@@ -605,14 +690,21 @@ class __$$_FailureCopyWithImpl<$Res>
 }
 
 /// @nodoc
-
+@JsonSerializable()
 class _$_Failure implements _Failure {
-  const _$_Failure({this.errorCode, this.message});
+  const _$_Failure({this.errorCode, this.message, final String? $type})
+      : $type = $type ?? 'failure';
+
+  factory _$_Failure.fromJson(Map<String, dynamic> json) =>
+      _$$_FailureFromJson(json);
 
   @override
   final int? errorCode;
   @override
   final String? message;
+
+  @JsonKey(name: 'runtimeType')
+  final String $type;
 
   @override
   String toString() {
@@ -629,6 +721,7 @@ class _$_Failure implements _Failure {
             (identical(other.message, message) || other.message == message));
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, errorCode, message);
 
@@ -717,11 +810,20 @@ class _$_Failure implements _Failure {
     }
     return orElse();
   }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$_FailureToJson(
+      this,
+    );
+  }
 }
 
 abstract class _Failure implements AbsenState {
   const factory _Failure({final int? errorCode, final String? message}) =
       _$_Failure;
+
+  factory _Failure.fromJson(Map<String, dynamic> json) = _$_Failure.fromJson;
 
   int? get errorCode;
   String? get message;

@@ -7,7 +7,7 @@ part of 'err_log_notifier.dart';
 // **************************************************************************
 
 String _$errLogRemoteServiceHash() =>
-    r'c6723d2e6a7a726661a7fea6042081da506c23da';
+    r'4082038deb6e44ff74bc2adca70a393bb648fadc';
 
 /// See also [errLogRemoteService].
 @ProviderFor(errLogRemoteService)
@@ -37,7 +37,7 @@ final errLogRepositoryProvider = Provider<ErrLogRepository>.internal(
 );
 
 typedef ErrLogRepositoryRef = ProviderRef<ErrLogRepository>;
-String _$errLogControllerHash() => r'cda56f4e2a3603097f9377606c27154bb16ef1a0';
+String _$errLogControllerHash() => r'5eb32deaf31639184978a3be4d9013e870be3420';
 
 /// See also [ErrLogController].
 @ProviderFor(ErrLogController)

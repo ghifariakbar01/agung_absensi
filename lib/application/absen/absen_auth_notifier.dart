@@ -7,7 +7,6 @@ import 'package:face_net_authentication/infrastructure/absen/absen_repository.da
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../domain/absen_failure.dart';
-import '../background/background_item_state.dart';
 import 'absen_auth_state.dart';
 
 class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
@@ -48,19 +47,17 @@ class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
         failureOrSuccessOption: optionOf(failureOrSuccess));
   }
 
-  void _changeBackgroundAbsenStateSaved(
-      BackgroundItemState backgroundItemState) {
+  void _changeBackgroundAbsenStateSaved(SavedLocation backgroundItemState) {
     state = state.copyWith(backgroundItemState: backgroundItemState);
   }
 
   Future<void> absenOneLiner({
-    required BackgroundItemState backgroundItemState,
+    required SavedLocation backgroundItemState,
     required JenisAbsen jenisAbsen,
     required String idGeof,
     required String imei,
     required Future<void> Function() onAbsen,
     required Future<void> Function() deleteSaved,
-    required Future<void> Function() getAbsenState,
     required Future<void> Function() showSuccessDialog,
     required Future<void> Function(String code, String message)
         showFailureDialog,
@@ -69,7 +66,7 @@ class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
 
     this._changeBackgroundAbsenStateSaved(backgroundItemState);
 
-    SavedLocation location = backgroundItemState.savedLocations;
+    SavedLocation location = backgroundItemState;
 
     // debugger();
 
@@ -96,13 +93,6 @@ class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
     }
     try {
       await deleteSaved();
-    } catch (e) {
-      showFailureDialog('', e.toString());
-      return;
-    }
-
-    try {
-      await getAbsenState();
     } catch (e) {
       showFailureDialog('', e.toString());
       return;

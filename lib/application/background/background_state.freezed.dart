@@ -17,7 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$BackgroundState {
   bool get isGetting => throw _privateConstructorUsedError;
-  List<BackgroundItemState> get savedBackgroundItems =>
+  List<SavedLocation> get savedBackgroundItems =>
       throw _privateConstructorUsedError;
   Option<Either<BackgroundFailure, List<SavedLocation>>>
       get failureOrSuccessOption => throw _privateConstructorUsedError;
@@ -37,7 +37,7 @@ abstract class $BackgroundStateCopyWith<$Res> {
   @useResult
   $Res call(
       {bool isGetting,
-      List<BackgroundItemState> savedBackgroundItems,
+      List<SavedLocation> savedBackgroundItems,
       Option<Either<BackgroundFailure, List<SavedLocation>>>
           failureOrSuccessOption,
       Option<Either<BackgroundFailure, Unit>> failureOrSuccessOptionSave});
@@ -69,7 +69,7 @@ class _$BackgroundStateCopyWithImpl<$Res, $Val extends BackgroundState>
       savedBackgroundItems: null == savedBackgroundItems
           ? _value.savedBackgroundItems
           : savedBackgroundItems // ignore: cast_nullable_to_non_nullable
-              as List<BackgroundItemState>,
+              as List<SavedLocation>,
       failureOrSuccessOption: null == failureOrSuccessOption
           ? _value.failureOrSuccessOption
           : failureOrSuccessOption // ignore: cast_nullable_to_non_nullable
@@ -92,7 +92,7 @@ abstract class _$$_BackgroundStateCopyWith<$Res>
   @useResult
   $Res call(
       {bool isGetting,
-      List<BackgroundItemState> savedBackgroundItems,
+      List<SavedLocation> savedBackgroundItems,
       Option<Either<BackgroundFailure, List<SavedLocation>>>
           failureOrSuccessOption,
       Option<Either<BackgroundFailure, Unit>> failureOrSuccessOptionSave});
@@ -122,7 +122,7 @@ class __$$_BackgroundStateCopyWithImpl<$Res>
       savedBackgroundItems: null == savedBackgroundItems
           ? _value._savedBackgroundItems
           : savedBackgroundItems // ignore: cast_nullable_to_non_nullable
-              as List<BackgroundItemState>,
+              as List<SavedLocation>,
       failureOrSuccessOption: null == failureOrSuccessOption
           ? _value.failureOrSuccessOption
           : failureOrSuccessOption // ignore: cast_nullable_to_non_nullable
@@ -140,16 +140,16 @@ class __$$_BackgroundStateCopyWithImpl<$Res>
 class _$_BackgroundState implements _BackgroundState {
   const _$_BackgroundState(
       {required this.isGetting,
-      required final List<BackgroundItemState> savedBackgroundItems,
+      required final List<SavedLocation> savedBackgroundItems,
       required this.failureOrSuccessOption,
       required this.failureOrSuccessOptionSave})
       : _savedBackgroundItems = savedBackgroundItems;
 
   @override
   final bool isGetting;
-  final List<BackgroundItemState> _savedBackgroundItems;
+  final List<SavedLocation> _savedBackgroundItems;
   @override
-  List<BackgroundItemState> get savedBackgroundItems {
+  List<SavedLocation> get savedBackgroundItems {
     if (_savedBackgroundItems is EqualUnmodifiableListView)
       return _savedBackgroundItems;
     // ignore: implicit_dynamic_type
@@ -202,7 +202,7 @@ class _$_BackgroundState implements _BackgroundState {
 abstract class _BackgroundState implements BackgroundState {
   const factory _BackgroundState(
       {required final bool isGetting,
-      required final List<BackgroundItemState> savedBackgroundItems,
+      required final List<SavedLocation> savedBackgroundItems,
       required final Option<Either<BackgroundFailure, List<SavedLocation>>>
           failureOrSuccessOption,
       required final Option<Either<BackgroundFailure, Unit>>
@@ -211,7 +211,7 @@ abstract class _BackgroundState implements BackgroundState {
   @override
   bool get isGetting;
   @override
-  List<BackgroundItemState> get savedBackgroundItems;
+  List<SavedLocation> get savedBackgroundItems;
   @override
   Option<Either<BackgroundFailure, List<SavedLocation>>>
       get failureOrSuccessOption;

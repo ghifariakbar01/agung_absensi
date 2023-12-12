@@ -60,10 +60,14 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
             () {},
             (either) => either.fold(
                 (failure) => failure.maybeWhen(
-                    noConnection: () => _onNoConnection(currentLocationLatitude,
-                        currentLocationLongitude, context),
-                    orElse: () async => _onErrOther(failure, context)),
-                (_) async => _onBerhasilAbsen(context))));
+                    noConnection: () => _onNoConnection(
+                        //
+                        currentLocationLatitude,
+                        currentLocationLongitude,
+                        context,
+                        absenState: ref.read(absenNotifierProvidier)),
+                    orElse: () => _onErrOther(failure, context)),
+                (_) => _onBerhasilAbsen(context))));
 
     // ABSEN MODE OFFLINE
     ref.listen<Option<Either<BackgroundFailure, Unit>>>(
@@ -86,7 +90,7 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                         asset: Assets.iconCrossed,
                       ),
                     ),
-                (_) async => _onBerhasilSimpanAbsen(context))));
+                (_) => _onBerhasilSimpanAbsen(context))));
 
     // ABSEN STATE
     final absen = ref.watch(absenNotifierProvidier);
@@ -128,10 +132,10 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
             return Column(
               children: [
                 // Toggle Absen Ulang
-                AbsenReset(),
+                Visibility(visible: !isOfflineMode, child: AbsenReset()),
 
                 Visibility(
-                  visible: true,
+                  visible: !isOfflineMode,
                   child: VButton(
                       label: 'ABSEN IN $karyawanShiftStr',
                       isEnabled: isTesting
@@ -164,7 +168,7 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                           )),
                 ),
                 Visibility(
-                  visible: true,
+                  visible: !isOfflineMode,
                   child: VButton(
                       label: 'ABSEN OUT $karyawanShiftStr',
                       isEnabled: isTesting
@@ -202,10 +206,12 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                 ? true
                 : isOfflineMode && nearest < minDistance && nearest != 0,
             child: VButton(
-                label: 'SIMPAN ABSEN',
+                label: 'SIMPAN ABSEN IN',
                 isEnabled: isTester.maybeWhen(
                     tester: () => true,
-                    orElse: () => nearest < minDistance && nearest != 0),
+                    orElse: () => isTesting
+                        ? isTesting
+                        : nearest < minDistance && nearest != 0),
                 onPressed: () async {
                   await HapticFeedback.vibrate();
 
@@ -217,11 +223,43 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                   await ref
                       .read(backgroundNotifierProvider.notifier)
                       .addSavedLocation(
-                          savedLocation: SavedLocation(
+                          savedLocation: SavedLocation.initial().copyWith(
                         idGeof: alamat.id,
                         alamat: alamat.nama,
-                        date: DateTime.now(),
-                        dbDate: DateTime.now(),
+                        absenState: AbsenState.empty(),
+                        latitude: currentLocationLatitude,
+                        longitude: currentLocationLongitude,
+                      ));
+
+                  // debugger();
+                })),
+
+        Visibility(
+            visible: isTesting
+                ? true
+                : isOfflineMode && nearest < minDistance && nearest != 0,
+            child: VButton(
+                label: 'SIMPAN ABSEN OUT',
+                isEnabled: isTester.maybeWhen(
+                    tester: () => true,
+                    orElse: () => isTesting
+                        ? isTesting
+                        : nearest < minDistance && nearest != 0),
+                onPressed: () async {
+                  await HapticFeedback.vibrate();
+
+                  // ALAMAT GEOFENCE
+                  final alamat = ref.watch(geofenceProvider
+                      .select((value) => value.nearestCoordinates));
+
+                  // SAVE ABSEN
+                  await ref
+                      .read(backgroundNotifierProvider.notifier)
+                      .addSavedLocation(
+                          savedLocation: SavedLocation.initial().copyWith(
+                        idGeof: alamat.id,
+                        alamat: alamat.nama,
+                        absenState: AbsenState.absenIn(),
                         latitude: currentLocationLatitude,
                         longitude: currentLocationLongitude,
                       ));
@@ -321,8 +359,12 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
     }
   }
 
-  _onNoConnection(double currentLocationLatitude,
-      double currentLocationLongitude, BuildContext context) async {
+  _onNoConnection(
+      //
+      double currentLocationLatitude,
+      double currentLocationLongitude,
+      BuildContext context,
+      {required AbsenState absenState}) async {
     {
       // ALAMAT GEOFENCE
       final alamat = ref
@@ -330,13 +372,15 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
 
       // SAVE ABSEN
       await ref.read(backgroundNotifierProvider.notifier).addSavedLocation(
-          savedLocation: SavedLocation(
-              idGeof: alamat.id,
-              latitude: currentLocationLatitude,
-              longitude: currentLocationLongitude,
-              alamat: alamat.nama,
-              date: DateTime.now(),
-              dbDate: DateTime.now()));
+              savedLocation: SavedLocation(
+            idGeof: alamat.id,
+            alamat: alamat.nama,
+            date: DateTime.now(),
+            dbDate: DateTime.now(),
+            absenState: absenState,
+            latitude: currentLocationLatitude,
+            longitude: currentLocationLongitude,
+          ));
 
       await showDialog(
           context: context,
@@ -437,9 +481,9 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
       String lokasi = await GeofenceUtil.getLokasiStr(
           lat: currentLocationLatitude, long: currentLocationLongitude);
 
-      // if (imei.isEmpty) {
-      //   return;
-      // }
+      if (imei.isEmpty) {
+        return;
+      }
 
       return await showCupertinoDialog(
           context: context,
