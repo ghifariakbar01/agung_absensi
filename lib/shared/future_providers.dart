@@ -68,23 +68,26 @@ final imeiInitFutureProvider =
 
         await ref
             .read(imeiAuthNotifierProvider.notifier)
-            .checkAndUpdateImeiByGivenParam(imeiDb: imeiDb);
+            .checkAndUpdateImei(imeiDb: imeiDb);
 
         log('imeiInitFutureProvider -- 7');
 
         // 4. PROCESS IMEI DATA
-        final isOffline = ref.read(absenOfflineModeProvider);
+        // IF OFFLINE FROM USER INIT
+        final isOfflineFromInit = ref.read(absenOfflineModeProvider);
 
-        if (!isOffline) {
+        if (!isOfflineFromInit) {
           await ref
               .read(imeiNotifierProvider.notifier)
               .processImei(imei: imeiDb, ref: ref, context: context);
         } else {
           ref.read(initUserStatusNotifierProvider.notifier).letYouThrough();
+          return unit;
         }
       } else {
         await ref.read(getUserFutureProvider.future);
         ref.read(initUserStatusNotifierProvider.notifier).letYouThrough();
+        return unit;
       }
     }
 

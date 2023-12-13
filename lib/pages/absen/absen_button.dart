@@ -202,9 +202,7 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
         ),
 
         Visibility(
-            visible: isTesting
-                ? true
-                : isOfflineMode && nearest < minDistance && nearest != 0,
+            visible: isTesting ? true : isOfflineMode,
             child: VButton(
                 label: 'SIMPAN ABSEN IN',
                 isEnabled: isTester.maybeWhen(
@@ -235,9 +233,7 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                 })),
 
         Visibility(
-            visible: isTesting
-                ? true
-                : isOfflineMode && nearest < minDistance && nearest != 0,
+            visible: isTesting ? true : isOfflineMode,
             child: VButton(
                 label: 'SIMPAN ABSEN OUT',
                 isEnabled: isTester.maybeWhen(

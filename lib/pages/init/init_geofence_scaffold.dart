@@ -51,40 +51,11 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
         ),
         (_, failureOrSuccessOption) => failureOrSuccessOption.fold(
             () {},
-            (either) => either.fold((failure) async {
-                  final String errMessage = failure.map(
-                    empty: (_) => '',
-                    unknown: (value) =>
-                        'Error ${value.errorCode} ${value.message} ',
-                  );
-
-                  final String imeiSaved = await ref
-                      .read(imeiNotifierProvider.notifier)
-                      .getImeiString();
-
-                  final String imeiDb = await ref
-                      .read(imeiNotifierProvider.notifier)
-                      .getImeiString();
-
-                  await ref.read(errLogControllerProvider.notifier).sendLog(
-                      imeiDb: imeiDb,
-                      imeiSaved: imeiSaved,
-                      errMessage: errMessage);
-
-                  return AlertHelper.showSnackBar(context, message: errMessage);
-                }, (savedLocations) async {
-                  if (savedLocations.isNotEmpty) {
-                    //
-                    log('savedLocations $savedLocations');
-                    ref
-                        .read(backgroundNotifierProvider.notifier)
-                        .changeBackgroundItems(savedLocations);
-                  } else {
-                    ref
-                        .read(backgroundNotifierProvider.notifier)
-                        .changeBackgroundItems([]);
-                  }
-                })));
+            (either) => either.fold(
+                _savedBackgroundItemsError,
+                ref
+                    .read(backgroundNotifierProvider.notifier)
+                    .changeBackgroundItems)));
 
     // GEOFENCE
     ref.listen<Option<Either<GeofenceFailure, List<GeofenceResponse>>>>(
@@ -98,175 +69,30 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
                     noConnection: () => ref
                         .read(geofenceProvider.notifier)
                         .getGeofenceListFromStorage(),
-                    empty: () async {
-                      final String errMessage =
-                          'Geofence Belum Disimpan sehingga tidak ada Geofence Offline.';
-
-                      final String imeiSaved = await ref
-                          .read(imeiNotifierProvider.notifier)
-                          .getImeiString();
-
-                      final String imeiDb = await ref
-                          .read(imeiNotifierProvider.notifier)
-                          .getImeiString();
-
-                      await ref.read(errLogControllerProvider.notifier).sendLog(
-                          imeiDb: imeiDb,
-                          imeiSaved: imeiSaved,
-                          errMessage: errMessage);
-
-                      return showCupertinoDialog(
-                          context: context,
-                          barrierDismissible: true,
-                          builder: (_) => VSimpleDialog(
-                              label: 'Error',
-                              labelDescription: "",
-                              asset: Assets.iconCrossed,
-                              color: Colors.red)).then((_) =>
-                          ref.read(userNotifierProvider.notifier).logout());
-                    },
-                    orElse: () async {
-                      final String errMessage = failure.maybeMap(
-                        orElse: () => '',
-                        passwordExpired: (_) => 'Pass Expire',
-                        passwordWrong: (value) => 'Pass Wrong',
-                        server: (error) => 'Error geofence: ($error)',
-                        wrongFormat: (val) => 'Error parsing geofence : $val',
-                      );
-
-                      final String imeiSaved = await ref
-                          .read(imeiNotifierProvider.notifier)
-                          .getImeiString();
-
-                      final String imeiDb = await ref
-                          .read(imeiNotifierProvider.notifier)
-                          .getImeiString();
-
-                      await ref.read(errLogControllerProvider.notifier).sendLog(
-                          imeiDb: imeiDb,
-                          imeiSaved: imeiSaved,
-                          errMessage: errMessage);
-
-                      return showCupertinoDialog(
-                          context: context,
-                          barrierDismissible: true,
-                          builder: (_) => VSimpleDialog(
-                              label: 'Error',
-                              labelDescription: errMessage,
-                              asset: Assets.iconCrossed,
-                              color: Colors.red)).then((_) => ref
-                          .read(geofenceProvider.notifier)
-                          .getGeofenceListFromStorage());
-                    });
+                    empty: () => _geofenceEmptyError(),
+                    orElse: () => _otherError(failure));
               }, (geofenceList) async {
                 final Function(Location location) mockListener = ref
                     .read(mockLocationNotifierProvider.notifier)
                     .addMockLocationListener;
                 //
                 if (geofenceList.isNotEmpty) {
-                  final bool isOffline =
-                      ref.read(absenOfflineModeProvider.notifier).state;
                   //
                   final List<Geofence> geofence = ref
                       .read(geofenceProvider.notifier)
                       .geofenceResponseToList(geofenceList);
-                  //
-                  final List<SavedLocation> savedItems =
-                      ref.read(backgroundNotifierProvider).savedBackgroundItems;
 
-                  log('isOffline $isOffline');
+                  final isOffline = ref.read(absenOfflineModeProvider);
+                  log('isOffline Geofeonce $isOffline');
 
                   // Is currently offline
                   if (!isOffline) {
-                    //
-                    await ref.read(geofenceProvider.notifier).startAutoAbsen(
-                        geofenceResponseList: geofenceList,
-                        savedBackgroundItems: savedItems,
-                        saveGeofence: (geofenceList) => ref
-                            .read(geofenceProvider.notifier)
-                            .saveGeofence(geofenceList),
-                        showDialogAndLogout: () => showDialog(
-                            context: context,
-                            builder: (context) => VSimpleDialog(
-                                  asset: Assets.iconCrossed,
-                                  label: 'Error',
-                                  labelDescription:
-                                      'Mohon Maaf Storage Anda penuh. Mohon luangkan storage Anda agar bisa menyimpan data Geofence.',
-                                )).then((_) =>
-                            ref.read(userNotifierProvider.notifier).logout()),
-                        startAbsen: (savedItems) async {
-                          // ABSEN TERSIMPAN
-                          if (savedItems.isNotEmpty) {
-                            await ref
-                                .read(geofenceProvider.notifier)
-                                .initializeGeoFence(geofence,
-                                    onError: (e) => log('error geofence $e'));
-                            await ref
-                                .read(geofenceProvider.notifier)
-                                .addGeofenceMockListener(
-                                    mockListener: mockListener);
-
-                            // debugger();
-                            log('savedItems $savedItems');
-                            // [AUTO ABSEN]
-
-                            final imei = ref.read(imeiNotifierProvider
-                                .select((value) => value.imei));
-
-                            final dbDate = await ref
-                                .refresh(networkTimeFutureProvider.future);
-
-                            // GET CURRENT NETWORK TIME
-                            await ref.read(networkTimeFutureProvider.future);
-
-                            final List<SavedLocation> savedItemsCurrent = ref
-                                .read(autoAbsenNotifierProvider.notifier)
-                                .currentNetworkTimeForSavedAbsen(
-                                    dbDate: dbDate, savedItems: savedItems);
-
-                            final Map<String, List<SavedLocation>> autoAbsen =
-                                ref
-                                    .read(autoAbsenNotifierProvider.notifier)
-                                    .sortAbsenMap(savedItemsCurrent);
-
-                            // debugger();
-
-                            await ref
-                                .read(autoAbsenNotifierProvider.notifier)
-                                .processAutoAbsen(
-                                  imei: imei,
-                                  geofence: geofence,
-                                  autoAbsenMap: autoAbsen,
-                                  buildContext: buildContext,
-                                  savedItems: savedItemsCurrent,
-                                );
-
-                            // debugger();
-                          } else {
-                            if (geofence.isNotEmpty) {
-                              //
-                              await ref
-                                  .read(geofenceProvider.notifier)
-                                  .initializeGeoFence(geofence,
-                                      onError: (e) => log('error geofence $e'));
-
-                              await ref
-                                  .read(geofenceProvider.notifier)
-                                  .addGeofenceMockListener(
-                                      mockListener: mockListener);
-                            } else {
-                              //
-                              await ref
-                                  .read(geofenceProvider.notifier)
-                                  .getGeofenceListFromStorage();
-                            }
-                            //
-                            await ref
-                                .read(backgroundNotifierProvider.notifier)
-                                .getSavedLocations();
-                          }
-                        });
-                    // debugger();
+                    _onGeonfeceNotOffline(
+                        //
+                        geofenceList,
+                        geofence,
+                        mockListener,
+                        buildContext);
                   } else {
                     //
                     await ref
@@ -314,5 +140,178 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
         backgroundColor: Colors.transparent,
       ),
     );
+  }
+
+  Future<void> _onGeonfeceNotOffline(
+      List<GeofenceResponse> geofenceList,
+      List<Geofence> geofence,
+      Function(Location location) mockListener,
+      BuildContext buildContext) async {
+    {
+      //
+      final List<SavedLocation> savedItems =
+          ref.read(backgroundNotifierProvider).savedBackgroundItems;
+
+      //
+      await ref.read(geofenceProvider.notifier).startAutoAbsen(
+          geofenceResponseList: geofenceList,
+          savedBackgroundItems: savedItems,
+          saveGeofence: (geofenceList) =>
+              ref.read(geofenceProvider.notifier).saveGeofence(geofenceList),
+          showDialogAndLogout: () => showDialog(
+                  context: context,
+                  builder: (context) => VSimpleDialog(
+                        asset: Assets.iconCrossed,
+                        label: 'Error',
+                        labelDescription:
+                            'Mohon Maaf Storage Anda penuh. Mohon luangkan storage Anda agar bisa menyimpan data Geofence.',
+                      ))
+              .then((_) => ref.read(userNotifierProvider.notifier).logout()),
+          startAbsen: (savedItems) async {
+            // ABSEN TERSIMPAN
+            if (savedItems.isNotEmpty) {
+              await ref.read(geofenceProvider.notifier).initializeGeoFence(
+                  geofence,
+                  onError: (e) => log('error geofence $e'));
+              await ref
+                  .read(geofenceProvider.notifier)
+                  .addGeofenceMockListener(mockListener: mockListener);
+
+              // debugger();
+              log('savedItems $savedItems');
+              // [AUTO ABSEN]
+
+              final imei =
+                  ref.read(imeiNotifierProvider.select((value) => value.imei));
+
+              final dbDate =
+                  await ref.refresh(networkTimeFutureProvider.future);
+
+              // GET CURRENT NETWORK TIME
+              await ref.read(networkTimeFutureProvider.future);
+
+              final List<SavedLocation> savedItemsCurrent = ref
+                  .read(autoAbsenNotifierProvider.notifier)
+                  .currentNetworkTimeForSavedAbsen(
+                      dbDate: dbDate, savedItems: savedItems);
+
+              final Map<String, List<SavedLocation>> autoAbsen = ref
+                  .read(autoAbsenNotifierProvider.notifier)
+                  .sortAbsenMap(savedItemsCurrent);
+
+              // debugger();
+
+              await ref
+                  .read(autoAbsenNotifierProvider.notifier)
+                  .processAutoAbsen(
+                    imei: imei,
+                    geofence: geofence,
+                    autoAbsenMap: autoAbsen,
+                    buildContext: buildContext,
+                    savedItems: savedItemsCurrent,
+                  );
+
+              // debugger();
+            } else {
+              if (geofence.isNotEmpty) {
+                //
+                await ref.read(geofenceProvider.notifier).initializeGeoFence(
+                    geofence,
+                    onError: (e) => log('error geofence $e'));
+
+                await ref
+                    .read(geofenceProvider.notifier)
+                    .addGeofenceMockListener(mockListener: mockListener);
+              } else {
+                //
+                await ref
+                    .read(geofenceProvider.notifier)
+                    .getGeofenceListFromStorage();
+              }
+              //
+              await ref
+                  .read(backgroundNotifierProvider.notifier)
+                  .getSavedLocations();
+            }
+          });
+      // debugger();
+    }
+  }
+
+  _otherError(GeofenceFailure failure) async {
+    {
+      final String errMessage = failure.maybeMap(
+        orElse: () => '',
+        passwordExpired: (_) => 'Pass Expire',
+        passwordWrong: (value) => 'Pass Wrong',
+        server: (error) => 'Error geofence: ($error)',
+        wrongFormat: (val) => 'Error parsing geofence : $val',
+      );
+
+      final String imeiSaved =
+          await ref.read(imeiNotifierProvider.notifier).getImeiString();
+
+      final String imeiDb =
+          await ref.read(imeiNotifierProvider.notifier).getImeiString();
+
+      await ref.read(errLogControllerProvider.notifier).sendLog(
+          imeiDb: imeiDb, imeiSaved: imeiSaved, errMessage: errMessage);
+
+      return showCupertinoDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (_) => VSimpleDialog(
+              label: 'Error',
+              labelDescription: errMessage,
+              asset: Assets.iconCrossed,
+              color: Colors.red)).then((_) =>
+          ref.read(geofenceProvider.notifier).getGeofenceListFromStorage());
+    }
+  }
+
+  _savedBackgroundItemsError(BackgroundFailure failure) async {
+    {
+      final String errMessage = failure.map(
+        empty: (_) => '',
+        unknown: (value) => 'Error ${value.errorCode} ${value.message} ',
+      );
+
+      final String imeiSaved =
+          await ref.read(imeiNotifierProvider.notifier).getImeiString();
+
+      final String imeiDb =
+          await ref.read(imeiNotifierProvider.notifier).getImeiString();
+
+      await ref.read(errLogControllerProvider.notifier).sendLog(
+          imeiDb: imeiDb, imeiSaved: imeiSaved, errMessage: errMessage);
+
+      return AlertHelper.showSnackBar(context, message: errMessage);
+    }
+  }
+
+  _geofenceEmptyError() async {
+    {
+      final String errMessage =
+          'Geofence Belum Disimpan sehingga tidak ada Geofence Offline.';
+
+      final String imeiSaved =
+          await ref.read(imeiNotifierProvider.notifier).getImeiString();
+
+      final String imeiDb =
+          await ref.read(imeiNotifierProvider.notifier).getImeiString();
+
+      await ref.read(errLogControllerProvider.notifier).sendLog(
+          imeiDb: imeiDb, imeiSaved: imeiSaved, errMessage: errMessage);
+
+      return showCupertinoDialog(
+              context: context,
+              barrierDismissible: true,
+              builder: (_) => VSimpleDialog(
+                  label: 'Error',
+                  labelDescription: "",
+                  asset: Assets.iconCrossed,
+                  color: Colors.red))
+          .then((_) => ref.read(userNotifierProvider.notifier).logout());
+    }
   }
 }

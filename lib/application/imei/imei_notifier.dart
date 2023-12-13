@@ -117,7 +117,8 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
   }) async {
     Either<EditFailure, Unit>? failureOrSuccess;
 
-    state = state.copyWith(isGetting: true);
+    state = state.copyWith(
+        isGetting: true, failureOrSuccessOptionClearRegisterImei: none());
 
     failureOrSuccess = await _editProfileRepostiroy.logClearImei(
         imei: state.imei, nama: nama, idUser: idUser);
@@ -300,8 +301,8 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
               showDialog: () => showFailedDialog(context),
               logout: () => ref.read(userNotifierProvider.notifier).logout(),
             )
-            .then(
-                (_) => ref.read(initUserStatusNotifierProvider.notifier).hold),
+            .then((_) =>
+                ref.read(initUserStatusNotifierProvider.notifier).hold()),
         onImeiNotRegistered: () => ref
             .read(editProfileNotifierProvider.notifier)
             .registerAndShowDialog(

@@ -99,31 +99,26 @@ class UserNotifier extends StateNotifier<UserState> {
   Future<void> onUserParsed({
     required Function initializeUser,
     required Function initializeDioRequest,
-    required Function checkAndUpdateImei,
   }) async {
     await initializeUser();
     await initializeDioRequest();
-    await checkAndUpdateImei();
   }
 
   Future<void> onUserParsedRaw(
           {required Ref ref,
           required UserModelWithPassword userModelWithPassword}) =>
       onUserParsed(
-          initializeUser: () => Future.delayed(
-              Duration(seconds: 2), () => setUser(userModelWithPassword)),
-          initializeDioRequest: () => Future.delayed(
-                Duration(seconds: 1),
-                () => ref.read(dioRequestProvider).addAll({
-                  "username": "${userModelWithPassword.nama}",
-                  "server": "${userModelWithPassword.ptServer}",
-                  "password": "${userModelWithPassword.password}",
-                }),
-              ),
-          checkAndUpdateImei: () => ref
-              .read(imeiAuthNotifierProvider.notifier)
-              .checkAndUpdateImei(
-                  idKary: userModelWithPassword.idKary ?? 'null'));
+        initializeUser: () => Future.delayed(
+            Duration(seconds: 2), () => setUser(userModelWithPassword)),
+        initializeDioRequest: () => Future.delayed(
+          Duration(seconds: 1),
+          () => ref.read(dioRequestProvider).addAll({
+            "username": "${userModelWithPassword.nama}",
+            "server": "${userModelWithPassword.ptServer}",
+            "password": "${userModelWithPassword.password}",
+          }),
+        ),
+      );
 
   Future<void> logout() async {
     Either<AuthFailure, Unit> failureOrSuccessOption;

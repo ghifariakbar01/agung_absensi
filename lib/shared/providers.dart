@@ -233,7 +233,7 @@ final imeiNotifierProvider = StateNotifierProvider<ImeiNotifier, ImeiState>(
 
 final imeiAuthNotifierProvider =
     StateNotifierProvider<ImeiAuthNotifier, ImeiAuthState>(
-        (ref) => ImeiAuthNotifier(ref.watch(editProfileRepositoryProvider)));
+        (ref) => ImeiAuthNotifier());
 
 final imeiResetNotifierProvider =
     StateNotifierProvider<ImeiResetNotifier, ImeiResetState>(
