@@ -15,7 +15,7 @@ final imeiIntroductionStorageProvider = Provider<CredentialsStorage>(
 final imeiIntroductionRepositoryProvider = Provider((ref) =>
     ImeiIntroductionRepository(ref.watch(imeiIntroductionStorageProvider)));
 
-final imeiIntroductionNotifierProvider =
+final imeiIntroNotifierProvider =
     StateNotifierProvider<ImeiIntroductionNotifier, ImeiIntroductionState>(
         (ref) => ImeiIntroductionNotifier(
             ref.watch(imeiIntroductionRepositoryProvider)));

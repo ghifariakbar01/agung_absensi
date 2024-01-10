@@ -115,11 +115,11 @@ class HomeScaffold extends ConsumerWidget {
               onTap: () async {
                 debugger(message: 'called');
                 await ref
-                    .read(imeiIntroductionNotifierProvider.notifier)
+                    .read(imeiIntroNotifierProvider.notifier)
                     .clearVisitedIMEIIntroduction();
                 await ref
-                    .read(imeiIntroductionNotifierProvider.notifier)
-                    .checkAndUpdateStatusIMEIIntroduction();
+                    .read(imeiIntroNotifierProvider.notifier)
+                    .checkAndUpdateImeiIntro();
                 await context.pushNamed(RouteNames.imeiInstructionNameRoute);
               },
               child: Ink(

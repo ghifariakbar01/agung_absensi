@@ -42,7 +42,7 @@ class RouterNotifier extends ChangeNotifier {
     );
 
     _ref.listen<ImeiIntroductionState>(
-      imeiIntroductionNotifierProvider,
+      imeiIntroNotifierProvider,
       (_, __) => notifyListeners(),
     );
 
@@ -56,7 +56,7 @@ class RouterNotifier extends ChangeNotifier {
     final tcState = _ref.read(tcNotifierProvider);
     final authState = _ref.read(authNotifierProvider);
     final initUserState = _ref.read(initUserStatusNotifierProvider);
-    final imeiIntroState = _ref.read(imeiIntroductionNotifierProvider);
+    final imeiIntroState = _ref.read(imeiIntroNotifierProvider);
 
     final areWeSigningIn = state.location == RouteNames.signInRoute;
     final areWeReadingTC = state.location == RouteNames.termsAndConditionRoute;

@@ -23,24 +23,27 @@ class SignInFormNotifier extends StateNotifier<SignInFormState> {
 
   String get saveStr => 'remember_me';
 
-  void changeAllData(
-      {required String ptNameStr,
-      required String idKaryawanStr,
-      required String userStr,
-      required String passwordStr,
-      required bool isKaryawan,
-      required bool isChecked}) {
+  changeAllData({
+    required String userStr,
+    required bool isChecked,
+    required bool isKaryawan,
+    required String ptNameStr,
+    required String passwordStr,
+    required String idKaryawanStr,
+  }) {
     state = state.copyWith(
-        idKaryawan: IdKaryawan(idKaryawanStr),
-        userId: UserId(userStr),
-        password: Password(passwordStr),
-        ptDropdownSelected: ptNameStr,
-        failureOrSuccessOption: none(),
-        isKaryawan: isKaryawan,
-        isChecked: isChecked);
+      isChecked: isChecked,
+      isKaryawan: isKaryawan,
+      ptDropdownSelected: ptNameStr,
+      failureOrSuccessOption: none(),
+      //
+      userId: UserId(userStr),
+      password: Password(passwordStr),
+      idKaryawan: IdKaryawan(idKaryawanStr),
+    );
   }
 
-  void changeInitializeNamaPT({required String namaPT}) {
+  changeInitializeNamaPT({required String namaPT}) {
     final ptMapWithName = state.ptMap.entries.firstWhereOrNull(
       (ptMap) =>
           ptMap.value.firstWhereOrNull((ptName) => ptName == namaPT) != null,
@@ -56,47 +59,47 @@ class SignInFormNotifier extends StateNotifier<SignInFormState> {
     }
   }
 
-  void changeIdKaryawan(String idKaryawanStr) {
+  changeIdKaryawan(String idKaryawanStr) {
     state = state.copyWith(
       idKaryawan: IdKaryawan(idKaryawanStr),
       failureOrSuccessOption: none(),
     );
   }
 
-  void changePTName(String ptNameStr) {
+  changePTName(String ptNameStr) {
     state = state.copyWith(
       ptServerSelected: PTName(ptNameStr),
       failureOrSuccessOption: none(),
     );
   }
 
-  void changeEmail(String emailStr) {
+  changeEmail(String emailStr) {
     state = state.copyWith(
       email: Email(emailStr),
       failureOrSuccessOption: none(),
     );
   }
 
-  void changeUserId(String userStr) {
+  changeUserId(String userStr) {
     state = state.copyWith(
       userId: UserId(userStr),
       failureOrSuccessOption: none(),
     );
   }
 
-  void changePassword(String passwordStr) {
+  changePassword(String passwordStr) {
     state = state.copyWith(
       password: Password(passwordStr),
       failureOrSuccessOption: none(),
     );
   }
 
-  void changeDropdownSelected(String dropdownStr) {
+  changeDropdownSelected(String dropdownStr) {
     state = state.copyWith(
         ptDropdownSelected: dropdownStr, failureOrSuccessOption: none());
   }
 
-  void changePTNameAndDropdown({
+  changePTNameAndDropdown({
     required void Function() changePTName,
     required void Function() changeDropdownSelected,
   }) {

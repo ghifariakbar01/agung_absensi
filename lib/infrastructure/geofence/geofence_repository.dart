@@ -28,6 +28,8 @@ class GeofenceRepository {
       return left(const GeofenceFailure.server());
     } on RestApiExceptionWithMessage catch (e) {
       return left(GeofenceFailure.server(e.errorCode, e.message));
+    } catch (e) {
+      return left(GeofenceFailure.server(01, e.toString()));
     }
   }
 
@@ -36,13 +38,14 @@ class GeofenceRepository {
       {required List<GeofenceResponse> geofenceList}) async {
     try {
       final String data = jsonEncode(geofenceList);
-
       await _credentialsStorage.save(data);
 
       return right(unit);
     } on PlatformException {
-      return left(GeofenceFailure.server(0,
+      return left(GeofenceFailure.server(01,
           'Mohon Maaf Storage Anda penuh. Mohon luangkan storage Anda agar bisa menyimpan data Geofence.'));
+    } catch (e) {
+      return left(GeofenceFailure.server(01, '$e'));
     }
   }
 

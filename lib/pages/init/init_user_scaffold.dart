@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../domain/imei_failure.dart';
+import '../../ip/application/ip_notifier.dart';
 import '../../shared/future_providers.dart';
 import '../../shared/providers.dart';
 import '../widgets/alert_helper.dart';
@@ -57,101 +58,105 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
       state.showAlertDialogOnError(context);
     });
 
+    final ip = ref.watch(ipNotifierProvider);
     final errLog = ref.watch(errLogControllerProvider);
 
-    return AsyncValueWidget<void>(
-      value: errLog,
-      data: (_) => Scaffold(
-        body: Stack(children: [
-          imeiInitFuture.when(
-            data: (_) => LoadingOverlay(
-                loadingMessage: 'Initializing User & Installation ID...',
-                isLoading: true),
-            loading: () => LoadingOverlay(
-                loadingMessage: 'Getting Data...', isLoading: true),
-            error: (error, stackTrace) => ListView(
-              children: [
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Icon(
-                      Icons.error,
-                      size: 50,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 8,
-                ),
-                Center(
-                    child: Text(
-                  'Oops. Something Went Wrong.',
-                  style: Themes.customColor(
-                    FontWeight.bold,
-                    18,
-                  ),
-                )),
-                SizedBox(
-                  height: 8,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    padding: EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: Palette.grey,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Theme(
-                      data: ThemeData(
-                        dividerColor: Colors.transparent,
+    return AsyncValueWidget(
+      value: ip,
+      data: (_) => AsyncValueWidget(
+        value: errLog,
+        data: (_) => Scaffold(
+          body: Stack(children: [
+            imeiInitFuture.when(
+              data: (_) => LoadingOverlay(
+                  loadingMessage: 'Initializing User & Installation ID...',
+                  isLoading: true),
+              loading: () => LoadingOverlay(
+                  loadingMessage: 'Getting Data...', isLoading: true),
+              error: (error, stackTrace) => ListView(
+                children: [
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Icon(
+                        Icons.error,
+                        size: 50,
                       ),
-                      child: ExpansionTile(
-                        iconColor: Colors.black,
-                        collapsedIconColor: Colors.black,
-                        title: Text(
-                          'Display Error',
-                          style: Themes.customColor(
-                            FontWeight.bold,
-                            14,
-                          ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  Center(
+                      child: Text(
+                    'Oops. Something Went Wrong.',
+                    style: Themes.customColor(
+                      FontWeight.bold,
+                      18,
+                    ),
+                  )),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      padding: EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: Palette.grey,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Theme(
+                        data: ThemeData(
+                          dividerColor: Colors.transparent,
                         ),
-                        subtitle: Text(
-                          'Error & Stack Trace',
-                          style: Themes.customColor(
-                            FontWeight.bold,
-                            14,
-                          ),
-                        ),
-                        children: [
-                          Text(
-                            'idKary: ${ref.read(userNotifierProvider).user.idKary}\n '
-                            'Error: $error \n'
-                            'StackTrace: $stackTrace \n',
+                        child: ExpansionTile(
+                          iconColor: Colors.black,
+                          collapsedIconColor: Colors.black,
+                          title: Text(
+                            'Display Error',
                             style: Themes.customColor(
-                              FontWeight.normal,
-                              12,
+                              FontWeight.bold,
+                              14,
                             ),
                           ),
-                        ],
+                          subtitle: Text(
+                            'Error & Stack Trace',
+                            style: Themes.customColor(
+                              FontWeight.bold,
+                              14,
+                            ),
+                          ),
+                          children: [
+                            Text(
+                              'idKary: ${ref.read(userNotifierProvider).user.idKary}\n '
+                              'Error: $error \n'
+                              'StackTrace: $stackTrace \n',
+                              style: Themes.customColor(
+                                FontWeight.normal,
+                                12,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: 8,
-                ),
-                VButton(
-                    label: 'Logout & Retry',
-                    onPressed: () => ref
-                        .read(imeiResetNotifierProvider.notifier)
-                        .clearImeiFromStorage())
-              ],
+                  SizedBox(
+                    height: 8,
+                  ),
+                  VButton(
+                      label: 'Logout & Retry',
+                      onPressed: () => ref
+                          .read(imeiResetNotifierProvider.notifier)
+                          .clearImeiFromStorage())
+                ],
+              ),
             ),
-          ),
-          //
-        ]),
-        // backgroundColor: Colors.white.withOpacity(0.9),
+            //
+          ]),
+          // backgroundColor: Colors.white.withOpacity(0.9),
+        ),
       ),
     );
   }

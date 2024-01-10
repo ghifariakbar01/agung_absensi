@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:face_net_authentication/application/remember_me/remember_me_state.dart';
+import 'package:face_net_authentication/ip/application/ip_notifier.dart';
 import 'package:face_net_authentication/pages/profile/widgets/profile_label.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -23,30 +24,28 @@ class _SignInFormState extends ConsumerState<SignInForm> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      ref.read(passwordVisibleProvider.notifier).state = false;
 
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
       final rememberMe = prefs.getString('remember_me');
 
       if (rememberMe != null) {
-        ref.read(passwordVisibleProvider.notifier).state = false;
-
-        RememberMeModel rememberMeModel =
-            RememberMeModel.fromJson(jsonDecode(rememberMe));
-
-        final namaPT = rememberMeModel.ptName;
+        final saved = RememberMeModel.fromJson(jsonDecode(rememberMe));
+        final savedPt = saved.ptName;
 
         ref.read(signInFormNotifierProvider.notifier).changeAllData(
-            ptNameStr: namaPT,
-            idKaryawanStr: rememberMeModel.nik,
-            passwordStr: rememberMeModel.password,
-            userStr: rememberMeModel.nama,
-            isKaryawan: rememberMeModel.isKaryawan,
-            isChecked: true);
+              isChecked: true,
+              ptNameStr: savedPt,
+              userStr: saved.nama,
+              idKaryawanStr: saved.nik,
+              passwordStr: saved.password,
+              isKaryawan: saved.isKaryawan,
+            );
 
-        if (namaPT.isNotEmpty) {
+        if (savedPt.isNotEmpty) {
           ref
               .read(signInFormNotifierProvider.notifier)
-              .changeInitializeNamaPT(namaPT: namaPT);
+              .changeInitializeNamaPT(namaPT: savedPt);
         }
       }
     });
@@ -54,14 +53,15 @@ class _SignInFormState extends ConsumerState<SignInForm> {
 
   @override
   Widget build(BuildContext context) {
-    final signInForm = ref.watch(signInFormNotifierProvider);
-
     final passwordVisible = ref.watch(passwordVisibleProvider);
+
+    final signInForm = ref.watch(signInFormNotifierProvider);
 
     final userId = signInForm.userId.getOrLeave('');
     final password = signInForm.password.getOrLeave('');
 
     final ptDropdownSelected = signInForm.ptDropdownSelected;
+
     return Form(
       autovalidateMode: signInForm.showErrorMessages
           ? AutovalidateMode.always
@@ -84,7 +84,8 @@ class _SignInFormState extends ConsumerState<SignInForm> {
                 .ptMap
                 .forEach((serverName, ptNameStrList) {
               for (final ptNameStr in ptNameStrList) {
-                if (value == ptNameStr) {
+                if (value == ptNameStr && value != null) {
+                  ref.read(ipNotifierProvider.notifier).initOnLogin(value);
                   ref
                       .read(signInFormNotifierProvider.notifier)
                       .changePTNameAndDropdown(
@@ -93,7 +94,7 @@ class _SignInFormState extends ConsumerState<SignInForm> {
                             .changePTName(serverName),
                         changeDropdownSelected: () => ref
                             .read(signInFormNotifierProvider.notifier)
-                            .changeDropdownSelected(value ?? ''),
+                            .changeDropdownSelected(value),
                       );
                 }
               }

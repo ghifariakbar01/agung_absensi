@@ -111,12 +111,12 @@ class ImeiIntroductionPage extends ConsumerWidget {
                             'Jika anda sudah mengerti instruksi di atas, tap Ya',
                         onPressed: () async {
                           await ref
-                              .read(imeiIntroductionNotifierProvider.notifier)
+                              .read(imeiIntroNotifierProvider.notifier)
                               .saveVisitedIMEIIntroduction('${DateTime.now()}');
 
                           await ref
-                              .read(imeiIntroductionNotifierProvider.notifier)
-                              .checkAndUpdateStatusIMEIIntroduction();
+                              .read(imeiIntroNotifierProvider.notifier)
+                              .checkAndUpdateImeiIntro();
                         })),
               )
             ],

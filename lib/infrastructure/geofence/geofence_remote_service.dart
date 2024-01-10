@@ -76,6 +76,8 @@ class GeofenceRemoteService {
       } else {
         rethrow;
       }
+    } catch (e) {
+      throw e;
     }
   }
 }

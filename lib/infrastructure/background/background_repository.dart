@@ -13,18 +13,21 @@ class BackgroundRepository {
 
   Future<Either<BackgroundFailure, List<SavedLocation>>>
       getSavedLocations() async {
-    final _sharedPreference = await SharedPreferences.getInstance();
+    try {
+      final _sharedPreference = await SharedPreferences.getInstance();
+      final String? locations = _sharedPreference.getString("locations");
 
-    final String? locations = _sharedPreference.getString("locations");
+      if (locations != null) {
+        final List<SavedLocation> savedLocations =
+            await parseLocationJson(savedLocations: locations);
 
-    if (locations != null) {
-      final List<SavedLocation> savedLocations =
-          await parseLocationJson(savedLocations: locations);
+        return right(savedLocations);
+      }
 
-      return right(savedLocations);
+      return right([]);
+    } catch (e) {
+      return left(BackgroundFailure.unknown(e.toString()));
     }
-
-    return right([]);
   }
 
   Future<Either<BackgroundFailure, Unit>> addBackgroundLocation(

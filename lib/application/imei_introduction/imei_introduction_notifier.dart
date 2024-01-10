@@ -9,7 +9,7 @@ class ImeiIntroductionNotifier extends StateNotifier<ImeiIntroductionState> {
 
   final ImeiIntroductionRepository _repository;
 
-  Future<void> checkAndUpdateStatusIMEIIntroduction() async {
+  Future<void> checkAndUpdateImeiIntro() async {
     final imeiIntroductionStatus = await _repository.getSaved();
 
     if (imeiIntroductionStatus == null) {

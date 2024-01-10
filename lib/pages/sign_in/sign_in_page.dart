@@ -1,4 +1,6 @@
 import 'package:dartz/dartz.dart';
+import 'package:face_net_authentication/ip/application/ip_notifier.dart';
+import 'package:face_net_authentication/pages/widgets/v_async_widget.dart';
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -52,65 +54,63 @@ class SignInPage extends HookConsumerWidget {
       signInFormNotifierProvider.select((state) => state.isSubmitting),
     );
 
-    return SafeArea(
-      child: Stack(
-        children: [
-          const SignInScaffold(),
-          Align(
-              alignment: Alignment.bottomCenter,
-              child: VButton(
-                onPressed: () async {
-                  FocusScope.of(context).unfocus();
-                  await ref
-                      .read(signInFormNotifierProvider.notifier)
-                      .signInAndRemember(
-                        init: () async {
-                          final String server = ref
-                              .read(signInFormNotifierProvider)
-                              .ptServerSelected
-                              .getOrLeave('');
-                          final String username = ref
-                              .read(signInFormNotifierProvider)
-                              .userId
-                              .getOrLeave('');
-                          final String password = ref
-                              .read(signInFormNotifierProvider)
-                              .password
-                              .getOrLeave('');
+    final ip = ref.watch(ipNotifierProvider);
 
-                          await Future.delayed(
-                              Duration(seconds: 1),
-                              () => ref.read(dioRequestProvider).addAll({
-                                    "server": server,
-                                    "username": username,
-                                    "password": password
-                                  }));
-                        },
-                        remember: () => ref
-                            .read(signInFormNotifierProvider.notifier)
-                            .rememberInfo(),
-                        clearSaved: () => ref
-                            .read(signInFormNotifierProvider.notifier)
-                            .clearInfo(),
-                        showDialogAndLogout: () => showDialog(
-                            context: context,
-                            builder: (context) => VSimpleDialog(
-                                  label: 'Error',
-                                  labelDescription:
-                                      'Mohon maaf storage anda penuh sehingga Aplikasi gagal menyimpan data user. Mohon luangkan storage dan dicoba login kembali',
-                                  asset: Assets.iconCrossed,
-                                )).then((_) =>
-                            ref.read(userNotifierProvider.notifier).logout()),
-                        signIn: () => ref
-                            .read(signInFormNotifierProvider.notifier)
-                            .signInWithUserIdEmailAndPassword(),
-                      );
-                },
-                label: 'LOGIN',
-              )),
-          LoadingOverlay(isLoading: isSubmitting),
-        ],
+    return AsyncValueWidget(
+      value: ip,
+      data: (_) => SafeArea(
+        child: Stack(
+          children: [
+            const SignInScaffold(),
+            Align(
+                alignment: Alignment.bottomCenter,
+                child: VButton(
+                  onPressed: () async {
+                    FocusScope.of(context).unfocus();
+                    await ref
+                        .read(signInFormNotifierProvider.notifier)
+                        .signInAndRemember(
+                          init: () => _initSignIn(ref),
+                          remember: () => ref
+                              .read(signInFormNotifierProvider.notifier)
+                              .rememberInfo(),
+                          clearSaved: () => ref
+                              .read(signInFormNotifierProvider.notifier)
+                              .clearInfo(),
+                          showDialogAndLogout: () => showDialog(
+                              context: context,
+                              builder: (context) => VSimpleDialog(
+                                    label: 'Error',
+                                    labelDescription:
+                                        'Mohon maaf storage anda penuh sehingga Aplikasi gagal menyimpan data user. Mohon luangkan storage dan dicoba login kembali',
+                                    asset: Assets.iconCrossed,
+                                  )).then((_) =>
+                              ref.read(userNotifierProvider.notifier).logout()),
+                          signIn: () => ref
+                              .read(signInFormNotifierProvider.notifier)
+                              .signInWithUserIdEmailAndPassword(),
+                        );
+                  },
+                  label: 'LOGIN',
+                )),
+            LoadingOverlay(isLoading: isSubmitting),
+          ],
+        ),
       ),
     );
+  }
+
+  _initSignIn(WidgetRef ref) {
+    {
+      String server =
+          ref.read(signInFormNotifierProvider).ptServerSelected.getOrLeave('');
+      String username =
+          ref.read(signInFormNotifierProvider).userId.getOrLeave('');
+      String password =
+          ref.read(signInFormNotifierProvider).password.getOrLeave('');
+
+      ref.read(dioRequestProvider).addAll(
+          {"server": server, "username": username, "password": password});
+    }
   }
 }

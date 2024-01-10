@@ -60,7 +60,7 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
 
     await ref.read(tcNotifierProvider.notifier).clearVisitedTC();
     await ref
-        .read(imeiIntroductionNotifierProvider.notifier)
+        .read(imeiIntroNotifierProvider.notifier)
         .clearVisitedIMEIIntroduction();
 
     ref.read(userNotifierProvider.notifier).setUserInitial();
@@ -74,8 +74,8 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
     await tcNotifier.checkAndUpdateStatusTC();
 
     final imeiInstructionNotifier =
-        ref.read(imeiIntroductionNotifierProvider.notifier);
-    await imeiInstructionNotifier.checkAndUpdateStatusIMEIIntroduction();
+        ref.read(imeiIntroNotifierProvider.notifier);
+    await imeiInstructionNotifier.checkAndUpdateImeiIntro();
 
     await ref.read(userNotifierProvider.notifier).logout();
     // debugger();
@@ -173,7 +173,7 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
           break;
 
         case false:
-          debugger(message: 'called');
+          // debugger(message: 'called');
 
           await _onTesterElseRegister(
               appleUsername, onImeiNotRegistered, onImeiAlreadyRegistered);
@@ -192,24 +192,18 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
           await _onTesterElseRegister(
               appleUsername, onImeiNotRegistered, onImeiAlreadyRegistered);
 
-          // onImeiOK();
-          // await onImeiNotRegistered();
-
           break;
         case false:
           () async {
             if (imeiDBString == savedImei) {
-              debugger(message: 'called');
+              // debugger(message: 'called');
 
               onImeiOK();
             } else if (imeiDBString != savedImei) {
+              // debugger(message: 'called');
               // FOR APPLE REVIEW
               await _onTesterElseRegister(
                   appleUsername, onImeiNotRegistered, onImeiAlreadyRegistered);
-              // debugger(message: 'called');
-
-              // onImeiOK();
-              // await onImeiNotRegistered();
             }
           }();
           break;
@@ -224,6 +218,7 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
       Future<void> onImeiNotRegistered(),
       Future<void> onImeiAlreadyRegistered()) async {
     if (appleUsername != null) {
+      // || appleUsername == 'Alfin'
       if (appleUsername == 'Ghifar') {
         await onImeiNotRegistered();
       } else {

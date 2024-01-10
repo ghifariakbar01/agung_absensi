@@ -1,7 +1,4 @@
-import 'dart:developer';
-
 import 'package:dartz/dartz.dart';
-import 'package:dio/dio.dart';
 import 'package:face_net_authentication/theme/application/theme_notifier.dart';
 // import 'package:face_net_authentication/locator.dart';
 
@@ -13,7 +10,7 @@ import 'application/imei_introduction/shared/imei_introduction_providers.dart';
 import 'application/permission/shared/permission_introduction_providers.dart';
 import 'application/tc/shared/tc_providers.dart';
 import 'config/configuration.dart';
-import 'pages/widgets/v_async_widget.dart';
+import 'ip/application/ip_notifier.dart';
 import 'shared/providers.dart';
 import 'style/style.dart';
 
@@ -29,16 +26,7 @@ Future<void> main() async {
 
 final initializationProvider =
     FutureProvider.family<Unit, BuildContext>((ref, context) async {
-  ref.read(dioProvider)
-    ..options = BaseOptions(
-      connectTimeout: BuildConfig.get().connectTimeout,
-      receiveTimeout: BuildConfig.get().receiveTimeout,
-      validateStatus: (status) {
-        return true;
-      },
-      baseUrl: BuildConfig.get().baseUrl,
-    )
-    ..interceptors.add(ref.read(authInterceptorProvider));
+  await ref.read(ipNotifierProvider.future);
 
   if (!BuildConfig.isProduction) {
     ref.read(dioProvider).interceptors.add(PrettyDioLogger(
@@ -46,13 +34,11 @@ final initializationProvider =
           requestBody: true,
         ));
   }
+
   await ref.read(tcNotifierProvider.notifier).checkAndUpdateStatusTC();
   await ref.read(authNotifierProvider.notifier).checkAndUpdateAuthStatus();
   await ref.read(permissionNotifierProvider.notifier).checkAndUpdateLocation();
-
-  await ref
-      .read(imeiIntroductionNotifierProvider.notifier)
-      .checkAndUpdateStatusIMEIIntroduction();
+  await ref.read(imeiIntroNotifierProvider.notifier).checkAndUpdateImeiIntro();
 
   return unit;
 });
@@ -63,7 +49,7 @@ class MyApp extends ConsumerWidget {
     ref.listen(initializationProvider(context), (_, __) {});
 
     final router = ref.watch(routerProvider);
-    final themeAsync = ref.watch(themeNotifierProvider);
+    final theme = ref.watch(themeNotifierProvider);
 
     return MaterialApp.router(
         routeInformationProvider: router.routeInformationProvider,
@@ -73,14 +59,14 @@ class MyApp extends ConsumerWidget {
         debugShowMaterialGrid: false,
         theme: Themes.lightTheme(context),
         darkTheme: Themes.darkTheme(context),
-        themeMode: themeAsync.when(
+        themeMode: theme.when(
             data: (theme) => theme.isEmpty
                 ? ThemeMode.system
                 : theme == 'dark'
                     ? ThemeMode.dark
                     : ThemeMode.light,
             error: (__, _) => ThemeMode.system,
-            loading: () => ThemeMode.system));
+            loading: () => ThemeMode.dark));
   }
 
   MaterialColor getMaterialColor(Color color) {
