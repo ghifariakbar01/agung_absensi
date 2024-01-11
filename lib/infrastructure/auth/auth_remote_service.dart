@@ -41,9 +41,13 @@ class AuthRemoteService {
         "username": "$userId",
         "password": "$password",
         "mode": "SELECT",
-        "command": "SELECT *, (select nama from mst_dept where id_dept = A.id_dept) as dept, " +
-            " (select nama from mst_comp where id_comp = A.id_comp) as comp, (select nama from mst_jabatan where id_jbt = A.id_jbt) as jbt" +
-            " FROM mst_user A WHERE nama = '$userId'  AND payroll IS NOT NULL AND payroll != ''",
+        "command":
+            //
+            "SELECT *, " +
+                " (SELECT nama FROM mst_dept WHERE id_dept = A.id_dept) AS dept, " +
+                " (SELECT nama FROM mst_comp WHERE id_comp = A.id_comp) AS comp, " +
+                " (SELECT nama FROM mst_jabatan WHERE id_jbt = A.id_jbt) AS jbt " +
+                " FROM mst_user A WHERE nama = '$userId'  AND payroll IS NOT NULL AND payroll != '' ",
       });
 
       log('data ${jsonEncode(data)}');
@@ -79,6 +83,7 @@ class AuthRemoteService {
                 email2: listSelected['email2'] ?? '',
                 imeiHp: listSelected['imei_hp'] ?? '',
                 idUser: listSelected['id_user'] ?? '',
+                payroll: listSelected['payroll'] ?? '',
                 noTelp1: listSelected['no_telp1'] ?? '',
                 noTelp2: listSelected['no_telp2'] ?? '',
                 fullname: listSelected['fullname'] ?? '',

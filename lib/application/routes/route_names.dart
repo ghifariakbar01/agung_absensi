@@ -52,4 +52,10 @@ class RouteNames {
 
   static const copyrightNameRoute = 'copyright';
   static const copyrightRoute = 'copyright';
+
+  static const sakitListNameRoute = 'sakitList';
+  static const sakitListRoute = 'sakitList';
+
+  static const createSakitNameRoute = 'createSakit';
+  static const createSakitRoute = 'createSakit';
 }

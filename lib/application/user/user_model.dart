@@ -26,6 +26,7 @@ class UserModelWithPassword with _$UserModelWithPassword {
     required String? password,
     @JsonKey(name: 'pass_update') required String? passwordUpdate,
     required String ptServer,
+    required String? payroll,
   }) = _UserModelWithPassword;
 
   factory UserModelWithPassword.fromJson(Map<String, Object?> json) =>
@@ -48,7 +49,8 @@ class UserModelWithPassword with _$UserModelWithPassword {
       password: '',
       passwordUpdate: '',
       photo: '',
-      ptServer: '');
+      ptServer: '',
+      payroll: '');
 }
 
 

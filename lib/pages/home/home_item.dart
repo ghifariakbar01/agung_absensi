@@ -38,16 +38,16 @@ class HomeItem extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(10),
                     color: Theme.of(context).primaryColorLight),
                 padding: EdgeInsets.all(8),
-                child: SizedBox(
-                    child: SvgPicture.asset(
+                child: Icon(
                   item.icon,
                   color: Palette.primaryLighter,
-                ))),
+                )),
             SizedBox(
               height: 4,
             ),
             Text(
               item.absen.toUpperCase(),
+              textAlign: TextAlign.center,
               style: Themes.customColor(
                 FontWeight.bold,
                 9,

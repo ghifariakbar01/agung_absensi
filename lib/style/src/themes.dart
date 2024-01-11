@@ -7,11 +7,17 @@ mixin Themes {
     ));
   }
 
-  static TextStyle customColor(FontWeight? fontWeight, double fontSize,
-      {Color? color}) {
+  static TextStyle customColor(
+    //
+    FontWeight? fontWeight,
+    double fontSize, {
+    Color? color,
+    TextDecoration? decoration,
+  }) {
     return TextStyle(
       color: color,
       fontSize: fontSize,
+      decoration: decoration,
       fontWeight: fontWeight ?? FontWeight.normal,
     );
   }

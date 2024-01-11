@@ -47,6 +47,7 @@ mixin _$UserModelWithPassword {
   @JsonKey(name: 'pass_update')
   String? get passwordUpdate => throw _privateConstructorUsedError;
   String get ptServer => throw _privateConstructorUsedError;
+  String? get payroll => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -77,7 +78,8 @@ abstract class $UserModelWithPasswordCopyWith<$Res> {
       String? photo,
       String? password,
       @JsonKey(name: 'pass_update') String? passwordUpdate,
-      String ptServer});
+      String ptServer,
+      String? payroll});
 }
 
 /// @nodoc
@@ -111,6 +113,7 @@ class _$UserModelWithPasswordCopyWithImpl<$Res,
     Object? password = freezed,
     Object? passwordUpdate = freezed,
     Object? ptServer = null,
+    Object? payroll = freezed,
   }) {
     return _then(_value.copyWith(
       idUser: freezed == idUser
@@ -181,6 +184,10 @@ class _$UserModelWithPasswordCopyWithImpl<$Res,
           ? _value.ptServer
           : ptServer // ignore: cast_nullable_to_non_nullable
               as String,
+      payroll: freezed == payroll
+          ? _value.payroll
+          : payroll // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -210,7 +217,8 @@ abstract class _$$_UserModelWithPasswordCopyWith<$Res>
       String? photo,
       String? password,
       @JsonKey(name: 'pass_update') String? passwordUpdate,
-      String ptServer});
+      String ptServer,
+      String? payroll});
 }
 
 /// @nodoc
@@ -241,6 +249,7 @@ class __$$_UserModelWithPasswordCopyWithImpl<$Res>
     Object? password = freezed,
     Object? passwordUpdate = freezed,
     Object? ptServer = null,
+    Object? payroll = freezed,
   }) {
     return _then(_$_UserModelWithPassword(
       idUser: freezed == idUser
@@ -311,6 +320,10 @@ class __$$_UserModelWithPasswordCopyWithImpl<$Res>
           ? _value.ptServer
           : ptServer // ignore: cast_nullable_to_non_nullable
               as String,
+      payroll: freezed == payroll
+          ? _value.payroll
+          : payroll // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -335,7 +348,8 @@ class _$_UserModelWithPassword implements _UserModelWithPassword {
       required this.photo,
       required this.password,
       @JsonKey(name: 'pass_update') required this.passwordUpdate,
-      required this.ptServer});
+      required this.ptServer,
+      required this.payroll});
 
   factory _$_UserModelWithPassword.fromJson(Map<String, dynamic> json) =>
       _$$_UserModelWithPasswordFromJson(json);
@@ -383,10 +397,12 @@ class _$_UserModelWithPassword implements _UserModelWithPassword {
   final String? passwordUpdate;
   @override
   final String ptServer;
+  @override
+  final String? payroll;
 
   @override
   String toString() {
-    return 'UserModelWithPassword(idUser: $idUser, idKary: $idKary, ktp: $ktp, deptList: $deptList, company: $company, jabatan: $jabatan, imeiHp: $imeiHp, nama: $nama, fullname: $fullname, noTelp1: $noTelp1, noTelp2: $noTelp2, email: $email, email2: $email2, photo: $photo, password: $password, passwordUpdate: $passwordUpdate, ptServer: $ptServer)';
+    return 'UserModelWithPassword(idUser: $idUser, idKary: $idKary, ktp: $ktp, deptList: $deptList, company: $company, jabatan: $jabatan, imeiHp: $imeiHp, nama: $nama, fullname: $fullname, noTelp1: $noTelp1, noTelp2: $noTelp2, email: $email, email2: $email2, photo: $photo, password: $password, passwordUpdate: $passwordUpdate, ptServer: $ptServer, payroll: $payroll)';
   }
 
   @override
@@ -415,7 +431,8 @@ class _$_UserModelWithPassword implements _UserModelWithPassword {
             (identical(other.passwordUpdate, passwordUpdate) ||
                 other.passwordUpdate == passwordUpdate) &&
             (identical(other.ptServer, ptServer) ||
-                other.ptServer == ptServer));
+                other.ptServer == ptServer) &&
+            (identical(other.payroll, payroll) || other.payroll == payroll));
   }
 
   @JsonKey(ignore: true)
@@ -438,7 +455,8 @@ class _$_UserModelWithPassword implements _UserModelWithPassword {
       photo,
       password,
       passwordUpdate,
-      ptServer);
+      ptServer,
+      payroll);
 
   @JsonKey(ignore: true)
   @override
@@ -473,7 +491,8 @@ abstract class _UserModelWithPassword implements UserModelWithPassword {
       required final String? photo,
       required final String? password,
       @JsonKey(name: 'pass_update') required final String? passwordUpdate,
-      required final String ptServer}) = _$_UserModelWithPassword;
+      required final String ptServer,
+      required final String? payroll}) = _$_UserModelWithPassword;
 
   factory _UserModelWithPassword.fromJson(Map<String, dynamic> json) =
       _$_UserModelWithPassword.fromJson;
@@ -521,6 +540,8 @@ abstract class _UserModelWithPassword implements UserModelWithPassword {
   String? get passwordUpdate;
   @override
   String get ptServer;
+  @override
+  String? get payroll;
   @override
   @JsonKey(ignore: true)
   _$$_UserModelWithPasswordCopyWith<_$_UserModelWithPassword> get copyWith =>

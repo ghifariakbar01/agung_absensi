@@ -19,6 +19,8 @@ import '../../pages/sign_in/sign_in_page.dart';
 import '../../pages/tc/tc_page.dart';
 import '../../pages/home/home_page.dart';
 import '../../pages/widgets/splash_page.dart';
+import '../../sakit/create_sakit/presentation/create_sakit_page.dart';
+import '../../sakit/sakit_list/presentation/sakit_list_page.dart';
 import '../../shared/providers.dart';
 import '../auth/auth_notifier.dart';
 
@@ -146,16 +148,6 @@ class RouterNotifier extends ChangeNotifier {
           path: RouteNames.homeRoute,
           builder: (context, state) => const HomePage(),
           routes: [
-            // GoRoute(
-            //   name: RouteNames.changePassNameRoute,
-            //   path: RouteNames.changePassRoute,
-            //   builder: (context, state) => const ChangePasswordPage(),
-            // ),
-            // GoRoute(
-            //   name: RouteNames.signUpNameRoute,
-            //   path: RouteNames.signUpRoute,
-            //   builder: (context, state) => const SignUp(),
-            // ),
             GoRoute(
                 name: RouteNames.permissionNameRoute,
                 path: RouteNames.permissionRoute,
@@ -165,11 +157,7 @@ class RouterNotifier extends ChangeNotifier {
               path: RouteNames.riwayatAbsenRoute,
               builder: (context, state) => const RiwayatAbsenPage(),
             ),
-            // GoRoute(
-            //   name: RouteNames.cameraNameRoute,
-            //   path: RouteNames.cameraRoute,
-            //   builder: (context, state) => const CameraPage(),
-            // ),
+
             GoRoute(
               name: RouteNames.editProfileNameRoute,
               path: RouteNames.editProfileRoute,
@@ -195,6 +183,33 @@ class RouterNotifier extends ChangeNotifier {
               path: RouteNames.copyrightRoute,
               builder: (context, state) => CopyRightPage(),
             ),
+
+            GoRoute(
+              name: RouteNames.sakitListNameRoute,
+              path: RouteNames.sakitListRoute,
+              builder: (context, state) => SakitListPage(),
+            ),
+            GoRoute(
+              name: RouteNames.createSakitNameRoute,
+              path: RouteNames.createSakitRoute,
+              builder: (context, state) => CreateSakitPage(),
+            ),
+
+            // GoRoute(
+            //   name: RouteNames.changePassNameRoute,
+            //   path: RouteNames.changePassRoute,
+            //   builder: (context, state) => const ChangePasswordPage(),
+            // ),
+            // GoRoute(
+            //   name: RouteNames.signUpNameRoute,
+            //   path: RouteNames.signUpRoute,
+            //   builder: (context, state) => const SignUp(),
+            // ),
+            // GoRoute(
+            //   name: RouteNames.cameraNameRoute,
+            //   path: RouteNames.cameraRoute,
+            //   builder: (context, state) => const CameraPage(),
+            // ),
           ]),
     ];
   }

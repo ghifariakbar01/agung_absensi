@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:flutter/services.dart';
@@ -80,7 +81,6 @@ class AuthRepository {
     required PTName server,
     required UserId userId,
     required Password password,
-    required IdKaryawan idKaryawan,
   }) async {
     try {
       final userIdStr = userId.getOrCrash();
@@ -113,6 +113,36 @@ class AuthRepository {
     } on PlatformException {
       return left(const AuthFailure.storage());
     }
+  }
+
+  Future<Unit> saveUserPayrollOnCreateFormSakit({
+    required PTName server,
+    required UserId userId,
+    required Password password,
+  }) async {
+    final serverStr = server.getOrCrash();
+    final userIdStr = userId.getOrCrash();
+    final passwordStr = password.getOrCrash();
+
+    final authResponse = await _remoteService.signIn(
+        userId: userIdStr.toString(), password: passwordStr, server: serverStr);
+
+    return await authResponse.when(
+      withUser: (user) async {
+        String userSave = jsonEncode(user);
+        await _credentialsStorage.save(userSave);
+        await _credentialsStorage.save(userSave);
+        await _credentialsStorage.save(userSave);
+
+        return unit;
+      },
+      failure: (errorCode, message) {
+        throw AuthFailure.server(
+          errorCode,
+          message,
+        );
+      },
+    );
   }
 
   Future<Either<UserFailure, String?>> getSignedInCredentials() async {

@@ -79,6 +79,7 @@ class StringUtils {
     return DateFormat('dd-MM-yyyy HH:mm').format(dateTime);
   }
 
+  // Output: 2023-06-21 00:00:00
   static String trimmedDate(DateTime dateTime) {
     return dateTime.toString().substring(0, 23);
   }

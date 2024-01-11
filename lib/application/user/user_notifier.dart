@@ -56,35 +56,16 @@ class UserNotifier extends StateNotifier<UserState> {
     final server = PTName(user.ptServer);
     final userId = UserId(user.nama ?? '');
     final password = Password(user.password ?? '');
-    final idKaryawan = IdKaryawan(user.idKary ?? '');
 
     state =
         state.copyWith(isGetting: true, failureOrSuccessOptionUpdate: none());
 
     failureOrSuccess = await _repository.saveUserAfterUpdate(
-        idKaryawan: idKaryawan,
-        password: password,
-        userId: userId,
-        server: server);
+        password: password, userId: userId, server: server);
 
     state = state.copyWith(
         isGetting: false,
         failureOrSuccessOptionUpdate: optionOf(failureOrSuccess));
-  }
-
-  Either<UserFailure, UserModelWithPassword> parseUser(String? user) {
-    try {
-      if (user != null) {
-        Map<String, Object?> userJson = jsonDecode(user);
-
-        if (userJson.isNotEmpty) {
-          return right(UserModelWithPassword.fromJson(userJson));
-        }
-      }
-      return left(UserFailure.errorParsing('userJson is Empty'));
-    } on FormatException catch (e) {
-      return left(UserFailure.errorParsing('$e'));
-    }
   }
 
   setUser(UserModelWithPassword user) {

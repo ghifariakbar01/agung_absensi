@@ -25,15 +25,16 @@ import 'home_tester_on.dart';
 
 class Item {
   final String absen;
-  final String icon;
+  final IconData icon;
   final String routeNames;
 
   Item(this.absen, this.icon, this.routeNames);
 }
 
 final List<Item> items = [
-  Item('ABSEN', Assets.iconClock, RouteNames.absenNameRoute),
-  Item('RIWAYAT', Assets.iconList, RouteNames.riwayatAbsenNameRoute),
+  Item('ABSEN', Icons.access_time_rounded, RouteNames.absenNameRoute),
+  Item('RIWAYAT', Icons.list, RouteNames.riwayatAbsenNameRoute),
+  Item('FORM SAKIT', Icons.sick, RouteNames.sakitListNameRoute)
 ];
 
 class HomeScaffold extends ConsumerWidget {
@@ -225,5 +226,4 @@ List<Widget> testerModeOn() => [HomeTesterOn(), ...regularMode()];
 
 List<Widget> testerModeOff() => [HomeTesterOff(), ...regularMode()];
 
-List<Widget> regularMode() =>
-    [HomeItem(item: items[0]), HomeItem(item: items[1])];
+List<Widget> regularMode() => [...items.map((e) => HomeItem(item: e))];

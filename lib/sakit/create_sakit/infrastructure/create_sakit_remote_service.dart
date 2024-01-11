@@ -1,0 +1,247 @@
+import 'dart:convert';
+import 'dart:developer';
+
+import 'package:dio/dio.dart';
+import 'package:face_net_authentication/infrastructure/dio_extensions.dart';
+import 'package:face_net_authentication/sakit/create_sakit/application/create_sakit_cuti.dart';
+
+import '../../../infrastructure/exceptions.dart';
+import '../application/create_sakit.dart';
+
+class CreateSakitRemoteService {
+  CreateSakitRemoteService(
+    this._dio,
+    this._dioRequest,
+  );
+
+  final Dio _dio;
+  final Map<String, String> _dioRequest;
+
+  static const String dbKaryawan = 'karyawan';
+  static const String dbMstLibur = 'mst_libur';
+  static const String dbMstCutiNew = 'hr_mst_cuti_new';
+
+  Future<CreateSakit> getCreateSakit(
+      {required int idUser,
+      required int idKaryawan,
+      required String tglAwal,
+      required String tglAkhir}) async {
+    debugger();
+
+    String? masuk;
+    int hitunglibur = 0;
+    String jdwSabtu = "";
+    bool bulanan = false;
+    CreateSakitCuti createSakitCuti = CreateSakitCuti();
+
+    // 1. GET JADWAL SABTU
+    try {
+      final Map<String, String> selectJadwalSabtu = {
+        'command':
+            "SELECT jdw_sabtu, bulanan FROM $dbKaryawan WHERE IdKary = '$idKaryawan' ",
+        'mode': 'SELECT'
+      };
+
+      final data = _dioRequest;
+
+      final dataSelectJadwalSabtu = _dioRequest;
+      dataSelectJadwalSabtu.addAll(selectJadwalSabtu);
+
+      final response = await _dio.post('',
+          data: jsonEncode(dataSelectJadwalSabtu),
+          options: Options(contentType: 'text/plain'));
+
+      log('data ${jsonEncode(data)}');
+
+      log('response $response');
+
+      // debugger();
+
+      final items = response.data?[0];
+
+      if (items['status'] == 'Success') {
+        final listExist = items['items'] != null && items['items'] is List;
+
+        if (listExist) {
+          if (items['items'][0]['jdw_sabtu'] != null) {
+            items['items'][0]['jdw_sabtu'] = jdwSabtu;
+          }
+
+          if (items['items'][0]['bulanan'] != null) {
+            items['items'][0]['bulanan'] = bulanan;
+          }
+        }
+      } else {
+        final message = items['error'] as String?;
+        final errorCode = items['errornum'] as int;
+
+        throw RestApiExceptionWithMessage(errorCode, message);
+      }
+    } on FormatException catch (e) {
+      throw FormatException(e.message);
+    } on DioError catch (e) {
+      if (e.isNoConnectionError || e.isConnectionTimeout) {
+        throw NoConnectionException();
+      } else if (e.response != null) {
+        throw RestApiException(e.response?.statusCode);
+      } else {
+        rethrow;
+      }
+    }
+
+    // 2. GET HITUNG LIBUR, BETWEEN DATES
+    try {
+      final Map<String, String> selectHitungLibur = {
+        'command': " SELECT COUNT(id_libur) AS hitunglibur " +
+            " FROM $dbMstLibur " +
+            " WHERE jenis <> 'LIBUR' AND tgl_awal BETWEEN '$tglAwal' AND '$tglAkhir' ",
+        'mode': 'SELECT'
+      };
+
+      final dataSelectHitungLibur = _dioRequest;
+      dataSelectHitungLibur.addAll(selectHitungLibur);
+
+      final response2 = await _dio.post('',
+          data: jsonEncode(dataSelectHitungLibur),
+          options: Options(contentType: 'text/plain'));
+
+      final items2 = response2.data?[0];
+
+      if (items2['status'] == 'Success') {
+        final listExist = items2['items'] != null && items2['items'] is List;
+
+        if (listExist) {
+          if (items2['items'][0]['hitunglibur'] != null) {
+            items2['items'][0]['hitunglibur'] = hitunglibur;
+          }
+        }
+      } else {
+        final message = items2['error'] as String?;
+        final errorCode = items2['errornum'] as int;
+
+        throw RestApiExceptionWithMessage(errorCode, message);
+      }
+    } on FormatException catch (e) {
+      throw FormatException(e.message);
+    } on DioError catch (e) {
+      if (e.isNoConnectionError || e.isConnectionTimeout) {
+        throw NoConnectionException();
+      } else if (e.response != null) {
+        throw RestApiException(e.response?.statusCode);
+      } else {
+        rethrow;
+      }
+    }
+
+    debugger();
+
+    // 3. GET MASTER CUTI, BY USER ID
+    try {
+      final Map<String, String> selectMasterCuti = {
+        'command': " SELECT * FROM $dbMstCutiNew  WHERE id_user = $idUser  ",
+        'mode': 'SELECT'
+      };
+
+      final dataSelectMasterCuti = _dioRequest;
+      dataSelectMasterCuti.addAll(selectMasterCuti);
+
+      final response3 = await _dio.post('',
+          data: jsonEncode(dataSelectMasterCuti),
+          options: Options(contentType: 'text/plain'));
+
+      final items3 = response3.data?[0];
+
+      if (items3['status'] == 'Success') {
+        final listExist = items3['items'] != null && items3['items'] is List;
+
+        if (listExist) {
+          if (items3['items'][0] != null) {
+            createSakitCuti = CreateSakitCuti.fromJson(
+                items3['items'][0] as Map<String, dynamic>);
+          } else {
+            throw RestApiExceptionWithMessage(
+                404, 'items CreateSakitCuti null');
+          }
+        }
+      } else {
+        final message = items3['error'] as String?;
+        final errorCode = items3['errornum'] as int;
+
+        throw RestApiExceptionWithMessage(errorCode, message);
+      }
+
+      //
+    } on FormatException catch (e) {
+      throw FormatException(e.message);
+    } on DioError catch (e) {
+      if (e.isNoConnectionError || e.isConnectionTimeout) {
+        throw NoConnectionException();
+      } else if (e.response != null) {
+        throw RestApiException(e.response?.statusCode);
+      } else {
+        rethrow;
+      }
+    }
+
+    // 4. GET DATE MASUK, BY ID KARYAWAN
+    try {
+      final Map<String, String> selectMasterKaryawan = {
+        'command': " SELECT * FROM Karyawan WHERE idKary = '$idKaryawan'  ",
+        'mode': 'SELECT'
+      };
+
+      final dataSelectMasterKaryawan = _dioRequest;
+      dataSelectMasterKaryawan.addAll(selectMasterKaryawan);
+
+      final response3 = await _dio.post('',
+          data: jsonEncode(dataSelectMasterKaryawan),
+          options: Options(contentType: 'text/plain'));
+
+      final items3 = response3.data?[0];
+
+      if (items3['status'] == 'Success') {
+        final listExist = items3['items'] != null && items3['items'] is List;
+
+        if (listExist) {
+          if (items3['items'][0]['Masuk'] != null) {
+            debugger();
+            masuk = items3['items'][0]['Masuk'];
+          } else {
+            throw RestApiExceptionWithMessage(404, 'items Masuk Karyawan null');
+          }
+        }
+      } else {
+        final message = items3['error'] as String?;
+        final errorCode = items3['errornum'] as int;
+
+        throw RestApiExceptionWithMessage(errorCode, message);
+      }
+
+      //
+    } on FormatException catch (e) {
+      throw FormatException(e.message);
+    } on DioError catch (e) {
+      if (e.isNoConnectionError || e.isConnectionTimeout) {
+        throw NoConnectionException();
+      } else if (e.response != null) {
+        throw RestApiException(e.response?.statusCode);
+      } else {
+        rethrow;
+      }
+    }
+
+    // final cDate = StringUtils.trimmedDate(DateTime.now());
+
+    final createSakit = CreateSakit().copyWith(
+      masuk: masuk,
+      bulanan: bulanan,
+      jadwalSabtu: jdwSabtu,
+      hitungLibur: hitunglibur,
+      createSakitCuti: createSakitCuti,
+    );
+
+    log('createSakit $createSakit');
+
+    return createSakit;
+  }
+}
