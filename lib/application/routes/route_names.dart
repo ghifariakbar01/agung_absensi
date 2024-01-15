@@ -58,4 +58,7 @@ class RouteNames {
 
   static const createSakitNameRoute = 'createSakit';
   static const createSakitRoute = 'createSakit';
+
+  static const sakitDtlNameRoute = 'sakitDtl';
+  static const sakitDtlRoute = 'sakitDtl';
 }

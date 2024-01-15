@@ -1,14 +1,13 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:face_net_authentication/infrastructure/dio_extensions.dart';
 
 import '../../../infrastructure/exceptions.dart';
-import '../application/sakit_list.dart';
+import '../application/sakit_dtl.dart';
 
-class SakitListRemoteService {
-  SakitListRemoteService(
+class SakitDtlRemoteService {
+  SakitDtlRemoteService(
     this._dio,
     this._dioRequest,
   );
@@ -16,30 +15,16 @@ class SakitListRemoteService {
   final Dio _dio;
   final Map<String, String> _dioRequest;
 
-  static const String dbName = 'hr_trs_sakit';
-  static const String dbDetail = 'hr_sakit_dtl';
-  static const String dbMstUser = 'mst_user';
+  static const String dbName = 'hr_sakit_dtl';
 
-  Future<List<SakitList>> getSakitList({required int page}) async {
+  Future<SakitDtl> getSakitDetail({required int idSakit}) async {
     try {
       // debugger();
       final data = _dioRequest;
 
       final Map<String, String> select = {
         'command': //
-            " SELECT " +
-                " $dbName.*, " +
-                " $dbMstUser.payroll, " +
-                " (SELECT nama from mst_dept WHERE id_dept = $dbMstUser.id_dept) AS dept, " +
-                " (SELECT COUNT(id_sakit) FROM $dbDetail WHERE id_sakit = $dbName.id_sakit ) AS qty_foto "
-                    " FROM " +
-                " $dbName " +
-                " JOIN " +
-                " $dbMstUser ON $dbName.id_user = $dbMstUser.id_user " +
-                " ORDER BY " +
-                " $dbName.c_date DESC " +
-                " OFFSET " +
-                " ${page}0 ROWS FETCH FIRST 20 ROWS ONLY ",
+            " SELECT * FROM $dbName WHERE id_sakit = $idSakit ",
         'mode': 'SELECT'
       };
 
@@ -60,10 +45,8 @@ class SakitListRemoteService {
         if (listExist) {
           final list = items['items'] as List;
 
-          if (list.isNotEmpty) {
-            return list
-                .map((e) => SakitList.fromJson(e as Map<String, dynamic>))
-                .toList();
+          if (list[0] != null) {
+            return SakitDtl.fromJson(list[0]);
           } else {
             final message = items['error'] as String?;
             final errorCode = items['errornum'] as int;

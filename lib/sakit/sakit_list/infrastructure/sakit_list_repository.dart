@@ -7,7 +7,7 @@ class SakitListRepository {
 
   final SakitListRemoteService _remoteService;
 
-  Future<List<SakitList>> getSakitList() {
-    return _remoteService.getSakitList();
+  Future<List<SakitList>> getSakitList({required int page}) {
+    return _remoteService.getSakitList(page: page);
   }
 }

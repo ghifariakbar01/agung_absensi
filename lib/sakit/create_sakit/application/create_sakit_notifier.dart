@@ -29,14 +29,18 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
   FutureOr<void> build() async {}
 
   Future<void> submitSakit(
-      {required String suratDokter,
+      {
+      //
       required String tglAwal,
       required String tglAkhir,
-      required Future<void> Function(String errMessage) onError}) async {
+      required String keterangan,
+      required String suratDokter,
+      required Future<void> Function(String errMessage) onError}
+      //
+      ) async {
     state = const AsyncLoading();
 
     final repo = ref.read(createSakitRepositoryProvider);
-
     final user = ref.read(userNotifierProvider).user;
 
     if (user.idUser == null) {
@@ -80,6 +84,15 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
     }
 
     debugger();
+
+    await repo.submitSakit(
+        idUser: user.idUser!,
+        ket: keterangan,
+        surat: suratDokter,
+        cUser: user.nama!,
+        tglEnd: tglAkhir,
+        tglStart: tglAwal,
+        jumlahHari: jumlahhari.toString());
 
     state = const AsyncValue.data('');
   }
@@ -197,7 +210,6 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
     return nbDays;
   }
 }
-
 
 // final repo = ref.read(createSakitRepositoryProvider);
 

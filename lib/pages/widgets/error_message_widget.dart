@@ -68,12 +68,15 @@ class ErrorMessageWidget extends ConsumerWidget {
                     ),
                   ),
                   children: [
-                    Text(
-                      'idKary: ${ref.read(userNotifierProvider).user.idKary}\n '
-                      'Error: $errorMessage \n',
-                      style: Themes.customColor(
-                        FontWeight.normal,
-                        12,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Text(
+                        'idKary: ${ref.read(userNotifierProvider).user.idKary}\n '
+                        'Error: $errorMessage \n',
+                        style: Themes.customColor(
+                          FontWeight.normal,
+                          12,
+                        ),
                       ),
                     ),
                   ],

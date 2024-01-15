@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:face_net_authentication/sakit/sakit_dtl/presentation/sakit_dtl_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -194,6 +195,13 @@ class RouterNotifier extends ChangeNotifier {
               path: RouteNames.createSakitRoute,
               builder: (context, state) => CreateSakitPage(),
             ),
+            GoRoute(
+                name: RouteNames.sakitDtlNameRoute,
+                path: RouteNames.sakitDtlRoute,
+                builder: (context, state) {
+                  final id = state.extra as int;
+                  return SakitDtlPageBy(id);
+                }),
 
             // GoRoute(
             //   name: RouteNames.changePassNameRoute,

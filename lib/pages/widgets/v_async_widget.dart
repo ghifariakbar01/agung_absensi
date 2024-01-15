@@ -18,8 +18,6 @@ class AsyncValueWidget<T> extends StatelessWidget {
       error: (e, st) {
         String errMessage = '';
 
-        debugger();
-
         if (e is RestApiExceptionWithMessage && e.message != null) {
           errMessage = e.message!;
         } else if (e is FormatException) {
@@ -27,8 +25,6 @@ class AsyncValueWidget<T> extends StatelessWidget {
         } else if (e is RestApiException) {
           errMessage = 'Error RestApiException ${e.errorCode.toString()}';
         } else {
-          debugger();
-
           errMessage = e.toString();
         }
 

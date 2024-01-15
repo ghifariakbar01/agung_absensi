@@ -24,6 +24,30 @@ SakitListRepository sakitListRepository(SakitListRepositoryRef ref) {
 class SakitListController extends _$SakitListController {
   @override
   FutureOr<List<SakitList>> build() {
-    return ref.read(sakitListRepositoryProvider).getSakitList();
+    return ref.read(sakitListRepositoryProvider).getSakitList(page: 0);
+  }
+
+  Future<void> load({required int page}) async {
+    state = const AsyncLoading<List<SakitList>>().copyWithPrevious(state);
+
+    state = await AsyncValue.guard(() async {
+      final res =
+          await ref.read(sakitListRepositoryProvider).getSakitList(page: page);
+
+      final List<SakitList> list = [
+        ...state.requireValue.toList(),
+        ...res,
+      ];
+
+      return list;
+    });
+  }
+
+  Future<void> refresh() async {
+    state = const AsyncLoading();
+
+    state = await AsyncValue.guard(() async {
+      return await ref.read(sakitListRepositoryProvider).getSakitList(page: 0);
+    });
   }
 }

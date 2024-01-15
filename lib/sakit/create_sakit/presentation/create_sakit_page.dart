@@ -266,16 +266,17 @@ class CreateSakitPage extends HookConsumerWidget {
 
                     VButton(
                         label: 'Buat Form Sakit',
-                        onPressed: () {
+                        onPressed: () async {
                           log('VARIABLES : \n  Nama : ${namaTextController.value.text} payroll: ${ptTextController.value.text} Diagnosa: ${diagnosaTextController.value.text} Surat Dokter: ${suratDokterTextController.value} ');
                           log('Tgl Awal: ${tglAwalTextController.value} Tgl Akhir: ${tglAkhirTextController.value} ');
                           log('SPV Note : ${spvTextController.value.text} HRD Note : ${hrdTextController.value.text} ');
 
-                          ref
+                          await ref
                               .read(createSakitNotifierProvider.notifier)
                               .submitSakit(
                                   tglAwal: tglAwalTextController.value,
                                   tglAkhir: tglAkhirTextController.value,
+                                  keterangan: diagnosaTextController.text,
                                   suratDokter: suratDokterTextController.value,
                                   onError: (msg) => HapticFeedback.vibrate()
                                       .then((_) => showDialog(

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:face_net_authentication/infrastructure/dio_extensions.dart';
 import 'package:face_net_authentication/sakit/create_sakit/application/create_sakit_cuti.dart';
@@ -19,15 +20,80 @@ class CreateSakitRemoteService {
 
   static const String dbKaryawan = 'karyawan';
   static const String dbMstLibur = 'mst_libur';
+  static const String dbHrSakit = 'hr_trs_sakit';
   static const String dbMstCutiNew = 'hr_mst_cuti_new';
+
+  Future<Unit> submitSakit({
+    required int idUser,
+    required String ket,
+    required String surat,
+    required String cUser,
+    required String tglEnd,
+    required String tglStart,
+    required String jumlahHari,
+  }) async {
+    try {
+      final Map<String, String> submitSakit = {
+        "command": "INSERT INTO $dbHrSakit ("
+            "id_user, ket, tgl_start, tgl_end, surat, tot_hari, periode, "
+            "spv_sta, spv_nm, spv_tgl, hrd_sta, hrd_nm, hrd_tgl, "
+            "c_date, c_user, u_date, u_user) VALUES ("
+            "$idUser, "
+            "'$ket', "
+            "'$tglStart', "
+            "'$tglEnd', "
+            "'$surat', "
+            "(datediff(day,'$tglStart', '$tglEnd') + 1) - $jumlahHari, "
+            "(DATENAME(MONTH,'$tglStart')), "
+            "'0', "
+            "'', "
+            "getdate(), "
+            "'0', "
+            "'', "
+            "getdate(), "
+            "getdate(), "
+            "'$cUser', "
+            "getdate(), "
+            "'$cUser') ",
+        "mode": "INSERT"
+      };
+
+      final data = _dioRequest;
+      data.addAll(submitSakit);
+
+      final response = await _dio.post('',
+          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
+
+      log('data ${jsonEncode(data)}');
+      log('response $response');
+      final items = response.data?[0];
+
+      if (items['status'] == 'Success') {
+        return unit;
+      } else {
+        final message = items['error'] as String?;
+        final errorCode = items['errornum'] as int;
+
+        throw RestApiExceptionWithMessage(errorCode, message);
+      }
+    } on FormatException catch (e) {
+      throw FormatException(e.message);
+    } on DioError catch (e) {
+      if (e.isNoConnectionError || e.isConnectionTimeout) {
+        throw NoConnectionException();
+      } else if (e.response != null) {
+        throw RestApiException(e.response?.statusCode);
+      } else {
+        rethrow;
+      }
+    }
+  }
 
   Future<CreateSakit> getCreateSakit(
       {required int idUser,
       required int idKaryawan,
       required String tglAwal,
       required String tglAkhir}) async {
-    debugger();
-
     String? masuk;
     int hitunglibur = 0;
     String jdwSabtu = "";
@@ -52,10 +118,7 @@ class CreateSakitRemoteService {
           options: Options(contentType: 'text/plain'));
 
       log('data ${jsonEncode(data)}');
-
       log('response $response');
-
-      // debugger();
 
       final items = response.data?[0];
 
@@ -133,8 +196,6 @@ class CreateSakitRemoteService {
       }
     }
 
-    debugger();
-
     // 3. GET MASTER CUTI, BY USER ID
     try {
       final Map<String, String> selectMasterCuti = {
@@ -204,7 +265,6 @@ class CreateSakitRemoteService {
 
         if (listExist) {
           if (items3['items'][0]['Masuk'] != null) {
-            debugger();
             masuk = items3['items'][0]['Masuk'];
           } else {
             throw RestApiExceptionWithMessage(404, 'items Masuk Karyawan null');
