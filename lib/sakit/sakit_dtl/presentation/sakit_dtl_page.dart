@@ -1,9 +1,10 @@
 import 'package:face_net_authentication/pages/widgets/async_value_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../application/routes/route_names.dart';
 import '../../../pages/widgets/v_async_widget.dart';
 import '../../../pages/widgets/v_scaffold_widget.dart';
 import '../../../style/style.dart';
@@ -38,10 +39,6 @@ class _SakitDtlPageByState extends ConsumerState<SakitDtlPageBy> {
       state.showAlertDialogOnError(context);
     });
 
-    useEffect(() {
-      return () {};
-    }, []);
-
     final sakitDtl = ref.watch(sakitDtlNotifierProvider);
 
     return AsyncValueWidget<SakitDtl>(
@@ -59,8 +56,11 @@ class _SakitDtlPageByState extends ConsumerState<SakitDtlPageBy> {
                     backgroundColor: Palette.primaryColor,
                     child: Icon(
                       Icons.upload,
+                      color: Colors.white,
                     ),
-                    onPressed: () {}),
+                    onPressed: () => context.pushNamed(
+                        RouteNames.sakitUploadRoute,
+                        extra: dtl.idSakit)),
                 scaffoldBody: SakitDtlWidget(dtl),
               ),
             ));
@@ -78,13 +78,13 @@ class SakitDtlWidget extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final imageUrl = ref
-        .read(sakitDtlNotifierProvider.notifier)
+        .watch(sakitDtlNotifierProvider.notifier)
         .urlImageFormSakit(item.namaImg);
 
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        color: theme.cardColor,
+        color: theme.primaryColor,
       ),
       padding: EdgeInsets.all(8),
       child: Column(

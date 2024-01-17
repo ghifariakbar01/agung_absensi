@@ -52,4 +52,20 @@ class SakitDtlNotifier extends _$SakitDtlNotifier {
 
     return 'http://agunglogisticsapp.co.id:$port/imgsakit/$namaFile';
   }
+
+  String formUploadImageFormSakit(int id) {
+    final user = ref.read(userNotifierProvider).user;
+
+    final ptServer = user.ptServer;
+    final userId = user.idUser;
+    final pass = user.password;
+
+    final port = _imagePtServerMap()
+        .entries
+        .toList()
+        .firstWhere((element) => element.key == ptServer)
+        .value;
+
+    return 'http://agunglogisticsapp.co.id:$port/mob_upload.aspx?mode=sakit&noid=$id&userid=$userId&userpass=$pass';
+  }
 }

@@ -34,7 +34,7 @@ class Item {
 final List<Item> items = [
   Item('ABSEN', Icons.access_time_rounded, RouteNames.absenNameRoute),
   Item('RIWAYAT', Icons.list, RouteNames.riwayatAbsenNameRoute),
-  Item('FORM SAKIT', Icons.sick, RouteNames.sakitListNameRoute)
+  Item('FORM SAKIT', Icons.medical_information, RouteNames.sakitListNameRoute)
 ];
 
 class HomeScaffold extends ConsumerWidget {

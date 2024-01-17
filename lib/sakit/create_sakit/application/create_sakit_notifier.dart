@@ -85,16 +85,14 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
 
     debugger();
 
-    await repo.submitSakit(
+    state = await AsyncValue.guard(() => repo.submitSakit(
         idUser: user.idUser!,
         ket: keterangan,
         surat: suratDokter,
         cUser: user.nama!,
         tglEnd: tglAkhir,
         tglStart: tglAwal,
-        jumlahHari: jumlahhari.toString());
-
-    state = const AsyncValue.data('');
+        jumlahHari: jumlahhari.toString()));
   }
 
   Future<void> _calcSaldoCuti(

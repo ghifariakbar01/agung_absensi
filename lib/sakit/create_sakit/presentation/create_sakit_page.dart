@@ -14,6 +14,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../constants/assets.dart';
+import '../../../pages/widgets/alert_helper.dart';
 import '../../../pages/widgets/v_async_widget.dart';
 import '../../../pages/widgets/v_dialogs.dart';
 import '../../../style/style.dart';
@@ -43,6 +44,13 @@ class CreateSakitPage extends HookConsumerWidget {
     });
     ref.listen<AsyncValue>(createSakitNotifierProvider, (_, state) {
       state.showAlertDialogOnError(context);
+    });
+    ref.listen<AsyncValue>(createSakitNotifierProvider, (_, state) {
+      if (!state.isLoading && state.hasValue && state.value != null) {
+        return AlertHelper.showSnackBar(context,
+            color: Palette.primaryColor,
+            message: 'Sukses Menginput Form Sakit ');
+      }
     });
 
     final payrollHelper = ref.watch(payrollHelperNotifierProvider);

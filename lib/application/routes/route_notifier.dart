@@ -21,6 +21,7 @@ import '../../pages/tc/tc_page.dart';
 import '../../pages/home/home_page.dart';
 import '../../pages/widgets/splash_page.dart';
 import '../../sakit/create_sakit/presentation/create_sakit_page.dart';
+import '../../sakit/sakit_dtl/presentation/sakit_upload_page.dart';
 import '../../sakit/sakit_list/presentation/sakit_list_page.dart';
 import '../../shared/providers.dart';
 import '../auth/auth_notifier.dart';
@@ -201,6 +202,13 @@ class RouterNotifier extends ChangeNotifier {
                 builder: (context, state) {
                   final id = state.extra as int;
                   return SakitDtlPageBy(id);
+                }),
+            GoRoute(
+                name: RouteNames.sakitUploadNameRoute,
+                path: RouteNames.sakitUploadRoute,
+                builder: (context, state) {
+                  final id = state.extra as int;
+                  return SakitUploadPage(id);
                 }),
 
             // GoRoute(

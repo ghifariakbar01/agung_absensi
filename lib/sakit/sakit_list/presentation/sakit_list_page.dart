@@ -58,6 +58,7 @@ class SakitListPage extends HookConsumerWidget {
                     backgroundColor: Palette.primaryColor,
                     child: Icon(
                       Icons.add,
+                      color: Theme.of(context).primaryColor,
                     ),
                     onPressed: () => context.pushNamed(
                           RouteNames.createSakitNameRoute,
@@ -100,7 +101,7 @@ class SakitListItem extends HookConsumerWidget {
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
-            color: theme.cardColor,
+            color: theme.primaryColor,
           ),
           padding: EdgeInsets.all(8),
           child: Column(
@@ -222,7 +223,7 @@ class SakitListItem extends HookConsumerWidget {
                           height: 2,
                         ),
                         Text(
-                          'SPV Aging : ${DateTime.parse(item.spvTgl!).difference(DateTime.now()).inDays}',
+                          'SPV Aging : ${DateTime.now().difference(DateTime.parse(item.spvTgl!)).inDays}',
                           style: Themes.customColor(FontWeight.bold, 10,
                               color: Theme.of(context).unselectedWidgetColor),
                         ),
@@ -257,7 +258,7 @@ class SakitListItem extends HookConsumerWidget {
                           height: 2,
                         ),
                         Text(
-                          'HRD Aging : ${DateTime.parse(item.hrdTgl!).difference(DateTime.now()).inDays}',
+                          'HRD Aging : ${DateTime.now().difference(DateTime.parse(item.hrdTgl!)).inDays}',
                           style: Themes.customColor(FontWeight.bold, 10,
                               color: Theme.of(context).unselectedWidgetColor),
                         ),
