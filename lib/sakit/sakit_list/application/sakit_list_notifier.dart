@@ -1,6 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../shared/providers.dart';
+import '../../create_sakit/application/create_sakit_notifier.dart';
 import '../infrastructure/sakit_list_remote_service.dart';
 import '../infrastructure/sakit_list_repository.dart';
 import 'sakit_list.dart';
@@ -24,15 +25,14 @@ SakitListRepository sakitListRepository(SakitListRepositoryRef ref) {
 class SakitListController extends _$SakitListController {
   @override
   FutureOr<List<SakitList>> build() {
-    return ref.read(sakitListRepositoryProvider).getSakitList(page: 0);
+    return _determineAndGetSakitListOn(page: 0);
   }
 
   Future<void> load({required int page}) async {
     state = const AsyncLoading<List<SakitList>>().copyWithPrevious(state);
 
     state = await AsyncValue.guard(() async {
-      final res =
-          await ref.read(sakitListRepositoryProvider).getSakitList(page: page);
+      final res = await _determineAndGetSakitListOn(page: page);
 
       final List<SakitList> list = [
         ...state.requireValue.toList(),
@@ -46,8 +46,28 @@ class SakitListController extends _$SakitListController {
   Future<void> refresh() async {
     state = const AsyncLoading();
 
-    state = await AsyncValue.guard(() async {
-      return await ref.read(sakitListRepositoryProvider).getSakitList(page: 0);
+    state = await AsyncValue.guard(() {
+      return _determineAndGetSakitListOn(page: 0);
     });
+  }
+
+  Future<List<SakitList>> _determineAndGetSakitListOn({required int page}) {
+    if (isHrdOrSpv()) {
+      return ref.read(sakitListRepositoryProvider).getSakitList(page: page);
+    } else {
+      return ref
+          .read(sakitListRepositoryProvider)
+          .getSakitListLimitedAccess(page: page);
+    }
+  }
+
+  bool isHrdOrSpv() {
+    final isAjl = ref.read(userNotifierProvider).user.ptServer == 'gs_18';
+
+    if (isAjl) {
+      return ref.read(userNotifierProvider).user.fin!.contains(",5101,");
+    } else {
+      return ref.read(userNotifierProvider).user.fin!.contains(",2,");
+    }
   }
 }

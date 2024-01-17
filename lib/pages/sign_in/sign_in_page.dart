@@ -56,7 +56,7 @@ class SignInPage extends HookConsumerWidget {
 
     final ip = ref.watch(ipNotifierProvider);
 
-    return AsyncValueWidget(
+    return VAsyncWidgetScaffold(
       value: ip,
       data: (_) => SafeArea(
         child: Stack(

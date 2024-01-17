@@ -71,7 +71,7 @@ class HomeScaffold extends ConsumerWidget {
     final themeAsync = ref.watch(themeNotifierProvider);
     final themeController = ref.watch(themeControllerProvider);
 
-    return AsyncValueWidget<void>(
+    return VAsyncWidgetScaffold<void>(
       value: themeController,
       data: (_) => Scaffold(
         drawer: WelcomeDrawer(),
@@ -94,7 +94,7 @@ class HomeScaffold extends ConsumerWidget {
             SizedBox(
               width: 8,
             ),
-            AsyncValueWidget<String>(
+            VAsyncWidgetScaffold<String>(
                 value: themeAsync,
                 data: (theme) => InkWell(
                     onTap: () => ref

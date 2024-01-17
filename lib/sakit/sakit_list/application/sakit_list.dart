@@ -7,7 +7,9 @@ part 'sakit_list.g.dart';
 class SakitList with _$SakitList {
   factory SakitList({
     @JsonKey(name: 'id_sakit') int? idSakit,
+    @JsonKey(name: 'id_user') int? idUser,
     @JsonKey(name: 'c_user') String? cUser,
+    @JsonKey(name: 'c_date') String? cDate,
     @JsonKey(name: 'payroll') String? payroll,
     @JsonKey(name: 'dept') String? dept,
     @JsonKey(name: 'ket') String? ket,

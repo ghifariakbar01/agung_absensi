@@ -54,6 +54,7 @@ class _HomeSavedState extends ConsumerState<HomeSaved> {
 
     final errLog = ref.watch(errLogControllerProvider);
 
-    return AsyncValueWidget<void>(value: errLog, data: (_) => HomeScaffold());
+    return VAsyncWidgetScaffold<void>(
+        value: errLog, data: (_) => HomeScaffold());
   }
 }

@@ -128,7 +128,7 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
 
     final errLog = ref.watch(errLogControllerProvider);
 
-    return AsyncValueWidget<void>(
+    return VAsyncWidgetScaffold<void>(
       value: errLog,
       data: (_) => Scaffold(
         body: Stack(children: [

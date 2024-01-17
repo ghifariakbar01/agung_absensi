@@ -40,7 +40,7 @@ final sakitListRepositoryProvider = Provider<SakitListRepository>.internal(
 
 typedef SakitListRepositoryRef = ProviderRef<SakitListRepository>;
 String _$sakitListControllerHash() =>
-    r'b2c16931f7d2a5134c730f16d8047c482597776a';
+    r'5cb928736e5c037e3312e5b7d811cf80765dc65c';
 
 /// See also [SakitListController].
 @ProviderFor(SakitListController)

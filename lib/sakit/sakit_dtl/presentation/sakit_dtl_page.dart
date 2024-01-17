@@ -41,7 +41,7 @@ class _SakitDtlPageByState extends ConsumerState<SakitDtlPageBy> {
 
     final sakitDtl = ref.watch(sakitDtlNotifierProvider);
 
-    return AsyncValueWidget<SakitDtl>(
+    return VAsyncWidgetScaffold<SakitDtl>(
         value: sakitDtl,
         data: (dtl) => RefreshIndicator(
               onRefresh: () {

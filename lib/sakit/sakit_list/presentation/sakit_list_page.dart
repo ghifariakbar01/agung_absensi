@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:face_net_authentication/pages/widgets/async_value_ui.dart';
-import 'package:face_net_authentication/sakit/sakit_list/application/sakit_list_notifier.dart';
+import 'package:face_net_authentication/sakit/sakit_approve/application/sakit_approve_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -13,6 +13,7 @@ import '../../../pages/widgets/v_async_widget.dart';
 import '../../../pages/widgets/v_scaffold_widget.dart';
 import '../../../style/style.dart';
 import '../application/sakit_list.dart';
+import '../application/sakit_list_notifier.dart';
 
 class SakitListPage extends HookConsumerWidget {
   const SakitListPage();
@@ -43,7 +44,7 @@ class SakitListPage extends HookConsumerWidget {
       return () => scrollController.removeListener(onScrolled);
     }, [scrollController]);
 
-    return AsyncValueWidget<List<SakitList>>(
+    return VAsyncWidgetScaffold<List<SakitList>>(
         value: sakitList,
         data: (list) => RefreshIndicator(
               onRefresh: () {
@@ -58,7 +59,7 @@ class SakitListPage extends HookConsumerWidget {
                     backgroundColor: Palette.primaryColor,
                     child: Icon(
                       Icons.add,
-                      color: Theme.of(context).primaryColor,
+                      color: Colors.white,
                     ),
                     onPressed: () => context.pushNamed(
                           RouteNames.createSakitNameRoute,
@@ -91,10 +92,24 @@ class SakitListItem extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
 
-    log('item.qtyFoto ${item.qtyFoto}');
+    final _isSpvApprove = item.spvTgl != item.cDate && item.spvSta == true;
+    final spvAging = _isSpvApprove
+        ? DateTime.parse(item.spvTgl!)
+            .difference(DateTime.parse(item.cDate!))
+            .inDays
+        : DateTime.now().difference(DateTime.parse(item.cDate!)).inDays;
+
+    final _isHrdApprove = item.hrdTgl != item.cDate && item.hrdSta == true;
+    final hrdAging = _isHrdApprove
+        ? DateTime.parse(item.hrdTgl!)
+            .difference(DateTime.parse(item.cDate!))
+            .inDays
+        : DateTime.now().difference(DateTime.parse(item.cDate!)).inDays;
 
     return InkWell(
       onTap: () => item.qtyFoto! == 0
+          // ||
+          //         item.idUser != ref.read(userNotifierProvider).user.idUser
           ? () {}
           : context.pushNamed(RouteNames.sakitDtlRoute, extra: item.idSakit),
       child: Ink(
@@ -197,73 +212,97 @@ class SakitListItem extends HookConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   // LOWER LEFT
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      if (item.spvSta != null)
-                        item.spvSta == true
-                            ? Icon(Icons.thumb_up,
-                                size: 20, color: Colors.green)
-                            : Icon(
-                                Icons.thumb_down,
-                                size: 20,
-                                color: Palette.greyDisabled,
-                              ),
-                      SizedBox(
-                        height: 2,
+                  InkWell(
+                    onTap: () {
+                      if (ref
+                          .read(sakitApproveControllerProvider.notifier)
+                          .canSpvApprove(item)) {
+                        log('message');
+                      }
+                    },
+                    child: Ink(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          if (item.spvSta != null)
+                            item.spvSta == true
+                                ? Icon(Icons.thumb_up,
+                                    size: 20, color: Colors.green)
+                                : Icon(
+                                    Icons.thumb_down,
+                                    size: 20,
+                                    color: Palette.greyDisabled,
+                                  ),
+                          SizedBox(
+                            height: 2,
+                          ),
+                          Text(
+                            'Approve SPV',
+                            style: Themes.customColor(FontWeight.bold, 10,
+                                color: Theme.of(context).unselectedWidgetColor),
+                          ),
+                          if (item.spvTgl != null) ...[
+                            SizedBox(
+                              height: 2,
+                            ),
+                            Text(
+                              'SPV Aging : $spvAging',
+                              style: Themes.customColor(FontWeight.bold, 10,
+                                  color:
+                                      Theme.of(context).unselectedWidgetColor),
+                            ),
+                          ],
+                        ],
                       ),
-                      Text(
-                        'Approve SPV',
-                        style: Themes.customColor(FontWeight.bold, 10,
-                            color: Theme.of(context).unselectedWidgetColor),
-                      ),
-                      if (item.spvTgl != null) ...[
-                        SizedBox(
-                          height: 2,
-                        ),
-                        Text(
-                          'SPV Aging : ${DateTime.now().difference(DateTime.parse(item.spvTgl!)).inDays}',
-                          style: Themes.customColor(FontWeight.bold, 10,
-                              color: Theme.of(context).unselectedWidgetColor),
-                        ),
-                      ],
-                    ],
+                    ),
                   ),
 
                   // LOWER RIGHT
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      if (item.hrdSta != null)
-                        item.hrdSta == true
-                            ? Icon(Icons.thumb_up,
-                                size: 20, color: Colors.green)
-                            : Icon(
-                                Icons.thumb_down,
-                                size: 20,
-                                color: Palette.greyDisabled,
-                              ),
-                      SizedBox(
-                        height: 2,
+                  InkWell(
+                    onTap: () {
+                      if (ref
+                          .read(sakitApproveControllerProvider.notifier)
+                          .canHrdApprove(item)) {
+                        log('message');
+                      }
+                    },
+                    child: Ink(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          if (item.hrdSta != null)
+                            item.hrdSta == true
+                                ? Icon(Icons.thumb_up,
+                                    size: 20, color: Colors.green)
+                                : Icon(
+                                    Icons.thumb_down,
+                                    size: 20,
+                                    color: Palette.greyDisabled,
+                                  ),
+                          SizedBox(
+                            height: 2,
+                          ),
+                          Text(
+                            'Approve HRD',
+                            style: Themes.customColor(FontWeight.bold, 10,
+                                color: Theme.of(context).unselectedWidgetColor),
+                          ),
+                          if (item.hrdTgl != null) ...[
+                            SizedBox(
+                              height: 2,
+                            ),
+                            Text(
+                              'HRD Aging : $hrdAging',
+                              style: Themes.customColor(FontWeight.bold, 10,
+                                  color:
+                                      Theme.of(context).unselectedWidgetColor),
+                            ),
+                          ],
+                        ],
                       ),
-                      Text(
-                        'Approve HRD',
-                        style: Themes.customColor(FontWeight.bold, 10,
-                            color: Theme.of(context).unselectedWidgetColor),
-                      ),
-                      if (item.hrdTgl != null) ...[
-                        SizedBox(
-                          height: 2,
-                        ),
-                        Text(
-                          'HRD Aging : ${DateTime.now().difference(DateTime.parse(item.hrdTgl!)).inDays}',
-                          style: Themes.customColor(FontWeight.bold, 10,
-                              color: Theme.of(context).unselectedWidgetColor),
-                        ),
-                      ],
-                    ],
+                    ),
                   )
                 ],
               ),

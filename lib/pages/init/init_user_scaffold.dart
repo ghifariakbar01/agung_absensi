@@ -61,9 +61,9 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
     final ip = ref.watch(ipNotifierProvider);
     final errLog = ref.watch(errLogControllerProvider);
 
-    return AsyncValueWidget(
+    return VAsyncWidgetScaffold(
       value: ip,
-      data: (_) => AsyncValueWidget(
+      data: (_) => VAsyncWidgetScaffold(
         value: errLog,
         data: (_) => Scaffold(
           body: Stack(children: [
