@@ -53,8 +53,8 @@ class UserNotifier extends StateNotifier<UserState> {
       {required UserModelWithPassword user}) async {
     Either<AuthFailure, Unit?> failureOrSuccess;
 
-    final server = PTName(user.ptServer);
     final userId = UserId(user.nama ?? '');
+    final server = PTName(user.ptServer ?? '');
     final password = Password(user.password ?? '');
 
     state =

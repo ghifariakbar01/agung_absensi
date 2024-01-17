@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:flutter/services.dart';
@@ -27,18 +26,10 @@ class AuthRepository {
       .then((value) => value.fold((_) => '', (userString) => userString ?? ''));
 
   Future<Either<AuthFailure, Unit>> signOut() async {
-    // try {
-    //   await _remoteService.signOut();
-    // } on RestApiException catch (e) {
-    //   return left(AuthFailure.server(e.errorCode));
-    // } on NoConnectionException {
-    //   // Ignoring
-    // }
-
     return clearCredentialsStorage();
   }
 
-  Future<Either<AuthFailure, Unit>> signInWithIdKaryawanUsernameAndPassword({
+  Future<Either<AuthFailure, Unit>> signInWithIdKaryawanUsernameAndPasswordACT({
     required PTName server,
     required UserId userId,
     required Password password,
@@ -48,7 +39,7 @@ class AuthRepository {
       final userIdStr = userId.getOrCrash();
       final passwordStr = password.getOrCrash();
 
-      final authResponse = await _remoteService.signIn(
+      final authResponse = await _remoteService.signInACT(
         server: serverStr,
         userId: userIdStr,
         password: passwordStr,
@@ -63,10 +54,53 @@ class AuthRepository {
 
           return right(unit);
         },
-        failure: (errorCode, message) => left(AuthFailure.server(
-          errorCode,
-          message,
-        )),
+        failure: (errorCode, message) {
+          return left(AuthFailure.server(
+            errorCode,
+            message,
+          ));
+        },
+      );
+    } on RestApiException catch (e) {
+      return left(AuthFailure.server(e.errorCode));
+    } on NoConnectionException {
+      return left(const AuthFailure.noConnection());
+    } on PlatformException {
+      return left(const AuthFailure.storage());
+    }
+  }
+
+  Future<Either<AuthFailure, Unit>> signInWithIdKaryawanUsernameAndPasswordARV({
+    required PTName server,
+    required UserId userId,
+    required Password password,
+  }) async {
+    try {
+      final serverStr = server.getOrCrash();
+      final userIdStr = userId.getOrCrash();
+      final passwordStr = password.getOrCrash();
+
+      final authResponse = await _remoteService.signInARV(
+        server: serverStr,
+        userId: userIdStr,
+        password: passwordStr,
+      );
+
+      return await authResponse.when(
+        withUser: (user) async {
+          String userSave = jsonEncode(user);
+          await _credentialsStorage.save(userSave);
+          await _credentialsStorage.save(userSave);
+          await _credentialsStorage.save(userSave);
+
+          return right(unit);
+        },
+        failure: (errorCode, message) {
+          return left(AuthFailure.server(
+            errorCode,
+            message,
+          ));
+        },
       );
     } on RestApiException catch (e) {
       return left(AuthFailure.server(e.errorCode));
@@ -83,35 +117,23 @@ class AuthRepository {
     required Password password,
   }) async {
     try {
-      final userIdStr = userId.getOrCrash();
-      final passwordStr = password.getOrCrash();
       final serverStr = server.getOrCrash();
 
-      final authResponse = await _remoteService.signIn(
-          userId: userIdStr.toString(),
-          password: passwordStr,
-          server: serverStr);
-
-      return await authResponse.when(
-        withUser: (user) async {
-          String userSave = jsonEncode(user);
-          await _credentialsStorage.save(userSave);
-          await _credentialsStorage.save(userSave);
-          await _credentialsStorage.save(userSave);
-
-          return right(unit);
-        },
-        failure: (errorCode, message) => left(AuthFailure.server(
-          errorCode,
-          message,
-        )),
-      );
+      if (serverStr == 'gs_18') {
+        //
+        return signInWithIdKaryawanUsernameAndPasswordARV(
+            server: server, userId: userId, password: password);
+      } else {
+        //
+        return signInWithIdKaryawanUsernameAndPasswordACT(
+            server: server, userId: userId, password: password);
+      }
     } on RestApiException catch (e) {
       return left(AuthFailure.server(e.errorCode));
-    } on NoConnectionException {
-      return left(const AuthFailure.noConnection());
     } on PlatformException {
       return left(const AuthFailure.storage());
+    } on NoConnectionException {
+      return left(const AuthFailure.noConnection());
     }
   }
 
@@ -124,25 +146,51 @@ class AuthRepository {
     final userIdStr = userId.getOrCrash();
     final passwordStr = password.getOrCrash();
 
-    final authResponse = await _remoteService.signIn(
-        userId: userIdStr.toString(), password: passwordStr, server: serverStr);
+    if (serverStr == 'gs_18') {
+      final authResponse = await _remoteService.signInARV(
+          userId: userIdStr.toString(),
+          password: passwordStr,
+          server: serverStr);
 
-    return await authResponse.when(
-      withUser: (user) async {
-        String userSave = jsonEncode(user);
-        await _credentialsStorage.save(userSave);
-        await _credentialsStorage.save(userSave);
-        await _credentialsStorage.save(userSave);
+      return await authResponse.when(
+        withUser: (user) async {
+          String userSave = jsonEncode(user);
+          await _credentialsStorage.save(userSave);
+          await _credentialsStorage.save(userSave);
+          await _credentialsStorage.save(userSave);
 
-        return unit;
-      },
-      failure: (errorCode, message) {
-        throw AuthFailure.server(
-          errorCode,
-          message,
-        );
-      },
-    );
+          return unit;
+        },
+        failure: (errorCode, message) {
+          throw AuthFailure.server(
+            errorCode,
+            message,
+          );
+        },
+      );
+    } else {
+      final authResponse = await _remoteService.signInACT(
+          userId: userIdStr.toString(),
+          password: passwordStr,
+          server: serverStr);
+
+      return await authResponse.when(
+        withUser: (user) async {
+          String userSave = jsonEncode(user);
+          await _credentialsStorage.save(userSave);
+          await _credentialsStorage.save(userSave);
+          await _credentialsStorage.save(userSave);
+
+          return unit;
+        },
+        failure: (errorCode, message) {
+          throw AuthFailure.server(
+            errorCode,
+            message,
+          );
+        },
+      );
+    }
   }
 
   Future<Either<UserFailure, String?>> getSignedInCredentials() async {
@@ -169,4 +217,13 @@ class AuthRepository {
       return left(const AuthFailure.storage());
     }
   }
+
+  // LOGOUT
+  // try {
+  //   await _remoteService.signOut();
+  // } on RestApiException catch (e) {
+  //   return left(AuthFailure.server(e.errorCode));
+  // } on NoConnectionException {
+  //   // Ignoring
+  // }
 }

@@ -23,7 +23,7 @@ class EditProfileScaffold extends ConsumerWidget {
         onPressed: () => ref
             .read(editProfileNotifierProvider.notifier)
             .submitEdit(
-                idKary: ref.read(userNotifierProvider).user.idKary ?? 'null'),
+                idKary: ref.read(userNotifierProvider).user.IdKary ?? 'null'),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: KeyboardDismissOnTap(

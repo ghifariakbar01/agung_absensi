@@ -10,7 +10,8 @@ part 'user_model.g.dart';
 class UserModelWithPassword with _$UserModelWithPassword {
   const factory UserModelWithPassword({
     @JsonKey(name: 'id_user') required int? idUser,
-    required String? idKary,
+    // ignore: non_constant_identifier_names
+    required String? IdKary,
     @JsonKey(name: 'ktp') required String? ktp,
     @JsonKey(name: 'dept') required String? deptList,
     @JsonKey(name: 'comp') required String? company,
@@ -23,40 +24,52 @@ class UserModelWithPassword with _$UserModelWithPassword {
     required String? email,
     required String? email2,
     required String? photo,
-    required String? password,
     @JsonKey(name: 'pass_update') required String? passwordUpdate,
-    required String ptServer,
     required String? payroll,
+    // user access
+    @JsonKey(name: "full_akses") required bool? fullAkses,
+    final String? lihat,
+    final String? baru,
+    final String? ubah,
+    final String? hapus,
+    final String? spv,
+    final String? mgr,
+    final String? fin,
+    final String? coo,
+    final String? gm,
+    final String? oth,
+    // sharedpref save
+    @Default('') required String? password,
+    @Default('') required String? ptServer,
   }) = _UserModelWithPassword;
 
   factory UserModelWithPassword.fromJson(Map<String, Object?> json) =>
       _$UserModelWithPasswordFromJson(json);
 
   factory UserModelWithPassword.initial() => UserModelWithPassword(
-      idUser: null,
-      company: '',
-      deptList: '',
-      email: '',
-      email2: '',
-      fullname: '',
-      idKary: '',
-      imeiHp: '',
-      jabatan: '',
-      ktp: '',
-      nama: '',
-      noTelp1: '',
-      noTelp2: '',
-      password: '',
-      passwordUpdate: '',
-      photo: '',
-      ptServer: '',
-      payroll: '');
+        idUser: null,
+        company: '',
+        deptList: '',
+        email: '',
+        email2: '',
+        fullname: '',
+        IdKary: '',
+        imeiHp: '',
+        jabatan: '',
+        ktp: '',
+        nama: '',
+        noTelp1: '',
+        noTelp2: '',
+        password: '',
+        passwordUpdate: '',
+        photo: '',
+        ptServer: '',
+        payroll: '',
+        fullAkses: null,
+      );
 }
 
-
-
-
-// - nik 
+// - nik
 // - nama
 // - departemen
 // - perusahaan

@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../style/style.dart';
-import '../profile/widgets/profile_avatar.dart';
 
 class WelcomeDrawer extends ConsumerWidget {
   const WelcomeDrawer();
@@ -30,7 +29,7 @@ class WelcomeDrawer extends ConsumerWidget {
                 //   height: 8,
                 // ),
                 Text(
-                  'NIK : ${userProvider.user.idKary ?? ''}',
+                  'NIK : ${userProvider.user.IdKary ?? ''}',
                   style: Themes.customColor(
                     FontWeight.bold,
                     15,

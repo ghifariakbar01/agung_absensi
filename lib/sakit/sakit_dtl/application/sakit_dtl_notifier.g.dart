@@ -38,7 +38,7 @@ final sakitDtlRepositoryProvider = Provider<SakitDtlRepository>.internal(
 );
 
 typedef SakitDtlRepositoryRef = ProviderRef<SakitDtlRepository>;
-String _$sakitDtlNotifierHash() => r'2c5618ed7298f5db32ff637c53ed3c7d26b74dba';
+String _$sakitDtlNotifierHash() => r'0be1630e61615787bc8dd2a162421a7bbed6b007';
 
 /// See also [SakitDtlNotifier].
 @ProviderFor(SakitDtlNotifier)

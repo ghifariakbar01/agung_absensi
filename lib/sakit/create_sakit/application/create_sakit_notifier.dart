@@ -48,14 +48,14 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
       await onError('ID User Null');
     }
 
-    if (user.idKary == null) {
+    if (user.IdKary == null) {
       state = AsyncData('');
       await onError('ID Karyawan Null');
     }
 
     final create = await repo.getCreateSakit(
         idUser: user.idUser!,
-        idKaryawan: int.parse(user.idKary!),
+        idKaryawan: int.parse(user.IdKary!),
         tglAwal: tglAwal,
         tglAkhir: tglAkhir);
 
@@ -217,13 +217,13 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
 //       throw AssertionError('ID User Null');
 //     }
 
-//     if (user.idKary == null) {
+//     if (user.IdKary == null) {
 //       throw AssertionError('ID Karyawan Null');
 //     }
 
 //     final create = await repo.getCreateSakit(
 //         idUser: user.idUser!,
-//         idKaryawan: int.parse(user.idKary!),
+//         idKaryawan: int.parse(user.IdKary!),
 //         tglAwal: '2024-01-08 00:00:00',
 //         tglAkhir: '2024-01-011 00:00:00');
 

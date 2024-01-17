@@ -86,9 +86,16 @@ class SignInPage extends HookConsumerWidget {
                                     asset: Assets.iconCrossed,
                                   )).then((_) =>
                               ref.read(userNotifierProvider.notifier).logout()),
-                          signIn: () => ref
-                              .read(signInFormNotifierProvider.notifier)
-                              .signInWithUserIdEmailAndPassword(),
+                          signIn: ref
+                                      .read(signInFormNotifierProvider)
+                                      .ptDropdownSelected ==
+                                  'gs_18'
+                              ? ref
+                                  .read(signInFormNotifierProvider.notifier)
+                                  .signInWithUserIdEmailAndPasswordARV
+                              : ref
+                                  .read(signInFormNotifierProvider.notifier)
+                                  .signInWithUserIdEmailAndPasswordACT,
                         );
                   },
                   label: 'LOGIN',

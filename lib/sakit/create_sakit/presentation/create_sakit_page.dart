@@ -1,11 +1,10 @@
 import 'dart:developer';
 
-import 'package:collection/collection.dart';
 import 'package:face_net_authentication/pages/widgets/async_value_ui.dart';
 import 'package:face_net_authentication/pages/widgets/v_button.dart';
 import 'package:face_net_authentication/pages/widgets/v_scaffold_widget.dart';
 import 'package:face_net_authentication/sakit/create_sakit/application/create_sakit_notifier.dart';
-import 'package:face_net_authentication/sakit/payroll_helper/payroll_helper_notifier.dart';
+
 import 'package:face_net_authentication/shared/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -18,6 +17,7 @@ import '../../../pages/widgets/alert_helper.dart';
 import '../../../pages/widgets/v_async_widget.dart';
 import '../../../pages/widgets/v_dialogs.dart';
 import '../../../style/style.dart';
+import '../../../user_helper/user_helper_notifier.dart';
 import '../../../utils/string_utils.dart';
 
 class CreateSakitPage extends HookConsumerWidget {
@@ -39,7 +39,7 @@ class CreateSakitPage extends HookConsumerWidget {
     final spvTextController = useTextEditingController();
     final hrdTextController = useTextEditingController();
 
-    ref.listen<AsyncValue>(payrollHelperNotifierProvider, (_, state) {
+    ref.listen<AsyncValue>(userHelperNotifierProvider, (_, state) {
       state.showAlertDialogOnError(context);
     });
     ref.listen<AsyncValue>(createSakitNotifierProvider, (_, state) {
@@ -53,12 +53,12 @@ class CreateSakitPage extends HookConsumerWidget {
       }
     });
 
-    final payrollHelper = ref.watch(payrollHelperNotifierProvider);
+    final userHelper = ref.watch(userHelperNotifierProvider);
     final createSakit = ref.watch(createSakitNotifierProvider);
 
     return KeyboardDismissOnTap(
       child: AsyncValueWidget<void>(
-        value: payrollHelper,
+        value: userHelper,
         data: (_) => AsyncValueWidget<void>(
           value: createSakit,
           data: (_) => VScaffoldWidget(
@@ -232,41 +232,41 @@ class CreateSakitPage extends HookConsumerWidget {
                       ),
                     ),
 
-                    SizedBox(
-                      height: 8,
-                    ),
+                    // SizedBox(
+                    //   height: 8,
+                    // ),
 
                     // SPV NOTE
-                    TextFormField(
-                      maxLines: 2,
-                      controller: spvTextController,
-                      cursorColor: Palette.primaryColor,
-                      decoration: Themes.formStyle(
-                        'Masukkan SPV Note',
-                      ),
-                      style: Themes.customColor(
-                        FontWeight.normal,
-                        14,
-                      ),
-                    ),
+                    // TextFormField(
+                    //   maxLines: 2,
+                    //   controller: spvTextController,
+                    //   cursorColor: Palette.primaryColor,
+                    //   decoration: Themes.formStyle(
+                    //     'Masukkan SPV Note',
+                    //   ),
+                    //   style: Themes.customColor(
+                    //     FontWeight.normal,
+                    //     14,
+                    //   ),
+                    // ),
 
-                    SizedBox(
-                      height: 8,
-                    ),
+                    // SizedBox(
+                    //   height: 8,
+                    // ),
 
                     // SPV NOTE
-                    TextFormField(
-                      maxLines: 2,
-                      controller: hrdTextController,
-                      cursorColor: Palette.primaryColor,
-                      decoration: Themes.formStyle(
-                        'Masukkan HRD Note',
-                      ),
-                      style: Themes.customColor(
-                        FontWeight.normal,
-                        14,
-                      ),
-                    ),
+                    // TextFormField(
+                    //   maxLines: 2,
+                    //   controller: hrdTextController,
+                    //   cursorColor: Palette.primaryColor,
+                    //   decoration: Themes.formStyle(
+                    //     'Masukkan HRD Note',
+                    //   ),
+                    //   style: Themes.customColor(
+                    //     FontWeight.normal,
+                    //     14,
+                    //   ),
+                    // ),
 
                     SizedBox(
                       height: 8,
@@ -275,9 +275,12 @@ class CreateSakitPage extends HookConsumerWidget {
                     VButton(
                         label: 'Buat Form Sakit',
                         onPressed: () async {
-                          log('VARIABLES : \n  Nama : ${namaTextController.value.text} payroll: ${ptTextController.value.text} Diagnosa: ${diagnosaTextController.value.text} Surat Dokter: ${suratDokterTextController.value} ');
-                          log('Tgl Awal: ${tglAwalTextController.value} Tgl Akhir: ${tglAkhirTextController.value} ');
-                          log('SPV Note : ${spvTextController.value.text} HRD Note : ${hrdTextController.value.text} ');
+                          log(' VARIABLES : \n  Nama : ${namaTextController.value.text} ');
+                          log(' payroll: ${ptTextController.value.text} \n ');
+                          log(' Diagnosa: ${diagnosaTextController.value.text} \n ');
+                          log(' Surat Dokter: ${suratDokterTextController.value} \n ');
+                          log(' Tgl Awal: ${tglAwalTextController.value} Tgl Akhir: ${tglAkhirTextController.value} \n ');
+                          log(' SPV Note : ${spvTextController.value.text} HRD Note : ${hrdTextController.value.text} \n  ');
 
                           await ref
                               .read(createSakitNotifierProvider.notifier)

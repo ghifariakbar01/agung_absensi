@@ -44,8 +44,8 @@ final imeiInitFutureProvider =
 
     final user = ref.read(userNotifierProvider).user;
 
-    if (user.idKary != null) {
-      if (user.idKary!.isNotEmpty) {
+    if (user.IdKary != null) {
+      if (user.IdKary!.isNotEmpty) {
         log('imeiInitFutureProvider -- 3');
 
         final imeiNotifier = ref.read(imeiNotifierProvider.notifier);
@@ -62,7 +62,7 @@ final imeiInitFutureProvider =
 
         String imeiDb = await ref
             .read(imeiNotifierProvider.notifier)
-            .getImeiStringDb(idKary: user.idKary ?? 'null');
+            .getImeiStringDb(idKary: user.IdKary ?? 'null');
 
         log('imeiInitFutureProvider -- 6');
 

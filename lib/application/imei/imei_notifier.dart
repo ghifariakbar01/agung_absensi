@@ -305,7 +305,7 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
                     .read(imeiNotifierProvider.notifier)
                     .registerImei(
                         imei: generatedImeiString,
-                        idKary: user.idKary ?? 'null'),
+                        idKary: user.IdKary ?? 'null'),
                 getImei: () => ref
                     .read(imeiNotifierProvider.notifier)
                     .getImeiCredentials(),

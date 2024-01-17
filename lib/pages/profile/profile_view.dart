@@ -16,7 +16,7 @@ class ProfileView extends ConsumerWidget {
       children: [
         // ProfileAvatarItem(url: userProvider.user.photo),
         ProfileItem(
-          text: userProvider.user.idKary ?? '',
+          text: userProvider.user.IdKary ?? '',
           icon: Icons.person,
           label: 'NIK',
         ),

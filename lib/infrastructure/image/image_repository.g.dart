@@ -21,7 +21,7 @@ final imageRepositoryProvider = AutoDisposeProvider<ImageRepository>.internal(
 );
 
 typedef ImageRepositoryRef = AutoDisposeProviderRef<ImageRepository>;
-String _$imageUrlHash() => r'5b5dca134465f933e7dbae27750f38acab827b95';
+String _$imageUrlHash() => r'50dae929d7ec1caaef06d388dcff8392fadce415';
 
 /// See also [imageUrl].
 @ProviderFor(imageUrl)

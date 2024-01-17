@@ -174,7 +174,7 @@ class SignInFormNotifier extends StateNotifier<SignInFormState> {
     }
   }
 
-  Future<void> signInWithUserIdEmailAndPassword() async {
+  Future<void> signInWithUserIdEmailAndPasswordACT() async {
     Either<AuthFailure, Unit>? signInFailureOrSuccess;
 
     if (isValid) {
@@ -184,7 +184,30 @@ class SignInFormNotifier extends StateNotifier<SignInFormState> {
       );
 
       signInFailureOrSuccess =
-          await _repository.signInWithIdKaryawanUsernameAndPassword(
+          await _repository.signInWithIdKaryawanUsernameAndPasswordACT(
+              userId: state.userId,
+              password: state.password,
+              server: state.ptServerSelected);
+    }
+
+    state = state.copyWith(
+      isSubmitting: false,
+      showErrorMessages: true,
+      failureOrSuccessOption: optionOf(signInFailureOrSuccess),
+    );
+  }
+
+  Future<void> signInWithUserIdEmailAndPasswordARV() async {
+    Either<AuthFailure, Unit>? signInFailureOrSuccess;
+
+    if (isValid) {
+      state = state.copyWith(
+        isSubmitting: true,
+        failureOrSuccessOption: none(),
+      );
+
+      signInFailureOrSuccess =
+          await _repository.signInWithIdKaryawanUsernameAndPasswordARV(
               userId: state.userId,
               password: state.password,
               server: state.ptServerSelected);

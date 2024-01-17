@@ -36,7 +36,7 @@ String imageUrl(ProviderRef ref) {
 
   final repository = ref.read(imageRepositoryProvider);
 
-  String port = repository.getPort(ptServer: ptServer);
+  String port = repository.getPort(ptServer: ptServer ?? '');
 
   return repository.imageUrl(port: port, idGeof: idGeof);
 }

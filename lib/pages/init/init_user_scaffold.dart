@@ -129,7 +129,7 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
                           ),
                           children: [
                             Text(
-                              'idKary: ${ref.read(userNotifierProvider).user.idKary}\n '
+                              'idKary: ${ref.read(userNotifierProvider).user.IdKary}\n '
                               'Error: $error \n'
                               'StackTrace: $stackTrace \n',
                               style: Themes.customColor(

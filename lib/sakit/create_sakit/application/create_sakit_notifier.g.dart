@@ -40,7 +40,7 @@ final createSakitRepositoryProvider = Provider<CreateSakitRepository>.internal(
 
 typedef CreateSakitRepositoryRef = ProviderRef<CreateSakitRepository>;
 String _$createSakitNotifierHash() =>
-    r'c51bcbc99fec3f8b07d3a2dd104739757777951d';
+    r'a3eaaf0bb2779e7e6ec36168e87fab7fd38a7af1';
 
 /// See also [CreateSakitNotifier].
 @ProviderFor(CreateSakitNotifier)
