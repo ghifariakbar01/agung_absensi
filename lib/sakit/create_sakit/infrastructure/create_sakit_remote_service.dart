@@ -89,6 +89,64 @@ class CreateSakitRemoteService {
     }
   }
 
+  Future<Unit> updateSakit({
+    required int id,
+    required int idUser,
+    required String ket,
+    required String surat,
+    required String cUser,
+    required String tglEnd,
+    required String tglStart,
+    required String jumlahHari,
+  }) async {
+    try {
+      final Map<String, String> submitSakit = {
+        "command": "UPDATE $dbHrSakit SET "
+            " id_user = $idUser,  "
+            " ket = '$ket',  "
+            " surat = '$surat',  "
+            " tot_hari = (datediff(day,'$tglStart', '$tglEnd') + 1) - $jumlahHari,  "
+            " periode = (DATENAME(MONTH,'$tglStart')),  "
+            " tgl_start = '$tglStart',  "
+            " tgl_end = '$tglEnd',  "
+            // add spv / hrd note
+            " u_date = GETDATE(), "
+            " u_user = $cUser, "
+            " WHERE id_sakit = $id ",
+        "mode": "INSERT"
+      };
+
+      final data = _dioRequest;
+      data.addAll(submitSakit);
+
+      final response = await _dio.post('',
+          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
+
+      log('data ${jsonEncode(data)}');
+      log('response $response');
+      final items = response.data?[0];
+
+      if (items['status'] == 'Success') {
+        return unit;
+      } else {
+        final message = items['error'] as String?;
+        final errorCode = items['errornum'] as int;
+
+        throw RestApiExceptionWithMessage(errorCode, message);
+      }
+    } on FormatException catch (e) {
+      throw FormatException(e.message);
+    } on DioError catch (e) {
+      if (e.isNoConnectionError || e.isConnectionTimeout) {
+        throw NoConnectionException();
+      } else if (e.response != null) {
+        throw RestApiException(e.response?.statusCode);
+      } else {
+        rethrow;
+      }
+    }
+  }
+
   Future<CreateSakit> getCreateSakit(
       {required int idUser,
       required int idKaryawan,

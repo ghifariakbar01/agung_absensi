@@ -28,6 +28,28 @@ class CreateSakitRepository {
     );
   }
 
+  Future<Unit> updateSakit({
+    required int id,
+    required int idUser,
+    required String ket,
+    required String surat,
+    required String cUser,
+    required String tglEnd,
+    required String tglStart,
+    required String jumlahHari,
+  }) {
+    return _remoteService.updateSakit(
+      id: id,
+      idUser: idUser,
+      ket: ket,
+      surat: surat,
+      cUser: cUser,
+      tglEnd: tglEnd,
+      tglStart: tglStart,
+      jumlahHari: jumlahHari,
+    );
+  }
+
   Future<CreateSakit> getCreateSakit(
       {required int idUser,
       required int idKaryawan,

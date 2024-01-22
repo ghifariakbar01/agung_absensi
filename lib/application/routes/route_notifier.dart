@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:face_net_authentication/sakit/create_sakit/presentation/edit_sakit_page.dart';
 import 'package:face_net_authentication/sakit/sakit_dtl/presentation/sakit_dtl_page.dart';
 import 'package:face_net_authentication/sakit/sakit_dtl/presentation/sakit_dtl_photo_page.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,7 @@ import '../../pages/home/home_page.dart';
 import '../../pages/widgets/splash_page.dart';
 import '../../sakit/create_sakit/presentation/create_sakit_page.dart';
 import '../../sakit/sakit_dtl/presentation/sakit_upload_page.dart';
+import '../../sakit/sakit_list/application/sakit_list.dart';
 import '../../sakit/sakit_list/presentation/sakit_list_page.dart';
 import '../../shared/providers.dart';
 import '../auth/auth_notifier.dart';
@@ -196,6 +198,14 @@ class RouterNotifier extends ChangeNotifier {
               name: RouteNames.createSakitNameRoute,
               path: RouteNames.createSakitRoute,
               builder: (context, state) => CreateSakitPage(),
+            ),
+            GoRoute(
+              name: RouteNames.editSakitNameRoute,
+              path: RouteNames.editSakitRoute,
+              builder: (context, state) {
+                final sakit = state.extra as SakitList;
+                return EditSakitPage(sakit);
+              },
             ),
             GoRoute(
                 name: RouteNames.sakitDtlNameRoute,

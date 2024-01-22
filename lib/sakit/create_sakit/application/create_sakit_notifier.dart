@@ -1,5 +1,4 @@
-import 'dart:developer';
-
+import 'package:face_net_authentication/application/user/user_model.dart';
 import 'package:face_net_authentication/sakit/create_sakit/application/create_sakit.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -43,6 +42,112 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
     final repo = ref.read(createSakitRepositoryProvider);
     final user = ref.read(userNotifierProvider).user;
 
+    int jumlahhari = 0;
+
+    await _processSakit(
+        repo: repo,
+        user: user,
+        onError: onError,
+        tglAwal: tglAwal,
+        tglAkhir: tglAkhir,
+        jumlahhari: jumlahhari,
+        suratDokter: suratDokter);
+
+    state = await AsyncValue.guard(() => repo.submitSakit(
+        idUser: user.idUser!,
+        ket: keterangan,
+        surat: suratDokter,
+        cUser: user.nama!,
+        tglEnd: tglAkhir,
+        tglStart: tglAwal,
+        jumlahHari: jumlahhari.toString()));
+  }
+
+  Future<void> updateSakit(
+      {
+      //
+      required int id,
+      required String tglAwal,
+      required String tglAkhir,
+      required String keterangan,
+      required String suratDokter,
+      required Future<void> Function(String errMessage) onError}
+      //
+      ) async {
+    state = const AsyncLoading();
+
+    final repo = ref.read(createSakitRepositoryProvider);
+    final user = ref.read(userNotifierProvider).user;
+
+    int jumlahhari = 0;
+
+    await _processSakit(
+        repo: repo,
+        user: user,
+        onError: onError,
+        tglAwal: tglAwal,
+        tglAkhir: tglAkhir,
+        jumlahhari: jumlahhari,
+        suratDokter: suratDokter);
+
+    state = await AsyncValue.guard(() => repo.updateSakit(
+        id: id,
+        idUser: user.idUser!,
+        ket: keterangan,
+        surat: suratDokter,
+        cUser: user.nama!,
+        tglEnd: tglAkhir,
+        tglStart: tglAwal,
+        jumlahHari: jumlahhari.toString()));
+  }
+
+  Future<void> _processSakit({
+    required int jumlahhari,
+    required String tglAwal,
+    required String tglAkhir,
+    required String suratDokter,
+    required UserModelWithPassword user,
+    required CreateSakitRepository repo,
+    required Future<void> onError(String errMessage),
+  }) async {
+    CreateSakit create =
+        await _getCreateSakit(user, onError, repo, tglAwal, tglAkhir);
+
+    // 1. CALC JUMLAH HARI
+
+    final tglAwalInDateTime = DateTime.parse(tglAwal);
+    final tglAkhirInDateTime = DateTime.parse(tglAkhir);
+
+    // jumlahhari MUTATION
+    _calcDiff(create, jumlahhari, tglAwalInDateTime, tglAkhirInDateTime);
+
+    // JIKA TS
+    if (suratDokter == 'TS') {
+      _noSuratCondition(create, onError);
+    }
+
+    // SALDO CUTI
+    await _calcSaldoCuti(
+      create: create,
+      onError: onError,
+      jumlahhari: jumlahhari,
+      suratDokter: suratDokter,
+      tglAwalInDateTime: tglAwalInDateTime,
+      tglAkhirInDateTime: tglAkhirInDateTime,
+    );
+
+    if (DateTime.now().difference(tglAwalInDateTime).inDays - jumlahhari > 3) {
+      state = AsyncData('');
+      await onError('Tanggal input lewat dari 3 hari');
+    }
+  }
+
+  Future<CreateSakit> _getCreateSakit(
+      UserModelWithPassword user,
+      Future<void> onError(String errMessage),
+      CreateSakitRepository repo,
+      String tglAwal,
+      String tglAkhir) async {
     if (user.idUser == null) {
       state = AsyncData('');
       await onError('ID User Null');
@@ -58,50 +163,18 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
         idKaryawan: int.parse(user.IdKary!),
         tglAwal: tglAwal,
         tglAkhir: tglAkhir);
-
-    // 1. CALC JUMLAH HARI
-
-    int jumlahhari = 0;
-
-    final tglAwalInDateTime = DateTime.parse(tglAwal);
-    final tglAkhirInDateTime = DateTime.parse(tglAkhir);
-
-    // jumlahhari MUTATION
-    _calcDiff(create, jumlahhari, tglAwalInDateTime, tglAkhirInDateTime);
-
-    // JIKA TS
-    if (suratDokter == 'TS') {
-      _noSuratCondition(create, onError);
-    }
-
-    // SALDO CUTI
-    _calcSaldoCuti(create, tglAwalInDateTime, suratDokter, tglAkhirInDateTime,
-        jumlahhari, onError);
-
-    if (DateTime.now().difference(tglAwalInDateTime).inDays - jumlahhari > 3) {
-      state = AsyncData('');
-      await onError('Tanggal input lewat dari 3 hari');
-    }
-
-    debugger();
-
-    state = await AsyncValue.guard(() => repo.submitSakit(
-        idUser: user.idUser!,
-        ket: keterangan,
-        surat: suratDokter,
-        cUser: user.nama!,
-        tglEnd: tglAkhir,
-        tglStart: tglAwal,
-        jumlahHari: jumlahhari.toString()));
+    return create;
   }
 
   Future<void> _calcSaldoCuti(
-      CreateSakit create,
-      DateTime tglAwalInDateTime,
-      String suratDokter,
-      DateTime tglAkhirInDateTime,
-      int jumlahhari,
-      Future<void> Function(String errMessage) onError) async {
+      {required int jumlahhari,
+      required String suratDokter,
+      required CreateSakit create,
+      required DateTime tglAkhirInDateTime,
+      required DateTime tglAwalInDateTime,
+      required Future<void> Function(String errMessage) onError}) async {
+    //
+
     final createMasukInDateTime = DateTime.parse('${create.masuk}');
     final createMasukInDateTimePlusOne =
         createMasukInDateTime.add(Duration(days: 365));
