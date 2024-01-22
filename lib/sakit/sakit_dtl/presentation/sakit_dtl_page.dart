@@ -41,13 +41,13 @@ class _SakitDtlPageByState extends ConsumerState<SakitDtlPageBy> {
 
     final sakitDtl = ref.watch(sakitDtlNotifierProvider);
 
-    return VAsyncWidgetScaffold<SakitDtl>(
+    return VAsyncWidgetScaffold<List<SakitDtl>>(
         value: sakitDtl,
         data: (dtl) => RefreshIndicator(
               onRefresh: () {
                 ref
                     .read(sakitDtlNotifierProvider.notifier)
-                    .loadSakitDetail(idSakit: dtl.idSakit);
+                    .loadSakitDetail(idSakit: dtl.first.idSakit);
                 return Future.value();
               },
               child: VScaffoldWidget(
@@ -60,8 +60,20 @@ class _SakitDtlPageByState extends ConsumerState<SakitDtlPageBy> {
                     ),
                     onPressed: () => context.pushNamed(
                         RouteNames.sakitUploadRoute,
-                        extra: dtl.idSakit)),
-                scaffoldBody: SakitDtlWidget(dtl),
+                        extra: dtl.first.idSakit)),
+                scaffoldBody: ListView.separated(
+                  itemCount: dtl.length,
+                  separatorBuilder: (context, index) => SizedBox(
+                    height: 8,
+                  ),
+                  itemBuilder: (context, index) => InkWell(
+                      onTap: () => context.pushNamed(
+                          RouteNames.sakitPhotoDtlRoute,
+                          extra: ref
+                              .read(sakitDtlNotifierProvider.notifier)
+                              .urlImageFormSakit(dtl[index].namaImg)),
+                      child: Ink(child: SakitDtlWidget(dtl[index]))),
+                ),
               ),
             ));
   }
@@ -143,19 +155,22 @@ class SakitDtlWidget extends HookConsumerWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               padding: EdgeInsets.all(8),
-              child: InAppWebView(
-                onWebViewCreated: (_) {},
-                initialUrlRequest: URLRequest(url: Uri.parse(imageUrl)),
-                onLoadStop: (controller, url) async {
-                  String html = await controller.evaluateJavascript(
-                      source:
-                          "window.document.getElementsByTagName('html')[0].outerHTML;");
+              child: IgnorePointer(
+                ignoring: true,
+                child: InAppWebView(
+                  onWebViewCreated: (_) {},
+                  initialUrlRequest: URLRequest(url: Uri.parse(imageUrl)),
+                  onLoadStop: (controller, url) async {
+                    String html = await controller.evaluateJavascript(
+                        source:
+                            "window.document.getElementsByTagName('html')[0].outerHTML;");
 
-                  if (html.contains('Runtime Error')) {}
-                },
-                onConsoleMessage: (controller, consoleMessage) {
-                  print(consoleMessage);
-                },
+                    if (html.contains('Runtime Error')) {}
+                  },
+                  onConsoleMessage: (controller, consoleMessage) {
+                    print(consoleMessage);
+                  },
+                ),
               )),
 
           SizedBox(

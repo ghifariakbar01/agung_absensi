@@ -6,7 +6,7 @@ class SakitDtlRepository {
 
   final SakitDtlRemoteService _remoteService;
 
-  Future<SakitDtl> getSakitDetail({required int idSakit}) {
+  Future<List<SakitDtl>> getSakitDetail({required int idSakit}) {
     return _remoteService.getSakitDetail(idSakit: idSakit);
   }
 }

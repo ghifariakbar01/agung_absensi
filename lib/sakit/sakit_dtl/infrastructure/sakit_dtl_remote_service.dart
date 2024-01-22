@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:face_net_authentication/infrastructure/dio_extensions.dart';
@@ -17,7 +18,7 @@ class SakitDtlRemoteService {
 
   static const String dbName = 'hr_sakit_dtl';
 
-  Future<SakitDtl> getSakitDetail({required int idSakit}) async {
+  Future<List<SakitDtl>> getSakitDetail({required int idSakit}) async {
     try {
       // debugger();
       final data = _dioRequest;
@@ -33,8 +34,8 @@ class SakitDtlRemoteService {
       final response = await _dio.post('',
           data: jsonEncode(data), options: Options(contentType: 'text/plain'));
 
-      // log('data ${jsonEncode(data)}');
-      // log('response page $page : $response');
+      log('data ${jsonEncode(data)}');
+      log('response page $idSakit : $response');
 
       final items = response.data?[0];
 
@@ -45,8 +46,8 @@ class SakitDtlRemoteService {
         if (listExist) {
           final list = items['items'] as List;
 
-          if (list[0] != null) {
-            return SakitDtl.fromJson(list[0]);
+          if (list.isNotEmpty) {
+            return list.map((e) => SakitDtl.fromJson(e)).toList();
           } else {
             final message = items['error'] as String?;
             final errorCode = items['errornum'] as int;

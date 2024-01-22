@@ -63,4 +63,7 @@ class RouteNames {
 
   static const sakitUploadNameRoute = 'sakitUpload';
   static const sakitUploadRoute = 'sakitUpload';
+
+  static const sakitPhotoDtlNameRoute = 'sakitPhotoDtl';
+  static const sakitPhotoDtlRoute = 'sakitPhotoDtl';
 }

@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:face_net_authentication/sakit/sakit_dtl/presentation/sakit_dtl_page.dart';
+import 'package:face_net_authentication/sakit/sakit_dtl/presentation/sakit_dtl_photo_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -209,6 +210,13 @@ class RouterNotifier extends ChangeNotifier {
                 builder: (context, state) {
                   final id = state.extra as int;
                   return SakitUploadPage(id);
+                }),
+            GoRoute(
+                name: RouteNames.sakitPhotoDtlNameRoute,
+                path: RouteNames.sakitPhotoDtlRoute,
+                builder: (context, state) {
+                  final imageUrl = state.extra as String;
+                  return SakitDtlPhotoPage(imageUrl: imageUrl);
                 }),
 
             // GoRoute(

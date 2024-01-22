@@ -23,8 +23,8 @@ SakitDtlRepository sakitDtlRepository(SakitDtlRepositoryRef ref) {
 @riverpod
 class SakitDtlNotifier extends _$SakitDtlNotifier {
   @override
-  FutureOr<SakitDtl> build() {
-    return SakitDtl.initial();
+  FutureOr<List<SakitDtl>> build() {
+    return [];
   }
 
   Future<void> loadSakitDetail({required int idSakit}) async {

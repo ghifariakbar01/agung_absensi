@@ -38,12 +38,12 @@ final sakitDtlRepositoryProvider = Provider<SakitDtlRepository>.internal(
 );
 
 typedef SakitDtlRepositoryRef = ProviderRef<SakitDtlRepository>;
-String _$sakitDtlNotifierHash() => r'0be1630e61615787bc8dd2a162421a7bbed6b007';
+String _$sakitDtlNotifierHash() => r'3be691dae2c2e976c5d23d24dc1f244df22f7899';
 
 /// See also [SakitDtlNotifier].
 @ProviderFor(SakitDtlNotifier)
 final sakitDtlNotifierProvider =
-    AutoDisposeAsyncNotifierProvider<SakitDtlNotifier, SakitDtl>.internal(
+    AutoDisposeAsyncNotifierProvider<SakitDtlNotifier, List<SakitDtl>>.internal(
   SakitDtlNotifier.new,
   name: r'sakitDtlNotifierProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -53,6 +53,6 @@ final sakitDtlNotifierProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$SakitDtlNotifier = AutoDisposeAsyncNotifier<SakitDtl>;
+typedef _$SakitDtlNotifier = AutoDisposeAsyncNotifier<List<SakitDtl>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
