@@ -38,6 +38,7 @@ _$_UserModelWithPassword _$$_UserModelWithPasswordFromJson(
       oth: json['oth'] as String?,
       password: json['password'] as String? ?? '',
       ptServer: json['ptServer'] as String? ?? '',
+      isSpvOrHrd: json['isSpvOrHrd'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$_UserModelWithPasswordToJson(
@@ -72,4 +73,5 @@ Map<String, dynamic> _$$_UserModelWithPasswordToJson(
       'oth': instance.oth,
       'password': instance.password,
       'ptServer': instance.ptServer,
+      'isSpvOrHrd': instance.isSpvOrHrd,
     };

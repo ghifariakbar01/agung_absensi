@@ -1,7 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../shared/providers.dart';
-import '../../create_sakit/application/create_sakit_notifier.dart';
 import '../infrastructure/sakit_list_remote_service.dart';
 import '../infrastructure/sakit_list_repository.dart';
 import 'sakit_list.dart';
@@ -62,12 +61,6 @@ class SakitListController extends _$SakitListController {
   }
 
   bool isHrdOrSpv() {
-    final isAjl = ref.read(userNotifierProvider).user.ptServer == 'gs_18';
-
-    if (isAjl) {
-      return ref.read(userNotifierProvider).user.fin!.contains(",5101,");
-    } else {
-      return ref.read(userNotifierProvider).user.fin!.contains(",2,");
-    }
+    return ref.read(userNotifierProvider).user.isSpvOrHrd ?? false;
   }
 }

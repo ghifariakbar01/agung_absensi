@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:face_net_authentication/infrastructure/exceptions.dart';
 import 'package:face_net_authentication/pages/widgets/alert_dialogs.dart';
 import 'package:face_net_authentication/utils/string_hardcoded.dart';
@@ -9,6 +11,8 @@ extension AsyncValueUI on AsyncValue {
     debugPrint('isLoading: $isLoading, hasError: $hasError');
     if (!isLoading && hasError) {
       String message = '';
+
+      log('error is $error');
       if (error is RestApiExceptionWithMessage) {
         message = (error as RestApiExceptionWithMessage).message ??
             'Error RestApiExceptionWithMessage';
@@ -17,6 +21,8 @@ extension AsyncValueUI on AsyncValue {
       } else if (error is RestApiException) {
         message = (error as RestApiException).errorCode.toString();
       } else {
+        log('error is here');
+
         message = error.toString();
       }
 

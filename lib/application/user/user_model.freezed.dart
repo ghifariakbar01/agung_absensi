@@ -58,9 +58,13 @@ mixin _$UserModelWithPassword {
   String? get fin => throw _privateConstructorUsedError;
   String? get coo => throw _privateConstructorUsedError;
   String? get gm => throw _privateConstructorUsedError;
-  String? get oth => throw _privateConstructorUsedError; // sharedpref save
+  String? get oth => throw _privateConstructorUsedError; //
+  @JsonKey(defaultValue: '')
   String? get password => throw _privateConstructorUsedError;
-  String? get ptServer => throw _privateConstructorUsedError;
+  @JsonKey(defaultValue: '')
+  String? get ptServer => throw _privateConstructorUsedError; // Is SPV or HRD
+  @JsonKey(defaultValue: false)
+  bool? get isSpvOrHrd => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -102,8 +106,9 @@ abstract class $UserModelWithPasswordCopyWith<$Res> {
       String? coo,
       String? gm,
       String? oth,
-      String? password,
-      String? ptServer});
+      @JsonKey(defaultValue: '') String? password,
+      @JsonKey(defaultValue: '') String? ptServer,
+      @JsonKey(defaultValue: false) bool? isSpvOrHrd});
 }
 
 /// @nodoc
@@ -149,6 +154,7 @@ class _$UserModelWithPasswordCopyWithImpl<$Res,
     Object? oth = freezed,
     Object? password = freezed,
     Object? ptServer = freezed,
+    Object? isSpvOrHrd = freezed,
   }) {
     return _then(_value.copyWith(
       idUser: freezed == idUser
@@ -267,6 +273,10 @@ class _$UserModelWithPasswordCopyWithImpl<$Res,
           ? _value.ptServer
           : ptServer // ignore: cast_nullable_to_non_nullable
               as String?,
+      isSpvOrHrd: freezed == isSpvOrHrd
+          ? _value.isSpvOrHrd
+          : isSpvOrHrd // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ) as $Val);
   }
 }
@@ -307,8 +317,9 @@ abstract class _$$_UserModelWithPasswordCopyWith<$Res>
       String? coo,
       String? gm,
       String? oth,
-      String? password,
-      String? ptServer});
+      @JsonKey(defaultValue: '') String? password,
+      @JsonKey(defaultValue: '') String? ptServer,
+      @JsonKey(defaultValue: false) bool? isSpvOrHrd});
 }
 
 /// @nodoc
@@ -351,6 +362,7 @@ class __$$_UserModelWithPasswordCopyWithImpl<$Res>
     Object? oth = freezed,
     Object? password = freezed,
     Object? ptServer = freezed,
+    Object? isSpvOrHrd = freezed,
   }) {
     return _then(_$_UserModelWithPassword(
       idUser: freezed == idUser
@@ -469,6 +481,10 @@ class __$$_UserModelWithPasswordCopyWithImpl<$Res>
           ? _value.ptServer
           : ptServer // ignore: cast_nullable_to_non_nullable
               as String?,
+      isSpvOrHrd: freezed == isSpvOrHrd
+          ? _value.isSpvOrHrd
+          : isSpvOrHrd // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
   }
 }
@@ -504,8 +520,9 @@ class _$_UserModelWithPassword implements _UserModelWithPassword {
       this.coo,
       this.gm,
       this.oth,
-      this.password,
-      this.ptServer});
+      @JsonKey(defaultValue: '') required this.password,
+      @JsonKey(defaultValue: '') required this.ptServer,
+      @JsonKey(defaultValue: false) required this.isSpvOrHrd});
 
   factory _$_UserModelWithPassword.fromJson(Map<String, dynamic> json) =>
       _$$_UserModelWithPasswordFromJson(json);
@@ -576,17 +593,21 @@ class _$_UserModelWithPassword implements _UserModelWithPassword {
   final String? gm;
   @override
   final String? oth;
-// sharedpref save
+//
   @override
-  @JsonKey()
+  @JsonKey(defaultValue: '')
   final String? password;
   @override
-  @JsonKey()
+  @JsonKey(defaultValue: '')
   final String? ptServer;
+// Is SPV or HRD
+  @override
+  @JsonKey(defaultValue: false)
+  final bool? isSpvOrHrd;
 
   @override
   String toString() {
-    return 'UserModelWithPassword(idUser: $idUser, IdKary: $IdKary, ktp: $ktp, deptList: $deptList, company: $company, jabatan: $jabatan, imeiHp: $imeiHp, nama: $nama, fullname: $fullname, noTelp1: $noTelp1, noTelp2: $noTelp2, email: $email, email2: $email2, photo: $photo, passwordUpdate: $passwordUpdate, payroll: $payroll, fullAkses: $fullAkses, lihat: $lihat, baru: $baru, ubah: $ubah, hapus: $hapus, spv: $spv, mgr: $mgr, fin: $fin, coo: $coo, gm: $gm, oth: $oth, password: $password, ptServer: $ptServer)';
+    return 'UserModelWithPassword(idUser: $idUser, IdKary: $IdKary, ktp: $ktp, deptList: $deptList, company: $company, jabatan: $jabatan, imeiHp: $imeiHp, nama: $nama, fullname: $fullname, noTelp1: $noTelp1, noTelp2: $noTelp2, email: $email, email2: $email2, photo: $photo, passwordUpdate: $passwordUpdate, payroll: $payroll, fullAkses: $fullAkses, lihat: $lihat, baru: $baru, ubah: $ubah, hapus: $hapus, spv: $spv, mgr: $mgr, fin: $fin, coo: $coo, gm: $gm, oth: $oth, password: $password, ptServer: $ptServer, isSpvOrHrd: $isSpvOrHrd)';
   }
 
   @override
@@ -628,7 +649,9 @@ class _$_UserModelWithPassword implements _UserModelWithPassword {
             (identical(other.password, password) ||
                 other.password == password) &&
             (identical(other.ptServer, ptServer) ||
-                other.ptServer == ptServer));
+                other.ptServer == ptServer) &&
+            (identical(other.isSpvOrHrd, isSpvOrHrd) ||
+                other.isSpvOrHrd == isSpvOrHrd));
   }
 
   @JsonKey(ignore: true)
@@ -663,7 +686,8 @@ class _$_UserModelWithPassword implements _UserModelWithPassword {
         gm,
         oth,
         password,
-        ptServer
+        ptServer,
+        isSpvOrHrd
       ]);
 
   @JsonKey(ignore: true)
@@ -683,35 +707,37 @@ class _$_UserModelWithPassword implements _UserModelWithPassword {
 
 abstract class _UserModelWithPassword implements UserModelWithPassword {
   const factory _UserModelWithPassword(
-      {@JsonKey(name: 'id_user') required final int? idUser,
-      required final String? IdKary,
-      @JsonKey(name: 'ktp') required final String? ktp,
-      @JsonKey(name: 'dept') required final String? deptList,
-      @JsonKey(name: 'comp') required final String? company,
-      @JsonKey(name: 'jbt') required final String? jabatan,
-      @JsonKey(name: 'imei_hp') required final String? imeiHp,
-      required final String? nama,
-      required final String? fullname,
-      @JsonKey(name: 'no_telp1') required final String? noTelp1,
-      @JsonKey(name: 'no_telp2') required final String? noTelp2,
-      required final String? email,
-      required final String? email2,
-      required final String? photo,
-      @JsonKey(name: 'pass_update') required final String? passwordUpdate,
-      required final String? payroll,
-      @JsonKey(name: "full_akses") required final bool? fullAkses,
-      final String? lihat,
-      final String? baru,
-      final String? ubah,
-      final String? hapus,
-      final String? spv,
-      final String? mgr,
-      final String? fin,
-      final String? coo,
-      final String? gm,
-      final String? oth,
-      required final String? password,
-      required final String? ptServer}) = _$_UserModelWithPassword;
+          {@JsonKey(name: 'id_user') required final int? idUser,
+          required final String? IdKary,
+          @JsonKey(name: 'ktp') required final String? ktp,
+          @JsonKey(name: 'dept') required final String? deptList,
+          @JsonKey(name: 'comp') required final String? company,
+          @JsonKey(name: 'jbt') required final String? jabatan,
+          @JsonKey(name: 'imei_hp') required final String? imeiHp,
+          required final String? nama,
+          required final String? fullname,
+          @JsonKey(name: 'no_telp1') required final String? noTelp1,
+          @JsonKey(name: 'no_telp2') required final String? noTelp2,
+          required final String? email,
+          required final String? email2,
+          required final String? photo,
+          @JsonKey(name: 'pass_update') required final String? passwordUpdate,
+          required final String? payroll,
+          @JsonKey(name: "full_akses") required final bool? fullAkses,
+          final String? lihat,
+          final String? baru,
+          final String? ubah,
+          final String? hapus,
+          final String? spv,
+          final String? mgr,
+          final String? fin,
+          final String? coo,
+          final String? gm,
+          final String? oth,
+          @JsonKey(defaultValue: '') required final String? password,
+          @JsonKey(defaultValue: '') required final String? ptServer,
+          @JsonKey(defaultValue: false) required final bool? isSpvOrHrd}) =
+      _$_UserModelWithPassword;
 
   factory _UserModelWithPassword.fromJson(Map<String, dynamic> json) =
       _$_UserModelWithPassword.fromJson;
@@ -780,10 +806,15 @@ abstract class _UserModelWithPassword implements UserModelWithPassword {
   String? get gm;
   @override
   String? get oth;
-  @override // sharedpref save
+  @override //
+  @JsonKey(defaultValue: '')
   String? get password;
   @override
+  @JsonKey(defaultValue: '')
   String? get ptServer;
+  @override // Is SPV or HRD
+  @JsonKey(defaultValue: false)
+  bool? get isSpvOrHrd;
   @override
   @JsonKey(ignore: true)
   _$$_UserModelWithPasswordCopyWith<_$_UserModelWithPassword> get copyWith =>

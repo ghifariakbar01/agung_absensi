@@ -6,6 +6,7 @@ part 'create_sakit_cuti.g.dart';
 @freezed
 class CreateSakitCuti with _$CreateSakitCuti {
   factory CreateSakitCuti({
+    @JsonKey(name: 'id_mst_cuti') int? idMstCuti,
     @JsonKey(name: 'open_date') DateTime? openDate,
     @JsonKey(name: 'close_date') DateTime? closeDate,
     @JsonKey(name: 'tahun_cuti_tidak_baru') String? tahunCutiTidakBaru,

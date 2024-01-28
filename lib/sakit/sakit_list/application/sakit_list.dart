@@ -10,18 +10,22 @@ class SakitList with _$SakitList {
     @JsonKey(name: 'id_user') int? idUser,
     @JsonKey(name: 'c_user') String? cUser,
     @JsonKey(name: 'c_date') String? cDate,
+    @JsonKey(name: 'u_date') String? uDate,
     @JsonKey(name: 'payroll') String? payroll,
     @JsonKey(name: 'dept') String? dept,
     @JsonKey(name: 'ket') String? ket,
     @JsonKey(name: 'surat') String? surat,
+    @JsonKey(name: 'btl_sta') bool? batalStatus,
     @JsonKey(name: 'tgl_start') String? tglStart,
     @JsonKey(name: 'tgl_end') String? tglEnd,
     @JsonKey(name: 'tot_hari') int? totHari,
     @JsonKey(name: 'qty_foto') int? qtyFoto,
     @JsonKey(name: 'spv_sta') bool? spvSta,
     @JsonKey(name: 'spv_tgl') String? spvTgl,
+    @JsonKey(name: 'spv_note') String? spvNote,
     @JsonKey(name: 'hrd_sta') bool? hrdSta,
     @JsonKey(name: 'hrd_tgl') String? hrdTgl,
+    @JsonKey(name: 'hrd_note') String? hrdNote,
   }) = _SakitList;
 
   factory SakitList.fromJson(Map<String, dynamic> json) =>

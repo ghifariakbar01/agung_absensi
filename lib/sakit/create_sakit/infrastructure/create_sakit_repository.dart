@@ -36,18 +36,23 @@ class CreateSakitRepository {
     required String cUser,
     required String tglEnd,
     required String tglStart,
-    required String jumlahHari,
+    required int jumlahHari,
+    required int hitungLibur,
   }) {
     return _remoteService.updateSakit(
-      id: id,
-      idUser: idUser,
-      ket: ket,
-      surat: surat,
-      cUser: cUser,
-      tglEnd: tglEnd,
-      tglStart: tglStart,
-      jumlahHari: jumlahHari,
-    );
+        id: id,
+        idUser: idUser,
+        ket: ket,
+        surat: surat,
+        cUser: cUser,
+        tglEnd: tglEnd,
+        tglStart: tglStart,
+        jumlahHari: jumlahHari,
+        hitungLibur: hitungLibur);
+  }
+
+  Future<int> getLastSubmitSakit({required int idUser}) {
+    return _remoteService.getLastSubmitSakit(idUser: idUser);
   }
 
   Future<CreateSakit> getCreateSakit(

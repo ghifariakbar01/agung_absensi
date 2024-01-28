@@ -4,7 +4,9 @@ import 'package:flutter/services.dart';
 
 class AlertHelper {
   static void showSnackBar(BuildContext context,
-      {required String message, Color? color, Function? onDone}) {
+      {required String message,
+      Color? color,
+      Future<void> Function()? onDone}) {
     HapticFeedback.vibrate().then((_) => showFlash(
           context: context,
           persistent: true,
@@ -21,6 +23,6 @@ class AlertHelper {
               ),
             );
           },
-        ).then((_) => onDone));
+        ).then((_) => onDone != null ? onDone() : () {}));
   }
 }

@@ -44,23 +44,30 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
 
     int jumlahhari = 0;
 
-    await _processSakit(
-        repo: repo,
-        user: user,
-        onError: onError,
-        tglAwal: tglAwal,
-        tglAkhir: tglAkhir,
-        jumlahhari: jumlahhari,
-        suratDokter: suratDokter);
+    try {
+      final CreateSakit create = await getCreateSakit(user, tglAwal, tglAkhir);
 
-    state = await AsyncValue.guard(() => repo.submitSakit(
-        idUser: user.idUser!,
-        ket: keterangan,
-        surat: suratDokter,
-        cUser: user.nama!,
-        tglEnd: tglAkhir,
-        tglStart: tglAwal,
-        jumlahHari: jumlahhari.toString()));
+      await _processSakit(
+          create: create,
+          user: user,
+          onError: onError,
+          tglAwal: tglAwal,
+          tglAkhir: tglAkhir,
+          jumlahhari: jumlahhari,
+          suratDokter: suratDokter);
+
+      state = await AsyncValue.guard(() => repo.submitSakit(
+          idUser: user.idUser!,
+          ket: keterangan,
+          surat: suratDokter,
+          cUser: user.nama!,
+          tglEnd: tglAkhir,
+          tglStart: tglAwal,
+          jumlahHari: jumlahhari.toString()));
+    } catch (e) {
+      state = const AsyncValue.data('');
+      await onError('Error $e');
+    }
   }
 
   Future<void> updateSakit(
@@ -81,38 +88,51 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
 
     int jumlahhari = 0;
 
-    await _processSakit(
-        repo: repo,
-        user: user,
-        onError: onError,
-        tglAwal: tglAwal,
-        tglAkhir: tglAkhir,
-        jumlahhari: jumlahhari,
-        suratDokter: suratDokter);
+    try {
+      final CreateSakit create = await getCreateSakit(user, tglAwal, tglAkhir);
 
-    state = await AsyncValue.guard(() => repo.updateSakit(
-        id: id,
-        idUser: user.idUser!,
-        ket: keterangan,
-        surat: suratDokter,
-        cUser: user.nama!,
-        tglEnd: tglAkhir,
-        tglStart: tglAwal,
-        jumlahHari: jumlahhari.toString()));
+      await _processSakit(
+          create: create,
+          user: user,
+          onError: onError,
+          tglAwal: tglAwal,
+          tglAkhir: tglAkhir,
+          jumlahhari: jumlahhari,
+          suratDokter: suratDokter);
+
+      state = await AsyncValue.guard(() => repo.updateSakit(
+          id: id,
+          idUser: user.idUser!,
+          ket: keterangan,
+          surat: suratDokter,
+          cUser: user.nama!,
+          tglEnd: tglAkhir,
+          tglStart: tglAwal,
+          jumlahHari: jumlahhari,
+          hitungLibur: create.hitungLibur ?? 0));
+    } catch (e) {
+      state = const AsyncValue.data('');
+      await onError('Error $e');
+    }
+  }
+
+  Future<int> getLastSubmitSakit() {
+    final id = ref.read(userNotifierProvider).user.idUser;
+    return ref
+        .read(createSakitRepositoryProvider)
+        .getLastSubmitSakit(idUser: id!);
   }
 
   Future<void> _processSakit({
+    required CreateSakit create,
+    //
     required int jumlahhari,
     required String tglAwal,
     required String tglAkhir,
     required String suratDokter,
     required UserModelWithPassword user,
-    required CreateSakitRepository repo,
     required Future<void> onError(String errMessage),
   }) async {
-    CreateSakit create =
-        await _getCreateSakit(user, onError, repo, tglAwal, tglAkhir);
-
     // 1. CALC JUMLAH HARI
 
     final tglAwalInDateTime = DateTime.parse(tglAwal);
@@ -123,7 +143,7 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
 
     // JIKA TS
     if (suratDokter == 'TS') {
-      _noSuratCondition(create, onError);
+      await _noSuratCondition(create);
     }
 
     // SALDO CUTI
@@ -137,39 +157,36 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
     );
 
     if (DateTime.now().difference(tglAwalInDateTime).inDays - jumlahhari > 3) {
-      state = AsyncData('');
-      await onError('Tanggal input lewat dari 3 hari');
+      throw AssertionError('Tanggal input lewat dari 3 hari');
     }
   }
 
-  Future<CreateSakit> _getCreateSakit(
-      UserModelWithPassword user,
-      Future<void> onError(String errMessage),
-      CreateSakitRepository repo,
-      String tglAwal,
-      String tglAkhir) async {
+  Future<CreateSakit> getCreateSakit(
+      UserModelWithPassword user, String tglAwal, String tglAkhir) async {
     if (user.idUser == null) {
-      state = AsyncData('');
-      await onError('ID User Null');
+      throw AssertionError('ID User Null');
     }
 
     if (user.IdKary == null) {
-      state = AsyncData('');
-      await onError('ID Karyawan Null');
+      throw AssertionError('ID Karyawan Null');
     }
 
-    final create = await repo.getCreateSakit(
-        idUser: user.idUser!,
-        idKaryawan: int.parse(user.IdKary!),
-        tglAwal: tglAwal,
-        tglAkhir: tglAkhir);
+    final create = await ref.read(createSakitRepositoryProvider).getCreateSakit(
+          tglAwal: tglAwal,
+          tglAkhir: tglAkhir,
+          idUser: user.idUser!,
+          idKaryawan: int.parse(user.IdKary!),
+        );
+
+    //
     return create;
   }
 
   Future<void> _calcSaldoCuti(
-      {required int jumlahhari,
+      {required CreateSakit create,
+      //
+      required int jumlahhari,
       required String suratDokter,
-      required CreateSakit create,
       required DateTime tglAkhirInDateTime,
       required DateTime tglAwalInDateTime,
       required Future<void> Function(String errMessage) onError}) async {
@@ -180,19 +197,20 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
         createMasukInDateTime.add(Duration(days: 365));
 
     final openDate = create.createSakitCuti!.openDate;
-    final closeDateInDateTime =
-        DateTime.parse('${create.createSakitCuti!.closeDate!.year}');
+    final closeDateInDateTime = create.createSakitCuti!.closeDate!;
 
-    if (create.createSakitCuti!.cutiTidakBaru! > 0 &&
-            tglAwalInDateTime.year != createMasukInDateTime.year ||
-        tglAwalInDateTime.year != createMasukInDateTimePlusOne.year &&
-            suratDokter == 'TS' &&
-            DateTime.now().difference(openDate!).inDays > 0) {
-      //
+    final jumlahCutiTidakBaru = create.createSakitCuti!.cutiTidakBaru!;
+    final diffSinceOpenDate = DateTime.now().difference(openDate!).inDays;
 
-      state = AsyncData('');
-      await onError(
-          "Saldo Cuti ${closeDateInDateTime.year} Habis! Belum Masuk Periode Cuti ${create.createSakitCuti!.tahunCutiTidakBaru} ");
+    final isSameYear = tglAwalInDateTime.year != createMasukInDateTime.year ||
+        tglAwalInDateTime.year != createMasukInDateTimePlusOne.year;
+
+    if (jumlahCutiTidakBaru > 0 &&
+        isSameYear &&
+        suratDokter == 'TS' &&
+        diffSinceOpenDate > 0) {
+      throw AssertionError(
+          " Saldo Cuti ${closeDateInDateTime.year} Habis! Belum Masuk Periode Cuti ${create.createSakitCuti!.tahunCutiTidakBaru} ");
     }
 
     final cutiBaru = create.createSakitCuti!.cutiBaru!;
@@ -206,8 +224,7 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
               jumlahhari -
               create.hitungLibur! <
           0) {
-        state = AsyncData('');
-        await onError("Sisa Saldo Cuti Tidak Cukup! " +
+        throw AssertionError("Sisa Saldo Cuti Tidak Cukup! " +
             " Saldo Cuti Anda Tersisa $cutiBaru  Untuk Periode ${create.createSakitCuti!.tahunCutiBaru} ");
       }
     }
@@ -219,67 +236,66 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
             jumlahhari -
             create.hitungLibur! <
         0) {
-      state = AsyncData('');
-      await onError("Sisa Saldo Cuti Tidak Cukup! " +
+      throw AssertionError("Sisa Saldo Cuti Tidak Cukup! " +
           " Saldo Cuti Anda Tersisa $cutiTidakBaru  Untuk Periode ${create.createSakitCuti!.tahunCutiTidakBaru} ");
     }
   }
 
-  Future<void> _noSuratCondition(CreateSakit create,
-      Future<void> Function(String errMessage) onError) async {
+  Future<void> _noSuratCondition(
+    CreateSakit create,
+  ) async {
     //
     // 2. CALC JUMLAH HARI LIBUR
     if (create.hitungLibur == 0) {
-      state = AsyncData('');
-      await onError("Master Data Cuti Anda Belum Ada! Silahkan Hubungi HR");
+      throw AssertionError(
+          "Master Data Cuti Anda Belum Ada! Silahkan Hubungi HR");
     }
     //
     // 3. CALC JUMLAH MASA KERJA, JIKA KURANG DARI 12 BULAN
     if (DateTime.parse('${create.masuk}').difference(DateTime.now()).inDays <
         365) {
-      state = AsyncData('');
-      await onError("Anda Belum Mendapat Hak Cuti, Masa Kerja Belum Setahun!");
+      throw AssertionError(
+          "Anda Belum Mendapat Hak Cuti, Masa Kerja Belum Setahun!");
     }
   }
+}
 
-  void _calcDiff(CreateSakit create, int jumlahhari, DateTime tglAwalInDateTime,
-      DateTime tglAkhirInDateTime) {
-    if (create.jadwalSabtu!.isNotEmpty && create.bulanan == false) {
-      jumlahhari =
-          calcDiffSaturdaySunday(tglAwalInDateTime, tglAkhirInDateTime);
-    } else if (create.jadwalSabtu!.isEmpty || create.bulanan == true) {
-      jumlahhari = calcDiffSunday(tglAwalInDateTime, tglAkhirInDateTime);
+void _calcDiff(CreateSakit create, int jumlahhari, DateTime tglAwalInDateTime,
+    DateTime tglAkhirInDateTime) {
+  if (create.jadwalSabtu!.isNotEmpty && create.bulanan == false) {
+    jumlahhari = calcDiffSaturdaySunday(tglAwalInDateTime, tglAkhirInDateTime);
+  } else if (create.jadwalSabtu!.isEmpty || create.bulanan == true) {
+    jumlahhari = calcDiffSunday(tglAwalInDateTime, tglAkhirInDateTime);
+  }
+}
+
+int calcDiffSaturdaySunday(DateTime startDate, DateTime endDate) {
+  int nbDays = 0;
+  DateTime currentDay = startDate;
+
+  while (currentDay.isBefore(endDate)) {
+    currentDay = currentDay.add(Duration(days: 1));
+
+    if (currentDay.weekday != DateTime.saturday &&
+        currentDay.weekday != DateTime.sunday) {
+      nbDays += 1;
     }
   }
+  return nbDays;
+}
 
-  int calcDiffSaturdaySunday(DateTime startDate, DateTime endDate) {
-    int nbDays = 0;
-    DateTime currentDay = startDate;
+int calcDiffSunday(DateTime startDate, DateTime endDate) {
+  int nbDays = 0;
+  DateTime currentDay = startDate;
 
-    while (currentDay.isBefore(endDate)) {
-      currentDay = currentDay.add(Duration(days: 1));
+  while (currentDay.isBefore(endDate)) {
+    currentDay = currentDay.add(Duration(days: 1));
 
-      if (currentDay.weekday != DateTime.saturday &&
-          currentDay.weekday != DateTime.sunday) {
-        nbDays += 1;
-      }
+    if (currentDay.weekday != DateTime.saturday) {
+      nbDays += 1;
     }
-    return nbDays;
   }
-
-  int calcDiffSunday(DateTime startDate, DateTime endDate) {
-    int nbDays = 0;
-    DateTime currentDay = startDate;
-
-    while (currentDay.isBefore(endDate)) {
-      currentDay = currentDay.add(Duration(days: 1));
-
-      if (currentDay.weekday != DateTime.saturday) {
-        nbDays += 1;
-      }
-    }
-    return nbDays;
-  }
+  return nbDays;
 }
 
 // final repo = ref.read(createSakitRepositoryProvider);

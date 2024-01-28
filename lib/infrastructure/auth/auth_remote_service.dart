@@ -84,9 +84,21 @@ class AuthRemoteService {
                       listSelected as Map<String, dynamic>)
                   .copyWith(ptServer: server, password: password);
 
-              log('user $user');
+              if (user.fin != null) {
+                if (user.fin!.contains(",2,")) {
+                  final userWFin = user.copyWith(isSpvOrHrd: true);
 
-              return AuthResponse.withUser(user);
+                  return AuthResponse.withUser(userWFin);
+                } else {
+                  final userWOFin = user.copyWith(isSpvOrHrd: false);
+
+                  return AuthResponse.withUser(userWOFin);
+                }
+              } else {
+                log('user $user');
+
+                return AuthResponse.withUser(user);
+              }
             } catch (e) {
               return AuthResponse.failure(
                 errorCode: 00,
@@ -182,8 +194,21 @@ class AuthRemoteService {
                       listSelected as Map<String, dynamic>)
                   .copyWith(ptServer: server, password: password);
 
-              log('user $user');
-              return AuthResponse.withUser(user);
+              if (user.fin != null) {
+                if (user.fin!.contains(",5101,")) {
+                  final userWFin = user.copyWith(isSpvOrHrd: true);
+
+                  return AuthResponse.withUser(userWFin);
+                } else {
+                  final userWOFin = user.copyWith(isSpvOrHrd: false);
+
+                  return AuthResponse.withUser(userWOFin);
+                }
+              } else {
+                log('user $user');
+
+                return AuthResponse.withUser(user);
+              }
             } catch (e) {
               return AuthResponse.failure(
                 errorCode: 00,

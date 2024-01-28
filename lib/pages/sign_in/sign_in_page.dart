@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/ip/application/ip_notifier.dart';
 import 'package:face_net_authentication/pages/widgets/v_async_widget.dart';
@@ -88,7 +90,8 @@ class SignInPage extends HookConsumerWidget {
                               ref.read(userNotifierProvider.notifier).logout()),
                           signIn: ref
                                       .read(signInFormNotifierProvider)
-                                      .ptDropdownSelected ==
+                                      .ptServerSelected
+                                      .getOrLeave('gs_12') ==
                                   'gs_18'
                               ? ref
                                   .read(signInFormNotifierProvider.notifier)

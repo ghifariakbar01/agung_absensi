@@ -20,6 +20,8 @@ CreateSakitCuti _$CreateSakitCutiFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$CreateSakitCuti {
+  @JsonKey(name: 'id_mst_cuti')
+  int? get idMstCuti => throw _privateConstructorUsedError;
   @JsonKey(name: 'open_date')
   DateTime? get openDate => throw _privateConstructorUsedError;
   @JsonKey(name: 'close_date')
@@ -46,7 +48,8 @@ abstract class $CreateSakitCutiCopyWith<$Res> {
       _$CreateSakitCutiCopyWithImpl<$Res, CreateSakitCuti>;
   @useResult
   $Res call(
-      {@JsonKey(name: 'open_date') DateTime? openDate,
+      {@JsonKey(name: 'id_mst_cuti') int? idMstCuti,
+      @JsonKey(name: 'open_date') DateTime? openDate,
       @JsonKey(name: 'close_date') DateTime? closeDate,
       @JsonKey(name: 'tahun_cuti_tidak_baru') String? tahunCutiTidakBaru,
       @JsonKey(name: 'tahun_cuti_baru') String? tahunCutiBaru,
@@ -67,6 +70,7 @@ class _$CreateSakitCutiCopyWithImpl<$Res, $Val extends CreateSakitCuti>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? idMstCuti = freezed,
     Object? openDate = freezed,
     Object? closeDate = freezed,
     Object? tahunCutiTidakBaru = freezed,
@@ -75,6 +79,10 @@ class _$CreateSakitCutiCopyWithImpl<$Res, $Val extends CreateSakitCuti>
     Object? cutiBaru = freezed,
   }) {
     return _then(_value.copyWith(
+      idMstCuti: freezed == idMstCuti
+          ? _value.idMstCuti
+          : idMstCuti // ignore: cast_nullable_to_non_nullable
+              as int?,
       openDate: freezed == openDate
           ? _value.openDate
           : openDate // ignore: cast_nullable_to_non_nullable
@@ -112,7 +120,8 @@ abstract class _$$_CreateSakitCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'open_date') DateTime? openDate,
+      {@JsonKey(name: 'id_mst_cuti') int? idMstCuti,
+      @JsonKey(name: 'open_date') DateTime? openDate,
       @JsonKey(name: 'close_date') DateTime? closeDate,
       @JsonKey(name: 'tahun_cuti_tidak_baru') String? tahunCutiTidakBaru,
       @JsonKey(name: 'tahun_cuti_baru') String? tahunCutiBaru,
@@ -131,6 +140,7 @@ class __$$_CreateSakitCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? idMstCuti = freezed,
     Object? openDate = freezed,
     Object? closeDate = freezed,
     Object? tahunCutiTidakBaru = freezed,
@@ -139,6 +149,10 @@ class __$$_CreateSakitCopyWithImpl<$Res>
     Object? cutiBaru = freezed,
   }) {
     return _then(_$_CreateSakit(
+      idMstCuti: freezed == idMstCuti
+          ? _value.idMstCuti
+          : idMstCuti // ignore: cast_nullable_to_non_nullable
+              as int?,
       openDate: freezed == openDate
           ? _value.openDate
           : openDate // ignore: cast_nullable_to_non_nullable
@@ -171,7 +185,8 @@ class __$$_CreateSakitCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_CreateSakit implements _CreateSakit {
   _$_CreateSakit(
-      {@JsonKey(name: 'open_date') this.openDate,
+      {@JsonKey(name: 'id_mst_cuti') this.idMstCuti,
+      @JsonKey(name: 'open_date') this.openDate,
       @JsonKey(name: 'close_date') this.closeDate,
       @JsonKey(name: 'tahun_cuti_tidak_baru') this.tahunCutiTidakBaru,
       @JsonKey(name: 'tahun_cuti_baru') this.tahunCutiBaru,
@@ -181,6 +196,9 @@ class _$_CreateSakit implements _CreateSakit {
   factory _$_CreateSakit.fromJson(Map<String, dynamic> json) =>
       _$$_CreateSakitFromJson(json);
 
+  @override
+  @JsonKey(name: 'id_mst_cuti')
+  final int? idMstCuti;
   @override
   @JsonKey(name: 'open_date')
   final DateTime? openDate;
@@ -202,7 +220,7 @@ class _$_CreateSakit implements _CreateSakit {
 
   @override
   String toString() {
-    return 'CreateSakitCuti(openDate: $openDate, closeDate: $closeDate, tahunCutiTidakBaru: $tahunCutiTidakBaru, tahunCutiBaru: $tahunCutiBaru, cutiTidakBaru: $cutiTidakBaru, cutiBaru: $cutiBaru)';
+    return 'CreateSakitCuti(idMstCuti: $idMstCuti, openDate: $openDate, closeDate: $closeDate, tahunCutiTidakBaru: $tahunCutiTidakBaru, tahunCutiBaru: $tahunCutiBaru, cutiTidakBaru: $cutiTidakBaru, cutiBaru: $cutiBaru)';
   }
 
   @override
@@ -210,6 +228,8 @@ class _$_CreateSakit implements _CreateSakit {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_CreateSakit &&
+            (identical(other.idMstCuti, idMstCuti) ||
+                other.idMstCuti == idMstCuti) &&
             (identical(other.openDate, openDate) ||
                 other.openDate == openDate) &&
             (identical(other.closeDate, closeDate) ||
@@ -226,7 +246,7 @@ class _$_CreateSakit implements _CreateSakit {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, openDate, closeDate,
+  int get hashCode => Object.hash(runtimeType, idMstCuti, openDate, closeDate,
       tahunCutiTidakBaru, tahunCutiBaru, cutiTidakBaru, cutiBaru);
 
   @JsonKey(ignore: true)
@@ -245,7 +265,8 @@ class _$_CreateSakit implements _CreateSakit {
 
 abstract class _CreateSakit implements CreateSakitCuti {
   factory _CreateSakit(
-      {@JsonKey(name: 'open_date') final DateTime? openDate,
+      {@JsonKey(name: 'id_mst_cuti') final int? idMstCuti,
+      @JsonKey(name: 'open_date') final DateTime? openDate,
       @JsonKey(name: 'close_date') final DateTime? closeDate,
       @JsonKey(name: 'tahun_cuti_tidak_baru') final String? tahunCutiTidakBaru,
       @JsonKey(name: 'tahun_cuti_baru') final String? tahunCutiBaru,
@@ -255,6 +276,9 @@ abstract class _CreateSakit implements CreateSakitCuti {
   factory _CreateSakit.fromJson(Map<String, dynamic> json) =
       _$_CreateSakit.fromJson;
 
+  @override
+  @JsonKey(name: 'id_mst_cuti')
+  int? get idMstCuti;
   @override
   @JsonKey(name: 'open_date')
   DateTime? get openDate;

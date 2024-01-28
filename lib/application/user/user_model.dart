@@ -38,9 +38,11 @@ class UserModelWithPassword with _$UserModelWithPassword {
     final String? coo,
     final String? gm,
     final String? oth,
-    // sharedpref save
-    @Default('') required String? password,
-    @Default('') required String? ptServer,
+    //
+    @JsonKey(defaultValue: '') required String? password,
+    @JsonKey(defaultValue: '') required String? ptServer,
+    // Is SPV or HRD
+    @JsonKey(defaultValue: false) required bool? isSpvOrHrd,
   }) = _UserModelWithPassword;
 
   factory UserModelWithPassword.fromJson(Map<String, Object?> json) =>
@@ -66,6 +68,8 @@ class UserModelWithPassword with _$UserModelWithPassword {
         ptServer: '',
         payroll: '',
         fullAkses: null,
+        isSpvOrHrd: false,
+        //
       );
 }
 

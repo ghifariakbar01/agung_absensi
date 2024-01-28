@@ -4,14 +4,17 @@ import 'package:face_net_authentication/pages/widgets/async_value_ui.dart';
 import 'package:face_net_authentication/pages/widgets/v_button.dart';
 import 'package:face_net_authentication/pages/widgets/v_scaffold_widget.dart';
 import 'package:face_net_authentication/sakit/create_sakit/application/create_sakit_notifier.dart';
+import 'package:face_net_authentication/sakit/sakit_list/application/sakit_list_notifier.dart';
 
 import 'package:face_net_authentication/shared/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../application/routes/route_names.dart';
 import '../../../constants/assets.dart';
 import '../../../pages/widgets/alert_helper.dart';
 import '../../../pages/widgets/v_async_widget.dart';
@@ -45,11 +48,33 @@ class CreateSakitPage extends HookConsumerWidget {
     ref.listen<AsyncValue>(createSakitNotifierProvider, (_, state) {
       state.showAlertDialogOnError(context);
     });
+
     ref.listen<AsyncValue>(createSakitNotifierProvider, (_, state) {
-      if (!state.isLoading && state.hasValue && state.value != null) {
-        return AlertHelper.showSnackBar(context,
-            color: Palette.primaryColor,
-            message: 'Sukses Menginput Form Sakit ');
+      if (!state.isLoading &&
+          state.hasValue &&
+          state.value != null &&
+          state.value != '' &&
+          state.hasError == false) {
+        return AlertHelper.showSnackBar(
+          context,
+          onDone: () async {
+            ref.invalidate(sakitListControllerProvider);
+            log('suratDokterTextController.value ${suratDokterTextController.value}');
+
+            debugger();
+
+            if (suratDokterTextController.value == 'DS') {
+              final id = await ref
+                  .read(createSakitNotifierProvider.notifier)
+                  .getLastSubmitSakit();
+              context.replaceNamed(RouteNames.sakitUploadRoute, extra: id);
+            } else {
+              context.pop();
+            }
+          },
+          color: Palette.primaryColor,
+          message: 'Sukses Menginput Form Sakit ',
+        );
       }
     });
 

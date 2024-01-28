@@ -28,6 +28,8 @@ mixin _$SakitList {
   String? get cUser => throw _privateConstructorUsedError;
   @JsonKey(name: 'c_date')
   String? get cDate => throw _privateConstructorUsedError;
+  @JsonKey(name: 'u_date')
+  String? get uDate => throw _privateConstructorUsedError;
   @JsonKey(name: 'payroll')
   String? get payroll => throw _privateConstructorUsedError;
   @JsonKey(name: 'dept')
@@ -36,6 +38,8 @@ mixin _$SakitList {
   String? get ket => throw _privateConstructorUsedError;
   @JsonKey(name: 'surat')
   String? get surat => throw _privateConstructorUsedError;
+  @JsonKey(name: 'btl_sta')
+  bool? get batalStatus => throw _privateConstructorUsedError;
   @JsonKey(name: 'tgl_start')
   String? get tglStart => throw _privateConstructorUsedError;
   @JsonKey(name: 'tgl_end')
@@ -48,10 +52,14 @@ mixin _$SakitList {
   bool? get spvSta => throw _privateConstructorUsedError;
   @JsonKey(name: 'spv_tgl')
   String? get spvTgl => throw _privateConstructorUsedError;
+  @JsonKey(name: 'spv_note')
+  String? get spvNote => throw _privateConstructorUsedError;
   @JsonKey(name: 'hrd_sta')
   bool? get hrdSta => throw _privateConstructorUsedError;
   @JsonKey(name: 'hrd_tgl')
   String? get hrdTgl => throw _privateConstructorUsedError;
+  @JsonKey(name: 'hrd_note')
+  String? get hrdNote => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -69,18 +77,22 @@ abstract class $SakitListCopyWith<$Res> {
       @JsonKey(name: 'id_user') int? idUser,
       @JsonKey(name: 'c_user') String? cUser,
       @JsonKey(name: 'c_date') String? cDate,
+      @JsonKey(name: 'u_date') String? uDate,
       @JsonKey(name: 'payroll') String? payroll,
       @JsonKey(name: 'dept') String? dept,
       @JsonKey(name: 'ket') String? ket,
       @JsonKey(name: 'surat') String? surat,
+      @JsonKey(name: 'btl_sta') bool? batalStatus,
       @JsonKey(name: 'tgl_start') String? tglStart,
       @JsonKey(name: 'tgl_end') String? tglEnd,
       @JsonKey(name: 'tot_hari') int? totHari,
       @JsonKey(name: 'qty_foto') int? qtyFoto,
       @JsonKey(name: 'spv_sta') bool? spvSta,
       @JsonKey(name: 'spv_tgl') String? spvTgl,
+      @JsonKey(name: 'spv_note') String? spvNote,
       @JsonKey(name: 'hrd_sta') bool? hrdSta,
-      @JsonKey(name: 'hrd_tgl') String? hrdTgl});
+      @JsonKey(name: 'hrd_tgl') String? hrdTgl,
+      @JsonKey(name: 'hrd_note') String? hrdNote});
 }
 
 /// @nodoc
@@ -100,18 +112,22 @@ class _$SakitListCopyWithImpl<$Res, $Val extends SakitList>
     Object? idUser = freezed,
     Object? cUser = freezed,
     Object? cDate = freezed,
+    Object? uDate = freezed,
     Object? payroll = freezed,
     Object? dept = freezed,
     Object? ket = freezed,
     Object? surat = freezed,
+    Object? batalStatus = freezed,
     Object? tglStart = freezed,
     Object? tglEnd = freezed,
     Object? totHari = freezed,
     Object? qtyFoto = freezed,
     Object? spvSta = freezed,
     Object? spvTgl = freezed,
+    Object? spvNote = freezed,
     Object? hrdSta = freezed,
     Object? hrdTgl = freezed,
+    Object? hrdNote = freezed,
   }) {
     return _then(_value.copyWith(
       idSakit: freezed == idSakit
@@ -130,6 +146,10 @@ class _$SakitListCopyWithImpl<$Res, $Val extends SakitList>
           ? _value.cDate
           : cDate // ignore: cast_nullable_to_non_nullable
               as String?,
+      uDate: freezed == uDate
+          ? _value.uDate
+          : uDate // ignore: cast_nullable_to_non_nullable
+              as String?,
       payroll: freezed == payroll
           ? _value.payroll
           : payroll // ignore: cast_nullable_to_non_nullable
@@ -146,6 +166,10 @@ class _$SakitListCopyWithImpl<$Res, $Val extends SakitList>
           ? _value.surat
           : surat // ignore: cast_nullable_to_non_nullable
               as String?,
+      batalStatus: freezed == batalStatus
+          ? _value.batalStatus
+          : batalStatus // ignore: cast_nullable_to_non_nullable
+              as bool?,
       tglStart: freezed == tglStart
           ? _value.tglStart
           : tglStart // ignore: cast_nullable_to_non_nullable
@@ -170,6 +194,10 @@ class _$SakitListCopyWithImpl<$Res, $Val extends SakitList>
           ? _value.spvTgl
           : spvTgl // ignore: cast_nullable_to_non_nullable
               as String?,
+      spvNote: freezed == spvNote
+          ? _value.spvNote
+          : spvNote // ignore: cast_nullable_to_non_nullable
+              as String?,
       hrdSta: freezed == hrdSta
           ? _value.hrdSta
           : hrdSta // ignore: cast_nullable_to_non_nullable
@@ -177,6 +205,10 @@ class _$SakitListCopyWithImpl<$Res, $Val extends SakitList>
       hrdTgl: freezed == hrdTgl
           ? _value.hrdTgl
           : hrdTgl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      hrdNote: freezed == hrdNote
+          ? _value.hrdNote
+          : hrdNote // ignore: cast_nullable_to_non_nullable
               as String?,
     ) as $Val);
   }
@@ -194,18 +226,22 @@ abstract class _$$_SakitListCopyWith<$Res> implements $SakitListCopyWith<$Res> {
       @JsonKey(name: 'id_user') int? idUser,
       @JsonKey(name: 'c_user') String? cUser,
       @JsonKey(name: 'c_date') String? cDate,
+      @JsonKey(name: 'u_date') String? uDate,
       @JsonKey(name: 'payroll') String? payroll,
       @JsonKey(name: 'dept') String? dept,
       @JsonKey(name: 'ket') String? ket,
       @JsonKey(name: 'surat') String? surat,
+      @JsonKey(name: 'btl_sta') bool? batalStatus,
       @JsonKey(name: 'tgl_start') String? tglStart,
       @JsonKey(name: 'tgl_end') String? tglEnd,
       @JsonKey(name: 'tot_hari') int? totHari,
       @JsonKey(name: 'qty_foto') int? qtyFoto,
       @JsonKey(name: 'spv_sta') bool? spvSta,
       @JsonKey(name: 'spv_tgl') String? spvTgl,
+      @JsonKey(name: 'spv_note') String? spvNote,
       @JsonKey(name: 'hrd_sta') bool? hrdSta,
-      @JsonKey(name: 'hrd_tgl') String? hrdTgl});
+      @JsonKey(name: 'hrd_tgl') String? hrdTgl,
+      @JsonKey(name: 'hrd_note') String? hrdNote});
 }
 
 /// @nodoc
@@ -223,18 +259,22 @@ class __$$_SakitListCopyWithImpl<$Res>
     Object? idUser = freezed,
     Object? cUser = freezed,
     Object? cDate = freezed,
+    Object? uDate = freezed,
     Object? payroll = freezed,
     Object? dept = freezed,
     Object? ket = freezed,
     Object? surat = freezed,
+    Object? batalStatus = freezed,
     Object? tglStart = freezed,
     Object? tglEnd = freezed,
     Object? totHari = freezed,
     Object? qtyFoto = freezed,
     Object? spvSta = freezed,
     Object? spvTgl = freezed,
+    Object? spvNote = freezed,
     Object? hrdSta = freezed,
     Object? hrdTgl = freezed,
+    Object? hrdNote = freezed,
   }) {
     return _then(_$_SakitList(
       idSakit: freezed == idSakit
@@ -253,6 +293,10 @@ class __$$_SakitListCopyWithImpl<$Res>
           ? _value.cDate
           : cDate // ignore: cast_nullable_to_non_nullable
               as String?,
+      uDate: freezed == uDate
+          ? _value.uDate
+          : uDate // ignore: cast_nullable_to_non_nullable
+              as String?,
       payroll: freezed == payroll
           ? _value.payroll
           : payroll // ignore: cast_nullable_to_non_nullable
@@ -269,6 +313,10 @@ class __$$_SakitListCopyWithImpl<$Res>
           ? _value.surat
           : surat // ignore: cast_nullable_to_non_nullable
               as String?,
+      batalStatus: freezed == batalStatus
+          ? _value.batalStatus
+          : batalStatus // ignore: cast_nullable_to_non_nullable
+              as bool?,
       tglStart: freezed == tglStart
           ? _value.tglStart
           : tglStart // ignore: cast_nullable_to_non_nullable
@@ -293,6 +341,10 @@ class __$$_SakitListCopyWithImpl<$Res>
           ? _value.spvTgl
           : spvTgl // ignore: cast_nullable_to_non_nullable
               as String?,
+      spvNote: freezed == spvNote
+          ? _value.spvNote
+          : spvNote // ignore: cast_nullable_to_non_nullable
+              as String?,
       hrdSta: freezed == hrdSta
           ? _value.hrdSta
           : hrdSta // ignore: cast_nullable_to_non_nullable
@@ -300,6 +352,10 @@ class __$$_SakitListCopyWithImpl<$Res>
       hrdTgl: freezed == hrdTgl
           ? _value.hrdTgl
           : hrdTgl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      hrdNote: freezed == hrdNote
+          ? _value.hrdNote
+          : hrdNote // ignore: cast_nullable_to_non_nullable
               as String?,
     ));
   }
@@ -313,18 +369,22 @@ class _$_SakitList implements _SakitList {
       @JsonKey(name: 'id_user') this.idUser,
       @JsonKey(name: 'c_user') this.cUser,
       @JsonKey(name: 'c_date') this.cDate,
+      @JsonKey(name: 'u_date') this.uDate,
       @JsonKey(name: 'payroll') this.payroll,
       @JsonKey(name: 'dept') this.dept,
       @JsonKey(name: 'ket') this.ket,
       @JsonKey(name: 'surat') this.surat,
+      @JsonKey(name: 'btl_sta') this.batalStatus,
       @JsonKey(name: 'tgl_start') this.tglStart,
       @JsonKey(name: 'tgl_end') this.tglEnd,
       @JsonKey(name: 'tot_hari') this.totHari,
       @JsonKey(name: 'qty_foto') this.qtyFoto,
       @JsonKey(name: 'spv_sta') this.spvSta,
       @JsonKey(name: 'spv_tgl') this.spvTgl,
+      @JsonKey(name: 'spv_note') this.spvNote,
       @JsonKey(name: 'hrd_sta') this.hrdSta,
-      @JsonKey(name: 'hrd_tgl') this.hrdTgl});
+      @JsonKey(name: 'hrd_tgl') this.hrdTgl,
+      @JsonKey(name: 'hrd_note') this.hrdNote});
 
   factory _$_SakitList.fromJson(Map<String, dynamic> json) =>
       _$$_SakitListFromJson(json);
@@ -342,6 +402,9 @@ class _$_SakitList implements _SakitList {
   @JsonKey(name: 'c_date')
   final String? cDate;
   @override
+  @JsonKey(name: 'u_date')
+  final String? uDate;
+  @override
   @JsonKey(name: 'payroll')
   final String? payroll;
   @override
@@ -353,6 +416,9 @@ class _$_SakitList implements _SakitList {
   @override
   @JsonKey(name: 'surat')
   final String? surat;
+  @override
+  @JsonKey(name: 'btl_sta')
+  final bool? batalStatus;
   @override
   @JsonKey(name: 'tgl_start')
   final String? tglStart;
@@ -372,15 +438,21 @@ class _$_SakitList implements _SakitList {
   @JsonKey(name: 'spv_tgl')
   final String? spvTgl;
   @override
+  @JsonKey(name: 'spv_note')
+  final String? spvNote;
+  @override
   @JsonKey(name: 'hrd_sta')
   final bool? hrdSta;
   @override
   @JsonKey(name: 'hrd_tgl')
   final String? hrdTgl;
+  @override
+  @JsonKey(name: 'hrd_note')
+  final String? hrdNote;
 
   @override
   String toString() {
-    return 'SakitList(idSakit: $idSakit, idUser: $idUser, cUser: $cUser, cDate: $cDate, payroll: $payroll, dept: $dept, ket: $ket, surat: $surat, tglStart: $tglStart, tglEnd: $tglEnd, totHari: $totHari, qtyFoto: $qtyFoto, spvSta: $spvSta, spvTgl: $spvTgl, hrdSta: $hrdSta, hrdTgl: $hrdTgl)';
+    return 'SakitList(idSakit: $idSakit, idUser: $idUser, cUser: $cUser, cDate: $cDate, uDate: $uDate, payroll: $payroll, dept: $dept, ket: $ket, surat: $surat, batalStatus: $batalStatus, tglStart: $tglStart, tglEnd: $tglEnd, totHari: $totHari, qtyFoto: $qtyFoto, spvSta: $spvSta, spvTgl: $spvTgl, spvNote: $spvNote, hrdSta: $hrdSta, hrdTgl: $hrdTgl, hrdNote: $hrdNote)';
   }
 
   @override
@@ -392,10 +464,13 @@ class _$_SakitList implements _SakitList {
             (identical(other.idUser, idUser) || other.idUser == idUser) &&
             (identical(other.cUser, cUser) || other.cUser == cUser) &&
             (identical(other.cDate, cDate) || other.cDate == cDate) &&
+            (identical(other.uDate, uDate) || other.uDate == uDate) &&
             (identical(other.payroll, payroll) || other.payroll == payroll) &&
             (identical(other.dept, dept) || other.dept == dept) &&
             (identical(other.ket, ket) || other.ket == ket) &&
             (identical(other.surat, surat) || other.surat == surat) &&
+            (identical(other.batalStatus, batalStatus) ||
+                other.batalStatus == batalStatus) &&
             (identical(other.tglStart, tglStart) ||
                 other.tglStart == tglStart) &&
             (identical(other.tglEnd, tglEnd) || other.tglEnd == tglEnd) &&
@@ -403,30 +478,37 @@ class _$_SakitList implements _SakitList {
             (identical(other.qtyFoto, qtyFoto) || other.qtyFoto == qtyFoto) &&
             (identical(other.spvSta, spvSta) || other.spvSta == spvSta) &&
             (identical(other.spvTgl, spvTgl) || other.spvTgl == spvTgl) &&
+            (identical(other.spvNote, spvNote) || other.spvNote == spvNote) &&
             (identical(other.hrdSta, hrdSta) || other.hrdSta == hrdSta) &&
-            (identical(other.hrdTgl, hrdTgl) || other.hrdTgl == hrdTgl));
+            (identical(other.hrdTgl, hrdTgl) || other.hrdTgl == hrdTgl) &&
+            (identical(other.hrdNote, hrdNote) || other.hrdNote == hrdNote));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      idSakit,
-      idUser,
-      cUser,
-      cDate,
-      payroll,
-      dept,
-      ket,
-      surat,
-      tglStart,
-      tglEnd,
-      totHari,
-      qtyFoto,
-      spvSta,
-      spvTgl,
-      hrdSta,
-      hrdTgl);
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        idSakit,
+        idUser,
+        cUser,
+        cDate,
+        uDate,
+        payroll,
+        dept,
+        ket,
+        surat,
+        batalStatus,
+        tglStart,
+        tglEnd,
+        totHari,
+        qtyFoto,
+        spvSta,
+        spvTgl,
+        spvNote,
+        hrdSta,
+        hrdTgl,
+        hrdNote
+      ]);
 
   @JsonKey(ignore: true)
   @override
@@ -448,18 +530,22 @@ abstract class _SakitList implements SakitList {
       @JsonKey(name: 'id_user') final int? idUser,
       @JsonKey(name: 'c_user') final String? cUser,
       @JsonKey(name: 'c_date') final String? cDate,
+      @JsonKey(name: 'u_date') final String? uDate,
       @JsonKey(name: 'payroll') final String? payroll,
       @JsonKey(name: 'dept') final String? dept,
       @JsonKey(name: 'ket') final String? ket,
       @JsonKey(name: 'surat') final String? surat,
+      @JsonKey(name: 'btl_sta') final bool? batalStatus,
       @JsonKey(name: 'tgl_start') final String? tglStart,
       @JsonKey(name: 'tgl_end') final String? tglEnd,
       @JsonKey(name: 'tot_hari') final int? totHari,
       @JsonKey(name: 'qty_foto') final int? qtyFoto,
       @JsonKey(name: 'spv_sta') final bool? spvSta,
       @JsonKey(name: 'spv_tgl') final String? spvTgl,
+      @JsonKey(name: 'spv_note') final String? spvNote,
       @JsonKey(name: 'hrd_sta') final bool? hrdSta,
-      @JsonKey(name: 'hrd_tgl') final String? hrdTgl}) = _$_SakitList;
+      @JsonKey(name: 'hrd_tgl') final String? hrdTgl,
+      @JsonKey(name: 'hrd_note') final String? hrdNote}) = _$_SakitList;
 
   factory _SakitList.fromJson(Map<String, dynamic> json) =
       _$_SakitList.fromJson;
@@ -477,6 +563,9 @@ abstract class _SakitList implements SakitList {
   @JsonKey(name: 'c_date')
   String? get cDate;
   @override
+  @JsonKey(name: 'u_date')
+  String? get uDate;
+  @override
   @JsonKey(name: 'payroll')
   String? get payroll;
   @override
@@ -488,6 +577,9 @@ abstract class _SakitList implements SakitList {
   @override
   @JsonKey(name: 'surat')
   String? get surat;
+  @override
+  @JsonKey(name: 'btl_sta')
+  bool? get batalStatus;
   @override
   @JsonKey(name: 'tgl_start')
   String? get tglStart;
@@ -507,11 +599,17 @@ abstract class _SakitList implements SakitList {
   @JsonKey(name: 'spv_tgl')
   String? get spvTgl;
   @override
+  @JsonKey(name: 'spv_note')
+  String? get spvNote;
+  @override
   @JsonKey(name: 'hrd_sta')
   bool? get hrdSta;
   @override
   @JsonKey(name: 'hrd_tgl')
   String? get hrdTgl;
+  @override
+  @JsonKey(name: 'hrd_note')
+  String? get hrdNote;
   @override
   @JsonKey(ignore: true)
   _$$_SakitListCopyWith<_$_SakitList> get copyWith =>

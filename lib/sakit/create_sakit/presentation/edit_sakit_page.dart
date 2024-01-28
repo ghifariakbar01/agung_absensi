@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../constants/assets.dart';
@@ -20,6 +21,7 @@ import '../../../style/style.dart';
 import '../../../user_helper/user_helper_notifier.dart';
 import '../../../utils/string_utils.dart';
 import '../../sakit_list/application/sakit_list.dart';
+import '../../sakit_list/application/sakit_list_notifier.dart';
 
 class EditSakitPage extends HookConsumerWidget {
   const EditSakitPage(this.item);
@@ -59,10 +61,18 @@ class EditSakitPage extends HookConsumerWidget {
       state.showAlertDialogOnError(context);
     });
     ref.listen<AsyncValue>(createSakitNotifierProvider, (_, state) {
-      if (!state.isLoading && state.hasValue && state.value != null) {
+      if (!state.isLoading &&
+          state.hasValue &&
+          state.value != null &&
+          state.value != '' &&
+          state.hasError == false) {
         return AlertHelper.showSnackBar(context,
             color: Palette.primaryColor,
-            message: 'Sukses Menginput Form Sakit ');
+            message: 'Sukses Mengupdate Form Sakit ', onDone: () {
+          ref.invalidate(sakitListControllerProvider);
+          context.pop();
+          return Future.value(true);
+        });
       }
     });
 

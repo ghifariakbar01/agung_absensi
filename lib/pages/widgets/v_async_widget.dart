@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:face_net_authentication/infrastructure/exceptions.dart';
 import 'package:face_net_authentication/pages/widgets/v_scaffold_widget.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +28,8 @@ class VAsyncWidgetScaffold<T> extends StatelessWidget {
         } else {
           errMessage = e.toString();
         }
+
+        log('errMessage is $e');
 
         return Center(child: ErrorMessageWidget(errMessage));
       },

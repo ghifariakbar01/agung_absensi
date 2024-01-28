@@ -8,6 +8,7 @@ part of 'create_sakit_cuti.dart';
 
 _$_CreateSakit _$$_CreateSakitFromJson(Map<String, dynamic> json) =>
     _$_CreateSakit(
+      idMstCuti: json['id_mst_cuti'] as int?,
       openDate: json['open_date'] == null
           ? null
           : DateTime.parse(json['open_date'] as String),
@@ -22,6 +23,7 @@ _$_CreateSakit _$$_CreateSakitFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$$_CreateSakitToJson(_$_CreateSakit instance) =>
     <String, dynamic>{
+      'id_mst_cuti': instance.idMstCuti,
       'open_date': instance.openDate?.toIso8601String(),
       'close_date': instance.closeDate?.toIso8601String(),
       'tahun_cuti_tidak_baru': instance.tahunCutiTidakBaru,
