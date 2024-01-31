@@ -187,10 +187,10 @@ class SakitListItem extends HookConsumerWidget {
                           ref
                               .read(sakitApproveControllerProvider.notifier)
                               .approveSpv(
-                                  idSakit: item.idSakit!,
-                                  nama:
-                                      ref.read(userNotifierProvider).user.nama!,
-                                  note: text);
+                                itemSakit: item,
+                                note: text,
+                                nama: ref.read(userNotifierProvider).user.nama!,
+                              );
                         }
                       } else {
                         ref
@@ -260,7 +260,7 @@ class SakitListItem extends HookConsumerWidget {
 
                         if (text != null) {
                           if (item.surat!.toLowerCase() == 'ds') {
-                            ref
+                            await ref
                                 .read(sakitApproveControllerProvider.notifier)
                                 .approveHrdDenganSurat(
                                   note: text,
@@ -268,8 +268,9 @@ class SakitListItem extends HookConsumerWidget {
                                   nama:
                                       ref.read(userNotifierProvider).user.nama!,
                                 );
+                            //
                           } else {
-                            ref
+                            await ref
                                 .read(sakitApproveControllerProvider.notifier)
                                 .approveHrdTanpaSurat(
                                   note: text,
@@ -278,18 +279,19 @@ class SakitListItem extends HookConsumerWidget {
                                   nama:
                                       ref.read(userNotifierProvider).user.nama!,
                                 );
+                            //
                           }
                         }
                       } else {
                         if (item.surat!.toLowerCase() == 'ds') {
-                          ref
+                          await ref
                               .read(sakitApproveControllerProvider.notifier)
                               .unApproveHrdDenganSurat(
                                 itemSakit: item,
                                 nama: ref.read(userNotifierProvider).user.nama!,
                               );
                         } else {
-                          ref
+                          await ref
                               .read(sakitApproveControllerProvider.notifier)
                               .unApproveHrdTanpaSurat(
                                 itemSakit: item,

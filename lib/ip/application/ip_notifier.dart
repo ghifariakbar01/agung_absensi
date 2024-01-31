@@ -18,8 +18,8 @@ part 'ip_notifier.g.dart';
 //     'http://agunglogisticsapp.co.id:1225/service_mobile.asmx/Perintah';
 
 // const ipCut = 'http://202.157.184.229:1001/service_mobile.asmx/Perintah';
-const ipCut = 'http://202.157.184.229:1001/service_mobile.asmx/Perintah';
-// const ipCut = 'http://agunglogisticsapp.co.id:1225/service_mobile.asmx/Perintah';
+const ipCut =
+    'http://agunglogisticsapp.co.id:1225/service_mobile.asmx/Perintah';
 
 // API Mobile Priuk :
 // http://agunglogisticsapp.co.id:1025/service_mobile.asmx/Perintah
@@ -31,8 +31,8 @@ const ipCut = 'http://202.157.184.229:1001/service_mobile.asmx/Perintah';
 // const ipPriyok = 'http://118.97.100.75:1025/service_mobile.asmx/Perintah';
 
 // const ipPriyok = 'http://202.157.184.229:1001/service_mobile.asmx/Perintah';
-const ipPriyok = 'http://202.157.184.229:1001/service_mobile.asmx/Perintah';
-// const ipPriyok = 'http://agunglogisticsapp.co.id:1225/service_mobile.asmx/Perintah';
+const ipPriyok =
+    'http://agunglogisticsapp.co.id:1225/service_mobile.asmx/Perintah';
 
 // [16:35, 18/12/2023] Pak Ismu: oke gini gs_18 dan gs_21 diarahkan ke http://118.97.100.75:1025/service_mobile.asmx/Perintah
 // [16:36, 18/12/2023] Pak Ismu: gs_12, gs_14, gs_16 diarahkan ke http://180.250.79.122:1025/service_mobile.asmx/Perintah

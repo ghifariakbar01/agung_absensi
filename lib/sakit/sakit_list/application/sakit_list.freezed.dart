@@ -24,6 +24,8 @@ mixin _$SakitList {
   int? get idSakit => throw _privateConstructorUsedError;
   @JsonKey(name: 'id_user')
   int? get idUser => throw _privateConstructorUsedError;
+  @JsonKey(name: 'id_dept')
+  int? get idDept => throw _privateConstructorUsedError;
   @JsonKey(name: 'c_user')
   String? get cUser => throw _privateConstructorUsedError;
   @JsonKey(name: 'c_date')
@@ -75,6 +77,7 @@ abstract class $SakitListCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: 'id_sakit') int? idSakit,
       @JsonKey(name: 'id_user') int? idUser,
+      @JsonKey(name: 'id_dept') int? idDept,
       @JsonKey(name: 'c_user') String? cUser,
       @JsonKey(name: 'c_date') String? cDate,
       @JsonKey(name: 'u_date') String? uDate,
@@ -110,6 +113,7 @@ class _$SakitListCopyWithImpl<$Res, $Val extends SakitList>
   $Res call({
     Object? idSakit = freezed,
     Object? idUser = freezed,
+    Object? idDept = freezed,
     Object? cUser = freezed,
     Object? cDate = freezed,
     Object? uDate = freezed,
@@ -137,6 +141,10 @@ class _$SakitListCopyWithImpl<$Res, $Val extends SakitList>
       idUser: freezed == idUser
           ? _value.idUser
           : idUser // ignore: cast_nullable_to_non_nullable
+              as int?,
+      idDept: freezed == idDept
+          ? _value.idDept
+          : idDept // ignore: cast_nullable_to_non_nullable
               as int?,
       cUser: freezed == cUser
           ? _value.cUser
@@ -224,6 +232,7 @@ abstract class _$$_SakitListCopyWith<$Res> implements $SakitListCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: 'id_sakit') int? idSakit,
       @JsonKey(name: 'id_user') int? idUser,
+      @JsonKey(name: 'id_dept') int? idDept,
       @JsonKey(name: 'c_user') String? cUser,
       @JsonKey(name: 'c_date') String? cDate,
       @JsonKey(name: 'u_date') String? uDate,
@@ -257,6 +266,7 @@ class __$$_SakitListCopyWithImpl<$Res>
   $Res call({
     Object? idSakit = freezed,
     Object? idUser = freezed,
+    Object? idDept = freezed,
     Object? cUser = freezed,
     Object? cDate = freezed,
     Object? uDate = freezed,
@@ -284,6 +294,10 @@ class __$$_SakitListCopyWithImpl<$Res>
       idUser: freezed == idUser
           ? _value.idUser
           : idUser // ignore: cast_nullable_to_non_nullable
+              as int?,
+      idDept: freezed == idDept
+          ? _value.idDept
+          : idDept // ignore: cast_nullable_to_non_nullable
               as int?,
       cUser: freezed == cUser
           ? _value.cUser
@@ -367,6 +381,7 @@ class _$_SakitList implements _SakitList {
   _$_SakitList(
       {@JsonKey(name: 'id_sakit') this.idSakit,
       @JsonKey(name: 'id_user') this.idUser,
+      @JsonKey(name: 'id_dept') this.idDept,
       @JsonKey(name: 'c_user') this.cUser,
       @JsonKey(name: 'c_date') this.cDate,
       @JsonKey(name: 'u_date') this.uDate,
@@ -395,6 +410,9 @@ class _$_SakitList implements _SakitList {
   @override
   @JsonKey(name: 'id_user')
   final int? idUser;
+  @override
+  @JsonKey(name: 'id_dept')
+  final int? idDept;
   @override
   @JsonKey(name: 'c_user')
   final String? cUser;
@@ -452,7 +470,7 @@ class _$_SakitList implements _SakitList {
 
   @override
   String toString() {
-    return 'SakitList(idSakit: $idSakit, idUser: $idUser, cUser: $cUser, cDate: $cDate, uDate: $uDate, payroll: $payroll, dept: $dept, ket: $ket, surat: $surat, batalStatus: $batalStatus, tglStart: $tglStart, tglEnd: $tglEnd, totHari: $totHari, qtyFoto: $qtyFoto, spvSta: $spvSta, spvTgl: $spvTgl, spvNote: $spvNote, hrdSta: $hrdSta, hrdTgl: $hrdTgl, hrdNote: $hrdNote)';
+    return 'SakitList(idSakit: $idSakit, idUser: $idUser, idDept: $idDept, cUser: $cUser, cDate: $cDate, uDate: $uDate, payroll: $payroll, dept: $dept, ket: $ket, surat: $surat, batalStatus: $batalStatus, tglStart: $tglStart, tglEnd: $tglEnd, totHari: $totHari, qtyFoto: $qtyFoto, spvSta: $spvSta, spvTgl: $spvTgl, spvNote: $spvNote, hrdSta: $hrdSta, hrdTgl: $hrdTgl, hrdNote: $hrdNote)';
   }
 
   @override
@@ -462,6 +480,7 @@ class _$_SakitList implements _SakitList {
             other is _$_SakitList &&
             (identical(other.idSakit, idSakit) || other.idSakit == idSakit) &&
             (identical(other.idUser, idUser) || other.idUser == idUser) &&
+            (identical(other.idDept, idDept) || other.idDept == idDept) &&
             (identical(other.cUser, cUser) || other.cUser == cUser) &&
             (identical(other.cDate, cDate) || other.cDate == cDate) &&
             (identical(other.uDate, uDate) || other.uDate == uDate) &&
@@ -490,6 +509,7 @@ class _$_SakitList implements _SakitList {
         runtimeType,
         idSakit,
         idUser,
+        idDept,
         cUser,
         cDate,
         uDate,
@@ -528,6 +548,7 @@ abstract class _SakitList implements SakitList {
   factory _SakitList(
       {@JsonKey(name: 'id_sakit') final int? idSakit,
       @JsonKey(name: 'id_user') final int? idUser,
+      @JsonKey(name: 'id_dept') final int? idDept,
       @JsonKey(name: 'c_user') final String? cUser,
       @JsonKey(name: 'c_date') final String? cDate,
       @JsonKey(name: 'u_date') final String? uDate,
@@ -556,6 +577,9 @@ abstract class _SakitList implements SakitList {
   @override
   @JsonKey(name: 'id_user')
   int? get idUser;
+  @override
+  @JsonKey(name: 'id_dept')
+  int? get idDept;
   @override
   @JsonKey(name: 'c_user')
   String? get cUser;

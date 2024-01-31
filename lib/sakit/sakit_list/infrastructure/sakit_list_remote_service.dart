@@ -31,6 +31,7 @@ class SakitListRemoteService {
             " SELECT " +
                 " $dbName.*, " +
                 " $dbMstUser.payroll, " +
+                " $dbMstUser.id_dept, " +
                 " (SELECT nama from mst_dept WHERE id_dept = $dbMstUser.id_dept) AS dept, " +
                 " (SELECT COUNT(id_sakit) FROM $dbDetail WHERE id_sakit = $dbName.id_sakit ) AS qty_foto "
                     " FROM " +
@@ -107,6 +108,7 @@ class SakitListRemoteService {
             " SELECT " +
                 " $dbName.*, " +
                 " $dbMstUser.payroll, " +
+                " $dbMstUser.id_dept, " +
                 " (SELECT nama from mst_dept WHERE id_dept = $dbMstUser.id_dept) AS dept, " +
                 " (SELECT COUNT(id_sakit) FROM $dbDetail WHERE id_sakit = $dbName.id_sakit ) AS qty_foto "
                     " FROM " +

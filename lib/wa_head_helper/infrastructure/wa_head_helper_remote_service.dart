@@ -31,7 +31,8 @@ class WaHeadHelperRemoteService {
                 " (SELECT idkary FROM mst_user WHERE id_user = mst_user_head.id_user_head) AS idkary, "
                 " (SELECT nama FROM mst_user WHERE id_user = mst_user_head.id_user_head) AS nama, "
                 " (SELECT no_telp1 FROM mst_user WHERE id_user = mst_user_head.id_user_head) AS telp1, "
-                " (SELECT no_telp2 FROM mst_user WHERE id_user = mst_user_head.id_user_head) AS telp2 "
+                " (SELECT no_telp2 FROM mst_user WHERE id_user = mst_user_head.id_user_head) AS telp2, "
+                " (SELECT id_dept FROM mst_user WHERE id_user = mst_user_head.id_user_head) AS id_dept "
                 " FROM mst_user_head WHERE id_user = $idUser ",
         'mode': 'SELECT'
       };
@@ -49,8 +50,10 @@ class WaHeadHelperRemoteService {
         final listExist = items['items'] != null && items['items'] is List;
 
         if (listExist) {
-          final list = items['items'][0] as List;
-          return list.map((e) => WaHead.fromJson(e)).toList();
+          final list = items['items'] as List;
+          return list
+              .map((e) => WaHead.fromJson(e as Map<String, dynamic>))
+              .toList();
         } else {
           final message = "List wa head empty";
           final errorCode = 404;

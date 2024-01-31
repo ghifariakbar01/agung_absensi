@@ -38,4 +38,8 @@ class WaHeadHelperNotifier extends _$WaHeadHelperNotifier {
       return ref.read(waHeadHelperRepositoryProvider).getWaHead(idUser: idUser);
     });
   }
+
+  Future<List<WaHead>> getWaHeads({required int idUser}) {
+    return ref.read(waHeadHelperRepositoryProvider).getWaHead(idUser: idUser);
+  }
 }

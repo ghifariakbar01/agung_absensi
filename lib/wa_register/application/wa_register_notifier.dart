@@ -49,6 +49,22 @@ class WaRegisterNotifier extends _$WaRegisterNotifier {
     return WaRegister.fromJson(fromJsonResponse);
   }
 
+  Future<WaRegister> getCurrentRegisteredWa() async {
+    final response =
+        await ref.read(waRegisterRepositoryProvider).getWaRegister();
+
+    if (response == null) {
+      debugger();
+      return WaRegister.initial();
+    }
+
+    debugger();
+
+    final fromJsonResponse = jsonDecode(response);
+
+    return WaRegister.fromJson(fromJsonResponse);
+  }
+
   Future<void> confirmRegisterWa({
     required BuildContext context,
   }) async {
@@ -64,6 +80,13 @@ class WaRegisterNotifier extends _$WaRegisterNotifier {
     } catch (e) {
       state = AsyncError(e, StackTrace.current);
     }
+  }
+
+  Future<void> retryRegisterWa({
+    required BuildContext context,
+  }) async {
+    await ref.read(waRegisterRepositoryProvider).clear();
+    confirmRegisterWa(context: context);
   }
 
   Future<void> _registerWaForNotif(

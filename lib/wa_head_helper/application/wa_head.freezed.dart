@@ -24,6 +24,8 @@ mixin _$WaHead {
   int? get idUserHead => throw _privateConstructorUsedError;
   @JsonKey(name: 'idkary')
   String? get idKary => throw _privateConstructorUsedError;
+  @JsonKey(name: 'id_dept')
+  int? get idDept => throw _privateConstructorUsedError;
   @JsonKey(name: 'nama')
   String? get nama => throw _privateConstructorUsedError;
   @JsonKey(name: 'telp1')
@@ -44,6 +46,7 @@ abstract class $WaHeadCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: 'id_user_head') int? idUserHead,
       @JsonKey(name: 'idkary') String? idKary,
+      @JsonKey(name: 'id_dept') int? idDept,
       @JsonKey(name: 'nama') String? nama,
       @JsonKey(name: 'telp1') String? telp1,
       @JsonKey(name: 'telp2') String? telp2});
@@ -64,6 +67,7 @@ class _$WaHeadCopyWithImpl<$Res, $Val extends WaHead>
   $Res call({
     Object? idUserHead = freezed,
     Object? idKary = freezed,
+    Object? idDept = freezed,
     Object? nama = freezed,
     Object? telp1 = freezed,
     Object? telp2 = freezed,
@@ -77,6 +81,10 @@ class _$WaHeadCopyWithImpl<$Res, $Val extends WaHead>
           ? _value.idKary
           : idKary // ignore: cast_nullable_to_non_nullable
               as String?,
+      idDept: freezed == idDept
+          ? _value.idDept
+          : idDept // ignore: cast_nullable_to_non_nullable
+              as int?,
       nama: freezed == nama
           ? _value.nama
           : nama // ignore: cast_nullable_to_non_nullable
@@ -102,6 +110,7 @@ abstract class _$$_WaHeadCopyWith<$Res> implements $WaHeadCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: 'id_user_head') int? idUserHead,
       @JsonKey(name: 'idkary') String? idKary,
+      @JsonKey(name: 'id_dept') int? idDept,
       @JsonKey(name: 'nama') String? nama,
       @JsonKey(name: 'telp1') String? telp1,
       @JsonKey(name: 'telp2') String? telp2});
@@ -119,6 +128,7 @@ class __$$_WaHeadCopyWithImpl<$Res>
   $Res call({
     Object? idUserHead = freezed,
     Object? idKary = freezed,
+    Object? idDept = freezed,
     Object? nama = freezed,
     Object? telp1 = freezed,
     Object? telp2 = freezed,
@@ -132,6 +142,10 @@ class __$$_WaHeadCopyWithImpl<$Res>
           ? _value.idKary
           : idKary // ignore: cast_nullable_to_non_nullable
               as String?,
+      idDept: freezed == idDept
+          ? _value.idDept
+          : idDept // ignore: cast_nullable_to_non_nullable
+              as int?,
       nama: freezed == nama
           ? _value.nama
           : nama // ignore: cast_nullable_to_non_nullable
@@ -154,6 +168,7 @@ class _$_WaHead implements _WaHead {
   _$_WaHead(
       {@JsonKey(name: 'id_user_head') this.idUserHead,
       @JsonKey(name: 'idkary') this.idKary,
+      @JsonKey(name: 'id_dept') this.idDept,
       @JsonKey(name: 'nama') this.nama,
       @JsonKey(name: 'telp1') this.telp1,
       @JsonKey(name: 'telp2') this.telp2});
@@ -168,6 +183,9 @@ class _$_WaHead implements _WaHead {
   @JsonKey(name: 'idkary')
   final String? idKary;
   @override
+  @JsonKey(name: 'id_dept')
+  final int? idDept;
+  @override
   @JsonKey(name: 'nama')
   final String? nama;
   @override
@@ -179,7 +197,7 @@ class _$_WaHead implements _WaHead {
 
   @override
   String toString() {
-    return 'WaHead(idUserHead: $idUserHead, idKary: $idKary, nama: $nama, telp1: $telp1, telp2: $telp2)';
+    return 'WaHead(idUserHead: $idUserHead, idKary: $idKary, idDept: $idDept, nama: $nama, telp1: $telp1, telp2: $telp2)';
   }
 
   @override
@@ -190,6 +208,7 @@ class _$_WaHead implements _WaHead {
             (identical(other.idUserHead, idUserHead) ||
                 other.idUserHead == idUserHead) &&
             (identical(other.idKary, idKary) || other.idKary == idKary) &&
+            (identical(other.idDept, idDept) || other.idDept == idDept) &&
             (identical(other.nama, nama) || other.nama == nama) &&
             (identical(other.telp1, telp1) || other.telp1 == telp1) &&
             (identical(other.telp2, telp2) || other.telp2 == telp2));
@@ -198,7 +217,7 @@ class _$_WaHead implements _WaHead {
   @JsonKey(ignore: true)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, idUserHead, idKary, nama, telp1, telp2);
+      Object.hash(runtimeType, idUserHead, idKary, idDept, nama, telp1, telp2);
 
   @JsonKey(ignore: true)
   @override
@@ -218,6 +237,7 @@ abstract class _WaHead implements WaHead {
   factory _WaHead(
       {@JsonKey(name: 'id_user_head') final int? idUserHead,
       @JsonKey(name: 'idkary') final String? idKary,
+      @JsonKey(name: 'id_dept') final int? idDept,
       @JsonKey(name: 'nama') final String? nama,
       @JsonKey(name: 'telp1') final String? telp1,
       @JsonKey(name: 'telp2') final String? telp2}) = _$_WaHead;
@@ -230,6 +250,9 @@ abstract class _WaHead implements WaHead {
   @override
   @JsonKey(name: 'idkary')
   String? get idKary;
+  @override
+  @JsonKey(name: 'id_dept')
+  int? get idDept;
   @override
   @JsonKey(name: 'nama')
   String? get nama;

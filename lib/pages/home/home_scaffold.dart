@@ -21,6 +21,7 @@ import '../widgets/copyright_text.dart';
 import '../widgets/network_widget.dart';
 import '../widgets/v_async_widget.dart';
 import 'home_item.dart';
+import 'home_register_wa.dart';
 import 'home_tester_off.dart';
 import 'home_tester_on.dart';
 
@@ -172,7 +173,7 @@ class HomeScaffold extends ConsumerWidget {
                 child: Stack(
                   children: [
                     SizedBox(
-                      height: 500,
+                      height: MediaQuery.of(context).size.height,
                       width: width,
                       child: ListView(
                         children: [
@@ -225,56 +226,23 @@ class HomeScaffold extends ConsumerWidget {
                             SizedBox(
                               height: 8,
                             ),
+                            HomeRegisterWa(),
                             SizedBox(
-                              height: 68,
-                              width: width,
-                              child: ListView.separated(
-                                scrollDirection: Axis.horizontal,
-                                separatorBuilder: (context, index) => SizedBox(
-                                  width: 8,
-                                ),
-                                itemBuilder: (__, _) => Ink(
-                                    height: 68,
-                                    width: 68,
-                                    decoration: BoxDecoration(
-                                      color: Theme.of(context).primaryColor,
-                                      borderRadius: BorderRadius.circular(10),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey
-                                              .withOpacity(0.5), // Shadow color
-                                          spreadRadius: 1,
-                                          blurRadius: 3,
-                                          offset: Offset(-1,
-                                              1), // Controls the position of the shadow
-                                        ),
-                                      ],
-                                    ),
-                                    child: InkWell(
-                                      onTap: () => ref
-                                          .read(waRegisterNotifierProvider
-                                              .notifier)
-                                          .confirmRegisterWa(context: context),
-                                      child: Padding(
-                                        padding: EdgeInsets.all(4),
-                                        child: Column(
-                                          children: [
-                                            Icon(Icons.message),
-                                            Spacer(),
-                                            Text(
-                                              'Register Wa ',
-                                              style: Themes.customColor(
-                                                7,
-                                                fontWeight: FontWeight.normal,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    )),
-                                itemCount: 1,
-                              ),
+                              height: 8,
+                            )
+                          ],
+
+                          if (waRegister.phone != null &&
+                              waRegister.isRegistered != null) ...[
+                            Text(
+                              'Ulangi Register Wa (Jika Perlu)',
+                              style: Themes.customColor(10,
+                                  fontWeight: FontWeight.bold),
                             ),
+                            SizedBox(
+                              height: 8,
+                            ),
+                            HomeRetryRegisterWa(),
                             SizedBox(
                               height: 8,
                             )
@@ -332,7 +300,7 @@ class HomeScaffold extends ConsumerWidget {
                             ),
                           ),
 
-                          const SizedBox(height: 30),
+                          const SizedBox(height: 65),
                         ],
                       ),
                     ),

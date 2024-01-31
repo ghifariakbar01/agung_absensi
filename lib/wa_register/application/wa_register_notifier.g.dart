@@ -23,7 +23,7 @@ final waRegisterRepositoryProvider = Provider<WaRegisterRepository>.internal(
 
 typedef WaRegisterRepositoryRef = ProviderRef<WaRegisterRepository>;
 String _$waRegisterNotifierHash() =>
-    r'98513db8d198e621fe31892118b68ad9b2363d21';
+    r'c8d903ce3a966639be8824fc92e299979ffa1ec3';
 
 /// See also [WaRegisterNotifier].
 @ProviderFor(WaRegisterNotifier)

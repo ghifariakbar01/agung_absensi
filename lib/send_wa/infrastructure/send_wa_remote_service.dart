@@ -18,6 +18,24 @@ class SendWaRemoteService {
 
   static const String dbName = 'wa_msg_report';
 
+  String _formatPhone(int phoneNumber) {
+    final String phoneString = phoneNumber.toString();
+
+    if (phoneString.startsWith('62')) {
+      return phoneString;
+    }
+
+    if (phoneString.startsWith('+62')) {
+      return phoneString.replaceAll('+', '');
+    }
+
+    if (phoneString.startsWith('8')) {
+      return '62$phoneString'.replaceAll(' ', '');
+    }
+
+    return phoneString.replaceAll(' ', '');
+  }
+
   Future<Unit> sendWa(
       {
       //
@@ -32,6 +50,8 @@ class SendWaRemoteService {
       // debugger();
       final data = _dioRequest;
 
+      final String phoneFormatted = _formatPhone(phone);
+
       final Map<String, String> select = {
         'command': //
             " INSERT INTO $dbName ( "
@@ -44,12 +64,12 @@ class SendWaRemoteService {
                 "        'Personal', "
                 "        'Queued', "
                 "        '$notifTitle', "
-                "        '$phone', "
+                "        '$phoneFormatted', "
                 "        '$idUser', "
                 "        '$idDept', "
                 "        '1', "
                 "        '$notifTitle', "
-                "        GETDATE() , ",
+                "        GETDATE() )  ",
         'mode': 'INSERT'
       };
 
@@ -59,10 +79,13 @@ class SendWaRemoteService {
           data: jsonEncode(data), options: Options(contentType: 'text/plain'));
 
       log('data ${jsonEncode(data)}');
+      debugger();
 
       final items = response.data?[0];
 
       if (items['status'] == 'Success') {
+        debugger();
+
         return unit;
       } else {
         final message = items['error'] as String?;

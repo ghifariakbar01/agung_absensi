@@ -38,13 +38,13 @@ class SendWaNotifier extends _$SendWaNotifier {
       }) async {
     state = const AsyncLoading();
 
-    state = await AsyncValue.guard<Unit>(() async {
-      return ref.read(sendWaRepositoryProvider).sendWa(
-          phone: phone,
-          idUser: idUser,
-          idDept: idDept,
-          notifTitle: notifTitle,
-          notifContent: notifContent);
-    });
+    state = await AsyncValue.guard(() => ref
+        .read(sendWaRepositoryProvider)
+        .sendWa(
+            phone: phone,
+            idUser: idUser,
+            idDept: idDept,
+            notifTitle: notifTitle,
+            notifContent: notifContent));
   }
 }

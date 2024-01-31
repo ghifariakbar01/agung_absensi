@@ -8,6 +8,7 @@ abstract class WaHead with _$WaHead {
   factory WaHead({
     @JsonKey(name: 'id_user_head') int? idUserHead,
     @JsonKey(name: 'idkary') String? idKary,
+    @JsonKey(name: 'id_dept') int? idDept,
     @JsonKey(name: 'nama') String? nama,
     @JsonKey(name: 'telp1') String? telp1,
     @JsonKey(name: 'telp2') String? telp2,

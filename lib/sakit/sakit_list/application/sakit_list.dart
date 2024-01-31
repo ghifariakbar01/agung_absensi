@@ -8,6 +8,7 @@ class SakitList with _$SakitList {
   factory SakitList({
     @JsonKey(name: 'id_sakit') int? idSakit,
     @JsonKey(name: 'id_user') int? idUser,
+    @JsonKey(name: 'id_dept') int? idDept,
     @JsonKey(name: 'c_user') String? cUser,
     @JsonKey(name: 'c_date') String? cDate,
     @JsonKey(name: 'u_date') String? uDate,

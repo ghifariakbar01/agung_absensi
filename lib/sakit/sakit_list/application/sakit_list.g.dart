@@ -9,6 +9,7 @@ part of 'sakit_list.dart';
 _$_SakitList _$$_SakitListFromJson(Map<String, dynamic> json) => _$_SakitList(
       idSakit: json['id_sakit'] as int?,
       idUser: json['id_user'] as int?,
+      idDept: json['id_dept'] as int?,
       cUser: json['c_user'] as String?,
       cDate: json['c_date'] as String?,
       uDate: json['u_date'] as String?,
@@ -33,6 +34,7 @@ Map<String, dynamic> _$$_SakitListToJson(_$_SakitList instance) =>
     <String, dynamic>{
       'id_sakit': instance.idSakit,
       'id_user': instance.idUser,
+      'id_dept': instance.idDept,
       'c_user': instance.cUser,
       'c_date': instance.cDate,
       'u_date': instance.uDate,
