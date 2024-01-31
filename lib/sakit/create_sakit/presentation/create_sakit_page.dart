@@ -83,13 +83,6 @@ class CreateSakitPage extends HookConsumerWidget {
     final userHelper = ref.watch(userHelperNotifierProvider);
     final createSakit = ref.watch(createSakitNotifierProvider);
 
-    final isButtonEnabled = suratDokterTextController.value.isNotEmpty &&
-        tglAwalTextController.value.isNotEmpty &&
-        tglAkhirTextController.value.isNotEmpty &&
-        diagnosaTextController.text.isNotEmpty;
-
-    log('isButtonEnabled $isButtonEnabled');
-
     final _formKey = useMemoized(GlobalKey<FormState>.new, const []);
 
     return KeyboardDismissOnTap(

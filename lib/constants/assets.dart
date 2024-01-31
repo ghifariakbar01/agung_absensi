@@ -6,6 +6,7 @@ class Assets {
   static const String iconList = 'assets/ic_list.svg';
   static const String iconChain = 'assets/ic_chain.png';
   static const String imgInstructionPrefix = 'assets/img_instruction_';
+  static const String imgRegisterWa = 'assets/wa_register.png';
   // home
   static const String iconAbsenManual = 'assets/ic_absenmanual.svg';
   static const String iconAbsen = 'assets/ic_absen.svg';
