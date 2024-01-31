@@ -21,15 +21,15 @@ class LocationDetail extends ConsumerWidget {
             Text(
               'Kantor Terdekat',
               style: Themes.customColor(
-                FontWeight.bold,
                 13,
+                fontWeight: FontWeight.bold,
               ),
             ),
             Text(
               ' : ',
               style: Themes.customColor(
-                FontWeight.bold,
                 13,
+                fontWeight: FontWeight.bold,
               ),
             ),
             Flexible(
@@ -37,8 +37,8 @@ class LocationDetail extends ConsumerWidget {
                 ' ${nearest.nama}',
                 maxLines: 10,
                 style: Themes.customColor(
-                  FontWeight.bold,
                   13,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
@@ -50,29 +50,29 @@ class LocationDetail extends ConsumerWidget {
             Text(
               'Jarak Maksimum',
               style: Themes.customColor(
-                FontWeight.bold,
                 13,
+                fontWeight: FontWeight.bold,
               ),
             ),
             Text(
               ' : ',
               style: Themes.customColor(
-                FontWeight.bold,
                 13,
+                fontWeight: FontWeight.bold,
               ),
             ),
             if (nearest.minDistance == 0) ...[
               Text('....Loading....',
                   style: Themes.customColor(
-                    FontWeight.bold,
                     13,
+                    fontWeight: FontWeight.bold,
                   ))
             ],
             if (nearest.minDistance != 0) ...[
               Text(' ${nearest.minDistance.round()} m',
                   style: Themes.customColor(
-                    FontWeight.bold,
                     13,
+                    fontWeight: FontWeight.bold,
                   ))
             ]
           ],
@@ -84,31 +84,31 @@ class LocationDetail extends ConsumerWidget {
             Text(
               'Jarak',
               style: Themes.customColor(
-                FontWeight.bold,
                 13,
+                fontWeight: FontWeight.bold,
               ),
             ),
             Text(
               ' : ',
               style: Themes.customColor(
-                FontWeight.bold,
                 13,
+                fontWeight: FontWeight.bold,
               ),
             ),
             if (nearest.remainingDistance == 0) ...[
               Text('....Loading....',
                   style: Themes.customColor(
-                    FontWeight.bold,
                     13,
+                    fontWeight: FontWeight.bold,
                   ))
             ],
             if (nearest.remainingDistance != 0) ...[
               Text(' ${nearest.remainingDistance.round()} m',
                   style: nearest.remainingDistance < nearest.minDistance
-                      ? Themes.customColor(FontWeight.bold, 14,
-                          color: Colors.green)
-                      : Themes.customColor(FontWeight.bold, 14,
-                          color: Colors.red)),
+                      ? Themes.customColor(14,
+                          fontWeight: FontWeight.bold, color: Colors.green)
+                      : Themes.customColor(14,
+                          fontWeight: FontWeight.bold, color: Colors.red)),
             ]
           ],
         ),

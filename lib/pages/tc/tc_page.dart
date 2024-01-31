@@ -57,7 +57,6 @@ class TCPage extends ConsumerWidget {
                     child: Text(
                       'Google Play Services',
                       style: Themes.customColor(
-                        FontWeight.normal,
                         12,
                       ),
                     )),
@@ -70,7 +69,6 @@ class TCPage extends ConsumerWidget {
                     child: Text(
                       'Apple’s Standard License Agreement',
                       style: Themes.customColor(
-                        FontWeight.normal,
                         12,
                       ),
                     )),
@@ -150,7 +148,6 @@ class TCPage extends ConsumerWidget {
                     child: Text(
                       'Google Play Services',
                       style: Themes.customColor(
-                        FontWeight.normal,
                         12,
                       ),
                     )),
@@ -188,7 +185,7 @@ class TCPage extends ConsumerWidget {
               ),
               Text(
                 'Agree to Privacy Policy',
-                style: Themes.customColor(FontWeight.normal, 14),
+                style: Themes.customColor(14),
               )
             ],
           ),
@@ -212,7 +209,7 @@ class TCPage extends ConsumerWidget {
               ),
               Text(
                 'Agree to Terms & Conditions',
-                style: Themes.customColor(FontWeight.normal, 14),
+                style: Themes.customColor(14),
               )
             ],
           ),
@@ -226,7 +223,6 @@ class TCPage extends ConsumerWidget {
                 textAlign: TextAlign.center,
                 label: 'CONTINUE',
                 textStyle: Themes.customColor(
-                  FontWeight.normal,
                   14,
                 ),
                 isEnabled: isPrivacy && isTerms,
@@ -261,7 +257,6 @@ class TCPage extends ConsumerWidget {
 Widget normalText(String text) => Text(
       text,
       style: Themes.customColor(
-        FontWeight.normal,
         12,
       ),
       textAlign: TextAlign.justify,
@@ -270,16 +265,16 @@ Widget normalText(String text) => Text(
 Widget headingText(String text) => Text(
       text,
       style: Themes.customColor(
-        FontWeight.bold,
         12,
+        fontWeight: FontWeight.bold,
       ),
     );
 
 Widget bigHeadingText(String text) => Text(
       text,
       style: Themes.customColor(
-        FontWeight.bold,
         14,
+        fontWeight: FontWeight.bold,
       ),
     );
 

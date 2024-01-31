@@ -38,10 +38,8 @@ class VButton extends StatelessWidget {
               child: Center(
                 child: Text(label,
                     style: textStyle ??
-                        Themes.customColor(
-                          FontWeight.bold,
-                          fontSize ?? 16,
-                        ),
+                        Themes.customColor(fontSize ?? 16,
+                            fontWeight: FontWeight.bold, color: Colors.white),
                     textAlign: textAlign ?? TextAlign.start),
               ),
             ),
@@ -58,10 +56,9 @@ class VButton extends StatelessWidget {
                   child: Text(
                     label,
                     style: textStyle ??
-                        Themes.customColor(
-                          FontWeight.bold,
-                          fontSize ?? 16,
-                        ),
+                        Themes.customColor(fontSize ?? 16,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).disabledColor),
                     textAlign: textAlign ?? TextAlign.start,
                   ),
                 )),

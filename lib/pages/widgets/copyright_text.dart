@@ -11,8 +11,8 @@ class CopyrightAgung extends StatelessWidget {
       textAlign: TextAlign.center,
       maxLines: 2,
       style: Themes.customColor(
-        FontWeight.bold,
         8,
+        fontWeight: FontWeight.bold,
       ),
     );
   }

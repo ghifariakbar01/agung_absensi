@@ -32,8 +32,8 @@ class EditProfileForm extends ConsumerWidget {
           TextFormField(
             // decoration: Themes.formStyle('Masukkan email'),
             style: Themes.customColor(
-              FontWeight.w500,
               15,
+              fontWeight: FontWeight.w500,
             ),
             keyboardType: TextInputType.emailAddress,
             initialValue: user.email,
@@ -61,8 +61,8 @@ class EditProfileForm extends ConsumerWidget {
           TextFormField(
             // decoration: Themes.formStyle('Masukkan email 2'),
             style: Themes.customColor(
-              FontWeight.w500,
               15,
+              fontWeight: FontWeight.w500,
             ),
             keyboardType: TextInputType.emailAddress,
             initialValue: user.email2,
@@ -90,8 +90,8 @@ class EditProfileForm extends ConsumerWidget {
           TextFormField(
             // decoration: Themes.formStyle('Masukkan No. HP 1'),
             style: Themes.customColor(
-              FontWeight.w500,
               15,
+              fontWeight: FontWeight.w500,
             ),
             keyboardType: TextInputType.phone,
             initialValue: user.noTelp1,
@@ -119,8 +119,8 @@ class EditProfileForm extends ConsumerWidget {
           TextFormField(
             // decoration: Themes.formStyle('Masukkan No. HP 2'),
             style: Themes.customColor(
-              FontWeight.w500,
               15,
+              fontWeight: FontWeight.w500,
             ),
             keyboardType: TextInputType.phone,
             initialValue: user.noTelp2,

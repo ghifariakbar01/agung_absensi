@@ -66,8 +66,8 @@ class BackgroundScaffold extends ConsumerWidget {
           title: Text(
             'Absen Tersimpan',
             style: Themes.customColor(
-              FontWeight.bold,
               20,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ),

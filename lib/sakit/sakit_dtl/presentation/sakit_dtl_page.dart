@@ -113,7 +113,7 @@ class SakitDtlWidget extends HookConsumerWidget {
                   // UPPER
                   Text(
                     'ID : ${item.idSakit}',
-                    style: Themes.customColor(FontWeight.bold, 11,
+                    style: Themes.customColor(11,
                         color: Theme.of(context).unselectedWidgetColor),
                   ),
                   SizedBox(
@@ -121,7 +121,7 @@ class SakitDtlWidget extends HookConsumerWidget {
                   ),
                   Text(
                     'Nama : ${item.namaImg}',
-                    style: Themes.customColor(FontWeight.bold, 11,
+                    style: Themes.customColor(11,
                         color: Theme.of(context).unselectedWidgetColor),
                   ),
                   SizedBox(
@@ -129,14 +129,14 @@ class SakitDtlWidget extends HookConsumerWidget {
                   ),
                   Text(
                     'Created By : ${item.cUser}',
-                    style: Themes.customColor(FontWeight.bold, 10,
+                    style: Themes.customColor(10,
                         color: Theme.of(context).unselectedWidgetColor),
                   ),
                 ],
               ),
               Text(
                 'Tgl Upload : ${item.cDate}',
-                style: Themes.customColor(FontWeight.bold, 8,
+                style: Themes.customColor(8,
                     color: Theme.of(context).unselectedWidgetColor),
               ),
             ],

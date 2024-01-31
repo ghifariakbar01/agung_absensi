@@ -40,8 +40,8 @@ class CopyRightPage extends ConsumerWidget {
                       'Error: $error StackTrace: $stackTrace',
                 )}',
                 style: Themes.customColor(
-                  FontWeight.bold,
                   15,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
               SizedBox(
@@ -54,8 +54,8 @@ class CopyRightPage extends ConsumerWidget {
               SelectableText(
                 '© 2023 Agung Logistics. All Rights Reserved.',
                 style: Themes.customColor(
-                  FontWeight.w500,
                   14,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
               SizedBox(
@@ -72,8 +72,8 @@ class CopyRightPage extends ConsumerWidget {
                       'CONTACT US',
                       textAlign: TextAlign.center,
                       style: Themes.customColor(
-                        FontWeight.bold,
                         14,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     SizedBox(

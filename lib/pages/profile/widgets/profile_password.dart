@@ -27,15 +27,15 @@ class ProfilePassword extends ConsumerWidget {
           Text(
             'PASSWORD : ',
             style: Themes.customColor(
-              FontWeight.bold,
               15,
+              fontWeight: FontWeight.bold,
             ),
           ),
           Text(
             '${passwordVisible ? userProvider.user.password ?? '' : '*'.padRight(userProvider.user.password!.length, '*')}',
             style: Themes.customColor(
-              FontWeight.bold,
               10,
+              fontWeight: FontWeight.bold,
             ),
           ),
           SizedBox(

@@ -31,8 +31,8 @@ class ErrorMessageWidget extends ConsumerWidget {
               child: Text(
             'Oops. Something Went Wrong.',
             style: Themes.customColor(
-              FontWeight.bold,
               18,
+              fontWeight: FontWeight.bold,
             ),
           )),
           SizedBox(
@@ -56,15 +56,15 @@ class ErrorMessageWidget extends ConsumerWidget {
                   title: Text(
                     'Display Error',
                     style: Themes.customColor(
-                      FontWeight.bold,
                       14,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   subtitle: Text(
                     'Error & Stack Trace',
                     style: Themes.customColor(
-                      FontWeight.bold,
                       14,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   children: [
@@ -74,7 +74,6 @@ class ErrorMessageWidget extends ConsumerWidget {
                         'idKary: ${ref.read(userNotifierProvider).user.IdKary}\n '
                         'Error: $errorMessage \n',
                         style: Themes.customColor(
-                          FontWeight.normal,
                           12,
                         ),
                       ),

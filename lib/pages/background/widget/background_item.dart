@@ -72,7 +72,8 @@ class BackgroundItem extends ConsumerWidget {
                               orElse: () => 'NaN',
                               empty: () => 'Jenis : Absen Masuk',
                               absenIn: () => 'Jenis : Absen Keluar'),
-                          style: Themes.customColor(FontWeight.bold, 11),
+                          style: Themes.customColor(11,
+                              fontWeight: FontWeight.bold),
                         )
                       ],
                     )),

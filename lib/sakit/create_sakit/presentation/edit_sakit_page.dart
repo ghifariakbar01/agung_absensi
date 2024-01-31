@@ -99,7 +99,6 @@ class EditSakitPage extends HookConsumerWidget {
                         'Masukkan nama',
                       ),
                       style: Themes.customColor(
-                        FontWeight.normal,
                         14,
                       ),
                       validator: (item) {
@@ -122,7 +121,6 @@ class EditSakitPage extends HookConsumerWidget {
                         'Masukkan pt',
                       ),
                       style: Themes.customColor(
-                        FontWeight.normal,
                         14,
                       ),
                       validator: (item) {
@@ -148,7 +146,6 @@ class EditSakitPage extends HookConsumerWidget {
                         'Masukkan diagnosa penyakit',
                       ),
                       style: Themes.customColor(
-                        FontWeight.normal,
                         14,
                       ),
                       validator: (item) {
@@ -185,7 +182,8 @@ class EditSakitPage extends HookConsumerWidget {
                         value: value,
                         child: Text(
                           value,
-                          style: Themes.customColor(FontWeight.bold, 10,
+                          style: Themes.customColor(10,
+                              fontWeight: FontWeight.bold,
                               color: Theme.of(context).unselectedWidgetColor),
                         ),
                       );
@@ -237,7 +235,6 @@ class EditSakitPage extends HookConsumerWidget {
                               'Masukkan tgl awal',
                             ),
                             style: Themes.customColor(
-                              FontWeight.normal,
                               14,
                             ),
                             validator: (item) {
@@ -266,7 +263,7 @@ class EditSakitPage extends HookConsumerWidget {
                   //     'Masukkan SPV Note',
                   //   ),
                   //   style: Themes.customColor(
-                  //     FontWeight.normal,
+                  //
                   //     14,
                   //   ),
                   // ),
@@ -284,7 +281,7 @@ class EditSakitPage extends HookConsumerWidget {
                   //     'Masukkan HRD Note',
                   //   ),
                   //   style: Themes.customColor(
-                  //     FontWeight.normal,
+                  //
                   //     14,
                   //   ),
                   // ),

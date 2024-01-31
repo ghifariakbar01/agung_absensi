@@ -35,12 +35,14 @@ class RiwayatTanggal extends ConsumerWidget {
               children: [
                 Text(
                   'Tanggal',
-                  style: Themes.customColor(FontWeight.bold, 12,
+                  style: Themes.customColor(12,
+                      fontWeight: FontWeight.bold,
                       color: Theme.of(context).unselectedWidgetColor),
                 ),
                 Text(
                   StringUtils.formatTanggal(tanggal),
-                  style: Themes.customColor(FontWeight.bold, 12,
+                  style: Themes.customColor(12,
+                      fontWeight: FontWeight.bold,
                       color: Theme.of(context).unselectedWidgetColor),
                 ),
               ],

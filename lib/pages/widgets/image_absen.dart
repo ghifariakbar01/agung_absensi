@@ -91,15 +91,15 @@ class _ImageAbsenState extends ConsumerState<ImageAbsen> {
                               Text(
                                 'Lokasi Jarak Terdekat',
                                 style: Themes.customColor(
-                                  FontWeight.bold,
                                   13,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                               Text(
                                 ' : ',
                                 style: Themes.customColor(
-                                  FontWeight.bold,
                                   13,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                               displayImage

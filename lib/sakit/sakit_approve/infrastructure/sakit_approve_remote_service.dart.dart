@@ -68,7 +68,55 @@ class SakitApproveRemoteService {
     }
   }
 
-  Future<Unit> approveHrd({
+  Future<Unit> approveHrdDenganSurat({
+    required String nama,
+    required String note,
+    required SakitList itemSakit,
+  }) async {
+    // 1. UPDATE SAKIT
+    try {
+      final Map<String, String> updateSakit = {
+        "command": "UPDATE $dbName SET "
+                " hrd_nm = '$nama', " +
+            " hrd_sta = 1, " +
+            " hrd_tgl = getdate(), " +
+            " hrd_note = '$note' " +
+            " WHERE id_sakit = ${itemSakit.idSakit} ",
+        "mode": "UPDATE"
+      };
+
+      final data = _dioRequest;
+      data.addAll(updateSakit);
+
+      final response = await _dio.post('',
+          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
+
+      log('data ${jsonEncode(data)}');
+      log('response $response');
+      final items = response.data?[0];
+
+      if (items['status'] == 'Success') {
+        return unit;
+      } else {
+        final message = items['error'] as String?;
+        final errorCode = items['errornum'] as int;
+
+        throw RestApiExceptionWithMessage(errorCode, message);
+      }
+    } on FormatException catch (e) {
+      throw FormatException(e.message);
+    } on DioError catch (e) {
+      if (e.isNoConnectionError || e.isConnectionTimeout) {
+        throw NoConnectionException();
+      } else if (e.response != null) {
+        throw RestApiException(e.response?.statusCode);
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  Future<Unit> approveHrdTanpaSurat({
     required String nama,
     required String note,
     required SakitList itemSakit,
@@ -282,7 +330,7 @@ class SakitApproveRemoteService {
     }
   }
 
-  Future<Unit> unApproveHrd({
+  Future<Unit> unApproveHrdDenganSurat({
     required String nama,
     required SakitList itemSakit,
   }) async {
@@ -294,6 +342,71 @@ class SakitApproveRemoteService {
             " hrd_sta = 0, " +
             " hrd_tgl = getdate() " +
             " WHERE id_sakit = ${itemSakit.idSakit} ",
+        "mode": "UPDATE"
+      };
+
+      final data = _dioRequest;
+      data.addAll(updateSakit);
+
+      final response = await _dio.post('',
+          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
+
+      log('data ${jsonEncode(data)}');
+      log('response $response');
+      final items = response.data?[0];
+
+      if (items['status'] == 'Success') {
+        return unit;
+      } else {
+        final message = items['error'] as String?;
+        final errorCode = items['errornum'] as int;
+
+        throw RestApiExceptionWithMessage(errorCode, message);
+      }
+    } on FormatException catch (e) {
+      throw FormatException(e.message);
+    } on DioError catch (e) {
+      if (e.isNoConnectionError || e.isConnectionTimeout) {
+        throw NoConnectionException();
+      } else if (e.response != null) {
+        throw RestApiException(e.response?.statusCode);
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  Future<Unit> unApproveHrdTanpaSurat({
+    required String nama,
+    required SakitList itemSakit,
+    required CreateSakit createSakit,
+  }) async {
+    // 1. UPDATE SAKIT
+    try {
+      int? cutiTidakBaruNew;
+      int? cutiBaruNew;
+      DateTime masuk = DateTime.parse(createSakit.masuk!);
+
+      if (masuk.year != createSakit.createSakitCuti!.openDate!.year) {
+        cutiTidakBaruNew =
+            createSakit.createSakitCuti!.cutiTidakBaru! + itemSakit.totHari!;
+      } else {
+        cutiBaruNew =
+            createSakit.createSakitCuti!.cutiBaru! + itemSakit.totHari!;
+      }
+
+      final Map<String, String> updateSakit = {
+        "command": "UPDATE $dbName SET "
+                " hrd_nm = '$nama', " +
+            " hrd_sta = 0, " +
+            " hrd_tgl = getdate() " +
+            " WHERE id_sakit = ${itemSakit.idSakit} "
+                //
+                " UPDATE $dbMstCutiNew SET "
+                " ${cutiTidakBaruNew != null ? " cuti_tidak_baru = $cutiTidakBaruNew " : ""} " +
+            " ${cutiBaruNew != null ? " cuti_baru = $cutiBaruNew " : ""} " +
+            " WHERE FORMAT(open_date, 'yyyy-01-01') = '${createSakit.createSakitCuti!.openDate!.year}-01-01' "
+                " AND id_user = ${itemSakit.idUser} ",
         "mode": "UPDATE"
       };
 

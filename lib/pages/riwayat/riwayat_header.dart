@@ -58,8 +58,8 @@ class RiwayatHeader extends ConsumerWidget {
                   child: Center(
                     child: Text(
                       date,
-                      style: Themes.customColor(FontWeight.bold, 15,
-                          color: Colors.white),
+                      style: Themes.customColor(15,
+                          fontWeight: FontWeight.bold, color: Colors.white),
                     ),
                   ),
                 ),

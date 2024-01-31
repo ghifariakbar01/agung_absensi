@@ -50,7 +50,10 @@ class BackgroundItemDetail extends StatelessWidget {
                         ),
                         Text(
                           'Lokasi',
-                          style: Themes.customColor(FontWeight.bold, 10),
+                          style: Themes.customColor(
+                            10,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ],
                     ),
@@ -59,7 +62,10 @@ class BackgroundItemDetail extends StatelessWidget {
                     ),
                     Text(
                       alamat,
-                      style: Themes.customColor(FontWeight.bold, 9),
+                      style: Themes.customColor(
+                        9,
+                        fontWeight: FontWeight.bold,
+                      ),
                     )
                   ],
                 )),
@@ -95,15 +101,20 @@ class BackgroundItemDetail extends StatelessWidget {
                               children: [
                                 Text(
                                   'Latitude',
-                                  style:
-                                      Themes.customColor(FontWeight.bold, 11),
+                                  style: Themes.customColor(
+                                    11,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                                 Text(
                                   latitude.length > 10
                                       ? '${latitude.substring(0, 10)}...'
                                       : latitude,
                                   maxLines: 1,
-                                  style: Themes.customColor(FontWeight.bold, 8),
+                                  style: Themes.customColor(
+                                    8,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ],
                             )
@@ -137,15 +148,18 @@ class BackgroundItemDetail extends StatelessWidget {
                               children: [
                                 Text(
                                   'Longitude',
-                                  style:
-                                      Themes.customColor(FontWeight.bold, 11),
+                                  style: Themes.customColor(
+                                    11,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                                 Text(
                                   longitude.length > 10
                                       ? '${longitude.substring(0, 10)}...'
                                       : longitude,
                                   maxLines: 1,
-                                  style: Themes.customColor(FontWeight.bold, 8),
+                                  style: Themes.customColor(8,
+                                      fontWeight: FontWeight.bold),
                                 ),
                               ],
                             )
@@ -181,7 +195,8 @@ class BackgroundItemDetail extends StatelessWidget {
                         ),
                         Text(
                           'Date',
-                          style: Themes.customColor(FontWeight.bold, 11),
+                          style: Themes.customColor(11,
+                              fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
@@ -194,7 +209,8 @@ class BackgroundItemDetail extends StatelessWidget {
                           child: Text(
                             StringUtils.formatTanggalJam(date),
                             maxLines: 5,
-                            style: Themes.customColor(FontWeight.bold, 10),
+                            style: Themes.customColor(10,
+                                fontWeight: FontWeight.bold),
                           ),
                         ),
                       ],

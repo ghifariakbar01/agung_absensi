@@ -23,8 +23,8 @@ class ProfileLabel extends StatelessWidget {
         Text(
           label,
           style: Themes.customColor(
-            FontWeight.bold,
             13,
+            fontWeight: FontWeight.bold,
           ),
         )
       ],

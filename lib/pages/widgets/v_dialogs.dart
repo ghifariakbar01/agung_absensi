@@ -42,15 +42,15 @@ class VAlertDialog extends ConsumerWidget {
         title: Text(
           label,
           style: Themes.customColor(
-            FontWeight.bold,
             20,
+            fontWeight: FontWeight.bold,
           ),
         ),
         content: Text(
           labelDescription,
           style: Themes.customColor(
-            FontWeight.bold,
             15,
+            fontWeight: FontWeight.bold,
           ),
         ),
         actions: [
@@ -71,8 +71,8 @@ class VAlertDialog extends ConsumerWidget {
                 child: Text(
                   backPressedLabel ?? 'TIDAK',
                   style: Themes.customColor(
-                    FontWeight.bold,
                     15,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
@@ -84,8 +84,8 @@ class VAlertDialog extends ConsumerWidget {
                 child: Text(
                   pressedLabel ?? 'YA',
                   style: Themes.customColor(
-                    FontWeight.bold,
                     15,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
@@ -124,7 +124,10 @@ class VSimpleDialog extends StatelessWidget {
           Center(
             child: Text(
               label,
-              style: Themes.customColor(FontWeight.bold, 20),
+              style: Themes.customColor(
+                20,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           SizedBox(
@@ -135,7 +138,10 @@ class VSimpleDialog extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 labelDescription,
-                style: Themes.customColor(FontWeight.bold, 15),
+                style: Themes.customColor(
+                  15,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           )

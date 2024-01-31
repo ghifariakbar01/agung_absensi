@@ -24,8 +24,8 @@ class ImeiIntroductionPage extends ConsumerWidget {
             child: Text(
               'Device Unlink',
               style: Themes.customColor(
-                FontWeight.bold,
                 40,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
@@ -50,8 +50,8 @@ class ImeiIntroductionPage extends ConsumerWidget {
                   ' Pengguna iOS tidak bisa melakukan unlink tanpa menggati device. ',
               textAlign: TextAlign.justify,
               style: Themes.customColor(
-                FontWeight.normal,
                 15,
+                fontWeight: FontWeight.normal,
               ),
             ),
           ),
@@ -64,8 +64,8 @@ class ImeiIntroductionPage extends ConsumerWidget {
                 child: Text(
                     'Untuk petunjuk melakukan Unlink Device ikuti langkah di bawah ini.',
                     style: Themes.customColor(
-                      FontWeight.normal,
                       15,
+                      fontWeight: FontWeight.normal,
                     )),
               ),
               SizedBox(

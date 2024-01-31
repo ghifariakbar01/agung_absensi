@@ -9,12 +9,12 @@ mixin Themes {
 
   static TextStyle customColor(
     //
-    FontWeight? fontWeight,
     double fontSize, {
     Color? color,
+    FontWeight? fontWeight,
     TextDecoration? decoration,
   }) {
-    return TextStyle(
+    return GoogleFonts.poppins(
       color: color,
       fontSize: fontSize,
       decoration: decoration,
@@ -22,16 +22,16 @@ mixin Themes {
     );
   }
 
-  static OutlineInputBorder notFocused() {
-    return const OutlineInputBorder(
+  static OutlineInputBorder notFocused({Color? color}) {
+    return OutlineInputBorder(
         borderRadius: BorderRadius.all(Radius.circular(10)),
-        borderSide: BorderSide(color: Palette.greyStroke));
+        borderSide: BorderSide(color: color ?? Palette.greyStroke));
   }
 
-  static OutlineInputBorder focused() {
-    return const OutlineInputBorder(
+  static OutlineInputBorder focused({Color? color}) {
+    return OutlineInputBorder(
         borderRadius: BorderRadius.all(Radius.circular(10)),
-        borderSide: BorderSide(color: Palette.primaryColor));
+        borderSide: BorderSide(color: color ?? Palette.primaryColor));
   }
 
   static InputDecoration formStyle(String hintText, {Widget? icon}) {
@@ -39,11 +39,37 @@ mixin Themes {
       hintText: hintText,
       suffixIcon: icon ?? null,
       border: InputBorder.none,
-      focusedBorder: Themes.focused(),
+      focusedBorder: InputBorder.none,
       enabledBorder: Themes.notFocused(),
       contentPadding: const EdgeInsets.all(16),
-      hintStyle: Themes.customColor(FontWeight.normal, 14),
-      labelStyle: Themes.customColor(FontWeight.normal, 14),
+      hintStyle: Themes.customColor(
+        14,
+        fontWeight: FontWeight.normal,
+      ),
+      labelStyle: Themes.customColor(
+        14,
+        fontWeight: FontWeight.normal,
+      ),
+    );
+  }
+
+  static InputDecoration formStyleBordered(String labelText,
+      {Color? borderColor, Widget? icon}) {
+    return InputDecoration(
+      labelText: labelText,
+      suffixIcon: icon ?? null,
+      border: Themes.focused(color: borderColor ?? Palette.primaryLighter),
+      focusedBorder:
+          Themes.focused(color: borderColor ?? Palette.primaryLighter),
+      enabledBorder:
+          Themes.focused(color: borderColor ?? Palette.primaryLighter),
+      contentPadding: const EdgeInsets.all(16),
+      hintStyle: Themes.customColor(
+        14,
+      ),
+      labelStyle: Themes.customColor(
+        14,
+      ),
     );
   }
 
@@ -51,26 +77,15 @@ mixin Themes {
     return ThemeData.light().copyWith(
       brightness: Brightness.light,
       appBarTheme: const AppBarTheme(
-          iconTheme: IconThemeData(color: Colors.black),
-          backgroundColor: Colors.white),
-      scaffoldBackgroundColor: Colors.white,
-      visualDensity: VisualDensity.adaptivePlatformDensity,
-      primaryColor: Colors.white,
-      primaryColorLight: Colors.white,
-      primaryColorDark: Palette.primaryColor,
-      disabledColor: Colors.black.withOpacity(0.15),
-      // Color Icon Lokasi Jarak Terdekat
-      secondaryHeaderColor: Colors.black,
-      // Color Riwayat Absen Text
-      unselectedWidgetColor: Palette.primaryLighter,
-      // Color Riwayat Absen Container
-      cardColor: Palette.primaryLighter,
-      colorScheme: const ColorScheme.dark(
-        primary: Colors.white,
-        secondary: Colors.black,
-        onPrimary: Colors.black,
-        onSecondary: Colors.black,
+        iconTheme: IconThemeData(color: Colors.black),
       ),
+      visualDensity: VisualDensity.adaptivePlatformDensity,
+      scaffoldBackgroundColor: Colors.white,
+      primaryColor: Colors.white,
+      secondaryHeaderColor: Colors.black,
+      unselectedWidgetColor: Palette.primaryLighter,
+      cardColor: Palette.primaryLighter,
+      disabledColor: Colors.black.withOpacity(0.15),
     );
   }
 
@@ -78,27 +93,16 @@ mixin Themes {
     return ThemeData.dark().copyWith(
       brightness: Brightness.dark,
       appBarTheme: const AppBarTheme(
-          actionsIconTheme: IconThemeData(color: Colors.white),
-          iconTheme: IconThemeData(color: Colors.white),
-          backgroundColor: Colors.black),
+        actionsIconTheme: IconThemeData(color: Colors.white),
+        iconTheme: IconThemeData(color: Colors.white),
+      ),
       visualDensity: VisualDensity.adaptivePlatformDensity,
       scaffoldBackgroundColor: Colors.black,
       primaryColor: Colors.black,
-      primaryColorLight: Colors.white,
-      // Color Icon Lokasi Jarak Terdekat
       secondaryHeaderColor: Colors.white,
-      // Color Riwayat Absen Text
       unselectedWidgetColor: Colors.white,
-      // Color Riwayat Absen Container
       cardColor: Colors.white.withOpacity(0.05),
-      primaryColorDark: Colors.white.withOpacity(0.05),
       disabledColor: Colors.white.withOpacity(0.15),
-      colorScheme: const ColorScheme.dark(
-        primary: Colors.white,
-        secondary: Colors.white,
-        onPrimary: Colors.white,
-        onSecondary: Colors.white,
-      ),
     );
   }
 }

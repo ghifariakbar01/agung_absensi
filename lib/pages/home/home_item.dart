@@ -18,44 +18,43 @@ class HomeItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return TextButton(
-      onPressed: () => ref.read(homeNotifierProvider.notifier).redirect(
-            ref: ref,
-            context: context,
-            route: item.routeNames,
-          ),
-      child: Container(
-        padding: EdgeInsets.all(8),
+    return Ink(
+        height: 68,
+        width: 68,
         decoration: BoxDecoration(
-            color: Palette.primaryLighter,
-            borderRadius: BorderRadius.circular(10)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Theme.of(context).primaryColorLight),
-                padding: EdgeInsets.all(8),
-                child: Icon(
-                  item.icon,
-                  color: Palette.primaryLighter,
-                )),
-            SizedBox(
-              height: 4,
+          color: Theme.of(context).primaryColor,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5), // Shadow color
+              spreadRadius: 1,
+              blurRadius: 3,
+              offset: Offset(-1, 1), // Controls the position of the shadow
             ),
-            Text(
-              item.absen.toUpperCase(),
-              textAlign: TextAlign.center,
-              style: Themes.customColor(
-                FontWeight.bold,
-                9,
-              ),
-            )
           ],
         ),
-      ),
-    );
+        child: InkWell(
+          onTap: () => ref.read(homeNotifierProvider.notifier).redirect(
+                ref: ref,
+                context: context,
+                route: item.routeNames,
+              ),
+          child: Padding(
+            padding: EdgeInsets.all(4),
+            child: Column(
+              children: [
+                SvgPicture.asset(item.asset),
+                Spacer(),
+                Text(
+                  item.name,
+                  style: Themes.customColor(
+                    7,
+                    fontWeight: FontWeight.normal,
+                  ),
+                )
+              ],
+            ),
+          ),
+        ));
   }
 }

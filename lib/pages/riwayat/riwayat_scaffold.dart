@@ -110,7 +110,8 @@ class _RiwayatAbsenScaffoldState extends ConsumerState<RiwayatAbsenScaffold> {
           iconTheme: IconThemeData(color: Colors.white),
           title: Text(
             'Riwayat Absen',
-            style: Themes.customColor(FontWeight.bold, 20, color: Colors.white),
+            style: Themes.customColor(20,
+                fontWeight: FontWeight.bold, color: Colors.white),
           ),
           toolbarHeight: 45,
           actions: [

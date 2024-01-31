@@ -74,8 +74,8 @@ class VFormDialog<T> extends ConsumerWidget {
                   title: Text(
                     label,
                     style: Themes.customColor(
-                      FontWeight.bold,
                       20,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   content: Container(
@@ -98,8 +98,8 @@ class VFormDialog<T> extends ConsumerWidget {
                         child: Text(
                           pressedLabel ?? 'Ok',
                           style: Themes.customColor(
-                            FontWeight.bold,
                             15,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
@@ -111,8 +111,8 @@ class VFormDialog<T> extends ConsumerWidget {
                         child: Text(
                           backPressedLabel ?? 'Cancel',
                           style: Themes.customColor(
-                            FontWeight.bold,
                             15,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),

@@ -14,21 +14,43 @@ class SakitApproveRepository {
     return _remoteService.approveSpv(idSakit: idSakit, nama: nama, note: note);
   }
 
-  Future<Unit> approveHrd({
+  Future<Unit> approveHrdTanpaSurat({
     required String nama,
     required String note,
     required SakitList itemSakit,
     required CreateSakit createSakit,
   }) {
-    return _remoteService.approveHrd(
+    return _remoteService.approveHrdTanpaSurat(
         nama: nama, note: note, itemSakit: itemSakit, createSakit: createSakit);
   }
 
-  Future<Unit> unapproveHrd({
+  Future<Unit> approveHrdDenganSurat({
+    required String nama,
+    required String note,
+    required SakitList itemSakit,
+  }) {
+    return _remoteService.approveHrdDenganSurat(
+      nama: nama,
+      note: note,
+      itemSakit: itemSakit,
+    );
+  }
+
+  Future<Unit> unApproveHrdDenganSurat({
     required String nama,
     required SakitList itemSakit,
   }) {
-    return _remoteService.unApproveHrd(nama: nama, itemSakit: itemSakit);
+    return _remoteService.unApproveHrdDenganSurat(
+        nama: nama, itemSakit: itemSakit);
+  }
+
+  Future<Unit> unApproveHrdTanpaSurat({
+    required String nama,
+    required SakitList itemSakit,
+    required CreateSakit createSakit,
+  }) {
+    return _remoteService.unApproveHrdTanpaSurat(
+        nama: nama, itemSakit: itemSakit, createSakit: createSakit);
   }
 
   Future<Unit> unapproveSpv({

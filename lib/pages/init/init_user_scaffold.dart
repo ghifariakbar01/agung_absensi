@@ -91,8 +91,8 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
                       child: Text(
                     'Oops. Something Went Wrong.',
                     style: Themes.customColor(
-                      FontWeight.bold,
                       18,
+                      fontWeight: FontWeight.bold,
                     ),
                   )),
                   SizedBox(
@@ -116,15 +116,15 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
                           title: Text(
                             'Display Error',
                             style: Themes.customColor(
-                              FontWeight.bold,
                               14,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                           subtitle: Text(
                             'Error & Stack Trace',
                             style: Themes.customColor(
-                              FontWeight.bold,
                               14,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                           children: [
@@ -133,7 +133,6 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
                               'Error: $error \n'
                               'StackTrace: $stackTrace \n',
                               style: Themes.customColor(
-                                FontWeight.normal,
                                 12,
                               ),
                             ),

@@ -31,7 +31,6 @@ class PermissionItem extends StatelessWidget {
               Text(
                 '$title',
                 style: Themes.customColor(
-                  FontWeight.normal,
                   14,
                 ),
               ),
@@ -45,7 +44,6 @@ class PermissionItem extends StatelessWidget {
         Text(
           label,
           style: Themes.customColor(
-            FontWeight.normal,
             14,
           ),
         ),

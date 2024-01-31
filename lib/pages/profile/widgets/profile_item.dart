@@ -31,8 +31,8 @@ class ProfileItem extends StatelessWidget {
         Text(
           text,
           style: Themes.customColor(
-            FontWeight.bold,
             15,
+            fontWeight: FontWeight.bold,
           ),
         ),
         SizedBox(

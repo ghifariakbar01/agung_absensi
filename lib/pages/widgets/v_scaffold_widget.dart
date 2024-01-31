@@ -7,7 +7,9 @@ class VScaffoldWidget extends StatelessWidget {
   const VScaffoldWidget(
       {required this.scaffoldTitle,
       required this.scaffoldBody,
-      this.scaffoldFAB});
+      this.scaffoldFAB,
+      this.appbarColor});
+  final Color? appbarColor;
   final String scaffoldTitle;
   final Widget scaffoldBody;
   final Widget? scaffoldFAB;
@@ -17,17 +19,19 @@ class VScaffoldWidget extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           elevation: 0,
-          backgroundColor: Palette.tertiaryColor,
+          backgroundColor: appbarColor ?? Palette.tertiaryColor,
           iconTheme: IconThemeData(color: Colors.white),
           title: Text(
             scaffoldTitle,
-            style: Themes.customColor(FontWeight.bold, 20, color: Colors.white),
+            style: Themes.customColor(20,
+                fontWeight: FontWeight.bold, color: Colors.white),
           ),
           toolbarHeight: 45,
           actions: [
             NetworkWidget(),
           ],
         ),
+        resizeToAvoidBottomInset: false,
         floatingActionButton: scaffoldFAB,
         body: Padding(
             padding: const EdgeInsets.all(10.0),

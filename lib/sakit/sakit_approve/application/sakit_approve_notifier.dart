@@ -29,9 +29,17 @@ class SakitApproveController extends _$SakitApproveController {
   @override
   FutureOr<void> build() {}
 
-  sendWaSpv() {}
+  sendWaSpv() {
+    //
 
-  sendWaHrd() {}
+    //
+  }
+
+  sendWaHrd() {
+    //
+
+    //
+  }
 
   Future<void> approveSpv(
       {required int idSakit,
@@ -57,7 +65,7 @@ class SakitApproveController extends _$SakitApproveController {
             ));
   }
 
-  Future<void> approveHrd({
+  Future<void> approveHrdTanpaSurat({
     required String nama,
     required String note,
     required SakitList itemSakit,
@@ -67,21 +75,62 @@ class SakitApproveController extends _$SakitApproveController {
 
     state = await AsyncValue.guard(() => ref
         .read(sakitApproveRepositoryProvider)
-        .approveHrd(
+        .approveHrdTanpaSurat(
             nama: nama,
             note: note,
             itemSakit: itemSakit,
             createSakit: createSakit));
   }
 
-  Future<void> unapproveHrd({
+  Future<void> approveHrdDenganSurat({
+    required String nama,
+    required String note,
+    required SakitList itemSakit,
+  }) async {
+    state = const AsyncLoading();
+
+    state = await AsyncValue.guard(
+        () => ref.read(sakitApproveRepositoryProvider).approveHrdDenganSurat(
+              nama: nama,
+              note: note,
+              itemSakit: itemSakit,
+            ));
+  }
+
+  Future<void> unApproveHrdDenganSurat({
     required String nama,
     required SakitList itemSakit,
   }) async {
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(
-        () => ref.read(sakitApproveRepositoryProvider).unapproveHrd(
+        () => ref.read(sakitApproveRepositoryProvider).unApproveHrdDenganSurat(
+              itemSakit: itemSakit,
+              nama: nama,
+            ));
+  }
+
+  Future<void> unApproveHrdTanpaSurat({
+    required String nama,
+    required SakitList itemSakit,
+    required CreateSakit createSakit,
+  }) async {
+    state = const AsyncLoading();
+
+    state = await AsyncValue.guard(() => ref
+        .read(sakitApproveRepositoryProvider)
+        .unApproveHrdTanpaSurat(
+            nama: nama, itemSakit: itemSakit, createSakit: createSakit));
+  }
+
+  Future<void> batal({
+    required String nama,
+    required SakitList itemSakit,
+  }) async {
+    state = const AsyncLoading();
+
+    state = await AsyncValue.guard(
+        () => ref.read(sakitApproveRepositoryProvider).batal(
               itemSakit: itemSakit,
               nama: nama,
             ));

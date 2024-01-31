@@ -28,11 +28,11 @@ class RiwayatID extends StatelessWidget {
             children: [
               Text(
                 'ID ABSEN',
-                style: Themes.customColor(FontWeight.bold, 7),
+                style: Themes.customColor(7, fontWeight: FontWeight.bold),
               ),
               Text(
                 idAbsen,
-                style: Themes.customColor(FontWeight.bold, 5),
+                style: Themes.customColor(5, fontWeight: FontWeight.bold),
               ),
             ],
           ),
@@ -42,11 +42,11 @@ class RiwayatID extends StatelessWidget {
             children: [
               Text(
                 'ID USER',
-                style: Themes.customColor(FontWeight.bold, 7),
+                style: Themes.customColor(7, fontWeight: FontWeight.bold),
               ),
               Text(
                 idUser,
-                style: Themes.customColor(FontWeight.bold, 5),
+                style: Themes.customColor(5, fontWeight: FontWeight.bold),
               ),
             ],
           )

@@ -106,8 +106,8 @@ class _SignInFormState extends ConsumerState<SignInForm> {
                 child: Text(
                   value,
                   style: Themes.customColor(
-                    FontWeight.bold,
                     12,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               );
@@ -126,8 +126,8 @@ class _SignInFormState extends ConsumerState<SignInForm> {
                   : 'Masukkan username',
             ),
             style: Themes.customColor(
-              FontWeight.normal,
               14,
+              fontWeight: FontWeight.normal,
             ),
             cursorColor: Palette.primaryColor,
             keyboardType: TextInputType.name,
@@ -164,8 +164,8 @@ class _SignInFormState extends ConsumerState<SignInForm> {
                   )),
             ),
             style: Themes.customColor(
-              FontWeight.normal,
               14,
+              fontWeight: FontWeight.normal,
             ),
             cursorColor: Palette.primaryColor,
             obscureText: !passwordVisible,
@@ -199,7 +199,6 @@ class _SignInFormState extends ConsumerState<SignInForm> {
               Text(
                 'Saya Karyawan dengan Jadwal Shift',
                 style: Themes.customColor(
-                  FontWeight.normal,
                   14,
                 ),
               )

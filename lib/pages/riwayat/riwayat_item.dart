@@ -47,12 +47,14 @@ class RiwayatItem extends ConsumerWidget {
                       children: [
                         Text(
                           'Jam $coancenate',
-                          style: Themes.customColor(FontWeight.bold, 12,
+                          style: Themes.customColor(12,
+                              fontWeight: FontWeight.bold,
                               color: Theme.of(context).unselectedWidgetColor),
                         ),
                         Text(
                           jam,
-                          style: Themes.customColor(FontWeight.bold, 10,
+                          style: Themes.customColor(10,
+                              fontWeight: FontWeight.bold,
                               color: Theme.of(context).unselectedWidgetColor),
                         ),
                       ],
@@ -96,14 +98,16 @@ class RiwayatItem extends ConsumerWidget {
                           flex: 1,
                           child: Text(
                             'Lokasi $coancenate',
-                            style: Themes.customColor(FontWeight.bold, 12,
+                            style: Themes.customColor(12,
+                                fontWeight: FontWeight.bold,
                                 color: Theme.of(context).unselectedWidgetColor),
                           ),
                         ),
                         Expanded(
                           child: AutoSizeText(
                             alamat,
-                            style: Themes.customColor(FontWeight.bold, 10,
+                            style: Themes.customColor(10,
+                                fontWeight: FontWeight.bold,
                                 color: Theme.of(context).unselectedWidgetColor),
                             minFontSize: 5,
                             maxFontSize: 10,

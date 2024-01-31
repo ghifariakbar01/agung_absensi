@@ -32,7 +32,10 @@ class RiwayatDelayed extends ConsumerWidget {
             ),
             Text(
               'Belum absen\n $coancenate',
-              style: Themes.customColor(FontWeight.bold, 7),
+              style: Themes.customColor(
+                7,
+                fontWeight: FontWeight.bold,
+              ),
               textAlign: TextAlign.center,
             ),
           ],

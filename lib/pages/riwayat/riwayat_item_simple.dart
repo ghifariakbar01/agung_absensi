@@ -26,11 +26,11 @@ class RiwayatItemSimple extends StatelessWidget {
         children: [
           Text(
             title,
-            style: Themes.customColor(FontWeight.bold, 7),
+            style: Themes.customColor(7, fontWeight: FontWeight.bold),
           ),
           Text(
             message,
-            style: Themes.customColor(FontWeight.bold, 5),
+            style: Themes.customColor(5, fontWeight: FontWeight.bold),
           ),
         ],
       ),
