@@ -22,7 +22,6 @@ class CreateCutiRepository {
     required int totalHari,
     required int sisaCuti,
     // date time
-    required String tglStart,
     required DateTime tglAwalInDateTime,
     required DateTime tglAkhirInDateTime,
   }) async {
@@ -35,7 +34,6 @@ class CreateCutiRepository {
     //     totalHari: totalHari,
     //     sisaCuti: sisaCuti,
     //     // date time
-    //     tglStart: tglStart,
     //     tglAwalInDateTime: tglAwalInDateTime,
     //     tglAkhirInDateTime: tglAkhirInDateTime);
 

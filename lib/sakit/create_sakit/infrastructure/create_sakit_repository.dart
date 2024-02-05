@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dartz/dartz.dart';
 
 import '../application/create_sakit.dart';
@@ -16,17 +18,18 @@ class CreateSakitRepository {
     required String cUser,
     required String tglEnd,
     required String tglStart,
-    required String jumlahHari,
-  }) {
+    required int jumlahHari,
+    required int hitungLibur,
+  }) async {
     return _remoteService.submitSakit(
-      idUser: idUser,
-      ket: ket,
-      surat: surat,
-      cUser: cUser,
-      tglEnd: tglEnd,
-      tglStart: tglStart,
-      jumlahHari: jumlahHari,
-    );
+        idUser: idUser,
+        ket: ket,
+        surat: surat,
+        cUser: cUser,
+        tglEnd: tglEnd,
+        tglStart: tglStart,
+        jumlahHari: jumlahHari,
+        hitungLibur: hitungLibur);
   }
 
   Future<Unit> updateSakit({

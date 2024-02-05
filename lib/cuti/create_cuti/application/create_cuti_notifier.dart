@@ -66,8 +66,6 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
           .read(createSakitNotifierProvider.notifier)
           .getCreateSakit(user, tglAwal, tglAkhir);
 
-      debugger();
-
       await _processCuti(
         user: user,
         create: create,
@@ -98,125 +96,89 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
     required CreateSakit create,
     required String tglAwal,
     required String tglAkhir,
-    required String keterangan,
     required String jenisCuti,
     required String alasanCuti,
+    required String keterangan,
     required UserModelWithPassword user,
   }) async {
-    // 1. CALC JUMLAH HARI
-    final tglAwalInDateTime = DateTime.parse(tglAwal);
-    final tglAkhirInDateTime = DateTime.parse(tglAkhir);
+    final DateTime tglAwalInDateTime = DateTime.parse(tglAwal);
+    final DateTime tglAkhirInDateTime = DateTime.parse(tglAkhir);
 
+    // 1. Calc jumlah harito substract sundays and saturdays
     final int jumlahhari =
         _getJumlahHari(create, tglAwalInDateTime, tglAkhirInDateTime);
 
-    // VALIDATE DATA MASTER CUTI
-    // await _validateMasterCuti(create: create, jenisCuti: jenisCuti);
+    // Begin VALIDATE DATA MASTER CUTI
+    await _validateMasterCuti(create: create, jenisCuti: jenisCuti);
 
-    // final isSpvOrHrd = ref.read(userNotifierProvider).user.isSpvOrHrd!;
+    final isSpvOrHrd = ref.read(userNotifierProvider).user.isSpvOrHrd!;
 
-    // if (!isSpvOrHrd) {
-    //   await _notHrCondition(
-    //       jumlahhari: jumlahhari,
-    //       tglAwalInDateTime: tglAwalInDateTime,
-    //       tglAkhirInDateTime: tglAkhirInDateTime);
-    // }
+    if (!isSpvOrHrd) {
+      await _notHrCondition(
+          jumlahhari: jumlahhari,
+          tglAwalInDateTime: tglAwalInDateTime,
+          tglAkhirInDateTime: tglAkhirInDateTime);
+    }
 
-    // if ((jenisCuti == 'CE' && alasanCuti.isEmpty) ||
-    //     (jenisCuti == 'CE' && alasanCuti == 'A0')) {
-    //   throw AssertionError('Cuti Emergency wajib memilih alasan!');
-    // }
+    if ((jenisCuti == 'CE' && alasanCuti.isEmpty) ||
+        (jenisCuti == 'CE' && alasanCuti == 'A0')) {
+      throw AssertionError('Cuti Emergency wajib memilih alasan!');
+    }
+    // End VALIDATE DATA MASTER CUTI
 
-    // totalHariCutiBaru MUTATION
+    // totalHariCutiBaru MUTATION, later to be used
     final int totalHariCutiBaru = create.createSakitCuti!.cutiBaru! -
-        (tglAkhirInDateTime.difference(tglAwalInDateTime).inDays -
-            jumlahhari -
-            create.hitungLibur!);
+        (tglAkhirInDateTime.difference(tglAwalInDateTime).inDays - jumlahhari) -
+        create.hitungLibur!;
 
-    // totalHariCutiTidakBaru MUTATION
+    // totalHariCutiTidakBaru MUTATION, later to be used
     final int totalHariCutiTidakBaru = create.createSakitCuti!.cutiTidakBaru! -
-        (tglAkhirInDateTime.difference(tglAwalInDateTime).inDays -
-            jumlahhari -
-            create.hitungLibur!);
-
-    debugger();
+        (tglAkhirInDateTime.difference(tglAwalInDateTime).inDays - jumlahhari) -
+        create.hitungLibur!;
 
     final DateTime openDateJan =
         DateTime(create.createSakitCuti!.openDate!.year, 1, 1);
-    final openDateMax =
+    final DateTime openDateMax =
         DateTime(create.createSakitCuti!.openDate!.year + 1, 6, 30);
+    final createMasukInDateTime = DateTime.parse(create.masuk!);
 
     /* 
       MUTATION VARIABLE 
       final DateTime? dateMasuk;
     */
-    final DateTime? dateMasuk;
-
-    final createMasukInDateTime = DateTime.parse(create.masuk!);
-
-    // 1. Mendapatkan date Masuk untuk dikirim
-    //    ke proses insert
-    //
-
-    //
-    //    jika masuk saat bulan februari
-    if (createMasukInDateTime.month == 2) {
-      // dateMasuk MUTATION
-      dateMasuk = DateTime(
-          createMasukInDateTime.year + 2, createMasukInDateTime.month - 1, 28);
-    }
-
-    //
-    //    jika masuk saat bulan januari
-    else if (createMasukInDateTime.month == 1) {
-      // dateMasuk MUTATION
-      dateMasuk = DateTime(createMasukInDateTime.year + 1, 12, 31);
-    } else {
-      // dateMasuk MUTATION
-      dateMasuk = DateTime(
-          createMasukInDateTime.year + 2, createMasukInDateTime.month - 1, 30);
-    }
-
+    final DateTime? dateMasuk =
+        _returnDateMasuk(createMasukInDateTime: createMasukInDateTime);
     final Duration tglAwaltglMasukDiff =
-        tglAwalInDateTime.difference(dateMasuk);
+        tglAwalInDateTime.difference(dateMasuk!);
 
     /* 
       MUTATION VARIABLE 
       final String? tahunCuti;
     */
-    final String? tahunCuti;
-
-    // 2. Mendapatkan tahun Cuti untuk dikirim
-    //    ke proses insert
-    //
-    if (create.createSakitCuti!.cutiBaru == 0 ||
-        create.createSakitCuti!.cutiBaru! > 0 &&
-            !tglAwaltglMasukDiff.isNegative) {
-      // tahunCuti MUTATION
-      tahunCuti = create.createSakitCuti!.tahunCutiTidakBaru!;
-    } else {
-      // tahunCuti MUTATION
-      tahunCuti = create.createSakitCuti!.tahunCutiBaru!;
-    }
+    final String? tahunCuti = _returnTahunCuti(
+      create: create,
+      tglAwaltglMasukDiff: tglAwaltglMasukDiff.inDays,
+    );
 
     // 3. Menghitung Saldo Cuti
     //    dan menghasilkan error jika habis
     //
-    final _tahunCutiTidakSamaDenganTahunMasuk =
-        tglAkhirInDateTime.year != createMasukInDateTime.year;
-    final _tahunCutiTidakSamaDenganTahunMasukPlusOneYear =
-        tglAkhirInDateTime.year != createMasukInDateTime.year + 1;
+    final sayaCutiDiTahunMasuk =
+        tglAkhirInDateTime.year == createMasukInDateTime.year;
+    final _sayaCutiDiTahunMasukBerikutnya =
+        tglAkhirInDateTime.year == createMasukInDateTime.year + 1;
 
-    bool validateTahunCuti = (_tahunCutiTidakSamaDenganTahunMasuk ||
-        _tahunCutiTidakSamaDenganTahunMasukPlusOneYear);
+    bool sayaMasihDataCutiBaru = create.createSakitCuti!.cutiTidakBaru! > 0;
+    bool validateTahunCuti =
+        (!sayaCutiDiTahunMasuk || !_sayaCutiDiTahunMasukBerikutnya);
     bool jenisCutiEmergencyOrTahunan = jenisCuti == 'CE' || jenisCuti == 'CT';
-    Duration tglMasukOpenDateJanDiff =
-        createMasukInDateTime.difference(openDateJan);
+    bool tglCutiLebihKecilDariOpenDate =
+        createMasukInDateTime.difference(openDateJan).isNegative;
 
-    if (create.createSakitCuti!.cutiTidakBaru! > 0 &&
+    if (sayaMasihDataCutiBaru &&
         validateTahunCuti &&
         jenisCutiEmergencyOrTahunan &&
-        tglMasukOpenDateJanDiff.isNegative) {
+        tglCutiLebihKecilDariOpenDate) {
       debugger();
       throw AssertionError(
           "Saldo Cuti ${create.createSakitCuti!.closeDate!.year} Habis! Belum Masuk Periode Cuti ${create.createSakitCuti!.tahunCutiTidakBaru} ");
@@ -241,11 +203,9 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
     final createSakitCuti = create.createSakitCuti;
 
     final bool saldoCutiTidakCukup = totalHariCutiBaru < 0;
-    final bool tahunCutiSamaDenganTahunMasuk =
-        tglAkhirInDateTime.year == createMasukInDateTime.year;
 
-    if (tglAkhirInDateTime.year == createMasukInDateTime.year) {
-      if (saldoCutiTidakCukup && tahunCutiSamaDenganTahunMasuk) {
+    if (sayaCutiDiTahunMasuk) {
+      if (saldoCutiTidakCukup) {
         throw AssertionError(
             'Sisa Saldo Cuti Tidak Cukup! Saldo Cuti Anda Tersisa ${createSakitCuti!.cutiBaru} untuk periode ${createSakitCuti.tahunCutiTidakBaru}');
       }
@@ -276,8 +236,6 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
                                   create.hitungLibur!;
     */
 
-    final tglAwaltglOpenDateMaxDiff = tglAwalInDateTime.difference(openDateMax);
-
     final bool saldoCutiTidakBaruTidakCukup = totalHariCutiTidakBaru < 0;
 
     if (tglAkhirInDateTime.year == createMasukInDateTime.year &&
@@ -290,31 +248,28 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
 
     // untuk mereset cuti tidak baru jika tgl_start melebihi tanggal date max
     if (createSakitCuti.cutiTidakBaru! > 0 &&
-        !tglAwaltglOpenDateMaxDiff.isNegative) {
+        !tglAwalInDateTime.difference(openDateMax).isNegative) {
       // BELOM UPDATE QUERY
 
       throw AssertionError(
           "Saldo Periode ${create.createSakitCuti!.closeDate!.year} Tersisa ${createSakitCuti.cutiTidakBaru} Dan Telah Expired! Silahkan Refresh Page dan Input Kembali");
     }
 
-    // cek mutation
-    debugger();
-
     // final String messageContent =
     //     " ( Testing Apps ) Terdapat Waiting Approve Pengajuan Izin Sakit Baru Telah Diinput Oleh : ${user.nama} ";
     // await _sendWaToHead(idUser: user.idUser!, messageContent: messageContent);
 
-    // get totalHari from previously mutated variable
+    // get totalHari from
     // totalHariCutiBaru, totalHariCutiTidakBaru
     // in _processCuti() function
-    final int totalHari = _getTotalHari(
+    final int totalHari = _returnTotalHari(
+      tglAkhirInDateTime: tglAkhirInDateTime,
       totalHariCutiBaru: totalHariCutiBaru,
       totalHariCutiTidakBaru: totalHariCutiTidakBaru,
-      tglAkhirInDateTime: tglAkhirInDateTime,
       createMasukInDateTime: DateTime.parse(create.masuk!),
     );
 
-    // get sisaCuti from previously mutated variabled
+    // get sisaCuti from
     // dateMasuk
     // in _processCuti() function
     final int? sisaCuti = create.createSakitCuti!.cutiBaru == 0 ||
@@ -325,23 +280,21 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
 
     debugger();
 
-    final repo = ref.read(createCutiRepositoryProvider);
-
-    state = await AsyncValue.guard(() => repo.submitCuti(
-          // mutated variables
-          totalHari: totalHari,
-          tahunCuti: tahunCuti!,
-          sisaCuti: sisaCuti!,
-          // raw variables
-          ket: keterangan,
-          alasan: alasanCuti,
-          jenisCuti: jenisCuti,
-          idUser: user.idUser!,
-          // date time
-          tglStart: tglAwal,
-          tglAwalInDateTime: tglAwalInDateTime,
-          tglAkhirInDateTime: tglAkhirInDateTime,
-        ));
+    state = await AsyncValue.guard(
+        () => ref.read(createCutiRepositoryProvider).submitCuti(
+              // mutated variables
+              totalHari: totalHari,
+              tahunCuti: tahunCuti!,
+              sisaCuti: sisaCuti!,
+              // raw variables
+              ket: keterangan,
+              alasan: alasanCuti,
+              jenisCuti: jenisCuti,
+              idUser: user.idUser!,
+              // date time
+              tglAwalInDateTime: tglAwalInDateTime,
+              tglAkhirInDateTime: tglAkhirInDateTime,
+            ));
   }
 
   Future<void> _validateMasterCuti({
@@ -355,17 +308,15 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
     }
 
     //
-    // 2. CALC JUMLAH HARI LIBUR
-    if (create.hitungLibur == 0) {
-      throw AssertionError(
-          "Master Data Cuti Anda Belum Ada! Silahkan Hubungi HR");
-    }
+    // if (create == ) {
+    //   throw AssertionError(
+    //       "Master Data Cuti Anda Belum Ada! Silahkan Hubungi HR");
+    // }
 
     final isCutiEmergencyOrTahunan = jenisCuti == 'CE' || jenisCuti == 'CT';
 
     // 3. CALC JUMLAH MASA KERJA, JIKA KURANG DARI 12 BULAN
-    if (DateTime.parse('${create.masuk}').difference(DateTime.now()).inDays <
-            365 &&
+    if (DateTime.now().difference(DateTime.parse(create.masuk!)).inDays < 365 &&
         isCutiEmergencyOrTahunan) {
       throw AssertionError(
           "Anda Belum Mendapat Hak Cuti, Masa Kerja Belum Setahun!");
@@ -380,7 +331,7 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
     required DateTime tglAwalInDateTime,
     required DateTime tglAkhirInDateTime,
   }) async {
-    if (!tglAwalInDateTime.difference(tglAkhirInDateTime).isNegative) {
+    if (!tglAkhirInDateTime.difference(tglAwalInDateTime).isNegative) {
       throw AssertionError(
           'Tanggal Awal Tidak Boleh Lebih Besar Dari Tanggal Akhir');
     }
@@ -431,7 +382,7 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
     return nbDays;
   }
 
-  int _getTotalHari({
+  int _returnTotalHari({
     required DateTime createMasukInDateTime,
     required DateTime tglAkhirInDateTime,
     required int totalHariCutiBaru,
@@ -439,13 +390,50 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
   }) {
     if (tglAkhirInDateTime.year == createMasukInDateTime.year &&
         tglAkhirInDateTime.year == createMasukInDateTime.year + 1) {
-      debugger();
-
       return totalHariCutiTidakBaru;
     } else {
-      debugger();
-
       return totalHariCutiBaru;
+    }
+  }
+
+  DateTime _returnDateMasuk({required DateTime createMasukInDateTime}) {
+    // 1. Mendapatkan date Masuk untuk dikirim
+    //    ke proses insert
+    //
+
+    //
+    //    jika masuk saat bulan februari
+    if (createMasukInDateTime.month == 2) {
+      // dateMasuk MUTATION
+      return DateTime(
+          createMasukInDateTime.year + 2, createMasukInDateTime.month - 1, 28);
+    }
+
+    //
+    //    jika masuk saat bulan januari
+    else if (createMasukInDateTime.month == 1) {
+      // dateMasuk MUTATION
+      return DateTime(createMasukInDateTime.year + 1, 12, 31);
+    } else {
+      // dateMasuk MUTATION
+      return DateTime(
+          createMasukInDateTime.year + 2, createMasukInDateTime.month - 1, 30);
+    }
+  }
+
+  String _returnTahunCuti(
+      {required CreateSakit create, required int tglAwaltglMasukDiff}) {
+    // 2. Mendapatkan tahun Cuti untuk dikirim
+    //    ke proses insert
+    //
+    if (create.createSakitCuti!.cutiBaru == 0 ||
+        create.createSakitCuti!.cutiBaru! > 0 &&
+            !tglAwaltglMasukDiff.isNegative) {
+      // tahunCuti MUTATION
+      return create.createSakitCuti!.tahunCutiTidakBaru!;
+    } else {
+      // tahunCuti MUTATION
+      return create.createSakitCuti!.tahunCutiBaru!;
     }
   }
 }

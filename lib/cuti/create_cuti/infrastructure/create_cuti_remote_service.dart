@@ -33,7 +33,6 @@ class CreateCutiRemoteService {
     required int totalHari,
     required int sisaCuti,
     // date time
-    required String tglStart,
     required DateTime tglAwalInDateTime,
     required DateTime tglAkhirInDateTime,
   }) async {
@@ -49,14 +48,14 @@ class CreateCutiRemoteService {
             "'$jenisCuti', "
             "'$alasan', "
             "'$ket', "
-            "(DATENAME (MONTH,'$tglStart')), "
+            "(DATENAME (MONTH,'${tglAwalInDateTime.toString()}')), "
             "'$tahunCuti', "
             "'${jenisCuti != "CR" ? "$totalHari , " : "14, "}', "
             "'${jenisCuti != "CR" ? "$sisaCuti" : " 0 ,"}"
             " ${jenisCuti != "CR" ? "${StringUtils.midnightDate(tglAkhirInDateTime)}" : "${StringUtils.midnightDate(tglAwalInDateTime.add(Duration(days: 13)))}"}"
             " ${jenisCuti != "CR" ? "${StringUtils.midnightDate(tglAkhirInDateTime)}" : "${StringUtils.midnightDate(tglAwalInDateTime.add(Duration(days: 13)))}"}"
-            "'$tglStart', "
-            "'$tglStart', "
+            "'${StringUtils.midnightDate(tglAwalInDateTime)}', "
+            "'${StringUtils.midnightDate(tglAwalInDateTime)}', "
             " getdate(), "
             "'0', "
             " getdate(), "

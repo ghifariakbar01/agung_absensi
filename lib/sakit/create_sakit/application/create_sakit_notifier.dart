@@ -82,10 +82,14 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
     final repo = ref.read(createSakitRepositoryProvider);
     final user = ref.read(userNotifierProvider).user;
 
-    int jumlahhari = 0;
-
     try {
       final CreateSakit create = await getCreateSakit(user, tglAwal, tglAkhir);
+
+      final DateTime tglAwalInDateTime = DateTime.parse(tglAwal);
+      final DateTime tglAkhirInDateTime = DateTime.parse(tglAkhir);
+
+      final int jumlahhari =
+          _calcDiff(create, tglAwalInDateTime, tglAkhirInDateTime);
 
       await _processSakit(
           create: create,
@@ -96,10 +100,10 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
           jumlahhari: jumlahhari,
           suratDokter: suratDokter);
 
-      final String messageContent =
-          " ( Testing Apps ) Terdapat Waiting Approve Pengajuan Izin Sakit Baru Telah Diinput Oleh : ${user.nama} ";
+      // final String messageContent =
+      //     " ( Testing Apps ) Terdapat Waiting Approve Pengajuan Izin Sakit Baru Telah Diinput Oleh : ${user.nama} ";
 
-      await _sendWaToHead(idUser: user.idUser!, messageContent: messageContent);
+      // await _sendWaToHead(idUser: user.idUser!, messageContent: messageContent);
 
       state = await AsyncValue.guard(() => repo.submitSakit(
           idUser: user.idUser!,
@@ -108,7 +112,8 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
           cUser: user.nama!,
           tglEnd: tglAkhir,
           tglStart: tglAwal,
-          jumlahHari: jumlahhari.toString()));
+          jumlahHari: jumlahhari,
+          hitungLibur: create.hitungLibur!));
     } catch (e) {
       state = const AsyncValue.data('');
       await onError('Error $e');
@@ -131,10 +136,14 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
     final repo = ref.read(createSakitRepositoryProvider);
     final user = ref.read(userNotifierProvider).user;
 
-    int jumlahhari = 0;
-
     try {
       final CreateSakit create = await getCreateSakit(user, tglAwal, tglAkhir);
+
+      final DateTime tglAwalInDateTime = DateTime.parse(tglAwal);
+      final DateTime tglAkhirInDateTime = DateTime.parse(tglAkhir);
+
+      final int jumlahhari =
+          _calcDiff(create, tglAwalInDateTime, tglAkhirInDateTime);
 
       await _processSakit(
           create: create,
@@ -154,7 +163,7 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
           tglStart: tglAwal,
           surat: suratDokter,
           jumlahHari: jumlahhari,
-          hitungLibur: create.hitungLibur ?? 0));
+          hitungLibur: create.hitungLibur!));
     } catch (e) {
       state = const AsyncValue.data('');
       await onError('Error $e');
@@ -180,12 +189,8 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
   }) async {
     // 1. CALC JUMLAH HARI
 
-    final tglAwalInDateTime = DateTime.parse(tglAwal);
-    final tglAkhirInDateTime = DateTime.parse(tglAkhir);
-
-    // jumlahhari MUTATION
-    jumlahhari =
-        _calcDiff(create, jumlahhari, tglAwalInDateTime, tglAkhirInDateTime);
+    final DateTime tglAwalInDateTime = DateTime.parse(tglAwal);
+    final DateTime tglAkhirInDateTime = DateTime.parse(tglAkhir);
 
     // JIKA TS
     if (suratDokter == 'TS') {
@@ -260,28 +265,26 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
     }
 
     final cutiBaru = create.createSakitCuti!.cutiBaru!;
-    final startEndPlusOneDiffInDays = tglAwalInDateTime
-        .difference(tglAkhirInDateTime.add(Duration(days: 1)))
+    final endStartPlusOneDiffInDays = tglAkhirInDateTime
+        .difference(tglAwalInDateTime.add(Duration(days: 1)))
         .inDays;
+    final totalHariCutiBaru = cutiBaru -
+        (endStartPlusOneDiffInDays - jumlahhari) -
+        create.hitungLibur!;
 
     if (cutiBaru > 0 && suratDokter == 'TS') {
-      if (cutiBaru -
-              startEndPlusOneDiffInDays -
-              jumlahhari -
-              create.hitungLibur! <
-          0) {
+      if (totalHariCutiBaru < 0) {
         throw AssertionError("Sisa Saldo Cuti Tidak Cukup! " +
             " Saldo Cuti Anda Tersisa $cutiBaru  Untuk Periode ${create.createSakitCuti!.tahunCutiBaru} ");
       }
     }
 
     final cutiTidakBaru = create.createSakitCuti!.cutiTidakBaru!;
+    final totalHariCutiTidakBaru = cutiTidakBaru -
+        (endStartPlusOneDiffInDays - jumlahhari) -
+        create.hitungLibur!;
 
-    if (cutiTidakBaru -
-            startEndPlusOneDiffInDays -
-            jumlahhari -
-            create.hitungLibur! <
-        0) {
+    if (totalHariCutiTidakBaru < 0) {
       throw AssertionError("Sisa Saldo Cuti Tidak Cukup! " +
           " Saldo Cuti Anda Tersisa $cutiTidakBaru  Untuk Periode ${create.createSakitCuti!.tahunCutiTidakBaru} ");
     }
@@ -292,29 +295,28 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
   ) async {
     //
     // 2. CALC JUMLAH HARI LIBUR
-    if (create.hitungLibur == 0) {
-      throw AssertionError(
-          "Master Data Cuti Anda Belum Ada! Silahkan Hubungi HR");
-    }
+    // if (create.hitungLibur == 0) {
+    //   throw AssertionError(
+    //       "Master Data Cuti Anda Belum Ada! Silahkan Hubungi HR");
+    // }
     //
     // 3. CALC JUMLAH MASA KERJA, JIKA KURANG DARI 12 BULAN
-    if (DateTime.parse('${create.masuk}').difference(DateTime.now()).inDays <
-        365) {
+    if (DateTime.now().difference(DateTime.parse(create.masuk!)).inDays < 365) {
       throw AssertionError(
           "Anda Belum Mendapat Hak Cuti, Masa Kerja Belum Setahun!");
     }
   }
 }
 
-int _calcDiff(CreateSakit create, int jumlahhari, DateTime tglAwalInDateTime,
+int _calcDiff(CreateSakit create, DateTime tglAwalInDateTime,
     DateTime tglAkhirInDateTime) {
   if (create.jadwalSabtu!.isNotEmpty && create.bulanan == false) {
     return calcDiffSaturdaySunday(tglAwalInDateTime, tglAkhirInDateTime);
   } else if (create.jadwalSabtu!.isEmpty || create.bulanan == true) {
     return calcDiffSunday(tglAwalInDateTime, tglAkhirInDateTime);
+  } else {
+    return 0;
   }
-
-  return 0;
 }
 
 int calcDiffSaturdaySunday(DateTime startDate, DateTime endDate) {

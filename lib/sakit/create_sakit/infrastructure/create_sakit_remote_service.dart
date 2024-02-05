@@ -30,7 +30,8 @@ class CreateSakitRemoteService {
     required String cUser,
     required String tglEnd,
     required String tglStart,
-    required String jumlahHari,
+    required int jumlahHari,
+    required int hitungLibur,
   }) async {
     try {
       final Map<String, String> submitSakit = {
@@ -43,7 +44,7 @@ class CreateSakitRemoteService {
             "'$tglStart', "
             "'$tglEnd', "
             "'$surat', "
-            "(datediff(day,'$tglStart', '$tglEnd') + 1) - $jumlahHari, "
+            "((datediff(day,'$tglStart', '$tglEnd') + 1) - $jumlahHari) - $hitungLibur, "
             "(DATENAME(MONTH,'$tglStart')), "
             "'0', "
             "'', "
@@ -66,6 +67,7 @@ class CreateSakitRemoteService {
 
       log('data ${jsonEncode(data)}');
       log('response $response');
+      debugger();
       final items = response.data?[0];
 
       if (items['status'] == 'Success') {
@@ -165,7 +167,7 @@ class CreateSakitRemoteService {
             " id_user = $idUser,  "
             " ket = '$ket',  "
             " surat = '$surat',  "
-            " tot_hari = (datediff(day,'$tglStart', '$tglEnd') + 1) - $jumlahHari - $hitungLibur,  "
+            " tot_hari = ((datediff(day,'$tglStart', '$tglEnd') + 1) - $jumlahHari) - $hitungLibur,  "
             " periode = (DATENAME(MONTH,'$tglStart')),  "
             " tgl_start = '$tglStart',  "
             " tgl_end = '$tglEnd',  "

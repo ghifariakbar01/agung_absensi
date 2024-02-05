@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:face_net_authentication/infrastructure/dio_extensions.dart';
 import 'package:face_net_authentication/pages/widgets/async_value_ui.dart';
 import 'package:face_net_authentication/pages/widgets/v_button.dart';
 
