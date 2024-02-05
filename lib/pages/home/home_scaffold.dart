@@ -39,7 +39,8 @@ final List<Item> attendance = [
 ];
 
 final List<Item> leaveRequest = [
-  Item('Form Sakit', Assets.iconSakit, RouteNames.sakitListNameRoute)
+  Item('Form Cuti', Assets.iconCuti, RouteNames.cutiListNameRoute),
+  Item('Form Sakit', Assets.iconSakit, RouteNames.sakitListNameRoute),
 ];
 
 class HomeScaffold extends ConsumerWidget {
@@ -264,7 +265,7 @@ class HomeScaffold extends ConsumerWidget {
                             child: ListView.separated(
                               scrollDirection: Axis.horizontal,
                               separatorBuilder: (context, index) => SizedBox(
-                                width: 8,
+                                width: 16,
                               ),
                               itemBuilder: (context, index) =>
                                   HomeItem(item: attendance[index]),
@@ -292,7 +293,7 @@ class HomeScaffold extends ConsumerWidget {
                             child: ListView.separated(
                               scrollDirection: Axis.horizontal,
                               separatorBuilder: (context, index) => SizedBox(
-                                width: 8,
+                                width: 16,
                               ),
                               itemBuilder: (context, index) =>
                                   HomeItem(item: leaveRequest[index]),

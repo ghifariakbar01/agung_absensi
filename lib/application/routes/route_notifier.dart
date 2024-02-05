@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:face_net_authentication/sakit/create_sakit/presentation/edit_sakit_page.dart';
 import 'package:face_net_authentication/sakit/sakit_dtl/presentation/sakit_dtl_page.dart';
 import 'package:face_net_authentication/sakit/sakit_dtl/presentation/sakit_dtl_photo_page.dart';
@@ -9,6 +7,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // import '../../../pages/change_pass/change_password_page.dart';
 
+import '../../cuti/create_cuti/presentation/create_cuti_page.dart';
+import '../../cuti/cuti_list/presentation/cuti_list_page.dart';
 import '../../pages/absen/absen_page.dart';
 import '../../pages/background/background_page.dart';
 import '../../pages/copyright/copyright_page.dart';
@@ -228,6 +228,17 @@ class RouterNotifier extends ChangeNotifier {
                   final imageUrl = state.extra as String;
                   return SakitDtlPhotoPage(imageUrl: imageUrl);
                 }),
+
+            GoRoute(
+              name: RouteNames.cutiListNameRoute,
+              path: RouteNames.cutiListRoute,
+              builder: (context, state) => CutiListPage(),
+            ),
+            GoRoute(
+              name: RouteNames.createCutiNameRoute,
+              path: RouteNames.createCutiRoute,
+              builder: (context, state) => CreateCutiPage(),
+            ),
 
             // GoRoute(
             //   name: RouteNames.changePassNameRoute,

@@ -11,7 +11,9 @@ class SakitListRepository {
     return _remoteService.getSakitList(page: page);
   }
 
-  Future<List<SakitList>> getSakitListLimitedAccess({required int page}) {
-    return _remoteService.getSakitListLimitedAccess(page: page);
+  Future<List<SakitList>> getSakitListLimitedAccess(
+      {required int page, required int idUserHead}) {
+    return _remoteService.getSakitListLimitedAccess(
+        page: page, idUserHead: idUserHead);
   }
 }

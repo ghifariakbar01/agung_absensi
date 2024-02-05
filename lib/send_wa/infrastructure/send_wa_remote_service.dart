@@ -33,7 +33,11 @@ class SendWaRemoteService {
       return '62$phoneString'.replaceAll(' ', '');
     }
 
-    return phoneString.replaceAll(' ', '');
+    if (phoneString.startsWith('08')) {
+      return '$phoneString'.replaceAll('08', '62').replaceAll(' ', '');
+    }
+
+    throw AssertionError('Phone number not formatted properly : $phoneString');
   }
 
   Future<Unit> sendWa(

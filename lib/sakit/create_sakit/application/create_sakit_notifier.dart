@@ -149,10 +149,10 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
           id: id,
           idUser: user.idUser!,
           ket: keterangan,
-          surat: suratDokter,
           cUser: user.nama!,
           tglEnd: tglAkhir,
           tglStart: tglAwal,
+          surat: suratDokter,
           jumlahHari: jumlahhari,
           hitungLibur: create.hitungLibur ?? 0));
     } catch (e) {
@@ -184,7 +184,8 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
     final tglAkhirInDateTime = DateTime.parse(tglAkhir);
 
     // jumlahhari MUTATION
-    _calcDiff(create, jumlahhari, tglAwalInDateTime, tglAkhirInDateTime);
+    jumlahhari =
+        _calcDiff(create, jumlahhari, tglAwalInDateTime, tglAkhirInDateTime);
 
     // JIKA TS
     if (suratDokter == 'TS') {
@@ -305,13 +306,15 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
   }
 }
 
-void _calcDiff(CreateSakit create, int jumlahhari, DateTime tglAwalInDateTime,
+int _calcDiff(CreateSakit create, int jumlahhari, DateTime tglAwalInDateTime,
     DateTime tglAkhirInDateTime) {
   if (create.jadwalSabtu!.isNotEmpty && create.bulanan == false) {
-    jumlahhari = calcDiffSaturdaySunday(tglAwalInDateTime, tglAkhirInDateTime);
+    return calcDiffSaturdaySunday(tglAwalInDateTime, tglAkhirInDateTime);
   } else if (create.jadwalSabtu!.isEmpty || create.bulanan == true) {
-    jumlahhari = calcDiffSunday(tglAwalInDateTime, tglAkhirInDateTime);
+    return calcDiffSunday(tglAwalInDateTime, tglAkhirInDateTime);
   }
+
+  return 0;
 }
 
 int calcDiffSaturdaySunday(DateTime startDate, DateTime endDate) {

@@ -4,10 +4,10 @@ import 'package:dio/dio.dart';
 import 'package:face_net_authentication/infrastructure/dio_extensions.dart';
 
 import '../../../infrastructure/exceptions.dart';
-import '../application/sakit_list.dart';
+import '../application/cuti_list.dart';
 
-class SakitListRemoteService {
-  SakitListRemoteService(
+class CutiListRemoteService {
+  CutiListRemoteService(
     this._dio,
     this._dioRequest,
   );
@@ -15,32 +15,36 @@ class SakitListRemoteService {
   final Dio _dio;
   final Map<String, String> _dioRequest;
 
-  static const String dbName = 'hr_trs_sakit';
+  static const String dbName = 'hr_trs_cuti_new';
   static const String dbDetail = 'hr_sakit_dtl';
   //
   static const String dbMstUser = 'mst_user';
   static const String dbMstUserHead = 'mst_user_head';
+  //
+  static const String dbKaryawan = 'karyawan';
+  static const String dbMstDept = 'mst_dept';
 
-  Future<List<SakitList>> getSakitList({required int page}) async {
+  Future<List<CutiList>> getCutiList({required int page}) async {
     try {
       // debugger();
       final data = _dioRequest;
 
       final Map<String, String> select = {
         'command': //
-            " SELECT " +
-                " $dbName.*, " +
-                " $dbMstUser.payroll, " +
-                " $dbMstUser.id_dept, " +
-                " (SELECT nama from mst_dept WHERE id_dept = $dbMstUser.id_dept) AS dept, " +
-                " (SELECT COUNT(id_sakit) FROM $dbDetail WHERE id_sakit = $dbName.id_sakit ) AS qty_foto "
-                    " FROM " +
-                " $dbName " +
-                " JOIN " +
-                " $dbMstUser ON $dbName.id_user = $dbMstUser.id_user " +
-                " ORDER BY " +
-                " $dbName.c_date DESC " +
-                " OFFSET " +
+            " SELECT "
+                " $dbName.*, "
+                " (SELECT no_telp1 FROM $dbMstUser WHERE id_user = $dbName.id_user) AS no_telp1, "
+                " (SELECT no_telp2 FROM $dbMstUser WHERE id_user = $dbName.id_user) AS no_telp2, "
+                " (SELECT fullname FROM $dbMstUser WHERE id_user = $dbName.id_user) AS fullname, "
+                " (SELECT pt FROM $dbKaryawan WHERE IdKary = $dbName.IdKary) AS pt, "
+                " (SELECT nama FROM $dbMstDept WHERE id_dept = (SELECT id_dept FROM $dbMstUser WHERE id_user = $dbName.id_user)) AS dept "
+                " FROM "
+                " $dbName "
+                " WHERE "
+                " id_cuti IS NOT NULL "
+                " ORDER BY "
+                " c_date DESC "
+                " OFFSET "
                 " $page * 20 ROWS FETCH FIRST 20 ROWS ONLY ",
         'mode': 'SELECT'
       };
@@ -64,7 +68,7 @@ class SakitListRemoteService {
 
           if (list.isNotEmpty) {
             return list
-                .map((e) => SakitList.fromJson(e as Map<String, dynamic>))
+                .map((e) => CutiList.fromJson(e as Map<String, dynamic>))
                 .toList();
           } else {
             final message = items['error'] as String?;
@@ -98,7 +102,7 @@ class SakitListRemoteService {
     }
   }
 
-  Future<List<SakitList>> getSakitListLimitedAccess(
+  Future<List<CutiList>> getCutiListLimitedAccess(
       {required int page, required int idUserHead}) async {
     try {
       // debugger();
@@ -106,22 +110,28 @@ class SakitListRemoteService {
 
       final Map<String, String> select = {
         'command': //
-            " SELECT " +
-                " $dbName.*, " +
-                " $dbMstUser.payroll, " +
-                " $dbMstUser.id_dept, " +
-                " (SELECT nama from mst_dept WHERE id_dept = $dbMstUser.id_dept) AS dept, " +
-                " (SELECT COUNT(id_sakit) FROM $dbDetail WHERE id_sakit = $dbName.id_sakit ) AS qty_foto "
-                    " FROM " +
-                " $dbName " +
-                " JOIN " +
-                " $dbMstUser ON $dbName.id_user = $dbMstUser.id_user " +
-                " WHERE $dbName.id_user IN (SELECT id_user FROM $dbMstUserHead WHERE id_user_head = $idUserHead) " +
-                " OR $dbName.id_user = 1 " +
-                " ORDER BY " +
-                " $dbName.c_date DESC " +
-                " OFFSET " +
-                " $page * 20 ROWS FETCH FIRST 20 ROWS ONLY ",
+            " SELECT "
+                "          $dbName.*, "
+                "          $dbMstUser.no_telp1, "
+                "          $dbMstUser.no_telp2, "
+                "          $dbMstUser.fullname, "
+                "          $dbKaryawan.pt, "
+                "          $dbMstDept.nama AS dept "
+                "      FROM "
+                "          $dbName "
+                "      JOIN "
+                "           $dbMstUser ON $dbName.id_user = $dbMstUser.id_user "
+                "      JOIN "
+                "          $dbKaryawan ON $dbName.IdKary = $dbKaryawan.IdKary "
+                "      JOIN "
+                "          $dbMstDept ON $dbMstUser.id_dept = $dbMstDept.id_dept "
+                "      WHERE "
+                "          ($dbName.id_user IN (SELECT id_user FROM mst_user_head WHERE id_user_head = $idUserHead) OR $dbName.id_user = 1) "
+                "          AND $dbName.id_cuti IS NOT NULL "
+                "      ORDER BY "
+                "          $dbName.c_date DESC "
+                "      OFFSET "
+                "          $page * 20 ROWS FETCH FIRST 20 ROWS ONLY ",
         'mode': 'SELECT'
       };
 
@@ -144,7 +154,7 @@ class SakitListRemoteService {
 
           if (list.isNotEmpty) {
             return list
-                .map((e) => SakitList.fromJson(e as Map<String, dynamic>))
+                .map((e) => CutiList.fromJson(e as Map<String, dynamic>))
                 .toList();
           } else {
             final message = items['error'] as String?;

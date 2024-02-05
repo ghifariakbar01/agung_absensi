@@ -70,4 +70,10 @@ class RouteNames {
 
   static const sakitPhotoDtlNameRoute = 'sakitPhotoDtl';
   static const sakitPhotoDtlRoute = 'sakitPhotoDtl';
+
+  static const cutiListNameRoute = 'cutiList';
+  static const cutiListRoute = 'cutiList';
+
+  static const createCutiNameRoute = 'createCuti';
+  static const createCutiRoute = 'createCuti';
 }

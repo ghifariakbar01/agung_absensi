@@ -1,6 +1,8 @@
+import 'package:face_net_authentication/wa_head_helper/application/wa_head_helper_notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../shared/providers.dart';
+import '../../../wa_head_helper/application/wa_head.dart';
 import '../infrastructure/sakit_list_remote_service.dart';
 import '../infrastructure/sakit_list_repository.dart';
 import 'sakit_list.dart';
@@ -50,13 +52,19 @@ class SakitListController extends _$SakitListController {
     });
   }
 
-  Future<List<SakitList>> _determineAndGetSakitListOn({required int page}) {
+  Future<List<SakitList>> _determineAndGetSakitListOn(
+      {required int page}) async {
     if (isHrdOrSpv()) {
       return ref.read(sakitListRepositoryProvider).getSakitList(page: page);
     } else {
-      return ref
-          .read(sakitListRepositoryProvider)
-          .getSakitListLimitedAccess(page: page);
+      final idUser = ref.read(userNotifierProvider).user.idUser;
+
+      final List<WaHead> waHeads = await ref
+          .read(waHeadHelperNotifierProvider.notifier)
+          .getWaHeads(idUser: idUser!);
+
+      return ref.read(sakitListRepositoryProvider).getSakitListLimitedAccess(
+          page: page, idUserHead: waHeads.first.idUserHead!);
     }
   }
 
