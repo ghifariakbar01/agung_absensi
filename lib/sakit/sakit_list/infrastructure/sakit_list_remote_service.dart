@@ -67,10 +67,7 @@ class SakitListRemoteService {
                 .map((e) => SakitList.fromJson(e as Map<String, dynamic>))
                 .toList();
           } else {
-            final message = items['error'] as String?;
-            final errorCode = items['errornum'] as int;
-
-            throw RestApiExceptionWithMessage(errorCode, message);
+            return [];
           }
         } else {
           final message = items['error'] as String?;
@@ -147,10 +144,7 @@ class SakitListRemoteService {
                 .map((e) => SakitList.fromJson(e as Map<String, dynamic>))
                 .toList();
           } else {
-            final message = items['error'] as String?;
-            final errorCode = items['errornum'] as int;
-
-            throw RestApiExceptionWithMessage(errorCode, message);
+            return [];
           }
         } else {
           final message = items['error'] as String?;

@@ -326,8 +326,8 @@ int calcDiffSaturdaySunday(DateTime startDate, DateTime endDate) {
   while (currentDay.isBefore(endDate)) {
     currentDay = currentDay.add(Duration(days: 1));
 
-    if (currentDay.weekday != DateTime.saturday &&
-        currentDay.weekday != DateTime.sunday) {
+    if (currentDay.weekday == DateTime.saturday &&
+        currentDay.weekday == DateTime.sunday) {
       nbDays += 1;
     }
   }
@@ -341,7 +341,7 @@ int calcDiffSunday(DateTime startDate, DateTime endDate) {
   while (currentDay.isBefore(endDate)) {
     currentDay = currentDay.add(Duration(days: 1));
 
-    if (currentDay.weekday != DateTime.saturday) {
+    if (currentDay.weekday == DateTime.saturday) {
       nbDays += 1;
     }
   }

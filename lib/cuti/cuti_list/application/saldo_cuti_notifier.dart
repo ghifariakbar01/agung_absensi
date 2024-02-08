@@ -25,4 +25,31 @@ class SaldoCutiNotifier extends _$SaldoCutiNotifier {
           idUser: user.idUser!,
         );
   }
+
+  Future<void> refresh() async {
+    state = AsyncLoading();
+
+    final user = ref.read(userNotifierProvider).user;
+
+    state = await AsyncValue.guard(() => ref
+        .read(createSakitRepositoryProvider)
+        .getSaldoMasterCuti(idUser: user.idUser!));
+  }
+
+  Future<CreateSakitCuti> getSaldoCuti() async {
+    final user = ref.read(userNotifierProvider).user;
+
+    if (user.idUser == null) {
+      throw AssertionError('ID User Null');
+    }
+
+    if (user.IdKary == null) {
+      throw AssertionError('ID Karyawan Null');
+    }
+
+    //
+    return await ref.read(createSakitRepositoryProvider).getSaldoMasterCuti(
+          idUser: user.idUser!,
+        );
+  }
 }

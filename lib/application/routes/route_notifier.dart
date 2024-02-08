@@ -8,6 +8,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // import '../../../pages/change_pass/change_password_page.dart';
 
 import '../../cuti/create_cuti/presentation/create_cuti_page.dart';
+import '../../cuti/create_cuti/presentation/edit_cuti_page.dart';
+import '../../cuti/cuti_list/application/cuti_list.dart';
 import '../../cuti/cuti_list/presentation/cuti_list_page.dart';
 import '../../pages/absen/absen_page.dart';
 import '../../pages/background/background_page.dart';
@@ -238,6 +240,14 @@ class RouterNotifier extends ChangeNotifier {
               name: RouteNames.createCutiNameRoute,
               path: RouteNames.createCutiRoute,
               builder: (context, state) => CreateCutiPage(),
+            ),
+            GoRoute(
+              name: RouteNames.editCutiNameRoute,
+              path: RouteNames.editCutiRoute,
+              builder: (context, state) {
+                final cuti = state.extra as CutiList;
+                return EditCutiPage(cuti);
+              },
             ),
 
             // GoRoute(

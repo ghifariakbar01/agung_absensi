@@ -24,14 +24,87 @@ class CreateCutiRemoteService {
   static const String dbCutiNew = 'hr_trs_cuti_new';
   static const String dbMstUser = 'mst_user';
 
+  Future<Unit> updateCuti({
+    required int idCuti,
+    //
+    required String jenisCuti,
+    required String alasan,
+    required String ket,
+    required String tahunCuti,
+    //
+    required String nama,
+    required int idUser,
+    required int sisaCuti,
+    //
+    required int jumlahHari,
+    required int hitungLibur,
+    // date time
+    required DateTime tglAwalInDateTime,
+    required DateTime tglAkhirInDateTime,
+  }) async {
+    try {
+      final Map<String, String> updateCuti = {
+        "command": "UPDATE $dbCutiNew SET "
+            "id_user = $idUser, " // id_user
+            "IdKary = (SELECT IdKary FROM $dbMstUser WHERE id_user = $idUser), " // IdKary
+            "jenis_cuti = '$jenisCuti', " // jenis_cuti
+            "alasan = '$alasan', " // alasan
+            "ket = '$ket', " // ket
+            "bulan_cuti = DATENAME(MONTH, '${tglAwalInDateTime.toString()}'), " // bulan_cuti
+            "tahun_cuti = '$tahunCuti', " // tahun_cuti
+            "total_hari = ${jenisCuti != "CR" ? "DATEDIFF(DAY, '${tglAwalInDateTime.toString()}', '${tglAkhirInDateTime.toString()}') + 1 - $jumlahHari - $hitungLibur" : "14"}, " // total_hari
+            "sisa_cuti = ${jenisCuti != "CR" ? "$sisaCuti" : "0"}, " // sisa_cuti
+            "tgl_end = ${jenisCuti != "CR" ? "'${StringUtils.midnightDate(tglAkhirInDateTime)}'" : "'${StringUtils.midnightDate(tglAwalInDateTime.add(Duration(days: 13)))}'"}, " // tgl_end
+            "tgl_end_hrd = ${jenisCuti != "CR" ? "'${StringUtils.midnightDate(tglAkhirInDateTime)}'" : "'${StringUtils.midnightDate(tglAwalInDateTime.add(Duration(days: 13)))}'"}, " // tgl_end_hrd
+            "tgl_start = '${StringUtils.midnightDate(tglAwalInDateTime)}', " // tgl_start
+            "tgl_start_hrd = '${StringUtils.midnightDate(tglAwalInDateTime)}', " // tgl_start_hrd
+            "u_date = GETDATE(), " // u_date
+            "u_user = '$nama' WHERE id_cuti = $idCuti", // u_user
+        "mode": "UPDATE"
+      };
+
+      final data = _dioRequest;
+      data.addAll(updateCuti);
+
+      final response = await _dio.post('',
+          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
+
+      log('data ${jsonEncode(data)}');
+      log('response $response');
+      final items = response.data?[0];
+
+      if (items['status'] == 'Success') {
+        return unit;
+      } else {
+        final message = items['error'] as String?;
+        final errorCode = items['errornum'] as int;
+
+        throw RestApiExceptionWithMessage(errorCode, message);
+      }
+    } on FormatException catch (e) {
+      throw FormatException(e.message);
+    } on DioError catch (e) {
+      if (e.isNoConnectionError || e.isConnectionTimeout) {
+        throw NoConnectionException();
+      } else if (e.response != null) {
+        throw RestApiException(e.response?.statusCode);
+      } else {
+        rethrow;
+      }
+    }
+  }
+
   Future<Unit> submitCuti({
     required String jenisCuti,
     required String alasan,
     required String ket,
     required String tahunCuti,
+    //
     required int idUser,
-    required int totalHari,
     required int sisaCuti,
+    //
+    required int jumlahHari,
+    required int hitungLibur,
     // date time
     required DateTime tglAwalInDateTime,
     required DateTime tglAkhirInDateTime,
@@ -41,25 +114,27 @@ class CreateCutiRemoteService {
         "command": "INSERT INTO $dbCutiNew ("
             "id_cuti, id_user, IdKary, jenis_cuti, alasan, ket, bulan_cuti, tahun_cuti, "
             "total_hari, sisa_cuti, tgl_end, tgl_end_hrd, tgl_start, tgl_start_hrd, spv_tgl, hrd_tgl, "
-            "c_date, c_user, u_date, u_user) VALUES ("
-            "(Select isnull(max(id_cuti),0) + 1 from $dbCutiNew), "
-            "$idUser, "
-            "(select IdKary from $dbMstUser where id_user = $idUser), "
-            "'$jenisCuti', "
-            "'$alasan', "
-            "'$ket', "
-            "(DATENAME (MONTH,'${tglAwalInDateTime.toString()}')), "
-            "'$tahunCuti', "
-            "'${jenisCuti != "CR" ? "$totalHari , " : "14, "}', "
-            "'${jenisCuti != "CR" ? "$sisaCuti" : " 0 ,"}"
-            " ${jenisCuti != "CR" ? "${StringUtils.midnightDate(tglAkhirInDateTime)}" : "${StringUtils.midnightDate(tglAwalInDateTime.add(Duration(days: 13)))}"}"
-            " ${jenisCuti != "CR" ? "${StringUtils.midnightDate(tglAkhirInDateTime)}" : "${StringUtils.midnightDate(tglAwalInDateTime.add(Duration(days: 13)))}"}"
-            "'${StringUtils.midnightDate(tglAwalInDateTime)}', "
-            "'${StringUtils.midnightDate(tglAwalInDateTime)}', "
-            " getdate(), "
-            "'0', "
-            " getdate(), "
-            "'0', ",
+            "c_date, c_user, u_date, u_user ) VALUES ("
+            "(Select isnull(max(id_cuti),0) + 1 from $dbCutiNew), " // id_cuti
+            "$idUser, " // id_user
+            "(select IdKary from $dbMstUser where id_user = $idUser), " // IdKary
+            "'$jenisCuti', " // jenis_cuti
+            "'$alasan', " // alasan
+            "'$ket', " // ket
+            "DATENAME(MONTH, '${tglAwalInDateTime.toString()}'), " // bulan_cuti
+            "'$tahunCuti', " // tahun_cuti
+            "${jenisCuti != "CR" ? "DATEDIFF(DAY, '${tglAwalInDateTime.toString()}', '${tglAkhirInDateTime.toString()}') + 1 - $jumlahHari - $hitungLibur, " : "14, "}" // total_hari
+            "${jenisCuti != "CR" ? "$sisaCuti," : "0,"}" // sisa_cuti
+            "${jenisCuti != "CR" ? "'${StringUtils.midnightDate(tglAkhirInDateTime)}'," : "'${StringUtils.midnightDate(tglAwalInDateTime.add(Duration(days: 13)))}',"}" // tgl_end
+            "${jenisCuti != "CR" ? "'${StringUtils.midnightDate(tglAkhirInDateTime)}'," : "'${StringUtils.midnightDate(tglAwalInDateTime.add(Duration(days: 13)))}',"}" // tgl_end_hrd
+            "'${StringUtils.midnightDate(tglAwalInDateTime)}', " // tgl_start
+            "'${StringUtils.midnightDate(tglAwalInDateTime)}', " // tgl_start_hrd
+            "GETDATE(), " // spv_tgl
+            "GETDATE(), " // hrd_tgl
+            "GETDATE(), " // c_date
+            "'0', " // c_user
+            "GETDATE(), " // u_date
+            "'0')", // u_user
         "mode": "INSERT"
       };
 

@@ -39,7 +39,7 @@ final createCutiRepositoryProvider = Provider<CreateCutiRepository>.internal(
 );
 
 typedef CreateCutiRepositoryRef = ProviderRef<CreateCutiRepository>;
-String _$jenisCutiNotifierHash() => r'91426e03ae2c13e35d3910e507abb818ce715f50';
+String _$jenisCutiNotifierHash() => r'b1bab90d4e59ccc3d136a9fd334dba6fb5ddcf6c';
 
 /// See also [JenisCutiNotifier].
 @ProviderFor(JenisCutiNotifier)
@@ -56,7 +56,7 @@ final jenisCutiNotifierProvider = AutoDisposeAsyncNotifierProvider<
 
 typedef _$JenisCutiNotifier = AutoDisposeAsyncNotifier<List<JenisCuti>>;
 String _$alasanCutiNotifierHash() =>
-    r'f1e9cddc41455b08002a8e0dca2e81e186a78bd9';
+    r'c0fa9a09c5eff313a6efdb6d78094cb474b76bb7';
 
 /// See also [AlasanCutiNotifier].
 @ProviderFor(AlasanCutiNotifier)
@@ -73,7 +73,7 @@ final alasanCutiNotifierProvider = AutoDisposeAsyncNotifierProvider<
 
 typedef _$AlasanCutiNotifier = AutoDisposeAsyncNotifier<List<AlasanCuti>>;
 String _$createCutiNotifierHash() =>
-    r'4b518ff542bfbf895eca13eea618fc561f740082';
+    r'cf46952870707b85a972d69fcabb11419cf47d0f';
 
 /// See also [CreateCutiNotifier].
 @ProviderFor(CreateCutiNotifier)

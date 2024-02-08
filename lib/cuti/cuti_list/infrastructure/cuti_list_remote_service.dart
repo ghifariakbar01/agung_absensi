@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:face_net_authentication/infrastructure/dio_extensions.dart';
@@ -56,6 +57,7 @@ class CutiListRemoteService {
 
       // log('data ${jsonEncode(data)}');
       // log('response page $page : $response');
+      debugger();
 
       final items = response.data?[0];
 
@@ -71,10 +73,7 @@ class CutiListRemoteService {
                 .map((e) => CutiList.fromJson(e as Map<String, dynamic>))
                 .toList();
           } else {
-            final message = items['error'] as String?;
-            final errorCode = items['errornum'] as int;
-
-            throw RestApiExceptionWithMessage(errorCode, message);
+            return [];
           }
         } else {
           final message = items['error'] as String?;
@@ -126,7 +125,7 @@ class CutiListRemoteService {
                 "      JOIN "
                 "          $dbMstDept ON $dbMstUser.id_dept = $dbMstDept.id_dept "
                 "      WHERE "
-                "          ($dbName.id_user IN (SELECT id_user FROM mst_user_head WHERE id_user_head = $idUserHead) OR $dbName.id_user = 1) "
+                "          ($dbName.id_user IN (SELECT id_user FROM mst_user_head WHERE id_user_head = $idUserHead)) "
                 "          AND $dbName.id_cuti IS NOT NULL "
                 "      ORDER BY "
                 "          $dbName.c_date DESC "
@@ -157,10 +156,7 @@ class CutiListRemoteService {
                 .map((e) => CutiList.fromJson(e as Map<String, dynamic>))
                 .toList();
           } else {
-            final message = items['error'] as String?;
-            final errorCode = items['errornum'] as int;
-
-            throw RestApiExceptionWithMessage(errorCode, message);
+            return [];
           }
         } else {
           final message = items['error'] as String?;

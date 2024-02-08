@@ -46,9 +46,6 @@ class CreateSakitPage extends HookConsumerWidget {
     ref.listen<AsyncValue>(userHelperNotifierProvider, (_, state) {
       state.showAlertDialogOnError(context);
     });
-    ref.listen<AsyncValue>(createSakitNotifierProvider, (_, state) {
-      state.showAlertDialogOnError(context);
-    });
 
     ref.listen<AsyncValue>(createSakitNotifierProvider, (_, state) {
       if (!state.isLoading &&
@@ -77,6 +74,7 @@ class CreateSakitPage extends HookConsumerWidget {
           message: 'Sukses Menginput Form Sakit ',
         );
       }
+      return state.showAlertDialogOnError(context);
     });
 
     final userHelper = ref.watch(userHelperNotifierProvider);

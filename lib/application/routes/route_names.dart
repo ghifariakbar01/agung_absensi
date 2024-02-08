@@ -76,4 +76,7 @@ class RouteNames {
 
   static const createCutiNameRoute = 'createCuti';
   static const createCutiRoute = 'createCuti';
+
+  static const editCutiNameRoute = 'editCuti';
+  static const editCutiRoute = 'editCuti';
 }

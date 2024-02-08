@@ -57,9 +57,7 @@ class EditSakitPage extends HookConsumerWidget {
     ref.listen<AsyncValue>(userHelperNotifierProvider, (_, state) {
       state.showAlertDialogOnError(context);
     });
-    ref.listen<AsyncValue>(createSakitNotifierProvider, (_, state) {
-      state.showAlertDialogOnError(context);
-    });
+
     ref.listen<AsyncValue>(createSakitNotifierProvider, (_, state) {
       if (!state.isLoading &&
           state.hasValue &&
@@ -74,6 +72,7 @@ class EditSakitPage extends HookConsumerWidget {
           return Future.value(true);
         });
       }
+      return state.showAlertDialogOnError(context);
     });
 
     final userHelper = ref.watch(userHelperNotifierProvider);

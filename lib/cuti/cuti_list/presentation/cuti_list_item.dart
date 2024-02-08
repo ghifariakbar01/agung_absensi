@@ -1,3 +1,7 @@
+import 'dart:developer';
+
+import 'package:face_net_authentication/cuti/create_cuti/application/create_cuti_notifier.dart';
+import 'package:face_net_authentication/pages/widgets/v_async_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -6,6 +10,8 @@ import '../../../application/routes/route_names.dart';
 import '../../../style/style.dart';
 
 import '../../../utils/string_utils.dart';
+import '../../create_cuti/application/alasan_cuti.dart';
+import '../../create_cuti/application/jenis_cuti.dart';
 import '../application/cuti_list.dart';
 
 class CutiListItem extends HookConsumerWidget {
@@ -32,6 +38,9 @@ class CutiListItem extends HookConsumerWidget {
             .difference(DateTime.parse(item.cDate!))
             .inDays
         : DateTime.now().difference(DateTime.parse(item.cDate!)).inDays;
+
+    final jenisCuti = ref.watch(jenisCutiNotifierProvider);
+    final alasanCuti = ref.watch(alasanCutiNotifierProvider);
 
     return IgnorePointer(
       ignoring: item.btlSta == true,
@@ -81,16 +90,22 @@ class CutiListItem extends HookConsumerWidget {
                       SizedBox(
                         height: 8,
                       ),
-                      Text(
-                        'Jenis Cuti : ${item.jenisCuti}',
-                        style: Themes.customColor(10,
-                            color: Theme.of(context).unselectedWidgetColor),
+                      VAsyncValueWidget<List<JenisCuti>>(
+                        value: jenisCuti,
+                        data: (list) => Text(
+                          'Jenis Cuti : ${list.firstWhere((element) => element.inisial == item.jenisCuti, orElse: () => list.first).nama}',
+                          style: Themes.customColor(10,
+                              color: Theme.of(context).unselectedWidgetColor),
+                        ),
                       ),
-                      Text(
-                        'Alasan Cuti : ${item.alasan}',
-                        style: Themes.customColor(10,
-                            color: Theme.of(context).unselectedWidgetColor),
-                        overflow: TextOverflow.visible,
+                      VAsyncValueWidget<List<AlasanCuti>>(
+                        value: alasanCuti,
+                        data: (list) => Text(
+                          'Alasan Cuti : ${list.firstWhere((element) => element.kode == item.alasan, orElse: () => list.first).alasan}',
+                          style: Themes.customColor(10,
+                              color: Theme.of(context).unselectedWidgetColor),
+                          overflow: TextOverflow.visible,
+                        ),
                       ),
                       SizedBox(
                         height: 8,
@@ -344,8 +359,8 @@ class CutiListItem extends HookConsumerWidget {
               Material(
                 color: Colors.transparent,
                 child: InkWell(
-                  // onTap: () =>
-                  // context.pushNamed(RouteNames.editSakitRoute, extra: item),
+                  onTap: () =>
+                      context.pushNamed(RouteNames.editCutiRoute, extra: item),
                   child: Ink(
                     child: Text('Edit',
                         style: Themes.customColor(10,

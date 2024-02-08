@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../application/routes/route_names.dart';
+import '../../../pages/widgets/alert_helper.dart';
 import '../../../pages/widgets/v_async_widget.dart';
 import '../../../pages/widgets/v_scaffold_widget.dart';
 import '../../../sakit/create_sakit/application/create_sakit_cuti.dart';
@@ -27,6 +28,41 @@ class CutiListPage extends HookConsumerWidget {
 
     final scrollController = useScrollController();
 
+    final page = useState(0);
+
+    void onScrolled() {
+      if (scrollController.position.pixels >=
+          scrollController.position.maxScrollExtent) {
+        page.value++;
+
+        ref.read(cutiListControllerProvider.notifier).load(
+              page: page.value + 1,
+            );
+      }
+    }
+
+    useEffect(() {
+      scrollController.addListener(onScrolled);
+      return () => scrollController.removeListener(onScrolled);
+    }, [scrollController]);
+
+    // ref.listen<AsyncValue>(sakitApproveControllerProvider, (_, state) {
+    //   if (!state.isLoading &&
+    //       state.hasValue &&
+    //       state.value != '' &&
+    //       state.value != null &&
+    //       state.hasError == false) {
+    //     return AlertHelper.showSnackBar(
+    //       context,
+    //       onDone: () async {
+    //         ref.invalidate(cutiListControllerProvider);
+    //       },
+    //       color: Palette.primaryColor,
+    //       message: '${state.value} ',
+    //     );
+    //   }
+    // });
+
     return VAsyncWidgetScaffold<CreateSakitCuti>(
         value: saldoCuti,
         data: (saldo) {
@@ -35,8 +71,9 @@ class CutiListPage extends HookConsumerWidget {
               data: (list) {
                 return RefreshIndicator(
                   onRefresh: () {
-                    // page.value = 0;
-                    // ref.read(saldoCutiNotifierProvider.notifier).refresh();
+                    page.value = 0;
+                    ref.read(saldoCutiNotifierProvider.notifier).refresh();
+                    ref.read(cutiListControllerProvider.notifier).refresh();
                     return Future.value();
                   },
                   child: VScaffoldWidget(
@@ -59,51 +96,63 @@ class CutiListPage extends HookConsumerWidget {
                         itemCount: list.length,
                         itemBuilder: (BuildContext context, int index) =>
                             index == 0
-                                ? Container(
-                                    padding: EdgeInsets.all(8),
-                                    decoration: BoxDecoration(
-                                      color:
-                                          Palette.greyDisabled.withOpacity(0.1),
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        SizedBox(
-                                          width: 200,
-                                          child: Text(
-                                            "1. Cuti Tahunan wajib diinput paling lambat H-5.\n"
-                                            "2. Persetujuan atasan paling lambat H+3 dari Tanggal penginputan Cuti.\n"
-                                            "3. Cuti Emergency dan Cuti Bersama dapat diinput pada hari H.\n"
-                                            "4. Total Hari dihitung berdasarkan Hari Kerja. (Tidak termasuk Tanggal Merah) '",
-                                            style: Themes.customColor(8,
-                                                fontWeight: FontWeight.bold),
-                                            textAlign: TextAlign.justify,
-                                          ),
+                                ? Column(
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.all(8),
+                                        decoration: BoxDecoration(
+                                          color: Palette.greyDisabled
+                                              .withOpacity(0.1),
+                                          borderRadius:
+                                              BorderRadius.circular(12),
                                         ),
-                                        Column(
+                                        child: Row(
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.center,
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Text(
-                                              'Saldo Cuti \n(${saldo.cutiBaru != 0 ? saldo.tahunCutiBaru : saldo.tahunCutiTidakBaru} )',
-                                              style: Themes.customColor(10,
-                                                  fontWeight: FontWeight.bold),
-                                              textAlign: TextAlign.center,
+                                            SizedBox(
+                                              width: 200,
+                                              child: Text(
+                                                "1. Cuti Tahunan wajib diinput paling lambat H-5.\n"
+                                                "2. Persetujuan atasan paling lambat H+3 dari Tanggal penginputan Cuti.\n"
+                                                "3. Cuti Emergency dan Cuti Bersama dapat diinput pada hari H.\n"
+                                                "4. Total Hari dihitung berdasarkan Hari Kerja. (Tidak termasuk Tanggal Merah) '",
+                                                style: Themes.customColor(8,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                                textAlign: TextAlign.justify,
+                                              ),
                                             ),
-                                            Text(
-                                              '${saldo.cutiBaru != 0 ? saldo.cutiBaru : saldo.cutiTidakBaru}',
-                                              style: Themes.customColor(20,
-                                                  color: Colors.red,
-                                                  fontWeight: FontWeight.bold),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  'Saldo Cuti \n(${saldo.cutiBaru != 0 ? saldo.tahunCutiBaru : saldo.tahunCutiTidakBaru} )',
+                                                  style: Themes.customColor(10,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                                Text(
+                                                  '${saldo.cutiBaru != 0 ? saldo.cutiBaru : saldo.cutiTidakBaru}',
+                                                  style: Themes.customColor(20,
+                                                      color: Colors.red,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                )
+                                              ],
                                             )
                                           ],
-                                        )
-                                      ],
-                                    ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      CutiListItem(list[index])
+                                    ],
                                   )
                                 : CutiListItem(list[index])),
                   ),
@@ -112,37 +161,3 @@ class CutiListPage extends HookConsumerWidget {
         });
   }
 }
-    // final page = useState(0);
-
-    // void onScrolled() {
-    //   if (scrollController.position.pixels >=
-    //       scrollController.position.maxScrollExtent) {
-    //     page.value++;
-
-    //     ref.read(sakitListControllerProvider.notifier).load(
-    //           page: page.value + 1,
-    //         );
-    //   }
-    // }
-
-    // useEffect(() {
-    //   scrollController.addListener(onScrolled);
-    //   return () => scrollController.removeListener(onScrolled);
-    // }, [scrollController]);
-
-     // ref.listen<AsyncValue>(sakitApproveControllerProvider, (_, state) {
-    //   if (!state.isLoading &&
-    //       state.hasValue &&
-    //       state.value != '' &&
-    //       state.value != null &&
-    //       state.hasError == false) {
-    //     return AlertHelper.showSnackBar(
-    //       context,
-    //       onDone: () async {
-    //         ref.invalidate(sakitListControllerProvider);
-    //       },
-    //       color: Palette.primaryColor,
-    //       message: '${state.value} ',
-    //     );
-    //   }
-    // });

@@ -20,7 +20,7 @@ class VAsyncWidgetScaffold<T> extends StatelessWidget {
         String errMessage = '';
 
         if (e is RestApiExceptionWithMessage && e.message != null) {
-          errMessage = e.message!;
+          errMessage = 'Error Kode :${e.errorCode} Message: ${e.message!}';
         } else if (e is FormatException) {
           errMessage = e.message;
         } else if (e is RestApiException) {
@@ -29,7 +29,7 @@ class VAsyncWidgetScaffold<T> extends StatelessWidget {
           errMessage = e.toString();
         }
 
-        log('errMessage is $e');
+        log('errMessage is $errMessage');
 
         return Center(child: ErrorMessageWidget(errMessage));
       },
