@@ -1,9 +1,9 @@
 import 'dart:developer';
 
-import 'package:face_net_authentication/pages/widgets/async_value_ui.dart';
-import 'package:face_net_authentication/pages/widgets/v_button.dart';
+import 'package:face_net_authentication/widgets/async_value_ui.dart';
+import 'package:face_net_authentication/widgets/v_button.dart';
 
-import 'package:face_net_authentication/pages/widgets/v_scaffold_widget.dart';
+import 'package:face_net_authentication/widgets/v_scaffold_widget.dart';
 import 'package:face_net_authentication/sakit/create_sakit/application/create_sakit_notifier.dart';
 import 'package:face_net_authentication/sakit/sakit_list/application/sakit_list_notifier.dart';
 
@@ -15,11 +15,11 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../application/routes/route_names.dart';
 import '../../../constants/assets.dart';
-import '../../../pages/widgets/alert_helper.dart';
-import '../../../pages/widgets/v_async_widget.dart';
-import '../../../pages/widgets/v_dialogs.dart';
+import '../../../routes/application/route_names.dart';
+import '../../../widgets/alert_helper.dart';
+import '../../../widgets/v_async_widget.dart';
+import '../../../widgets/v_dialogs.dart';
 import '../../../style/style.dart';
 import '../../../user_helper/user_helper_notifier.dart';
 import '../../../utils/string_utils.dart';

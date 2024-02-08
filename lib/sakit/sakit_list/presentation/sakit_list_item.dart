@@ -8,8 +8,8 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
-import '../../../application/routes/route_names.dart';
-import '../../../pages/widgets/v_dialogs.dart';
+import '../../../routes/application/route_names.dart';
+import '../../../widgets/v_dialogs.dart';
 import '../../../style/style.dart';
 import '../../create_sakit/application/create_sakit.dart';
 import '../application/sakit_list.dart';

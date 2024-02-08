@@ -1,9 +1,9 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../application/user/user_model.dart';
 import '../../../sakit/create_sakit/application/create_sakit.dart';
 import '../../../sakit/create_sakit/application/create_sakit_notifier.dart';
 import '../../../shared/providers.dart';
+import '../../../user/application/user_model.dart';
 import '../infrastructure/create_cuti_remote_service.dart';
 import '../infrastructure/create_cuti_repository.dart';
 import 'alasan_cuti.dart';

@@ -2,10 +2,10 @@ import 'dart:developer';
 
 import 'package:face_net_authentication/cuti/create_cuti/application/jenis_cuti.dart';
 import 'package:face_net_authentication/cuti/cuti_list/application/cuti_list_notifier.dart';
-import 'package:face_net_authentication/pages/widgets/async_value_ui.dart';
-import 'package:face_net_authentication/pages/widgets/v_button.dart';
+import 'package:face_net_authentication/widgets/async_value_ui.dart';
+import 'package:face_net_authentication/widgets/v_button.dart';
 
-import 'package:face_net_authentication/pages/widgets/v_scaffold_widget.dart';
+import 'package:face_net_authentication/widgets/v_scaffold_widget.dart';
 
 import 'package:face_net_authentication/shared/providers.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +14,8 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../pages/widgets/alert_helper.dart';
-import '../../../pages/widgets/v_async_widget.dart';
+import '../../../widgets/alert_helper.dart';
+import '../../../widgets/v_async_widget.dart';
 import '../../../style/style.dart';
 import '../../../utils/string_utils.dart';
 import '../application/alasan_cuti.dart';

@@ -6,13 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
-import 'application/imei_introduction/shared/imei_introduction_providers.dart';
-import 'application/permission/shared/permission_introduction_providers.dart';
-import 'application/tc/shared/tc_providers.dart';
 import 'config/configuration.dart';
+import 'imei_introduction/application/shared/imei_introduction_providers.dart';
 import 'ip/application/ip_notifier.dart';
+import 'permission/application/shared/permission_introduction_providers.dart';
 import 'shared/providers.dart';
 import 'style/style.dart';
+import 'tc/application/shared/tc_providers.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

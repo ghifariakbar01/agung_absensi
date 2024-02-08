@@ -1,11 +1,11 @@
 import 'dart:developer';
 
-import 'package:face_net_authentication/application/user/user_model.dart';
 import 'package:face_net_authentication/sakit/create_sakit/application/create_sakit.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../send_wa/application/send_wa_notifier.dart';
 import '../../../shared/providers.dart';
+import '../../../user/application/user_model.dart';
 import '../../../wa_head_helper/application/wa_head.dart';
 import '../../../wa_head_helper/application/wa_head_helper_notifier.dart';
 import '../infrastructure/create_sakit_remote_service.dart';

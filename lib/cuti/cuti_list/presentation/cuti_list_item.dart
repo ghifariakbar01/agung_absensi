@@ -1,12 +1,10 @@
-import 'dart:developer';
-
 import 'package:face_net_authentication/cuti/create_cuti/application/create_cuti_notifier.dart';
-import 'package:face_net_authentication/pages/widgets/v_async_widget.dart';
+import 'package:face_net_authentication/widgets/v_async_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../application/routes/route_names.dart';
+import '../../../routes/application/route_names.dart';
 import '../../../style/style.dart';
 
 import '../../../utils/string_utils.dart';

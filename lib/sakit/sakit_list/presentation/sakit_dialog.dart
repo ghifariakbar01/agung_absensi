@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../infrastructure/exceptions.dart';
-import '../../../pages/widgets/error_message_widget.dart';
+import '../../../widgets/error_message_widget.dart';
 
 class DialogHelper<T> {
   Future<String?> showFormDialog({

@@ -6,7 +6,7 @@ part of 'saldo_cuti_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$saldoCutiNotifierHash() => r'ec4928fd7f753874a51332fd872bdd098f7aabb5';
+String _$saldoCutiNotifierHash() => r'df9745850d2e05fccbfdd53dc54eed3ca1044751';
 
 /// See also [SaldoCutiNotifier].
 @ProviderFor(SaldoCutiNotifier)

@@ -2,12 +2,13 @@ import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
-import 'package:face_net_authentication/application/remember_me/remember_me_state.dart';
+
 import 'package:face_net_authentication/shared/providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../config/configuration.dart';
+import '../../remember_me/application/remember_me_state.dart';
 
 part 'ip_notifier.g.dart';
 

@@ -4,11 +4,11 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../application/user/user_notifier.dart';
-import '../application/user/user_model.dart';
 import '../constants/assets.dart';
 
-import '../pages/widgets/v_dialogs.dart';
+import '../user/application/user_model.dart';
+import '../user/application/user_notifier.dart';
+import '../widgets/v_dialogs.dart';
 import 'providers.dart';
 
 // 1. GET AND SET USER

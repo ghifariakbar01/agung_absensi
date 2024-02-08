@@ -1,5 +1,5 @@
-import 'package:face_net_authentication/pages/widgets/v_async_widget.dart';
-import 'package:face_net_authentication/pages/widgets/v_scaffold_widget.dart';
+import 'package:face_net_authentication/widgets/v_async_widget.dart';
+import 'package:face_net_authentication/widgets/v_scaffold_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
