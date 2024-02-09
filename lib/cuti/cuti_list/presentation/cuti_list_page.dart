@@ -1,28 +1,30 @@
+import 'package:face_net_authentication/mst_karyawan_cuti/application/mst_karyawan_cuti_notifier.dart';
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../mst_karyawan_cuti/application/mst_karyawan_cuti.dart';
 import '../../../routes/application/route_names.dart';
 import '../../../widgets/v_async_widget.dart';
 import '../../../widgets/v_scaffold_widget.dart';
-import '../../../sakit/create_sakit/application/create_sakit_cuti.dart';
+
 import '../../../style/style.dart';
 import '../application/cuti_list.dart';
 import '../application/cuti_list_notifier.dart';
-import '../application/saldo_cuti_notifier.dart';
+
 import 'cuti_list_item.dart';
 
 class CutiListPage extends HookConsumerWidget {
   const CutiListPage();
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen<AsyncValue>(saldoCutiNotifierProvider, (_, state) {
+    ref.listen<AsyncValue>(mstKaryawanCutiNotifierProvider, (_, state) {
       state.showAlertDialogOnError(context);
     });
 
-    final saldoCuti = ref.watch(saldoCutiNotifierProvider);
+    final mstCuti = ref.watch(mstKaryawanCutiNotifierProvider);
     final cutiList = ref.watch(cutiListControllerProvider);
 
     final scrollController = useScrollController();
@@ -62,8 +64,8 @@ class CutiListPage extends HookConsumerWidget {
     //   }
     // });
 
-    return VAsyncWidgetScaffold<CreateSakitCuti>(
-        value: saldoCuti,
+    return VAsyncWidgetScaffold<MstKaryawanCuti>(
+        value: mstCuti,
         data: (saldo) {
           return VAsyncWidgetScaffold<List<CutiList>>(
               value: cutiList,
@@ -71,7 +73,9 @@ class CutiListPage extends HookConsumerWidget {
                 return RefreshIndicator(
                   onRefresh: () {
                     page.value = 0;
-                    ref.read(saldoCutiNotifierProvider.notifier).refresh();
+                    ref
+                        .read(mstKaryawanCutiNotifierProvider.notifier)
+                        .refresh();
                     ref.read(cutiListControllerProvider.notifier).refresh();
                     return Future.value();
                   },

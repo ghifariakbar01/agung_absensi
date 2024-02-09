@@ -4,9 +4,11 @@ import 'package:face_net_authentication/send_wa/application/send_wa_notifier.dar
 import 'package:face_net_authentication/wa_register/application/wa_register_notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../mst_karyawan_cuti/application/mst_karyawan_cuti.dart';
 import '../../../shared/providers.dart';
 import '../../../wa_register/application/wa_register.dart';
 import '../../create_sakit/application/create_sakit.dart';
+
 import '../../create_sakit/application/create_sakit_notifier.dart';
 import '../../sakit_list/application/sakit_list.dart';
 import '../../sakit_list/application/sakit_list_notifier.dart';
@@ -104,6 +106,7 @@ class SakitApproveController extends _$SakitApproveController {
     required String note,
     required SakitList itemSakit,
     required CreateSakit createSakit,
+    required MstKaryawanCuti mstCuti,
   }) async {
     state = const AsyncLoading();
 
@@ -116,7 +119,8 @@ class SakitApproveController extends _$SakitApproveController {
           nama: nama,
           note: note,
           itemSakit: itemSakit,
-          createSakit: createSakit);
+          createSakit: createSakit,
+          mstCuti: mstCuti);
 
       state = AsyncData<void>('Sukses Melakukan Approve Form Sakit');
     } catch (e) {
@@ -170,12 +174,16 @@ class SakitApproveController extends _$SakitApproveController {
     required String nama,
     required SakitList itemSakit,
     required CreateSakit createSakit,
+    required MstKaryawanCuti mstCuti,
   }) async {
     state = const AsyncLoading();
 
     try {
       await ref.read(sakitApproveRepositoryProvider).unApproveHrdTanpaSurat(
-          nama: nama, itemSakit: itemSakit, createSakit: createSakit);
+          nama: nama,
+          itemSakit: itemSakit,
+          createSakit: createSakit,
+          mstCuti: mstCuti);
 
       state = AsyncData<void>('Sukses Unapprove Form Sakit');
     } catch (e) {

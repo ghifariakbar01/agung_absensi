@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'create_sakit_cuti.dart';
+part of 'mst_karyawan_cuti.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,12 +14,12 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
-CreateSakitCuti _$CreateSakitCutiFromJson(Map<String, dynamic> json) {
-  return _CreateSakit.fromJson(json);
+MstKaryawanCuti _$MstKaryawanCutiFromJson(Map<String, dynamic> json) {
+  return _MstKaryawanCuti.fromJson(json);
 }
 
 /// @nodoc
-mixin _$CreateSakitCuti {
+mixin _$MstKaryawanCuti {
   @JsonKey(name: 'id_mst_cuti')
   int? get idMstCuti => throw _privateConstructorUsedError;
   @JsonKey(name: 'open_date')
@@ -37,15 +37,15 @@ mixin _$CreateSakitCuti {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $CreateSakitCutiCopyWith<CreateSakitCuti> get copyWith =>
+  $MstKaryawanCutiCopyWith<MstKaryawanCuti> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $CreateSakitCutiCopyWith<$Res> {
-  factory $CreateSakitCutiCopyWith(
-          CreateSakitCuti value, $Res Function(CreateSakitCuti) then) =
-      _$CreateSakitCutiCopyWithImpl<$Res, CreateSakitCuti>;
+abstract class $MstKaryawanCutiCopyWith<$Res> {
+  factory $MstKaryawanCutiCopyWith(
+          MstKaryawanCuti value, $Res Function(MstKaryawanCuti) then) =
+      _$MstKaryawanCutiCopyWithImpl<$Res, MstKaryawanCuti>;
   @useResult
   $Res call(
       {@JsonKey(name: 'id_mst_cuti') int? idMstCuti,
@@ -58,9 +58,9 @@ abstract class $CreateSakitCutiCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$CreateSakitCutiCopyWithImpl<$Res, $Val extends CreateSakitCuti>
-    implements $CreateSakitCutiCopyWith<$Res> {
-  _$CreateSakitCutiCopyWithImpl(this._value, this._then);
+class _$MstKaryawanCutiCopyWithImpl<$Res, $Val extends MstKaryawanCuti>
+    implements $MstKaryawanCutiCopyWith<$Res> {
+  _$MstKaryawanCutiCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -112,11 +112,11 @@ class _$CreateSakitCutiCopyWithImpl<$Res, $Val extends CreateSakitCuti>
 }
 
 /// @nodoc
-abstract class _$$_CreateSakitCopyWith<$Res>
-    implements $CreateSakitCutiCopyWith<$Res> {
-  factory _$$_CreateSakitCopyWith(
-          _$_CreateSakit value, $Res Function(_$_CreateSakit) then) =
-      __$$_CreateSakitCopyWithImpl<$Res>;
+abstract class _$$_MstKaryawanCutiCopyWith<$Res>
+    implements $MstKaryawanCutiCopyWith<$Res> {
+  factory _$$_MstKaryawanCutiCopyWith(
+          _$_MstKaryawanCuti value, $Res Function(_$_MstKaryawanCuti) then) =
+      __$$_MstKaryawanCutiCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -130,11 +130,11 @@ abstract class _$$_CreateSakitCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_CreateSakitCopyWithImpl<$Res>
-    extends _$CreateSakitCutiCopyWithImpl<$Res, _$_CreateSakit>
-    implements _$$_CreateSakitCopyWith<$Res> {
-  __$$_CreateSakitCopyWithImpl(
-      _$_CreateSakit _value, $Res Function(_$_CreateSakit) _then)
+class __$$_MstKaryawanCutiCopyWithImpl<$Res>
+    extends _$MstKaryawanCutiCopyWithImpl<$Res, _$_MstKaryawanCuti>
+    implements _$$_MstKaryawanCutiCopyWith<$Res> {
+  __$$_MstKaryawanCutiCopyWithImpl(
+      _$_MstKaryawanCuti _value, $Res Function(_$_MstKaryawanCuti) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -148,7 +148,7 @@ class __$$_CreateSakitCopyWithImpl<$Res>
     Object? cutiTidakBaru = freezed,
     Object? cutiBaru = freezed,
   }) {
-    return _then(_$_CreateSakit(
+    return _then(_$_MstKaryawanCuti(
       idMstCuti: freezed == idMstCuti
           ? _value.idMstCuti
           : idMstCuti // ignore: cast_nullable_to_non_nullable
@@ -183,8 +183,8 @@ class __$$_CreateSakitCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_CreateSakit implements _CreateSakit {
-  _$_CreateSakit(
+class _$_MstKaryawanCuti implements _MstKaryawanCuti {
+  _$_MstKaryawanCuti(
       {@JsonKey(name: 'id_mst_cuti') this.idMstCuti,
       @JsonKey(name: 'open_date') this.openDate,
       @JsonKey(name: 'close_date') this.closeDate,
@@ -193,8 +193,8 @@ class _$_CreateSakit implements _CreateSakit {
       @JsonKey(name: 'cuti_tidak_baru') this.cutiTidakBaru,
       @JsonKey(name: 'cuti_baru') this.cutiBaru});
 
-  factory _$_CreateSakit.fromJson(Map<String, dynamic> json) =>
-      _$$_CreateSakitFromJson(json);
+  factory _$_MstKaryawanCuti.fromJson(Map<String, dynamic> json) =>
+      _$$_MstKaryawanCutiFromJson(json);
 
   @override
   @JsonKey(name: 'id_mst_cuti')
@@ -220,14 +220,14 @@ class _$_CreateSakit implements _CreateSakit {
 
   @override
   String toString() {
-    return 'CreateSakitCuti(idMstCuti: $idMstCuti, openDate: $openDate, closeDate: $closeDate, tahunCutiTidakBaru: $tahunCutiTidakBaru, tahunCutiBaru: $tahunCutiBaru, cutiTidakBaru: $cutiTidakBaru, cutiBaru: $cutiBaru)';
+    return 'MstKaryawanCuti(idMstCuti: $idMstCuti, openDate: $openDate, closeDate: $closeDate, tahunCutiTidakBaru: $tahunCutiTidakBaru, tahunCutiBaru: $tahunCutiBaru, cutiTidakBaru: $cutiTidakBaru, cutiBaru: $cutiBaru)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_CreateSakit &&
+            other is _$_MstKaryawanCuti &&
             (identical(other.idMstCuti, idMstCuti) ||
                 other.idMstCuti == idMstCuti) &&
             (identical(other.openDate, openDate) ||
@@ -252,29 +252,29 @@ class _$_CreateSakit implements _CreateSakit {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_CreateSakitCopyWith<_$_CreateSakit> get copyWith =>
-      __$$_CreateSakitCopyWithImpl<_$_CreateSakit>(this, _$identity);
+  _$$_MstKaryawanCutiCopyWith<_$_MstKaryawanCuti> get copyWith =>
+      __$$_MstKaryawanCutiCopyWithImpl<_$_MstKaryawanCuti>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_CreateSakitToJson(
+    return _$$_MstKaryawanCutiToJson(
       this,
     );
   }
 }
 
-abstract class _CreateSakit implements CreateSakitCuti {
-  factory _CreateSakit(
+abstract class _MstKaryawanCuti implements MstKaryawanCuti {
+  factory _MstKaryawanCuti(
       {@JsonKey(name: 'id_mst_cuti') final int? idMstCuti,
       @JsonKey(name: 'open_date') final DateTime? openDate,
       @JsonKey(name: 'close_date') final DateTime? closeDate,
       @JsonKey(name: 'tahun_cuti_tidak_baru') final String? tahunCutiTidakBaru,
       @JsonKey(name: 'tahun_cuti_baru') final String? tahunCutiBaru,
       @JsonKey(name: 'cuti_tidak_baru') final int? cutiTidakBaru,
-      @JsonKey(name: 'cuti_baru') final int? cutiBaru}) = _$_CreateSakit;
+      @JsonKey(name: 'cuti_baru') final int? cutiBaru}) = _$_MstKaryawanCuti;
 
-  factory _CreateSakit.fromJson(Map<String, dynamic> json) =
-      _$_CreateSakit.fromJson;
+  factory _MstKaryawanCuti.fromJson(Map<String, dynamic> json) =
+      _$_MstKaryawanCuti.fromJson;
 
   @override
   @JsonKey(name: 'id_mst_cuti')
@@ -299,6 +299,6 @@ abstract class _CreateSakit implements CreateSakitCuti {
   int? get cutiBaru;
   @override
   @JsonKey(ignore: true)
-  _$$_CreateSakitCopyWith<_$_CreateSakit> get copyWith =>
+  _$$_MstKaryawanCutiCopyWith<_$_MstKaryawanCuti> get copyWith =>
       throw _privateConstructorUsedError;
 }

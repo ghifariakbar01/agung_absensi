@@ -1,9 +1,7 @@
-import 'dart:developer';
-
 import 'package:dartz/dartz.dart';
 
 import '../application/create_sakit.dart';
-import '../application/create_sakit_cuti.dart';
+
 import 'create_sakit_remote_service.dart';
 
 class CreateSakitRepository {
@@ -69,14 +67,6 @@ class CreateSakitRepository {
       tglAwal: tglAwal,
       tglAkhir: tglAkhir,
       idKaryawan: idKaryawan,
-    );
-  }
-
-  Future<CreateSakitCuti> getSaldoMasterCuti({
-    required int idUser,
-  }) {
-    return _remoteService.getSaldoMasterCuti(
-      idUser: idUser,
     );
   }
 }

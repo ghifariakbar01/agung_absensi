@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:face_net_authentication/mst_karyawan_cuti/application/mst_karyawan_cuti_notifier.dart';
 import 'package:face_net_authentication/sakit/create_sakit/application/create_sakit_notifier.dart';
 import 'package:face_net_authentication/sakit/sakit_approve/application/sakit_approve_notifier.dart';
 import 'package:face_net_authentication/shared/providers.dart';
@@ -8,10 +9,12 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../../mst_karyawan_cuti/application/mst_karyawan_cuti.dart';
 import '../../../routes/application/route_names.dart';
 import '../../../widgets/v_dialogs.dart';
 import '../../../style/style.dart';
 import '../../create_sakit/application/create_sakit.dart';
+
 import '../application/sakit_list.dart';
 import 'sakit_dialog.dart';
 
@@ -245,10 +248,14 @@ class SakitListItem extends HookConsumerWidget {
                       //   log('message');
                       // }
 
+                      final user = ref.read(userNotifierProvider).user;
+
                       final CreateSakit createSakit = await ref
                           .read(createSakitNotifierProvider.notifier)
-                          .getCreateSakit(ref.read(userNotifierProvider).user,
-                              item.tglStart!, item.tglEnd!);
+                          .getCreateSakit(user, item.tglStart!, item.tglEnd!);
+                      final MstKaryawanCuti mstCuti = await ref
+                          .read(mstKaryawanCutiNotifierProvider.notifier)
+                          .getSaldoMasterCutiById(user.idUser!);
 
                       if (item.hrdSta == false) {
                         final String? text =
@@ -265,8 +272,7 @@ class SakitListItem extends HookConsumerWidget {
                                 .approveHrdDenganSurat(
                                   note: text,
                                   itemSakit: item,
-                                  nama:
-                                      ref.read(userNotifierProvider).user.nama!,
+                                  nama: user.nama!,
                                 );
                             //
                           } else {
@@ -276,8 +282,8 @@ class SakitListItem extends HookConsumerWidget {
                                   note: text,
                                   itemSakit: item,
                                   createSakit: createSakit,
-                                  nama:
-                                      ref.read(userNotifierProvider).user.nama!,
+                                  mstCuti: mstCuti,
+                                  nama: user.nama!,
                                 );
                             //
                           }
@@ -288,7 +294,7 @@ class SakitListItem extends HookConsumerWidget {
                               .read(sakitApproveControllerProvider.notifier)
                               .unApproveHrdDenganSurat(
                                 itemSakit: item,
-                                nama: ref.read(userNotifierProvider).user.nama!,
+                                nama: user.nama!,
                               );
                         } else {
                           await ref
@@ -296,7 +302,8 @@ class SakitListItem extends HookConsumerWidget {
                               .unApproveHrdTanpaSurat(
                                 itemSakit: item,
                                 createSakit: createSakit,
-                                nama: ref.read(userNotifierProvider).user.nama!,
+                                mstCuti: mstCuti,
+                                nama: user.nama!,
                               );
                         }
                       }

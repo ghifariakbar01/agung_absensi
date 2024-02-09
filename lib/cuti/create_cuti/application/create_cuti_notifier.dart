@@ -1,6 +1,9 @@
+import 'package:face_net_authentication/mst_karyawan_cuti/application/mst_karyawan_cuti_notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../mst_karyawan_cuti/application/mst_karyawan_cuti.dart';
 import '../../../sakit/create_sakit/application/create_sakit.dart';
+
 import '../../../sakit/create_sakit/application/create_sakit_notifier.dart';
 import '../../../shared/providers.dart';
 import '../../../user/application/user_model.dart';
@@ -63,14 +66,18 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
     final user = ref.read(userNotifierProvider).user;
 
     try {
-      final create = await ref
+      final CreateSakit create = await ref
           .read(createSakitNotifierProvider.notifier)
           .getCreateSakit(user, tglAwal, tglAkhir);
+      final MstKaryawanCuti mstCuti = await ref
+          .read(mstKaryawanCutiNotifierProvider.notifier)
+          .getSaldoMasterCutiById(user.idUser!);
 
       await _finalizeUpdate(
         idCuti: idCuti,
         user: user,
         create: create,
+        mstCuti: mstCuti,
         tglAwal: tglAwal,
         tglAkhir: tglAkhir,
         jenisCuti: jenisCuti,
@@ -98,12 +105,16 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
     final user = ref.read(userNotifierProvider).user;
 
     try {
-      final create = await ref
+      final CreateSakit create = await ref
           .read(createSakitNotifierProvider.notifier)
           .getCreateSakit(user, tglAwal, tglAkhir);
+      final MstKaryawanCuti mstCuti = await ref
+          .read(mstKaryawanCutiNotifierProvider.notifier)
+          .getSaldoMasterCutiById(user.idUser!);
 
       await _finalizeSubmit(
         user: user,
+        mstCuti: mstCuti,
         create: create,
         tglAwal: tglAwal,
         tglAkhir: tglAkhir,
@@ -135,6 +146,7 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
     required String alasanCuti,
     required String keterangan,
     required CreateSakit create,
+    required MstKaryawanCuti mstCuti,
     required UserModelWithPassword user,
   }) async {
     final DateTime tglAwalInDateTime = DateTime.parse(tglAwal);
@@ -164,20 +176,18 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
     // End VALIDATE DATA MASTER CUTI
 
     // totalHariCutiBaru
-    final int totalHariCutiBaru = create.createSakitCuti!.cutiBaru! -
+    final int totalHariCutiBaru = mstCuti.cutiBaru! -
         (tglAkhirInDateTime.difference(tglAwalInDateTime).inDays - jumlahhari) -
         create.hitungLibur!;
 
     // totalHariCutiTidakBaru
-    final int totalHariCutiTidakBaru = create.createSakitCuti!.cutiTidakBaru! -
+    final int totalHariCutiTidakBaru = mstCuti.cutiTidakBaru! -
         (tglAkhirInDateTime.difference(tglAwalInDateTime).inDays - jumlahhari) -
         create.hitungLibur!;
 
-    final DateTime openDateJan =
-        DateTime(create.createSakitCuti!.openDate!.year, 1, 1);
+    final DateTime openDateJan = DateTime(mstCuti.openDate!.year, 1, 1);
 
-    final DateTime openDateMax =
-        DateTime(create.createSakitCuti!.openDate!.year + 1, 6, 30);
+    final DateTime openDateMax = DateTime(mstCuti.openDate!.year + 1, 6, 30);
 
     final DateTime createMasukInDateTime = DateTime.parse(create.masuk!);
 
@@ -196,7 +206,7 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
       dalam periode
     */
     final String? tahunCuti = _returnTahunCuti(
-      create: create,
+      mstCuti: mstCuti,
       tglAwaltglMasukDiff: tglAwaltglMasukDiff.inDays,
     );
 
@@ -204,29 +214,41 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
     //    dan menghasilkan error jika habis
     //
 
+    // required String jenisCuti,
+    // required int totalHariCutiBaru,
+    // required int totalHariCutiTidakBaru,
+    // required Duration tglAwaltglMasukDiff,
+    // required DateTime openDateJan,
+    // required DateTime tglAkhirInDateTime,
+    // required DateTime createMasukInDateTime,
+    // required CreateSakit create,
+    // required MstKaryawanCuti mstCuti,
+
     await _validateSaldoCuti(
-        create: create,
-        jenisCuti: jenisCuti,
-        openDateJan: openDateJan,
-        tglAkhirInDateTime: tglAkhirInDateTime,
-        tglAwaltglMasukDiff: tglAwaltglMasukDiff,
-        createMasukInDateTime: createMasukInDateTime,
-        totalHariCutiBaru: totalHariCutiBaru,
-        totalHariCutiTidakBaru: totalHariCutiTidakBaru);
+      jenisCuti: jenisCuti,
+      totalHariCutiBaru: totalHariCutiBaru,
+      totalHariCutiTidakBaru: totalHariCutiTidakBaru,
+      tglAwaltglMasukDiff: tglAwaltglMasukDiff,
+      openDateJan: openDateJan,
+      tglAkhirInDateTime: tglAkhirInDateTime,
+      createMasukInDateTime: createMasukInDateTime,
+      create: create,
+      mstCuti: mstCuti,
+    );
 
     // final String messageContent =
     //     " ( Testing Apps ) Terdapat Waiting Approve Pengajuan Izin Sakit Baru Telah Diinput Oleh : ${user.nama} ";
     // await _sendWaToHead(idUser: user.idUser!, messageContent: messageContent);
 
-    final syarat2 = (create.createSakitCuti!.cutiBaru! > 0 &&
+    final syarat2 = (mstCuti.cutiBaru! > 0 &&
         !dateMasuk.difference(tglAwalInDateTime).isNegative);
 
     // get sisaCuti from
     // dateMasuk
     // in _finalizeSubmit() function
-    final int? sisaCuti = create.createSakitCuti!.cutiBaru == 0 || syarat2
-        ? create.createSakitCuti!.cutiBaru
-        : create.createSakitCuti!.cutiTidakBaru;
+    final int? sisaCuti = mstCuti.cutiBaru == 0 || syarat2
+        ? mstCuti.cutiBaru
+        : mstCuti.cutiTidakBaru;
 
     state = await AsyncValue.guard(
         () => ref.read(createCutiRepositoryProvider).submitCuti(
@@ -253,6 +275,7 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
     required String alasanCuti,
     required String keterangan,
     required CreateSakit create,
+    required MstKaryawanCuti mstCuti,
     required UserModelWithPassword user,
   }) async {
     final DateTime tglAwalInDateTime = DateTime.parse(tglAwal);
@@ -282,20 +305,18 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
     // End VALIDATE DATA MASTER CUTI
 
     // totalHariCutiBaru
-    final int totalHariCutiBaru = create.createSakitCuti!.cutiBaru! -
+    final int totalHariCutiBaru = mstCuti.cutiBaru! -
         (tglAkhirInDateTime.difference(tglAwalInDateTime).inDays - jumlahhari) -
         create.hitungLibur!;
 
     // totalHariCutiTidakBaru
-    final int totalHariCutiTidakBaru = create.createSakitCuti!.cutiTidakBaru! -
+    final int totalHariCutiTidakBaru = mstCuti.cutiTidakBaru! -
         (tglAkhirInDateTime.difference(tglAwalInDateTime).inDays - jumlahhari) -
         create.hitungLibur!;
 
-    final DateTime openDateJan =
-        DateTime(create.createSakitCuti!.openDate!.year, 1, 1);
+    final DateTime openDateJan = DateTime(mstCuti.openDate!.year, 1, 1);
 
-    final DateTime openDateMax =
-        DateTime(create.createSakitCuti!.openDate!.year + 1, 6, 30);
+    final DateTime openDateMax = DateTime(mstCuti.openDate!.year + 1, 6, 30);
 
     final DateTime createMasukInDateTime = DateTime.parse(create.masuk!);
 
@@ -314,7 +335,7 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
       dalam periode
     */
     final String? tahunCuti = _returnTahunCuti(
-      create: create,
+      mstCuti: mstCuti,
       tglAwaltglMasukDiff: tglAwaltglMasukDiff.inDays,
     );
 
@@ -323,28 +344,30 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
     //
 
     await _validateSaldoCuti(
-        create: create,
-        jenisCuti: jenisCuti,
-        openDateJan: openDateJan,
-        tglAkhirInDateTime: tglAkhirInDateTime,
-        tglAwaltglMasukDiff: tglAwaltglMasukDiff,
-        createMasukInDateTime: createMasukInDateTime,
-        totalHariCutiBaru: totalHariCutiBaru,
-        totalHariCutiTidakBaru: totalHariCutiTidakBaru);
+      jenisCuti: jenisCuti,
+      totalHariCutiBaru: totalHariCutiBaru,
+      totalHariCutiTidakBaru: totalHariCutiTidakBaru,
+      tglAwaltglMasukDiff: tglAwaltglMasukDiff,
+      openDateJan: openDateJan,
+      tglAkhirInDateTime: tglAkhirInDateTime,
+      createMasukInDateTime: createMasukInDateTime,
+      create: create,
+      mstCuti: mstCuti,
+    );
 
     // final String messageContent =
     //     " ( Testing Apps ) Terdapat Waiting Approve Pengajuan Izin Sakit Baru Telah Diinput Oleh : ${user.nama} ";
     // await _sendWaToHead(idUser: user.idUser!, messageContent: messageContent);
 
-    final syarat2 = (create.createSakitCuti!.cutiBaru! > 0 &&
+    final syarat2 = (mstCuti.cutiBaru! > 0 &&
         !dateMasuk.difference(tglAwalInDateTime).isNegative);
 
     // get sisaCuti from
     // dateMasuk
     // in _finalizeSubmit() function
-    final int? sisaCuti = create.createSakitCuti!.cutiBaru == 0 || syarat2
-        ? create.createSakitCuti!.cutiBaru
-        : create.createSakitCuti!.cutiTidakBaru;
+    final int? sisaCuti = mstCuti.cutiBaru == 0 || syarat2
+        ? mstCuti.cutiBaru
+        : mstCuti.cutiTidakBaru;
 
     final nama = ref.read(userNotifierProvider).user.nama!;
 
@@ -367,22 +390,23 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
             ));
   }
 
-  Future<void> _validateSaldoCuti(
-      {required String jenisCuti,
-      required CreateSakit create,
-      required DateTime openDateJan,
-      required DateTime tglAkhirInDateTime,
-      required DateTime createMasukInDateTime,
-      required int totalHariCutiBaru,
-      required int totalHariCutiTidakBaru,
-      required Duration tglAwaltglMasukDiff}) async {
+  Future<void> _validateSaldoCuti({
+    required String jenisCuti,
+    required int totalHariCutiBaru,
+    required int totalHariCutiTidakBaru,
+    required Duration tglAwaltglMasukDiff,
+    required DateTime openDateJan,
+    required DateTime tglAkhirInDateTime,
+    required DateTime createMasukInDateTime,
+    required CreateSakit create,
+    required MstKaryawanCuti mstCuti,
+  }) async {
     final bool sayaCutiDiTahunMasuk =
         tglAkhirInDateTime.year == createMasukInDateTime.year;
     final bool sayaCutiDiTahunMasukBerikutnya =
         tglAkhirInDateTime.year == createMasukInDateTime.year + 1;
 
-    final bool sayaMasihAdaCutiTidakBaru =
-        create.createSakitCuti!.cutiTidakBaru! > 0;
+    final bool sayaMasihAdaCutiTidakBaru = mstCuti.cutiTidakBaru! > 0;
     final bool validateTahunCuti =
         (!sayaCutiDiTahunMasuk || !sayaCutiDiTahunMasukBerikutnya);
     final bool jenisCutiEmergencyOrTahunan =
@@ -395,7 +419,7 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
         jenisCutiEmergencyOrTahunan &&
         tglCutiLebihKecilDariOpenDate) {
       throw AssertionError(
-          "Saldo Cuti ${create.createSakitCuti!.closeDate!.year} Habis! Belum Masuk Periode Cuti ${create.createSakitCuti!.tahunCutiTidakBaru} ");
+          "Saldo Cuti ${mstCuti.closeDate!.year} Habis! Belum Masuk Periode Cuti ${mstCuti.tahunCutiTidakBaru} ");
     }
 
     // 4. Saldo Cuti Awal (Tahun Masuk)
@@ -414,23 +438,21 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
                              create.hitungLibur!;
     */
 
-    final createSakitCuti = create.createSakitCuti;
-
     final bool saldoCutiTidakCukup = totalHariCutiBaru < 0;
 
     if (sayaCutiDiTahunMasuk) {
       if (saldoCutiTidakCukup) {
         throw AssertionError(
-            'Sisa Saldo Cuti Tidak Cukup! Saldo Cuti Anda Tersisa ${createSakitCuti!.cutiBaru} untuk periode ${createSakitCuti.tahunCutiTidakBaru}');
+            'Sisa Saldo Cuti Tidak Cukup! Saldo Cuti Anda Tersisa ${mstCuti.cutiBaru} untuk periode ${mstCuti.tahunCutiTidakBaru}');
       }
     }
 
     // untuk mereset cuti baru jika tgl_start melebihi tanggal expired (datemsk)
-    if (createSakitCuti!.cutiBaru! > 0 && !tglAwaltglMasukDiff.isNegative) {
+    if (mstCuti.cutiBaru! > 0 && !tglAwaltglMasukDiff.isNegative) {
       // BELOM UPDATE QUERY
 
       throw AssertionError(
-          "Saldo Periode ${createMasukInDateTime.year} Tersisa ${createSakitCuti.cutiBaru} Dan Telah Expired! Silahkan Refresh Page dan Input Kembali");
+          "Saldo Periode ${createMasukInDateTime.year} Tersisa ${mstCuti.cutiBaru} Dan Telah Expired! Silahkan Refresh Page dan Input Kembali");
     }
 
     final bool saldoCutiTidakBaruTidakCukup = totalHariCutiTidakBaru < 0;
@@ -441,7 +463,7 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
         // BELOM UPDATE QUERY
 
         throw AssertionError(
-            "Sisa Saldo Cuti Tidak Cukup! Saldo Cuti Anda Tersisa ${createSakitCuti.cutiTidakBaru} Untuk Periode ${createSakitCuti.tahunCutiTidakBaru}");
+            "Sisa Saldo Cuti Tidak Cukup! Saldo Cuti Anda Tersisa ${mstCuti.cutiTidakBaru} Untuk Periode ${mstCuti.tahunCutiTidakBaru}");
       }
     }
 
@@ -453,10 +475,10 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
     //    variables :
     //
     //    final createMasukInDateTime = DateTime.parse(create.masuk!);
-    //    final openDateMax = DateTime(create.createSakitCuti!.openDate!.year + 1, 6, 30);
+    //    final openDateMax = DateTime(mstCuti.openDate!.year + 1, 6, 30);
     //
     /*     
-        totalHariCutiTidakBaru =  createSakitCuti!.cutiTidakBaru! -
+        totalHariCutiTidakBaru =  mstCuti!.cutiTidakBaru! -
                                   tglAkhirInDateTime.difference(tglAwalInDateTime).inDays -
                                   jumlahhari -
                                   create.hitungLibur!;
@@ -467,7 +489,7 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
         // BELOM UPDATE QUERY
 
         throw AssertionError(
-            "Sisa Saldo Cuti Tidak Cukup! Saldo Cuti Anda Tersisa ${createSakitCuti.cutiTidakBaru} Untuk Periode ${createSakitCuti.tahunCutiTidakBaru}");
+            "Sisa Saldo Cuti Tidak Cukup! Saldo Cuti Anda Tersisa ${mstCuti.cutiTidakBaru} Untuk Periode ${mstCuti.tahunCutiTidakBaru}");
       }
     }
   }
@@ -490,7 +512,7 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
 
     final isCutiEmergencyOrTahunan = jenisCuti == 'CE' || jenisCuti == 'CT';
 
-    // 3. CALC JUMLAH MASA KERJA, JIKA KURANG DARI 12 BULAN
+    // 2. CALC JUMLAH MASA KERJA, JIKA KURANG DARI 12 BULAN
     if (DateTime.now().difference(DateTime.parse(create.masuk!)).inDays < 365 &&
         isCutiEmergencyOrTahunan) {
       throw AssertionError(
@@ -582,16 +604,15 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
   }
 
   String _returnTahunCuti(
-      {required CreateSakit create, required int tglAwaltglMasukDiff}) {
+      {required MstKaryawanCuti mstCuti, required int tglAwaltglMasukDiff}) {
     // 2. Mendapatkan tahun Cuti untuk dikirim
     //    ke proses insert
     //
-    if (create.createSakitCuti!.cutiBaru == 0 ||
-        create.createSakitCuti!.cutiBaru! > 0 &&
-            !tglAwaltglMasukDiff.isNegative) {
-      return create.createSakitCuti!.tahunCutiTidakBaru!;
+    if (mstCuti.cutiBaru == 0 ||
+        mstCuti.cutiBaru! > 0 && !tglAwaltglMasukDiff.isNegative) {
+      return mstCuti.tahunCutiTidakBaru!;
     } else {
-      return create.createSakitCuti!.tahunCutiBaru!;
+      return mstCuti.tahunCutiBaru!;
     }
   }
 }

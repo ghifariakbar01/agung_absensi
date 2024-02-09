@@ -1,6 +1,8 @@
 import 'package:dartz/dartz.dart';
 
+import '../../../mst_karyawan_cuti/application/mst_karyawan_cuti.dart';
 import '../../create_sakit/application/create_sakit.dart';
+
 import '../../sakit_list/application/sakit_list.dart';
 import 'sakit_approve_remote_service.dart.dart';
 
@@ -19,9 +21,15 @@ class SakitApproveRepository {
     required String note,
     required SakitList itemSakit,
     required CreateSakit createSakit,
+    required MstKaryawanCuti mstCuti,
   }) {
     return _remoteService.approveHrdTanpaSurat(
-        nama: nama, note: note, itemSakit: itemSakit, createSakit: createSakit);
+      nama: nama,
+      note: note,
+      itemSakit: itemSakit,
+      createSakit: createSakit,
+      mstCuti: mstCuti,
+    );
   }
 
   Future<Unit> approveHrdDenganSurat({
@@ -48,9 +56,13 @@ class SakitApproveRepository {
     required String nama,
     required SakitList itemSakit,
     required CreateSakit createSakit,
+    required MstKaryawanCuti mstCuti,
   }) {
     return _remoteService.unApproveHrdTanpaSurat(
-        nama: nama, itemSakit: itemSakit, createSakit: createSakit);
+        nama: nama,
+        itemSakit: itemSakit,
+        createSakit: createSakit,
+        mstCuti: mstCuti);
   }
 
   Future<Unit> unapproveSpv({

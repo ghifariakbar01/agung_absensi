@@ -6,7 +6,10 @@ import 'package:face_net_authentication/send_wa/application/send_wa_notifier.dar
 import 'package:face_net_authentication/wa_register/application/wa_register_notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../mst_karyawan_cuti/application/mst_karyawan_cuti.dart';
+import '../../../mst_karyawan_cuti/application/mst_karyawan_cuti_notifier.dart';
 import '../../../sakit/create_sakit/application/create_sakit.dart';
+
 import '../../../shared/providers.dart';
 import '../../../wa_register/application/wa_register.dart';
 
@@ -101,10 +104,15 @@ class CutiApproveController extends _$CutiApproveController {
 
       // calc saldo cuti
       // 1. get date masuk
+      final user = ref.read(userNotifierProvider).user;
+
       final CreateSakit create = await ref
           .read(createSakitNotifierProvider.notifier)
-          .getCreateSakit(ref.read(userNotifierProvider).user,
-              itemCuti.tglStart!, itemCuti.tglEnd!);
+          .getCreateSakit(user, itemCuti.tglStart!, itemCuti.tglEnd!);
+      final MstKaryawanCuti mstCuti = await ref
+          .read(mstKaryawanCutiNotifierProvider.notifier)
+          .getSaldoMasterCutiById(user.idUser!);
+
       final DateTime? dateMasuk = _returnDateMasuk(
           createMasukInDateTime: DateTime.parse(create.masuk!));
 
@@ -113,11 +121,11 @@ class CutiApproveController extends _$CutiApproveController {
       final sayaCutiDiTahunBerikutnya = int.parse(itemCuti.tahunCuti!) ==
           DateTime.parse(create.masuk!).year + 1;
       final tidakAdaCutiBaruDan =
-          create.createSakitCuti!.cutiBaru == 0 && !sayaCutiDiTahunYangSama;
+          mstCuti.cutiBaru == 0 && !sayaCutiDiTahunYangSama;
 
       final sayaCutiSaatMasuk =
           DateTime.parse(itemCuti.tglStart!).difference(dateMasuk!).isNegative;
-      final adaCutiBaruDan = create.createSakitCuti!.cutiBaru! > 0 &&
+      final adaCutiBaruDan = mstCuti.cutiBaru! > 0 &&
           !sayaCutiSaatMasuk &&
           !sayaCutiDiTahunYangSama;
 
@@ -134,11 +142,10 @@ class CutiApproveController extends _$CutiApproveController {
         //
       }
 
-      final cutiBaruSayaHabis =
-          create.createSakitCuti!.cutiBaru! - itemCuti.totalHari! == 0;
+      final cutiBaruSayaHabis = mstCuti.cutiBaru! - itemCuti.totalHari! == 0;
 
       final cutiTidakBaruSayaHabis =
-          create.createSakitCuti!.cutiTidakBaru! - itemCuti.totalHari! == 0;
+          mstCuti.cutiTidakBaru! - itemCuti.totalHari! == 0;
 
       if (sayaCutiDiTahunYangSama && cutiBaruSayaHabis) {
         // update
@@ -266,6 +273,9 @@ class CutiApproveController extends _$CutiApproveController {
     final CreateSakit createSakit = await ref
         .read(createSakitNotifierProvider.notifier)
         .getCreateSakit(user, item.tglStart!, item.tglEnd!);
+    final MstKaryawanCuti mstCuti = await ref
+        .read(mstKaryawanCutiNotifierProvider.notifier)
+        .getSaldoMasterCutiById(user.idUser!);
 
     if (jumlahHari - jumlahHariLibur - createSakit.hitungLibur! >= 3 &&
         item.jenisCuti == 'CT') {
@@ -273,8 +283,7 @@ class CutiApproveController extends _$CutiApproveController {
     }
 
     if (item.jenisCuti != 'CR') {
-      if (createSakit.createSakitCuti!.openDate!.year.toString() !=
-          item.tahunCuti) {
+      if (mstCuti.openDate!.year.toString() != item.tahunCuti) {
         return false;
       }
     }

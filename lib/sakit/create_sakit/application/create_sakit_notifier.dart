@@ -1,8 +1,10 @@
 import 'dart:developer';
 
+import 'package:face_net_authentication/mst_karyawan_cuti/application/mst_karyawan_cuti_notifier.dart';
 import 'package:face_net_authentication/sakit/create_sakit/application/create_sakit.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../mst_karyawan_cuti/application/mst_karyawan_cuti.dart';
 import '../../../send_wa/application/send_wa_notifier.dart';
 import '../../../shared/providers.dart';
 import '../../../user/application/user_model.dart';
@@ -84,6 +86,9 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
 
     try {
       final CreateSakit create = await getCreateSakit(user, tglAwal, tglAkhir);
+      final MstKaryawanCuti mstCuti = await ref
+          .read(mstKaryawanCutiNotifierProvider.notifier)
+          .getSaldoMasterCutiById(user.idUser!);
 
       final DateTime tglAwalInDateTime = DateTime.parse(tglAwal);
       final DateTime tglAkhirInDateTime = DateTime.parse(tglAkhir);
@@ -93,6 +98,7 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
 
       await _processSakit(
           create: create,
+          mstCuti: mstCuti,
           user: user,
           onError: onError,
           tglAwal: tglAwal,
@@ -100,10 +106,9 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
           jumlahhari: jumlahhari,
           suratDokter: suratDokter);
 
-      // final String messageContent =
-      //     " ( Testing Apps ) Terdapat Waiting Approve Pengajuan Izin Sakit Baru Telah Diinput Oleh : ${user.nama} ";
-
-      // await _sendWaToHead(idUser: user.idUser!, messageContent: messageContent);
+      final String messageContent =
+          " ( Testing Apps ) Terdapat Waiting Approve Pengajuan Izin Sakit Baru Telah Diinput Oleh : ${user.nama} ";
+      await _sendWaToHead(idUser: user.idUser!, messageContent: messageContent);
 
       state = await AsyncValue.guard(() => repo.submitSakit(
           idUser: user.idUser!,
@@ -138,6 +143,9 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
 
     try {
       final CreateSakit create = await getCreateSakit(user, tglAwal, tglAkhir);
+      final MstKaryawanCuti mstCuti = await ref
+          .read(mstKaryawanCutiNotifierProvider.notifier)
+          .getSaldoMasterCutiById(user.idUser!);
 
       final DateTime tglAwalInDateTime = DateTime.parse(tglAwal);
       final DateTime tglAkhirInDateTime = DateTime.parse(tglAkhir);
@@ -147,6 +155,7 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
 
       await _processSakit(
           create: create,
+          mstCuti: mstCuti,
           user: user,
           onError: onError,
           tglAwal: tglAwal,
@@ -179,6 +188,7 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
 
   Future<void> _processSakit({
     required CreateSakit create,
+    required MstKaryawanCuti mstCuti,
     //
     required int jumlahhari,
     required String tglAwal,
@@ -200,6 +210,7 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
     // SALDO CUTI
     await _calcSaldoCuti(
       create: create,
+      mstCuti: mstCuti,
       onError: onError,
       jumlahhari: jumlahhari,
       suratDokter: suratDokter,
@@ -235,6 +246,7 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
 
   Future<void> _calcSaldoCuti(
       {required CreateSakit create,
+      required MstKaryawanCuti mstCuti,
       //
       required int jumlahhari,
       required String suratDokter,
@@ -247,10 +259,10 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
     final createMasukInDateTimePlusOne =
         createMasukInDateTime.add(Duration(days: 365));
 
-    final openDate = create.createSakitCuti!.openDate;
-    final closeDateInDateTime = create.createSakitCuti!.closeDate!;
+    final openDate = mstCuti.openDate;
+    final closeDateInDateTime = mstCuti.closeDate!;
 
-    final jumlahCutiTidakBaru = create.createSakitCuti!.cutiTidakBaru!;
+    final jumlahCutiTidakBaru = mstCuti.cutiTidakBaru!;
     final diffSinceOpenDate = DateTime.now().difference(openDate!).inDays;
 
     final isSameYear = tglAwalInDateTime.year != createMasukInDateTime.year ||
@@ -261,10 +273,10 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
         suratDokter == 'TS' &&
         diffSinceOpenDate > 0) {
       throw AssertionError(
-          " Saldo Cuti ${closeDateInDateTime.year} Habis! Belum Masuk Periode Cuti ${create.createSakitCuti!.tahunCutiTidakBaru} ");
+          " Saldo Cuti ${closeDateInDateTime.year} Habis! Belum Masuk Periode Cuti ${mstCuti.tahunCutiTidakBaru} ");
     }
 
-    final cutiBaru = create.createSakitCuti!.cutiBaru!;
+    final cutiBaru = mstCuti.cutiBaru!;
     final endStartPlusOneDiffInDays = tglAkhirInDateTime
         .difference(tglAwalInDateTime.add(Duration(days: 1)))
         .inDays;
@@ -275,18 +287,18 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
     if (cutiBaru > 0 && suratDokter == 'TS') {
       if (totalHariCutiBaru < 0) {
         throw AssertionError("Sisa Saldo Cuti Tidak Cukup! " +
-            " Saldo Cuti Anda Tersisa $cutiBaru  Untuk Periode ${create.createSakitCuti!.tahunCutiBaru} ");
+            " Saldo Cuti Anda Tersisa $cutiBaru  Untuk Periode ${mstCuti.tahunCutiBaru} ");
       }
     }
 
-    final cutiTidakBaru = create.createSakitCuti!.cutiTidakBaru!;
+    final cutiTidakBaru = mstCuti.cutiTidakBaru!;
     final totalHariCutiTidakBaru = cutiTidakBaru -
         (endStartPlusOneDiffInDays - jumlahhari) -
         create.hitungLibur!;
 
     if (totalHariCutiTidakBaru < 0) {
       throw AssertionError("Sisa Saldo Cuti Tidak Cukup! " +
-          " Saldo Cuti Anda Tersisa $cutiTidakBaru  Untuk Periode ${create.createSakitCuti!.tahunCutiTidakBaru} ");
+          " Saldo Cuti Anda Tersisa $cutiTidakBaru  Untuk Periode ${mstCuti.tahunCutiTidakBaru} ");
     }
   }
 

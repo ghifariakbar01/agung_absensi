@@ -1,13 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'create_sakit_cuti.dart';
+part of 'mst_karyawan_cuti.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_CreateSakit _$$_CreateSakitFromJson(Map<String, dynamic> json) =>
-    _$_CreateSakit(
+_$_MstKaryawanCuti _$$_MstKaryawanCutiFromJson(Map<String, dynamic> json) =>
+    _$_MstKaryawanCuti(
       idMstCuti: json['id_mst_cuti'] as int?,
       openDate: json['open_date'] == null
           ? null
@@ -21,7 +21,7 @@ _$_CreateSakit _$$_CreateSakitFromJson(Map<String, dynamic> json) =>
       cutiBaru: json['cuti_baru'] as int?,
     );
 
-Map<String, dynamic> _$$_CreateSakitToJson(_$_CreateSakit instance) =>
+Map<String, dynamic> _$$_MstKaryawanCutiToJson(_$_MstKaryawanCuti instance) =>
     <String, dynamic>{
       'id_mst_cuti': instance.idMstCuti,
       'open_date': instance.openDate?.toIso8601String(),

@@ -6,7 +6,9 @@ import 'package:dio/dio.dart';
 import 'package:face_net_authentication/infrastructure/dio_extensions.dart';
 
 import '../../../infrastructure/exceptions.dart';
+import '../../../mst_karyawan_cuti/application/mst_karyawan_cuti.dart';
 import '../../create_sakit/application/create_sakit.dart';
+
 import '../../sakit_list/application/sakit_list.dart';
 
 class SakitApproveRemoteService {
@@ -121,13 +123,14 @@ class SakitApproveRemoteService {
     required String note,
     required SakitList itemSakit,
     required CreateSakit createSakit,
+    required MstKaryawanCuti mstCuti,
   }) async {
     // 2. CALC SALDO CUTI
 
     // jika cuti baru habis dengan total hari sakit maka
     // cuti baru = 0
     // jika tidak habis maka jumlah cuti baru = cuti baru - total hari sakit
-    final int cutiBaruOld = createSakit.createSakitCuti!.cutiBaru!;
+    final int cutiBaruOld = mstCuti.cutiBaru!;
     final int cutiBaruNew =
         itemSakit.totHari! == 0 ? 0 : cutiBaruOld - itemSakit.totHari!;
 
@@ -137,13 +140,12 @@ class SakitApproveRemoteService {
       // jika tidak maka close date ditambah satu tahun
       // open date akan ditambah satu tahun terlepas dari semua kondisi
 
-      final openDateOld = createSakit.createSakitCuti!.openDate;
-      final openDateOldPlusOneYear =
-          createSakit.createSakitCuti!.openDate!.add(Duration(days: 365));
+      final openDateOld = mstCuti.openDate;
+      final openDateOldPlusOneYear = mstCuti.openDate!.add(Duration(days: 365));
 
-      final closeDateOld = createSakit.createSakitCuti!.closeDate;
+      final closeDateOld = mstCuti.closeDate;
       final closeDateOldPlusOneYear =
-          createSakit.createSakitCuti!.closeDate!.add(Duration(days: 365));
+          mstCuti.closeDate!.add(Duration(days: 365));
 
       DateTime? closeDateNew;
       DateTime? openDateNew;
@@ -164,7 +166,7 @@ class SakitApproveRemoteService {
               " cuti_baru  = '$cutiBaruNew', "
               " close_date  = '$closeDateNew', "
               " open_date  = '$openDateNew' "
-              " WHERE id_mst_cuti =  ${createSakit.createSakitCuti!.idMstCuti} "
+              " WHERE id_mst_cuti =  ${mstCuti.idMstCuti} "
               //
               " UPDATE $dbName SET "
               " sisa_cuti  = '$cutiBaruNew', "
@@ -211,20 +213,19 @@ class SakitApproveRemoteService {
       // dan jika open date = close date maka close date masih sama
       // jika open date != close date maka close date = close date ditambah satu tahun
 
-      final int cutiTidakBaruOld = createSakit.createSakitCuti!.cutiTidakBaru!;
+      final int cutiTidakBaruOld = mstCuti.cutiTidakBaru!;
       final int cutiTidakBaruNew = cutiTidakBaruOld - itemSakit.totHari! == 0
           ? 12
           : cutiTidakBaruOld - itemSakit.totHari!;
 
       int? tahunCutiTidakBaru;
 
-      final openDateOld = createSakit.createSakitCuti!.openDate;
-      final openDateOldPlusOneYear =
-          createSakit.createSakitCuti!.openDate!.add(Duration(days: 365));
+      final openDateOld = mstCuti.openDate;
+      final openDateOldPlusOneYear = mstCuti.openDate!.add(Duration(days: 365));
 
-      final closeDateOld = createSakit.createSakitCuti!.closeDate;
+      final closeDateOld = mstCuti.closeDate;
       final closeDateOldPlusOneYear =
-          createSakit.createSakitCuti!.closeDate!.add(Duration(days: 365));
+          mstCuti.closeDate!.add(Duration(days: 365));
 
       DateTime? closeDateNew;
       DateTime? openDateNew;
@@ -248,7 +249,7 @@ class SakitApproveRemoteService {
               " ${tahunCutiTidakBaru != null ? ", tahun_cuti_tidak_baru  = $tahunCutiTidakBaru, " : ""}  "
               " ${openDateNew != null ? " open_date = $openDateNew, " : ""} "
               " ${closeDateNew != null ? " close_date = $closeDateNew " : ""} "
-              " WHERE id_mst_cuti =  ${createSakit.createSakitCuti!.idMstCuti} "
+              " WHERE id_mst_cuti =  ${mstCuti.idMstCuti} "
               //
               " UPDATE $dbName SET "
               " sisa_cuti  = '$cutiTidakBaruNew' "
@@ -380,6 +381,7 @@ class SakitApproveRemoteService {
     required String nama,
     required SakitList itemSakit,
     required CreateSakit createSakit,
+    required MstKaryawanCuti mstCuti,
   }) async {
     // 1. UPDATE SAKIT
     try {
@@ -387,12 +389,10 @@ class SakitApproveRemoteService {
       int? cutiBaruNew;
       DateTime masuk = DateTime.parse(createSakit.masuk!);
 
-      if (masuk.year != createSakit.createSakitCuti!.openDate!.year) {
-        cutiTidakBaruNew =
-            createSakit.createSakitCuti!.cutiTidakBaru! + itemSakit.totHari!;
+      if (masuk.year != mstCuti.openDate!.year) {
+        cutiTidakBaruNew = mstCuti.cutiTidakBaru! + itemSakit.totHari!;
       } else {
-        cutiBaruNew =
-            createSakit.createSakitCuti!.cutiBaru! + itemSakit.totHari!;
+        cutiBaruNew = mstCuti.cutiBaru! + itemSakit.totHari!;
       }
 
       final Map<String, String> updateSakit = {
@@ -405,7 +405,7 @@ class SakitApproveRemoteService {
                 " UPDATE $dbMstCutiNew SET "
                 " ${cutiTidakBaruNew != null ? " cuti_tidak_baru = $cutiTidakBaruNew " : ""} " +
             " ${cutiBaruNew != null ? " cuti_baru = $cutiBaruNew " : ""} " +
-            " WHERE FORMAT(open_date, 'yyyy-01-01') = '${createSakit.createSakitCuti!.openDate!.year}-01-01' "
+            " WHERE FORMAT(open_date, 'yyyy-01-01') = '${mstCuti.openDate!.year}-01-01' "
                 " AND id_user = ${itemSakit.idUser} ",
         "mode": "UPDATE"
       };

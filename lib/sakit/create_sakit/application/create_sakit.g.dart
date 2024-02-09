@@ -12,10 +12,6 @@ _$_CreateSakit _$$_CreateSakitFromJson(Map<String, dynamic> json) =>
       hitungLibur: json['hitunglibur'] as int?,
       bulanan: json['bulanan'] as bool? ?? false,
       masuk: json['Masuk'] as String?,
-      createSakitCuti: json['createSakitCuti'] == null
-          ? null
-          : CreateSakitCuti.fromJson(
-              json['createSakitCuti'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$_CreateSakitToJson(_$_CreateSakit instance) =>
@@ -24,5 +20,4 @@ Map<String, dynamic> _$$_CreateSakitToJson(_$_CreateSakit instance) =>
       'hitunglibur': instance.hitungLibur,
       'bulanan': instance.bulanan,
       'Masuk': instance.masuk,
-      'createSakitCuti': instance.createSakitCuti,
     };

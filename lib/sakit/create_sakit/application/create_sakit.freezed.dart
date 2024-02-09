@@ -27,7 +27,6 @@ mixin _$CreateSakit {
   bool get bulanan => throw _privateConstructorUsedError;
   @JsonKey(name: 'Masuk')
   String? get masuk => throw _privateConstructorUsedError;
-  CreateSakitCuti? get createSakitCuti => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -45,10 +44,7 @@ abstract class $CreateSakitCopyWith<$Res> {
       {@JsonKey(name: 'jdw_sabtu') String? jadwalSabtu,
       @JsonKey(name: 'hitunglibur') int? hitungLibur,
       bool bulanan,
-      @JsonKey(name: 'Masuk') String? masuk,
-      CreateSakitCuti? createSakitCuti});
-
-  $CreateSakitCutiCopyWith<$Res>? get createSakitCuti;
+      @JsonKey(name: 'Masuk') String? masuk});
 }
 
 /// @nodoc
@@ -68,7 +64,6 @@ class _$CreateSakitCopyWithImpl<$Res, $Val extends CreateSakit>
     Object? hitungLibur = freezed,
     Object? bulanan = null,
     Object? masuk = freezed,
-    Object? createSakitCuti = freezed,
   }) {
     return _then(_value.copyWith(
       jadwalSabtu: freezed == jadwalSabtu
@@ -87,23 +82,7 @@ class _$CreateSakitCopyWithImpl<$Res, $Val extends CreateSakit>
           ? _value.masuk
           : masuk // ignore: cast_nullable_to_non_nullable
               as String?,
-      createSakitCuti: freezed == createSakitCuti
-          ? _value.createSakitCuti
-          : createSakitCuti // ignore: cast_nullable_to_non_nullable
-              as CreateSakitCuti?,
     ) as $Val);
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $CreateSakitCutiCopyWith<$Res>? get createSakitCuti {
-    if (_value.createSakitCuti == null) {
-      return null;
-    }
-
-    return $CreateSakitCutiCopyWith<$Res>(_value.createSakitCuti!, (value) {
-      return _then(_value.copyWith(createSakitCuti: value) as $Val);
-    });
   }
 }
 
@@ -119,11 +98,7 @@ abstract class _$$_CreateSakitCopyWith<$Res>
       {@JsonKey(name: 'jdw_sabtu') String? jadwalSabtu,
       @JsonKey(name: 'hitunglibur') int? hitungLibur,
       bool bulanan,
-      @JsonKey(name: 'Masuk') String? masuk,
-      CreateSakitCuti? createSakitCuti});
-
-  @override
-  $CreateSakitCutiCopyWith<$Res>? get createSakitCuti;
+      @JsonKey(name: 'Masuk') String? masuk});
 }
 
 /// @nodoc
@@ -141,7 +116,6 @@ class __$$_CreateSakitCopyWithImpl<$Res>
     Object? hitungLibur = freezed,
     Object? bulanan = null,
     Object? masuk = freezed,
-    Object? createSakitCuti = freezed,
   }) {
     return _then(_$_CreateSakit(
       jadwalSabtu: freezed == jadwalSabtu
@@ -160,10 +134,6 @@ class __$$_CreateSakitCopyWithImpl<$Res>
           ? _value.masuk
           : masuk // ignore: cast_nullable_to_non_nullable
               as String?,
-      createSakitCuti: freezed == createSakitCuti
-          ? _value.createSakitCuti
-          : createSakitCuti // ignore: cast_nullable_to_non_nullable
-              as CreateSakitCuti?,
     ));
   }
 }
@@ -175,8 +145,7 @@ class _$_CreateSakit implements _CreateSakit {
       {@JsonKey(name: 'jdw_sabtu') this.jadwalSabtu,
       @JsonKey(name: 'hitunglibur') this.hitungLibur,
       this.bulanan = false,
-      @JsonKey(name: 'Masuk') this.masuk,
-      this.createSakitCuti});
+      @JsonKey(name: 'Masuk') this.masuk});
 
   factory _$_CreateSakit.fromJson(Map<String, dynamic> json) =>
       _$$_CreateSakitFromJson(json);
@@ -193,12 +162,10 @@ class _$_CreateSakit implements _CreateSakit {
   @override
   @JsonKey(name: 'Masuk')
   final String? masuk;
-  @override
-  final CreateSakitCuti? createSakitCuti;
 
   @override
   String toString() {
-    return 'CreateSakit(jadwalSabtu: $jadwalSabtu, hitungLibur: $hitungLibur, bulanan: $bulanan, masuk: $masuk, createSakitCuti: $createSakitCuti)';
+    return 'CreateSakit(jadwalSabtu: $jadwalSabtu, hitungLibur: $hitungLibur, bulanan: $bulanan, masuk: $masuk)';
   }
 
   @override
@@ -211,15 +178,13 @@ class _$_CreateSakit implements _CreateSakit {
             (identical(other.hitungLibur, hitungLibur) ||
                 other.hitungLibur == hitungLibur) &&
             (identical(other.bulanan, bulanan) || other.bulanan == bulanan) &&
-            (identical(other.masuk, masuk) || other.masuk == masuk) &&
-            (identical(other.createSakitCuti, createSakitCuti) ||
-                other.createSakitCuti == createSakitCuti));
+            (identical(other.masuk, masuk) || other.masuk == masuk));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, jadwalSabtu, hitungLibur, bulanan, masuk, createSakitCuti);
+  int get hashCode =>
+      Object.hash(runtimeType, jadwalSabtu, hitungLibur, bulanan, masuk);
 
   @JsonKey(ignore: true)
   @override
@@ -240,8 +205,7 @@ abstract class _CreateSakit implements CreateSakit {
       {@JsonKey(name: 'jdw_sabtu') final String? jadwalSabtu,
       @JsonKey(name: 'hitunglibur') final int? hitungLibur,
       final bool bulanan,
-      @JsonKey(name: 'Masuk') final String? masuk,
-      final CreateSakitCuti? createSakitCuti}) = _$_CreateSakit;
+      @JsonKey(name: 'Masuk') final String? masuk}) = _$_CreateSakit;
 
   factory _CreateSakit.fromJson(Map<String, dynamic> json) =
       _$_CreateSakit.fromJson;
@@ -257,8 +221,6 @@ abstract class _CreateSakit implements CreateSakit {
   @override
   @JsonKey(name: 'Masuk')
   String? get masuk;
-  @override
-  CreateSakitCuti? get createSakitCuti;
   @override
   @JsonKey(ignore: true)
   _$$_CreateSakitCopyWith<_$_CreateSakit> get copyWith =>
