@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:face_net_authentication/infrastructure/dio_extensions.dart';
 
 import '../../../infrastructure/exceptions.dart';
+import '../application/phone_num.dart';
 
 class SendWaRemoteService {
   SendWaRemoteService(
@@ -17,9 +18,10 @@ class SendWaRemoteService {
   final Map<String, String> _dioRequest;
 
   static const String dbName = 'wa_msg_report';
+  static const String dbMstUser = 'mst_user';
 
   String _formatPhone(int phoneNumber) {
-    final String phoneString = phoneNumber.toString();
+    final phoneString = phoneNumber.toString();
 
     if (phoneString.startsWith('62')) {
       return phoneString;
@@ -87,6 +89,67 @@ class SendWaRemoteService {
 
       if (items['status'] == 'Success') {
         return unit;
+      } else {
+        final message = items['error'] as String?;
+        final errorCode = items['errornum'] as int;
+
+        throw RestApiExceptionWithMessage(errorCode, message);
+      }
+    } on FormatException catch (e) {
+      throw FormatException(e.message);
+    } on DioError catch (e) {
+      if (e.isNoConnectionError || e.isConnectionTimeout) {
+        throw NoConnectionException();
+      } else if (e.response != null) {
+        throw RestApiException(e.response?.statusCode);
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  Future<PhoneNum> getPhoneById({
+    required int idUser,
+  }) async {
+    try {
+      final data = _dioRequest;
+
+      final Map<String, String> select = {
+        'command': //
+            " SELECT no_telp1, no_telp2 FROM $dbMstUser WHERE id_user = $idUser ",
+        'mode': 'SELECT'
+      };
+
+      data.addAll(select);
+
+      final response = await _dio.post('',
+          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
+
+      log('data ${jsonEncode(data)}');
+      log('response $response');
+
+      final items = response.data?[0];
+
+      if (items['status'] == 'Success') {
+        final listExist = items['items'] != null && items['items'] is List;
+
+        if (listExist) {
+          final list = items['items'] as List;
+
+          if (list.isNotEmpty) {
+            return PhoneNum.fromJson(list[0] as Map<String, dynamic>);
+          } else {
+            final message = items['error'] as String?;
+            final errorCode = items['errornum'] as int;
+
+            throw RestApiExceptionWithMessage(errorCode, message);
+          }
+        } else {
+          final message = items['error'] as String?;
+          final errorCode = items['errornum'] as int;
+
+          throw RestApiExceptionWithMessage(errorCode, message);
+        }
       } else {
         final message = items['error'] as String?;
         final errorCode = items['errornum'] as int;

@@ -41,7 +41,7 @@ final waHeadHelperRepositoryProvider =
 
 typedef WaHeadHelperRepositoryRef = ProviderRef<WaHeadHelperRepository>;
 String _$waHeadHelperNotifierHash() =>
-    r'0d3c941039b5b0a61a920f32afbe186f51a06c95';
+    r'bcd8a2a6b24270d9d35a7d40033ee491bb8af899';
 
 /// See also [WaHeadHelperNotifier].
 @ProviderFor(WaHeadHelperNotifier)

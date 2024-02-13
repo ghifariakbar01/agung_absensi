@@ -3,15 +3,14 @@ import 'dart:developer';
 import 'package:face_net_authentication/cuti/cuti_approve/infrastructure/cuti_approve_remote_service.dart.dart';
 import 'package:face_net_authentication/sakit/create_sakit/application/create_sakit_notifier.dart';
 import 'package:face_net_authentication/send_wa/application/send_wa_notifier.dart';
-import 'package:face_net_authentication/wa_register/application/wa_register_notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../mst_karyawan_cuti/application/mst_karyawan_cuti.dart';
 import '../../../mst_karyawan_cuti/application/mst_karyawan_cuti_notifier.dart';
 import '../../../sakit/create_sakit/application/create_sakit.dart';
 
+import '../../../send_wa/application/phone_num.dart';
 import '../../../shared/providers.dart';
-import '../../../wa_register/application/wa_register.dart';
 
 import '../../cuti_list/application/cuti_list.dart';
 
@@ -40,23 +39,29 @@ class CutiApproveController extends _$CutiApproveController {
 
   Future<void> _sendWa(
       {required CutiList itemCuti, required String messageContent}) async {
-    final WaRegister registeredWa = await ref
-        .read(waRegisterNotifierProvider.notifier)
-        .getCurrentRegisteredWa();
+    final PhoneNum registeredWa = await ref
+        .read(sendWaNotifierProvider.notifier)
+        .getPhoneById(idUser: itemCuti.idUser!);
 
-    if (registeredWa.phone != null) {
-      //
+    if (registeredWa.noTelp1!.isNotEmpty) {
       await ref.read(sendWaNotifierProvider.notifier).sendWaDirect(
-          phone: int.parse(registeredWa.phone!),
+          phone: int.parse(registeredWa.noTelp1!),
+          idUser: itemCuti.idUser!,
+          // idDept: itemCuti.idDept!,
+          idDept: 1,
+          notifTitle: 'Notifikasi HRMS',
+          notifContent: '$messageContent');
+    } else if (registeredWa.noTelp2!.isNotEmpty) {
+      await ref.read(sendWaNotifierProvider.notifier).sendWaDirect(
+          phone: int.parse(registeredWa.noTelp2!),
           idUser: itemCuti.idUser!,
           // idDept: itemCuti.idDept!,
           idDept: 1,
           notifTitle: 'Notifikasi HRMS',
           notifContent: '$messageContent');
     } else {
-      //
       throw AssertionError(
-          'Phone number not Registerd. Daftarkan dahulu nomor Wa Anda di Home');
+          'User yang dituju tidak memiliki nomor telfon. Silahkan hubungi HR ');
     }
   }
 
@@ -72,11 +77,10 @@ class CutiApproveController extends _$CutiApproveController {
           .read(cutiApproveRepositoryProvider)
           .approveSpv(nama: nama, note: note, idCuti: itemCuti.idCuti!);
       final String messageContent =
-          ' (Testing Apps) Izin Sakit Anda Sudah Diapprove Oleh Atasan $nama 2';
-
+          ' (Testing Apps) Izin Sakit Anda Sudah Diapprove Oleh Atasan $nama ';
       await _sendWa(itemCuti: itemCuti, messageContent: messageContent);
 
-      state = AsyncData<void>('Sukses Melakukan Approve Form Sakit');
+      state = AsyncData<void>('Sukses Melakukan Approve Form Cuti');
     } catch (e) {
       state = AsyncError(e, StackTrace.current);
     }
@@ -93,7 +97,7 @@ class CutiApproveController extends _$CutiApproveController {
           .read(cutiApproveRepositoryProvider)
           .unapproveSpv(nama: nama, idCuti: itemCuti.idCuti!);
 
-      state = AsyncData<void>('Sukses Melakukan Unapprove Form Sakit');
+      state = AsyncData<void>('Sukses Melakukan Unapprove Form Cuti');
     } catch (e) {
       state = AsyncError(e, StackTrace.current);
     }
@@ -106,117 +110,111 @@ class CutiApproveController extends _$CutiApproveController {
   }) async {
     state = const AsyncLoading();
 
-    try {
-      state = await AsyncValue.guard(() async {
-        if (itemCuti.jenisCuti != 'CR') {
-          final CreateSakit create = await ref
-              .read(createSakitNotifierProvider.notifier)
-              .getCreateSakit(
-                  itemCuti.idUser!, itemCuti.tglStart!, itemCuti.tglEnd!);
-          final MstKaryawanCuti mstCuti = await ref
-              .read(mstKaryawanCutiNotifierProvider.notifier)
-              .getSaldoMasterCutiById(itemCuti.idUser!);
+    state = await AsyncValue.guard(() async {
+      if (itemCuti.jenisCuti != 'CR') {
+        final CreateSakit create = await ref
+            .read(createSakitNotifierProvider.notifier)
+            .getCreateSakit(
+                itemCuti.idUser!, itemCuti.tglStart!, itemCuti.tglEnd!);
+        final MstKaryawanCuti mstCuti = await ref
+            .read(mstKaryawanCutiNotifierProvider.notifier)
+            .getSaldoMasterCutiById(itemCuti.idUser!);
 
-          final DateTime? dateMasuk = _returnDateMasuk(
-              createMasukInDateTime: DateTime.parse(create.masuk!));
+        final DateTime? dateMasuk = _returnDateMasuk(
+            createMasukInDateTime: DateTime.parse(create.masuk!));
 
-          final sayaCutiDiTahunYangSama = int.parse(itemCuti.tahunCuti!) ==
-              DateTime.parse(create.masuk!).year;
-          final sayaCutiDiTahunBerikutnya = int.parse(itemCuti.tahunCuti!) ==
-              DateTime.parse(create.masuk!).year + 1;
-          final tidakAdaCutiBaruDan =
-              mstCuti.cutiBaru == 0 && !sayaCutiDiTahunYangSama;
+        final sayaCutiDiTahunYangSama = int.parse(itemCuti.tahunCuti!) ==
+            DateTime.parse(create.masuk!).year;
+        final sayaCutiDiTahunBerikutnya = int.parse(itemCuti.tahunCuti!) ==
+            DateTime.parse(create.masuk!).year + 1;
+        final tidakAdaCutiBaruDan =
+            mstCuti.cutiBaru == 0 && !sayaCutiDiTahunYangSama;
 
-          final sayaCutiSaatMasuk = DateTime.parse(itemCuti.tglStart!)
-              .difference(dateMasuk!)
-              .isNegative;
-          final adaCutiBaruDan = mstCuti.cutiBaru! > 0 &&
-              !sayaCutiSaatMasuk &&
-              !sayaCutiDiTahunYangSama;
+        final sayaCutiSaatMasuk = DateTime.parse(itemCuti.tglStart!)
+            .difference(dateMasuk!)
+            .isNegative;
+        final adaCutiBaruDan = mstCuti.cutiBaru! > 0 &&
+            !sayaCutiSaatMasuk &&
+            !sayaCutiDiTahunYangSama;
 
-          // calc sisa cuti
-          if (itemCuti.hrdNm == null) {
-            await ref
-                .read(cutiApproveRepositoryProvider)
-                .calcSisaCuti(itemCuti: itemCuti);
-          }
-
-          // calc cuti_tidak_baru OR cuti_baru
-          if (tidakAdaCutiBaruDan || adaCutiBaruDan) {
-            // update
-            // cuti_tidak_baru
-            await ref.read(cutiApproveRepositoryProvider).calcCutiTidakBaru(
-                totalHari: itemCuti.totalHari!, mstCuti: mstCuti);
-
-            //
-          } else if (sayaCutiDiTahunYangSama && sayaCutiSaatMasuk) {
-            // update
-            // cuti_baru
-            await ref
-                .read(cutiApproveRepositoryProvider)
-                .calcCutiBaru(totalHari: itemCuti.totalHari!, mstCuti: mstCuti);
-            //
-          }
-
-          final cutiBaruSayaHabis =
-              mstCuti.cutiBaru! - itemCuti.totalHari! == 0;
-          final cutiTidakBaruSayaHabis =
-              mstCuti.cutiTidakBaru! - itemCuti.totalHari! == 0;
-
-          // calc close_date, open_date, cuti_tidak_baru, tahun_cuti_tidak_baru
-          if (sayaCutiDiTahunYangSama && cutiBaruSayaHabis) {
-            // update
-            // close_date
-            // open_date
-
-            await ref
-                .read(cutiApproveRepositoryProvider)
-                .calcCloseOpenDate(masuk: create.masuk!, mstCuti: mstCuti);
-            //
-          } else if (sayaCutiDiTahunYangSama && cutiTidakBaruSayaHabis) {
-            // update
-            // cuti_tidak_baru
-            // tahun_cuti_tidak_baru
-            // close_date
-            // open_date
-
-            await ref
-                .read(cutiApproveRepositoryProvider)
-                .calcCloseOpenCutiTidakBaruDanTahuCuti(
-                    masuk: create.masuk!, mstCuti: mstCuti);
-            //
-          } else if (!sayaCutiDiTahunYangSama && cutiTidakBaruSayaHabis ||
-              sayaCutiDiTahunBerikutnya) {
-            // update
-            // cuti_tidak_baru
-            // close_date
-            // open_date
-
-            await ref
-                .read(cutiApproveRepositoryProvider)
-                .calcCloseOpenCutiTidakBaruDanTahuCuti2(
-                  mstCuti: mstCuti,
-                );
-            //
-          }
+        // calc sisa cuti
+        if (itemCuti.hrdNm == null) {
+          await ref
+              .read(cutiApproveRepositoryProvider)
+              .calcSisaCuti(itemCuti: itemCuti);
         }
 
-        final String messageContent =
-            'Izin Sakit Anda Sudah Diapprove Oleh HRD $nama';
+        // calc cuti_tidak_baru OR cuti_baru
+        if (tidakAdaCutiBaruDan || adaCutiBaruDan) {
+          // update
+          // cuti_tidak_baru
+          await ref.read(cutiApproveRepositoryProvider).calcCutiTidakBaru(
+              totalHari: itemCuti.totalHari!, mstCuti: mstCuti);
 
-        await _sendWa(itemCuti: itemCuti, messageContent: messageContent);
+          //
+        } else if (sayaCutiDiTahunYangSama && sayaCutiSaatMasuk) {
+          // update
+          // cuti_baru
+          await ref
+              .read(cutiApproveRepositoryProvider)
+              .calcCutiBaru(totalHari: itemCuti.totalHari!, mstCuti: mstCuti);
+          //
+        }
 
-        await ref.read(cutiApproveRepositoryProvider).approveHrd(
-              nama: nama,
-              note: note,
-              itemCuti: itemCuti,
-            );
+        final cutiBaruSayaHabis = mstCuti.cutiBaru! - itemCuti.totalHari! == 0;
+        final cutiTidakBaruSayaHabis =
+            mstCuti.cutiTidakBaru! - itemCuti.totalHari! == 0;
 
-        return Future.value('Sukses Melakukan Approve Form Sakit');
-      });
-    } catch (e) {
-      state = AsyncError(e, StackTrace.current);
-    }
+        // calc close_date, open_date, cuti_tidak_baru, tahun_cuti_tidak_baru
+        if (sayaCutiDiTahunYangSama && cutiBaruSayaHabis) {
+          // update
+          // close_date
+          // open_date
+
+          await ref
+              .read(cutiApproveRepositoryProvider)
+              .calcCloseOpenDate(masuk: create.masuk!, mstCuti: mstCuti);
+          //
+        } else if (sayaCutiDiTahunYangSama && cutiTidakBaruSayaHabis) {
+          // update
+          // cuti_tidak_baru
+          // tahun_cuti_tidak_baru
+          // close_date
+          // open_date
+
+          await ref
+              .read(cutiApproveRepositoryProvider)
+              .calcCloseOpenCutiTidakBaruDanTahuCuti(
+                  masuk: create.masuk!, mstCuti: mstCuti);
+          //
+        } else if (!sayaCutiDiTahunYangSama && cutiTidakBaruSayaHabis ||
+            sayaCutiDiTahunBerikutnya) {
+          // update
+          // cuti_tidak_baru
+          // close_date
+          // open_date
+
+          await ref
+              .read(cutiApproveRepositoryProvider)
+              .calcCloseOpenCutiTidakBaruDanTahuCuti2(
+                mstCuti: mstCuti,
+              );
+          //
+        }
+      }
+
+      final String messageContent =
+          'Izin Sakit Anda Sudah Diapprove Oleh HRD $nama';
+      await _sendWa(itemCuti: itemCuti, messageContent: messageContent);
+
+      await ref.read(cutiApproveRepositoryProvider).approveHrd(
+            nama: nama,
+            note: note,
+            itemCuti: itemCuti,
+          );
+
+      return Future.value('Sukses Melakukan Approve Form Cuti');
+    });
   }
 
   Future<void> unapproveHrd({
@@ -285,7 +283,7 @@ class CutiApproveController extends _$CutiApproveController {
             itemCuti: itemCuti,
           );
 
-      state = AsyncData<void>('Sukses Melakukan Unapprove Form Sakit');
+      state = AsyncData<void>('Sukses Melakukan Unapprove Form Cuti');
     } catch (e) {
       state = AsyncError(e, StackTrace.current);
     }
@@ -293,7 +291,6 @@ class CutiApproveController extends _$CutiApproveController {
 
   Future<void> batal({
     required String nama,
-    required String note,
     required CutiList itemCuti,
   }) async {
     state = const AsyncLoading();
@@ -324,6 +321,14 @@ class CutiApproveController extends _$CutiApproveController {
             !sayaCutiSaatMasuk &&
             !sayaCutiDiTahunYangSama;
 
+        if (itemCuti.sisaCuti == 0 && !sayaCutiDiTahunYangSama) {
+          throw AssertionError('Sisa Cuti Tidak Ada');
+        }
+
+        if (itemCuti.spvSta == false && itemCuti.hrdSta == false) {
+          throw AssertionError('Belum diapprove Spv & Hrd');
+        }
+
         // calc sisa cuti
         if (itemCuti.hrdNm == null) {
           await ref
@@ -353,12 +358,20 @@ class CutiApproveController extends _$CutiApproveController {
         }
       }
 
-      await ref.read(cutiApproveRepositoryProvider).unapproveHrd(
+      debugger();
+
+      await ref.read(cutiApproveRepositoryProvider).batal(
             nama: nama,
             itemCuti: itemCuti,
           );
 
-      state = AsyncData<void>('Sukses Melakukan Unapprove Form Sakit');
+      final String messageContent =
+          ' (Testing Apps) Izin Cuti Anda Telah Di Batalkan Oleh : $nama ';
+      await _sendWa(itemCuti: itemCuti, messageContent: messageContent);
+
+      debugger();
+
+      state = AsyncData<void>('Sukses Membatalkan Form Cuti');
     } catch (e) {
       state = AsyncError(e, StackTrace.current);
     }
@@ -494,7 +507,7 @@ class CutiApproveController extends _$CutiApproveController {
 //         .read(cutiApproveRepositoryProvider)
 //         .unapproveSpv(nama: nama, itemSakit: itemSakit);
 
-//     state = AsyncData<void>('Sukses Unapprove Form Sakit');
+//     state = AsyncData<void>('Sukses Unapprove Form Cuti');
 //   } catch (e) {
 //     state = AsyncError(e, StackTrace.current);
 //   }
@@ -511,7 +524,7 @@ class CutiApproveController extends _$CutiApproveController {
 //     await ref.read(cutiApproveRepositoryProvider).unApproveHrdTanpaSurat(
 //         nama: nama, itemSakit: itemSakit, createSakit: createSakit);
 
-//     state = AsyncData<void>('Sukses Unapprove Form Sakit');
+//     state = AsyncData<void>('Sukses Unapprove Form Cuti');
 //   } catch (e) {
 //     state = AsyncError(e, StackTrace.current);
 //   }
@@ -533,7 +546,7 @@ class CutiApproveController extends _$CutiApproveController {
 //           itemSakit: itemSakit,
 //         );
 
-//     state = AsyncData<void>('Sukses Membatalkan Form Sakit');
+//     state = AsyncData<void>('Sukses Membatalkan Form Cuti');
 //   } catch (e) {
 //     state = AsyncError(e, StackTrace.current);
 //   }

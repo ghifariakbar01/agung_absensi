@@ -8,7 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 extension AsyncValueUI on AsyncValue {
   void showAlertDialogOnError(BuildContext context) {
-    debugPrint('isLoading: $isLoading, hasError: $hasError');
+    log('isLoading: $isLoading, hasError: $hasError');
     if (!isLoading && hasError) {
       String message = '';
 

@@ -13,6 +13,7 @@ import '../../../shared/providers.dart';
 import '../../../style/style.dart';
 
 import '../../../utils/string_utils.dart';
+import '../../../widgets/v_dialogs.dart';
 import '../../create_cuti/application/alasan_cuti.dart';
 import '../../create_cuti/application/jenis_cuti.dart';
 import '../application/cuti_list.dart';
@@ -45,7 +46,7 @@ class CutiListItem extends HookConsumerWidget {
     final jenisCuti = ref.watch(jenisCutiNotifierProvider);
     final alasanCuti = ref.watch(alasanCutiNotifierProvider);
 
-    final cutiApprove = ref.watch(cutiApproveControllerProvider);
+    log('item.btlSta ${item.btlSta == true}');
 
     return IgnorePointer(
       ignoring: item.btlSta == true,
@@ -392,25 +393,25 @@ class CutiListItem extends HookConsumerWidget {
                     color: Colors.transparent,
                     child: InkWell(
                       onTap: () {
-                        // showDialog(
-                        //     context: context,
-                        //     builder: (_) => VAlertDialog(
-                        //         label: 'Batalkan form sakit ?',
-                        //         labelDescription:
-                        //             'Jika Ya, form sakit tidak dapat digunakan.',
-                        //         onPressed: () async {
-                        //           await ref
-                        //               .read(sakitApproveControllerProvider
-                        //                   .notifier)
-                        //               .batal(
-                        //                 itemSakit: item,
-                        //                 nama: ref
-                        //                     .read(userNotifierProvider)
-                        //                     .user
-                        //                     .nama!,
-                        //               );
-                        //           context.pop();
-                        //         }));
+                        showDialog(
+                            context: context,
+                            builder: (_) => VAlertDialog(
+                                label: 'Batalkan form cuti ?',
+                                labelDescription:
+                                    'Jika Ya, form cuti tidak dapat digunakan.',
+                                onPressed: () async {
+                                  context.pop();
+                                  await ref
+                                      .read(cutiApproveControllerProvider
+                                          .notifier)
+                                      .batal(
+                                        itemCuti: item,
+                                        nama: ref
+                                            .read(userNotifierProvider)
+                                            .user
+                                            .nama!,
+                                      );
+                                }));
                       },
                       child: Ink(
                         child: Column(

@@ -48,6 +48,17 @@ class CutiApproveRepository {
     );
   }
 
+  Future<Unit> batal({
+    required String nama,
+    required CutiList itemCuti,
+    // required CreateSakit createSakit,
+  }) {
+    return _remoteService.batal(
+      nama: nama,
+      itemCuti: itemCuti,
+    );
+  }
+
   Future<Unit> calcSisaCuti(
       {required CutiList itemCuti, bool isRestore = false}) {
     return _remoteService.calcSisaCuti(

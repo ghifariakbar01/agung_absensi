@@ -35,7 +35,7 @@ class CutiApproveRemoteService {
         "mode": "UPDATE"
       };
 
-      debugger();
+      // debugger();
 
       final data = _dioRequest;
       data.addAll(updateSakit);
@@ -474,7 +474,6 @@ class CutiApproveRemoteService {
 
   Future<Unit> batal({
     required String nama,
-    required String note,
     required CutiList itemCuti,
   }) async {
     // 1. UPDATE SAKIT
@@ -482,7 +481,7 @@ class CutiApproveRemoteService {
       final Map<String, String> updateSakit = {
         "command": "UPDATE $dbName SET "
                 " btl_nm = '$nama', " +
-            " btl_sta = 0, " +
+            " btl_sta = 1, " +
             " btl_tgl = getdate() " +
             " WHERE id_cuti = ${itemCuti.idCuti} ",
         "mode": "UPDATE"

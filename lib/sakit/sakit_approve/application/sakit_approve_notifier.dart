@@ -1,13 +1,10 @@
-import 'dart:developer';
-
 import 'package:face_net_authentication/send_wa/application/send_wa_notifier.dart';
-import 'package:face_net_authentication/wa_register/application/wa_register_notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../mst_karyawan_cuti/application/mst_karyawan_cuti.dart';
 import '../../../mst_karyawan_cuti/application/mst_karyawan_cuti_notifier.dart';
+import '../../../send_wa/application/phone_num.dart';
 import '../../../shared/providers.dart';
-import '../../../wa_register/application/wa_register.dart';
 import '../../create_sakit/application/create_sakit.dart';
 
 import '../../create_sakit/application/create_sakit_notifier.dart';
@@ -39,24 +36,29 @@ class SakitApproveController extends _$SakitApproveController {
 
   Future<void> _sendWa(
       {required SakitList itemSakit, required String messageContent}) async {
-    debugger();
+    // debugger();
 
-    final WaRegister registeredWa = await ref
-        .read(waRegisterNotifierProvider.notifier)
-        .getCurrentRegisteredWa();
+    final PhoneNum registeredWa = await ref
+        .read(sendWaNotifierProvider.notifier)
+        .getPhoneById(idUser: itemSakit.idUser!);
 
-    if (registeredWa.phone != null) {
-      //
-      await ref.read(sendWaNotifierProvider.notifier).sendWa(
-          phone: int.parse(registeredWa.phone!),
+    if (registeredWa.noTelp1!.isNotEmpty) {
+      await ref.read(sendWaNotifierProvider.notifier).sendWaDirect(
+          phone: int.parse(registeredWa.noTelp1!),
+          idUser: itemSakit.idUser!,
+          idDept: itemSakit.idDept!,
+          notifTitle: 'Notifikasi HRMS',
+          notifContent: '$messageContent');
+    } else if (registeredWa.noTelp2!.isNotEmpty) {
+      await ref.read(sendWaNotifierProvider.notifier).sendWaDirect(
+          phone: int.parse(registeredWa.noTelp2!),
           idUser: itemSakit.idUser!,
           idDept: itemSakit.idDept!,
           notifTitle: 'Notifikasi HRMS',
           notifContent: '$messageContent');
     } else {
-      //
       throw AssertionError(
-          'Phone number not Registerd. Daftarkan dahulu nomor Wa Anda di Home');
+          'User yang dituju tidak memiliki nomor telfon. Silahkan hubungi HR ');
     }
   }
 
@@ -67,13 +69,12 @@ class SakitApproveController extends _$SakitApproveController {
     state = const AsyncLoading();
 
     try {
-      final String messageContent =
-          'Izin Sakit Anda Sudah Diapprove Oleh Atasan $nama';
-
-      await _sendWa(itemSakit: itemSakit, messageContent: messageContent);
       await ref
           .read(sakitApproveRepositoryProvider)
           .approveSpv(nama: nama, note: note, idSakit: itemSakit.idSakit!);
+      final String messageContent =
+          'Izin Sakit Anda Sudah Diapprove Oleh Atasan $nama';
+      await _sendWa(itemSakit: itemSakit, messageContent: messageContent);
 
       state = AsyncData<void>('Sukses Melakukan Approve Form Sakit');
     } catch (e) {
@@ -88,13 +89,12 @@ class SakitApproveController extends _$SakitApproveController {
     state = const AsyncLoading();
 
     try {
-      final String messageContent =
-          'Izin Sakit Anda Sudah Diapprove Oleh Atasan $nama';
-
-      await _sendWa(itemSakit: itemSakit, messageContent: messageContent);
       await ref
           .read(sakitApproveRepositoryProvider)
           .unapproveSpv(nama: nama, itemSakit: itemSakit);
+      final String messageContent =
+          'Izin Sakit Anda Sudah Diapprove Oleh Atasan $nama';
+      await _sendWa(itemSakit: itemSakit, messageContent: messageContent);
 
       state = AsyncData<void>('Sukses Unapprove Form Sakit');
     } catch (e) {
@@ -118,16 +118,17 @@ class SakitApproveController extends _$SakitApproveController {
           .read(mstKaryawanCutiNotifierProvider.notifier)
           .getSaldoMasterCutiById(itemSakit.idUser!);
 
-      final String messageContent =
-          'Izin Sakit Anda Sudah Diapprove Oleh HRD $namaHrd';
-
-      await _sendWa(itemSakit: itemSakit, messageContent: messageContent);
       await ref.read(sakitApproveRepositoryProvider).approveHrdTanpaSurat(
           namaHrd: namaHrd,
           note: note,
           itemSakit: itemSakit,
           createSakit: createSakit,
           mstCutiUser: mstCutiUser);
+
+      final String messageContent =
+          'Izin Sakit Anda Sudah Diapprove Oleh HRD $namaHrd';
+
+      await _sendWa(itemSakit: itemSakit, messageContent: messageContent);
 
       state = AsyncData<void>('Sukses Melakukan Approve Form Sakit');
     } catch (e) {
@@ -143,15 +144,16 @@ class SakitApproveController extends _$SakitApproveController {
     state = const AsyncLoading();
 
     try {
-      final String messageContent =
-          'Izin Sakit Anda Sudah Diapprove Oleh HRD $namaHrd';
-
-      await _sendWa(itemSakit: itemSakit, messageContent: messageContent);
       await ref.read(sakitApproveRepositoryProvider).approveHrdDenganSurat(
             nama: namaHrd,
             note: note,
             itemSakit: itemSakit,
           );
+
+      final String messageContent =
+          'Izin Sakit Anda Sudah Diapprove Oleh HRD $namaHrd';
+
+      await _sendWa(itemSakit: itemSakit, messageContent: messageContent);
 
       state = AsyncData<void>('Sukses Melakukan Approve Form Sakit');
     } catch (e) {
@@ -211,15 +213,14 @@ class SakitApproveController extends _$SakitApproveController {
     state = const AsyncLoading();
 
     try {
-      final String messageContent =
-          'Izin Sakit Anda Telah Di Batalkan Oleh : $nama';
-
-      await _sendWa(itemSakit: itemSakit, messageContent: messageContent);
       await ref.read(sakitApproveRepositoryProvider).batal(
             nama: nama,
             itemSakit: itemSakit,
           );
+      final String messageContent =
+          'Izin Sakit Anda Telah Di Batalkan Oleh : $nama';
 
+      await _sendWa(itemSakit: itemSakit, messageContent: messageContent);
       state = AsyncData<void>('Sukses Membatalkan Form Sakit');
     } catch (e) {
       state = AsyncError(e, StackTrace.current);

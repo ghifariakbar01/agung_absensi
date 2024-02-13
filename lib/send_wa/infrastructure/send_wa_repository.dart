@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 
+import '../application/phone_num.dart';
 import 'send_wa_remote_service.dart';
 
 class SendWaRepository {
@@ -23,5 +24,13 @@ class SendWaRepository {
         idDept: idDept,
         notifTitle: notifTitle,
         notifContent: notifContent);
+  }
+
+  Future<PhoneNum> getPhoneById({
+    required int idUser,
+  }) async {
+    return _remoteService.getPhoneById(
+      idUser: idUser,
+    );
   }
 }

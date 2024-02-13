@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dartz/dartz.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -5,6 +7,7 @@ import '../../../shared/providers.dart';
 
 import '../infrastructure/send_wa_remote_service.dart';
 import '../infrastructure/send_wa_repository.dart';
+import 'phone_num.dart';
 
 part 'send_wa_notifier.g.dart';
 
@@ -26,27 +29,27 @@ class SendWaNotifier extends _$SendWaNotifier {
   @override
   FutureOr<void> build() {}
 
-  Future<void> sendWa(
-      {
-      //
-      required int phone,
-      required int idUser,
-      required int idDept,
-      required String notifTitle,
-      required String notifContent
-      //
-      }) async {
-    state = const AsyncLoading();
+  // Future<void> sendWa(
+  //     {
+  //     //
+  //     required int phone,
+  //     required int idUser,
+  //     required int idDept,
+  //     required String notifTitle,
+  //     required String notifContent
+  //     //
+  //     }) async {
+  //   state = const AsyncLoading();
 
-    state = await AsyncValue.guard(() => ref
-        .read(sendWaRepositoryProvider)
-        .sendWa(
-            phone: phone,
-            idUser: idUser,
-            idDept: idDept,
-            notifTitle: notifTitle,
-            notifContent: notifContent));
-  }
+  //   state = await AsyncValue.guard(() => ref
+  //       .read(sendWaRepositoryProvider)
+  //       .sendWa(
+  //           phone: phone,
+  //           idUser: idUser,
+  //           idDept: idDept,
+  //           notifTitle: notifTitle,
+  //           notifContent: notifContent));
+  // }
 
   Future<Unit> sendWaDirect(
       {
@@ -64,5 +67,9 @@ class SendWaNotifier extends _$SendWaNotifier {
         idDept: idDept,
         notifTitle: notifTitle,
         notifContent: notifContent);
+  }
+
+  Future<PhoneNum> getPhoneById({required int idUser}) async {
+    return ref.read(sendWaRepositoryProvider).getPhoneById(idUser: idUser);
   }
 }
