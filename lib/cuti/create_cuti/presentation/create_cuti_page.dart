@@ -9,15 +9,18 @@ import 'package:face_net_authentication/widgets/v_scaffold_widget.dart';
 
 import 'package:face_net_authentication/shared/providers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../constants/assets.dart';
 import '../../../widgets/alert_helper.dart';
 import '../../../widgets/v_async_widget.dart';
 import '../../../style/style.dart';
 import '../../../utils/string_utils.dart';
+import '../../../widgets/v_dialogs.dart';
 import '../application/alasan_cuti.dart';
 import '../application/create_cuti_notifier.dart';
 
@@ -284,26 +287,31 @@ class CreateCutiPage extends HookConsumerWidget {
 
                             if (_formKey.currentState!.validate()) {
                               _formKey.currentState!.save();
-                              // await ref
-                              //     .read(createCutiNotifierProvider.notifier)
-                              //     .submitCuti(
-                              //         tglAwal: tglAwalTextController.value,
-                              //         tglAkhir: tglAkhirTextController.value,
-                              //         keterangan:
-                              //             keteranganCutiTextController.text,
-                              //         jenisCuti: jenisCutiTextController.value,
-                              //         alasanCuti:
-                              //             alasanCutiTextController.value,
-                              //         onError: (msg) => HapticFeedback.vibrate()
-                              //             .then((_) => showDialog(
-                              //                 context: context,
-                              //                 barrierDismissible: true,
-                              //                 builder: (_) => VSimpleDialog(
-                              //                       color: Palette.red,
-                              //                       asset: Assets.iconCrossed,
-                              //                       label: 'Oops',
-                              //                       labelDescription: msg,
-                              //                     ))));
+                              await ref
+                                  .read(createCutiNotifierProvider.notifier)
+                                  .submitCuti(
+                                      idUser: ref
+                                          .read(userNotifierProvider)
+                                          .user
+                                          .idUser!,
+                                      // CHANGE ID USER
+                                      tglAwal: tglAwalTextController.value,
+                                      tglAkhir: tglAkhirTextController.value,
+                                      keterangan:
+                                          keteranganCutiTextController.text,
+                                      jenisCuti: jenisCutiTextController.value,
+                                      alasanCuti:
+                                          alasanCutiTextController.value,
+                                      onError: (msg) => HapticFeedback.vibrate()
+                                          .then((_) => showDialog(
+                                              context: context,
+                                              barrierDismissible: true,
+                                              builder: (_) => VSimpleDialog(
+                                                    color: Palette.red,
+                                                    asset: Assets.iconCrossed,
+                                                    label: 'Oops',
+                                                    labelDescription: msg,
+                                                  ))));
                             }
                           }),
                     )

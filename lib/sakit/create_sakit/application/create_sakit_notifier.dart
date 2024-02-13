@@ -36,8 +36,6 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
 
   Future<void> _sendWaToHead(
       {required int idUser, required String messageContent}) async {
-    debugger();
-
     final List<WaHead> waHeads = await ref
         .read(waHeadHelperNotifierProvider.notifier)
         .getWaHeads(idUser: idUser);
@@ -45,19 +43,21 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
     if (waHeads.isNotEmpty) {
       for (int i = 0; i < waHeads.length; i++) {
         if (waHeads[i].telp1 != null) {
-          await ref.read(sendWaNotifierProvider.notifier).sendWa(
-              phone: int.parse(waHeads[i].telp1!),
-              idUser: waHeads[i].idUserHead!,
-              idDept: waHeads[i].idDept!,
-              notifTitle: 'Notifikasi HRMS',
-              notifContent: '$messageContent');
+          if (waHeads[i].telp1!.isNotEmpty)
+            await ref.read(sendWaNotifierProvider.notifier).sendWaDirect(
+                phone: int.parse(waHeads[i].telp1!),
+                idUser: waHeads[i].idUserHead!,
+                idDept: waHeads[i].idDept!,
+                notifTitle: 'Notifikasi HRMS',
+                notifContent: '$messageContent');
         } else if (waHeads[i].telp2 != null) {
-          await ref.read(sendWaNotifierProvider.notifier).sendWa(
-              phone: 6281385367083,
-              idUser: waHeads[i].idUserHead!,
-              idDept: waHeads[i].idDept!,
-              notifTitle: 'Notifikasi HRMS',
-              notifContent: '$messageContent');
+          if (waHeads[i].telp2!.isNotEmpty)
+            await ref.read(sendWaNotifierProvider.notifier).sendWaDirect(
+                phone: int.parse(waHeads[i].telp2!),
+                idUser: waHeads[i].idUserHead!,
+                idDept: waHeads[i].idDept!,
+                notifTitle: 'Notifikasi HRMS',
+                notifContent: '$messageContent');
         } else {
           throw AssertionError(
               'Atasan bernama ${waHeads[i].nama} tidak memiliki data nomor Hp...');
@@ -72,6 +72,7 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
   Future<void> submitSakit(
       {
       //
+      required int idUser,
       required String tglAwal,
       required String tglAkhir,
       required String keterangan,
@@ -81,44 +82,44 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
       ) async {
     state = const AsyncLoading();
 
-    final repo = ref.read(createSakitRepositoryProvider);
-    final user = ref.read(userNotifierProvider).user;
-
     try {
-      final CreateSakit create = await getCreateSakit(user, tglAwal, tglAkhir);
+      final CreateSakit create =
+          await getCreateSakit(idUser, tglAwal, tglAkhir);
       final MstKaryawanCuti mstCuti = await ref
           .read(mstKaryawanCutiNotifierProvider.notifier)
-          .getSaldoMasterCutiById(user.idUser!);
+          .getSaldoMasterCutiById(idUser);
 
       final DateTime tglAwalInDateTime = DateTime.parse(tglAwal);
       final DateTime tglAkhirInDateTime = DateTime.parse(tglAkhir);
-
       final int jumlahhari =
           _calcDiff(create, tglAwalInDateTime, tglAkhirInDateTime);
+
+      final cUser = ref.read(userNotifierProvider).user.nama;
 
       await _processSakit(
           create: create,
           mstCuti: mstCuti,
-          user: user,
-          onError: onError,
+          idUser: idUser,
           tglAwal: tglAwal,
           tglAkhir: tglAkhir,
           jumlahhari: jumlahhari,
           suratDokter: suratDokter);
 
       final String messageContent =
-          " ( Testing Apps ) Terdapat Waiting Approve Pengajuan Izin Sakit Baru Telah Diinput Oleh : ${user.nama} ";
-      await _sendWaToHead(idUser: user.idUser!, messageContent: messageContent);
+          " ( Testing Apps ) Terdapat Waiting Approve Pengajuan Izin Sakit Baru Telah Diinput Oleh : $cUser ";
+      await _sendWaToHead(idUser: idUser, messageContent: messageContent);
 
-      state = await AsyncValue.guard(() => repo.submitSakit(
-          idUser: user.idUser!,
-          ket: keterangan,
-          surat: suratDokter,
-          cUser: user.nama!,
-          tglEnd: tglAkhir,
-          tglStart: tglAwal,
-          jumlahHari: jumlahhari,
-          hitungLibur: create.hitungLibur!));
+      state = await AsyncValue.guard(() => ref
+          .read(createSakitRepositoryProvider)
+          .submitSakit(
+              idUser: idUser,
+              ket: keterangan,
+              surat: suratDokter,
+              cUser: cUser!,
+              tglEnd: tglAkhir,
+              tglStart: tglAwal,
+              jumlahHari: jumlahhari,
+              hitungLibur: create.hitungLibur!));
     } catch (e) {
       state = const AsyncValue.data('');
       await onError('Error $e');
@@ -129,6 +130,7 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
       {
       //
       required int id,
+      required int idUser,
       required String tglAwal,
       required String tglAkhir,
       required String keterangan,
@@ -138,14 +140,12 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
       ) async {
     state = const AsyncLoading();
 
-    final repo = ref.read(createSakitRepositoryProvider);
-    final user = ref.read(userNotifierProvider).user;
-
     try {
-      final CreateSakit create = await getCreateSakit(user, tglAwal, tglAkhir);
+      final CreateSakit create =
+          await getCreateSakit(idUser, tglAwal, tglAkhir);
       final MstKaryawanCuti mstCuti = await ref
           .read(mstKaryawanCutiNotifierProvider.notifier)
-          .getSaldoMasterCutiById(user.idUser!);
+          .getSaldoMasterCutiById(idUser);
 
       final DateTime tglAwalInDateTime = DateTime.parse(tglAwal);
       final DateTime tglAkhirInDateTime = DateTime.parse(tglAkhir);
@@ -156,23 +156,24 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
       await _processSakit(
           create: create,
           mstCuti: mstCuti,
-          user: user,
-          onError: onError,
+          idUser: idUser,
           tglAwal: tglAwal,
           tglAkhir: tglAkhir,
           jumlahhari: jumlahhari,
           suratDokter: suratDokter);
 
-      state = await AsyncValue.guard(() => repo.updateSakit(
-          id: id,
-          idUser: user.idUser!,
-          ket: keterangan,
-          cUser: user.nama!,
-          tglEnd: tglAkhir,
-          tglStart: tglAwal,
-          surat: suratDokter,
-          jumlahHari: jumlahhari,
-          hitungLibur: create.hitungLibur!));
+      state = await AsyncValue.guard(() => ref
+          .read(createSakitRepositoryProvider)
+          .updateSakit(
+              id: id,
+              idUser: idUser,
+              ket: keterangan,
+              uUser: ref.read(userNotifierProvider).user.nama!,
+              tglEnd: tglAkhir,
+              tglStart: tglAwal,
+              surat: suratDokter,
+              jumlahHari: jumlahhari,
+              hitungLibur: create.hitungLibur!));
     } catch (e) {
       state = const AsyncValue.data('');
       await onError('Error $e');
@@ -189,13 +190,12 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
   Future<void> _processSakit({
     required CreateSakit create,
     required MstKaryawanCuti mstCuti,
+    required int idUser,
     //
     required int jumlahhari,
     required String tglAwal,
     required String tglAkhir,
     required String suratDokter,
-    required UserModelWithPassword user,
-    required Future<void> onError(String errMessage),
   }) async {
     // 1. CALC JUMLAH HARI
 
@@ -211,7 +211,6 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
     await _calcSaldoCuti(
       create: create,
       mstCuti: mstCuti,
-      onError: onError,
       jumlahhari: jumlahhari,
       suratDokter: suratDokter,
       tglAwalInDateTime: tglAwalInDateTime,
@@ -224,35 +223,23 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
   }
 
   Future<CreateSakit> getCreateSakit(
-      UserModelWithPassword user, String tglAwal, String tglAkhir) async {
-    if (user.idUser == null) {
-      throw AssertionError('ID User Null');
-    }
-
-    if (user.IdKary == null) {
-      throw AssertionError('ID Karyawan Null');
-    }
-
-    final create = await ref.read(createSakitRepositoryProvider).getCreateSakit(
+      int idUser, String tglAwal, String tglAkhir) async {
+    return ref.read(createSakitRepositoryProvider).getCreateSakit(
           tglAwal: tglAwal,
           tglAkhir: tglAkhir,
-          idUser: user.idUser!,
-          idKaryawan: int.parse(user.IdKary!),
+          idUser: idUser,
         );
-
-    //
-    return create;
   }
 
-  Future<void> _calcSaldoCuti(
-      {required CreateSakit create,
-      required MstKaryawanCuti mstCuti,
-      //
-      required int jumlahhari,
-      required String suratDokter,
-      required DateTime tglAkhirInDateTime,
-      required DateTime tglAwalInDateTime,
-      required Future<void> Function(String errMessage) onError}) async {
+  Future<void> _calcSaldoCuti({
+    required CreateSakit create,
+    required MstKaryawanCuti mstCuti,
+    //
+    required int jumlahhari,
+    required String suratDokter,
+    required DateTime tglAkhirInDateTime,
+    required DateTime tglAwalInDateTime,
+  }) async {
     //
 
     final createMasukInDateTime = DateTime.parse('${create.masuk}');
@@ -359,23 +346,3 @@ int calcDiffSunday(DateTime startDate, DateTime endDate) {
   }
   return nbDays;
 }
-
-// final repo = ref.read(createSakitRepositoryProvider);
-
-//     final user = ref.read(userNotifierProvider).user;
-
-//     if (user.idUser == null) {
-//       throw AssertionError('ID User Null');
-//     }
-
-//     if (user.IdKary == null) {
-//       throw AssertionError('ID Karyawan Null');
-//     }
-
-//     final create = await repo.getCreateSakit(
-//         idUser: user.idUser!,
-//         idKaryawan: int.parse(user.IdKary!),
-//         tglAwal: '2024-01-08 00:00:00',
-//         tglAkhir: '2024-01-011 00:00:00');
-
-//     log('createSakit $create');

@@ -153,7 +153,7 @@ class CreateSakitRemoteService {
     required int idUser,
     required String ket,
     required String surat,
-    required String cUser,
+    required String uUser,
     required String tglEnd,
     required String tglStart,
     required int jumlahHari,
@@ -173,7 +173,7 @@ class CreateSakitRemoteService {
             " spv_note = '',  "
             " hrd_note = '',  "
             " u_date = getdate(), "
-            " u_user = '$cUser' "
+            " u_user = '$uUser' "
             " WHERE id_sakit = $id ",
         "mode": "UPDATE"
       };
@@ -210,71 +210,16 @@ class CreateSakitRemoteService {
   }
 
   Future<CreateSakit> getCreateSakit({
-    //
     required int idUser,
-    required int idKaryawan,
     required String tglAwal,
     required String tglAkhir,
-    //
   }) async {
     String? masuk;
     int hitunglibur = 0;
     String jdwSabtu = "";
     bool bulanan = false;
 
-    // 1. GET JADWAL SABTU
-    try {
-      final Map<String, String> selectJadwalSabtu = {
-        'command':
-            "SELECT jdw_sabtu, bulanan FROM $dbKaryawan WHERE IdKary = '$idKaryawan' ",
-        'mode': 'SELECT'
-      };
-
-      final data = _dioRequest;
-
-      final dataSelectJadwalSabtu = _dioRequest;
-      dataSelectJadwalSabtu.addAll(selectJadwalSabtu);
-
-      final response = await _dio.post('',
-          data: jsonEncode(dataSelectJadwalSabtu),
-          options: Options(contentType: 'text/plain'));
-
-      log('data ${jsonEncode(data)}');
-      log('response $response');
-
-      final items = response.data?[0];
-
-      if (items['status'] == 'Success') {
-        final listExist = items['items'] != null && items['items'] is List;
-
-        if (listExist) {
-          if (items['items'][0]['jdw_sabtu'] != null) {
-            items['items'][0]['jdw_sabtu'] = jdwSabtu;
-          }
-
-          if (items['items'][0]['bulanan'] != null) {
-            items['items'][0]['bulanan'] = bulanan;
-          }
-        }
-      } else {
-        final message = items['error'] as String?;
-        final errorCode = items['errornum'] as int;
-
-        throw RestApiExceptionWithMessage(errorCode, message);
-      }
-    } on FormatException catch (e) {
-      throw FormatException(e.message);
-    } on DioError catch (e) {
-      if (e.isNoConnectionError || e.isConnectionTimeout) {
-        throw NoConnectionException();
-      } else if (e.response != null) {
-        throw RestApiException(e.response?.statusCode);
-      } else {
-        rethrow;
-      }
-    }
-
-    // 2. GET HITUNG LIBUR, BETWEEN DATES
+    // 1. GET HITUNG LIBUR, BETWEEN DATES
     try {
       final Map<String, String> selectHitungLibur = {
         'command': " SELECT COUNT(id_libur) AS hitunglibur " +
@@ -320,10 +265,11 @@ class CreateSakitRemoteService {
       }
     }
 
-    // 3. GET DATE MASUK, BY ID KARYAWAN
+    // 2. GET DATE MASUK, BY ID KARYAWAN
     try {
       final Map<String, String> selectMasterKaryawan = {
-        'command': " SELECT * FROM Karyawan WHERE idKary = '$idKaryawan'  ",
+        'command':
+            " SELECT * FROM $dbKaryawan WHERE idKary = (SELECT IdKary FROM mst_user WHERE id_user = $idUser)  ",
         'mode': 'SELECT'
       };
 
@@ -366,9 +312,7 @@ class CreateSakitRemoteService {
       }
     }
 
-    // final cDate = StringUtils.trimmedDate(DateTime.now());
-
-    final createSakit = CreateSakit().copyWith(
+    final createSakit = CreateSakit(
       masuk: masuk,
       bulanan: bulanan,
       jadwalSabtu: jdwSabtu,

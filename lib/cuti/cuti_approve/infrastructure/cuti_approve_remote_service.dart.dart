@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:face_net_authentication/infrastructure/dio_extensions.dart';
 
 import '../../../infrastructure/exceptions.dart';
+import '../../../mst_karyawan_cuti/application/mst_karyawan_cuti.dart';
 import '../../cuti_list/application/cuti_list.dart';
 
 class CutiApproveRemoteService {
@@ -17,7 +18,7 @@ class CutiApproveRemoteService {
   final Dio _dio;
   final Map<String, String> _dioRequest;
 
-  static const String dbName = 'hr_trs_sakit';
+  static const String dbName = 'hr_trs_cuti_new';
   static const String dbMstCutiNew = 'hr_mst_cuti_new';
   //
 
@@ -30,6 +31,50 @@ class CutiApproveRemoteService {
             " spv_sta = 1, " +
             " spv_tgl = getdate(), " +
             " spv_note = '$note' " +
+            " WHERE id_cuti = $idCuti ",
+        "mode": "UPDATE"
+      };
+
+      debugger();
+
+      final data = _dioRequest;
+      data.addAll(updateSakit);
+
+      final response = await _dio.post('',
+          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
+
+      log('data ${jsonEncode(data)}');
+      log('response $response');
+      final items = response.data?[0];
+
+      if (items['status'] == 'Success') {
+        return unit;
+      } else {
+        final message = items['error'] as String?;
+        final errorCode = items['errornum'] as int;
+
+        throw RestApiExceptionWithMessage(errorCode, message);
+      }
+    } on FormatException catch (e) {
+      throw FormatException(e.message);
+    } on DioError catch (e) {
+      if (e.isNoConnectionError || e.isConnectionTimeout) {
+        throw NoConnectionException();
+      } else if (e.response != null) {
+        throw RestApiException(e.response?.statusCode);
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  Future<Unit> unapproveSpv({required int idCuti, required String nama}) async {
+    try {
+      final Map<String, String> updateSakit = {
+        "command": "UPDATE $dbName SET "
+                " spv_nm = '$nama', " +
+            " spv_sta = 0, " +
+            " spv_tgl = GETDATE() " +
             " WHERE id_cuti = $idCuti ",
         "mode": "UPDATE"
       };
@@ -77,8 +122,7 @@ class CutiApproveRemoteService {
                 " hrd_nm = '$nama', " +
             " hrd_sta = 1, " +
             " hrd_tgl = getdate(), " +
-            " hrd_note = '$note', " +
-            " sisa_cuti = ${itemCuti.sisaCuti! - itemCuti.totalHari!} " +
+            " hrd_note = '$note' " +
             " WHERE id_cuti = ${itemCuti.idCuti} ",
         "mode": "UPDATE"
       };
@@ -114,160 +158,364 @@ class CutiApproveRemoteService {
     }
   }
 
-  // Future<Unit> unApproveHrdTanpaSurat({
-  //   required String nama,
-  //   required SakitList itemSakit,
-  //   required CreateSakit createSakit,
-  // }) async {
-  //   // 1. UPDATE SAKIT
-  //   try {
-  //     int? cutiTidakBaruNew;
-  //     int? cutiBaruNew;
-  //     DateTime masuk = DateTime.parse(createSakit.masuk!);
+  Future<Unit> unapproveHrd({
+    required String nama,
+    required CutiList itemCuti,
+  }) async {
+    // 1. UPDATE SAKIT
+    try {
+      final Map<String, String> updateSakit = {
+        "command": "UPDATE $dbName SET "
+                " hrd_nm = '$nama', " +
+            " hrd_sta = 0, " +
+            " hrd_tgl = getdate() " +
+            " WHERE id_cuti = ${itemCuti.idCuti} ",
+        "mode": "UPDATE"
+      };
 
-  //     if (masuk.year != createSakit.createSakitCuti!.openDate!.year) {
-  //       cutiTidakBaruNew =
-  //           createSakit.createSakitCuti!.cutiTidakBaru! + itemSakit.totHari!;
-  //     } else {
-  //       cutiBaruNew =
-  //           createSakit.createSakitCuti!.cutiBaru! + itemSakit.totHari!;
-  //     }
+      final data = _dioRequest;
+      data.addAll(updateSakit);
 
-  //     final Map<String, String> updateSakit = {
-  //       "command": "UPDATE $dbName SET "
-  //               " hrd_nm = '$nama', " +
-  //           " hrd_sta = 0, " +
-  //           " hrd_tgl = getdate() " +
-  //           " WHERE id_cuti = ${itemSakit.idCuti} "
-  //               //
-  //               " UPDATE $dbMstCutiNew SET "
-  //               " ${cutiTidakBaruNew != null ? " cuti_tidak_baru = $cutiTidakBaruNew " : ""} " +
-  //           " ${cutiBaruNew != null ? " cuti_baru = $cutiBaruNew " : ""} " +
-  //           " WHERE FORMAT(open_date, 'yyyy-01-01') = '${createSakit.createSakitCuti!.openDate!.year}-01-01' "
-  //               " AND id_user = ${itemSakit.idUser} ",
-  //       "mode": "UPDATE"
-  //     };
+      final response = await _dio.post('',
+          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
 
-  //     final data = _dioRequest;
-  //     data.addAll(updateSakit);
+      log('data ${jsonEncode(data)}');
+      log('response $response');
+      final items = response.data?[0];
 
-  //     final response = await _dio.post('',
-  //         data: jsonEncode(data), options: Options(contentType: 'text/plain'));
+      if (items['status'] == 'Success') {
+        return unit;
+      } else {
+        final message = items['error'] as String?;
+        final errorCode = items['errornum'] as int;
 
-  //     log('data ${jsonEncode(data)}');
-  //     log('response $response');
-  //     final items = response.data?[0];
+        throw RestApiExceptionWithMessage(errorCode, message);
+      }
+    } on FormatException catch (e) {
+      throw FormatException(e.message);
+    } on DioError catch (e) {
+      if (e.isNoConnectionError || e.isConnectionTimeout) {
+        throw NoConnectionException();
+      } else if (e.response != null) {
+        throw RestApiException(e.response?.statusCode);
+      } else {
+        rethrow;
+      }
+    }
+  }
 
-  //     if (items['status'] == 'Success') {
-  //       return unit;
-  //     } else {
-  //       final message = items['error'] as String?;
-  //       final errorCode = items['errornum'] as int;
+  Future<Unit> calcSisaCuti(
+      {required CutiList itemCuti, bool isRestore = false}) async {
+    // 1. UPDATE SAKIT
+    try {
+      final Map<String, String> updateSakit = {
+        "command": "UPDATE $dbName SET "
+            " ${isRestore ? " sisa_cuti = '${itemCuti.sisaCuti! + itemCuti.totalHari!}' " : " sisa_cuti = '${itemCuti.sisaCuti! - itemCuti.totalHari!}' "} "
+            " WHERE id_cuti = ${itemCuti.idCuti} ",
+        "mode": "UPDATE"
+      };
 
-  //       throw RestApiExceptionWithMessage(errorCode, message);
-  //     }
-  //   } on FormatException catch (e) {
-  //     throw FormatException(e.message);
-  //   } on DioError catch (e) {
-  //     if (e.isNoConnectionError || e.isConnectionTimeout) {
-  //       throw NoConnectionException();
-  //     } else if (e.response != null) {
-  //       throw RestApiException(e.response?.statusCode);
-  //     } else {
-  //       rethrow;
-  //     }
-  //   }
-  // }
+      final data = _dioRequest;
+      data.addAll(updateSakit);
 
-  // Future<Unit> unApproveSpv({
-  //   required String nama,
-  //   required SakitList itemSakit,
-  // }) async {
-  //   // 1. UPDATE SAKIT
-  //   try {
-  //     final Map<String, String> updateSakit = {
-  //       "command": "UPDATE $dbName SET "
-  //               " spv_nm = '$nama', " +
-  //           " spv_sta = 0, " +
-  //           " spv_tgl = getdate() " +
-  //           " WHERE id_cuti = ${itemSakit.idCuti} ",
-  //       "mode": "UPDATE"
-  //     };
+      final response = await _dio.post('',
+          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
 
-  //     final data = _dioRequest;
-  //     data.addAll(updateSakit);
+      log('data ${jsonEncode(data)}');
+      log('response $response');
+      final items = response.data?[0];
 
-  //     final response = await _dio.post('',
-  //         data: jsonEncode(data), options: Options(contentType: 'text/plain'));
+      if (items['status'] == 'Success') {
+        return unit;
+      } else {
+        final message = items['error'] as String?;
+        final errorCode = items['errornum'] as int;
 
-  //     log('data ${jsonEncode(data)}');
-  //     log('response $response');
-  //     final items = response.data?[0];
+        throw RestApiExceptionWithMessage(errorCode, message);
+      }
+    } on FormatException catch (e) {
+      throw FormatException(e.message);
+    } on DioError catch (e) {
+      if (e.isNoConnectionError || e.isConnectionTimeout) {
+        throw NoConnectionException();
+      } else if (e.response != null) {
+        throw RestApiException(e.response?.statusCode);
+      } else {
+        rethrow;
+      }
+    }
+  }
 
-  //     if (items['status'] == 'Success') {
-  //       return unit;
-  //     } else {
-  //       final message = items['error'] as String?;
-  //       final errorCode = items['errornum'] as int;
+  Future<Unit> calcCutiTidakBaru(
+      {required int totalHari,
+      required MstKaryawanCuti mstCuti,
+      bool isRestore = false}) async {
+    // 1. UPDATE SAKIT
+    try {
+      final Map<String, String> updateSakit = {
+        "command": "UPDATE $dbMstCutiNew SET "
+            " ${isRestore ? " cuti_tidak_baru = '${mstCuti.cutiTidakBaru! + totalHari}' " : " cuti_tidak_baru = '${mstCuti.cutiTidakBaru! - totalHari}' "} "
+            " WHERE id_mst_cuti = ${mstCuti.idMstCuti} ",
+        "mode": "UPDATE"
+      };
 
-  //       throw RestApiExceptionWithMessage(errorCode, message);
-  //     }
-  //   } on FormatException catch (e) {
-  //     throw FormatException(e.message);
-  //   } on DioError catch (e) {
-  //     if (e.isNoConnectionError || e.isConnectionTimeout) {
-  //       throw NoConnectionException();
-  //     } else if (e.response != null) {
-  //       throw RestApiException(e.response?.statusCode);
-  //     } else {
-  //       rethrow;
-  //     }
-  //   }
-  // }
+      final data = _dioRequest;
+      data.addAll(updateSakit);
 
-  // Future<Unit> batal({
-  //   required String nama,
-  //   required SakitList itemSakit,
-  // }) async {
-  //   // 1. UPDATE SAKIT
-  //   try {
-  //     final Map<String, String> updateSakit = {
-  //       "command": "UPDATE $dbName SET "
-  //               " btl_nm = '$nama', " +
-  //           " btl_sta = 1, " +
-  //           " btl_tgl = getdate() " +
-  //           " WHERE id_cuti = ${itemSakit.idCuti} ",
-  //       "mode": "UPDATE"
-  //     };
+      final response = await _dio.post('',
+          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
 
-  //     final data = _dioRequest;
-  //     data.addAll(updateSakit);
+      log('data ${jsonEncode(data)}');
+      log('response $response');
+      final items = response.data?[0];
 
-  //     final response = await _dio.post('',
-  //         data: jsonEncode(data), options: Options(contentType: 'text/plain'));
+      if (items['status'] == 'Success') {
+        return unit;
+      } else {
+        final message = items['error'] as String?;
+        final errorCode = items['errornum'] as int;
 
-  //     log('data ${jsonEncode(data)}');
-  //     log('response $response');
-  //     final items = response.data?[0];
+        throw RestApiExceptionWithMessage(errorCode, message);
+      }
+    } on FormatException catch (e) {
+      throw FormatException(e.message);
+    } on DioError catch (e) {
+      if (e.isNoConnectionError || e.isConnectionTimeout) {
+        throw NoConnectionException();
+      } else if (e.response != null) {
+        throw RestApiException(e.response?.statusCode);
+      } else {
+        rethrow;
+      }
+    }
+  }
 
-  //     if (items['status'] == 'Success') {
-  //       return unit;
-  //     } else {
-  //       final message = items['error'] as String?;
-  //       final errorCode = items['errornum'] as int;
+  Future<Unit> calcCutiBaru(
+      {required int totalHari,
+      required MstKaryawanCuti mstCuti,
+      bool isRestore = false}) async {
+    // 1. UPDATE SAKIT
+    try {
+      final Map<String, String> updateSakit = {
+        "command": "UPDATE $dbMstCutiNew SET "
+            " ${isRestore ? " cuti_baru = '${mstCuti.cutiBaru! + totalHari}' " : " cuti_baru = '${mstCuti.cutiBaru! - totalHari}' "} "
+            " WHERE id_mst_cuti = ${mstCuti.idMstCuti} ",
+        "mode": "UPDATE"
+      };
 
-  //       throw RestApiExceptionWithMessage(errorCode, message);
-  //     }
-  //   } on FormatException catch (e) {
-  //     throw FormatException(e.message);
-  //   } on DioError catch (e) {
-  //     if (e.isNoConnectionError || e.isConnectionTimeout) {
-  //       throw NoConnectionException();
-  //     } else if (e.response != null) {
-  //       throw RestApiException(e.response?.statusCode);
-  //     } else {
-  //       rethrow;
-  //     }
-  //   }
-  // }
+      final data = _dioRequest;
+      data.addAll(updateSakit);
+
+      final response = await _dio.post('',
+          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
+
+      log('data ${jsonEncode(data)}');
+      log('response $response');
+      final items = response.data?[0];
+
+      if (items['status'] == 'Success') {
+        return unit;
+      } else {
+        final message = items['error'] as String?;
+        final errorCode = items['errornum'] as int;
+
+        throw RestApiExceptionWithMessage(errorCode, message);
+      }
+    } on FormatException catch (e) {
+      throw FormatException(e.message);
+    } on DioError catch (e) {
+      if (e.isNoConnectionError || e.isConnectionTimeout) {
+        throw NoConnectionException();
+      } else if (e.response != null) {
+        throw RestApiException(e.response?.statusCode);
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  Future<Unit> calcCloseOpenDate({
+    required String masuk,
+    required MstKaryawanCuti mstCuti,
+  }) async {
+    // 1. UPDATE SAKIT
+    try {
+      final Map<String, String> updateSakit = {
+        "command": "UPDATE $dbMstCutiNew SET "
+                " close_date = '${DateTime.parse(masuk).year}-01-01', " +
+            " open_date = '${DateTime.parse(masuk).year + 1}-01-01' " +
+            " WHERE id_mst_cuti = ${mstCuti.idMstCuti} ",
+        "mode": "UPDATE"
+      };
+
+      final data = _dioRequest;
+      data.addAll(updateSakit);
+
+      final response = await _dio.post('',
+          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
+
+      log('data ${jsonEncode(data)}');
+      log('response $response');
+      final items = response.data?[0];
+
+      if (items['status'] == 'Success') {
+        return unit;
+      } else {
+        final message = items['error'] as String?;
+        final errorCode = items['errornum'] as int;
+
+        throw RestApiExceptionWithMessage(errorCode, message);
+      }
+    } on FormatException catch (e) {
+      throw FormatException(e.message);
+    } on DioError catch (e) {
+      if (e.isNoConnectionError || e.isConnectionTimeout) {
+        throw NoConnectionException();
+      } else if (e.response != null) {
+        throw RestApiException(e.response?.statusCode);
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  Future<Unit> calcCloseOpenCutiTidakBaruDanTahuCuti({
+    required String masuk,
+    required MstKaryawanCuti mstCuti,
+  }) async {
+    // 1. UPDATE SAKIT
+    try {
+      final Map<String, String> updateSakit = {
+        "command": "UPDATE $dbMstCutiNew SET "
+                " cuti_tidak_baru = 12, " +
+            " tahun_cuti_tidak_baru = '${DateTime.parse(masuk).year + 2}', " +
+            " close_date = '${DateTime.parse(masuk).year + 1}-01-01', " +
+            " open_date = '${DateTime.parse(masuk).year + 2}-01-01' " +
+            " WHERE id_mst_cuti = ${mstCuti.idMstCuti} ",
+        "mode": "UPDATE"
+      };
+
+      final data = _dioRequest;
+      data.addAll(updateSakit);
+
+      final response = await _dio.post('',
+          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
+
+      log('data ${jsonEncode(data)}');
+      log('response $response');
+      final items = response.data?[0];
+
+      if (items['status'] == 'Success') {
+        return unit;
+      } else {
+        final message = items['error'] as String?;
+        final errorCode = items['errornum'] as int;
+
+        throw RestApiExceptionWithMessage(errorCode, message);
+      }
+    } on FormatException catch (e) {
+      throw FormatException(e.message);
+    } on DioError catch (e) {
+      if (e.isNoConnectionError || e.isConnectionTimeout) {
+        throw NoConnectionException();
+      } else if (e.response != null) {
+        throw RestApiException(e.response?.statusCode);
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  Future<Unit> calcCloseOpenCutiTidakBaruDanTahuCuti2({
+    required MstKaryawanCuti mstCuti,
+  }) async {
+    // 1. UPDATE SAKIT
+    try {
+      final Map<String, String> updateSakit = {
+        "command": "UPDATE $dbMstCutiNew SET "
+                " cuti_tidak_baru = 12, " +
+            " tahun_cuti_tidak_baru = '${mstCuti.openDate!.year + 1}', " +
+            " open_date = '${mstCuti.openDate!.year + 1}-01-01', " +
+            " ${mstCuti.openDate == mstCuti.closeDate ? " close_date = ${mstCuti.closeDate!.year}-01-01 " : " close_date = ${mstCuti.closeDate!.year + 1}-01-01 "} " +
+            " WHERE id_mst_cuti = ${mstCuti.idMstCuti} ",
+        "mode": "UPDATE"
+      };
+
+      final data = _dioRequest;
+      data.addAll(updateSakit);
+
+      final response = await _dio.post('',
+          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
+
+      log('data ${jsonEncode(data)}');
+      log('response $response');
+      final items = response.data?[0];
+
+      if (items['status'] == 'Success') {
+        return unit;
+      } else {
+        final message = items['error'] as String?;
+        final errorCode = items['errornum'] as int;
+
+        throw RestApiExceptionWithMessage(errorCode, message);
+      }
+    } on FormatException catch (e) {
+      throw FormatException(e.message);
+    } on DioError catch (e) {
+      if (e.isNoConnectionError || e.isConnectionTimeout) {
+        throw NoConnectionException();
+      } else if (e.response != null) {
+        throw RestApiException(e.response?.statusCode);
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  Future<Unit> batal({
+    required String nama,
+    required String note,
+    required CutiList itemCuti,
+  }) async {
+    // 1. UPDATE SAKIT
+    try {
+      final Map<String, String> updateSakit = {
+        "command": "UPDATE $dbName SET "
+                " btl_nm = '$nama', " +
+            " btl_sta = 0, " +
+            " btl_tgl = getdate() " +
+            " WHERE id_cuti = ${itemCuti.idCuti} ",
+        "mode": "UPDATE"
+      };
+
+      final data = _dioRequest;
+      data.addAll(updateSakit);
+
+      final response = await _dio.post('',
+          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
+
+      log('data ${jsonEncode(data)}');
+      log('response $response');
+      final items = response.data?[0];
+
+      if (items['status'] == 'Success') {
+        return unit;
+      } else {
+        final message = items['error'] as String?;
+        final errorCode = items['errornum'] as int;
+
+        throw RestApiExceptionWithMessage(errorCode, message);
+      }
+    } on FormatException catch (e) {
+      throw FormatException(e.message);
+    } on DioError catch (e) {
+      if (e.isNoConnectionError || e.isConnectionTimeout) {
+        throw NoConnectionException();
+      } else if (e.response != null) {
+        throw RestApiException(e.response?.statusCode);
+      } else {
+        rethrow;
+      }
+    }
+  }
 }

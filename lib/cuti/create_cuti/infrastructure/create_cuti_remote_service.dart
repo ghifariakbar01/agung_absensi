@@ -21,6 +21,7 @@ class CreateCutiRemoteService {
 
   static const String dbHrMstEmergency = 'hr_mst_emergency';
   static const String dbHrMstJenisCuti = 'hr_mst_jns_cuti';
+  static const String dbMstCutiNew = 'hr_mst_cuti_new';
   static const String dbCutiNew = 'hr_trs_cuti_new';
   static const String dbMstUser = 'mst_user';
 
@@ -141,8 +142,12 @@ class CreateCutiRemoteService {
       final data = _dioRequest;
       data.addAll(submitCuti);
 
+      debugger();
+
       final response = await _dio.post('',
           data: jsonEncode(data), options: Options(contentType: 'text/plain'));
+
+      debugger();
 
       log('data ${jsonEncode(data)}');
       log('response $response');
@@ -248,6 +253,149 @@ class CreateCutiRemoteService {
 
           throw RestApiExceptionWithMessage(errorCode, message);
         }
+      } else {
+        final message = items['error'] as String?;
+        final errorCode = items['errornum'] as int;
+
+        throw RestApiExceptionWithMessage(errorCode, message);
+      }
+    } on FormatException catch (e) {
+      throw FormatException(e.message);
+    } on DioError catch (e) {
+      if (e.isNoConnectionError || e.isConnectionTimeout) {
+        throw NoConnectionException();
+      } else if (e.response != null) {
+        throw RestApiException(e.response?.statusCode);
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  Future<Unit> resetCutiTahunMasuk({
+    required int idUser,
+    required String nama,
+    required String masuk,
+  }) async {
+    try {
+      final Map<String, String> updateCuti = {
+        "command": "UPDATE $dbMstCutiNew SET "
+            "cuti_baru = 0, "
+            "open_date = '${DateTime.parse(masuk).year}-01-01', "
+            "close_date = '${DateTime.parse(masuk).year + 1}-01-01', "
+            "u_date = GETDATE(), " // u_date
+            "u_user = '$nama' WHERE id_user = $idUser", // u_user
+        "mode": "UPDATE"
+      };
+
+      final data = _dioRequest;
+      data.addAll(updateCuti);
+
+      final response = await _dio.post('',
+          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
+
+      log('data ${jsonEncode(data)}');
+      log('response $response');
+      final items = response.data?[0];
+
+      if (items['status'] == 'Success') {
+        return unit;
+      } else {
+        final message = items['error'] as String?;
+        final errorCode = items['errornum'] as int;
+
+        throw RestApiExceptionWithMessage(errorCode, message);
+      }
+    } on FormatException catch (e) {
+      throw FormatException(e.message);
+    } on DioError catch (e) {
+      if (e.isNoConnectionError || e.isConnectionTimeout) {
+        throw NoConnectionException();
+      } else if (e.response != null) {
+        throw RestApiException(e.response?.statusCode);
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  Future<Unit> resetCutiSatuTahunLebih({
+    required int idUser,
+    required String nama,
+    required String masuk,
+  }) async {
+    try {
+      final Map<String, String> updateCuti = {
+        "command": "UPDATE $dbMstCutiNew SET "
+            "cuti_tidak_baru = 12, "
+            "tahun_cuti_tidak_baru = '${DateTime.parse(masuk).year + 2}', "
+            "open_date = '${DateTime.parse(masuk).year + 2}-01-01', "
+            "close_date = '${DateTime.parse(masuk).year + 1}-01-01', "
+            "u_date = GETDATE(), " // u_date
+            "u_user = '$nama' WHERE id_user = $idUser", // u_user
+        "mode": "UPDATE"
+      };
+
+      final data = _dioRequest;
+      data.addAll(updateCuti);
+
+      final response = await _dio.post('',
+          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
+
+      log('data ${jsonEncode(data)}');
+      log('response $response');
+      final items = response.data?[0];
+
+      if (items['status'] == 'Success') {
+        return unit;
+      } else {
+        final message = items['error'] as String?;
+        final errorCode = items['errornum'] as int;
+
+        throw RestApiExceptionWithMessage(errorCode, message);
+      }
+    } on FormatException catch (e) {
+      throw FormatException(e.message);
+    } on DioError catch (e) {
+      if (e.isNoConnectionError || e.isConnectionTimeout) {
+        throw NoConnectionException();
+      } else if (e.response != null) {
+        throw RestApiException(e.response?.statusCode);
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  Future<Unit> resetCutiDuaTahunLebih({
+    required int idUser,
+    required String nama,
+    required String masuk,
+  }) async {
+    try {
+      final Map<String, String> updateCuti = {
+        "command": "UPDATE $dbMstCutiNew SET "
+            "cuti_tidak_baru = 12, "
+            "tahun_cuti_tidak_baru = '${DateTime.parse(masuk).year + 1}', "
+            "open_date = '${DateTime.parse(masuk).year + 1}-01-01', "
+            "close_date = '${DateTime.parse(masuk).year + 1}-01-01', "
+            "u_date = GETDATE(), " // u_date
+            "u_user = '$nama' WHERE id_user = $idUser", // u_user
+        "mode": "UPDATE"
+      };
+
+      final data = _dioRequest;
+      data.addAll(updateCuti);
+
+      final response = await _dio.post('',
+          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
+
+      log('data ${jsonEncode(data)}');
+      log('response $response');
+      final items = response.data?[0];
+
+      if (items['status'] == 'Success') {
+        return unit;
       } else {
         final message = items['error'] as String?;
         final errorCode = items['errornum'] as int;

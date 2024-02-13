@@ -58,8 +58,6 @@ class WaRegisterNotifier extends _$WaRegisterNotifier {
       return WaRegister.initial();
     }
 
-    debugger();
-
     final fromJsonResponse = jsonDecode(response);
 
     return WaRegister.fromJson(fromJsonResponse);

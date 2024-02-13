@@ -8,7 +8,7 @@ class WaHeadHelperRepository {
 
   Future<List<WaHead>> getWaHead({
     required int idUser,
-  }) {
-    return _remoteService.getWaHead(idUser: idUser);
+  }) async {
+    return await _remoteService.getWaHead(idUser: idUser);
   }
 }

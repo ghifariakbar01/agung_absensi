@@ -301,6 +301,7 @@ class EditCutiPage extends HookConsumerWidget {
                               await ref
                                   .read(createCutiNotifierProvider.notifier)
                                   .updateCuti(
+                                      idUser: item.idUser!,
                                       idCuti: item.idCuti!,
                                       tglAwal: tglAwalTextController.value,
                                       tglAkhir: tglAkhirTextController.value,

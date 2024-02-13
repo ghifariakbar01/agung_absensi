@@ -17,18 +17,18 @@ class SakitApproveRepository {
   }
 
   Future<Unit> approveHrdTanpaSurat({
-    required String nama,
+    required String namaHrd,
     required String note,
     required SakitList itemSakit,
     required CreateSakit createSakit,
-    required MstKaryawanCuti mstCuti,
+    required MstKaryawanCuti mstCutiUser,
   }) {
     return _remoteService.approveHrdTanpaSurat(
-      nama: nama,
+      namaHrd: namaHrd,
       note: note,
       itemSakit: itemSakit,
       createSakit: createSakit,
-      mstCuti: mstCuti,
+      mstCutiUser: mstCutiUser,
     );
   }
 

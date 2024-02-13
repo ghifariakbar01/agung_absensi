@@ -303,6 +303,11 @@ class CreateSakitPage extends HookConsumerWidget {
                                 await ref
                                     .read(createSakitNotifierProvider.notifier)
                                     .submitSakit(
+                                        idUser: ref
+                                            .read(userNotifierProvider)
+                                            .user
+                                            .idUser!,
+                                        // CHANGE ID USER
                                         tglAwal: tglAwalTextController.value,
                                         tglAkhir: tglAkhirTextController.value,
                                         keterangan: diagnosaTextController.text,

@@ -57,7 +57,6 @@ class CutiListRemoteService {
 
       // log('data ${jsonEncode(data)}');
       // log('response page $page : $response');
-      debugger();
 
       final items = response.data?[0];
 

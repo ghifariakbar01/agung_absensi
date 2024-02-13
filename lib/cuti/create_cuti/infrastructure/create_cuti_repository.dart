@@ -1,5 +1,7 @@
 // import 'dart:developer';
 
+import 'dart:developer';
+
 import 'package:dartz/dartz.dart';
 
 import '../application/alasan_cuti.dart';
@@ -65,9 +67,6 @@ class CreateCutiRepository {
         hitungLibur: hitungLibur,
         tglAwalInDateTime: tglAwalInDateTime,
         tglAkhirInDateTime: tglAkhirInDateTime);
-
-    // debugger();
-    // return unit;
   }
 
   Future<List<AlasanCuti>> getAlasanEmergency() {
@@ -76,5 +75,32 @@ class CreateCutiRepository {
 
   Future<List<JenisCuti>> getJenisCuti() {
     return _remoteService.getJenisCuti();
+  }
+
+  Future<Unit> resetCutiTahunMasuk({
+    required int idUser,
+    required String nama,
+    required String masuk,
+  }) {
+    return _remoteService.resetCutiTahunMasuk(
+        idUser: idUser, nama: nama, masuk: masuk);
+  }
+
+  Future<Unit> resetCutiSatuTahunLebih({
+    required int idUser,
+    required String nama,
+    required String masuk,
+  }) {
+    return _remoteService.resetCutiSatuTahunLebih(
+        idUser: idUser, nama: nama, masuk: masuk);
+  }
+
+  Future<Unit> resetCutiDuaTahunLebih({
+    required int idUser,
+    required String nama,
+    required String masuk,
+  }) {
+    return _remoteService.resetCutiDuaTahunLebih(
+        idUser: idUser, nama: nama, masuk: masuk);
   }
 }

@@ -5,6 +5,7 @@ import 'package:face_net_authentication/wa_register/application/wa_register_noti
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../mst_karyawan_cuti/application/mst_karyawan_cuti.dart';
+import '../../../mst_karyawan_cuti/application/mst_karyawan_cuti_notifier.dart';
 import '../../../shared/providers.dart';
 import '../../../wa_register/application/wa_register.dart';
 import '../../create_sakit/application/create_sakit.dart';
@@ -102,25 +103,31 @@ class SakitApproveController extends _$SakitApproveController {
   }
 
   Future<void> approveHrdTanpaSurat({
-    required String nama,
+    required String namaHrd,
     required String note,
     required SakitList itemSakit,
-    required CreateSakit createSakit,
-    required MstKaryawanCuti mstCuti,
   }) async {
     state = const AsyncLoading();
 
     try {
+      final CreateSakit createSakit = await ref
+          .read(createSakitNotifierProvider.notifier)
+          .getCreateSakit(
+              itemSakit.idUser!, itemSakit.tglStart!, itemSakit.tglEnd!);
+      final MstKaryawanCuti mstCutiUser = await ref
+          .read(mstKaryawanCutiNotifierProvider.notifier)
+          .getSaldoMasterCutiById(itemSakit.idUser!);
+
       final String messageContent =
-          'Izin Sakit Anda Sudah Diapprove Oleh HRD $nama';
+          'Izin Sakit Anda Sudah Diapprove Oleh HRD $namaHrd';
 
       await _sendWa(itemSakit: itemSakit, messageContent: messageContent);
       await ref.read(sakitApproveRepositoryProvider).approveHrdTanpaSurat(
-          nama: nama,
+          namaHrd: namaHrd,
           note: note,
           itemSakit: itemSakit,
           createSakit: createSakit,
-          mstCuti: mstCuti);
+          mstCutiUser: mstCutiUser);
 
       state = AsyncData<void>('Sukses Melakukan Approve Form Sakit');
     } catch (e) {
@@ -129,7 +136,7 @@ class SakitApproveController extends _$SakitApproveController {
   }
 
   Future<void> approveHrdDenganSurat({
-    required String nama,
+    required String namaHrd,
     required String note,
     required SakitList itemSakit,
   }) async {
@@ -137,11 +144,11 @@ class SakitApproveController extends _$SakitApproveController {
 
     try {
       final String messageContent =
-          'Izin Sakit Anda Sudah Diapprove Oleh HRD $nama';
+          'Izin Sakit Anda Sudah Diapprove Oleh HRD $namaHrd';
 
       await _sendWa(itemSakit: itemSakit, messageContent: messageContent);
       await ref.read(sakitApproveRepositoryProvider).approveHrdDenganSurat(
-            nama: nama,
+            nama: namaHrd,
             note: note,
             itemSakit: itemSakit,
           );
@@ -173,17 +180,23 @@ class SakitApproveController extends _$SakitApproveController {
   Future<void> unApproveHrdTanpaSurat({
     required String nama,
     required SakitList itemSakit,
-    required CreateSakit createSakit,
-    required MstKaryawanCuti mstCuti,
   }) async {
     state = const AsyncLoading();
 
     try {
+      final CreateSakit createSakit = await ref
+          .read(createSakitNotifierProvider.notifier)
+          .getCreateSakit(
+              itemSakit.idUser!, itemSakit.tglStart!, itemSakit.tglEnd!);
+      final MstKaryawanCuti mstCutiUser = await ref
+          .read(mstKaryawanCutiNotifierProvider.notifier)
+          .getSaldoMasterCutiById(itemSakit.idUser!);
+
       await ref.read(sakitApproveRepositoryProvider).unApproveHrdTanpaSurat(
           nama: nama,
           itemSakit: itemSakit,
           createSakit: createSakit,
-          mstCuti: mstCuti);
+          mstCuti: mstCutiUser);
 
       state = AsyncData<void>('Sukses Unapprove Form Sakit');
     } catch (e) {

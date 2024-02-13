@@ -134,10 +134,20 @@ class SakitDtlWidget extends HookConsumerWidget {
                   ),
                 ],
               ),
-              Text(
-                'Tgl Upload : ${item.cDate}',
-                style: Themes.customColor(8,
-                    color: Theme.of(context).unselectedWidgetColor),
+              SizedBox(
+                width: 50,
+                child: Row(
+                  children: [
+                    Flexible(
+                      child: Text(
+                        'Tgl Upload : ${item.cDate}',
+                        maxLines: 3,
+                        style: Themes.customColor(8,
+                            color: Theme.of(context).unselectedWidgetColor),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

@@ -29,17 +29,18 @@ class WaHeadHelperNotifier extends _$WaHeadHelperNotifier {
     return [];
   }
 
-  Future<void> sendWa({
+  Future<void> loadWaHeads({
     required int idUser,
   }) async {
     state = const AsyncLoading();
 
-    state = await AsyncValue.guard(() async {
-      return ref.read(waHeadHelperRepositoryProvider).getWaHead(idUser: idUser);
-    });
+    state = await AsyncValue.guard(() =>
+        ref.read(waHeadHelperRepositoryProvider).getWaHead(idUser: idUser));
   }
 
-  Future<List<WaHead>> getWaHeads({required int idUser}) {
-    return ref.read(waHeadHelperRepositoryProvider).getWaHead(idUser: idUser);
+  Future<List<WaHead>> getWaHeads({required int idUser}) async {
+    return await ref
+        .read(waHeadHelperRepositoryProvider)
+        .getWaHead(idUser: idUser);
   }
 }

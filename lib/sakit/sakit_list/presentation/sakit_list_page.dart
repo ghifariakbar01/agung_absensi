@@ -36,6 +36,9 @@ class SakitListPage extends HookConsumerWidget {
           state.value != '' &&
           state.value != null &&
           state.hasError == false) {
+        if (ModalRoute.of(context)?.isCurrent != true) {
+          context.pop();
+        }
         return AlertHelper.showSnackBar(
           context,
           onDone: () async {

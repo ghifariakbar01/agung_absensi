@@ -35,7 +35,7 @@ class CreateSakitRepository {
     required int idUser,
     required String ket,
     required String surat,
-    required String cUser,
+    required String uUser,
     required String tglEnd,
     required String tglStart,
     required int jumlahHari,
@@ -46,7 +46,7 @@ class CreateSakitRepository {
         idUser: idUser,
         ket: ket,
         surat: surat,
-        cUser: cUser,
+        uUser: uUser,
         tglEnd: tglEnd,
         tglStart: tglStart,
         jumlahHari: jumlahHari,
@@ -59,14 +59,12 @@ class CreateSakitRepository {
 
   Future<CreateSakit> getCreateSakit(
       {required int idUser,
-      required int idKaryawan,
       required String tglAwal,
       required String tglAkhir}) {
     return _remoteService.getCreateSakit(
       idUser: idUser,
       tglAwal: tglAwal,
       tglAkhir: tglAkhir,
-      idKaryawan: idKaryawan,
     );
   }
 }

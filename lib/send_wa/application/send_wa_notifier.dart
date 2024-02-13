@@ -47,4 +47,22 @@ class SendWaNotifier extends _$SendWaNotifier {
             notifTitle: notifTitle,
             notifContent: notifContent));
   }
+
+  Future<Unit> sendWaDirect(
+      {
+      //
+      required int phone,
+      required int idUser,
+      required int idDept,
+      required String notifTitle,
+      required String notifContent
+      //
+      }) async {
+    return ref.read(sendWaRepositoryProvider).sendWa(
+        phone: phone,
+        idUser: idUser,
+        idDept: idDept,
+        notifTitle: notifTitle,
+        notifContent: notifContent);
+  }
 }

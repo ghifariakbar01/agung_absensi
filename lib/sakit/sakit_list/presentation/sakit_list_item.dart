@@ -180,7 +180,6 @@ class SakitListItem extends HookConsumerWidget {
                       if (item.spvSta == false) {
                         final String? text =
                             await DialogHelper<void>().showFormDialog(
-                          value: sakitApprove,
                           label: 'Isi Form Approve SPV',
                           context: context,
                         );
@@ -248,19 +247,9 @@ class SakitListItem extends HookConsumerWidget {
                       //   log('message');
                       // }
 
-                      final user = ref.read(userNotifierProvider).user;
-
-                      final CreateSakit createSakit = await ref
-                          .read(createSakitNotifierProvider.notifier)
-                          .getCreateSakit(user, item.tglStart!, item.tglEnd!);
-                      final MstKaryawanCuti mstCuti = await ref
-                          .read(mstKaryawanCutiNotifierProvider.notifier)
-                          .getSaldoMasterCutiById(user.idUser!);
-
                       if (item.hrdSta == false) {
                         final String? text =
                             await DialogHelper<void>().showFormDialog(
-                          value: sakitApprove,
                           label: 'Isi Form Approve HRD',
                           context: context,
                         );
@@ -272,7 +261,8 @@ class SakitListItem extends HookConsumerWidget {
                                 .approveHrdDenganSurat(
                                   note: text,
                                   itemSakit: item,
-                                  nama: user.nama!,
+                                  namaHrd:
+                                      ref.read(userNotifierProvider).user.nama!,
                                 );
                             //
                           } else {
@@ -281,9 +271,8 @@ class SakitListItem extends HookConsumerWidget {
                                 .approveHrdTanpaSurat(
                                   note: text,
                                   itemSakit: item,
-                                  createSakit: createSakit,
-                                  mstCuti: mstCuti,
-                                  nama: user.nama!,
+                                  namaHrd:
+                                      ref.read(userNotifierProvider).user.nama!,
                                 );
                             //
                           }
@@ -294,16 +283,14 @@ class SakitListItem extends HookConsumerWidget {
                               .read(sakitApproveControllerProvider.notifier)
                               .unApproveHrdDenganSurat(
                                 itemSakit: item,
-                                nama: user.nama!,
+                                nama: ref.read(userNotifierProvider).user.nama!,
                               );
                         } else {
                           await ref
                               .read(sakitApproveControllerProvider.notifier)
                               .unApproveHrdTanpaSurat(
                                 itemSakit: item,
-                                createSakit: createSakit,
-                                mstCuti: mstCuti,
-                                nama: user.nama!,
+                                nama: ref.read(userNotifierProvider).user.nama!,
                               );
                         }
                       }
@@ -436,19 +423,16 @@ class SakitListItem extends HookConsumerWidget {
                                 label: 'Batalkan form sakit ?',
                                 labelDescription:
                                     'Jika Ya, form sakit tidak dapat digunakan.',
-                                onPressed: () async {
-                                  await ref
-                                      .read(sakitApproveControllerProvider
-                                          .notifier)
-                                      .batal(
-                                        itemSakit: item,
-                                        nama: ref
-                                            .read(userNotifierProvider)
-                                            .user
-                                            .nama!,
-                                      );
-                                  context.pop();
-                                }));
+                                onPressed: () => ref
+                                    .read(
+                                        sakitApproveControllerProvider.notifier)
+                                    .batal(
+                                      itemSakit: item,
+                                      nama: ref
+                                          .read(userNotifierProvider)
+                                          .user
+                                          .nama!,
+                                    )));
                       },
                       child: Ink(
                         child: Column(

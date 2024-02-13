@@ -312,6 +312,7 @@ class EditSakitPage extends HookConsumerWidget {
                         await ref
                             .read(createSakitNotifierProvider.notifier)
                             .updateSakit(
+                                idUser: item.idUser!,
                                 id: item.idSakit!,
                                 suratDokter: suratDokterText,
                                 tglAwal: tglAwalTextController.value,

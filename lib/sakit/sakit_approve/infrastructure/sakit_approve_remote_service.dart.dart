@@ -119,18 +119,18 @@ class SakitApproveRemoteService {
   }
 
   Future<Unit> approveHrdTanpaSurat({
-    required String nama,
     required String note,
+    required String namaHrd,
     required SakitList itemSakit,
     required CreateSakit createSakit,
-    required MstKaryawanCuti mstCuti,
+    required MstKaryawanCuti mstCutiUser,
   }) async {
     // 2. CALC SALDO CUTI
 
     // jika cuti baru habis dengan total hari sakit maka
     // cuti baru = 0
     // jika tidak habis maka jumlah cuti baru = cuti baru - total hari sakit
-    final int cutiBaruOld = mstCuti.cutiBaru!;
+    final int cutiBaruOld = mstCutiUser.cutiBaru!;
     final int cutiBaruNew =
         itemSakit.totHari! == 0 ? 0 : cutiBaruOld - itemSakit.totHari!;
 
@@ -140,12 +140,13 @@ class SakitApproveRemoteService {
       // jika tidak maka close date ditambah satu tahun
       // open date akan ditambah satu tahun terlepas dari semua kondisi
 
-      final openDateOld = mstCuti.openDate;
-      final openDateOldPlusOneYear = mstCuti.openDate!.add(Duration(days: 365));
+      final openDateOld = mstCutiUser.openDate;
+      final openDateOldPlusOneYear =
+          mstCutiUser.openDate!.add(Duration(days: 365));
 
-      final closeDateOld = mstCuti.closeDate;
+      final closeDateOld = mstCutiUser.closeDate;
       final closeDateOldPlusOneYear =
-          mstCuti.closeDate!.add(Duration(days: 365));
+          mstCutiUser.closeDate!.add(Duration(days: 365));
 
       DateTime? closeDateNew;
       DateTime? openDateNew;
@@ -166,7 +167,7 @@ class SakitApproveRemoteService {
               " cuti_baru  = '$cutiBaruNew', "
               " close_date  = '$closeDateNew', "
               " open_date  = '$openDateNew' "
-              " WHERE id_mst_cuti =  ${mstCuti.idMstCuti} "
+              " WHERE id_mst_cuti =  ${mstCutiUser.idMstCuti} "
               //
               " UPDATE $dbName SET "
               " sisa_cuti  = '$cutiBaruNew', "
@@ -213,19 +214,20 @@ class SakitApproveRemoteService {
       // dan jika open date = close date maka close date masih sama
       // jika open date != close date maka close date = close date ditambah satu tahun
 
-      final int cutiTidakBaruOld = mstCuti.cutiTidakBaru!;
+      final int cutiTidakBaruOld = mstCutiUser.cutiTidakBaru!;
       final int cutiTidakBaruNew = cutiTidakBaruOld - itemSakit.totHari! == 0
           ? 12
           : cutiTidakBaruOld - itemSakit.totHari!;
 
       int? tahunCutiTidakBaru;
 
-      final openDateOld = mstCuti.openDate;
-      final openDateOldPlusOneYear = mstCuti.openDate!.add(Duration(days: 365));
+      final openDateOld = mstCutiUser.openDate;
+      final openDateOldPlusOneYear =
+          mstCutiUser.openDate!.add(Duration(days: 365));
 
-      final closeDateOld = mstCuti.closeDate;
+      final closeDateOld = mstCutiUser.closeDate;
       final closeDateOldPlusOneYear =
-          mstCuti.closeDate!.add(Duration(days: 365));
+          mstCutiUser.closeDate!.add(Duration(days: 365));
 
       DateTime? closeDateNew;
       DateTime? openDateNew;
@@ -249,7 +251,7 @@ class SakitApproveRemoteService {
               " ${tahunCutiTidakBaru != null ? ", tahun_cuti_tidak_baru  = $tahunCutiTidakBaru, " : ""}  "
               " ${openDateNew != null ? " open_date = $openDateNew, " : ""} "
               " ${closeDateNew != null ? " close_date = $closeDateNew " : ""} "
-              " WHERE id_mst_cuti =  ${mstCuti.idMstCuti} "
+              " WHERE id_mst_cuti =  ${mstCutiUser.idMstCuti} "
               //
               " UPDATE $dbName SET "
               " sisa_cuti  = '$cutiTidakBaruNew' "
@@ -292,7 +294,7 @@ class SakitApproveRemoteService {
     try {
       final Map<String, String> updateSakit = {
         "command": "UPDATE $dbName SET "
-                " hrd_nm = '$nama', " +
+                " hrd_nm = '$namaHrd', " +
             " hrd_sta = 1, " +
             " hrd_tgl = getdate(), " +
             " hrd_note = '$note' " +

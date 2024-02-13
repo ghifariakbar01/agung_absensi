@@ -51,7 +51,6 @@ class SendWaRemoteService {
       //
       }) async {
     try {
-      // debugger();
       final data = _dioRequest;
 
       final String phoneFormatted = _formatPhone(phone);
@@ -83,13 +82,10 @@ class SendWaRemoteService {
           data: jsonEncode(data), options: Options(contentType: 'text/plain'));
 
       log('data ${jsonEncode(data)}');
-      debugger();
 
       final items = response.data?[0];
 
       if (items['status'] == 'Success') {
-        debugger();
-
         return unit;
       } else {
         final message = items['error'] as String?;

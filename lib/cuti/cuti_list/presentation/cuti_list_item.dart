@@ -1,10 +1,15 @@
+import 'dart:developer';
+
 import 'package:face_net_authentication/cuti/create_cuti/application/create_cuti_notifier.dart';
+import 'package:face_net_authentication/cuti/cuti_approve/application/cuti_approve_notifier.dart';
 import 'package:face_net_authentication/widgets/v_async_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../routes/application/route_names.dart';
+import '../../../sakit/sakit_list/presentation/sakit_dialog.dart';
+import '../../../shared/providers.dart';
 import '../../../style/style.dart';
 
 import '../../../utils/string_utils.dart';
@@ -40,6 +45,8 @@ class CutiListItem extends HookConsumerWidget {
     final jenisCuti = ref.watch(jenisCutiNotifierProvider);
     final alasanCuti = ref.watch(alasanCutiNotifierProvider);
 
+    final cutiApprove = ref.watch(cutiApproveControllerProvider);
+
     return IgnorePointer(
       ignoring: item.btlSta == true,
       child: Container(
@@ -71,7 +78,7 @@ class CutiListItem extends HookConsumerWidget {
                             color: Theme.of(context).unselectedWidgetColor),
                       ),
                       Text(
-                        'Nama : ${item.cUser}',
+                        'Nama : ${item.fullname}',
                         style: Themes.customColor(11,
                             color: Theme.of(context).unselectedWidgetColor),
                       ),
@@ -182,32 +189,38 @@ class CutiListItem extends HookConsumerWidget {
 
                       // jika belum diapprove maka approve
                       // kl udah di unapprove
-                      // if (item.spvSta == false) {
-                      //   final String? text =
-                      //       await DialogHelper<void>().showFormDialog(
-                      //     value: sakitApprove,
-                      //     label: 'Isi Form Approve SPV',
-                      //     context: context,
-                      //   );
 
-                      //   if (text != null) {
-                      //     log('message $text');
-                      //     ref
-                      //         .read(sakitApproveControllerProvider.notifier)
-                      //         .approveSpv(
-                      //           itemSakit: item,
-                      //           note: text,
-                      //           nama: ref.read(userNotifierProvider).user.nama!,
-                      //         );
-                      //   }
-                      // } else {
-                      //   ref
-                      //       .read(sakitApproveControllerProvider.notifier)
-                      //       .unapproveSpv(
-                      //         itemSakit: item,
-                      //         nama: ref.read(userNotifierProvider).user.nama!,
-                      //       );
-                      // }
+                      if (item.spvSta == false) {
+                        final String? text =
+                            await DialogHelper<void>().showFormDialog(
+                          label: 'Isi Form Approve SPV',
+                          context: context,
+                        );
+
+                        final namaSpv =
+                            ref.read(userNotifierProvider).user.nama!;
+
+                        if (text != null) {
+                          log('message $text');
+                          await ref
+                              .read(cutiApproveControllerProvider.notifier)
+                              .approveSpv(
+                                note: text,
+                                itemCuti: item,
+                                nama: namaSpv,
+                              );
+                        }
+                      } else {
+                        final namaSpv =
+                            ref.read(userNotifierProvider).user.nama!;
+
+                        await ref
+                            .read(cutiApproveControllerProvider.notifier)
+                            .unapproveSpv(
+                              itemCuti: item,
+                              nama: namaSpv,
+                            );
+                      }
                     },
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -253,61 +266,36 @@ class CutiListItem extends HookConsumerWidget {
                       //   log('message');
                       // }
 
-                      // final CreateSakit createSakit = await ref
-                      //     .read(createSakitNotifierProvider.notifier)
-                      //     .getCreateSakit(ref.read(userNotifierProvider).user,
-                      //         item.tglStart!, item.tglEnd!);
+                      if (item.hrdSta == false) {
+                        final String? text =
+                            await DialogHelper<void>().showFormDialog(
+                          label: 'Isi Form Approve HRD',
+                          context: context,
+                        );
 
-                      // if (item.hrdSta == false) {
-                      //   final String? text =
-                      //       await DialogHelper<void>().showFormDialog(
-                      //     value: sakitApprove,
-                      //     label: 'Isi Form Approve HRD',
-                      //     context: context,
-                      //   );
+                        if (text != null) {
+                          final namaHrd =
+                              ref.read(userNotifierProvider).user.nama!;
 
-                      //   if (text != null) {
-                      //     if (item.surat!.toLowerCase() == 'ds') {
-                      //       await ref
-                      //           .read(sakitApproveControllerProvider.notifier)
-                      //           .approveHrdDenganSurat(
-                      //             note: text,
-                      //             itemSakit: item,
-                      //             nama:
-                      //                 ref.read(userNotifierProvider).user.nama!,
-                      //           );
-                      //       //
-                      //     } else {
-                      //       await ref
-                      //           .read(sakitApproveControllerProvider.notifier)
-                      //           .approveHrdTanpaSurat(
-                      //             note: text,
-                      //             itemSakit: item,
-                      //             createSakit: createSakit,
-                      //             nama:
-                      //                 ref.read(userNotifierProvider).user.nama!,
-                      //           );
-                      //       //
-                      //     }
-                      //   }
-                      // } else {
-                      //   if (item.surat!.toLowerCase() == 'ds') {
-                      //     await ref
-                      //         .read(sakitApproveControllerProvider.notifier)
-                      //         .unApproveHrdDenganSurat(
-                      //           itemSakit: item,
-                      //           nama: ref.read(userNotifierProvider).user.nama!,
-                      //         );
-                      //   } else {
-                      //     await ref
-                      //         .read(sakitApproveControllerProvider.notifier)
-                      //         .unApproveHrdTanpaSurat(
-                      //           itemSakit: item,
-                      //           createSakit: createSakit,
-                      //           nama: ref.read(userNotifierProvider).user.nama!,
-                      //         );
-                      //   }
-                      // }
+                          await ref
+                              .read(cutiApproveControllerProvider.notifier)
+                              .approveHrd(
+                                note: text,
+                                itemCuti: item,
+                                nama: namaHrd,
+                              );
+                        }
+                      } else {
+                        final namaHrd =
+                            ref.read(userNotifierProvider).user.nama!;
+
+                        await ref
+                            .read(cutiApproveControllerProvider.notifier)
+                            .unapproveHrd(
+                              itemCuti: item,
+                              nama: namaHrd,
+                            );
+                      }
                     },
                     child: Ink(
                       child: Column(

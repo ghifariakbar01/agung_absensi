@@ -16,7 +16,7 @@ class SendWaRepository {
       required String notifTitle,
       required String notifContent
       //
-      }) {
+      }) async {
     return _remoteService.sendWa(
         phone: phone,
         idUser: idUser,

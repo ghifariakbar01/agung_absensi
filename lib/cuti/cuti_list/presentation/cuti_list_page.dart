@@ -1,3 +1,4 @@
+import 'package:face_net_authentication/cuti/cuti_approve/application/cuti_approve_notifier.dart';
 import 'package:face_net_authentication/mst_karyawan_cuti/application/mst_karyawan_cuti_notifier.dart';
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
 import 'package:flutter/material.dart';
@@ -7,10 +8,12 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../mst_karyawan_cuti/application/mst_karyawan_cuti.dart';
 import '../../../routes/application/route_names.dart';
+import '../../../widgets/alert_helper.dart';
 import '../../../widgets/v_async_widget.dart';
 import '../../../widgets/v_scaffold_widget.dart';
 
 import '../../../style/style.dart';
+import '../../create_cuti/application/create_cuti_notifier.dart';
 import '../application/cuti_list.dart';
 import '../application/cuti_list_notifier.dart';
 
@@ -20,9 +23,9 @@ class CutiListPage extends HookConsumerWidget {
   const CutiListPage();
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen<AsyncValue>(mstKaryawanCutiNotifierProvider, (_, state) {
-      state.showAlertDialogOnError(context);
-    });
+    // ref.listen<AsyncValue>(mstKaryawanCutiNotifierProvider, (_, state) {
+    //   state.showAlertDialogOnError(context);
+    // });
 
     final mstCuti = ref.watch(mstKaryawanCutiNotifierProvider);
     final cutiList = ref.watch(cutiListControllerProvider);
@@ -47,22 +50,25 @@ class CutiListPage extends HookConsumerWidget {
       return () => scrollController.removeListener(onScrolled);
     }, [scrollController]);
 
-    // ref.listen<AsyncValue>(sakitApproveControllerProvider, (_, state) {
-    //   if (!state.isLoading &&
-    //       state.hasValue &&
-    //       state.value != '' &&
-    //       state.value != null &&
-    //       state.hasError == false) {
-    //     return AlertHelper.showSnackBar(
-    //       context,
-    //       onDone: () async {
-    //         ref.invalidate(cutiListControllerProvider);
-    //       },
-    //       color: Palette.primaryColor,
-    //       message: '${state.value} ',
-    //     );
-    //   }
-    // });
+    ref.listen<AsyncValue>(cutiApproveControllerProvider, (_, state) {
+      if (!state.isLoading &&
+          state.hasValue &&
+          state.value != '' &&
+          state.value != null &&
+          state.hasError == false) {
+        return AlertHelper.showSnackBar(
+          context,
+          onDone: () async {
+            ref.invalidate(cutiListControllerProvider);
+            ref.invalidate(mstKaryawanCutiNotifierProvider);
+          },
+          color: Palette.primaryColor,
+          message: '${state.value} ',
+        );
+      } else {
+        return state.showAlertDialogOnError(context);
+      }
+    });
 
     return VAsyncWidgetScaffold<MstKaryawanCuti>(
         value: mstCuti,
