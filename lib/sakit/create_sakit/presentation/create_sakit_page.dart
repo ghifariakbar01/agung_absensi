@@ -14,6 +14,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 
 import '../../../constants/assets.dart';
 import '../../../routes/application/route_names.dart';
@@ -88,7 +89,7 @@ class CreateSakitPage extends HookConsumerWidget {
         data: (_) => VAsyncWidgetScaffold<void>(
           value: createSakit,
           data: (_) => VScaffoldWidget(
-              appbarColor: Palette.primaryLighter,
+              appbarColor: Palette.primaryColor,
               scaffoldTitle: 'Create Form Sakit',
               scaffoldBody: Padding(
                 padding: EdgeInsets.only(
@@ -101,33 +102,10 @@ class CreateSakitPage extends HookConsumerWidget {
                       TextFormField(
                           enabled: false,
                           controller: namaTextController,
-                          cursorColor: Palette.primaryColor,
                           keyboardType: TextInputType.name,
-                          decoration: Themes.formStyle(
-                            'Masukkan nama',
-                          ),
-                          style: Themes.customColor(
-                            14,
-                            fontWeight: FontWeight.normal,
-                          ),
-                          validator: (item) {
-                            if (item == null) {
-                              return 'Form tidak boleh kosong';
-                            } else if (item.isEmpty) {
-                              return 'Form tidak boleh kosong';
-                            }
-
-                            return null;
-                          }),
-
-                      // PT
-                      TextFormField(
-                          enabled: false,
-                          controller: ptTextController,
                           cursorColor: Palette.primaryColor,
-                          keyboardType: TextInputType.name,
-                          decoration: Themes.formStyle(
-                            'Masukkan pt',
+                          decoration: Themes.formStyleBordered(
+                            'Nama',
                           ),
                           style: Themes.customColor(
                             14,
@@ -144,7 +122,34 @@ class CreateSakitPage extends HookConsumerWidget {
                           }),
 
                       SizedBox(
-                        height: 8,
+                        height: 16,
+                      ),
+
+                      // PT
+                      TextFormField(
+                          enabled: false,
+                          controller: ptTextController,
+                          cursorColor: Palette.primaryColor,
+                          keyboardType: TextInputType.name,
+                          decoration: Themes.formStyleBordered(
+                            'PT',
+                          ),
+                          style: Themes.customColor(
+                            14,
+                            fontWeight: FontWeight.normal,
+                          ),
+                          validator: (item) {
+                            if (item == null) {
+                              return 'Form tidak boleh kosong';
+                            } else if (item.isEmpty) {
+                              return 'Form tidak boleh kosong';
+                            }
+
+                            return null;
+                          }),
+
+                      SizedBox(
+                        height: 16,
                       ),
 
                       // SURAT DOKTER
@@ -152,7 +157,8 @@ class CreateSakitPage extends HookConsumerWidget {
                         elevation: 0,
                         iconSize: 20,
                         padding: EdgeInsets.all(0),
-                        icon: const Icon(Icons.arrow_downward),
+                        icon: Icon(Icons.keyboard_arrow_down_rounded,
+                            color: Palette.primaryColor),
                         decoration: Themes.formStyleBordered(
                           'Surat Dokter',
                         ),
@@ -188,7 +194,7 @@ class CreateSakitPage extends HookConsumerWidget {
                       ),
 
                       SizedBox(
-                        height: 8,
+                        height: 16,
                       ),
 
                       // TGL AWAL
@@ -212,16 +218,15 @@ class CreateSakitPage extends HookConsumerWidget {
                               tglAwalTextController.value = start;
                               tglAkhirTextController.value = end;
 
-                              final startPlaceHolder =
-                                  StringUtils.formatTanggal(
-                                      picked.start.toString());
-                              final endPlaceHolder = StringUtils.formatTanggal(
-                                  picked.end.toString());
+                              final startPlaceHolder = DateFormat(
+                                'dd MMM yyyy',
+                              ).format(picked.start);
+                              final endPlaceHolder = DateFormat(
+                                'dd MMM yyyy',
+                              ).format(picked.end);
 
                               tglPlaceholderTextController.text =
-                                  'Dari $startPlaceHolder Sampai $endPlaceHolder';
-
-                              log('START $start END $end');
+                                  '$startPlaceHolder - $endPlaceHolder';
                             }
                           },
                           child: IgnorePointer(
@@ -251,7 +256,7 @@ class CreateSakitPage extends HookConsumerWidget {
                       ),
 
                       SizedBox(
-                        height: 8,
+                        height: 16,
                       ),
 
                       // DIAGNOSA
@@ -277,11 +282,7 @@ class CreateSakitPage extends HookConsumerWidget {
                           }),
 
                       SizedBox(
-                        height: 8,
-                      ),
-
-                      Container(
-                        height: 58,
+                        height: 54,
                       ),
 
                       Align(

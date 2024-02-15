@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../constants/assets.dart';
 import '../shared/providers.dart';
 
 class VAlertDialog extends ConsumerWidget {
@@ -146,6 +147,110 @@ class VSimpleDialog extends StatelessWidget {
             ),
           )
         ],
+      ),
+    );
+  }
+}
+
+class VBatalDialog extends StatelessWidget {
+  const VBatalDialog({Key? key, required this.onTap}) : super(key: key);
+
+  final Function() onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 32.0),
+      child: Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        child: SizedBox(
+          height: 150,
+          child: Stack(
+            children: [
+              Container(
+                height: 124,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: EdgeInsets.all(8),
+                child: Center(
+                  child: Text(
+                    'Apa anda ingin membatalkan Pengajuan ini?',
+                    textAlign: TextAlign.center,
+                    style: Themes.customColor(14),
+                  ),
+                ),
+              ),
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: Ink(
+                  height: 31,
+                  decoration: BoxDecoration(
+                    color: Palette.red,
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(12),
+                      bottomRight: Radius.circular(12),
+                    ),
+                  ),
+                  child: InkWell(
+                    onTap: onTap,
+                    child: Center(
+                      child: Text(
+                        'Batalkan',
+                        style: Themes.customColor(14, color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class VAksesDitolak extends StatelessWidget {
+  const VAksesDitolak({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 32.0),
+      child: Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        child: Container(
+          height: 150,
+          decoration: BoxDecoration(
+            color: Palette.red2,
+            borderRadius: BorderRadius.circular(12.0),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SvgPicture.asset(
+                Assets.iconCrossed,
+                color: Colors.white,
+              ),
+              SizedBox(
+                height: 2,
+              ),
+              Text(
+                'Anda tidak memiliki akses untuk Approval',
+                textAlign: TextAlign.center,
+                style: Themes.customColor(14, color: Colors.white),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

@@ -34,6 +34,10 @@ mixin _$SakitList {
   String? get uDate => throw _privateConstructorUsedError;
   @JsonKey(name: 'payroll')
   String? get payroll => throw _privateConstructorUsedError;
+  @JsonKey(name: 'fullname')
+  String? get fullname => throw _privateConstructorUsedError;
+  @JsonKey(name: 'comp')
+  String? get comp => throw _privateConstructorUsedError;
   @JsonKey(name: 'dept')
   String? get dept => throw _privateConstructorUsedError;
   @JsonKey(name: 'ket')
@@ -42,6 +46,8 @@ mixin _$SakitList {
   String? get surat => throw _privateConstructorUsedError;
   @JsonKey(name: 'btl_sta')
   bool? get batalStatus => throw _privateConstructorUsedError;
+  @JsonKey(name: 'btl_nm')
+  String? get batalNama => throw _privateConstructorUsedError;
   @JsonKey(name: 'tgl_start')
   String? get tglStart => throw _privateConstructorUsedError;
   @JsonKey(name: 'tgl_end')
@@ -82,10 +88,13 @@ abstract class $SakitListCopyWith<$Res> {
       @JsonKey(name: 'c_date') String? cDate,
       @JsonKey(name: 'u_date') String? uDate,
       @JsonKey(name: 'payroll') String? payroll,
+      @JsonKey(name: 'fullname') String? fullname,
+      @JsonKey(name: 'comp') String? comp,
       @JsonKey(name: 'dept') String? dept,
       @JsonKey(name: 'ket') String? ket,
       @JsonKey(name: 'surat') String? surat,
       @JsonKey(name: 'btl_sta') bool? batalStatus,
+      @JsonKey(name: 'btl_nm') String? batalNama,
       @JsonKey(name: 'tgl_start') String? tglStart,
       @JsonKey(name: 'tgl_end') String? tglEnd,
       @JsonKey(name: 'tot_hari') int? totHari,
@@ -118,10 +127,13 @@ class _$SakitListCopyWithImpl<$Res, $Val extends SakitList>
     Object? cDate = freezed,
     Object? uDate = freezed,
     Object? payroll = freezed,
+    Object? fullname = freezed,
+    Object? comp = freezed,
     Object? dept = freezed,
     Object? ket = freezed,
     Object? surat = freezed,
     Object? batalStatus = freezed,
+    Object? batalNama = freezed,
     Object? tglStart = freezed,
     Object? tglEnd = freezed,
     Object? totHari = freezed,
@@ -162,6 +174,14 @@ class _$SakitListCopyWithImpl<$Res, $Val extends SakitList>
           ? _value.payroll
           : payroll // ignore: cast_nullable_to_non_nullable
               as String?,
+      fullname: freezed == fullname
+          ? _value.fullname
+          : fullname // ignore: cast_nullable_to_non_nullable
+              as String?,
+      comp: freezed == comp
+          ? _value.comp
+          : comp // ignore: cast_nullable_to_non_nullable
+              as String?,
       dept: freezed == dept
           ? _value.dept
           : dept // ignore: cast_nullable_to_non_nullable
@@ -178,6 +198,10 @@ class _$SakitListCopyWithImpl<$Res, $Val extends SakitList>
           ? _value.batalStatus
           : batalStatus // ignore: cast_nullable_to_non_nullable
               as bool?,
+      batalNama: freezed == batalNama
+          ? _value.batalNama
+          : batalNama // ignore: cast_nullable_to_non_nullable
+              as String?,
       tglStart: freezed == tglStart
           ? _value.tglStart
           : tglStart // ignore: cast_nullable_to_non_nullable
@@ -237,10 +261,13 @@ abstract class _$$_SakitListCopyWith<$Res> implements $SakitListCopyWith<$Res> {
       @JsonKey(name: 'c_date') String? cDate,
       @JsonKey(name: 'u_date') String? uDate,
       @JsonKey(name: 'payroll') String? payroll,
+      @JsonKey(name: 'fullname') String? fullname,
+      @JsonKey(name: 'comp') String? comp,
       @JsonKey(name: 'dept') String? dept,
       @JsonKey(name: 'ket') String? ket,
       @JsonKey(name: 'surat') String? surat,
       @JsonKey(name: 'btl_sta') bool? batalStatus,
+      @JsonKey(name: 'btl_nm') String? batalNama,
       @JsonKey(name: 'tgl_start') String? tglStart,
       @JsonKey(name: 'tgl_end') String? tglEnd,
       @JsonKey(name: 'tot_hari') int? totHari,
@@ -271,10 +298,13 @@ class __$$_SakitListCopyWithImpl<$Res>
     Object? cDate = freezed,
     Object? uDate = freezed,
     Object? payroll = freezed,
+    Object? fullname = freezed,
+    Object? comp = freezed,
     Object? dept = freezed,
     Object? ket = freezed,
     Object? surat = freezed,
     Object? batalStatus = freezed,
+    Object? batalNama = freezed,
     Object? tglStart = freezed,
     Object? tglEnd = freezed,
     Object? totHari = freezed,
@@ -315,6 +345,14 @@ class __$$_SakitListCopyWithImpl<$Res>
           ? _value.payroll
           : payroll // ignore: cast_nullable_to_non_nullable
               as String?,
+      fullname: freezed == fullname
+          ? _value.fullname
+          : fullname // ignore: cast_nullable_to_non_nullable
+              as String?,
+      comp: freezed == comp
+          ? _value.comp
+          : comp // ignore: cast_nullable_to_non_nullable
+              as String?,
       dept: freezed == dept
           ? _value.dept
           : dept // ignore: cast_nullable_to_non_nullable
@@ -331,6 +369,10 @@ class __$$_SakitListCopyWithImpl<$Res>
           ? _value.batalStatus
           : batalStatus // ignore: cast_nullable_to_non_nullable
               as bool?,
+      batalNama: freezed == batalNama
+          ? _value.batalNama
+          : batalNama // ignore: cast_nullable_to_non_nullable
+              as String?,
       tglStart: freezed == tglStart
           ? _value.tglStart
           : tglStart // ignore: cast_nullable_to_non_nullable
@@ -386,10 +428,13 @@ class _$_SakitList implements _SakitList {
       @JsonKey(name: 'c_date') this.cDate,
       @JsonKey(name: 'u_date') this.uDate,
       @JsonKey(name: 'payroll') this.payroll,
+      @JsonKey(name: 'fullname') this.fullname,
+      @JsonKey(name: 'comp') this.comp,
       @JsonKey(name: 'dept') this.dept,
       @JsonKey(name: 'ket') this.ket,
       @JsonKey(name: 'surat') this.surat,
       @JsonKey(name: 'btl_sta') this.batalStatus,
+      @JsonKey(name: 'btl_nm') this.batalNama,
       @JsonKey(name: 'tgl_start') this.tglStart,
       @JsonKey(name: 'tgl_end') this.tglEnd,
       @JsonKey(name: 'tot_hari') this.totHari,
@@ -426,6 +471,12 @@ class _$_SakitList implements _SakitList {
   @JsonKey(name: 'payroll')
   final String? payroll;
   @override
+  @JsonKey(name: 'fullname')
+  final String? fullname;
+  @override
+  @JsonKey(name: 'comp')
+  final String? comp;
+  @override
   @JsonKey(name: 'dept')
   final String? dept;
   @override
@@ -437,6 +488,9 @@ class _$_SakitList implements _SakitList {
   @override
   @JsonKey(name: 'btl_sta')
   final bool? batalStatus;
+  @override
+  @JsonKey(name: 'btl_nm')
+  final String? batalNama;
   @override
   @JsonKey(name: 'tgl_start')
   final String? tglStart;
@@ -470,7 +524,7 @@ class _$_SakitList implements _SakitList {
 
   @override
   String toString() {
-    return 'SakitList(idSakit: $idSakit, idUser: $idUser, idDept: $idDept, cUser: $cUser, cDate: $cDate, uDate: $uDate, payroll: $payroll, dept: $dept, ket: $ket, surat: $surat, batalStatus: $batalStatus, tglStart: $tglStart, tglEnd: $tglEnd, totHari: $totHari, qtyFoto: $qtyFoto, spvSta: $spvSta, spvTgl: $spvTgl, spvNote: $spvNote, hrdSta: $hrdSta, hrdTgl: $hrdTgl, hrdNote: $hrdNote)';
+    return 'SakitList(idSakit: $idSakit, idUser: $idUser, idDept: $idDept, cUser: $cUser, cDate: $cDate, uDate: $uDate, payroll: $payroll, fullname: $fullname, comp: $comp, dept: $dept, ket: $ket, surat: $surat, batalStatus: $batalStatus, batalNama: $batalNama, tglStart: $tglStart, tglEnd: $tglEnd, totHari: $totHari, qtyFoto: $qtyFoto, spvSta: $spvSta, spvTgl: $spvTgl, spvNote: $spvNote, hrdSta: $hrdSta, hrdTgl: $hrdTgl, hrdNote: $hrdNote)';
   }
 
   @override
@@ -485,11 +539,16 @@ class _$_SakitList implements _SakitList {
             (identical(other.cDate, cDate) || other.cDate == cDate) &&
             (identical(other.uDate, uDate) || other.uDate == uDate) &&
             (identical(other.payroll, payroll) || other.payroll == payroll) &&
+            (identical(other.fullname, fullname) ||
+                other.fullname == fullname) &&
+            (identical(other.comp, comp) || other.comp == comp) &&
             (identical(other.dept, dept) || other.dept == dept) &&
             (identical(other.ket, ket) || other.ket == ket) &&
             (identical(other.surat, surat) || other.surat == surat) &&
             (identical(other.batalStatus, batalStatus) ||
                 other.batalStatus == batalStatus) &&
+            (identical(other.batalNama, batalNama) ||
+                other.batalNama == batalNama) &&
             (identical(other.tglStart, tglStart) ||
                 other.tglStart == tglStart) &&
             (identical(other.tglEnd, tglEnd) || other.tglEnd == tglEnd) &&
@@ -514,10 +573,13 @@ class _$_SakitList implements _SakitList {
         cDate,
         uDate,
         payroll,
+        fullname,
+        comp,
         dept,
         ket,
         surat,
         batalStatus,
+        batalNama,
         tglStart,
         tglEnd,
         totHari,
@@ -553,10 +615,13 @@ abstract class _SakitList implements SakitList {
       @JsonKey(name: 'c_date') final String? cDate,
       @JsonKey(name: 'u_date') final String? uDate,
       @JsonKey(name: 'payroll') final String? payroll,
+      @JsonKey(name: 'fullname') final String? fullname,
+      @JsonKey(name: 'comp') final String? comp,
       @JsonKey(name: 'dept') final String? dept,
       @JsonKey(name: 'ket') final String? ket,
       @JsonKey(name: 'surat') final String? surat,
       @JsonKey(name: 'btl_sta') final bool? batalStatus,
+      @JsonKey(name: 'btl_nm') final String? batalNama,
       @JsonKey(name: 'tgl_start') final String? tglStart,
       @JsonKey(name: 'tgl_end') final String? tglEnd,
       @JsonKey(name: 'tot_hari') final int? totHari,
@@ -593,6 +658,12 @@ abstract class _SakitList implements SakitList {
   @JsonKey(name: 'payroll')
   String? get payroll;
   @override
+  @JsonKey(name: 'fullname')
+  String? get fullname;
+  @override
+  @JsonKey(name: 'comp')
+  String? get comp;
+  @override
   @JsonKey(name: 'dept')
   String? get dept;
   @override
@@ -604,6 +675,9 @@ abstract class _SakitList implements SakitList {
   @override
   @JsonKey(name: 'btl_sta')
   bool? get batalStatus;
+  @override
+  @JsonKey(name: 'btl_nm')
+  String? get batalNama;
   @override
   @JsonKey(name: 'tgl_start')
   String? get tglStart;

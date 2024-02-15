@@ -35,9 +35,8 @@ class EditSakitPage extends HookConsumerWidget {
     final ptTextController = useTextEditingController(text: nama.user.payroll);
 
     final diagnosaTextController = useTextEditingController(text: item.ket);
-    final suratDokterTextController = useState(item.surat!.toLowerCase() == 'ts'
-        ? 'Tanpa Surat Dokter'
-        : 'Dengan Surat Dokter');
+    final suratDokterTextController = useState(
+        item.surat!.toLowerCase() == 'ts' ? 'Tanpa Surat' : 'Dengan Surat');
 
     final tglPlaceholderTextController = useTextEditingController(
         text:
@@ -94,8 +93,8 @@ class EditSakitPage extends HookConsumerWidget {
                       controller: namaTextController,
                       cursorColor: Palette.primaryColor,
                       keyboardType: TextInputType.name,
-                      decoration: Themes.formStyle(
-                        'Masukkan nama',
+                      decoration: Themes.formStyleBordered(
+                        'Nama',
                       ),
                       style: Themes.customColor(
                         14,
@@ -109,6 +108,10 @@ class EditSakitPage extends HookConsumerWidget {
 
                         return null;
                       }),
+
+                  SizedBox(
+                    height: 16,
+                  ),
 
                   // PT
                   TextFormField(
@@ -116,8 +119,8 @@ class EditSakitPage extends HookConsumerWidget {
                       controller: ptTextController,
                       cursorColor: Palette.primaryColor,
                       keyboardType: TextInputType.name,
-                      decoration: Themes.formStyle(
-                        'Masukkan pt',
+                      decoration: Themes.formStyleBordered(
+                        'PT',
                       ),
                       style: Themes.customColor(
                         14,
@@ -133,67 +136,43 @@ class EditSakitPage extends HookConsumerWidget {
                       }),
 
                   SizedBox(
-                    height: 8,
-                  ),
-
-                  // DIAGNOSA
-                  TextFormField(
-                      maxLines: 2,
-                      controller: diagnosaTextController,
-                      cursorColor: Palette.primaryColor,
-                      decoration: Themes.formStyle(
-                        'Masukkan diagnosa penyakit',
-                      ),
-                      style: Themes.customColor(
-                        14,
-                      ),
-                      validator: (item) {
-                        if (item == null) {
-                          return 'Form tidak boleh kosong';
-                        } else if (item.isEmpty) {
-                          return 'Form tidak boleh kosong';
-                        }
-
-                        return null;
-                      }),
-
-                  SizedBox(
-                    height: 8,
+                    height: 16,
                   ),
 
                   // SURAT DOKTER
                   DropdownButtonFormField<String>(
-                    // value: suratDokterTextController.value,
                     elevation: 16,
                     iconSize: 20,
-                    icon: const Icon(Icons.arrow_downward),
-                    decoration: Themes.formStyle('Surat Dokter'),
-                    // style: const TextStyle(color: Palette.primaryColor),
                     value: suratDokterTextController.value,
+                    decoration: Themes.formStyleBordered('Surat Dokter'),
+                    icon: Icon(
+                      Icons.keyboard_arrow_down_rounded,
+                      color: Palette.primaryColor,
+                    ),
                     onChanged: (String? value) {
                       if (value != null) {
                         suratDokterTextController.value = value;
                       }
                     },
-                    items: ['Dengan Surat Dokter', 'Tanpa Surat Dokter']
+                    items: ['Dengan Surat', 'Tanpa Surat']
                         .map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: Text(
                           value,
-                          style: Themes.customColor(10,
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).unselectedWidgetColor),
+                          style: Themes.customColor(
+                            14,
+                          ),
                         ),
                       );
                     }).toList(),
                   ),
 
                   SizedBox(
-                    height: 8,
+                    height: 16,
                   ),
 
-                  // TGL AWAL
+                  // TGL
                   InkWell(
                     onTap: () async {
                       final picked = await showDateRangePicker(
@@ -230,8 +209,8 @@ class EditSakitPage extends HookConsumerWidget {
                             maxLines: 1,
                             controller: tglPlaceholderTextController,
                             cursorColor: Palette.primaryColor,
-                            decoration: Themes.formStyle(
-                              'Masukkan tgl awal',
+                            decoration: Themes.formStyleBordered(
+                              'Tanggal',
                             ),
                             style: Themes.customColor(
                               14,
@@ -249,44 +228,33 @@ class EditSakitPage extends HookConsumerWidget {
                     ),
                   ),
 
-                  // SizedBox(
-                  //   height: 8,
-                  // ),
+                  SizedBox(
+                    height: 16,
+                  ),
 
-                  // SPV NOTE
-                  // TextFormField(
-                  //   maxLines: 2,
-                  //   controller: spvTextController,
-                  //   cursorColor: Palette.primaryColor,
-                  //   decoration: Themes.formStyle(
-                  //     'Masukkan SPV Note',
-                  //   ),
-                  //   style: Themes.customColor(
-                  //
-                  //     14,
-                  //   ),
-                  // ),
+                  // DIAGNOSA
+                  TextFormField(
+                      maxLines: 5,
+                      controller: diagnosaTextController,
+                      cursorColor: Palette.primaryColor,
+                      decoration: Themes.formStyleBordered(
+                        'Diagnosa',
+                      ),
+                      style: Themes.customColor(
+                        14,
+                      ),
+                      validator: (item) {
+                        if (item == null) {
+                          return 'Form tidak boleh kosong';
+                        } else if (item.isEmpty) {
+                          return 'Form tidak boleh kosong';
+                        }
 
-                  // SizedBox(
-                  //   height: 8,
-                  // ),
-
-                  // SPV NOTE
-                  // TextFormField(
-                  //   maxLines: 2,
-                  //   controller: hrdTextController,
-                  //   cursorColor: Palette.primaryColor,
-                  //   decoration: Themes.formStyle(
-                  //     'Masukkan HRD Note',
-                  //   ),
-                  //   style: Themes.customColor(
-                  //
-                  //     14,
-                  //   ),
-                  // ),
+                        return null;
+                      }),
 
                   SizedBox(
-                    height: 8,
+                    height: 16,
                   ),
 
                   Expanded(child: Container()),

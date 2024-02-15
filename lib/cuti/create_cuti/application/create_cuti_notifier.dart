@@ -1,6 +1,3 @@
-import 'dart:developer';
-
-import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/mst_karyawan_cuti/application/mst_karyawan_cuti_notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -268,8 +265,7 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
         ? mstCuti.cutiBaru
         : mstCuti.cutiTidakBaru;
 
-    final cUser = ref.read(userNotifierProvider).user.nama;
-
+    // final cUser = ref.read(userNotifierProvider).user.nama;
     // final String messageContent =
     //     " ( Testing Apps ) Terdapat Waiting Aprrove Pengajuan Cuti Baru Telah Diinput Oleh : $cUser ";
     // await _sendWaToHead(idUser: idUser, messageContent: messageContent);

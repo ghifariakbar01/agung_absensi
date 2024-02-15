@@ -133,9 +133,9 @@ class CreateCutiRemoteService {
             "GETDATE(), " // spv_tgl
             "GETDATE(), " // hrd_tgl
             "GETDATE(), " // c_date
-            "'0', " // c_user
+            "'(select nama from $dbMstUser where id_user = $idUser)', " // c_user
             "GETDATE(), " // u_date
-            "'0')", // u_user
+            "'(select nama from $dbMstUser where id_user = $idUser)')", // u_user
         "mode": "INSERT"
       };
 

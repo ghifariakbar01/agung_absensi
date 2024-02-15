@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:face_net_authentication/mst_karyawan_cuti/application/mst_karyawan_cuti_notifier.dart';
 import 'package:face_net_authentication/sakit/create_sakit/application/create_sakit.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -7,7 +5,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../mst_karyawan_cuti/application/mst_karyawan_cuti.dart';
 import '../../../send_wa/application/send_wa_notifier.dart';
 import '../../../shared/providers.dart';
-import '../../../user/application/user_model.dart';
 import '../../../wa_head_helper/application/wa_head.dart';
 import '../../../wa_head_helper/application/wa_head_helper_notifier.dart';
 import '../infrastructure/create_sakit_remote_service.dart';
@@ -105,9 +102,9 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
           jumlahhari: jumlahhari,
           suratDokter: suratDokter);
 
-      final String messageContent =
-          " ( Testing Apps ) Terdapat Waiting Approve Pengajuan Izin Sakit Baru Telah Diinput Oleh : $cUser ";
-      await _sendWaToHead(idUser: idUser, messageContent: messageContent);
+      // final String messageContent =
+      //     " ( Testing Apps ) Terdapat Waiting Approve Pengajuan Izin Sakit Baru Telah Diinput Oleh : $cUser ";
+      // await _sendWaToHead(idUser: idUser, messageContent: messageContent);
 
       state = await AsyncValue.guard(() => ref
           .read(createSakitRepositoryProvider)

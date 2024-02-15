@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:face_net_authentication/infrastructure/dio_extensions.dart';
@@ -37,6 +36,7 @@ class CutiListRemoteService {
                 " (SELECT no_telp1 FROM $dbMstUser WHERE id_user = $dbName.id_user) AS no_telp1, "
                 " (SELECT no_telp2 FROM $dbMstUser WHERE id_user = $dbName.id_user) AS no_telp2, "
                 " (SELECT fullname FROM $dbMstUser WHERE id_user = $dbName.id_user) AS fullname, "
+                " (SELECT nama FROM mst_comp WHERE id_comp =  (SELECT id_comp FROM $dbMstUser WHERE id_user = $dbName.id_user) ) AS comp, "
                 " (SELECT pt FROM $dbKaryawan WHERE IdKary = $dbName.IdKary) AS pt, "
                 " (SELECT nama FROM $dbMstDept WHERE id_dept = (SELECT id_dept FROM $dbMstUser WHERE id_user = $dbName.id_user)) AS dept "
                 " FROM "
@@ -114,7 +114,8 @@ class CutiListRemoteService {
                 "          $dbMstUser.no_telp2, "
                 "          $dbMstUser.fullname, "
                 "          $dbKaryawan.pt, "
-                "          $dbMstDept.nama AS dept "
+                "          $dbMstDept.nama AS dept, "
+                "          (SELECT nama FROM mst_comp WHERE id_comp = (SELECT id_comp FROM $dbMstUser WHERE id_user = $dbName.id_user)) AS comp "
                 "      FROM "
                 "          $dbName "
                 "      JOIN "

@@ -41,6 +41,7 @@ abstract class CutiList with _$CutiList {
     @JsonKey(name: 'no_telp2') String? noTelp2,
     @JsonKey(name: 'fullname') String? fullname,
     @JsonKey(name: 'pt') String? pt,
+    @JsonKey(name: 'comp') String? comp,
     @JsonKey(name: 'dept') String? dept,
   }) = _CutiList;
 

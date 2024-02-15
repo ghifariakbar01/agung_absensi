@@ -58,43 +58,42 @@ mixin Themes {
     return InputDecoration(
       labelText: labelText,
       suffixIcon: icon ?? null,
-      border: Themes.focused(color: borderColor ?? Palette.primaryLighter),
-      focusedBorder:
-          Themes.focused(color: borderColor ?? Palette.primaryLighter),
-      enabledBorder:
-          Themes.focused(color: borderColor ?? Palette.primaryLighter),
       contentPadding: const EdgeInsets.all(16),
-      hintStyle: Themes.customColor(
-        14,
-      ),
+      hintStyle: Themes.customColor(14, color: Palette.primaryColor),
       labelStyle: Themes.customColor(
         14,
       ),
+      floatingLabelBehavior: FloatingLabelBehavior.always,
+      border: Themes.focused(color: borderColor ?? Palette.primaryColor),
+      focusedBorder: Themes.focused(color: borderColor ?? Palette.primaryColor),
+      enabledBorder: Themes.focused(color: borderColor ?? Palette.primaryColor),
     );
   }
 
   static ThemeData lightTheme(BuildContext context) {
     return ThemeData.light().copyWith(
-      brightness: Brightness.light,
-      appBarTheme: const AppBarTheme(
-        iconTheme: IconThemeData(color: Colors.black),
-      ),
-      visualDensity: VisualDensity.adaptivePlatformDensity,
-      scaffoldBackgroundColor: Colors.white,
-      primaryColor: Colors.white,
-      secondaryHeaderColor: Colors.black,
-      unselectedWidgetColor: Palette.primaryLighter,
-      cardColor: Palette.primaryLighter,
-      disabledColor: Colors.black.withOpacity(0.15),
-    );
+        brightness: Brightness.light,
+        appBarTheme: const AppBarTheme(
+          iconTheme: IconThemeData(color: Colors.black),
+        ),
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+        scaffoldBackgroundColor: Colors.white,
+        primaryColor: Colors.white,
+        secondaryHeaderColor: Colors.black,
+        cardColor: Palette.primaryLighter,
+        unselectedWidgetColor: Palette.primaryLighter,
+        disabledColor: Colors.black.withOpacity(0.15),
+        datePickerTheme: DatePickerThemeData(
+            headerBackgroundColor: Palette.primaryColor,
+            headerForegroundColor: Palette.primaryColor));
   }
 
   static ThemeData darkTheme(BuildContext context) {
     return ThemeData.dark().copyWith(
       brightness: Brightness.dark,
       appBarTheme: const AppBarTheme(
-        actionsIconTheme: IconThemeData(color: Colors.white),
         iconTheme: IconThemeData(color: Colors.white),
+        actionsIconTheme: IconThemeData(color: Colors.white),
       ),
       visualDensity: VisualDensity.adaptivePlatformDensity,
       scaffoldBackgroundColor: Colors.black,

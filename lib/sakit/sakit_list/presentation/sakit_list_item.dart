@@ -1,22 +1,22 @@
 import 'dart:developer';
 
-import 'package:face_net_authentication/mst_karyawan_cuti/application/mst_karyawan_cuti_notifier.dart';
-import 'package:face_net_authentication/sakit/create_sakit/application/create_sakit_notifier.dart';
-import 'package:face_net_authentication/sakit/sakit_approve/application/sakit_approve_notifier.dart';
 import 'package:face_net_authentication/shared/providers.dart';
+import 'package:face_net_authentication/widgets/tappable_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
-import '../../../mst_karyawan_cuti/application/mst_karyawan_cuti.dart';
+import '../../../constants/assets.dart';
 import '../../../routes/application/route_names.dart';
-import '../../../widgets/v_dialogs.dart';
 import '../../../style/style.dart';
-import '../../create_sakit/application/create_sakit.dart';
 
+import '../../../widgets/v_dialogs.dart';
+import '../../sakit_approve/application/sakit_approve_notifier.dart';
 import '../application/sakit_list.dart';
 import 'sakit_dialog.dart';
+import 'sakit_dtl_dialog.dart';
 
 class SakitListItem extends HookConsumerWidget {
   const SakitListItem(
@@ -29,435 +29,744 @@ class SakitListItem extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
 
-    final _isSpvApprove = item.spvTgl != item.cDate && item.spvSta == true;
-    final spvAging = _isSpvApprove
-        ? DateTime.parse(item.spvTgl!)
-            .difference(DateTime.parse(item.cDate!))
-            .inDays
-        : DateTime.now().difference(DateTime.parse(item.cDate!)).inDays;
+    // final _isSpvApprove = item.spvTgl != item.cDate && item.spvSta == true;
+    // final spvAging = _isSpvApprove
+    //     ? DateTime.parse(item.spvTgl!)
+    //         .difference(DateTime.parse(item.cDate!))
+    //         .inDays
+    //     : DateTime.now().difference(DateTime.parse(item.cDate!)).inDays;
 
-    final _isHrdApprove = item.hrdTgl != item.cDate && item.hrdSta == true;
-    final hrdAging = _isHrdApprove
-        ? DateTime.parse(item.hrdTgl!)
-            .difference(DateTime.parse(item.cDate!))
-            .inDays
-        : DateTime.now().difference(DateTime.parse(item.cDate!)).inDays;
+    // final _isHrdApprove = item.hrdTgl != item.cDate && item.hrdSta == true;
+    // final hrdAging = _isHrdApprove
+    //     ? DateTime.parse(item.hrdTgl!)
+    //         .difference(DateTime.parse(item.cDate!))
+    //         .inDays
+    //     : DateTime.now().difference(DateTime.parse(item.cDate!)).inDays;
 
-    final sakitApprove = ref.watch(sakitApproveControllerProvider);
-
-    return IgnorePointer(
-      ignoring: item.batalStatus == true,
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          color: item.batalStatus == true
-              ? Palette.red.withOpacity(0.3)
-              : theme.primaryColor,
-        ),
-        padding: EdgeInsets.all(8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: SizedBox(
+        height: 210,
+        child: Stack(
           children: [
-            // UPPER
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // LEFT
-                Flexible(
-                  flex: 1,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'ID Form: ${item.idSakit}',
-                        style: Themes.customColor(11,
-                            color: Theme.of(context).unselectedWidgetColor),
-                      ),
-                      Text(
-                        'Nama : ${item.cUser}',
-                        style: Themes.customColor(11,
-                            color: Theme.of(context).unselectedWidgetColor),
-                      ),
-                      Text(
-                        'PT : ${item.payroll}',
-                        style: Themes.customColor(10,
-                            color: Theme.of(context).unselectedWidgetColor),
-                      ),
-                      Text(
-                        'Dept : ${item.dept}',
-                        style: Themes.customColor(10,
-                            color: Theme.of(context).unselectedWidgetColor),
-                      ),
-                      SizedBox(
-                        height: 8,
-                      ),
-                      Text(
-                        'Diagnosa : ${item.ket}',
-                        style: Themes.customColor(8,
-                            color: Theme.of(context).unselectedWidgetColor),
-                        overflow: TextOverflow.visible,
-                      ),
-                      if (item.spvNote != null) ...[
-                        Text(
-                          'SPV Note : ${item.spvNote}',
-                          style: Themes.customColor(8,
-                              color: Theme.of(context).unselectedWidgetColor),
-                          overflow: TextOverflow.visible,
-                        ),
-                      ],
-                      if (item.hrdNote != null) ...[
-                        Text(
-                          'HRD Note : ${item.hrdNote}',
-                          style: Themes.customColor(8,
-                              color: Theme.of(context).unselectedWidgetColor),
-                          overflow: TextOverflow.visible,
-                        ),
-                      ]
-                    ],
-                  ),
-                ),
-
-                // RIGHT
-                Flexible(
-                  flex: 1,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (item.surat != null) ...[
-                        Text(
-                          'Surat: ${item.surat!.toLowerCase() == 'ds' ? 'Dengan Surat Dokter' : 'Tanpa Surat Dokter'}',
-                          style: Themes.customColor(10,
-                              color: Theme.of(context).unselectedWidgetColor),
-                        ),
-                      ],
-                      if (item.tglStart != null) ...[
-                        Text(
-                          'Tanggal Awal : ${DateFormat('yyyy-MM-dd').format(DateTime.parse(item.tglStart!))}',
-                          style: Themes.customColor(10,
-                              color: Theme.of(context).unselectedWidgetColor),
-                        ),
-                      ],
-                      Text(
-                        'Tanggal Akhir : ${DateFormat('yyyy-MM-dd').format(DateTime.parse(item.tglEnd!))}',
-                        style: Themes.customColor(10,
-                            color: Theme.of(context).unselectedWidgetColor),
-                      ),
-                      Text(
-                        'Total Hari : ${item.totHari}',
-                        style: Themes.customColor(10,
-                            color: Theme.of(context).unselectedWidgetColor),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
-
-            SizedBox(
-              height: 8,
-            ),
-
-            // MIDDLE
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // LOWER LEFT
-                Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: () async {
-                      //  if (ref
-                      //     .read(sakitApproveControllerProvider.notifier)
-                      //     .canSpvApprove(item)) {
-                      //   log('message');
-                      // }
-
-                      // jika belum diapprove maka approve
-                      // kl udah di unapprove
-                      if (item.spvSta == false) {
-                        final String? text =
-                            await DialogHelper<void>().showFormDialog(
-                          label: 'Isi Form Approve SPV',
-                          context: context,
-                        );
-
-                        if (text != null) {
-                          log('message $text');
-                          ref
-                              .read(sakitApproveControllerProvider.notifier)
-                              .approveSpv(
-                                itemSakit: item,
-                                note: text,
-                                nama: ref.read(userNotifierProvider).user.nama!,
-                              );
-                        }
-                      } else {
-                        ref
-                            .read(sakitApproveControllerProvider.notifier)
-                            .unapproveSpv(
-                              itemSakit: item,
-                              nama: ref.read(userNotifierProvider).user.nama!,
-                            );
-                      }
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        if (item.spvSta != null)
-                          item.spvSta == true
-                              ? Icon(Icons.thumb_up,
-                                  size: 20, color: Colors.green)
-                              : Icon(
-                                  Icons.thumb_down,
-                                  size: 20,
-                                  color: Palette.greyDisabled,
-                                ),
-                        SizedBox(
-                          height: 2,
-                        ),
-                        Text(
-                          'Approve SPV',
-                          style: Themes.customColor(10,
-                              color: Theme.of(context).unselectedWidgetColor),
-                        ),
-                        if (item.spvTgl != null) ...[
-                          Text(
-                            'SPV Aging : $spvAging',
-                            style: Themes.customColor(10,
-                                color: Theme.of(context).unselectedWidgetColor),
-                          ),
-                        ],
-                      ],
+            Container(
+              padding: EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: item.batalStatus == true
+                      ? Palette.red
+                      : theme.primaryColor,
+                  boxShadow: [
+                    BoxShadow(
+                      color: item.batalStatus == true
+                          ? Colors.white
+                          : Colors.grey.withOpacity(0.5), // Shadow color
+                      spreadRadius: 1,
+                      blurRadius: 3,
+                      offset:
+                          Offset(0, 1), // Controls the position of the shadow
                     ),
+                  ]),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Upper Part
+                  Row(
+                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // LEFT
+                      Text(
+                        DateFormat(
+                          'EEEE, dd MMMM yyyy',
+                        ).format(DateTime.parse(item.cDate!)),
+                        style: Themes.customColor(10,
+                            fontWeight: FontWeight.w500,
+                            color: item.batalStatus == true
+                                ? Colors.white
+                                : theme.primaryColor),
+                      ),
+
+                      Spacer(),
+
+                      // tappable svg
+                      TappableSvg(
+                          assetPath: Assets.iconDetail,
+                          color: item.batalStatus == true ? Colors.white : null,
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => SakitDtlDialog(
+                                item: item,
+                              ),
+                            );
+                          }),
+                      SizedBox(
+                        width: 4,
+                      ),
+                      if (item.batalStatus == false)
+                        TappableSvg(
+                            assetPath: Assets.iconBatal,
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => VBatalDialog(
+                                  onTap: () async {
+                                    context.pop();
+                                    await ref
+                                        .read(sakitApproveControllerProvider
+                                            .notifier)
+                                        .batal(
+                                          itemSakit: item,
+                                          nama: ref
+                                              .read(userNotifierProvider)
+                                              .user
+                                              .nama!,
+                                        );
+                                  },
+                                ),
+                              );
+                            }),
+                    ],
                   ),
-                ),
 
-                // LOWER RIGHT
-                Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: () async {
-                      // if (ref
-                      //     .read(sakitApproveControllerProvider.notifier)
-                      //     .canHrdApprove(item)) {
-                      //   log('message');
-                      // }
+                  SizedBox(
+                    height: 2,
+                  ),
 
-                      if (item.hrdSta == false) {
-                        final String? text =
-                            await DialogHelper<void>().showFormDialog(
-                          label: 'Isi Form Approve HRD',
-                          context: context,
-                        );
+                  Divider(
+                    height: 2,
+                    color: Palette.dividerColor,
+                  ),
 
-                        if (text != null) {
-                          if (item.surat!.toLowerCase() == 'ds') {
-                            await ref
-                                .read(sakitApproveControllerProvider.notifier)
-                                .approveHrdDenganSurat(
-                                  note: text,
-                                  itemSakit: item,
-                                  namaHrd:
-                                      ref.read(userNotifierProvider).user.nama!,
-                                );
-                            //
-                          } else {
-                            await ref
-                                .read(sakitApproveControllerProvider.notifier)
-                                .approveHrdTanpaSurat(
-                                  note: text,
-                                  itemSakit: item,
-                                  namaHrd:
-                                      ref.read(userNotifierProvider).user.nama!,
-                                );
-                            //
-                          }
-                        }
-                      } else {
-                        if (item.surat!.toLowerCase() == 'ds') {
-                          await ref
-                              .read(sakitApproveControllerProvider.notifier)
-                              .unApproveHrdDenganSurat(
-                                itemSakit: item,
-                                nama: ref.read(userNotifierProvider).user.nama!,
-                              );
-                        } else {
-                          await ref
-                              .read(sakitApproveControllerProvider.notifier)
-                              .unApproveHrdTanpaSurat(
-                                itemSakit: item,
-                                nama: ref.read(userNotifierProvider).user.nama!,
-                              );
-                        }
-                      }
-                    },
-                    child: Ink(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                  SizedBox(
+                    height: 10,
+                  ),
+
+                  // MIDDLE
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (item.hrdSta != null)
-                            item.hrdSta == true
-                                ? Icon(Icons.thumb_up,
-                                    size: 20, color: Colors.green)
-                                : Icon(
-                                    Icons.thumb_down,
-                                    size: 20,
-                                    color: Palette.greyDisabled,
-                                  ),
+                          Text(
+                            'Nama',
+                            style: Themes.customColor(7,
+                                color: item.batalStatus == true
+                                    ? Colors.white
+                                    : Colors.grey),
+                          ),
                           SizedBox(
                             height: 2,
                           ),
                           Text(
-                            'Approve HRD',
-                            style: Themes.customColor(10,
-                                color: Theme.of(context).unselectedWidgetColor),
+                            item.fullname!,
+                            style: Themes.customColor(9,
+                                color: item.batalStatus == true
+                                    ? Colors.white
+                                    : Palette.primaryColor,
+                                fontWeight: FontWeight.w500),
                           ),
-                          if (item.hrdTgl != null) ...[
-                            Text(
-                              'HRD Aging : $hrdAging',
-                              style: Themes.customColor(10,
-                                  color:
-                                      Theme.of(context).unselectedWidgetColor),
-                            ),
-                          ],
                         ],
                       ),
-                    ),
-                  ),
-                )
-              ],
-            ),
 
-            SizedBox(
-              height: 8,
-            ),
+                      SizedBox(
+                        width: 25,
+                      ),
 
-            // LOWER
-            Row(children: [
-              // if (item.qtyFoto != null)
-              // if (item.qtyFoto! > 0)
-              Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: () => item.qtyFoto! == 0
-                      ? context.pushNamed(RouteNames.sakitUploadRoute,
-                          extra: item.idSakit)
-                      : context.pushNamed(RouteNames.sakitDtlRoute,
-                          extra: item.idSakit),
-                  child: Ink(
-                    child: Text('Upload : ${item.qtyFoto} Images',
-                        style: Themes.customColor(10,
-                            color: Colors.green,
-                            decoration: TextDecoration.underline)),
-                  ),
-                ),
-              ),
-              Spacer(),
-              // if (item.cUser != currUser)
-              Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: () =>
-                      context.pushNamed(RouteNames.editSakitRoute, extra: item),
-                  child: Ink(
-                    child: Text('Edit',
-                        style: Themes.customColor(10,
-                            color: Colors.blue,
-                            decoration: TextDecoration.underline)),
-                  ),
-                ),
-              ),
-              SizedBox(
-                width: 8,
-              ),
-              // if (item.cUser != currUser)
-              Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: () => {},
-                  child: Ink(
-                    child: Text('Delete',
-                        style: Themes.customColor(10,
-                            color: Colors.red,
-                            decoration: TextDecoration.underline)),
-                  ),
-                ),
-              )
-            ]),
-
-            SizedBox(
-              height: 8,
-            ),
-
-            Row(
-              children: [
-                Text(
-                  'Last Update : ${item.uDate}',
-                  style: Themes.customColor(
-                    10,
-                  ),
-                ),
-                Spacer(),
-                if (item.batalStatus == true) ...[
-                  Text(
-                    'Form Dibatalkan',
-                    style: Themes.customColor(
-                      10,
-                    ),
-                  ),
-                ],
-                if (item.batalStatus == false &&
-                    item.surat!.toLowerCase() == 'ds') ...[
-                  Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () {
-                        showDialog(
-                            context: context,
-                            builder: (_) => VAlertDialog(
-                                label: 'Batalkan form sakit ?',
-                                labelDescription:
-                                    'Jika Ya, form sakit tidak dapat digunakan.',
-                                onPressed: () => ref
-                                    .read(
-                                        sakitApproveControllerProvider.notifier)
-                                    .batal(
-                                      itemSakit: item,
-                                      nama: ref
-                                          .read(userNotifierProvider)
-                                          .user
-                                          .nama!,
-                                    )));
-                      },
-                      child: Ink(
-                        child: Column(
-                          children: [
-                            Icon(
-                              Icons.cancel,
-                              color: Colors.red,
-                            ),
-                            Text(
-                              'Batal',
-                              style: Themes.customColor(
-                                10,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Tanggal Awal',
+                                    style: Themes.customColor(7,
+                                        color: item.batalStatus == true
+                                            ? Colors.white
+                                            : Colors.grey),
+                                  ),
+                                  SizedBox(
+                                    height: 2,
+                                  ),
+                                  Text(
+                                    DateFormat(
+                                      'dd MMM yyyy',
+                                    ).format(DateTime.parse(item.tglStart!)),
+                                    style: Themes.customColor(9,
+                                        color: item.batalStatus == true
+                                            ? Colors.white
+                                            : Palette.blue,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
+                              SizedBox(
+                                width: 16,
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Tanggal Akhir',
+                                    style: Themes.customColor(7,
+                                        color: item.batalStatus == true
+                                            ? Colors.white
+                                            : Colors.grey),
+                                  ),
+                                  SizedBox(
+                                    height: 2,
+                                  ),
+                                  Text(
+                                    DateFormat(
+                                      'dd MMM yyyy',
+                                    ).format(DateTime.parse(item.tglEnd!)),
+                                    style: Themes.customColor(9,
+                                        color: item.batalStatus == true
+                                            ? Colors.white
+                                            : Palette.tertiaryColor,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                          SizedBox(
+                            height: 4,
+                          ),
+                          Row(
+                            children: [
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Jumlah Sakit',
+                                    style: Themes.customColor(7,
+                                        color: item.batalStatus == true
+                                            ? Colors.white
+                                            : Colors.grey),
+                                  ),
+                                  SizedBox(
+                                    height: 2,
+                                  ),
+                                  Text(
+                                    item.totHari!.toString() + " Hari",
+                                    style: Themes.customColor(9,
+                                        color: item.batalStatus == true
+                                            ? Colors.white
+                                            : Palette.primaryColor,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                width: 25,
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Surat',
+                                    style: Themes.customColor(7,
+                                        color: item.batalStatus == true
+                                            ? Colors.white
+                                            : Colors.grey),
+                                  ),
+                                  SizedBox(
+                                    height: 2,
+                                  ),
+                                  Text(
+                                    '${item.surat!.toLowerCase() == 'ds' ? 'Dengan Surat' : 'Tanpa Surat'}',
+                                    style: Themes.customColor(9,
+                                        color: item.batalStatus == true
+                                            ? Colors.white
+                                            : Palette.tertiaryColor,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ],
+                      )
+
+                      // tgl, jumlah sakit, surat info
+                    ],
+                  ),
+
+                  SizedBox(
+                    height: 4,
+                  ),
+
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Diagnosa',
+                        style: Themes.customColor(7,
+                            color: item.batalStatus == true
+                                ? Colors.white
+                                : Colors.grey),
+                      ),
+                      SizedBox(
+                        height: 2,
+                      ),
+                      Text(
+                        '${item.ket}',
+                        style: Themes.customColor(9,
+                            color: item.batalStatus == true
+                                ? Colors.white
+                                : Palette.primaryColor,
+                            fontWeight: FontWeight.w500),
+                      ),
+                    ],
+                  ),
+
+                  SizedBox(
+                    height: 8,
+                  ),
+
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Document',
+                        style: Themes.customColor(7,
+                            color: item.batalStatus == true
+                                ? Colors.white
+                                : Colors.grey),
+                      ),
+                      SizedBox(
+                        height: 2,
+                      ),
+                      Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () => item.qtyFoto! == 0
+                              ? context.pushNamed(RouteNames.sakitUploadRoute,
+                                  extra: item.idSakit)
+                              : context.pushNamed(RouteNames.sakitDtlRoute,
+                                  extra: item.idSakit),
+                          child: Ink(
+                            child: Text(
+                                item.qtyFoto == 0
+                                    ? '-'
+                                    : 'Upload : ${item.qtyFoto} Images',
+                                style: Themes.customColor(
+                                  9,
+                                  color: item.batalStatus == true
+                                      ? Colors.white
+                                      : Palette.blueLink,
+                                )),
+                          ),
                         ),
                       ),
+                    ],
+                  ),
+
+                  // LOWER
+                ],
+              ),
+            ),
+
+            // approval
+            Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: Container(
+                  height: 25,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(8),
+                      bottomRight: Radius.circular(8),
                     ),
-                  )
-                ]
-              ],
-            )
+                    color: Colors.transparent,
+                  ),
+                  child: Row(
+                    children: [
+                      if (item.batalStatus == true) ...[
+                        Expanded(
+                          child: Container(
+                            height: 25,
+                            decoration: BoxDecoration(
+                                color: Palette.primaryColor,
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(8),
+                                  bottomRight: Radius.circular(8),
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey
+                                        .withOpacity(0.5), // Shadow color
+                                    spreadRadius: 1,
+                                    blurRadius: 3,
+                                    offset: Offset(0,
+                                        1), // Controls the position of the shadow
+                                  ),
+                                ]),
+                            child: Center(
+                              child: Text(
+                                'Canceled by ${item.batalNama}',
+                                style: Themes.customColor(7,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ] else ...[
+                        // ok
+                        Expanded(
+                          child: Stack(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(boxShadow: [
+                                  BoxShadow(
+                                    color: item.batalStatus == true
+                                        ? Colors.white
+                                        : Colors.grey
+                                            .withOpacity(0.5), // Shadow color
+                                    spreadRadius: 1,
+                                    blurRadius: 3,
+                                    offset: Offset(0,
+                                        1), // Controls the position of the shadow
+                                  ),
+                                ]),
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    splashColor: Palette.primaryColor,
+                                    onTap: () async {
+                                      if (!ref
+                                          .read(userNotifierProvider)
+                                          .user
+                                          .isSpvOrHrd!) {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) => VAksesDitolak(),
+                                        );
+                                      } else {
+                                        // jika belum diapprove maka approve
+                                        // kl udah di unapprove
+                                        if (item.spvSta == false) {
+                                          final String? text =
+                                              await DialogHelper<void>()
+                                                  .showFormDialog(
+                                            label: 'Isi Form Approve SPV',
+                                            context: context,
+                                          );
+
+                                          if (text != null) {
+                                            log('message $text');
+                                            await ref
+                                                .read(
+                                                    sakitApproveControllerProvider
+                                                        .notifier)
+                                                .approveSpv(
+                                                  itemSakit: item,
+                                                  note: text,
+                                                  nama: ref
+                                                      .read(
+                                                          userNotifierProvider)
+                                                      .user
+                                                      .nama!,
+                                                );
+                                          }
+                                        } else {
+                                          await ref
+                                              .read(
+                                                  sakitApproveControllerProvider
+                                                      .notifier)
+                                              .unapproveSpv(
+                                                itemSakit: item,
+                                                nama: ref
+                                                    .read(userNotifierProvider)
+                                                    .user
+                                                    .nama!,
+                                              );
+                                        }
+                                      }
+                                    },
+                                    child: Ink(
+                                      height: 25,
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.only(
+                                            bottomLeft: Radius.circular(8),
+                                          ),
+                                          color: item.spvSta! == true
+                                              ? Palette.green
+                                              : Palette.red2,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: item.batalStatus == true
+                                                  ? Colors.white
+                                                  : Colors.grey.withOpacity(
+                                                      0.5), // Shadow color
+                                              spreadRadius: 1,
+                                              blurRadius: 3,
+                                              offset: Offset(0,
+                                                  1), // Controls the position of the shadow
+                                            ),
+                                          ]),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            'Approve SPV',
+                                            style: Themes.customColor(7,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              if (item.spvSta! == true)
+                                Positioned(
+                                  right: 5,
+                                  bottom: 0,
+                                  top: 0,
+                                  child: SvgPicture.asset(
+                                    Assets.iconThumbUp,
+                                  ),
+                                ),
+                              if (item.spvSta! == false)
+                                Positioned(
+                                  right: 5,
+                                  bottom: 0,
+                                  top: 0,
+                                  child: SvgPicture.asset(
+                                    Assets.iconThumbDown,
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+
+                        // not ok
+                        Expanded(
+                          child: Stack(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(boxShadow: [
+                                  BoxShadow(
+                                    color: item.batalStatus == true
+                                        ? Colors.white
+                                        : Colors.grey
+                                            .withOpacity(0.5), // Shadow color
+                                    spreadRadius: 1,
+                                    blurRadius: 3,
+                                    offset: Offset(0,
+                                        1), // Controls the position of the shadow
+                                  ),
+                                ]),
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    splashColor: Palette.primaryColor,
+                                    onTap: () async {
+                                      if (!ref
+                                          .read(userNotifierProvider)
+                                          .user
+                                          .isSpvOrHrd!) {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) => VAksesDitolak(),
+                                        );
+                                      } else {
+                                        if (item.hrdSta == false) {
+                                          final String? text =
+                                              await DialogHelper<void>()
+                                                  .showFormDialog(
+                                            label: 'Isi Form Approve HRD',
+                                            context: context,
+                                          );
+
+                                          if (text != null) {
+                                            if (item.surat!.toLowerCase() ==
+                                                'ds') {
+                                              await ref
+                                                  .read(
+                                                      sakitApproveControllerProvider
+                                                          .notifier)
+                                                  .approveHrdDenganSurat(
+                                                    note: text,
+                                                    itemSakit: item,
+                                                    namaHrd: ref
+                                                        .read(
+                                                            userNotifierProvider)
+                                                        .user
+                                                        .nama!,
+                                                  );
+                                              //
+                                            } else {
+                                              await ref
+                                                  .read(
+                                                      sakitApproveControllerProvider
+                                                          .notifier)
+                                                  .approveHrdTanpaSurat(
+                                                    note: text,
+                                                    itemSakit: item,
+                                                    namaHrd: ref
+                                                        .read(
+                                                            userNotifierProvider)
+                                                        .user
+                                                        .nama!,
+                                                  );
+                                              //
+                                            }
+                                          }
+                                        }
+                                      }
+                                    },
+                                    child: Ink(
+                                      height: 25,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.only(
+                                          bottomRight: Radius.circular(8),
+                                        ),
+                                        color: item.hrdSta! == true
+                                            ? Palette.green
+                                            : Palette.red2,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            'Approve HRD',
+                                            style: Themes.customColor(7,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              if (item.hrdSta! == true)
+                                Positioned(
+                                  left: 5,
+                                  bottom: 0,
+                                  top: 0,
+                                  child: Transform.scale(
+                                    scaleX: -1,
+                                    child: SvgPicture.asset(
+                                      Assets.iconThumbUp,
+                                    ),
+                                  ),
+                                ),
+                              if (item.hrdSta! == false)
+                                Positioned(
+                                  left: 5,
+                                  bottom: 0,
+                                  top: 0,
+                                  child: Transform.scale(
+                                    scaleX: -1,
+                                    child: SvgPicture.asset(
+                                      Assets.iconThumbDown,
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        )
+                      ]
+                    ],
+                  ),
+                ))
           ],
         ),
       ),
     );
   }
 }
+
+//                 // LOWER RIGHT
+//                 Material(
+//                   color: Colors.transparent,
+//                   child: InkWell(
+//                     onTap: () async {
+//                       // if (ref
+//                       //     .read(sakitApproveControllerProvider.notifier)
+//                       //     .canHrdApprove(item)) {
+//                       //   log('message');
+//                       // }
+
+
+//                         }
+//                       } else {
+//                         if (item.surat!.toLowerCase() == 'ds') {
+//                           await ref
+//                               .read(sakitApproveControllerProvider.notifier)
+//                               .unApproveHrdDenganSurat(
+//                                 itemSakit: item,
+//                                 nama:
+//                                     ref.read(userNotifierProvider).user.nama!,
+//                               );
+//                         } else {
+//                           await ref
+//                               .read(sakitApproveControllerProvider.notifier)
+//                               .unApproveHrdTanpaSurat(
+//                                 itemSakit: item,
+//                                 nama:
+//                                     ref.read(userNotifierProvider).user.nama!,
+//                               );
+//                         }
+//                       }
+//                     },
+//                     child: Ink(
+//                       child: Column(
+//                         mainAxisAlignment: MainAxisAlignment.center,
+//                         crossAxisAlignment: CrossAxisAlignment.center,
+//                         children: [
+//                           if (item.hrdSta != null)
+//                             item.hrdSta == true
+//                                 ? Icon(Icons.thumb_up,
+//                                     size: 20, color: Colors.green)
+//                                 : Icon(
+//                                     Icons.thumb_down,
+//                                     size: 20,
+//                                     color: Palette.greyDisabled,
+//                                   ),
+//                           SizedBox(
+//                             height: 2,
+//                           ),
+//                           Text(
+//                             'Approve HRD',
+//                             style: Themes.customColor(10,
+//                                 color:
+//                                     Theme.of(context).unselectedWidgetColor),
+//                           ),
+//                           if (item.hrdTgl != null) ...[
+//                             Text(
+//                               'HRD Aging : $hrdAging',
+//                               style: Themes.customColor(10,
+//                                   color: Theme.of(context)
+//                                       .unselectedWidgetColor),
+//                             ),
+//                           ],
+//                         ],
+//                       ),
+//                     ),
+//                   ),
+//                 )
+

@@ -53,11 +53,11 @@ class SakitListPage extends HookConsumerWidget {
     void onScrolled() {
       if (scrollController.position.pixels >=
           scrollController.position.maxScrollExtent) {
-        page.value++;
-
         ref.read(sakitListControllerProvider.notifier).load(
               page: page.value + 1,
             );
+
+        page.value++;
       }
     }
 
@@ -66,46 +66,87 @@ class SakitListPage extends HookConsumerWidget {
       return () => scrollController.removeListener(onScrolled);
     }, [scrollController]);
 
-    return VAsyncWidgetScaffold<List<SakitList>>(
-        value: sakitList,
-        data: (list) {
-          return VAsyncWidgetScaffold(
-            value: sakitApprove,
-            data: (_) => VAsyncWidgetScaffold(
-              value: sendWa,
-              data: (_) => RefreshIndicator(
-                onRefresh: () {
-                  page.value = 0;
-                  ref.read(sakitListControllerProvider.notifier).refresh();
-                  return Future.value();
-                },
-                child: VScaffoldWidget(
-                  scaffoldTitle: 'List Form Sakit',
-                  scaffoldFAB: FloatingActionButton.small(
-                      backgroundColor: Palette.primaryColor,
-                      child: Icon(
-                        Icons.add,
-                        color: Colors.white,
-                      ),
-                      onPressed: () => context.pushNamed(
-                            RouteNames.createSakitNameRoute,
-                          )),
-                  scaffoldBody: ListView.separated(
-                      controller: scrollController,
-                      separatorBuilder: (__, index) => SizedBox(
-                            height: 8,
-                          ),
-                      itemCount: list.length + 1,
-                      itemBuilder: (BuildContext context, int index) =>
-                          index == list.length
-                              ? SizedBox(
-                                  height: 50,
-                                )
-                              : SakitListItem(list[index])),
+    return VAsyncWidgetScaffold(
+      value: sakitApprove,
+      data: (_) => VAsyncWidgetScaffold(
+        value: sendWa,
+        data: (_) => RefreshIndicator(
+          onRefresh: () async {
+            page.value = 0;
+            await ref.read(sakitListControllerProvider.notifier).refresh();
+            return Future.value();
+          },
+          child: VScaffoldTabLayout(
+            scaffoldTitle: 'List Form Sakit',
+            scaffoldFAB: FloatingActionButton.small(
+                backgroundColor: Palette.primaryColor,
+                child: Icon(
+                  Icons.add,
+                  color: Colors.white,
                 ),
-              ),
+                onPressed: () => context.pushNamed(
+                      RouteNames.createSakitNameRoute,
+                    )),
+            onPageChanged: () async {
+              page.value = 0;
+              await ref.read(sakitListControllerProvider.notifier).refresh();
+              return Future.value();
+            },
+            scaffoldBody: [
+              VAsyncValueWidget<List<SakitList>>(
+                  value: sakitList,
+                  data: (list) {
+                    final waiting = list
+                        .where((e) =>
+                            (e.spvSta == false || e.hrdSta == false) &&
+                            e.batalStatus == false)
+                        .toList();
+                    return _list(scrollController, waiting);
+                  }),
+              VAsyncValueWidget<List<SakitList>>(
+                  value: sakitList,
+                  data: (list) {
+                    final approved = list
+                        .where((e) =>
+                            (e.spvSta == true || e.hrdSta == true) &&
+                            e.batalStatus == false)
+                        .toList();
+                    return _list(scrollController, approved);
+                  }),
+              VAsyncValueWidget<List<SakitList>>(
+                  value: sakitList,
+                  data: (list) {
+                    final cancelled =
+                        list.where((e) => e.batalStatus == true).toList();
+                    return _list(scrollController, cancelled);
+                  }),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  ListView _list(ScrollController scrollController, List<SakitList> list) {
+    return ListView.separated(
+        controller: scrollController,
+        separatorBuilder: (__, index) => SizedBox(
+              height: 8,
             ),
-          );
-        });
+        itemCount: list.length + 1,
+        itemBuilder: (BuildContext context, int index) => index == list.length
+            ? SizedBox(
+                height: 50,
+              )
+            : index == 0
+                ? Column(
+                    children: [
+                      SizedBox(
+                        height: 10,
+                      ),
+                      SakitListItem(list[index])
+                    ],
+                  )
+                : SakitListItem(list[index]));
   }
 }

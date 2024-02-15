@@ -15,4 +15,11 @@ class Assets {
   static const String iconIzin = 'assets/ic_izin.svg';
   static const String iconRiwayat = 'assets/ic_riwayat.svg';
   static const String iconSakit = 'assets/ic_sakit.svg';
+  // icon
+  static const String iconDetail = 'assets/ic_detail.svg';
+  static const String iconBatal = 'assets/ic_batal.svg';
+  static const String iconThumbUp = 'assets/ic_thumb_up.svg';
+  static const String iconThumbDown = 'assets/ic_thumb_down.svg';
+  static const String iconEdit = 'assets/ic_edit.svg';
+  static const String iconDelete = 'assets/ic_delete.svg';
 }

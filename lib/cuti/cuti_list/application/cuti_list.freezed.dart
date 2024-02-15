@@ -86,6 +86,8 @@ mixin _$CutiList {
   String? get fullname => throw _privateConstructorUsedError;
   @JsonKey(name: 'pt')
   String? get pt => throw _privateConstructorUsedError;
+  @JsonKey(name: 'comp')
+  String? get comp => throw _privateConstructorUsedError;
   @JsonKey(name: 'dept')
   String? get dept => throw _privateConstructorUsedError;
 
@@ -134,6 +136,7 @@ abstract class $CutiListCopyWith<$Res> {
       @JsonKey(name: 'no_telp2') String? noTelp2,
       @JsonKey(name: 'fullname') String? fullname,
       @JsonKey(name: 'pt') String? pt,
+      @JsonKey(name: 'comp') String? comp,
       @JsonKey(name: 'dept') String? dept});
 }
 
@@ -183,6 +186,7 @@ class _$CutiListCopyWithImpl<$Res, $Val extends CutiList>
     Object? noTelp2 = freezed,
     Object? fullname = freezed,
     Object? pt = freezed,
+    Object? comp = freezed,
     Object? dept = freezed,
   }) {
     return _then(_value.copyWith(
@@ -318,6 +322,10 @@ class _$CutiListCopyWithImpl<$Res, $Val extends CutiList>
           ? _value.pt
           : pt // ignore: cast_nullable_to_non_nullable
               as String?,
+      comp: freezed == comp
+          ? _value.comp
+          : comp // ignore: cast_nullable_to_non_nullable
+              as String?,
       dept: freezed == dept
           ? _value.dept
           : dept // ignore: cast_nullable_to_non_nullable
@@ -367,6 +375,7 @@ abstract class _$$_CutiListCopyWith<$Res> implements $CutiListCopyWith<$Res> {
       @JsonKey(name: 'no_telp2') String? noTelp2,
       @JsonKey(name: 'fullname') String? fullname,
       @JsonKey(name: 'pt') String? pt,
+      @JsonKey(name: 'comp') String? comp,
       @JsonKey(name: 'dept') String? dept});
 }
 
@@ -414,6 +423,7 @@ class __$$_CutiListCopyWithImpl<$Res>
     Object? noTelp2 = freezed,
     Object? fullname = freezed,
     Object? pt = freezed,
+    Object? comp = freezed,
     Object? dept = freezed,
   }) {
     return _then(_$_CutiList(
@@ -549,6 +559,10 @@ class __$$_CutiListCopyWithImpl<$Res>
           ? _value.pt
           : pt // ignore: cast_nullable_to_non_nullable
               as String?,
+      comp: freezed == comp
+          ? _value.comp
+          : comp // ignore: cast_nullable_to_non_nullable
+              as String?,
       dept: freezed == dept
           ? _value.dept
           : dept // ignore: cast_nullable_to_non_nullable
@@ -594,6 +608,7 @@ class _$_CutiList implements _CutiList {
       @JsonKey(name: 'no_telp2') this.noTelp2,
       @JsonKey(name: 'fullname') this.fullname,
       @JsonKey(name: 'pt') this.pt,
+      @JsonKey(name: 'comp') this.comp,
       @JsonKey(name: 'dept') this.dept});
 
   factory _$_CutiList.fromJson(Map<String, dynamic> json) =>
@@ -699,12 +714,15 @@ class _$_CutiList implements _CutiList {
   @JsonKey(name: 'pt')
   final String? pt;
   @override
+  @JsonKey(name: 'comp')
+  final String? comp;
+  @override
   @JsonKey(name: 'dept')
   final String? dept;
 
   @override
   String toString() {
-    return 'CutiList(idCuti: $idCuti, idUser: $idUser, idKary: $idKary, jenisCuti: $jenisCuti, alasan: $alasan, ket: $ket, bulanCuti: $bulanCuti, tahunCuti: $tahunCuti, totalHari: $totalHari, sisaCuti: $sisaCuti, tglStart: $tglStart, tglEnd: $tglEnd, tglStartHrd: $tglStartHrd, tglEndHrd: $tglEndHrd, spvSta: $spvSta, spvNm: $spvNm, spvTgl: $spvTgl, spvNote: $spvNote, hrdSta: $hrdSta, hrdNm: $hrdNm, hrdTgl: $hrdTgl, hrdNote: $hrdNote, btlSta: $btlSta, btlNm: $btlNm, btlTgl: $btlTgl, cDate: $cDate, cUser: $cUser, uDate: $uDate, uUser: $uUser, noTelp1: $noTelp1, noTelp2: $noTelp2, fullname: $fullname, pt: $pt, dept: $dept)';
+    return 'CutiList(idCuti: $idCuti, idUser: $idUser, idKary: $idKary, jenisCuti: $jenisCuti, alasan: $alasan, ket: $ket, bulanCuti: $bulanCuti, tahunCuti: $tahunCuti, totalHari: $totalHari, sisaCuti: $sisaCuti, tglStart: $tglStart, tglEnd: $tglEnd, tglStartHrd: $tglStartHrd, tglEndHrd: $tglEndHrd, spvSta: $spvSta, spvNm: $spvNm, spvTgl: $spvTgl, spvNote: $spvNote, hrdSta: $hrdSta, hrdNm: $hrdNm, hrdTgl: $hrdTgl, hrdNote: $hrdNote, btlSta: $btlSta, btlNm: $btlNm, btlTgl: $btlTgl, cDate: $cDate, cUser: $cUser, uDate: $uDate, uUser: $uUser, noTelp1: $noTelp1, noTelp2: $noTelp2, fullname: $fullname, pt: $pt, comp: $comp, dept: $dept)';
   }
 
   @override
@@ -754,6 +772,7 @@ class _$_CutiList implements _CutiList {
             (identical(other.fullname, fullname) ||
                 other.fullname == fullname) &&
             (identical(other.pt, pt) || other.pt == pt) &&
+            (identical(other.comp, comp) || other.comp == comp) &&
             (identical(other.dept, dept) || other.dept == dept));
   }
 
@@ -794,6 +813,7 @@ class _$_CutiList implements _CutiList {
         noTelp2,
         fullname,
         pt,
+        comp,
         dept
       ]);
 
@@ -846,6 +866,7 @@ abstract class _CutiList implements CutiList {
       @JsonKey(name: 'no_telp2') final String? noTelp2,
       @JsonKey(name: 'fullname') final String? fullname,
       @JsonKey(name: 'pt') final String? pt,
+      @JsonKey(name: 'comp') final String? comp,
       @JsonKey(name: 'dept') final String? dept}) = _$_CutiList;
 
   factory _CutiList.fromJson(Map<String, dynamic> json) = _$_CutiList.fromJson;
@@ -949,6 +970,9 @@ abstract class _CutiList implements CutiList {
   @override
   @JsonKey(name: 'pt')
   String? get pt;
+  @override
+  @JsonKey(name: 'comp')
+  String? get comp;
   @override
   @JsonKey(name: 'dept')
   String? get dept;

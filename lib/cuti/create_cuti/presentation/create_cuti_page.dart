@@ -14,6 +14,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 
 import '../../../constants/assets.dart';
 import '../../../widgets/alert_helper.dart';
@@ -69,7 +70,7 @@ class CreateCutiPage extends HookConsumerWidget {
       child: VAsyncWidgetScaffold<void>(
         value: createCuti,
         data: (_) => VScaffoldWidget(
-            appbarColor: Palette.primaryLighter,
+            appbarColor: Palette.primaryColor,
             scaffoldTitle: 'Create Form Cuti',
             scaffoldBody: Padding(
               padding: EdgeInsets.only(
@@ -85,7 +86,7 @@ class CreateCutiPage extends HookConsumerWidget {
                         controller: namaTextController,
                         cursorColor: Palette.primaryColor,
                         keyboardType: TextInputType.name,
-                        decoration: Themes.formStyle(
+                        decoration: Themes.formStyleBordered(
                           'Masukkan nama',
                         ),
                         style: Themes.customColor(
@@ -101,6 +102,10 @@ class CreateCutiPage extends HookConsumerWidget {
 
                           return null;
                         }),
+
+                    SizedBox(
+                      height: 16,
+                    ),
 
                     // Jenis Cuti
                     VAsyncValueWidget<List<JenisCuti>>(
@@ -141,7 +146,7 @@ class CreateCutiPage extends HookConsumerWidget {
                     ),
 
                     SizedBox(
-                      height: 8,
+                      height: 16,
                     ),
 
                     // Alasan Cuti
@@ -177,7 +182,7 @@ class CreateCutiPage extends HookConsumerWidget {
                     ),
 
                     SizedBox(
-                      height: 8,
+                      height: 16,
                     ),
 
                     TextFormField(
@@ -204,7 +209,7 @@ class CreateCutiPage extends HookConsumerWidget {
                         }),
 
                     SizedBox(
-                      height: 8,
+                      height: 16,
                     ),
 
                     // TGL AWAL
@@ -227,15 +232,15 @@ class CreateCutiPage extends HookConsumerWidget {
                             tglAwalTextController.value = start;
                             tglAkhirTextController.value = end;
 
-                            final startPlaceHolder = StringUtils.formatTanggal(
-                                picked.start.toString());
-                            final endPlaceHolder = StringUtils.formatTanggal(
-                                picked.end.toString());
+                            final startPlaceHolder = DateFormat(
+                              'dd MMM yyyy',
+                            ).format(picked.start);
+                            final endPlaceHolder = DateFormat(
+                              'dd MMM yyyy',
+                            ).format(picked.end);
 
                             tglPlaceholderTextController.text =
-                                'Dari $startPlaceHolder Sampai $endPlaceHolder';
-
-                            log('START $start END $end');
+                                '$startPlaceHolder - $endPlaceHolder';
                           }
                         },
                         child: IgnorePointer(
@@ -264,12 +269,8 @@ class CreateCutiPage extends HookConsumerWidget {
                       ),
                     ),
 
-                    SizedBox(
-                      height: 8,
-                    ),
-
                     Container(
-                      height: 58,
+                      height: 60,
                     ),
 
                     Align(

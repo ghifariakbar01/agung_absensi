@@ -22,9 +22,9 @@ class CutiListPage extends HookConsumerWidget {
   const CutiListPage();
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // ref.listen<AsyncValue>(mstKaryawanCutiNotifierProvider, (_, state) {
-    //   state.showAlertDialogOnError(context);
-    // });
+    ref.listen<AsyncValue>(mstKaryawanCutiNotifierProvider, (_, state) {
+      state.showAlertDialogOnError(context);
+    });
 
     final mstCuti = ref.watch(mstKaryawanCutiNotifierProvider);
     final cutiList = ref.watch(cutiListControllerProvider);
@@ -71,101 +71,192 @@ class CutiListPage extends HookConsumerWidget {
 
     return VAsyncWidgetScaffold<MstKaryawanCuti>(
         value: mstCuti,
-        data: (saldo) {
-          return VAsyncWidgetScaffold<List<CutiList>>(
-              value: cutiList,
-              data: (list) {
-                return RefreshIndicator(
-                  onRefresh: () {
-                    page.value = 0;
-                    ref
-                        .read(mstKaryawanCutiNotifierProvider.notifier)
-                        .refresh();
-                    ref.read(cutiListControllerProvider.notifier).refresh();
-                    return Future.value();
-                  },
-                  child: VScaffoldWidget(
-                    scaffoldTitle: 'List Form Cuti',
-                    scaffoldFAB: FloatingActionButton.small(
-                      backgroundColor: Palette.primaryColor,
-                      onPressed: () => context.pushNamed(
-                        RouteNames.createCutiNameRoute,
-                      ),
-                      child: Icon(
-                        Icons.add,
-                        color: Colors.white,
-                      ),
-                    ),
-                    scaffoldBody: ListView.separated(
-                        controller: scrollController,
-                        separatorBuilder: (__, index) => SizedBox(
-                              height: 8,
-                            ),
-                        itemCount: list.length,
-                        itemBuilder: (BuildContext context, int index) =>
-                            index == 0
-                                ? Column(
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.all(8),
-                                        decoration: BoxDecoration(
-                                          color: Palette.greyDisabled
-                                              .withOpacity(0.1),
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                        ),
-                                        child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            SizedBox(
-                                              width: 200,
-                                              child: Text(
-                                                "1. Cuti Tahunan wajib diinput paling lambat H-5.\n"
-                                                "2. Persetujuan atasan paling lambat H+3 dari Tanggal penginputan Cuti.\n"
-                                                "3. Cuti Emergency dan Cuti Bersama dapat diinput pada hari H.\n"
-                                                "4. Total Hari dihitung berdasarkan Hari Kerja. (Tidak termasuk Tanggal Merah) '",
-                                                style: Themes.customColor(8,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                                textAlign: TextAlign.justify,
-                                              ),
-                                            ),
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Text(
-                                                  'Saldo Cuti \n(${saldo.cutiBaru != 0 ? saldo.tahunCutiBaru : saldo.tahunCutiTidakBaru} )',
-                                                  style: Themes.customColor(10,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                                Text(
-                                                  '${saldo.cutiBaru != 0 ? saldo.cutiBaru : saldo.cutiTidakBaru}',
-                                                  style: Themes.customColor(20,
-                                                      color: Colors.red,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                )
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 8,
-                                      ),
-                                      CutiListItem(list[index])
-                                    ],
-                                  )
-                                : CutiListItem(list[index])),
+        data: (mst) {
+          return RefreshIndicator(
+            onRefresh: () {
+              page.value = 0;
+              ref.read(mstKaryawanCutiNotifierProvider.notifier).refresh();
+              ref.read(cutiListControllerProvider.notifier).refresh();
+              return Future.value();
+            },
+            child: VScaffoldTabLayout(
+              scaffoldTitle: 'List Form Cuti',
+              scaffoldFAB: FloatingActionButton.small(
+                  backgroundColor: Palette.primaryColor,
+                  child: Icon(
+                    Icons.add,
+                    color: Colors.white,
                   ),
-                );
-              });
+                  onPressed: () => context.pushNamed(
+                        RouteNames.createCutiNameRoute,
+                      )),
+              onPageChanged: () async {
+                page.value = 0;
+                await ref.read(cutiListControllerProvider.notifier).refresh();
+                return Future.value();
+              },
+              scaffoldBody: [
+                VAsyncValueWidget<List<CutiList>>(
+                    value: cutiList,
+                    data: (list) {
+                      final waiting = list
+                          .where((e) =>
+                              (e.spvSta == false || e.hrdSta == false) &&
+                              e.btlSta == false)
+                          .toList();
+                      return _list(
+                        mst,
+                        waiting,
+                        scrollController,
+                      );
+                    }),
+                VAsyncValueWidget<List<CutiList>>(
+                    value: cutiList,
+                    data: (list) {
+                      final approved = list
+                          .where((e) =>
+                              (e.spvSta == true || e.hrdSta == true) &&
+                              e.btlSta != true)
+                          .toList();
+                      return _list(
+                        mst,
+                        approved,
+                        scrollController,
+                      );
+                    }),
+                VAsyncValueWidget<List<CutiList>>(
+                    value: cutiList,
+                    data: (list) {
+                      final cancelled =
+                          list.where((e) => e.btlSta == true).toList();
+                      return _list(
+                        mst,
+                        cancelled,
+                        scrollController,
+                      );
+                    }),
+              ],
+            ),
+          );
         });
   }
+}
+
+Widget _list(
+  MstKaryawanCuti mst,
+  List<CutiList> list,
+  ScrollController scrollController,
+) {
+  return list.isEmpty
+      ? Padding(
+          padding: const EdgeInsets.only(
+              top: 10.0, left: 16.0, right: 16.0, bottom: 0),
+          child: Container(
+            height: 100,
+            padding: EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Palette.greyDisabled.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  width: 200,
+                  child: Text(
+                    "1. Cuti Tahunan wajib diinput paling lambat H-5.\n"
+                    "2. Persetujuan atasan paling lambat H+3 dari Tanggal penginputan Cuti.\n"
+                    "3. Cuti Emergency dan Cuti Bersama dapat diinput pada hari H.\n"
+                    "4. Total Hari dihitung berdasarkan Hari Kerja. (Tidak termasuk Tanggal Merah) '",
+                    style: Themes.customColor(8, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.justify,
+                  ),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Saldo Cuti \n(${mst.cutiBaru != 0 ? mst.tahunCutiBaru : mst.tahunCutiTidakBaru} )',
+                      style:
+                          Themes.customColor(10, fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
+                    ),
+                    Text(
+                      '${mst.cutiBaru != 0 ? mst.cutiBaru : mst.cutiTidakBaru}',
+                      style: Themes.customColor(20,
+                          color: Colors.red, fontWeight: FontWeight.bold),
+                    )
+                  ],
+                )
+              ],
+            ),
+          ),
+        )
+      : ListView.separated(
+          controller: scrollController,
+          separatorBuilder: (__, index) => SizedBox(
+                height: 8,
+              ),
+          itemCount: list.length + 1,
+          itemBuilder: (BuildContext context, int index) => index == list.length
+              ? SizedBox(
+                  height: 50,
+                )
+              : index == 0
+                  ? Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              top: 10.0, left: 16.0, right: 16.0, bottom: 0),
+                          child: Container(
+                            padding: EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: Palette.greyDisabled.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                SizedBox(
+                                  width: 200,
+                                  child: Text(
+                                    "1. Cuti Tahunan wajib diinput paling lambat H-5.\n"
+                                    "2. Persetujuan atasan paling lambat H+3 dari Tanggal penginputan Cuti.\n"
+                                    "3. Cuti Emergency dan Cuti Bersama dapat diinput pada hari H.\n"
+                                    "4. Total Hari dihitung berdasarkan Hari Kerja. (Tidak termasuk Tanggal Merah) '",
+                                    style: Themes.customColor(8,
+                                        fontWeight: FontWeight.bold),
+                                    textAlign: TextAlign.justify,
+                                  ),
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Saldo Cuti \n(${mst.cutiBaru != 0 ? mst.tahunCutiBaru : mst.tahunCutiTidakBaru} )',
+                                      style: Themes.customColor(10,
+                                          fontWeight: FontWeight.bold),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    Text(
+                                      '${mst.cutiBaru != 0 ? mst.cutiBaru : mst.cutiTidakBaru}',
+                                      style: Themes.customColor(20,
+                                          color: Colors.red,
+                                          fontWeight: FontWeight.bold),
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        CutiListItem(list[index])
+                      ],
+                    )
+                  : CutiListItem(list[index]));
 }

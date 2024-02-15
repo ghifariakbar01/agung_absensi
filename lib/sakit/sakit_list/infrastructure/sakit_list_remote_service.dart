@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:face_net_authentication/infrastructure/dio_extensions.dart';
@@ -32,7 +33,9 @@ class SakitListRemoteService {
                 " $dbName.*, " +
                 " $dbMstUser.payroll, " +
                 " $dbMstUser.id_dept, " +
-                " (SELECT nama from mst_dept WHERE id_dept = $dbMstUser.id_dept) AS dept, " +
+                " $dbMstUser.fullname, " +
+                " (SELECT nama FROM mst_comp WHERE id_comp = $dbMstUser.id_comp) AS comp, " +
+                " (SELECT nama FROM mst_dept WHERE id_dept = $dbMstUser.id_dept) AS dept, " +
                 " (SELECT COUNT(id_sakit) FROM $dbDetail WHERE id_sakit = $dbName.id_sakit ) AS qty_foto "
                     " FROM " +
                 " $dbName " +
@@ -99,6 +102,7 @@ class SakitListRemoteService {
       {required int page, required int idUserHead}) async {
     try {
       // debugger();
+      log('page $page');
       final data = _dioRequest;
 
       final Map<String, String> select = {
@@ -107,14 +111,15 @@ class SakitListRemoteService {
                 " $dbName.*, " +
                 " $dbMstUser.payroll, " +
                 " $dbMstUser.id_dept, " +
-                " (SELECT nama from mst_dept WHERE id_dept = $dbMstUser.id_dept) AS dept, " +
+                " $dbMstUser.fullname, " +
+                " (SELECT nama FROM mst_comp WHERE id_comp = $dbMstUser.id_comp) AS comp, " +
+                " (SELECT nama FROM mst_dept WHERE id_dept = $dbMstUser.id_dept) AS dept, " +
                 " (SELECT COUNT(id_sakit) FROM $dbDetail WHERE id_sakit = $dbName.id_sakit ) AS qty_foto "
                     " FROM " +
                 " $dbName " +
                 " JOIN " +
                 " $dbMstUser ON $dbName.id_user = $dbMstUser.id_user " +
                 " WHERE $dbName.id_user IN (SELECT id_user FROM $dbMstUserHead WHERE id_user_head = $idUserHead) " +
-                " OR $dbName.id_user = 1 " +
                 " ORDER BY " +
                 " $dbName.c_date DESC " +
                 " OFFSET " +

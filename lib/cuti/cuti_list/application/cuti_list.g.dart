@@ -40,6 +40,7 @@ _$_CutiList _$$_CutiListFromJson(Map<String, dynamic> json) => _$_CutiList(
       noTelp2: json['no_telp2'] as String?,
       fullname: json['fullname'] as String?,
       pt: json['pt'] as String?,
+      comp: json['comp'] as String?,
       dept: json['dept'] as String?,
     );
 
@@ -78,5 +79,6 @@ Map<String, dynamic> _$$_CutiListToJson(_$_CutiList instance) =>
       'no_telp2': instance.noTelp2,
       'fullname': instance.fullname,
       'pt': instance.pt,
+      'comp': instance.comp,
       'dept': instance.dept,
     };
