@@ -40,8 +40,9 @@ final List<Item> attendance = [
 ];
 
 final List<Item> leaveRequest = [
-  Item('Form Cuti', Assets.iconCuti, RouteNames.cutiListNameRoute),
-  Item('Form Sakit', Assets.iconSakit, RouteNames.sakitListNameRoute),
+  Item('Cuti', Assets.iconCuti, RouteNames.cutiListNameRoute),
+  Item('Sakit', Assets.iconSakit, RouteNames.sakitListNameRoute),
+  Item('Izin', Assets.iconIzin, RouteNames.sakitListNameRoute),
 ];
 
 class HomeScaffold extends ConsumerWidget {

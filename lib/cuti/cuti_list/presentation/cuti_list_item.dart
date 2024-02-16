@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:face_net_authentication/cuti/create_cuti/application/create_cuti_notifier.dart';
 import 'package:face_net_authentication/cuti/cuti_approve/application/cuti_approve_notifier.dart';
 import 'package:face_net_authentication/cuti/cuti_list/presentation/cuti_dtl_dialog.dart';
@@ -463,44 +461,51 @@ class CutiListItem extends HookConsumerWidget {
                                           builder: (context) => VAksesDitolak(),
                                         );
                                       } else {
-                                        // jika belum diapprove maka approve
-                                        // kl udah di unapprove
                                         if (item.spvSta == false) {
-                                          final String? text =
-                                              await DialogHelper<void>()
-                                                  .showFormDialog(
-                                            label: 'Isi Form Approve SPV',
-                                            context: context,
-                                          );
-
-                                          if (text != null) {
-                                            log('message $text');
-                                            await ref
-                                                .read(
-                                                    cutiApproveControllerProvider
-                                                        .notifier)
-                                                .approveSpv(
-                                                  note: text,
-                                                  itemCuti: item,
-                                                  nama: ref
-                                                      .read(
-                                                          userNotifierProvider)
-                                                      .user
-                                                      .nama!,
-                                                );
-                                          }
+                                          await showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  VAlertDialog2(
+                                                      label:
+                                                          'Dibutuhkan Konfirmasi SPV (Approve)',
+                                                      onPressed: () async {
+                                                        context.pop();
+                                                        await ref
+                                                            .read(
+                                                                cutiApproveControllerProvider
+                                                                    .notifier)
+                                                            .approveSpv(
+                                                              note: '',
+                                                              itemCuti: item,
+                                                              nama: ref
+                                                                  .read(
+                                                                      userNotifierProvider)
+                                                                  .user
+                                                                  .nama!,
+                                                            );
+                                                      }));
                                         } else {
-                                          await ref
-                                              .read(
-                                                  cutiApproveControllerProvider
-                                                      .notifier)
-                                              .unapproveSpv(
-                                                itemCuti: item,
-                                                nama: ref
-                                                    .read(userNotifierProvider)
-                                                    .user
-                                                    .nama!,
-                                              );
+                                          await showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  VAlertDialog2(
+                                                      label:
+                                                          'Dibutuhkan Konfirmasi SPV (Unapprove)',
+                                                      onPressed: () async {
+                                                        context.pop();
+                                                        await ref
+                                                            .read(
+                                                                cutiApproveControllerProvider
+                                                                    .notifier)
+                                                            .unapproveSpv(
+                                                              itemCuti: item,
+                                                              nama: ref
+                                                                  .read(
+                                                                      userNotifierProvider)
+                                                                  .user
+                                                                  .nama!,
+                                                            );
+                                                      }));
                                         }
                                       }
                                     },
@@ -594,7 +599,6 @@ class CutiListItem extends HookConsumerWidget {
                                           final String? text =
                                               await DialogHelper<void>()
                                                   .showFormDialog(
-                                            label: 'Isi Form Approve HRD',
                                             context: context,
                                           );
 
@@ -614,6 +618,28 @@ class CutiListItem extends HookConsumerWidget {
                                                 );
                                             //
                                           }
+                                        } else {
+                                          await showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  VAlertDialog2(
+                                                      label:
+                                                          'Dibutuhkan Konfirmasi HRD (Unapprove)',
+                                                      onPressed: () async {
+                                                        context.pop();
+                                                        await ref
+                                                            .read(
+                                                                cutiApproveControllerProvider
+                                                                    .notifier)
+                                                            .unapproveHrd(
+                                                              itemCuti: item,
+                                                              nama: ref
+                                                                  .read(
+                                                                      userNotifierProvider)
+                                                                  .user
+                                                                  .nama!,
+                                                            );
+                                                      }));
                                         }
                                       }
                                     },

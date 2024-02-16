@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:face_net_authentication/shared/providers.dart';
 import 'package:face_net_authentication/widgets/tappable_widget.dart';
 import 'package:flutter/material.dart';
@@ -463,41 +461,50 @@ class SakitListItem extends HookConsumerWidget {
                                         // jika belum diapprove maka approve
                                         // kl udah di unapprove
                                         if (item.spvSta == false) {
-                                          final String? text =
-                                              await DialogHelper<void>()
-                                                  .showFormDialog(
-                                            label: 'Isi Form Approve SPV',
-                                            context: context,
-                                          );
+                                          await showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  VAlertDialog2(
+                                                      label:
+                                                          'Dibutuhkan Konfirmasi SPV (Approve)',
+                                                      onPressed: () async {
+                                                        context.pop();
 
-                                          if (text != null) {
-                                            log('message $text');
-                                            await ref
-                                                .read(
-                                                    sakitApproveControllerProvider
-                                                        .notifier)
-                                                .approveSpv(
-                                                  itemSakit: item,
-                                                  note: text,
-                                                  nama: ref
-                                                      .read(
-                                                          userNotifierProvider)
-                                                      .user
-                                                      .nama!,
-                                                );
-                                          }
+                                                        await ref
+                                                            .read(
+                                                                sakitApproveControllerProvider
+                                                                    .notifier)
+                                                            .approveSpv(
+                                                                itemSakit: item,
+                                                                note: '',
+                                                                nama: ref
+                                                                    .read(
+                                                                        userNotifierProvider)
+                                                                    .user
+                                                                    .nama!);
+                                                      }));
                                         } else {
-                                          await ref
-                                              .read(
-                                                  sakitApproveControllerProvider
-                                                      .notifier)
-                                              .unapproveSpv(
-                                                itemSakit: item,
-                                                nama: ref
-                                                    .read(userNotifierProvider)
-                                                    .user
-                                                    .nama!,
-                                              );
+                                          await showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  VAlertDialog2(
+                                                      label:
+                                                          'Dibutuhkan Konfirmasi SPV (Unapprove)',
+                                                      onPressed: () async {
+                                                        context.pop();
+
+                                                        await ref
+                                                            .read(
+                                                                sakitApproveControllerProvider
+                                                                    .notifier)
+                                                            .unapproveSpv(
+                                                                itemSakit: item,
+                                                                nama: ref
+                                                                    .read(
+                                                                        userNotifierProvider)
+                                                                    .user
+                                                                    .nama!);
+                                                      }));
                                         }
                                       }
                                     },
@@ -595,7 +602,7 @@ class SakitListItem extends HookConsumerWidget {
                                           final String? text =
                                               await DialogHelper<void>()
                                                   .showFormDialog(
-                                            label: 'Isi Form Approve HRD',
+                                            label: 'Note HRD',
                                             context: context,
                                           );
 
@@ -632,6 +639,53 @@ class SakitListItem extends HookConsumerWidget {
                                                   );
                                               //
                                             }
+                                          }
+                                        } else {
+                                          if (item.surat!.toLowerCase() ==
+                                              'ds') {
+                                            await showDialog(
+                                                context: context,
+                                                builder: (context) =>
+                                                    VAlertDialog2(
+                                                        label:
+                                                            'Dibutuhkan Konfirmasi HRD (Unapprove)',
+                                                        onPressed: () async {
+                                                          context.pop();
+                                                          await ref
+                                                              .read(
+                                                                  sakitApproveControllerProvider
+                                                                      .notifier)
+                                                              .unApproveHrdDenganSurat(
+                                                                  itemSakit:
+                                                                      item,
+                                                                  nama: ref
+                                                                      .read(
+                                                                          userNotifierProvider)
+                                                                      .user
+                                                                      .nama!);
+                                                        }));
+                                          } else {
+                                            await showDialog(
+                                                context: context,
+                                                builder: (context) =>
+                                                    VAlertDialog2(
+                                                        label:
+                                                            'Dibutuhkan Konfirmasi HRD (Unapprove)',
+                                                        onPressed: () async {
+                                                          context.pop();
+                                                          await ref
+                                                              .read(
+                                                                  sakitApproveControllerProvider
+                                                                      .notifier)
+                                                              .unApproveHrdTanpaSurat(
+                                                                  itemSakit:
+                                                                      item,
+                                                                  nama: ref
+                                                                      .read(
+                                                                          userNotifierProvider)
+                                                                      .user
+                                                                      .nama!);
+                                                        }));
                                           }
                                         }
                                       }
@@ -711,7 +765,6 @@ class SakitListItem extends HookConsumerWidget {
 //                       //   log('message');
 //                       // }
 
-
 //                         }
 //                       } else {
 //                         if (item.surat!.toLowerCase() == 'ds') {
@@ -769,4 +822,3 @@ class SakitListItem extends HookConsumerWidget {
 //                     ),
 //                   ),
 //                 )
-
