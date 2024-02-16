@@ -91,8 +91,6 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
       final int jumlahhari =
           _calcDiff(create, tglAwalInDateTime, tglAkhirInDateTime);
 
-      final cUser = ref.read(userNotifierProvider).user.nama;
-
       await _processSakit(
           create: create,
           mstCuti: mstCuti,
@@ -102,9 +100,10 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
           jumlahhari: jumlahhari,
           suratDokter: suratDokter);
 
-      // final String messageContent =
-      //     " ( Testing Apps ) Terdapat Waiting Approve Pengajuan Izin Sakit Baru Telah Diinput Oleh : $cUser ";
-      // await _sendWaToHead(idUser: idUser, messageContent: messageContent);
+      final cUser = ref.read(userNotifierProvider).user.nama;
+      final String messageContent =
+          " ( Testing Apps ) Terdapat Waiting Approve Pengajuan Izin Sakit Baru Telah Diinput Oleh : $cUser ";
+      await _sendWaToHead(idUser: idUser, messageContent: messageContent);
 
       state = await AsyncValue.guard(() => ref
           .read(createSakitRepositoryProvider)

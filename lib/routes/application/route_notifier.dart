@@ -23,6 +23,7 @@ import '../../imei_introduction/application/shared/imei_introduction_providers.d
 import '../../imei_introduction/presentation/imei_introduction_page.dart';
 import '../../init_user/application/init_user_status.dart';
 import '../../init_user/presentation/init_user_scaffold.dart';
+import '../../izin/izin_list/presentation/izin_list_page.dart';
 import '../../permission/presentation/permission_page.dart';
 import '../../profile/presentation/profile_page.dart';
 import '../../riwayat_absen/presentation/riwayat_page.dart';
@@ -250,6 +251,25 @@ class RouterNotifier extends ChangeNotifier {
                 return EditCutiPage(cuti);
               },
             ),
+
+            GoRoute(
+              name: RouteNames.izinListNameRoute,
+              path: RouteNames.izinListRoute,
+              builder: (context, state) => IzinListPage(),
+            ),
+            // GoRoute(
+            //   name: RouteNames.createIzinNameRoute,
+            //   path: RouteNames.createIzinRoute,
+            //   builder: (context, state) => CreateIzinPage(),
+            // ),
+            // GoRoute(
+            //   name: RouteNames.editIzinNameRoute,
+            //   path: RouteNames.editIzinRoute,
+            //   builder: (context, state) {
+            //     final Izin = state.extra as IzinList;
+            //     return EditIzinPage(cuti);
+            //   },
+            // ),
 
             // GoRoute(
             //   name: RouteNames.changePassNameRoute,

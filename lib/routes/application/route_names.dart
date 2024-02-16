@@ -79,4 +79,13 @@ class RouteNames {
 
   static const editCutiNameRoute = 'editCuti';
   static const editCutiRoute = 'editCuti';
+
+  static const izinListNameRoute = 'izinList';
+  static const izinListRoute = 'izinList';
+
+  static const createIzinNameRoute = 'createIzin';
+  static const createIzinRoute = 'createIzin';
+
+  static const editIzinNameRoute = 'editIzin';
+  static const editIzinRoute = 'editIzin';
 }

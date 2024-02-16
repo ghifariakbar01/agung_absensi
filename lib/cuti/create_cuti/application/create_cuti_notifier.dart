@@ -265,10 +265,10 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
         ? mstCuti.cutiBaru
         : mstCuti.cutiTidakBaru;
 
-    // final cUser = ref.read(userNotifierProvider).user.nama;
-    // final String messageContent =
-    //     " ( Testing Apps ) Terdapat Waiting Aprrove Pengajuan Cuti Baru Telah Diinput Oleh : $cUser ";
-    // await _sendWaToHead(idUser: idUser, messageContent: messageContent);
+    final cUser = ref.read(userNotifierProvider).user.nama;
+    final String messageContent =
+        " ( Testing Apps ) Terdapat Waiting Aprrove Pengajuan Cuti Baru Telah Diinput Oleh : $cUser ";
+    await _sendWaToHead(idUser: idUser, messageContent: messageContent);
 
     state = await AsyncValue.guard(
         () => ref.read(createCutiRepositoryProvider).submitCuti(
