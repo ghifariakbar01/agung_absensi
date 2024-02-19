@@ -38,9 +38,8 @@ class SakitApproveController extends _$SakitApproveController {
       {required SakitList itemSakit, required String messageContent}) async {
     // debugger();
 
-    final PhoneNum registeredWa = await ref
-        .read(sendWaNotifierProvider.notifier)
-        .getPhoneById(idUser: itemSakit.idUser!);
+    final PhoneNum registeredWa =
+        PhoneNum(noTelp1: itemSakit.noTelp1, noTelp2: itemSakit.noTelp2);
 
     if (registeredWa.noTelp1!.isNotEmpty) {
       await ref.read(sendWaNotifierProvider.notifier).sendWaDirect(

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:face_net_authentication/send_wa/application/send_wa_notifier.dart';
 import 'package:face_net_authentication/widgets/v_button.dart';
 import 'package:face_net_authentication/widgets/v_dialogs.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,7 @@ import '../../../shared/providers.dart';
 import '../../constants/assets.dart';
 import '../../infrastructure/cache_storage/wa_regist_storage.dart';
 import '../../infrastructure/credentials_storage/credentials_storage.dart';
+import '../../send_wa/application/phone_num.dart';
 import '../../style/style.dart';
 import '../infrastructure/wa_register_repository.dart';
 import 'wa_register.dart';
@@ -33,6 +35,29 @@ WaRegisterRepository waRegisterRepository(WaRegisterRepositoryRef ref) {
 }
 
 @riverpod
+class CurrentlySavedPhoneNumberNotifier
+    extends _$CurrentlySavedPhoneNumberNotifier {
+  @override
+  FutureOr<PhoneNum> build() async {
+    final idUser = ref.read(userNotifierProvider).user.idUser!;
+    return ref
+        .read(sendWaNotifierProvider.notifier)
+        .getPhoneById(idUser: idUser);
+  }
+
+  Future<void> refresh() async {
+    state = const AsyncLoading();
+
+    state = await AsyncValue.guard(() async {
+      final idUser = ref.read(userNotifierProvider).user.idUser!;
+      return ref
+          .read(sendWaNotifierProvider.notifier)
+          .getPhoneById(idUser: idUser);
+    });
+  }
+}
+
+@riverpod
 class WaRegisterNotifier extends _$WaRegisterNotifier {
   @override
   FutureOr<WaRegister> build() async {
@@ -47,6 +72,24 @@ class WaRegisterNotifier extends _$WaRegisterNotifier {
     final fromJsonResponse = jsonDecode(response);
 
     return WaRegister.fromJson(fromJsonResponse);
+  }
+
+  Future<void> refresh() async {
+    state = const AsyncLoading();
+
+    state = await AsyncValue.guard<WaRegister>(() async {
+      final response =
+          await ref.read(waRegisterRepositoryProvider).getWaRegister();
+
+      if (response == null) {
+        debugger();
+        return WaRegister.initial();
+      }
+
+      final fromJsonResponse = jsonDecode(response);
+
+      return WaRegister.fromJson(fromJsonResponse);
+    });
   }
 
   Future<WaRegister> getCurrentRegisteredWa() async {

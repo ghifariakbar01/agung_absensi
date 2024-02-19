@@ -33,6 +33,8 @@ class SakitListRemoteService {
                 " $dbName.*, " +
                 " $dbMstUser.payroll, " +
                 " $dbMstUser.id_dept, " +
+                " $dbMstUser.no_telp1, " +
+                " $dbMstUser.no_telp2, " +
                 " $dbMstUser.fullname, " +
                 " (SELECT nama FROM mst_comp WHERE id_comp = $dbMstUser.id_comp) AS comp, " +
                 " (SELECT nama FROM mst_dept WHERE id_dept = $dbMstUser.id_dept) AS dept, " +
@@ -111,6 +113,8 @@ class SakitListRemoteService {
                 " $dbName.*, " +
                 " $dbMstUser.payroll, " +
                 " $dbMstUser.id_dept, " +
+                " $dbMstUser.no_telp1, " +
+                " $dbMstUser.no_telp2, " +
                 " $dbMstUser.fullname, " +
                 " (SELECT nama FROM mst_comp WHERE id_comp = $dbMstUser.id_comp) AS comp, " +
                 " (SELECT nama FROM mst_dept WHERE id_dept = $dbMstUser.id_dept) AS dept, " +

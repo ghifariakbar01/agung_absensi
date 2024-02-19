@@ -1,11 +1,11 @@
 import 'dart:developer';
 
+import 'package:face_net_authentication/shared/providers.dart';
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
 import 'package:face_net_authentication/widgets/v_button.dart';
 import 'package:face_net_authentication/widgets/v_scaffold_widget.dart';
 import 'package:face_net_authentication/sakit/create_sakit/application/create_sakit_notifier.dart';
 
-import 'package:face_net_authentication/shared/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -30,9 +30,9 @@ class EditSakitPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final nama = ref.watch(userNotifierProvider);
-    final namaTextController = useTextEditingController(text: nama.user.nama);
-    final ptTextController = useTextEditingController(text: nama.user.payroll);
+    final user = ref.watch(userNotifierProvider).user;
+    final namaTextController = useTextEditingController(text: user.nama);
+    final ptTextController = useTextEditingController(text: user.payroll);
 
     final diagnosaTextController = useTextEditingController(text: item.ket);
     final suratDokterTextController = useState(
@@ -280,8 +280,8 @@ class EditSakitPage extends HookConsumerWidget {
                         await ref
                             .read(createSakitNotifierProvider.notifier)
                             .updateSakit(
-                                idUser: item.idUser!,
                                 id: item.idSakit!,
+                                idUser: item.idUser!,
                                 suratDokter: suratDokterText,
                                 tglAwal: tglAwalTextController.value,
                                 tglAkhir: tglAkhirTextController.value,

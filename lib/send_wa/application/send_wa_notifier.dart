@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dartz/dartz.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -28,28 +26,6 @@ SendWaRepository sendWaRepository(SendWaRepositoryRef ref) {
 class SendWaNotifier extends _$SendWaNotifier {
   @override
   FutureOr<void> build() {}
-
-  // Future<void> sendWa(
-  //     {
-  //     //
-  //     required int phone,
-  //     required int idUser,
-  //     required int idDept,
-  //     required String notifTitle,
-  //     required String notifContent
-  //     //
-  //     }) async {
-  //   state = const AsyncLoading();
-
-  //   state = await AsyncValue.guard(() => ref
-  //       .read(sendWaRepositoryProvider)
-  //       .sendWa(
-  //           phone: phone,
-  //           idUser: idUser,
-  //           idDept: idDept,
-  //           notifTitle: notifTitle,
-  //           notifContent: notifContent));
-  // }
 
   Future<Unit> sendWaDirect(
       {

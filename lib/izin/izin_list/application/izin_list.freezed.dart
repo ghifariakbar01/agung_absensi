@@ -24,6 +24,8 @@ mixin _$IzinList {
   int? get idIzin => throw _privateConstructorUsedError;
   @JsonKey(name: 'id_user')
   int? get idUser => throw _privateConstructorUsedError;
+  @JsonKey(name: 'id_dept')
+  int? get idDept => throw _privateConstructorUsedError;
   String? get ket => throw _privateConstructorUsedError;
   @JsonKey(name: 'tgl_start')
   String? get tglStart => throw _privateConstructorUsedError;
@@ -79,6 +81,8 @@ mixin _$IzinList {
   String? get cBy => throw _privateConstructorUsedError;
   @JsonKey(name: 'idkar')
   String? get idkar => throw _privateConstructorUsedError;
+  @JsonKey(name: 'payroll')
+  String? get payroll => throw _privateConstructorUsedError;
   @JsonKey(name: 'no_telp1')
   String? get noTelp1 => throw _privateConstructorUsedError;
   @JsonKey(name: 'no_telp2')
@@ -101,6 +105,7 @@ abstract class $IzinListCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: 'id_izin') int? idIzin,
       @JsonKey(name: 'id_user') int? idUser,
+      @JsonKey(name: 'id_dept') int? idDept,
       String? ket,
       @JsonKey(name: 'tgl_start') String? tglStart,
       @JsonKey(name: 'tgl_end') String? tglEnd,
@@ -130,6 +135,7 @@ abstract class $IzinListCopyWith<$Res> {
       @JsonKey(name: 'u_by') String? uBy,
       @JsonKey(name: 'c_by') String? cBy,
       @JsonKey(name: 'idkar') String? idkar,
+      @JsonKey(name: 'payroll') String? payroll,
       @JsonKey(name: 'no_telp1') String? noTelp1,
       @JsonKey(name: 'no_telp2') String? noTelp2,
       String? fullname,
@@ -152,6 +158,7 @@ class _$IzinListCopyWithImpl<$Res, $Val extends IzinList>
   $Res call({
     Object? idIzin = freezed,
     Object? idUser = freezed,
+    Object? idDept = freezed,
     Object? ket = freezed,
     Object? tglStart = freezed,
     Object? tglEnd = freezed,
@@ -181,6 +188,7 @@ class _$IzinListCopyWithImpl<$Res, $Val extends IzinList>
     Object? uBy = freezed,
     Object? cBy = freezed,
     Object? idkar = freezed,
+    Object? payroll = freezed,
     Object? noTelp1 = freezed,
     Object? noTelp2 = freezed,
     Object? fullname = freezed,
@@ -195,6 +203,10 @@ class _$IzinListCopyWithImpl<$Res, $Val extends IzinList>
       idUser: freezed == idUser
           ? _value.idUser
           : idUser // ignore: cast_nullable_to_non_nullable
+              as int?,
+      idDept: freezed == idDept
+          ? _value.idDept
+          : idDept // ignore: cast_nullable_to_non_nullable
               as int?,
       ket: freezed == ket
           ? _value.ket
@@ -311,6 +323,10 @@ class _$IzinListCopyWithImpl<$Res, $Val extends IzinList>
       idkar: freezed == idkar
           ? _value.idkar
           : idkar // ignore: cast_nullable_to_non_nullable
+              as String?,
+      payroll: freezed == payroll
+          ? _value.payroll
+          : payroll // ignore: cast_nullable_to_non_nullable
               as String?,
       noTelp1: freezed == noTelp1
           ? _value.noTelp1
@@ -346,6 +362,7 @@ abstract class _$$_IzinListCopyWith<$Res> implements $IzinListCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: 'id_izin') int? idIzin,
       @JsonKey(name: 'id_user') int? idUser,
+      @JsonKey(name: 'id_dept') int? idDept,
       String? ket,
       @JsonKey(name: 'tgl_start') String? tglStart,
       @JsonKey(name: 'tgl_end') String? tglEnd,
@@ -375,6 +392,7 @@ abstract class _$$_IzinListCopyWith<$Res> implements $IzinListCopyWith<$Res> {
       @JsonKey(name: 'u_by') String? uBy,
       @JsonKey(name: 'c_by') String? cBy,
       @JsonKey(name: 'idkar') String? idkar,
+      @JsonKey(name: 'payroll') String? payroll,
       @JsonKey(name: 'no_telp1') String? noTelp1,
       @JsonKey(name: 'no_telp2') String? noTelp2,
       String? fullname,
@@ -395,6 +413,7 @@ class __$$_IzinListCopyWithImpl<$Res>
   $Res call({
     Object? idIzin = freezed,
     Object? idUser = freezed,
+    Object? idDept = freezed,
     Object? ket = freezed,
     Object? tglStart = freezed,
     Object? tglEnd = freezed,
@@ -424,6 +443,7 @@ class __$$_IzinListCopyWithImpl<$Res>
     Object? uBy = freezed,
     Object? cBy = freezed,
     Object? idkar = freezed,
+    Object? payroll = freezed,
     Object? noTelp1 = freezed,
     Object? noTelp2 = freezed,
     Object? fullname = freezed,
@@ -438,6 +458,10 @@ class __$$_IzinListCopyWithImpl<$Res>
       idUser: freezed == idUser
           ? _value.idUser
           : idUser // ignore: cast_nullable_to_non_nullable
+              as int?,
+      idDept: freezed == idDept
+          ? _value.idDept
+          : idDept // ignore: cast_nullable_to_non_nullable
               as int?,
       ket: freezed == ket
           ? _value.ket
@@ -555,6 +579,10 @@ class __$$_IzinListCopyWithImpl<$Res>
           ? _value.idkar
           : idkar // ignore: cast_nullable_to_non_nullable
               as String?,
+      payroll: freezed == payroll
+          ? _value.payroll
+          : payroll // ignore: cast_nullable_to_non_nullable
+              as String?,
       noTelp1: freezed == noTelp1
           ? _value.noTelp1
           : noTelp1 // ignore: cast_nullable_to_non_nullable
@@ -585,6 +613,7 @@ class _$_IzinList implements _IzinList {
   const _$_IzinList(
       {@JsonKey(name: 'id_izin') this.idIzin,
       @JsonKey(name: 'id_user') this.idUser,
+      @JsonKey(name: 'id_dept') this.idDept,
       this.ket,
       @JsonKey(name: 'tgl_start') this.tglStart,
       @JsonKey(name: 'tgl_end') this.tglEnd,
@@ -614,6 +643,7 @@ class _$_IzinList implements _IzinList {
       @JsonKey(name: 'u_by') this.uBy,
       @JsonKey(name: 'c_by') this.cBy,
       @JsonKey(name: 'idkar') this.idkar,
+      @JsonKey(name: 'payroll') this.payroll,
       @JsonKey(name: 'no_telp1') this.noTelp1,
       @JsonKey(name: 'no_telp2') this.noTelp2,
       this.fullname,
@@ -629,6 +659,9 @@ class _$_IzinList implements _IzinList {
   @override
   @JsonKey(name: 'id_user')
   final int? idUser;
+  @override
+  @JsonKey(name: 'id_dept')
+  final int? idDept;
   @override
   final String? ket;
   @override
@@ -714,6 +747,9 @@ class _$_IzinList implements _IzinList {
   @JsonKey(name: 'idkar')
   final String? idkar;
   @override
+  @JsonKey(name: 'payroll')
+  final String? payroll;
+  @override
   @JsonKey(name: 'no_telp1')
   final String? noTelp1;
   @override
@@ -728,7 +764,7 @@ class _$_IzinList implements _IzinList {
 
   @override
   String toString() {
-    return 'IzinList(idIzin: $idIzin, idUser: $idUser, ket: $ket, tglStart: $tglStart, tglEnd: $tglEnd, spvSta: $spvSta, spvNm: $spvNm, spvTgl: $spvTgl, hrdSta: $hrdSta, hrdNm: $hrdNm, hrdTgl: $hrdTgl, cDate: $cDate, cUser: $cUser, uDate: $uDate, uUser: $uUser, hrdNote: $hrdNote, spvNote: $spvNote, tglStartHrd: $tglStartHrd, tglEndHrd: $tglEndHrd, totHari: $totHari, btlSta: $btlSta, btlTgl: $btlTgl, btlNm: $btlNm, idMstIzin: $idMstIzin, qtyfoto: $qtyfoto, namaIzin: $namaIzin, appSpv: $appSpv, appHrd: $appHrd, uBy: $uBy, cBy: $cBy, idkar: $idkar, noTelp1: $noTelp1, noTelp2: $noTelp2, fullname: $fullname, dept: $dept, comp: $comp)';
+    return 'IzinList(idIzin: $idIzin, idUser: $idUser, idDept: $idDept, ket: $ket, tglStart: $tglStart, tglEnd: $tglEnd, spvSta: $spvSta, spvNm: $spvNm, spvTgl: $spvTgl, hrdSta: $hrdSta, hrdNm: $hrdNm, hrdTgl: $hrdTgl, cDate: $cDate, cUser: $cUser, uDate: $uDate, uUser: $uUser, hrdNote: $hrdNote, spvNote: $spvNote, tglStartHrd: $tglStartHrd, tglEndHrd: $tglEndHrd, totHari: $totHari, btlSta: $btlSta, btlTgl: $btlTgl, btlNm: $btlNm, idMstIzin: $idMstIzin, qtyfoto: $qtyfoto, namaIzin: $namaIzin, appSpv: $appSpv, appHrd: $appHrd, uBy: $uBy, cBy: $cBy, idkar: $idkar, payroll: $payroll, noTelp1: $noTelp1, noTelp2: $noTelp2, fullname: $fullname, dept: $dept, comp: $comp)';
   }
 
   @override
@@ -738,6 +774,7 @@ class _$_IzinList implements _IzinList {
             other is _$_IzinList &&
             (identical(other.idIzin, idIzin) || other.idIzin == idIzin) &&
             (identical(other.idUser, idUser) || other.idUser == idUser) &&
+            (identical(other.idDept, idDept) || other.idDept == idDept) &&
             (identical(other.ket, ket) || other.ket == ket) &&
             (identical(other.tglStart, tglStart) ||
                 other.tglStart == tglStart) &&
@@ -772,6 +809,7 @@ class _$_IzinList implements _IzinList {
             (identical(other.uBy, uBy) || other.uBy == uBy) &&
             (identical(other.cBy, cBy) || other.cBy == cBy) &&
             (identical(other.idkar, idkar) || other.idkar == idkar) &&
+            (identical(other.payroll, payroll) || other.payroll == payroll) &&
             (identical(other.noTelp1, noTelp1) || other.noTelp1 == noTelp1) &&
             (identical(other.noTelp2, noTelp2) || other.noTelp2 == noTelp2) &&
             (identical(other.fullname, fullname) ||
@@ -786,6 +824,7 @@ class _$_IzinList implements _IzinList {
         runtimeType,
         idIzin,
         idUser,
+        idDept,
         ket,
         tglStart,
         tglEnd,
@@ -815,6 +854,7 @@ class _$_IzinList implements _IzinList {
         uBy,
         cBy,
         idkar,
+        payroll,
         noTelp1,
         noTelp2,
         fullname,
@@ -840,6 +880,7 @@ abstract class _IzinList implements IzinList {
   const factory _IzinList(
       {@JsonKey(name: 'id_izin') final int? idIzin,
       @JsonKey(name: 'id_user') final int? idUser,
+      @JsonKey(name: 'id_dept') final int? idDept,
       final String? ket,
       @JsonKey(name: 'tgl_start') final String? tglStart,
       @JsonKey(name: 'tgl_end') final String? tglEnd,
@@ -869,6 +910,7 @@ abstract class _IzinList implements IzinList {
       @JsonKey(name: 'u_by') final String? uBy,
       @JsonKey(name: 'c_by') final String? cBy,
       @JsonKey(name: 'idkar') final String? idkar,
+      @JsonKey(name: 'payroll') final String? payroll,
       @JsonKey(name: 'no_telp1') final String? noTelp1,
       @JsonKey(name: 'no_telp2') final String? noTelp2,
       final String? fullname,
@@ -883,6 +925,9 @@ abstract class _IzinList implements IzinList {
   @override
   @JsonKey(name: 'id_user')
   int? get idUser;
+  @override
+  @JsonKey(name: 'id_dept')
+  int? get idDept;
   @override
   String? get ket;
   @override
@@ -967,6 +1012,9 @@ abstract class _IzinList implements IzinList {
   @override
   @JsonKey(name: 'idkar')
   String? get idkar;
+  @override
+  @JsonKey(name: 'payroll')
+  String? get payroll;
   @override
   @JsonKey(name: 'no_telp1')
   String? get noTelp1;

@@ -32,6 +32,10 @@ mixin _$SakitList {
   String? get cDate => throw _privateConstructorUsedError;
   @JsonKey(name: 'u_date')
   String? get uDate => throw _privateConstructorUsedError;
+  @JsonKey(name: 'no_telp1')
+  String? get noTelp1 => throw _privateConstructorUsedError;
+  @JsonKey(name: 'no_telp2')
+  String? get noTelp2 => throw _privateConstructorUsedError;
   @JsonKey(name: 'payroll')
   String? get payroll => throw _privateConstructorUsedError;
   @JsonKey(name: 'fullname')
@@ -87,6 +91,8 @@ abstract class $SakitListCopyWith<$Res> {
       @JsonKey(name: 'c_user') String? cUser,
       @JsonKey(name: 'c_date') String? cDate,
       @JsonKey(name: 'u_date') String? uDate,
+      @JsonKey(name: 'no_telp1') String? noTelp1,
+      @JsonKey(name: 'no_telp2') String? noTelp2,
       @JsonKey(name: 'payroll') String? payroll,
       @JsonKey(name: 'fullname') String? fullname,
       @JsonKey(name: 'comp') String? comp,
@@ -126,6 +132,8 @@ class _$SakitListCopyWithImpl<$Res, $Val extends SakitList>
     Object? cUser = freezed,
     Object? cDate = freezed,
     Object? uDate = freezed,
+    Object? noTelp1 = freezed,
+    Object? noTelp2 = freezed,
     Object? payroll = freezed,
     Object? fullname = freezed,
     Object? comp = freezed,
@@ -169,6 +177,14 @@ class _$SakitListCopyWithImpl<$Res, $Val extends SakitList>
       uDate: freezed == uDate
           ? _value.uDate
           : uDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+      noTelp1: freezed == noTelp1
+          ? _value.noTelp1
+          : noTelp1 // ignore: cast_nullable_to_non_nullable
+              as String?,
+      noTelp2: freezed == noTelp2
+          ? _value.noTelp2
+          : noTelp2 // ignore: cast_nullable_to_non_nullable
               as String?,
       payroll: freezed == payroll
           ? _value.payroll
@@ -260,6 +276,8 @@ abstract class _$$_SakitListCopyWith<$Res> implements $SakitListCopyWith<$Res> {
       @JsonKey(name: 'c_user') String? cUser,
       @JsonKey(name: 'c_date') String? cDate,
       @JsonKey(name: 'u_date') String? uDate,
+      @JsonKey(name: 'no_telp1') String? noTelp1,
+      @JsonKey(name: 'no_telp2') String? noTelp2,
       @JsonKey(name: 'payroll') String? payroll,
       @JsonKey(name: 'fullname') String? fullname,
       @JsonKey(name: 'comp') String? comp,
@@ -297,6 +315,8 @@ class __$$_SakitListCopyWithImpl<$Res>
     Object? cUser = freezed,
     Object? cDate = freezed,
     Object? uDate = freezed,
+    Object? noTelp1 = freezed,
+    Object? noTelp2 = freezed,
     Object? payroll = freezed,
     Object? fullname = freezed,
     Object? comp = freezed,
@@ -340,6 +360,14 @@ class __$$_SakitListCopyWithImpl<$Res>
       uDate: freezed == uDate
           ? _value.uDate
           : uDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+      noTelp1: freezed == noTelp1
+          ? _value.noTelp1
+          : noTelp1 // ignore: cast_nullable_to_non_nullable
+              as String?,
+      noTelp2: freezed == noTelp2
+          ? _value.noTelp2
+          : noTelp2 // ignore: cast_nullable_to_non_nullable
               as String?,
       payroll: freezed == payroll
           ? _value.payroll
@@ -427,6 +455,8 @@ class _$_SakitList implements _SakitList {
       @JsonKey(name: 'c_user') this.cUser,
       @JsonKey(name: 'c_date') this.cDate,
       @JsonKey(name: 'u_date') this.uDate,
+      @JsonKey(name: 'no_telp1') this.noTelp1,
+      @JsonKey(name: 'no_telp2') this.noTelp2,
       @JsonKey(name: 'payroll') this.payroll,
       @JsonKey(name: 'fullname') this.fullname,
       @JsonKey(name: 'comp') this.comp,
@@ -467,6 +497,12 @@ class _$_SakitList implements _SakitList {
   @override
   @JsonKey(name: 'u_date')
   final String? uDate;
+  @override
+  @JsonKey(name: 'no_telp1')
+  final String? noTelp1;
+  @override
+  @JsonKey(name: 'no_telp2')
+  final String? noTelp2;
   @override
   @JsonKey(name: 'payroll')
   final String? payroll;
@@ -524,7 +560,7 @@ class _$_SakitList implements _SakitList {
 
   @override
   String toString() {
-    return 'SakitList(idSakit: $idSakit, idUser: $idUser, idDept: $idDept, cUser: $cUser, cDate: $cDate, uDate: $uDate, payroll: $payroll, fullname: $fullname, comp: $comp, dept: $dept, ket: $ket, surat: $surat, batalStatus: $batalStatus, batalNama: $batalNama, tglStart: $tglStart, tglEnd: $tglEnd, totHari: $totHari, qtyFoto: $qtyFoto, spvSta: $spvSta, spvTgl: $spvTgl, spvNote: $spvNote, hrdSta: $hrdSta, hrdTgl: $hrdTgl, hrdNote: $hrdNote)';
+    return 'SakitList(idSakit: $idSakit, idUser: $idUser, idDept: $idDept, cUser: $cUser, cDate: $cDate, uDate: $uDate, noTelp1: $noTelp1, noTelp2: $noTelp2, payroll: $payroll, fullname: $fullname, comp: $comp, dept: $dept, ket: $ket, surat: $surat, batalStatus: $batalStatus, batalNama: $batalNama, tglStart: $tglStart, tglEnd: $tglEnd, totHari: $totHari, qtyFoto: $qtyFoto, spvSta: $spvSta, spvTgl: $spvTgl, spvNote: $spvNote, hrdSta: $hrdSta, hrdTgl: $hrdTgl, hrdNote: $hrdNote)';
   }
 
   @override
@@ -538,6 +574,8 @@ class _$_SakitList implements _SakitList {
             (identical(other.cUser, cUser) || other.cUser == cUser) &&
             (identical(other.cDate, cDate) || other.cDate == cDate) &&
             (identical(other.uDate, uDate) || other.uDate == uDate) &&
+            (identical(other.noTelp1, noTelp1) || other.noTelp1 == noTelp1) &&
+            (identical(other.noTelp2, noTelp2) || other.noTelp2 == noTelp2) &&
             (identical(other.payroll, payroll) || other.payroll == payroll) &&
             (identical(other.fullname, fullname) ||
                 other.fullname == fullname) &&
@@ -572,6 +610,8 @@ class _$_SakitList implements _SakitList {
         cUser,
         cDate,
         uDate,
+        noTelp1,
+        noTelp2,
         payroll,
         fullname,
         comp,
@@ -614,6 +654,8 @@ abstract class _SakitList implements SakitList {
       @JsonKey(name: 'c_user') final String? cUser,
       @JsonKey(name: 'c_date') final String? cDate,
       @JsonKey(name: 'u_date') final String? uDate,
+      @JsonKey(name: 'no_telp1') final String? noTelp1,
+      @JsonKey(name: 'no_telp2') final String? noTelp2,
       @JsonKey(name: 'payroll') final String? payroll,
       @JsonKey(name: 'fullname') final String? fullname,
       @JsonKey(name: 'comp') final String? comp,
@@ -654,6 +696,12 @@ abstract class _SakitList implements SakitList {
   @override
   @JsonKey(name: 'u_date')
   String? get uDate;
+  @override
+  @JsonKey(name: 'no_telp1')
+  String? get noTelp1;
+  @override
+  @JsonKey(name: 'no_telp2')
+  String? get noTelp2;
   @override
   @JsonKey(name: 'payroll')
   String? get payroll;

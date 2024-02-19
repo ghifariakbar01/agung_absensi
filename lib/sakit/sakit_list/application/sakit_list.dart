@@ -12,6 +12,8 @@ class SakitList with _$SakitList {
     @JsonKey(name: 'c_user') String? cUser,
     @JsonKey(name: 'c_date') String? cDate,
     @JsonKey(name: 'u_date') String? uDate,
+    @JsonKey(name: 'no_telp1') String? noTelp1,
+    @JsonKey(name: 'no_telp2') String? noTelp2,
     @JsonKey(name: 'payroll') String? payroll,
     @JsonKey(name: 'fullname') String? fullname,
     @JsonKey(name: 'comp') String? comp,

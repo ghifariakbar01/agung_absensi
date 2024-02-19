@@ -9,6 +9,7 @@ part of 'izin_list.dart';
 _$_IzinList _$$_IzinListFromJson(Map<String, dynamic> json) => _$_IzinList(
       idIzin: json['id_izin'] as int?,
       idUser: json['id_user'] as int?,
+      idDept: json['id_dept'] as int?,
       ket: json['ket'] as String?,
       tglStart: json['tgl_start'] as String?,
       tglEnd: json['tgl_end'] as String?,
@@ -38,6 +39,7 @@ _$_IzinList _$$_IzinListFromJson(Map<String, dynamic> json) => _$_IzinList(
       uBy: json['u_by'] as String?,
       cBy: json['c_by'] as String?,
       idkar: json['idkar'] as String?,
+      payroll: json['payroll'] as String?,
       noTelp1: json['no_telp1'] as String?,
       noTelp2: json['no_telp2'] as String?,
       fullname: json['fullname'] as String?,
@@ -49,6 +51,7 @@ Map<String, dynamic> _$$_IzinListToJson(_$_IzinList instance) =>
     <String, dynamic>{
       'id_izin': instance.idIzin,
       'id_user': instance.idUser,
+      'id_dept': instance.idDept,
       'ket': instance.ket,
       'tgl_start': instance.tglStart,
       'tgl_end': instance.tglEnd,
@@ -78,6 +81,7 @@ Map<String, dynamic> _$$_IzinListToJson(_$_IzinList instance) =>
       'u_by': instance.uBy,
       'c_by': instance.cBy,
       'idkar': instance.idkar,
+      'payroll': instance.payroll,
       'no_telp1': instance.noTelp1,
       'no_telp2': instance.noTelp2,
       'fullname': instance.fullname,

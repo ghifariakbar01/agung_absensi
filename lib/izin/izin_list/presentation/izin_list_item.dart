@@ -1,3 +1,4 @@
+import 'package:face_net_authentication/izin/izin_approve/application/izin_approve_notifier.dart';
 import 'package:face_net_authentication/izin/izin_list/presentation/izin_dtl_dialog.dart';
 import 'package:face_net_authentication/shared/providers.dart';
 import 'package:face_net_authentication/widgets/tappable_widget.dart';
@@ -8,6 +9,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../constants/assets.dart';
+import '../../../sakit/sakit_list/presentation/sakit_dialog.dart';
 import '../../../style/style.dart';
 
 import '../../../widgets/v_dialogs.dart';
@@ -107,16 +109,16 @@ class IzinListItem extends HookConsumerWidget {
                                 builder: (context) => VBatalDialog(
                                   onTap: () async {
                                     context.pop();
-                                    // await ref
-                                    //     .read(sakitApproveControllerProvider
-                                    //         .notifier)
-                                    //     .batal(
-                                    //       itemSakit: item,
-                                    //       nama: ref
-                                    //           .read(userNotifierProvider)
-                                    //           .user
-                                    //           .nama!,
-                                    //     );
+                                    await ref
+                                        .read(izinApproveControllerProvider
+                                            .notifier)
+                                        .batal(
+                                          itemIzin: item,
+                                          nama: ref
+                                              .read(userNotifierProvider)
+                                              .user
+                                              .nama!,
+                                        );
                                   },
                                 ),
                               );
@@ -285,7 +287,7 @@ class IzinListItem extends HookConsumerWidget {
                                     height: 2,
                                   ),
                                   SizedBox(
-                                    width: 125,
+                                    width: 75,
                                     child: Text(
                                       '${item.namaIzin}',
                                       style: Themes.customColor(9,
@@ -415,58 +417,54 @@ class IzinListItem extends HookConsumerWidget {
                                           context: context,
                                           builder: (context) => VAksesDitolak(),
                                         );
+                                      } else {
+                                        // jika belum diapprove maka approve
+                                        // kl udah di unapprove
+                                        if (item.spvSta == false) {
+                                          await showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  VAlertDialog2(
+                                                      label:
+                                                          'Dibutuhkan Konfirmasi SPV (Approve)',
+                                                      onPressed: () async {
+                                                        context.pop();
+
+                                                        await ref
+                                                            .read(
+                                                                izinApproveControllerProvider
+                                                                    .notifier)
+                                                            .approveSpv(
+                                                                itemIzin: item,
+                                                                nama: ref
+                                                                    .read(
+                                                                        userNotifierProvider)
+                                                                    .user
+                                                                    .nama!);
+                                                      }));
+                                        } else {
+                                          await showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  VAlertDialog2(
+                                                      label:
+                                                          'Dibutuhkan Konfirmasi SPV (Unapprove)',
+                                                      onPressed: () async {
+                                                        context.pop();
+                                                        await ref
+                                                            .read(
+                                                                izinApproveControllerProvider
+                                                                    .notifier)
+                                                            .unApproveSpv(
+                                                                itemIzin: item,
+                                                                nama: ref
+                                                                    .read(
+                                                                        userNotifierProvider)
+                                                                    .user
+                                                                    .nama!);
+                                                      }));
+                                        }
                                       }
-                                      // } else {
-
-                                      //   // jika belum diapprove maka approve
-                                      //   // kl udah di unapprove
-                                      //   if (item.spvSta == false) {
-                                      //     await showDialog(
-                                      //         context: context,
-                                      //         builder: (context) =>
-                                      //             VAlertDialog2(
-                                      //                 label:
-                                      //                     'Dibutuhkan Konfirmasi SPV (Approve)',
-                                      //                 onPressed: () async {
-                                      //                   context.pop();
-
-                                      //                   await ref
-                                      //                       .read(
-                                      //                           sakitApproveControllerProvider
-                                      //                               .notifier)
-                                      //                       .approveSpv(
-                                      //                           itemSakit: item,
-                                      //                           note: '',
-                                      //                           nama: ref
-                                      //                               .read(
-                                      //                                   userNotifierProvider)
-                                      //                               .user
-                                      //                               .nama!);
-                                      //                 }));
-                                      //   } else {
-                                      //     await showDialog(
-                                      //         context: context,
-                                      //         builder: (context) =>
-                                      //             VAlertDialog2(
-                                      //                 label:
-                                      //                     'Dibutuhkan Konfirmasi SPV (Unapprove)',
-                                      //                 onPressed: () async {
-                                      //                   context.pop();
-
-                                      //                   await ref
-                                      //                       .read(
-                                      //                           sakitApproveControllerProvider
-                                      //                               .notifier)
-                                      //                       .unapproveSpv(
-                                      //                           itemSakit: item,
-                                      //                           nama: ref
-                                      //                               .read(
-                                      //                                   userNotifierProvider)
-                                      //                               .user
-                                      //                               .nama!);
-                                      //                 }));
-                                      //   }
-                                      // }
                                     },
                                     child: Ink(
                                       height: 25,
@@ -557,99 +555,45 @@ class IzinListItem extends HookConsumerWidget {
                                           context: context,
                                           builder: (context) => VAksesDitolak(),
                                         );
-                                      }
-                                      // } else {
-                                      //   if (item.hrdSta == false) {
-                                      //     final String? text =
-                                      //         await DialogHelper<void>()
-                                      //             .showFormDialog(
-                                      //       label: 'Note HRD',
-                                      //       context: context,
-                                      //     );
+                                      } else {
+                                        final String? text =
+                                            await DialogHelper<void>()
+                                                .showFormDialog(
+                                          label: 'Note HRD',
+                                          context: context,
+                                        );
 
-                                      //     if (text != null) {
-                                      //       if (item.surat!.toLowerCase() ==
-                                      //           'ds') {
-                                      //         await ref
-                                      //             .read(
-                                      //                 sakitApproveControllerProvider
-                                      //                     .notifier)
-                                      //             .approveHrdDenganSurat(
-                                      //               note: text,
-                                      //               itemSakit: item,
-                                      //               namaHrd: ref
-                                      //                   .read(
-                                      //                       userNotifierProvider)
-                                      //                   .user
-                                      //                   .nama!,
-                                      //             );
-                                      //         //
-                                      //       } else {
-                                      //         await ref
-                                      //             .read(
-                                      //                 sakitApproveControllerProvider
-                                      //                     .notifier)
-                                      //             .approveHrdTanpaSurat(
-                                      //               note: text,
-                                      //               itemSakit: item,
-                                      //               namaHrd: ref
-                                      //                   .read(
-                                      //                       userNotifierProvider)
-                                      //                   .user
-                                      //                   .nama!,
-                                      //             );
-                                      //         //
-                                      //       }
-                                      //     }
-                                      //   } else {
-                                      //     if (item.surat!.toLowerCase() ==
-                                      //         'ds') {
-                                      //       await showDialog(
-                                      //           context: context,
-                                      //           builder: (context) =>
-                                      //               VAlertDialog2(
-                                      //                   label:
-                                      //                       'Dibutuhkan Konfirmasi HRD (Unapprove)',
-                                      //                   onPressed: () async {
-                                      //                     context.pop();
-                                      //                     await ref
-                                      //                         .read(
-                                      //                             sakitApproveControllerProvider
-                                      //                                 .notifier)
-                                      //                         .unApproveHrdDenganSurat(
-                                      //                             itemSakit:
-                                      //                                 item,
-                                      //                             nama: ref
-                                      //                                 .read(
-                                      //                                     userNotifierProvider)
-                                      //                                 .user
-                                      //                                 .nama!);
-                                      //                   }));
-                                      //     } else {
-                                      //       await showDialog(
-                                      //           context: context,
-                                      //           builder: (context) =>
-                                      //               VAlertDialog2(
-                                      //                   label:
-                                      //                       'Dibutuhkan Konfirmasi HRD (Unapprove)',
-                                      //                   onPressed: () async {
-                                      //                     context.pop();
-                                      //                     await ref
-                                      //                         .read(
-                                      //                             sakitApproveControllerProvider
-                                      //                                 .notifier)
-                                      //                         .unApproveHrdTanpaSurat(
-                                      //                             itemSakit:
-                                      //                                 item,
-                                      //                             nama: ref
-                                      //                                 .read(
-                                      //                                     userNotifierProvider)
-                                      //                                 .user
-                                      //                                 .nama!);
-                                      //                   }));
-                                      //     }
-                                      //   }
-                                      // }
+                                        if (text != null) {
+                                          if (item.hrdSta == false)
+                                            await ref
+                                                .read(
+                                                    izinApproveControllerProvider
+                                                        .notifier)
+                                                .approveHrd(
+                                                  note: text,
+                                                  itemIzin: item,
+                                                  namaHrd: ref
+                                                      .read(
+                                                          userNotifierProvider)
+                                                      .user
+                                                      .nama!,
+                                                );
+                                          else
+                                            await ref
+                                                .read(
+                                                    izinApproveControllerProvider
+                                                        .notifier)
+                                                .unApproveHrd(
+                                                  idIzin: item.idIzin!,
+                                                  note: text,
+                                                  namaHrd: ref
+                                                      .read(
+                                                          userNotifierProvider)
+                                                      .user
+                                                      .nama!,
+                                                );
+                                        }
+                                      }
                                     },
                                     child: Ink(
                                       height: 25,
@@ -714,72 +658,3 @@ class IzinListItem extends HookConsumerWidget {
     );
   }
 }
-
-//                 // LOWER RIGHT
-//                 Material(
-//                   color: Colors.transparent,
-//                   child: InkWell(
-//                     onTap: () async {
-//                       // if (ref
-//                       //     .read(sakitApproveControllerProvider.notifier)
-//                       //     .canHrdApprove(item)) {
-//                       //   log('message');
-//                       // }
-
-//                         }
-//                       } else {
-//                         if (item.surat!.toLowerCase() == 'ds') {
-//                           await ref
-//                               .read(sakitApproveControllerProvider.notifier)
-//                               .unApproveHrdDenganSurat(
-//                                 itemSakit: item,
-//                                 nama:
-//                                     ref.read(userNotifierProvider).user.nama!,
-//                               );
-//                         } else {
-//                           await ref
-//                               .read(sakitApproveControllerProvider.notifier)
-//                               .unApproveHrdTanpaSurat(
-//                                 itemSakit: item,
-//                                 nama:
-//                                     ref.read(userNotifierProvider).user.nama!,
-//                               );
-//                         }
-//                       }
-//                     },
-//                     child: Ink(
-//                       child: Column(
-//                         mainAxisAlignment: MainAxisAlignment.center,
-//                         crossAxisAlignment: CrossAxisAlignment.center,
-//                         children: [
-//                           if (item.hrdSta != null)
-//                             item.hrdSta == true
-//                                 ? Icon(Icons.thumb_up,
-//                                     size: 20, color: Colors.green)
-//                                 : Icon(
-//                                     Icons.thumb_down,
-//                                     size: 20,
-//                                     color: Palette.greyDisabled,
-//                                   ),
-//                           SizedBox(
-//                             height: 2,
-//                           ),
-//                           Text(
-//                             'Approve HRD',
-//                             style: Themes.customColor(10,
-//                                 color:
-//                                     Theme.of(context).unselectedWidgetColor),
-//                           ),
-//                           if (item.hrdTgl != null) ...[
-//                             Text(
-//                               'HRD Aging : $hrdAging',
-//                               style: Themes.customColor(10,
-//                                   color: Theme.of(context)
-//                                       .unselectedWidgetColor),
-//                             ),
-//                           ],
-//                         ],
-//                       ),
-//                     ),
-//                   ),
-//                 )

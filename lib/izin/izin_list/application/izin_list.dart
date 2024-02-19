@@ -10,6 +10,7 @@ abstract class IzinList with _$IzinList {
   const factory IzinList({
     @JsonKey(name: 'id_izin') int? idIzin,
     @JsonKey(name: 'id_user') int? idUser,
+    @JsonKey(name: 'id_dept') int? idDept,
     String? ket,
     @JsonKey(name: 'tgl_start') String? tglStart,
     @JsonKey(name: 'tgl_end') String? tglEnd,
@@ -39,6 +40,7 @@ abstract class IzinList with _$IzinList {
     @JsonKey(name: 'u_by') String? uBy,
     @JsonKey(name: 'c_by') String? cBy,
     @JsonKey(name: 'idkar') String? idkar,
+    @JsonKey(name: 'payroll') String? payroll,
     @JsonKey(name: 'no_telp1') String? noTelp1,
     @JsonKey(name: 'no_telp2') String? noTelp2,
     String? fullname,

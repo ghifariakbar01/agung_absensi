@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../constants/assets.dart';
 
@@ -10,6 +11,57 @@ import '../user/application/user_model.dart';
 import '../user/application/user_notifier.dart';
 import '../widgets/v_dialogs.dart';
 import 'providers.dart';
+
+part 'future_providers.g.dart';
+
+// for refresh on home page
+@riverpod
+class GetUserNotifier extends _$GetUserNotifier {
+  @override
+  FutureOr<Unit> build() async {
+    UserNotifier userNotifier = ref.read(userNotifierProvider.notifier);
+    String userString = await userNotifier.getUserString();
+
+    // PARSE USER SUCCESS / FAILURE
+    if (userString.isNotEmpty) {
+      final json = jsonDecode(userString) as Map<String, Object?>;
+      final user = UserModelWithPassword.fromJson(json);
+
+      if (json.isNotEmpty) {
+        await ref
+            .read(userNotifierProvider.notifier)
+            .onUserParsedRaw(ref: ref, userModelWithPassword: user);
+      }
+    }
+    log('GetUserNotifier Here');
+
+    return unit;
+  }
+
+  Future<void> refresh() async {
+    state = const AsyncLoading();
+
+    state = await AsyncValue.guard(() async {
+      UserNotifier userNotifier = ref.read(userNotifierProvider.notifier);
+      String userString = await userNotifier.getUserString();
+
+      // PARSE USER SUCCESS / FAILURE
+      if (userString.isNotEmpty) {
+        final json = jsonDecode(userString) as Map<String, Object?>;
+        final user = UserModelWithPassword.fromJson(json);
+
+        if (json.isNotEmpty) {
+          await ref
+              .read(userNotifierProvider.notifier)
+              .onUserParsedRaw(ref: ref, userModelWithPassword: user);
+        }
+      }
+      log('GetUserNotifier Here');
+
+      return unit;
+    });
+  }
+}
 
 // 1. GET AND SET USER
 final getUserFutureProvider = FutureProvider<Unit>((ref) async {

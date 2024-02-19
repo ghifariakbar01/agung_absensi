@@ -24,7 +24,7 @@ class IzinListPage extends HookConsumerWidget {
     });
 
     final sendWa = ref.watch(sendWaNotifierProvider);
-    final sakitList = ref.watch(izinListControllerProvider);
+    final izinList = ref.watch(izinListControllerProvider);
     final sakitApprove = ref.watch(sakitApproveControllerProvider);
 
     ref.listen<AsyncValue>(sakitApproveControllerProvider, (_, state) {
@@ -66,87 +66,86 @@ class IzinListPage extends HookConsumerWidget {
       return () => scrollController.removeListener(onScrolled);
     }, [scrollController]);
 
+    final onRefresh = () async {
+      page.value = 0;
+      await ref.read(izinListControllerProvider.notifier).refresh();
+      return Future.value();
+    };
+
     return VAsyncWidgetScaffold(
       value: sakitApprove,
       data: (_) => VAsyncWidgetScaffold(
         value: sendWa,
-        data: (_) => RefreshIndicator(
-          onRefresh: () async {
-            page.value = 0;
-            await ref.read(izinListControllerProvider.notifier).refresh();
-            return Future.value();
-          },
-          child: VScaffoldTabLayout(
-            scaffoldTitle: 'List Form Izin',
-            scaffoldFAB: FloatingActionButton.small(
-                backgroundColor: Palette.primaryColor,
-                child: Icon(
-                  Icons.add,
-                  color: Colors.white,
-                ),
-                onPressed: () => context.pushNamed(
-                      RouteNames.createSakitNameRoute,
-                    )),
-            onPageChanged: () async {
-              page.value = 0;
-              await ref.read(izinListControllerProvider.notifier).refresh();
-              return Future.value();
-            },
-            scaffoldBody: [
-              VAsyncValueWidget<List<IzinList>>(
-                  value: sakitList,
-                  data: (list) {
-                    final waiting = list
-                        .where((e) =>
-                            (e.spvSta == false || e.hrdSta == false) &&
-                            e.btlSta == false)
-                        .toList();
-                    return _list(scrollController, waiting);
-                  }),
-              VAsyncValueWidget<List<IzinList>>(
-                  value: sakitList,
-                  data: (list) {
-                    final approved = list
-                        .where((e) =>
-                            (e.spvSta == true || e.hrdSta == true) &&
-                            e.btlSta == false)
-                        .toList();
-                    return _list(scrollController, approved);
-                  }),
-              VAsyncValueWidget<List<IzinList>>(
-                  value: sakitList,
-                  data: (list) {
-                    final cancelled =
-                        list.where((e) => e.btlSta == true).toList();
-                    return _list(scrollController, cancelled);
-                  }),
-            ],
-          ),
+        data: (_) => VScaffoldTabLayout(
+          scaffoldTitle: 'List Form Izin',
+          scaffoldFAB: FloatingActionButton.small(
+              backgroundColor: Palette.primaryColor,
+              child: Icon(
+                Icons.add,
+                color: Colors.white,
+              ),
+              onPressed: () => context.pushNamed(
+                    RouteNames.createIzinNameRoute,
+                  )),
+          onPageChanged: onRefresh,
+          scaffoldBody: [
+            VAsyncValueWidget<List<IzinList>>(
+                value: izinList,
+                data: (list) {
+                  final waiting = list
+                      .where((e) =>
+                          (e.spvSta == false || e.hrdSta == false) &&
+                          e.btlSta == false)
+                      .toList();
+                  return _list(scrollController, waiting, onRefresh);
+                }),
+            VAsyncValueWidget<List<IzinList>>(
+                value: izinList,
+                data: (list) {
+                  final approved = list
+                      .where((e) =>
+                          (e.spvSta == true || e.hrdSta == true) &&
+                          e.btlSta == false)
+                      .toList();
+                  return _list(scrollController, approved, onRefresh);
+                }),
+            VAsyncValueWidget<List<IzinList>>(
+                value: izinList,
+                data: (list) {
+                  final cancelled =
+                      list.where((e) => e.btlSta == true).toList();
+                  return _list(scrollController, cancelled, onRefresh);
+                }),
+          ],
         ),
       ),
     );
   }
 
-  ListView _list(ScrollController scrollController, List<IzinList> list) {
-    return ListView.separated(
-        controller: scrollController,
-        separatorBuilder: (__, index) => SizedBox(
-              height: 8,
-            ),
-        itemCount: list.length + 1,
-        itemBuilder: (BuildContext context, int index) => index == list.length
-            ? SizedBox(
-                height: 50,
-              )
-            : index == 0
-                ? Column(
-                    children: [
-                      SizedBox(
-                        height: 10,
-                      ),
-                      IzinListItem(list[index])
-                    ],
-                  )
-                : IzinListItem(list[index]));
+  Widget _list(ScrollController scrollController, List<IzinList> list,
+      Future<void> Function() onRefresh) {
+    return RefreshIndicator(
+      onRefresh: onRefresh,
+      child: ListView.separated(
+          controller: scrollController,
+          separatorBuilder: (__, index) => SizedBox(
+                height: 8,
+              ),
+          itemCount: list.length + 1,
+          itemBuilder: (BuildContext context, int index) => index == list.length
+              ? SizedBox(
+                  height: 50,
+                )
+              : index == 0
+                  ? Column(
+                      children: [
+                        SizedBox(
+                          height: 10,
+                        ),
+                        IzinListItem(list[index])
+                      ],
+                    )
+                  : IzinListItem(list[index])),
+    );
   }
 }

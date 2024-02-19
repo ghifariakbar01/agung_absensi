@@ -22,6 +22,25 @@ final waRegisterRepositoryProvider = Provider<WaRegisterRepository>.internal(
 );
 
 typedef WaRegisterRepositoryRef = ProviderRef<WaRegisterRepository>;
+String _$currentlySavedPhoneNumberNotifierHash() =>
+    r'300095a761d34f9ab854ded59ae752d8eeee1332';
+
+/// See also [CurrentlySavedPhoneNumberNotifier].
+@ProviderFor(CurrentlySavedPhoneNumberNotifier)
+final currentlySavedPhoneNumberNotifierProvider =
+    AutoDisposeAsyncNotifierProvider<CurrentlySavedPhoneNumberNotifier,
+        PhoneNum>.internal(
+  CurrentlySavedPhoneNumberNotifier.new,
+  name: r'currentlySavedPhoneNumberNotifierProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$currentlySavedPhoneNumberNotifierHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$CurrentlySavedPhoneNumberNotifier
+    = AutoDisposeAsyncNotifier<PhoneNum>;
 String _$waRegisterNotifierHash() =>
     r'd4d6cf6a29d0430dcf29d51041ffd2cafe37a26e';
 

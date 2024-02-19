@@ -107,11 +107,14 @@ class IzinDtlDialog extends StatelessWidget {
                         SizedBox(
                           height: 2,
                         ),
-                        Text(
-                          item.dept!,
-                          style: Themes.customColor(9,
-                              color: Palette.primaryColor,
-                              fontWeight: FontWeight.w500),
+                        SizedBox(
+                          width: 90,
+                          child: Text(
+                            item.dept!,
+                            style: Themes.customColor(9,
+                                color: Palette.primaryColor,
+                                fontWeight: FontWeight.w500),
+                          ),
                         ),
                       ],
                     ),
@@ -206,11 +209,14 @@ class IzinDtlDialog extends StatelessWidget {
                         SizedBox(
                           height: 2,
                         ),
-                        Text(
-                          '${item.namaIzin}',
-                          style: Themes.customColor(9,
-                              color: Palette.tertiaryColor,
-                              fontWeight: FontWeight.w500),
+                        SizedBox(
+                          width: 90,
+                          child: Text(
+                            '${item.namaIzin}',
+                            style: Themes.customColor(9,
+                                color: Palette.tertiaryColor,
+                                fontWeight: FontWeight.w500),
+                          ),
                         ),
                       ],
                     ),
@@ -236,11 +242,14 @@ class IzinDtlDialog extends StatelessWidget {
                     SizedBox(
                       height: 2,
                     ),
-                    Text(
-                      '${item.ket}',
-                      style: Themes.customColor(9,
-                          color: Palette.tertiaryColor,
-                          fontWeight: FontWeight.w500),
+                    SizedBox(
+                      width: 200,
+                      child: Text(
+                        '${item.ket}',
+                        style: Themes.customColor(9,
+                            color: Palette.tertiaryColor,
+                            fontWeight: FontWeight.w500),
+                      ),
                     ),
                   ],
                 ),
@@ -296,7 +305,7 @@ class IzinDtlDialog extends StatelessWidget {
                       assetPath: Assets.iconEdit,
                       onTap: () {
                         context.pop();
-                        return context.pushNamed(RouteNames.editSakitRoute,
+                        return context.pushNamed(RouteNames.editIzinRoute,
                             extra: item);
                       }),
                   SizedBox(

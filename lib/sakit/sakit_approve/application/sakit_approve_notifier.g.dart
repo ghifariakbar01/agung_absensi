@@ -41,7 +41,7 @@ final sakitApproveRepositoryProvider =
 
 typedef SakitApproveRepositoryRef = ProviderRef<SakitApproveRepository>;
 String _$sakitApproveControllerHash() =>
-    r'8d6c9199c85527afad8d0443dfe7d7a3c4a8a7a0';
+    r'5f434bfdf1d33bb983f305eea96fa9fd1969fcb7';
 
 /// See also [SakitApproveController].
 @ProviderFor(SakitApproveController)
