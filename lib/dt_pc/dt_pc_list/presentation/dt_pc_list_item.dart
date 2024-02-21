@@ -1,13 +1,18 @@
+import 'package:face_net_authentication/dt_pc/dt_pc_approve/application/dt_pc_approve_notifier.dart';
 import 'package:face_net_authentication/dt_pc/dt_pc_list/presentation/dt_pc_dtl_dialog.dart';
 import 'package:face_net_authentication/widgets/tappable_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../constants/assets.dart';
+import '../../../sakit/sakit_list/presentation/sakit_dialog.dart';
+import '../../../shared/providers.dart';
 import '../../../style/style.dart';
 
+import '../../../widgets/v_dialogs.dart';
 import '../application/dt_pc_list.dart';
 
 class DtPcListItem extends HookConsumerWidget {
@@ -96,24 +101,24 @@ class DtPcListItem extends HookConsumerWidget {
                         TappableSvg(
                             assetPath: Assets.iconBatal,
                             onTap: () {
-                              // showDialog(
-                              //   context: context,
-                              //   builder: (context) => VBatalDialog(
-                              //     onTap: () async {
-                              //       context.pop();
-                              //       await ref
-                              //           .read(izinApproveControllerProvider
-                              //               .notifier)
-                              //           .batal(
-                              //             itemIzin: item,
-                              //             nama: ref
-                              //                 .read(userNotifierProvider)
-                              //                 .user
-                              //                 .nama!,
-                              //           );
-                              //     },
-                              //   ),
-                              // );
+                              showDialog(
+                                context: context,
+                                builder: (context) => VBatalDialog(
+                                  onTap: () async {
+                                    context.pop();
+                                    await ref
+                                        .read(dtPcApproveControllerProvider
+                                            .notifier)
+                                        .batal(
+                                          itemDt: item,
+                                          nama: ref
+                                              .read(userNotifierProvider)
+                                              .user
+                                              .nama!,
+                                        );
+                                  },
+                                ),
+                              );
                             }),
                     ],
                   ),
@@ -335,64 +340,64 @@ class DtPcListItem extends HookConsumerWidget {
                                   color: Colors.transparent,
                                   child: InkWell(
                                     splashColor: Palette.primaryColor,
-                                    // onTap: () async {
-                                    //   if (!ref
-                                    //       .read(userNotifierProvider)
-                                    //       .user
-                                    //       .isSpvOrHrd!) {
-                                    //     showDialog(
-                                    //       context: context,
-                                    //       builder: (context) => VAksesDitolak(),
-                                    //     );
-                                    //   } else {
-                                    //     // jika belum diapprove maka approve
-                                    //     // kl udah di unapprove
-                                    //     if (item.spvSta == false) {
-                                    //       await showDialog(
-                                    //           context: context,
-                                    //           builder: (context) =>
-                                    //               VAlertDialog2(
-                                    //                   label:
-                                    //                       'Dibutuhkan Konfirmasi SPV (Approve)',
-                                    //                   onPressed: () async {
-                                    //                     context.pop();
+                                    onTap: () async {
+                                      if (!ref
+                                          .read(userNotifierProvider)
+                                          .user
+                                          .isSpvOrHrd!) {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) => VAksesDitolak(),
+                                        );
+                                      } else {
+                                        // jika belum diapprove maka approve
+                                        // kl udah di unapprove
+                                        if (item.spvSta == false) {
+                                          await showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  VAlertDialog2(
+                                                      label:
+                                                          'Dibutuhkan Konfirmasi SPV (Approve)',
+                                                      onPressed: () async {
+                                                        context.pop();
 
-                                    //                     await ref
-                                    //                         .read(
-                                    //                             izinApproveControllerProvider
-                                    //                                 .notifier)
-                                    //                         .approveSpv(
-                                    //                             itemIzin: item,
-                                    //                             nama: ref
-                                    //                                 .read(
-                                    //                                     userNotifierProvider)
-                                    //                                 .user
-                                    //                                 .nama!);
-                                    //                   }));
-                                    //     } else {
-                                    //       await showDialog(
-                                    //           context: context,
-                                    //           builder: (context) =>
-                                    //               VAlertDialog2(
-                                    //                   label:
-                                    //                       'Dibutuhkan Konfirmasi SPV (Unapprove)',
-                                    //                   onPressed: () async {
-                                    //                     context.pop();
-                                    //                     await ref
-                                    //                         .read(
-                                    //                             izinApproveControllerProvider
-                                    //                                 .notifier)
-                                    //                         .unApproveSpv(
-                                    //                             itemIzin: item,
-                                    //                             nama: ref
-                                    //                                 .read(
-                                    //                                     userNotifierProvider)
-                                    //                                 .user
-                                    //                                 .nama!);
-                                    //                   }));
-                                    //     }
-                                    //   }
-                                    // },
+                                                        await ref
+                                                            .read(
+                                                                dtPcApproveControllerProvider
+                                                                    .notifier)
+                                                            .approveSpv(
+                                                                itemDt: item,
+                                                                nama: ref
+                                                                    .read(
+                                                                        userNotifierProvider)
+                                                                    .user
+                                                                    .nama!);
+                                                      }));
+                                        } else {
+                                          await showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  VAlertDialog2(
+                                                      label:
+                                                          'Dibutuhkan Konfirmasi SPV (Unapprove)',
+                                                      onPressed: () async {
+                                                        context.pop();
+                                                        await ref
+                                                            .read(
+                                                                dtPcApproveControllerProvider
+                                                                    .notifier)
+                                                            .unApproveSpv(
+                                                                itemDt: item,
+                                                                nama: ref
+                                                                    .read(
+                                                                        userNotifierProvider)
+                                                                    .user
+                                                                    .nama!);
+                                                      }));
+                                        }
+                                      }
+                                    },
                                     child: Ink(
                                       height: 25,
                                       decoration: BoxDecoration(
@@ -473,55 +478,55 @@ class DtPcListItem extends HookConsumerWidget {
                                   color: Colors.transparent,
                                   child: InkWell(
                                     splashColor: Palette.primaryColor,
-                                    // onTap: () async {
-                                    //   if (!ref
-                                    //       .read(userNotifierProvider)
-                                    //       .user
-                                    //       .isSpvOrHrd!) {
-                                    //     showDialog(
-                                    //       context: context,
-                                    //       builder: (context) => VAksesDitolak(),
-                                    //     );
-                                    //   } else {
-                                    //     final String? text =
-                                    //         await DialogHelper<void>()
-                                    //             .showFormDialog(
-                                    //       label: 'Note HRD',
-                                    //       context: context,
-                                    //     );
+                                    onTap: () async {
+                                      if (!ref
+                                          .read(userNotifierProvider)
+                                          .user
+                                          .isSpvOrHrd!) {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) => VAksesDitolak(),
+                                        );
+                                      } else {
+                                        final String? text =
+                                            await DialogHelper<void>()
+                                                .showFormDialog(
+                                          label: 'Note HRD',
+                                          context: context,
+                                        );
 
-                                    //     if (text != null) {
-                                    //       if (item.hrdSta == false)
-                                    //         await ref
-                                    //             .read(
-                                    //                 izinApproveControllerProvider
-                                    //                     .notifier)
-                                    //             .approveHrd(
-                                    //               note: text,
-                                    //               itemIzin: item,
-                                    //               namaHrd: ref
-                                    //                   .read(
-                                    //                       userNotifierProvider)
-                                    //                   .user
-                                    //                   .nama!,
-                                    //             );
-                                    //       else
-                                    //         await ref
-                                    //             .read(
-                                    //                 izinApproveControllerProvider
-                                    //                     .notifier)
-                                    //             .unApproveHrd(
-                                    //               idIzin: item.idIzin!,
-                                    //               note: text,
-                                    //               namaHrd: ref
-                                    //                   .read(
-                                    //                       userNotifierProvider)
-                                    //                   .user
-                                    //                   .nama!,
-                                    //             );
-                                    //     }
-                                    //   }
-                                    // },
+                                        if (text != null) {
+                                          if (item.hrdSta == false)
+                                            await ref
+                                                .read(
+                                                    dtPcApproveControllerProvider
+                                                        .notifier)
+                                                .approveHrd(
+                                                  note: text,
+                                                  itemDt: item,
+                                                  namaHrd: ref
+                                                      .read(
+                                                          userNotifierProvider)
+                                                      .user
+                                                      .nama!,
+                                                );
+                                          else
+                                            await ref
+                                                .read(
+                                                    dtPcApproveControllerProvider
+                                                        .notifier)
+                                                .unApproveHrd(
+                                                  idDt: item.idDt!,
+                                                  note: text,
+                                                  namaHrd: ref
+                                                      .read(
+                                                          userNotifierProvider)
+                                                      .user
+                                                      .nama!,
+                                                );
+                                        }
+                                      }
+                                    },
                                     child: Ink(
                                       height: 25,
                                       decoration: BoxDecoration(

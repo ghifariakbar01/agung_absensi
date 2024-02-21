@@ -39,22 +39,22 @@ final dtPcApproveRepositoryProvider = Provider<DtPcApproveRepository>.internal(
 );
 
 typedef DtPcApproveRepositoryRef = ProviderRef<DtPcApproveRepository>;
-String _$izinApproveControllerHash() =>
-    r'6bcb42753feafe7a905c84c6dc1cb27317b26dec';
+String _$dtPcApproveControllerHash() =>
+    r'c6fcf7c7c723520b2458c91f66d59d64042c2df7';
 
-/// See also [IzinApproveController].
-@ProviderFor(IzinApproveController)
-final izinApproveControllerProvider =
-    AutoDisposeAsyncNotifierProvider<IzinApproveController, void>.internal(
-  IzinApproveController.new,
-  name: r'izinApproveControllerProvider',
+/// See also [DtPcApproveController].
+@ProviderFor(DtPcApproveController)
+final dtPcApproveControllerProvider =
+    AutoDisposeAsyncNotifierProvider<DtPcApproveController, void>.internal(
+  DtPcApproveController.new,
+  name: r'dtPcApproveControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$izinApproveControllerHash,
+      : _$dtPcApproveControllerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$IzinApproveController = AutoDisposeAsyncNotifier<void>;
+typedef _$DtPcApproveController = AutoDisposeAsyncNotifier<void>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

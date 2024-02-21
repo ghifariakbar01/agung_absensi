@@ -27,7 +27,7 @@ DtPcApproveRepository dtPcApproveRepository(DtPcApproveRepositoryRef ref) {
 }
 
 @riverpod
-class IzinApproveController extends _$IzinApproveController {
+class DtPcApproveController extends _$DtPcApproveController {
   @override
   FutureOr<void> build() {}
 
@@ -69,10 +69,10 @@ class IzinApproveController extends _$IzinApproveController {
           .read(dtPcApproveRepositoryProvider)
           .approveSpv(nama: nama, idDt: itemDt.idDt!);
       final String messageContent =
-          'Izin Anda Sudah Diapprove Oleh Atasan $nama';
+          'Izin DT/PC Anda Sudah Diapprove Oleh Atasan $nama';
       await _sendWa(itemDt: itemDt, messageContent: messageContent);
 
-      state = AsyncData<void>('Sukses Melakukan Approve Form Izin');
+      state = AsyncData<void>('Sukses Melakukan Approve Form DT/PC');
     } catch (e) {
       state = AsyncError(e, StackTrace.current);
     }
@@ -89,7 +89,7 @@ class IzinApproveController extends _$IzinApproveController {
           .read(dtPcApproveRepositoryProvider)
           .unApproveSpv(nama: nama, idDt: itemDt.idDt!);
 
-      state = AsyncData<void>('Sukses Unapprove Form Izin');
+      state = AsyncData<void>('Sukses Unapprove Form DT/PC');
     } catch (e) {
       state = AsyncError(e, StackTrace.current);
     }
@@ -108,10 +108,10 @@ class IzinApproveController extends _$IzinApproveController {
           .approveHrd(namaHrd: namaHrd, note: note, idDt: itemDt.idDt!);
 
       final String messageContent =
-          'Izin Anda Sudah Diapprove Oleh HRD $namaHrd';
+          'Izin DT/PC Anda Sudah Diapprove Oleh HRD $namaHrd';
       await _sendWa(itemDt: itemDt, messageContent: messageContent);
 
-      state = AsyncData<void>('Sukses Melakukan Approve Form Izin');
+      state = AsyncData<void>('Sukses Melakukan Approve Form DT/PC');
     } catch (e) {
       state = AsyncError(e, StackTrace.current);
     }
@@ -129,7 +129,7 @@ class IzinApproveController extends _$IzinApproveController {
           .read(dtPcApproveRepositoryProvider)
           .unApproveHrd(nama: namaHrd, note: note, idDt: idDt);
 
-      state = AsyncData<void>('Sukses Melakukan Unapprove Form Izin');
+      state = AsyncData<void>('Sukses Melakukan Unapprove Form DT/PC');
     } catch (e) {
       state = AsyncError(e, StackTrace.current);
     }
@@ -149,7 +149,7 @@ class IzinApproveController extends _$IzinApproveController {
       final String messageContent = 'Izin Anda Telah Di Batalkan Oleh : $nama';
 
       await _sendWa(itemDt: itemDt, messageContent: messageContent);
-      state = AsyncData<void>('Sukses Membatalkan Form Izin');
+      state = AsyncData<void>('Sukses Membatalkan Form DT/PC');
     } catch (e) {
       state = AsyncError(e, StackTrace.current);
     }
