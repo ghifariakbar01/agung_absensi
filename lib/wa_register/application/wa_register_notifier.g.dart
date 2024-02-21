@@ -23,7 +23,7 @@ final waRegisterRepositoryProvider = Provider<WaRegisterRepository>.internal(
 
 typedef WaRegisterRepositoryRef = ProviderRef<WaRegisterRepository>;
 String _$currentlySavedPhoneNumberNotifierHash() =>
-    r'300095a761d34f9ab854ded59ae752d8eeee1332';
+    r'f96ab07078ff68137ee3502e83f77b71deaae5f9';
 
 /// See also [CurrentlySavedPhoneNumberNotifier].
 @ProviderFor(CurrentlySavedPhoneNumberNotifier)
@@ -42,7 +42,7 @@ final currentlySavedPhoneNumberNotifierProvider =
 typedef _$CurrentlySavedPhoneNumberNotifier
     = AutoDisposeAsyncNotifier<PhoneNum>;
 String _$waRegisterNotifierHash() =>
-    r'd4d6cf6a29d0430dcf29d51041ffd2cafe37a26e';
+    r'17cc04bc48595ccabc409df75d0b1e3711eb9681';
 
 /// See also [WaRegisterNotifier].
 @ProviderFor(WaRegisterNotifier)

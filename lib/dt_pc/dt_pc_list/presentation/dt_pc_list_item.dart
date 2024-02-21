@@ -1,27 +1,21 @@
-import 'package:face_net_authentication/izin/izin_approve/application/izin_approve_notifier.dart';
-import 'package:face_net_authentication/izin/izin_list/presentation/izin_dtl_dialog.dart';
-import 'package:face_net_authentication/shared/providers.dart';
+import 'package:face_net_authentication/dt_pc/dt_pc_list/presentation/dt_pc_dtl_dialog.dart';
 import 'package:face_net_authentication/widgets/tappable_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../constants/assets.dart';
-import '../../../sakit/sakit_list/presentation/sakit_dialog.dart';
 import '../../../style/style.dart';
 
-import '../../../widgets/v_dialogs.dart';
+import '../application/dt_pc_list.dart';
 
-import '../application/izin_list.dart';
-
-class IzinListItem extends HookConsumerWidget {
-  const IzinListItem(
+class DtPcListItem extends HookConsumerWidget {
+  const DtPcListItem(
     this.item,
   );
 
-  final IzinList item;
+  final DtPcList item;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -44,7 +38,7 @@ class IzinListItem extends HookConsumerWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: SizedBox(
-        height: 200,
+        height: 130,
         child: Stack(
           children: [
             Container(
@@ -90,7 +84,7 @@ class IzinListItem extends HookConsumerWidget {
                           onTap: () {
                             showDialog(
                               context: context,
-                              builder: (context) => IzinDtlDialog(
+                              builder: (context) => DtPcDtlDialog(
                                 item: item,
                               ),
                             );
@@ -102,24 +96,24 @@ class IzinListItem extends HookConsumerWidget {
                         TappableSvg(
                             assetPath: Assets.iconBatal,
                             onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) => VBatalDialog(
-                                  onTap: () async {
-                                    context.pop();
-                                    await ref
-                                        .read(izinApproveControllerProvider
-                                            .notifier)
-                                        .batal(
-                                          itemIzin: item,
-                                          nama: ref
-                                              .read(userNotifierProvider)
-                                              .user
-                                              .nama!,
-                                        );
-                                  },
-                                ),
-                              );
+                              // showDialog(
+                              //   context: context,
+                              //   builder: (context) => VBatalDialog(
+                              //     onTap: () async {
+                              //       context.pop();
+                              //       await ref
+                              //           .read(izinApproveControllerProvider
+                              //               .notifier)
+                              //           .batal(
+                              //             itemIzin: item,
+                              //             nama: ref
+                              //                 .read(userNotifierProvider)
+                              //                 .user
+                              //                 .nama!,
+                              //           );
+                              //     },
+                              //   ),
+                              // );
                             }),
                     ],
                   ),
@@ -140,7 +134,7 @@ class IzinListItem extends HookConsumerWidget {
                   // MIDDLE
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -166,143 +160,78 @@ class IzinListItem extends HookConsumerWidget {
                           ),
                         ],
                       ),
-
                       SizedBox(
                         width: 25,
                       ),
-
                       Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Tanggal Awal',
-                                    style: Themes.customColor(7,
-                                        color: item.btlSta == true
-                                            ? Colors.white
-                                            : Colors.grey),
-                                  ),
-                                  SizedBox(
-                                    height: 2,
-                                  ),
-                                  Text(
-                                    DateFormat(
-                                      'dd MMM yyyy',
-                                    ).format(DateTime.parse(item.tglStart!)),
-                                    style: Themes.customColor(9,
-                                        color: item.btlSta == true
-                                            ? Colors.white
-                                            : Palette.blue,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                width: 16,
-                              ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Tanggal Akhir',
-                                    style: Themes.customColor(7,
-                                        color: item.btlSta == true
-                                            ? Colors.white
-                                            : Colors.grey),
-                                  ),
-                                  SizedBox(
-                                    height: 2,
-                                  ),
-                                  Text(
-                                    DateFormat(
-                                      'dd MMM yyyy',
-                                    ).format(DateTime.parse(item.tglEnd!)),
-                                    style: Themes.customColor(9,
-                                        color: item.btlSta == true
-                                            ? Colors.white
-                                            : Palette.tertiaryColor,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ],
-                              )
-                            ],
+                          Text(
+                            'Tanggal Izin',
+                            style: Themes.customColor(7,
+                                color: item.btlSta == true
+                                    ? Colors.white
+                                    : Colors.grey),
                           ),
                           SizedBox(
-                            height: 4,
+                            height: 2,
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Jumlah Izin',
-                                    style: Themes.customColor(7,
-                                        color: item.btlSta == true
-                                            ? Colors.white
-                                            : Colors.grey),
-                                  ),
-                                  SizedBox(
-                                    height: 2,
-                                  ),
-                                  Text(
-                                    item.totHari!.toString() + " Hari",
-                                    style: Themes.customColor(
-                                      9,
-                                      color: item.btlSta == true
-                                          ? Colors.white
-                                          : Palette.primaryColor,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                width: 25,
-                              ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Jenis Izin',
-                                    style: Themes.customColor(7,
-                                        color: item.btlSta == true
-                                            ? Colors.white
-                                            : Colors.grey),
-                                  ),
-                                  SizedBox(
-                                    height: 2,
-                                  ),
-                                  SizedBox(
-                                    width: 75,
-                                    child: Text(
-                                      '${item.namaIzin}',
-                                      style: Themes.customColor(9,
-                                          color: item.btlSta == true
-                                              ? Colors.white
-                                              : Palette.tertiaryColor,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ],
+                          Text(
+                            DateFormat(
+                              'dd MMM yyyy',
+                            ).format(DateTime.parse(item.dtTgl!)),
+                            style: Themes.customColor(9,
+                                color: item.btlSta == true
+                                    ? Colors.white
+                                    : Palette.blue,
+                                fontWeight: FontWeight.w500),
                           ),
                         ],
-                      )
-
-                      // tgl, jumlah sakit, surat info
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Jam',
+                            style: Themes.customColor(7, color: Colors.grey),
+                          ),
+                          SizedBox(
+                            height: 2,
+                          ),
+                          Text(
+                            DateFormat(
+                              'Hm',
+                            ).format(DateTime.parse(item.jam!)),
+                            style: Themes.customColor(9,
+                                color: Palette.tertiaryColor,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Jenis',
+                            style: Themes.customColor(7, color: Colors.grey),
+                          ),
+                          SizedBox(
+                            height: 2,
+                          ),
+                          SizedBox(
+                            width: 90,
+                            child: Text(
+                              '${item.kategori!.toLowerCase() == 'dt' ? 'Datang Telat' : 'Pulang Cepat'}',
+                              style: Themes.customColor(9,
+                                  color: Palette.orange,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
 
@@ -406,64 +335,64 @@ class IzinListItem extends HookConsumerWidget {
                                   color: Colors.transparent,
                                   child: InkWell(
                                     splashColor: Palette.primaryColor,
-                                    onTap: () async {
-                                      if (!ref
-                                          .read(userNotifierProvider)
-                                          .user
-                                          .isSpvOrHrd!) {
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) => VAksesDitolak(),
-                                        );
-                                      } else {
-                                        // jika belum diapprove maka approve
-                                        // kl udah di unapprove
-                                        if (item.spvSta == false) {
-                                          await showDialog(
-                                              context: context,
-                                              builder: (context) =>
-                                                  VAlertDialog2(
-                                                      label:
-                                                          'Dibutuhkan Konfirmasi SPV (Approve)',
-                                                      onPressed: () async {
-                                                        context.pop();
+                                    // onTap: () async {
+                                    //   if (!ref
+                                    //       .read(userNotifierProvider)
+                                    //       .user
+                                    //       .isSpvOrHrd!) {
+                                    //     showDialog(
+                                    //       context: context,
+                                    //       builder: (context) => VAksesDitolak(),
+                                    //     );
+                                    //   } else {
+                                    //     // jika belum diapprove maka approve
+                                    //     // kl udah di unapprove
+                                    //     if (item.spvSta == false) {
+                                    //       await showDialog(
+                                    //           context: context,
+                                    //           builder: (context) =>
+                                    //               VAlertDialog2(
+                                    //                   label:
+                                    //                       'Dibutuhkan Konfirmasi SPV (Approve)',
+                                    //                   onPressed: () async {
+                                    //                     context.pop();
 
-                                                        await ref
-                                                            .read(
-                                                                izinApproveControllerProvider
-                                                                    .notifier)
-                                                            .approveSpv(
-                                                                itemIzin: item,
-                                                                nama: ref
-                                                                    .read(
-                                                                        userNotifierProvider)
-                                                                    .user
-                                                                    .nama!);
-                                                      }));
-                                        } else {
-                                          await showDialog(
-                                              context: context,
-                                              builder: (context) =>
-                                                  VAlertDialog2(
-                                                      label:
-                                                          'Dibutuhkan Konfirmasi SPV (Unapprove)',
-                                                      onPressed: () async {
-                                                        context.pop();
-                                                        await ref
-                                                            .read(
-                                                                izinApproveControllerProvider
-                                                                    .notifier)
-                                                            .unApproveSpv(
-                                                                itemIzin: item,
-                                                                nama: ref
-                                                                    .read(
-                                                                        userNotifierProvider)
-                                                                    .user
-                                                                    .nama!);
-                                                      }));
-                                        }
-                                      }
-                                    },
+                                    //                     await ref
+                                    //                         .read(
+                                    //                             izinApproveControllerProvider
+                                    //                                 .notifier)
+                                    //                         .approveSpv(
+                                    //                             itemIzin: item,
+                                    //                             nama: ref
+                                    //                                 .read(
+                                    //                                     userNotifierProvider)
+                                    //                                 .user
+                                    //                                 .nama!);
+                                    //                   }));
+                                    //     } else {
+                                    //       await showDialog(
+                                    //           context: context,
+                                    //           builder: (context) =>
+                                    //               VAlertDialog2(
+                                    //                   label:
+                                    //                       'Dibutuhkan Konfirmasi SPV (Unapprove)',
+                                    //                   onPressed: () async {
+                                    //                     context.pop();
+                                    //                     await ref
+                                    //                         .read(
+                                    //                             izinApproveControllerProvider
+                                    //                                 .notifier)
+                                    //                         .unApproveSpv(
+                                    //                             itemIzin: item,
+                                    //                             nama: ref
+                                    //                                 .read(
+                                    //                                     userNotifierProvider)
+                                    //                                 .user
+                                    //                                 .nama!);
+                                    //                   }));
+                                    //     }
+                                    //   }
+                                    // },
                                     child: Ink(
                                       height: 25,
                                       decoration: BoxDecoration(
@@ -544,55 +473,55 @@ class IzinListItem extends HookConsumerWidget {
                                   color: Colors.transparent,
                                   child: InkWell(
                                     splashColor: Palette.primaryColor,
-                                    onTap: () async {
-                                      if (!ref
-                                          .read(userNotifierProvider)
-                                          .user
-                                          .isSpvOrHrd!) {
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) => VAksesDitolak(),
-                                        );
-                                      } else {
-                                        final String? text =
-                                            await DialogHelper<void>()
-                                                .showFormDialog(
-                                          label: 'Note HRD',
-                                          context: context,
-                                        );
+                                    // onTap: () async {
+                                    //   if (!ref
+                                    //       .read(userNotifierProvider)
+                                    //       .user
+                                    //       .isSpvOrHrd!) {
+                                    //     showDialog(
+                                    //       context: context,
+                                    //       builder: (context) => VAksesDitolak(),
+                                    //     );
+                                    //   } else {
+                                    //     final String? text =
+                                    //         await DialogHelper<void>()
+                                    //             .showFormDialog(
+                                    //       label: 'Note HRD',
+                                    //       context: context,
+                                    //     );
 
-                                        if (text != null) {
-                                          if (item.hrdSta == false)
-                                            await ref
-                                                .read(
-                                                    izinApproveControllerProvider
-                                                        .notifier)
-                                                .approveHrd(
-                                                  note: text,
-                                                  itemIzin: item,
-                                                  namaHrd: ref
-                                                      .read(
-                                                          userNotifierProvider)
-                                                      .user
-                                                      .nama!,
-                                                );
-                                          else
-                                            await ref
-                                                .read(
-                                                    izinApproveControllerProvider
-                                                        .notifier)
-                                                .unApproveHrd(
-                                                  idIzin: item.idIzin!,
-                                                  note: text,
-                                                  namaHrd: ref
-                                                      .read(
-                                                          userNotifierProvider)
-                                                      .user
-                                                      .nama!,
-                                                );
-                                        }
-                                      }
-                                    },
+                                    //     if (text != null) {
+                                    //       if (item.hrdSta == false)
+                                    //         await ref
+                                    //             .read(
+                                    //                 izinApproveControllerProvider
+                                    //                     .notifier)
+                                    //             .approveHrd(
+                                    //               note: text,
+                                    //               itemIzin: item,
+                                    //               namaHrd: ref
+                                    //                   .read(
+                                    //                       userNotifierProvider)
+                                    //                   .user
+                                    //                   .nama!,
+                                    //             );
+                                    //       else
+                                    //         await ref
+                                    //             .read(
+                                    //                 izinApproveControllerProvider
+                                    //                     .notifier)
+                                    //             .unApproveHrd(
+                                    //               idIzin: item.idIzin!,
+                                    //               note: text,
+                                    //               namaHrd: ref
+                                    //                   .read(
+                                    //                       userNotifierProvider)
+                                    //                   .user
+                                    //                   .nama!,
+                                    //             );
+                                    //     }
+                                    //   }
+                                    // },
                                     child: Ink(
                                       height: 25,
                                       decoration: BoxDecoration(

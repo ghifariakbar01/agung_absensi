@@ -88,4 +88,13 @@ class RouteNames {
 
   static const editIzinNameRoute = 'editIzin';
   static const editIzinRoute = 'editIzin';
+
+  static const dtPcListNameRoute = 'dtPcList';
+  static const dtPcListRoute = 'dtPcList';
+
+  static const createDtPcNameRoute = 'createDtPc';
+  static const createDtPcRoute = 'createDtPc';
+
+  static const editDtPcNameRoute = 'editDtPc';
+  static const editDtPcRoute = 'editDtPc';
 }

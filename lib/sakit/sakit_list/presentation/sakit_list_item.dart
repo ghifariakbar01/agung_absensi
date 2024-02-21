@@ -80,9 +80,8 @@ class SakitListItem extends HookConsumerWidget {
                         ).format(DateTime.parse(item.cDate!)),
                         style: Themes.customColor(10,
                             fontWeight: FontWeight.w500,
-                            color: item.batalStatus == true
-                                ? Colors.white
-                                : theme.primaryColor),
+                            color:
+                                item.batalStatus == true ? Colors.white : null),
                       ),
 
                       Spacer(),

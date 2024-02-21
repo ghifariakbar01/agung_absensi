@@ -1,3 +1,4 @@
+import 'package:face_net_authentication/dt_pc/create_dt_pc/presentation/edit_dt_pc_page.dart';
 import 'package:face_net_authentication/sakit/create_sakit/presentation/edit_sakit_page.dart';
 import 'package:face_net_authentication/sakit/sakit_dtl/presentation/sakit_dtl_page.dart';
 import 'package:face_net_authentication/sakit/sakit_dtl/presentation/sakit_dtl_photo_page.dart';
@@ -16,6 +17,9 @@ import '../../cuti/create_cuti/presentation/create_cuti_page.dart';
 import '../../cuti/create_cuti/presentation/edit_cuti_page.dart';
 import '../../cuti/cuti_list/application/cuti_list.dart';
 import '../../cuti/cuti_list/presentation/cuti_list_page.dart';
+import '../../dt_pc/create_dt_pc/presentation/create_dt_pc_page.dart';
+import '../../dt_pc/dt_pc_list/application/dt_pc_list.dart';
+import '../../dt_pc/dt_pc_list/presentation/dt_pc_list_page.dart';
 import '../../edit_profile/presentation/edit_profile_page.dart';
 import '../../home/presentation/home_page.dart';
 import '../../imei_introduction/application/imei_state.dart';
@@ -271,6 +275,25 @@ class RouterNotifier extends ChangeNotifier {
               builder: (context, state) {
                 final izin = state.extra as IzinList;
                 return EditIzinPage(izin);
+              },
+            ),
+
+            GoRoute(
+              name: RouteNames.dtPcListNameRoute,
+              path: RouteNames.dtPcListRoute,
+              builder: (context, state) => DtPcListPage(),
+            ),
+            GoRoute(
+              name: RouteNames.createDtPcNameRoute,
+              path: RouteNames.createDtPcRoute,
+              builder: (context, state) => CreateDtPcPage(),
+            ),
+            GoRoute(
+              name: RouteNames.editDtPcNameRoute,
+              path: RouteNames.editDtPcRoute,
+              builder: (context, state) {
+                final dtPc = state.extra as DtPcList;
+                return EditDtPcPage(dtPc);
               },
             ),
 
