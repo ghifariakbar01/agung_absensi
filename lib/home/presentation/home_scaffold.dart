@@ -40,6 +40,8 @@ class Item {
 final List<Item> attendance = [
   Item('Absen', Assets.iconAbsen, RouteNames.absenNameRoute),
   Item('Riwayat', Assets.iconRiwayat, RouteNames.riwayatAbsenNameRoute),
+  Item('Absen Manual', Assets.iconAbsenManual,
+      RouteNames.absenManualListNameRoute),
 ];
 
 final List<Item> leaveRequest = [

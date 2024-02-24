@@ -1,3 +1,5 @@
+import 'package:face_net_authentication/absen_manual/absen_manual_list/presentation/absen_manual_list_page.dart';
+import 'package:face_net_authentication/absen_manual/create_absen_manual/presentation/edit_absen_manual_page.dart';
 import 'package:face_net_authentication/dt_pc/create_dt_pc/presentation/edit_dt_pc_page.dart';
 import 'package:face_net_authentication/sakit/create_sakit/presentation/edit_sakit_page.dart';
 import 'package:face_net_authentication/sakit/sakit_dtl/presentation/sakit_dtl_page.dart';
@@ -10,6 +12,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../absen/presentation/absen_page.dart';
 
+import '../../absen_manual/absen_manual_list/application/absen_manual_list.dart';
+import '../../absen_manual/create_absen_manual/presentation/create_absen_manual_page.dart';
 import '../../auth/application/auth_notifier.dart';
 import '../../background/presentation/background_page.dart';
 import '../../copyright/presentation/copyright_page.dart';
@@ -294,6 +298,25 @@ class RouterNotifier extends ChangeNotifier {
               builder: (context, state) {
                 final dtPc = state.extra as DtPcList;
                 return EditDtPcPage(dtPc);
+              },
+            ),
+
+            GoRoute(
+              name: RouteNames.absenManualListNameRoute,
+              path: RouteNames.absenManualListRoute,
+              builder: (context, state) => AbsenManualListPage(),
+            ),
+            GoRoute(
+              name: RouteNames.createAbsenManualNameRoute,
+              path: RouteNames.createAbsenManualRoute,
+              builder: (context, state) => CreateAbsenManualPage(),
+            ),
+            GoRoute(
+              name: RouteNames.editAbsenManualNameRoute,
+              path: RouteNames.editAbsenManualRoute,
+              builder: (context, state) {
+                final absen = state.extra as AbsenManualList;
+                return EditAbsenManualPage(absen);
               },
             ),
 

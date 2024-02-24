@@ -6,12 +6,12 @@ import 'package:intl/intl.dart';
 import '../../../constants/assets.dart';
 import '../../../routes/application/route_names.dart';
 import '../../../style/style.dart';
-import '../application/dt_pc_list.dart';
+import '../application/absen_manual_list.dart';
 
-class DtPcDtlDialog extends StatelessWidget {
-  const DtPcDtlDialog({Key? key, required this.item}) : super(key: key);
+class AbsenManualDtlDialog extends StatelessWidget {
+  const AbsenManualDtlDialog({Key? key, required this.item}) : super(key: key);
 
-  final DtPcList item;
+  final AbsenManualList item;
 
   @override
   Widget build(BuildContext context) {
@@ -34,14 +34,14 @@ class DtPcDtlDialog extends StatelessWidget {
                   children: [
                     // ID FORM
                     Text(
-                      'ID Form',
+                      'ID Absen',
                       style: Themes.customColor(7, color: Colors.grey),
                     ),
                     SizedBox(
                       height: 2,
                     ),
                     Text(
-                      item.idDt.toString(),
+                      item.idAbsenmnl.toString(),
                       style: Themes.customColor(9,
                           color: Palette.primaryColor,
                           fontWeight: FontWeight.w500),
@@ -62,7 +62,7 @@ class DtPcDtlDialog extends StatelessWidget {
                           height: 2,
                         ),
                         Text(
-                          item.fullname!,
+                          item.fullname,
                           style: Themes.customColor(9,
                               color: Palette.primaryColor,
                               fontWeight: FontWeight.w500),
@@ -85,7 +85,7 @@ class DtPcDtlDialog extends StatelessWidget {
                           height: 2,
                         ),
                         Text(
-                          item.comp ?? "-",
+                          item.comp,
                           style: Themes.customColor(9,
                               color: Palette.primaryColor,
                               fontWeight: FontWeight.w500),
@@ -110,7 +110,7 @@ class DtPcDtlDialog extends StatelessWidget {
                         SizedBox(
                           width: 90,
                           child: Text(
-                            item.dept!,
+                            item.dept,
                             style: Themes.customColor(9,
                                 color: Palette.primaryColor,
                                 fontWeight: FontWeight.w500),
@@ -140,7 +140,7 @@ class DtPcDtlDialog extends StatelessWidget {
                         Text(
                           DateFormat(
                             'dd MMM yyyy',
-                          ).format(DateTime.parse(item.dtTgl!)),
+                          ).format(DateTime.parse(item.tgl)),
                           style: Themes.customColor(9,
                               color: Palette.blue, fontWeight: FontWeight.w500),
                         ),
@@ -149,13 +149,12 @@ class DtPcDtlDialog extends StatelessWidget {
                     SizedBox(
                       height: 8,
                     ),
-                    // TGL AKHIR
                     Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Jam',
+                          'Jam Awal',
                           style: Themes.customColor(7, color: Colors.grey),
                         ),
                         SizedBox(
@@ -164,7 +163,30 @@ class DtPcDtlDialog extends StatelessWidget {
                         Text(
                           DateFormat(
                             'hh:mm a',
-                          ).format(DateTime.parse(item.jam!)),
+                          ).format(DateTime.parse(item.jamAwal)),
+                          style: Themes.customColor(9,
+                              color: Palette.blue, fontWeight: FontWeight.w500),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Jam Akhir',
+                          style: Themes.customColor(7, color: Colors.grey),
+                        ),
+                        SizedBox(
+                          height: 2,
+                        ),
+                        Text(
+                          DateFormat(
+                            'hh:mm a',
+                          ).format(DateTime.parse(item.jamAkhir)),
                           style: Themes.customColor(9,
                               color: Palette.tertiaryColor,
                               fontWeight: FontWeight.w500),
@@ -174,13 +196,12 @@ class DtPcDtlDialog extends StatelessWidget {
                     SizedBox(
                       height: 8,
                     ),
-
                     Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Jenis',
+                          'Jenis Absen',
                           style: Themes.customColor(7, color: Colors.grey),
                         ),
                         SizedBox(
@@ -189,7 +210,7 @@ class DtPcDtlDialog extends StatelessWidget {
                         SizedBox(
                           width: 90,
                           child: Text(
-                            '${item.kategori}',
+                            '${item.jenisAbsen}',
                             style: Themes.customColor(9,
                                 color: Palette.tertiaryColor,
                                 fontWeight: FontWeight.w500),
@@ -224,7 +245,7 @@ class DtPcDtlDialog extends StatelessWidget {
                       child: Text(
                         '${item.ket}',
                         style: Themes.customColor(9,
-                            color: Palette.tertiaryColor,
+                            color: Palette.primaryColor,
                             fontWeight: FontWeight.w500),
                       ),
                     ),
@@ -241,7 +262,8 @@ class DtPcDtlDialog extends StatelessWidget {
                       assetPath: Assets.iconEdit,
                       onTap: () {
                         context.pop();
-                        return context.pushNamed(RouteNames.editDtPcRoute,
+                        return context.pushNamed(
+                            RouteNames.editAbsenManualRoute,
                             extra: item);
                       }),
                   SizedBox(

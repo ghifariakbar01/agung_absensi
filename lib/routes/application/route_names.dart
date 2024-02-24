@@ -97,4 +97,13 @@ class RouteNames {
 
   static const editDtPcNameRoute = 'editDtPc';
   static const editDtPcRoute = 'editDtPc';
+
+  static const absenManualListNameRoute = 'absenManualList';
+  static const absenManualListRoute = 'absenManualList';
+
+  static const createAbsenManualNameRoute = 'createAbsenManual';
+  static const createAbsenManualRoute = 'createAbsenManual';
+
+  static const editAbsenManualNameRoute = 'editAbsenManual';
+  static const editAbsenManualRoute = 'editAbsenManual';
 }

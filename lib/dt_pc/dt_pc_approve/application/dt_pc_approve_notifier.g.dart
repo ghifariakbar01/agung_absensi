@@ -40,7 +40,7 @@ final dtPcApproveRepositoryProvider = Provider<DtPcApproveRepository>.internal(
 
 typedef DtPcApproveRepositoryRef = ProviderRef<DtPcApproveRepository>;
 String _$dtPcApproveControllerHash() =>
-    r'c6fcf7c7c723520b2458c91f66d59d64042c2df7';
+    r'cb524e2bc7bf54a43d6902db5f4b1c9f0e81da33';
 
 /// See also [DtPcApproveController].
 @ProviderFor(DtPcApproveController)

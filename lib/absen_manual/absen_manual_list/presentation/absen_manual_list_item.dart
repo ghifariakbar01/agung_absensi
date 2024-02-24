@@ -1,5 +1,5 @@
-import 'package:face_net_authentication/dt_pc/dt_pc_approve/application/dt_pc_approve_notifier.dart';
-import 'package:face_net_authentication/dt_pc/dt_pc_list/presentation/dt_pc_dtl_dialog.dart';
+import 'package:face_net_authentication/absen_manual/absen_manual_approve/application/absen_manual_approve_notifier.dart';
+import 'package:face_net_authentication/absen_manual/absen_manual_list/presentation/absen_manual_dtl_dialog.dart';
 import 'package:face_net_authentication/widgets/tappable_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -13,14 +13,14 @@ import '../../../shared/providers.dart';
 import '../../../style/style.dart';
 
 import '../../../widgets/v_dialogs.dart';
-import '../application/dt_pc_list.dart';
+import '../application/absen_manual_list.dart';
 
-class DtPcListItem extends HookConsumerWidget {
-  const DtPcListItem(
+class AbsenManualListItem extends HookConsumerWidget {
+  const AbsenManualListItem(
     this.item,
   );
 
-  final DtPcList item;
+  final AbsenManualList item;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -74,7 +74,7 @@ class DtPcListItem extends HookConsumerWidget {
                       Text(
                         DateFormat(
                           'EEEE, dd MMMM yyyy',
-                        ).format(DateTime.parse(item.cDate!)),
+                        ).format(DateTime.parse(item.cDate)),
                         style: Themes.customColor(10,
                             fontWeight: FontWeight.w500,
                             color: item.btlSta == true ? Colors.white : null),
@@ -89,7 +89,7 @@ class DtPcListItem extends HookConsumerWidget {
                           onTap: () {
                             showDialog(
                               context: context,
-                              builder: (context) => DtPcDtlDialog(
+                              builder: (context) => AbsenManualDtlDialog(
                                 item: item,
                               ),
                             );
@@ -107,10 +107,11 @@ class DtPcListItem extends HookConsumerWidget {
                                   onTap: () async {
                                     context.pop();
                                     await ref
-                                        .read(dtPcApproveControllerProvider
-                                            .notifier)
+                                        .read(
+                                            absenManualApproveControllerProvider
+                                                .notifier)
                                         .batal(
-                                          itemDt: item,
+                                          item: item,
                                           nama: ref
                                               .read(userNotifierProvider)
                                               .user
@@ -139,7 +140,7 @@ class DtPcListItem extends HookConsumerWidget {
                   // MIDDLE
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -156,7 +157,7 @@ class DtPcListItem extends HookConsumerWidget {
                             height: 2,
                           ),
                           Text(
-                            item.fullname!,
+                            item.fullname,
                             style: Themes.customColor(9,
                                 color: item.btlSta == true
                                     ? Colors.white
@@ -165,15 +166,13 @@ class DtPcListItem extends HookConsumerWidget {
                           ),
                         ],
                       ),
-                      SizedBox(
-                        width: 25,
-                      ),
+                      Spacer(),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Tanggal Izin',
+                            'Jam Awal',
                             style: Themes.customColor(7,
                                 color: item.btlSta == true
                                     ? Colors.white
@@ -184,8 +183,8 @@ class DtPcListItem extends HookConsumerWidget {
                           ),
                           Text(
                             DateFormat(
-                              'dd MMM yyyy',
-                            ).format(DateTime.parse(item.dtTgl!)),
+                              'hh:mm a',
+                            ).format(DateTime.parse(item.jamAwal)),
                             style: Themes.customColor(9,
                                 color: item.btlSta == true
                                     ? Colors.white
@@ -194,12 +193,15 @@ class DtPcListItem extends HookConsumerWidget {
                           ),
                         ],
                       ),
+                      SizedBox(
+                        width: 4,
+                      ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Jam',
+                            'Jam Akhir',
                             style: Themes.customColor(7, color: Colors.grey),
                           ),
                           SizedBox(
@@ -208,12 +210,17 @@ class DtPcListItem extends HookConsumerWidget {
                           Text(
                             DateFormat(
                               'hh:mm a',
-                            ).format(DateTime.parse(item.jam!)),
+                            ).format(DateTime.parse(item.jamAkhir)),
                             style: Themes.customColor(9,
-                                color: Palette.tertiaryColor,
+                                color: item.btlSta == true
+                                    ? Colors.white
+                                    : Palette.tertiaryColor,
                                 fontWeight: FontWeight.w500),
                           ),
                         ],
+                      ),
+                      SizedBox(
+                        width: 4,
                       ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -229,9 +236,11 @@ class DtPcListItem extends HookConsumerWidget {
                           SizedBox(
                             width: 90,
                             child: Text(
-                              '${item.kategori!.toLowerCase() == 'dt' ? 'Datang Telat' : 'Pulang Cepat'}',
+                              '${item.jenisAbsen}',
                               style: Themes.customColor(9,
-                                  color: Palette.orange,
+                                  color: item.btlSta == true
+                                      ? Colors.white
+                                      : Palette.orange,
                                   fontWeight: FontWeight.w500),
                             ),
                           ),
@@ -364,10 +373,10 @@ class DtPcListItem extends HookConsumerWidget {
 
                                                         await ref
                                                             .read(
-                                                                dtPcApproveControllerProvider
+                                                                absenManualApproveControllerProvider
                                                                     .notifier)
                                                             .approveSpv(
-                                                                itemDt: item,
+                                                                item: item,
                                                                 nama: ref
                                                                     .read(
                                                                         userNotifierProvider)
@@ -385,10 +394,10 @@ class DtPcListItem extends HookConsumerWidget {
                                                         context.pop();
                                                         await ref
                                                             .read(
-                                                                dtPcApproveControllerProvider
+                                                                absenManualApproveControllerProvider
                                                                     .notifier)
                                                             .unApproveSpv(
-                                                                itemDt: item,
+                                                                item: item,
                                                                 nama: ref
                                                                     .read(
                                                                         userNotifierProvider)
@@ -404,7 +413,7 @@ class DtPcListItem extends HookConsumerWidget {
                                           borderRadius: BorderRadius.only(
                                             bottomLeft: Radius.circular(8),
                                           ),
-                                          color: item.spvSta! == true
+                                          color: item.spvSta == true
                                               ? Palette.green
                                               : Palette.red2,
                                           boxShadow: [
@@ -435,7 +444,7 @@ class DtPcListItem extends HookConsumerWidget {
                                   ),
                                 ),
                               ),
-                              if (item.spvSta! == true)
+                              if (item.spvSta == true)
                                 Positioned(
                                   right: 5,
                                   bottom: 0,
@@ -444,7 +453,7 @@ class DtPcListItem extends HookConsumerWidget {
                                     Assets.iconThumbUp,
                                   ),
                                 ),
-                              if (item.spvSta! == false)
+                              if (item.spvSta == false)
                                 Positioned(
                                   right: 5,
                                   bottom: 0,
@@ -499,11 +508,11 @@ class DtPcListItem extends HookConsumerWidget {
                                           if (item.hrdSta == false)
                                             await ref
                                                 .read(
-                                                    dtPcApproveControllerProvider
+                                                    absenManualApproveControllerProvider
                                                         .notifier)
                                                 .approveHrd(
                                                   note: text,
-                                                  itemDt: item,
+                                                  item: item,
                                                   namaHrd: ref
                                                       .read(
                                                           userNotifierProvider)
@@ -513,10 +522,10 @@ class DtPcListItem extends HookConsumerWidget {
                                           else
                                             await ref
                                                 .read(
-                                                    dtPcApproveControllerProvider
+                                                    absenManualApproveControllerProvider
                                                         .notifier)
                                                 .unApproveHrd(
-                                                  idDt: item.idDt!,
+                                                  idAbsenMnl: item.idAbsenmnl,
                                                   note: text,
                                                   namaHrd: ref
                                                       .read(
@@ -533,7 +542,7 @@ class DtPcListItem extends HookConsumerWidget {
                                         borderRadius: BorderRadius.only(
                                           bottomRight: Radius.circular(8),
                                         ),
-                                        color: item.hrdSta! == true
+                                        color: item.hrdSta == true
                                             ? Palette.green
                                             : Palette.red2,
                                       ),
@@ -553,7 +562,7 @@ class DtPcListItem extends HookConsumerWidget {
                                   ),
                                 ),
                               ),
-                              if (item.hrdSta! == true)
+                              if (item.hrdSta == true)
                                 Positioned(
                                   left: 5,
                                   bottom: 0,
@@ -565,7 +574,7 @@ class DtPcListItem extends HookConsumerWidget {
                                     ),
                                   ),
                                 ),
-                              if (item.hrdSta! == false)
+                              if (item.hrdSta == false)
                                 Positioned(
                                   left: 5,
                                   bottom: 0,

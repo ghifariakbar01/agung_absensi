@@ -10,8 +10,8 @@ class AlertHelper {
     HapticFeedback.vibrate().then((_) => showFlash(
           context: context,
           persistent: true,
+          barrierDismissible: false,
           duration: const Duration(seconds: 2),
-          // barrierDismissible: true,
           builder: (context, controller) {
             return FlashBar(
               controller: controller,
