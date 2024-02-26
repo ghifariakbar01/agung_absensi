@@ -65,7 +65,7 @@ class WaRegisterNotifier extends _$WaRegisterNotifier {
         await ref.read(waRegisterRepositoryProvider).getWaRegister();
 
     if (response == null) {
-      debugger();
+      // debugger();
       return WaRegister.initial();
     }
 

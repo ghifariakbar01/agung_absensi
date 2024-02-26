@@ -47,6 +47,7 @@ dependencies:
   geofence_service: ^4.0.0
 
   #* UI
+  dropdown_search: ^5.0.6
   flash: ^3.0.5+1
   flutter_svg: ^2.0.0
   google_fonts: ^4.0.4

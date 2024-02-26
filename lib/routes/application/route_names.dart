@@ -106,4 +106,16 @@ class RouteNames {
 
   static const editAbsenManualNameRoute = 'editAbsenManual';
   static const editAbsenManualRoute = 'editAbsenManual';
+
+  static const tugasDinasListNameRoute = 'tugasDinasList';
+  static const tugasDinasListRoute = 'tugasDinasList';
+
+  static const createTugasDinasNameRoute = 'createTugasDinas';
+  static const createTugasDinasRoute = 'createTugasDinas';
+
+  static const editTugasDinasNameRoute = 'editTugasDinas';
+  static const editTugasDinasRoute = 'editTugasDinas';
+
+  static const searchPemberiTugasDinasNameRoute = 'searchPemberiTugasDinas';
+  static const searchPemberiTugasDinasRoute = 'searchPemberiTugasDinas';
 }

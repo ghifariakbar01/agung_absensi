@@ -49,6 +49,7 @@ final List<Item> leaveRequest = [
   Item('Sakit', Assets.iconSakit, RouteNames.sakitListNameRoute),
   Item('Izin', Assets.iconIzin, RouteNames.izinListNameRoute),
   Item('DT / PC', Assets.iconDtPc, RouteNames.dtPcListNameRoute),
+  Item('Tugas Dinas', Assets.iconDtPc, RouteNames.tugasDinasListNameRoute),
 ];
 
 class HomeScaffold extends ConsumerWidget {
@@ -349,16 +350,18 @@ class HomeScaffold extends ConsumerWidget {
                             ),
                             //
                             SizedBox(
-                              height: 68,
+                              height: 158,
                               width: width,
-                              child: ListView.separated(
-                                scrollDirection: Axis.horizontal,
-                                separatorBuilder: (context, index) => SizedBox(
-                                  width: 16,
+                              child: GridView.count(
+                                primary: false,
+                                crossAxisSpacing: 15,
+                                mainAxisSpacing: 15,
+                                crossAxisCount: 4,
+                                children: List.generate(
+                                  leaveRequest.length,
+                                  (index) =>
+                                      HomeItem(item: leaveRequest[index]),
                                 ),
-                                itemBuilder: (context, index) =>
-                                    HomeItem(item: leaveRequest[index]),
-                                itemCount: leaveRequest.length,
                               ),
                             ),
 

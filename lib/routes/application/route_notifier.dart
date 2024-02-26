@@ -4,6 +4,7 @@ import 'package:face_net_authentication/dt_pc/create_dt_pc/presentation/edit_dt_
 import 'package:face_net_authentication/sakit/create_sakit/presentation/edit_sakit_page.dart';
 import 'package:face_net_authentication/sakit/sakit_dtl/presentation/sakit_dtl_page.dart';
 import 'package:face_net_authentication/sakit/sakit_dtl/presentation/sakit_dtl_photo_page.dart';
+import 'package:face_net_authentication/tugas_dinas/create_tugas_dinas/presentation/create_tugas_dinas_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -48,6 +49,8 @@ import '../../sign_in_form/presentation/sign_in_page.dart';
 import '../../tc/application/shared/tc_providers.dart';
 import '../../tc/application/tc_state.dart';
 import '../../tc/presentation/tc_page.dart';
+import '../../tugas_dinas/create_tugas_dinas/presentation/search_pemberi_tugas.dart';
+import '../../tugas_dinas/tugas_dinas_list/presentation/tugas_dinas_list_page.dart';
 import '../../widgets/splash_page.dart';
 import 'route_names.dart';
 
@@ -319,6 +322,30 @@ class RouterNotifier extends ChangeNotifier {
                 return EditAbsenManualPage(absen);
               },
             ),
+
+            GoRoute(
+              name: RouteNames.tugasDinasListNameRoute,
+              path: RouteNames.tugasDinasListRoute,
+              builder: (context, state) => TugasDinasListPage(),
+            ),
+            GoRoute(
+              name: RouteNames.createTugasDinasNameRoute,
+              path: RouteNames.createTugasDinasRoute,
+              builder: (context, state) => CreateTugasDinasPage(),
+            ),
+            GoRoute(
+              name: RouteNames.searchPemberiTugasDinasNameRoute,
+              path: RouteNames.searchPemberiTugasDinasRoute,
+              builder: (context, state) => SearchPemberiTugas(),
+            ),
+            // GoRoute(
+            //   name: RouteNames.editAbsenManualNameRoute,
+            //   path: RouteNames.editAbsenManualRoute,
+            //   builder: (context, state) {
+            //     final absen = state.extra as AbsenManualList;
+            //     return EditAbsenManualPage(absen);
+            //   },
+            // ),
 
             // GoRoute(
             //   name: RouteNames.changePassNameRoute,
