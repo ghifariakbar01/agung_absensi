@@ -1,501 +1,540 @@
-// import 'dart:developer';
+import 'dart:developer';
 
-// import 'package:face_net_authentication/widgets/async_value_ui.dart';
-// import 'package:flutter/material.dart';
-// import 'package:flutter/services.dart';
-// import 'package:flutter_hooks/flutter_hooks.dart';
-// import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-// import 'package:go_router/go_router.dart';
-// import 'package:hooks_riverpod/hooks_riverpod.dart';
-// import 'package:intl/intl.dart';
+import 'package:face_net_authentication/widgets/async_value_ui.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 
-// import '../../../constants/assets.dart';
-// import '../../../shared/providers.dart';
-// import '../../../widgets/alert_helper.dart';
-// import '../../../widgets/v_async_widget.dart';
-// import '../../../style/style.dart';
-// import '../../../user_helper/user_helper_notifier.dart';
-// import '../../../utils/string_utils.dart';
-// import '../../../widgets/v_button.dart';
-// import '../../../widgets/v_dialogs.dart';
-// import '../../../widgets/v_scaffold_widget.dart';
+import '../../../constants/assets.dart';
+import '../../../routes/application/route_names.dart';
+import '../../../shared/providers.dart';
+import '../../../widgets/alert_helper.dart';
+import '../../../widgets/v_async_widget.dart';
+import '../../../style/style.dart';
+import '../../../user_helper/user_helper_notifier.dart';
+import '../../../utils/string_utils.dart';
+import '../../../widgets/v_button.dart';
+import '../../../widgets/v_dialogs.dart';
+import '../../../widgets/v_scaffold_widget.dart';
+import '../../tugas_dinas_list/application/tugas_dinas_list.dart';
+import '../../tugas_dinas_list/application/tugas_dinas_list_notifier.dart';
+import '../application/create_tugas_dinas_notifier.dart';
+import '../application/user_list.dart';
 
-// import '../../absen_manual_list/application/absen_manual_list.dart';
-// import '../../absen_manual_list/application/absen_manual_list_notifier.dart';
-// import '../application/create_absen_manual_notifier.dart';
-// import '../application/jenis_absen.dart';
+class EditTugasDinasPage extends HookConsumerWidget {
+  const EditTugasDinasPage(this.item);
 
-// String _returnPlaceHolderText(
-//   String hour,
-// ) {
-//   final DateTime jam = DateTime.parse(hour);
-//   final startPlaceHolder = DateFormat(
-//     'dd MMM yyyy',
-//   ).format(jam);
+  final TugasDinasList item;
 
-//   return "$startPlaceHolder";
-// }
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final jenisTugasDinasTextController =
+        useTextEditingController(text: item.kategori);
 
-// class EditAbsenManualPage extends HookConsumerWidget {
-//   const EditAbsenManualPage(this.item);
+    // final nama = ref.watch(userNotifierProvider);
+    final namaTextController = useTextEditingController(text: item.cUser);
 
-//   final AbsenManualList item;
+    final pemberiTugasController = useState(UserList(
+        idUser: item.idPemberi,
+        nama: item.pemberiName,
+        fullname: item.pemberiFullname));
+    final pemberiTugasPlaceHolderTextController =
+        useTextEditingController(text: item.pemberiFullname);
 
-//   @override
-//   Widget build(BuildContext context, WidgetRef ref) {
-//     final nama = ref.watch(userNotifierProvider);
-//     final namaTextController = useTextEditingController(text: nama.user.nama);
-//     final ptTextController = useTextEditingController(text: nama.user.payroll);
+    final perusahaanTextController =
+        useTextEditingController(text: item.perusahaan);
 
-//     final keteranganTextController = useTextEditingController(text: item.ket);
-//     final jenisTextController = useState(item.jenisAbsen);
+    final alamatTextController = useTextEditingController(text: item.lokasi);
 
-//     final tglPlaceholderTextController =
-//         useTextEditingController(text: _returnPlaceHolderText(item.tgl));
+    final keteranganTextController = useTextEditingController(text: item.ket);
 
-//     final tglTextController = useState(item.tgl);
-//     final jamAwalTextController = useState(item.jamAwal);
-//     final jamAwalPlaceholderTextController = useTextEditingController(
-//         text: DateFormat('HH:mm')
-//             .format(DateTime.parse(item.jamAwal))
-//             .toString());
+    final jamTglAwalPlaceholderTextController =
+        useTextEditingController(text: item.jamStart);
+    final tglAwalTextController = useState(item.tglStart);
+    final jamAwalTextController = useState(item.jamStart);
 
-//     final jamAkhirTextController = useState(item.jamAkhir);
-//     final jamAkhirPlaceholderTextController = useTextEditingController(
-//         text: DateFormat('HH:mm')
-//             .format(DateTime.parse(item.jamAkhir))
-//             .toString());
+    final jamTglAkhirPlaceholderTextController =
+        useTextEditingController(text: item.jamEnd);
+    final tglAkhirTextController = useState(item.tglEnd);
+    final jamAkhirTextController = useState(item.jamEnd);
 
-//     ref.listen<AsyncValue>(userHelperNotifierProvider, (_, state) {
-//       state.showAlertDialogOnError(context);
-//     });
+    final khusus = useState(item.jenis);
 
-//     ref.listen<AsyncValue>(createAbsenManualNotifierProvider, (_, state) {
-//       if (!state.isLoading &&
-//           state.hasValue &&
-//           state.value != null &&
-//           state.value != '' &&
-//           state.hasError == false) {
-//         return AlertHelper.showSnackBar(
-//           context,
-//           color: Palette.primaryColor,
-//           message: 'Sukses Edit Form Absen',
-//           onDone: () {
-//             ref.invalidate(absenManualListControllerProvider);
-//             context.pop();
-//             return Future.value(true);
-//           },
-//         );
-//       }
-//       return state.showAlertDialogOnError(context);
-//     });
+    ref.listen<AsyncValue>(userHelperNotifierProvider, (_, state) {
+      state.showAlertDialogOnError(context);
+    });
 
-//     final createIzin = ref.watch(createAbsenManualNotifierProvider);
-//     final jenisAbsen = ref.watch(jenisAbsenManualNotifierProvider);
+    ref.listen<AsyncValue>(createTugasDinasNotifierProvider, (_, state) {
+      if (!state.isLoading &&
+          state.hasValue &&
+          state.value != null &&
+          state.value != '' &&
+          state.hasError == false) {
+        return AlertHelper.showSnackBar(
+          context,
+          color: Palette.primaryColor,
+          message: 'Sukses Menginput Form Tugas Dinas',
+          onDone: () {
+            ref.invalidate(tugasDinasListControllerProvider);
+            context.pop();
+            return Future.value(true);
+          },
+        );
+      }
+      return state.showAlertDialogOnError(context);
+    });
 
-//     final _formKey = useMemoized(GlobalKey<FormState>.new, const []);
+    final createIzin = ref.watch(createTugasDinasNotifierProvider);
 
-//     return KeyboardDismissOnTap(
-//       child: VAsyncWidgetScaffold<void>(
-//         value: createIzin,
-//         data: (_) => VScaffoldWidget(
-//             appbarColor: Palette.primaryColor,
-//             scaffoldTitle: 'Edit Form Absen Manual',
-//             scaffoldBody: Padding(
-//               padding: EdgeInsets.only(
-//                   bottom: MediaQuery.of(context).viewInsets.bottom),
-//               child: Form(
-//                 key: _formKey,
-//                 child: ListView(
-//                   children: [
-//                     // NAMA
-//                     TextFormField(
-//                         enabled: false,
-//                         controller: namaTextController,
-//                         keyboardType: TextInputType.name,
-//                         cursorColor: Palette.primaryColor,
-//                         decoration: Themes.formStyleBordered(
-//                           'Nama',
-//                         ),
-//                         style: Themes.customColor(
-//                           14,
-//                           fontWeight: FontWeight.normal,
-//                         ),
-//                         validator: (item) {
-//                           if (item == null) {
-//                             return 'Form tidak boleh kosong';
-//                           } else if (item.isEmpty) {
-//                             return 'Form tidak boleh kosong';
-//                           }
+    final _formKey = useMemoized(GlobalKey<FormState>.new, const []);
 
-//                           return null;
-//                         }),
+    final listTugasDinas = ['', 'DK', 'LK'];
 
-//                     SizedBox(
-//                       height: 16,
-//                     ),
+    return KeyboardDismissOnTap(
+      child: VAsyncWidgetScaffold<void>(
+        value: createIzin,
+        data: (_) => VScaffoldWidget(
+            appbarColor: Palette.primaryColor,
+            scaffoldTitle: 'Create Form Tugas Dinas',
+            scaffoldBody: Padding(
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom),
+              child: Form(
+                key: _formKey,
+                child: ListView(
+                  children: [
+                    SizedBox(
+                      height: 8,
+                    ),
+                    DropdownButtonFormField<String>(
+                      isExpanded: true,
+                      elevation: 0,
+                      iconSize: 20,
+                      padding: EdgeInsets.all(0),
+                      icon: Icon(Icons.keyboard_arrow_down_rounded,
+                          color: Palette.primaryColor),
+                      decoration: Themes.formStyleBordered(
+                        'Jenis Tugas Dinas',
+                      ),
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Form tidak boleh kosong';
+                        }
 
-//                     // PT
-//                     TextFormField(
-//                         enabled: false,
-//                         controller: ptTextController,
-//                         cursorColor: Palette.primaryColor,
-//                         keyboardType: TextInputType.name,
-//                         decoration: Themes.formStyleBordered(
-//                           'PT',
-//                         ),
-//                         style: Themes.customColor(
-//                           14,
-//                           fontWeight: FontWeight.normal,
-//                         ),
-//                         validator: (item) {
-//                           if (item == null) {
-//                             return 'Form tidak boleh kosong';
-//                           } else if (item.isEmpty) {
-//                             return 'Form tidak boleh kosong';
-//                           }
+                        return null;
+                      },
+                      value: listTugasDinas.firstWhere(
+                        (element) =>
+                            element == jenisTugasDinasTextController.text,
+                        orElse: () => listTugasDinas.first,
+                      ),
+                      onChanged: (String? value) {
+                        if (value != null) {
+                          jenisTugasDinasTextController.text = value;
+                        }
+                      },
+                      items: listTugasDinas
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(
+                            value,
+                            style: Themes.customColor(
+                              14,
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    // NAMA
+                    TextFormField(
+                        enabled: false,
+                        controller: namaTextController,
+                        keyboardType: TextInputType.name,
+                        cursorColor: Palette.primaryColor,
+                        decoration: Themes.formStyleBordered(
+                          'Pemohon',
+                        ),
+                        style: Themes.customColor(
+                          14,
+                          fontWeight: FontWeight.normal,
+                        ),
+                        validator: (item) {
+                          if (item == null) {
+                            return 'Form tidak boleh kosong';
+                          } else if (item.isEmpty) {
+                            return 'Form tidak boleh kosong';
+                          }
 
-//                           return null;
-//                         }),
+                          return null;
+                        }),
 
-//                     SizedBox(
-//                       height: 16,
-//                     ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    // PEMBERI TUGAS
+                    Ink(
+                      child: InkWell(
+                        onTap: () async {
+                          final UserList? pemberiTugas =
+                              await context.pushNamed(
+                                  RouteNames.searchPemberiTugasDinasRoute);
 
-//                     VAsyncValueWidget<List<JenisAbsen>>(
-//                       value: jenisAbsen,
-//                       data: (list) => DropdownButtonFormField<JenisAbsen>(
-//                         elevation: 0,
-//                         iconSize: 20,
-//                         padding: EdgeInsets.all(0),
-//                         icon: Icon(Icons.keyboard_arrow_down_rounded,
-//                             color: Palette.primaryColor),
-//                         decoration: Themes.formStyleBordered(
-//                           'Jenis Absen',
-//                         ),
-//                         validator: (value) {
-//                           if (value == null) {
-//                             return 'Form tidak boleh kosong';
-//                           }
+                          if (pemberiTugas != null) {
+                            log('pemberiTugas ${pemberiTugas.toJson()}');
+                            pemberiTugasController.value = pemberiTugas;
+                            pemberiTugasPlaceHolderTextController.text =
+                                pemberiTugas.fullname!;
+                          }
+                        },
+                        child: IgnorePointer(
+                          ignoring: true,
+                          child: TextFormField(
+                              maxLines: 1,
+                              controller: pemberiTugasPlaceHolderTextController,
+                              cursorColor: Palette.primaryColor,
+                              decoration: Themes.formStyleBordered(
+                                'Pemberi Tugas',
+                                icon: Icon(Icons.keyboard_arrow_down_rounded,
+                                    color: Palette.primaryColor),
+                              ),
+                              style: Themes.customColor(
+                                14,
+                                fontWeight: FontWeight.normal,
+                              ),
+                              validator: (item) {
+                                if (item == null) {
+                                  return 'Form tidak boleh kosong';
+                                } else if (item.isEmpty) {
+                                  return 'Form tidak boleh kosong';
+                                }
 
-//                           return null;
-//                         },
-//                         value: list.firstWhere(
-//                           (element) =>
-//                               element.Kode == jenisTextController.value,
-//                           orElse: () => list.first,
-//                         ),
-//                         onChanged: (JenisAbsen? value) {
-//                           if (value != null) {
-//                             jenisTextController.value = value.Kode;
-//                           }
-//                         },
-//                         isExpanded: true,
-//                         items: list.map<DropdownMenuItem<JenisAbsen>>(
-//                             (JenisAbsen value) {
-//                           return DropdownMenuItem<JenisAbsen>(
-//                             value: value,
-//                             child: Text(
-//                               value.Nama,
-//                               style: Themes.customColor(
-//                                 14,
-//                               ),
-//                             ),
-//                           );
-//                         }).toList(),
-//                       ),
-//                     ),
+                                return null;
+                              }),
+                        ),
+                      ),
+                    ),
 
-//                     SizedBox(
-//                       height: 16,
-//                     ),
+                    SizedBox(
+                      height: 16,
+                    ),
 
-//                     // TGL
-//                     Ink(
-//                       child: InkWell(
-//                         onTap: () async {
-//                           final picked = await showDatePicker(
-//                             context: context,
-//                             initialDate: DateTime.now(),
-//                             lastDate: DateTime.now().add(Duration(days: 90)),
-//                             firstDate:
-//                                 DateTime.now().subtract(Duration(days: 90)),
-//                           );
-//                           if (picked != null) {
-//                             print(picked);
+                    // PERUSAHAAN
+                    TextFormField(
+                        maxLines: 1,
+                        controller: perusahaanTextController,
+                        cursorColor: Palette.primaryColor,
+                        decoration: Themes.formStyleBordered(
+                          'Perusahaan',
+                        ),
+                        style: Themes.customColor(
+                          14,
+                          fontWeight: FontWeight.normal,
+                        ),
+                        validator: (item) {
+                          if (item == null) {
+                            return 'Form tidak boleh kosong';
+                          } else if (item.isEmpty) {
+                            return 'Form tidak boleh kosong';
+                          }
 
-//                             final tgl = StringUtils.midnightDate(picked)
-//                                 .replaceAll('.000', '');
+                          return null;
+                        }),
 
-//                             tglTextController.value = tgl;
+                    SizedBox(
+                      height: 16,
+                    ),
 
-//                             final startPlaceHolder = DateFormat(
-//                               'dd MMM yyyy',
-//                             ).format(picked);
+                    // ALAMAT
+                    TextFormField(
+                        maxLines: 1,
+                        controller: alamatTextController,
+                        cursorColor: Palette.primaryColor,
+                        decoration: Themes.formStyleBordered(
+                          'Alamat',
+                        ),
+                        style: Themes.customColor(
+                          14,
+                          fontWeight: FontWeight.normal,
+                        ),
+                        validator: (item) {
+                          if (item == null) {
+                            return 'Form tidak boleh kosong';
+                          } else if (item.isEmpty) {
+                            return 'Form tidak boleh kosong';
+                          }
 
-//                             tglPlaceholderTextController.text =
-//                                 "$startPlaceHolder";
-//                           }
-//                         },
-//                         child: IgnorePointer(
-//                           ignoring: true,
-//                           child: TextFormField(
-//                               maxLines: 1,
-//                               cursorColor: Palette.primaryColor,
-//                               controller: tglPlaceholderTextController,
-//                               decoration:
-//                                   Themes.formStyleBordered('Tanggal Izin',
-//                                       icon: Icon(
-//                                         Icons.calendar_month,
-//                                       )),
-//                               style: Themes.customColor(
-//                                 14,
-//                                 fontWeight: FontWeight.normal,
-//                               ),
-//                               validator: (item) {
-//                                 if (item == null) {
-//                                   return 'Form tidak boleh kosong';
-//                                 } else if (item.isEmpty) {
-//                                   return 'Form tidak boleh kosong';
-//                                 }
+                          return null;
+                        }),
 
-//                                 return null;
-//                               }),
-//                         ),
-//                       ),
-//                     ),
+                    SizedBox(
+                      height: 16,
+                    ),
 
-//                     SizedBox(
-//                       height: 16,
-//                     ),
+                    // TGL AWAL
+                    Ink(
+                      child: InkWell(
+                        onTap: () async {
+                          final picked = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            lastDate: DateTime.now().add(Duration(days: 90)),
+                            firstDate:
+                                DateTime.now().subtract(Duration(days: 90)),
+                          );
+                          if (picked != null) {
+                            print(picked);
+                            final hour = await showTimePicker(
+                              context: context,
+                              initialEntryMode: TimePickerEntryMode.input,
+                              initialTime: TimeOfDay.now(),
+                              builder: (context, child) {
+                                return MediaQuery(
+                                  data: MediaQuery.of(context)
+                                      .copyWith(alwaysUse24HourFormat: true),
+                                  child: child!,
+                                );
+                              },
+                            );
 
-//                     // JAM AWAL
-//                     IgnorePointer(
-//                       ignoring: tglTextController.value.isEmpty,
-//                       child: Ink(
-//                         child: InkWell(
-//                           onTap: () async {
-//                             final hour = await showTimePicker(
-//                               context: context,
-//                               initialEntryMode: TimePickerEntryMode.input,
-//                               initialTime: TimeOfDay.now(),
-//                               builder: (context, child) {
-//                                 return MediaQuery(
-//                                   data: MediaQuery.of(context)
-//                                       .copyWith(alwaysUse24HourFormat: true),
-//                                   child: child!,
-//                                 );
-//                               },
-//                             );
+                            final String tgl = StringUtils.midnightDate(picked)
+                                .replaceAll('.000', '');
+                            tglAwalTextController.value = tgl;
 
-//                             final tgl = tglTextController.value;
-//                             final tglDateTime =
-//                                 DateTime.parse(tglTextController.value);
+                            final jam = DateTime(picked.year, picked.month,
+                                picked.day, hour!.hour, hour.minute);
+                            jamAwalTextController.value =
+                                jam.toString().replaceAll('.000', '');
 
-//                             final jam = DateTime(
-//                                 tglDateTime.year,
-//                                 tglDateTime.month,
-//                                 tglDateTime.day,
-//                                 hour!.hour,
-//                                 hour.minute);
+                            final String startPlaceHolder = DateFormat(
+                              'dd MMM yyyy HH:mm',
+                            ).format(jam);
 
-//                             log('tgl $tgl ');
+                            jamTglAwalPlaceholderTextController.text =
+                                "$startPlaceHolder";
+                          }
+                        },
+                        child: IgnorePointer(
+                          ignoring: true,
+                          child: TextFormField(
+                              maxLines: 1,
+                              cursorColor: Palette.primaryColor,
+                              controller: jamTglAwalPlaceholderTextController,
+                              decoration:
+                                  Themes.formStyleBordered('Tanggal & Jam Awal',
+                                      icon: Icon(
+                                        Icons.calendar_month,
+                                      )),
+                              style: Themes.customColor(
+                                14,
+                                fontWeight: FontWeight.normal,
+                              ),
+                              validator: (item) {
+                                if (item == null) {
+                                  return 'Form tidak boleh kosong';
+                                } else if (item.isEmpty) {
+                                  return 'Form tidak boleh kosong';
+                                }
 
-//                             jamAwalTextController.value =
-//                                 jam.toString().replaceAll('.000', '');
-//                             jamAwalPlaceholderTextController.text =
-//                                 DateFormat('HH:mm').format(jam).toString();
-//                           },
-//                           child: IgnorePointer(
-//                             ignoring: true,
-//                             child: TextFormField(
-//                                 maxLines: 1,
-//                                 cursorColor: Palette.primaryColor,
-//                                 controller: jamAwalPlaceholderTextController,
-//                                 decoration: Themes.formStyleBordered('Jam Awal',
-//                                     icon: Icon(Icons.access_time_sharp)),
-//                                 style: Themes.customColor(
-//                                   14,
-//                                   fontWeight: FontWeight.normal,
-//                                 ),
-//                                 validator: (item) {
-//                                   if (item == null) {
-//                                     return 'Form tidak boleh kosong';
-//                                   } else if (item.isEmpty) {
-//                                     return 'Form tidak boleh kosong';
-//                                   }
+                                return null;
+                              }),
+                        ),
+                      ),
+                    ),
 
-//                                   return null;
-//                                 }),
-//                           ),
-//                         ),
-//                       ),
-//                     ),
+                    SizedBox(
+                      height: 16,
+                    ),
 
-//                     SizedBox(
-//                       height: 16,
-//                     ),
+                    // TGL AKHIR
+                    Ink(
+                      child: InkWell(
+                        onTap: () async {
+                          final picked = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            lastDate: DateTime.now().add(Duration(days: 90)),
+                            firstDate:
+                                DateTime.now().subtract(Duration(days: 90)),
+                          );
+                          if (picked != null) {
+                            print(picked);
+                            final hour = await showTimePicker(
+                              context: context,
+                              initialEntryMode: TimePickerEntryMode.input,
+                              initialTime: TimeOfDay.now(),
+                              builder: (context, child) {
+                                return MediaQuery(
+                                  data: MediaQuery.of(context)
+                                      .copyWith(alwaysUse24HourFormat: true),
+                                  child: child!,
+                                );
+                              },
+                            );
 
-//                     // JAM AKHIR
-//                     IgnorePointer(
-//                       ignoring: //
-//                           tglTextController.value.isEmpty &&
-//                               jamAkhirTextController.value.isEmpty,
-//                       child: Ink(
-//                         child: InkWell(
-//                           onTap: () async {
-//                             final jamAwalAddOneHour = TimeOfDay.fromDateTime(
-//                                 DateTime.parse(jamAwalTextController.value)
-//                                     .add(Duration(hours: 1)));
+                            final String tgl = StringUtils.midnightDate(picked)
+                                .replaceAll('.000', '');
+                            tglAkhirTextController.value = tgl;
 
-//                             final hour = await showTimePicker(
-//                               context: context,
-//                               initialEntryMode: TimePickerEntryMode.input,
-//                               initialTime: jamAwalAddOneHour,
-//                               builder: (context, child) {
-//                                 return MediaQuery(
-//                                   data: MediaQuery.of(context)
-//                                       .copyWith(alwaysUse24HourFormat: true),
-//                                   child: child!,
-//                                 );
-//                               },
-//                             );
+                            final jam = DateTime(picked.year, picked.month,
+                                picked.day, hour!.hour, hour.minute);
+                            jamAkhirTextController.value =
+                                jam.toString().replaceAll('.000', '');
 
-//                             final tgl = tglTextController.value;
-//                             final tglDateTime =
-//                                 DateTime.parse(tglTextController.value);
+                            final String placeholder = DateFormat(
+                              'dd MMM yyyy HH:mm',
+                            ).format(jam);
 
-//                             final jam = DateTime(
-//                                 tglDateTime.year,
-//                                 tglDateTime.month,
-//                                 tglDateTime.day,
-//                                 hour!.hour,
-//                                 hour.minute);
+                            jamTglAkhirPlaceholderTextController.text =
+                                placeholder;
+                          }
+                        },
+                        child: IgnorePointer(
+                          ignoring: true,
+                          child: TextFormField(
+                              maxLines: 1,
+                              cursorColor: Palette.primaryColor,
+                              controller: jamTglAkhirPlaceholderTextController,
+                              decoration: Themes.formStyleBordered(
+                                  'Tanggal & Jam Akhir',
+                                  icon: Icon(
+                                    Icons.calendar_month,
+                                  )),
+                              style: Themes.customColor(
+                                14,
+                                fontWeight: FontWeight.normal,
+                              ),
+                              validator: (item) {
+                                if (item == null) {
+                                  return 'Form tidak boleh kosong';
+                                } else if (item.isEmpty) {
+                                  return 'Form tidak boleh kosong';
+                                }
 
-//                             log('tgl $tgl ');
+                                return null;
+                              }),
+                        ),
+                      ),
+                    ),
 
-//                             jamAkhirTextController.value =
-//                                 jam.toString().replaceAll('.000', '');
-//                             jamAkhirPlaceholderTextController.text =
-//                                 DateFormat('HH:mm').format(jam).toString();
-//                           },
-//                           child: IgnorePointer(
-//                             ignoring: true,
-//                             child: TextFormField(
-//                                 maxLines: 1,
-//                                 cursorColor: Palette.primaryColor,
-//                                 controller: jamAkhirPlaceholderTextController,
-//                                 decoration: Themes.formStyleBordered(
-//                                     'Jam Akhir',
-//                                     icon: Icon(Icons.access_time_sharp)),
-//                                 style: Themes.customColor(
-//                                   14,
-//                                   fontWeight: FontWeight.normal,
-//                                 ),
-//                                 validator: (item) {
-//                                   if (item == null) {
-//                                     return 'Form tidak boleh kosong';
-//                                   } else if (item.isEmpty) {
-//                                     return 'Form tidak boleh kosong';
-//                                   }
+                    SizedBox(
+                      height: 16,
+                    ),
 
-//                                   final akhir = DateTime.parse(
-//                                       jamAkhirTextController.value);
-//                                   final awal = DateTime.parse(
-//                                       jamAwalTextController.value);
+                    //
+                    TextFormField(
+                      maxLines: 5,
+                      controller: keteranganTextController,
+                      cursorColor: Palette.primaryColor,
+                      decoration: Themes.formStyleBordered(
+                        'Keterangan',
+                      ),
+                      style: Themes.customColor(
+                        14,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
 
-//                                   if (akhir.difference(awal).inMinutes < 0) {
-//                                     return 'Jam akhir tidak boleh melewati jam awal';
-//                                   }
+                    SizedBox(
+                      height: 10,
+                    ),
+                    SizedBox(
+                      width: 10.0,
+                      child: Row(
+                        children: [
+                          Checkbox(
+                            fillColor:
+                                MaterialStatePropertyAll(Colors.transparent),
+                            checkColor: Palette.primaryColor,
+                            value: khusus.value,
+                            onChanged: (val) {
+                              if (val != null) khusus.value = val;
+                            },
+                            shape: ContinuousRectangleBorder(
+                                borderRadius: BorderRadius.circular(2)),
+                            side: MaterialStateBorderSide.resolveWith(
+                              (states) => BorderSide(
+                                  width: 2.0, color: Palette.primaryColor),
+                            ),
+                          ),
+                          Text(
+                            'Khusus',
+                            style: Themes.customColor(14),
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
 
-//                                   return null;
-//                                 }),
-//                           ),
-//                         ),
-//                       ),
-//                     ),
+                    SizedBox(
+                      height: 54,
+                    ),
 
-//                     SizedBox(
-//                       height: 16,
-//                     ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: VButton(
+                          label: 'Update Form Tugas Dinas',
+                          onPressed: () async {
+                            log(' VARIABLES : \n  Nama : ${namaTextController.value.text} ');
+                            log(' Jenis Tugas Dinas: ${jenisTugasDinasTextController.value.text} \n ');
+                            log(' Keterangan: ${keteranganTextController.value.text} \n ');
+                            log(' Tanggal: ${tglAwalTextController.value} \n ');
+                            log(' Tgl Awal: ${tglAwalTextController.value} \n ');
+                            log(' Jam Awal: ${jamAwalTextController.value} \n ');
+                            log(' Tgl Akhir: ${tglAkhirTextController.value} \n ');
+                            log(' Jam Akhir: ${jamAkhirTextController.value} \n ');
 
-//                     //
-//                     TextFormField(
-//                         maxLines: 5,
-//                         controller: keteranganTextController,
-//                         cursorColor: Palette.primaryColor,
-//                         decoration: Themes.formStyleBordered(
-//                           'Keterangan',
-//                         ),
-//                         style: Themes.customColor(
-//                           14,
-//                           fontWeight: FontWeight.normal,
-//                         ),
-//                         validator: (item) {
-//                           if (jenisTextController.value.toLowerCase() ==
-//                               'lln') {
-//                             if (item == null) {
-//                               return 'Bila Pilih Absen Lainnya / Kasus -> Wajib Mengisi Kolom Keterangan';
-//                             } else if (item.isEmpty) {
-//                               return 'Bila Pilih Absen Lainnya / Kasus -> Wajib Mengisi Kolom Keterangan';
-//                             }
-//                           }
+                            final user = ref.read(userNotifierProvider).user;
 
-//                           return null;
-//                         }),
-
-//                     SizedBox(
-//                       height: 54,
-//                     ),
-
-//                     Align(
-//                       alignment: Alignment.bottomCenter,
-//                       child: VButton(
-//                           label: 'Edit Absen Manual',
-//                           onPressed: () async {
-//                             log(' VARIABLES : \n  Nama : ${namaTextController.value.text} ');
-//                             log(' Payroll: ${ptTextController.value.text} \n ');
-//                             log(' Keterangan: ${keteranganTextController.value.text} \n ');
-//                             log(' Jenis Absen: ${jenisTextController.value} \n ');
-//                             log(' Tanggal: ${tglTextController.value} \n ');
-//                             log(' Jam Awal: ${jamAwalTextController.value} \n ');
-//                             log(' Jam Akhir: ${jamAkhirTextController.value} \n ');
-
-//                             final user = ref.read(userNotifierProvider).user;
-
-//                             if (_formKey.currentState!.validate()) {
-//                               _formKey.currentState!.save();
-//                               await ref
-//                                   .read(createAbsenManualNotifierProvider
-//                                       .notifier)
-//                                   .updateAbsenManual(
-//                                     id: item.idAbsenmnl,
-//                                     idUser: user.idUser!,
-//                                     uUser: user.nama!,
-//                                     tgl: tglTextController.value,
-//                                     jamAwal: jamAwalTextController.value,
-//                                     jenisAbsen: jenisTextController.value,
-//                                     jamAkhir: jamAkhirTextController.value,
-//                                     ket: keteranganTextController.text,
-//                                     onError: (msg) => HapticFeedback.vibrate()
-//                                         .then((_) => showDialog(
-//                                             context: context,
-//                                             barrierDismissible: true,
-//                                             builder: (_) => VSimpleDialog(
-//                                                   color: Palette.red,
-//                                                   asset: Assets.iconCrossed,
-//                                                   label: 'Oops',
-//                                                   labelDescription: msg,
-//                                                 ))),
-//                                   );
-//                             }
-//                           }),
-//                     )
-//                   ],
-//                 ),
-//               ),
-//             )),
-//       ),
-//     );
-//   }
-// }
+                            if (_formKey.currentState!.validate()) {
+                              _formKey.currentState!.save();
+                              await ref
+                                  .read(
+                                      createTugasDinasNotifierProvider.notifier)
+                                  .updateTugasDinas(
+                                    id: item.idDinas,
+                                    idUser: user.idUser!,
+                                    idPemberi:
+                                        pemberiTugasController.value.idUser!,
+                                    uUser: user.nama!,
+                                    tglAwal: tglAwalTextController.value!,
+                                    tglAkhir: tglAkhirTextController.value!,
+                                    jamAwal: jamAwalTextController.value!,
+                                    kategori:
+                                        jenisTugasDinasTextController.text,
+                                    perusahaan: perusahaanTextController.text,
+                                    lokasi: alamatTextController.text,
+                                    khusus: khusus.value,
+                                    jamAkhir: jamAkhirTextController.value!,
+                                    ket: keteranganTextController.text,
+                                    onError: (msg) => HapticFeedback.vibrate()
+                                        .then((_) => showDialog(
+                                            context: context,
+                                            barrierDismissible: true,
+                                            builder: (_) => VSimpleDialog(
+                                                  color: Palette.red,
+                                                  asset: Assets.iconCrossed,
+                                                  label: 'Oops',
+                                                  labelDescription: msg,
+                                                ))),
+                                  );
+                            }
+                          }),
+                    )
+                  ],
+                ),
+              ),
+            )),
+      ),
+    );
+  }
+}

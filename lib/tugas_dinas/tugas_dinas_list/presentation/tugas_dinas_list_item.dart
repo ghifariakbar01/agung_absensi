@@ -43,7 +43,7 @@ class TugasDinasListItem extends HookConsumerWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: SizedBox(
-        height: 225,
+        height: 250,
         child: Stack(
           children: [
             Container(
@@ -171,51 +171,114 @@ class TugasDinasListItem extends HookConsumerWidget {
                       ),
                       Spacer(),
                       Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Pemberi Tugas',
-                            style: Themes.customColor(7,
-                                color: item.btlSta == true
-                                    ? Colors.white
-                                    : Colors.grey),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Pemberi Tugas',
+                                style: Themes.customColor(7,
+                                    color: item.btlSta == true
+                                        ? Colors.white
+                                        : Colors.grey),
+                              ),
+                              SizedBox(
+                                height: 2,
+                              ),
+                              Text(
+                                item.pemberiName!,
+                                style: Themes.customColor(9,
+                                    color: item.btlSta == true
+                                        ? Colors.white
+                                        : Palette.primaryColor,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ],
                           ),
                           SizedBox(
-                            height: 2,
+                            height: 4,
                           ),
-                          Text(
-                            item.pemberi!,
-                            style: Themes.customColor(9,
-                                color: item.btlSta == true
-                                    ? Colors.white
-                                    : Palette.primaryColor,
-                                fontWeight: FontWeight.w500),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Tanggal Awal',
+                                style:
+                                    Themes.customColor(7, color: Colors.grey),
+                              ),
+                              SizedBox(
+                                height: 2,
+                              ),
+                              Text(
+                                DateFormat(
+                                  'dd MMM yyyy',
+                                ).format(DateTime.parse(item.tglStart!)),
+                                style: Themes.customColor(9,
+                                    color: item.btlSta == true
+                                        ? Colors.white
+                                        : Palette.blue,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ],
                           ),
                         ],
                       ),
                       Spacer(),
                       Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Dept',
-                            style: Themes.customColor(7,
-                                color: item.btlSta == true
-                                    ? Colors.white
-                                    : Colors.grey),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Dept',
+                                style: Themes.customColor(7,
+                                    color: item.btlSta == true
+                                        ? Colors.white
+                                        : Colors.grey),
+                              ),
+                              SizedBox(
+                                height: 2,
+                              ),
+                              Text(
+                                item.dept!,
+                                style: Themes.customColor(8,
+                                    color: item.btlSta == true
+                                        ? Colors.white
+                                        : Palette.primaryColor,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ],
                           ),
                           SizedBox(
-                            height: 2,
+                            height: 4,
                           ),
-                          Text(
-                            item.dept!,
-                            style: Themes.customColor(8,
-                                color: item.btlSta == true
-                                    ? Colors.white
-                                    : Palette.primaryColor,
-                                fontWeight: FontWeight.w500),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Tanggal Akhir',
+                                style:
+                                    Themes.customColor(7, color: Colors.grey),
+                              ),
+                              SizedBox(
+                                height: 2,
+                              ),
+                              Text(
+                                DateFormat(
+                                  'dd MMM yyyy',
+                                ).format(DateTime.parse(item.tglEnd!)),
+                                style: Themes.customColor(9,
+                                    color: item.btlSta == true
+                                        ? Colors.white
+                                        : Palette.tertiaryColor,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -225,80 +288,27 @@ class TugasDinasListItem extends HookConsumerWidget {
                     ],
                   ),
 
-                  Row(
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Kategori',
-                            style: Themes.customColor(7, color: Colors.grey),
-                          ),
-                          SizedBox(
-                            height: 2,
-                          ),
-                          SizedBox(
-                            width: 90,
-                            child: Text(
-                              '${item.kategori}',
-                              style: Themes.customColor(9,
-                                  color: item.btlSta == true
-                                      ? Colors.white
-                                      : Palette.orange,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                          ),
-                        ],
+                      Text(
+                        'Kategori',
+                        style: Themes.customColor(7, color: Colors.grey),
                       ),
-                      Spacer(),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Tanggal Awal',
-                            style: Themes.customColor(7, color: Colors.grey),
-                          ),
-                          SizedBox(
-                            height: 2,
-                          ),
-                          Text(
-                            DateFormat(
-                              'dd MMM yyyy',
-                            ).format(DateTime.parse(item.tglStart!)),
-                            style: Themes.customColor(9,
-                                color: item.btlSta == true
-                                    ? Colors.white
-                                    : Palette.blue,
-                                fontWeight: FontWeight.w500),
-                          ),
-                        ],
+                      SizedBox(
+                        height: 2,
                       ),
-                      Spacer(),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Tanggal Akhir',
-                            style: Themes.customColor(7, color: Colors.grey),
-                          ),
-                          SizedBox(
-                            height: 2,
-                          ),
-                          Text(
-                            DateFormat(
-                              'dd MMM yyyy',
-                            ).format(DateTime.parse(item.tglEnd!)),
-                            style: Themes.customColor(9,
-                                color: item.btlSta == true
-                                    ? Colors.white
-                                    : Palette.tertiaryColor,
-                                fontWeight: FontWeight.w500),
-                          ),
-                        ],
+                      SizedBox(
+                        width: 90,
+                        child: Text(
+                          '${item.kategori}',
+                          style: Themes.customColor(9,
+                              color: item.btlSta == true
+                                  ? Colors.white
+                                  : Palette.orange,
+                              fontWeight: FontWeight.w500),
+                        ),
                       ),
                     ],
                   ),

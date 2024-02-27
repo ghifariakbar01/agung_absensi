@@ -139,7 +139,7 @@ class TugasDinasDtlDialog extends StatelessWidget {
                         SizedBox(
                           width: 90,
                           child: Text(
-                            item.pemberi ?? "-",
+                            item.pemberiFullname ?? "-",
                             style: Themes.customColor(9,
                                 color: Palette.primaryColor,
                                 fontWeight: FontWeight.w500),
@@ -375,7 +375,7 @@ class TugasDinasDtlDialog extends StatelessWidget {
                               fillColor:
                                   MaterialStatePropertyAll(Colors.transparent),
                               checkColor: Palette.primaryColor,
-                              value: true,
+                              value: item.jenis,
                               onChanged: (val) {},
                               shape: ContinuousRectangleBorder(
                                   borderRadius: BorderRadius.circular(2)),
@@ -432,8 +432,7 @@ class TugasDinasDtlDialog extends StatelessWidget {
                       assetPath: Assets.iconEdit,
                       onTap: () {
                         context.pop();
-                        return context.pushNamed(
-                            RouteNames.editAbsenManualRoute,
+                        return context.pushNamed(RouteNames.editTugasDinasRoute,
                             extra: item);
                       }),
                   SizedBox(

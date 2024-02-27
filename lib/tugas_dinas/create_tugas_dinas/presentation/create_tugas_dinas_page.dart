@@ -2,12 +2,14 @@ import 'dart:developer';
 
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../../constants/assets.dart';
 import '../../../routes/application/route_names.dart';
 import '../../../shared/providers.dart';
 import '../../../widgets/alert_helper.dart';
@@ -16,6 +18,7 @@ import '../../../style/style.dart';
 import '../../../user_helper/user_helper_notifier.dart';
 import '../../../utils/string_utils.dart';
 import '../../../widgets/v_button.dart';
+import '../../../widgets/v_dialogs.dart';
 import '../../../widgets/v_scaffold_widget.dart';
 import '../../tugas_dinas_list/application/tugas_dinas_list_notifier.dart';
 import '../application/create_tugas_dinas_notifier.dart';
@@ -40,11 +43,15 @@ class CreateTugasDinasPage extends HookConsumerWidget {
 
     final keteranganTextController = useTextEditingController();
 
-    final tglAwalPlaceholderTextController = useTextEditingController();
+    final jamTglAwalPlaceholderTextController = useTextEditingController();
     final tglAwalTextController = useState('');
+    final jamAwalTextController = useState('');
 
-    final tglAkhirPlaceholderTextController = useTextEditingController();
+    final jamTglAkhirPlaceholderTextController = useTextEditingController();
     final tglAkhirTextController = useState('');
+    final jamAkhirTextController = useState('');
+
+    final khusus = useState(false);
 
     ref.listen<AsyncValue>(userHelperNotifierProvider, (_, state) {
       state.showAlertDialogOnError(context);
@@ -74,7 +81,7 @@ class CreateTugasDinasPage extends HookConsumerWidget {
 
     final _formKey = useMemoized(GlobalKey<FormState>.new, const []);
 
-    final listTugasDinas = ['', 'Dalam Kota', 'Luar Kota'];
+    final listTugasDinas = ['', 'DK', 'LK'];
 
     return KeyboardDismissOnTap(
       child: VAsyncWidgetScaffold<void>(
@@ -173,7 +180,7 @@ class CreateTugasDinasPage extends HookConsumerWidget {
                             log('pemberiTugas ${pemberiTugas.toJson()}');
                             pemberiTugasController.value = pemberiTugas;
                             pemberiTugasPlaceHolderTextController.text =
-                                pemberiTugas.fullName!;
+                                pemberiTugas.fullname!;
                           }
                         },
                         child: IgnorePointer(
@@ -273,17 +280,33 @@ class CreateTugasDinasPage extends HookConsumerWidget {
                           );
                           if (picked != null) {
                             print(picked);
+                            final hour = await showTimePicker(
+                              context: context,
+                              initialEntryMode: TimePickerEntryMode.input,
+                              initialTime: TimeOfDay.now(),
+                              builder: (context, child) {
+                                return MediaQuery(
+                                  data: MediaQuery.of(context)
+                                      .copyWith(alwaysUse24HourFormat: true),
+                                  child: child!,
+                                );
+                              },
+                            );
 
-                            final tgl = StringUtils.midnightDate(picked)
+                            final String tgl = StringUtils.midnightDate(picked)
                                 .replaceAll('.000', '');
-
                             tglAwalTextController.value = tgl;
 
-                            final startPlaceHolder = DateFormat(
-                              'dd MMM yyyy',
-                            ).format(picked);
+                            final jam = DateTime(picked.year, picked.month,
+                                picked.day, hour!.hour, hour.minute);
+                            jamAwalTextController.value =
+                                jam.toString().replaceAll('.000', '');
 
-                            tglAwalPlaceholderTextController.text =
+                            final String startPlaceHolder = DateFormat(
+                              'dd MMM yyyy HH:mm',
+                            ).format(jam);
+
+                            jamTglAwalPlaceholderTextController.text =
                                 "$startPlaceHolder";
                           }
                         },
@@ -292,9 +315,9 @@ class CreateTugasDinasPage extends HookConsumerWidget {
                           child: TextFormField(
                               maxLines: 1,
                               cursorColor: Palette.primaryColor,
-                              controller: tglAwalPlaceholderTextController,
+                              controller: jamTglAwalPlaceholderTextController,
                               decoration:
-                                  Themes.formStyleBordered('Tanggal Awal',
+                                  Themes.formStyleBordered('Tanggal & Jam Awal',
                                       icon: Icon(
                                         Icons.calendar_month,
                                       )),
@@ -332,18 +355,34 @@ class CreateTugasDinasPage extends HookConsumerWidget {
                           );
                           if (picked != null) {
                             print(picked);
+                            final hour = await showTimePicker(
+                              context: context,
+                              initialEntryMode: TimePickerEntryMode.input,
+                              initialTime: TimeOfDay.now(),
+                              builder: (context, child) {
+                                return MediaQuery(
+                                  data: MediaQuery.of(context)
+                                      .copyWith(alwaysUse24HourFormat: true),
+                                  child: child!,
+                                );
+                              },
+                            );
 
-                            final tgl = StringUtils.midnightDate(picked)
+                            final String tgl = StringUtils.midnightDate(picked)
                                 .replaceAll('.000', '');
-
                             tglAkhirTextController.value = tgl;
 
-                            final startPlaceHolder = DateFormat(
-                              'dd MMM yyyy',
-                            ).format(picked);
+                            final jam = DateTime(picked.year, picked.month,
+                                picked.day, hour!.hour, hour.minute);
+                            jamAkhirTextController.value =
+                                jam.toString().replaceAll('.000', '');
 
-                            tglAkhirPlaceholderTextController.text =
-                                "$startPlaceHolder";
+                            final String placeholder = DateFormat(
+                              'dd MMM yyyy HH:mm',
+                            ).format(jam);
+
+                            jamTglAkhirPlaceholderTextController.text =
+                                placeholder;
                           }
                         },
                         child: IgnorePointer(
@@ -351,12 +390,12 @@ class CreateTugasDinasPage extends HookConsumerWidget {
                           child: TextFormField(
                               maxLines: 1,
                               cursorColor: Palette.primaryColor,
-                              controller: tglAkhirPlaceholderTextController,
-                              decoration:
-                                  Themes.formStyleBordered('Tanggal Akhir',
-                                      icon: Icon(
-                                        Icons.calendar_month,
-                                      )),
+                              controller: jamTglAkhirPlaceholderTextController,
+                              decoration: Themes.formStyleBordered(
+                                  'Tanggal & Jam Akhir',
+                                  icon: Icon(
+                                    Icons.calendar_month,
+                                  )),
                               style: Themes.customColor(
                                 14,
                                 fontWeight: FontWeight.normal,
@@ -393,47 +432,89 @@ class CreateTugasDinasPage extends HookConsumerWidget {
                     ),
 
                     SizedBox(
+                      height: 10,
+                    ),
+                    SizedBox(
+                      width: 10.0,
+                      child: Row(
+                        children: [
+                          Checkbox(
+                            fillColor:
+                                MaterialStatePropertyAll(Colors.transparent),
+                            checkColor: Palette.primaryColor,
+                            value: khusus.value,
+                            onChanged: (val) {
+                              if (val != null) khusus.value = val;
+                            },
+                            shape: ContinuousRectangleBorder(
+                                borderRadius: BorderRadius.circular(2)),
+                            side: MaterialStateBorderSide.resolveWith(
+                              (states) => BorderSide(
+                                  width: 2.0, color: Palette.primaryColor),
+                            ),
+                          ),
+                          Text(
+                            'Khusus',
+                            style: Themes.customColor(14),
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+
+                    SizedBox(
                       height: 54,
                     ),
 
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: VButton(
-                          label: 'Submit Form Tugas Dinas',
+                          label: 'Update Form Tugas Dinas',
                           onPressed: () async {
                             log(' VARIABLES : \n  Nama : ${namaTextController.value.text} ');
                             log(' Jenis Tugas Dinas: ${jenisTugasDinasTextController.value.text} \n ');
                             log(' Keterangan: ${keteranganTextController.value.text} \n ');
                             log(' Tanggal: ${tglAwalTextController.value} \n ');
                             log(' Tgl Awal: ${tglAwalTextController.value} \n ');
+                            log(' Jam Awal: ${jamAwalTextController.value} \n ');
                             log(' Tgl Akhir: ${tglAkhirTextController.value} \n ');
+                            log(' Jam Akhir: ${jamAkhirTextController.value} \n ');
 
-                            // final user = ref.read(userNotifierProvider).user;
+                            final user = ref.read(userNotifierProvider).user;
 
                             if (_formKey.currentState!.validate()) {
                               _formKey.currentState!.save();
-                              // await ref
-                              //     .read(
-                              //         createTugasDinasNotifierProvider.notifier)
-                              //     .submitAbsenManual(
-                              //       idUser: user.idUser!,
-                              //       cUser: user.nama!,
-                              //       tgl: tglAwalTextController.value,
-                              //       jamAwal: jamAwalTextController.value,
-                              //       jenisDinas: jenisTextController.value,
-                              //       jamAkhir: jamAkhirTextController.value,
-                              //       ket: keteranganTextController.text,
-                              //       onError: (msg) => HapticFeedback.vibrate()
-                              //           .then((_) => showDialog(
-                              //               context: context,
-                              //               barrierDismissible: true,
-                              //               builder: (_) => VSimpleDialog(
-                              //                     color: Palette.red,
-                              //                     asset: Assets.iconCrossed,
-                              //                     label: 'Oops',
-                              //                     labelDescription: msg,
-                              //                   ))),
-                              //     );
+                              await ref
+                                  .read(
+                                      createTugasDinasNotifierProvider.notifier)
+                                  .submitTugasDinas(
+                                    idUser: user.idUser!,
+                                    idPemberi:
+                                        pemberiTugasController.value.idUser!,
+                                    cUser: user.nama!,
+                                    tglAwal: tglAwalTextController.value,
+                                    tglAkhir: tglAkhirTextController.value,
+                                    jamAwal: jamAwalTextController.value,
+                                    kategori:
+                                        jenisTugasDinasTextController.text,
+                                    perusahaan: perusahaanTextController.text,
+                                    lokasi: alamatTextController.text,
+                                    khusus: khusus.value,
+                                    jamAkhir: jamAkhirTextController.value,
+                                    ket: keteranganTextController.text,
+                                    onError: (msg) => HapticFeedback.vibrate()
+                                        .then((_) => showDialog(
+                                            context: context,
+                                            barrierDismissible: true,
+                                            builder: (_) => VSimpleDialog(
+                                                  color: Palette.red,
+                                                  asset: Assets.iconCrossed,
+                                                  label: 'Oops',
+                                                  labelDescription: msg,
+                                                ))),
+                                  );
                             }
                           }),
                     )

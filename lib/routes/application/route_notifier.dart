@@ -49,7 +49,9 @@ import '../../sign_in_form/presentation/sign_in_page.dart';
 import '../../tc/application/shared/tc_providers.dart';
 import '../../tc/application/tc_state.dart';
 import '../../tc/presentation/tc_page.dart';
+import '../../tugas_dinas/create_tugas_dinas/presentation/edit_tugas_dinas_page.dart';
 import '../../tugas_dinas/create_tugas_dinas/presentation/search_pemberi_tugas.dart';
+import '../../tugas_dinas/tugas_dinas_list/application/tugas_dinas_list.dart';
 import '../../tugas_dinas/tugas_dinas_list/presentation/tugas_dinas_list_page.dart';
 import '../../widgets/splash_page.dart';
 import 'route_names.dart';
@@ -334,18 +336,18 @@ class RouterNotifier extends ChangeNotifier {
               builder: (context, state) => CreateTugasDinasPage(),
             ),
             GoRoute(
+              name: RouteNames.editTugasDinasNameRoute,
+              path: RouteNames.editTugasDinasRoute,
+              builder: (context, state) {
+                final tugas = state.extra as TugasDinasList;
+                return EditTugasDinasPage(tugas);
+              },
+            ),
+            GoRoute(
               name: RouteNames.searchPemberiTugasDinasNameRoute,
               path: RouteNames.searchPemberiTugasDinasRoute,
               builder: (context, state) => SearchPemberiTugas(),
             ),
-            // GoRoute(
-            //   name: RouteNames.editAbsenManualNameRoute,
-            //   path: RouteNames.editAbsenManualRoute,
-            //   builder: (context, state) {
-            //     final absen = state.extra as AbsenManualList;
-            //     return EditAbsenManualPage(absen);
-            //   },
-            // ),
 
             // GoRoute(
             //   name: RouteNames.changePassNameRoute,

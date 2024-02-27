@@ -114,7 +114,10 @@ mixin _$TugasDinasList {
   String? get uBy => throw _privateConstructorUsedError;
   @JsonKey(name: 'c_by')
   String? get cBy => throw _privateConstructorUsedError;
-  String? get pemberi => throw _privateConstructorUsedError;
+  @JsonKey(name: 'pemberi_name')
+  String? get pemberiName => throw _privateConstructorUsedError;
+  @JsonKey(name: 'pemberi_fullname')
+  String? get pemberiFullname => throw _privateConstructorUsedError;
   @JsonKey(name: 'level_user')
   int get levelUser => throw _privateConstructorUsedError;
   @JsonKey(name: 'idkar')
@@ -191,7 +194,8 @@ abstract class $TugasDinasListCopyWith<$Res> {
       @JsonKey(name: 'app_hrd') String? appHrd,
       @JsonKey(name: 'u_by') String? uBy,
       @JsonKey(name: 'c_by') String? cBy,
-      String? pemberi,
+      @JsonKey(name: 'pemberi_name') String? pemberiName,
+      @JsonKey(name: 'pemberi_fullname') String? pemberiFullname,
       @JsonKey(name: 'level_user') int levelUser,
       @JsonKey(name: 'idkar') String? idKar,
       @JsonKey(name: 'id_dept1') int idDept1,
@@ -265,7 +269,8 @@ class _$TugasDinasListCopyWithImpl<$Res, $Val extends TugasDinasList>
     Object? appHrd = freezed,
     Object? uBy = freezed,
     Object? cBy = freezed,
-    Object? pemberi = freezed,
+    Object? pemberiName = freezed,
+    Object? pemberiFullname = freezed,
     Object? levelUser = null,
     Object? idKar = freezed,
     Object? idDept1 = null,
@@ -473,9 +478,13 @@ class _$TugasDinasListCopyWithImpl<$Res, $Val extends TugasDinasList>
           ? _value.cBy
           : cBy // ignore: cast_nullable_to_non_nullable
               as String?,
-      pemberi: freezed == pemberi
-          ? _value.pemberi
-          : pemberi // ignore: cast_nullable_to_non_nullable
+      pemberiName: freezed == pemberiName
+          ? _value.pemberiName
+          : pemberiName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      pemberiFullname: freezed == pemberiFullname
+          ? _value.pemberiFullname
+          : pemberiFullname // ignore: cast_nullable_to_non_nullable
               as String?,
       levelUser: null == levelUser
           ? _value.levelUser
@@ -575,7 +584,8 @@ abstract class _$$_TugasDinasListCopyWith<$Res>
       @JsonKey(name: 'app_hrd') String? appHrd,
       @JsonKey(name: 'u_by') String? uBy,
       @JsonKey(name: 'c_by') String? cBy,
-      String? pemberi,
+      @JsonKey(name: 'pemberi_name') String? pemberiName,
+      @JsonKey(name: 'pemberi_fullname') String? pemberiFullname,
       @JsonKey(name: 'level_user') int levelUser,
       @JsonKey(name: 'idkar') String? idKar,
       @JsonKey(name: 'id_dept1') int idDept1,
@@ -647,7 +657,8 @@ class __$$_TugasDinasListCopyWithImpl<$Res>
     Object? appHrd = freezed,
     Object? uBy = freezed,
     Object? cBy = freezed,
-    Object? pemberi = freezed,
+    Object? pemberiName = freezed,
+    Object? pemberiFullname = freezed,
     Object? levelUser = null,
     Object? idKar = freezed,
     Object? idDept1 = null,
@@ -855,9 +866,13 @@ class __$$_TugasDinasListCopyWithImpl<$Res>
           ? _value.cBy
           : cBy // ignore: cast_nullable_to_non_nullable
               as String?,
-      pemberi: freezed == pemberi
-          ? _value.pemberi
-          : pemberi // ignore: cast_nullable_to_non_nullable
+      pemberiName: freezed == pemberiName
+          ? _value.pemberiName
+          : pemberiName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      pemberiFullname: freezed == pemberiFullname
+          ? _value.pemberiFullname
+          : pemberiFullname // ignore: cast_nullable_to_non_nullable
               as String?,
       levelUser: null == levelUser
           ? _value.levelUser
@@ -952,7 +967,8 @@ class _$_TugasDinasList implements _TugasDinasList {
       @JsonKey(name: 'app_hrd') required this.appHrd,
       @JsonKey(name: 'u_by') required this.uBy,
       @JsonKey(name: 'c_by') required this.cBy,
-      required this.pemberi,
+      @JsonKey(name: 'pemberi_name') required this.pemberiName,
+      @JsonKey(name: 'pemberi_fullname') required this.pemberiFullname,
       @JsonKey(name: 'level_user') required this.levelUser,
       @JsonKey(name: 'idkar') required this.idKar,
       @JsonKey(name: 'id_dept1') required this.idDept1,
@@ -1110,7 +1126,11 @@ class _$_TugasDinasList implements _TugasDinasList {
   @JsonKey(name: 'c_by')
   final String? cBy;
   @override
-  final String? pemberi;
+  @JsonKey(name: 'pemberi_name')
+  final String? pemberiName;
+  @override
+  @JsonKey(name: 'pemberi_fullname')
+  final String? pemberiFullname;
   @override
   @JsonKey(name: 'level_user')
   final int levelUser;
@@ -1136,7 +1156,7 @@ class _$_TugasDinasList implements _TugasDinasList {
 
   @override
   String toString() {
-    return 'TugasDinasList(idDinas: $idDinas, idUser: $idUser, ket: $ket, tglStart: $tglStart, tglEnd: $tglEnd, spvSta: $spvSta, spvNm: $spvNm, spvTgl: $spvTgl, hrdSta: $hrdSta, hrdNm: $hrdNm, hrdTgl: $hrdTgl, cDate: $cDate, cUser: $cUser, uDate: $uDate, uUser: $uUser, kategori: $kategori, perusahaan: $perusahaan, lokasi: $lokasi, cooSta: $cooSta, cooNm: $cooNm, cooTgl: $cooTgl, idComp: $idComp, idDept: $idDept, ittenSta: $ittenSta, reportSta: $reportSta, ittenAppNm: $ittenAppNm, reportAppNm: $reportAppNm, ittenAppTgl: $ittenAppTgl, reportAppTgl: $reportAppTgl, idPemberi: $idPemberi, gmSta: $gmSta, gmNm: $gmNm, gmTgl: $gmTgl, btlSta: $btlSta, btlTgl: $btlTgl, btlNm: $btlNm, jenis: $jenis, biayaSta: $biayaSta, biayaTgl: $biayaTgl, biayaNm: $biayaNm, gaBiayaSta: $gaBiayaSta, gaBiayaDate: $gaBiayaDate, gaBiayaNm: $gaBiayaNm, jamStart: $jamStart, jamEnd: $jamEnd, appSpv: $appSpv, appHrd: $appHrd, uBy: $uBy, cBy: $cBy, pemberi: $pemberi, levelUser: $levelUser, idKar: $idKar, idDept1: $idDept1, payroll: $payroll, noTelp1: $noTelp1, noTelp2: $noTelp2, fullname: $fullname, dept: $dept, comp: $comp)';
+    return 'TugasDinasList(idDinas: $idDinas, idUser: $idUser, ket: $ket, tglStart: $tglStart, tglEnd: $tglEnd, spvSta: $spvSta, spvNm: $spvNm, spvTgl: $spvTgl, hrdSta: $hrdSta, hrdNm: $hrdNm, hrdTgl: $hrdTgl, cDate: $cDate, cUser: $cUser, uDate: $uDate, uUser: $uUser, kategori: $kategori, perusahaan: $perusahaan, lokasi: $lokasi, cooSta: $cooSta, cooNm: $cooNm, cooTgl: $cooTgl, idComp: $idComp, idDept: $idDept, ittenSta: $ittenSta, reportSta: $reportSta, ittenAppNm: $ittenAppNm, reportAppNm: $reportAppNm, ittenAppTgl: $ittenAppTgl, reportAppTgl: $reportAppTgl, idPemberi: $idPemberi, gmSta: $gmSta, gmNm: $gmNm, gmTgl: $gmTgl, btlSta: $btlSta, btlTgl: $btlTgl, btlNm: $btlNm, jenis: $jenis, biayaSta: $biayaSta, biayaTgl: $biayaTgl, biayaNm: $biayaNm, gaBiayaSta: $gaBiayaSta, gaBiayaDate: $gaBiayaDate, gaBiayaNm: $gaBiayaNm, jamStart: $jamStart, jamEnd: $jamEnd, appSpv: $appSpv, appHrd: $appHrd, uBy: $uBy, cBy: $cBy, pemberiName: $pemberiName, pemberiFullname: $pemberiFullname, levelUser: $levelUser, idKar: $idKar, idDept1: $idDept1, payroll: $payroll, noTelp1: $noTelp1, noTelp2: $noTelp2, fullname: $fullname, dept: $dept, comp: $comp)';
   }
 
   @override
@@ -1207,7 +1227,10 @@ class _$_TugasDinasList implements _TugasDinasList {
             (identical(other.appHrd, appHrd) || other.appHrd == appHrd) &&
             (identical(other.uBy, uBy) || other.uBy == uBy) &&
             (identical(other.cBy, cBy) || other.cBy == cBy) &&
-            (identical(other.pemberi, pemberi) || other.pemberi == pemberi) &&
+            (identical(other.pemberiName, pemberiName) ||
+                other.pemberiName == pemberiName) &&
+            (identical(other.pemberiFullname, pemberiFullname) ||
+                other.pemberiFullname == pemberiFullname) &&
             (identical(other.levelUser, levelUser) ||
                 other.levelUser == levelUser) &&
             (identical(other.idKar, idKar) || other.idKar == idKar) &&
@@ -1274,7 +1297,8 @@ class _$_TugasDinasList implements _TugasDinasList {
         appHrd,
         uBy,
         cBy,
-        pemberi,
+        pemberiName,
+        pemberiFullname,
         levelUser,
         idKar,
         idDept1,
@@ -1351,7 +1375,8 @@ abstract class _TugasDinasList implements TugasDinasList {
       @JsonKey(name: 'app_hrd') required final String? appHrd,
       @JsonKey(name: 'u_by') required final String? uBy,
       @JsonKey(name: 'c_by') required final String? cBy,
-      required final String? pemberi,
+      @JsonKey(name: 'pemberi_name') required final String? pemberiName,
+      @JsonKey(name: 'pemberi_fullname') required final String? pemberiFullname,
       @JsonKey(name: 'level_user') required final int levelUser,
       @JsonKey(name: 'idkar') required final String? idKar,
       @JsonKey(name: 'id_dept1') required final int idDept1,
@@ -1509,7 +1534,11 @@ abstract class _TugasDinasList implements TugasDinasList {
   @JsonKey(name: 'c_by')
   String? get cBy;
   @override
-  String? get pemberi;
+  @JsonKey(name: 'pemberi_name')
+  String? get pemberiName;
+  @override
+  @JsonKey(name: 'pemberi_fullname')
+  String? get pemberiFullname;
   @override
   @JsonKey(name: 'level_user')
   int get levelUser;

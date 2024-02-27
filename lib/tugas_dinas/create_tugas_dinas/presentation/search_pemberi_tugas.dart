@@ -97,9 +97,9 @@ class SearchPemberiTugas extends HookConsumerWidget {
                     itemBuilder: (context, index) {
                       if (list.isEmpty) return Container();
 
-                      final nama = list[index].fullName;
+                      final nama = list[index].fullname!;
 
-                      if (nama!.isEmpty) return Container();
+                      if (nama.isEmpty) return Container();
 
                       return Ink(
                           decoration: BoxDecoration(
@@ -142,9 +142,7 @@ Future<void> _onTimerIsUp(
           .trimRight()
           .replaceAll(_whitespaceRE, ' ');
 
-      if (justSearched.value &&
-          searchController.value.text.isNotEmpty &&
-          searchTrimmed != ref.read(lastSearchedProvider.notifier).state) {
+      if (justSearched.value && searchController.value.text.isNotEmpty) {
         ref
             .read(pemberiTugasDinasNotifierProvider.notifier)
             .getPemohonListNamed(searchTrimmed);

@@ -1,7 +1,11 @@
 // ignore_for_file: sdk_version_since
 
+import 'dart:developer';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../sakit/create_sakit/application/create_sakit.dart';
+import '../../../sakit/create_sakit/application/create_sakit_notifier.dart';
 import '../../../send_wa/application/send_wa_notifier.dart';
 import '../../../shared/providers.dart';
 import '../../../wa_head_helper/application/wa_head.dart';
@@ -91,115 +95,129 @@ class CreateTugasDinasNotifier extends _$CreateTugasDinasNotifier {
     }
   }
 
-  // Future<void> submitAbsenManual(
-  //     {
-  //     //
-  //     required int idUser,
-  //     required String ket,
-  //     required String tgl,
-  //     required String jamAwal,
-  //     required String jamAkhir,
-  //     required String jenisAbsen,
-  //     required String cUser,
-  //     required Future<void> Function(String errMessage) onError}) async {
-  //   state = const AsyncLoading();
+  Future<void> submitTugasDinas(
+      {required int idUser,
+      required int idPemberi,
+      required String ket,
+      required String tglAwal,
+      required String tglAkhir,
+      required String jamAwal,
+      required String jamAkhir,
+      required String kategori,
+      required String perusahaan,
+      required String lokasi,
+      required String cUser,
+      required bool khusus,
+      required Future<void> Function(String errMessage) onError}) async {
+    state = const AsyncLoading();
 
-  //   try {
-  //     debugger();
+    try {
+      // final cUser = ref.read(userNotifierProvider).user.nama!;
+      // final String messageContent =
+      //     " ( Testing Apps ) Terdapat Waiting Aprove Pengajuan Absen Manual Baru Telah Diinput Oleh : $cUser ";
+      // await _sendWaToHead(idUser: idUser, messageContent: messageContent);
 
-  //     // final cUser = ref.read(userNotifierProvider).user.nama!;
-  //     // final String messageContent =
-  //     //     " ( Testing Apps ) Terdapat Waiting Aprove Pengajuan Absen Manual Baru Telah Diinput Oleh : $cUser ";
-  //     // await _sendWaToHead(idUser: idUser, messageContent: messageContent);
+      // debugger();
+      final CreateSakit create = await ref
+          .read(createSakitNotifierProvider.notifier)
+          .getCreateSakit(idUser, tglAwal, tglAkhir);
+      _verifyDate(create, tglAwal, tglAkhir, kategori, khusus);
 
-  //     if (jenisAbsen.toLowerCase() == 'lln') {
-  //       state = await AsyncValue.guard(() =>
-  //           ref.read(createAbsenManualRepositoryProvider).submitAbsenManual(
-  //                 idUser: idUser,
-  //                 ket: ket,
-  //                 tgl: tgl,
-  //                 jamAwal: jamAwal,
-  //                 jamAkhir: jamAkhir,
-  //                 jenisAbsen: jenisAbsen,
-  //                 cUser: cUser,
-  //               ));
-  //     } else {
-  //       final String tglFinal =
-  //           StringUtils.midnightDate(DateTime.now()).replaceAll('.000', '');
+      await ref.read(createTugasDinasRepositoryProvider).submitTugasDinas(
+          idUser: idUser,
+          idPemberi: idPemberi,
+          ket: ket,
+          tglAwal: tglAwal,
+          tglAkhir: tglAkhir,
+          jamAwal: jamAwal,
+          jamAkhir: jamAkhir,
+          kategori: kategori,
+          perusahaan: perusahaan,
+          lokasi: lokasi,
+          cUser: cUser,
+          khusus: khusus);
 
-  //       final jamAwalDate = DateTime.parse(jamAwal);
-  //       final jamAwalDateFinal = DateTime.now()
-  //           .copyWith(hour: jamAwalDate.hour, minute: jamAwalDate.minute);
-  //       final String jamAwalFinal = DateFormat(
-  //         'yyyy-MM-dd HH:mm:ss',
-  //       ).format(jamAwalDateFinal).toString();
+      state = const AsyncValue.data('Sukses Menginput Form Tugas Dinas');
+    } catch (e) {
+      state = const AsyncValue.data('');
+      await onError('Error $e');
+    }
+  }
 
-  //       final jamAkhirDate = DateTime.parse(jamAkhir);
-  //       final jamAkhirDateFinal = DateTime.now()
-  //           .copyWith(hour: jamAkhirDate.hour, minute: jamAkhirDate.minute);
-  //       final String jamAkhirFinal = DateFormat(
-  //         'yyyy-MM-dd HH:mm:ss',
-  //       ).format(jamAkhirDateFinal).toString();
+  Future<void> updateTugasDinas(
+      {required int id,
+      required int idUser,
+      required int idPemberi,
+      required String ket,
+      required String tglAwal,
+      required String tglAkhir,
+      required String jamAwal,
+      required String jamAkhir,
+      required String kategori,
+      required String perusahaan,
+      required String lokasi,
+      required bool khusus,
+      required String uUser,
+      required Future<void> Function(String errMessage) onError}) async {
+    state = const AsyncLoading();
 
-  //       log('tglFinal $tglFinal');
-  //       log('jamAwalFinal $jamAwalFinal');
-  //       log('jamAkhirFinal $jamAkhirFinal');
+    try {
+      debugger();
+      final CreateSakit create = await ref
+          .read(createSakitNotifierProvider.notifier)
+          .getCreateSakit(idUser, tglAwal, tglAkhir);
+      _verifyDate(create, tglAwal, tglAkhir, kategori, khusus);
 
-  //       state = await AsyncValue.guard(() =>
-  //           ref.read(createAbsenManualRepositoryProvider).submitAbsenManual(
-  //                 idUser: idUser,
-  //                 ket: ket,
-  //                 tgl: tglFinal,
-  //                 jamAwal: jamAwalFinal,
-  //                 jamAkhir: jamAkhirFinal,
-  //                 jenisAbsen: jenisAbsen,
-  //                 cUser: cUser,
-  //               ));
-  //     }
-  //   } catch (e) {
-  //     state = const AsyncValue.data('');
-  //     await onError('Error $e');
-  //   }
-  // }
+      await ref.read(createTugasDinasRepositoryProvider).updateTugasDinas(
+            id: id,
+            idUser: idUser,
+            idPemberi: idPemberi,
+            ket: ket,
+            tglAwal: tglAwal,
+            tglAkhir: tglAkhir,
+            jamAwal: jamAwal,
+            jamAkhir: jamAkhir,
+            kategori: kategori,
+            perusahaan: perusahaan,
+            lokasi: lokasi,
+            khusus: khusus,
+            uUser: uUser,
+          );
 
-  // Future<void> updateAbsenManual(
-  //     {
-  //     //
-  //     required int id,
-  //     required int idUser,
-  //     required String ket,
-  //     required String tgl,
-  //     required String jamAwal,
-  //     required String jamAkhir,
-  //     required String jenisAbsen,
-  //     required String uUser,
-  //     required Future<void> Function(String errMessage) onError}) async {
-  //   state = const AsyncLoading();
+      state = const AsyncValue.data('Sukses Mengupdate Form Tugas Dinas');
+    } catch (e) {
+      state = const AsyncValue.data('');
+      await onError('Error $e');
+    }
+  }
 
-  //   try {
-  //     final jamAwalDateTime = DateTime.parse(jamAwal);
-  //     final jamAkhirDateTime = DateTime.parse(jamAkhir);
+  void _verifyDate(CreateSakit create, String tglAwal, String tglAkhir,
+      String kategori, bool khusus) {
+    // 1. Calc jumlah harito substract sundays and saturdays
+    final int _jumlahhari = _getJumlahHari(
+        create, DateTime.parse(tglAwal), DateTime.parse(tglAkhir));
+    int _diffIndays() =>
+        DateTime.parse(tglAwal).difference(DateTime.now()).inDays + _jumlahhari;
 
-  //     if (jamAkhirDateTime.difference(jamAwalDateTime).inDays > 1) {
-  //       throw AssertionError('Tanggal input lewat dari 1 hari');
-  //     }
+    if (kategori == 'lk' && khusus == false) {
+      final bool lewatDariMinTigaHari = _diffIndays() > -2;
+      // final bool fullAkses = ref.read(userNotifierProvider).user.fullAkses
 
-  //     state = await AsyncValue.guard(
-  //         () => ref.read(createAbsenManualRepositoryProvider).updateAbsenManual(
-  //               id: id,
-  //               idUser: idUser,
-  //               ket: ket,
-  //               tgl: tgl,
-  //               jamAwal: jamAwal,
-  //               jamAkhir: jamAkhir,
-  //               jenisAbsen: jenisAbsen,
-  //               uUser: uUser,
-  //             ));
-  //   } catch (e) {
-  //     state = const AsyncValue.data('');
-  //     await onError('Error $e');
-  //   }
-  // }
+      if (lewatDariMinTigaHari && khusus == false) {
+        throw AssertionError('Tanggal input lewat dari -3 hari');
+      }
+    } else {
+      if (_diffIndays() > 0 && khusus == false) {
+        throw AssertionError('Tanggal input lewat dari sehari');
+      }
+    }
+
+    if (DateTime.parse(tglAwal).difference(DateTime.parse(tglAkhir)).inDays >
+        0) {
+      throw AssertionError(
+          'Tanggal Awal Tidak Boleh Lebih Besar Dari Tanggal Akhir');
+    }
+  }
 
   // _validateJmlHariSubmit({
   //   required int jumlahhari,
@@ -234,49 +252,49 @@ class CreateTugasDinasNotifier extends _$CreateTugasDinasNotifier {
   //   }
   // }
 
-  // int _getJumlahHari(
-  //     //
-  //     CreateSakit create,
-  //     DateTime tglAwalInDateTime,
-  //     DateTime tglAkhirInDateTime) {
-  //   log('create $create');
-  //   if (create.jadwalSabtu!.isNotEmpty && create.bulanan == false) {
-  //     return calcDiffSaturdaySunday(tglAwalInDateTime, tglAkhirInDateTime);
-  //   } else if (create.jadwalSabtu!.isEmpty || create.bulanan == true) {
-  //     return calcDiffSunday(tglAwalInDateTime, tglAkhirInDateTime);
-  //   } else {
-  //     return 0;
-  //   }
-  // }
+  int _getJumlahHari(
+      //
+      CreateSakit create,
+      DateTime tglAwalInDateTime,
+      DateTime tglAkhirInDateTime) {
+    log('create $create');
+    if (create.jadwalSabtu!.isNotEmpty && create.bulanan == false) {
+      return calcDiffSaturdaySunday(tglAwalInDateTime, tglAkhirInDateTime);
+    } else if (create.jadwalSabtu!.isEmpty || create.bulanan == true) {
+      return calcDiffSunday(tglAwalInDateTime, tglAkhirInDateTime);
+    } else {
+      return 0;
+    }
+  }
 
-  // int calcDiffSaturdaySunday(DateTime startDate, DateTime endDate) {
-  //   int nbDays = 0;
-  //   DateTime currentDay = startDate;
+  int calcDiffSaturdaySunday(DateTime startDate, DateTime endDate) {
+    int nbDays = 0;
+    DateTime currentDay = startDate;
 
-  //   while (currentDay.isBefore(endDate)) {
-  //     currentDay = currentDay.add(Duration(days: 1));
+    while (currentDay.isBefore(endDate)) {
+      currentDay = currentDay.add(Duration(days: 1));
 
-  //     if (currentDay.weekday == DateTime.saturday &&
-  //         currentDay.weekday == DateTime.sunday) {
-  //       nbDays += 1;
-  //     }
-  //   }
+      if (currentDay.weekday == DateTime.saturday &&
+          currentDay.weekday == DateTime.sunday) {
+        nbDays += 1;
+      }
+    }
 
-  //   return nbDays;
-  // }
+    return nbDays;
+  }
 
-  // int calcDiffSunday(DateTime startDate, DateTime endDate) {
-  //   int nbDays = 0;
-  //   DateTime currentDay = startDate;
+  int calcDiffSunday(DateTime startDate, DateTime endDate) {
+    int nbDays = 0;
+    DateTime currentDay = startDate;
 
-  //   while (currentDay.isBefore(endDate)) {
-  //     currentDay = currentDay.add(Duration(days: 1));
+    while (currentDay.isBefore(endDate)) {
+      currentDay = currentDay.add(Duration(days: 1));
 
-  //     if (currentDay.weekday == DateTime.saturday) {
-  //       nbDays += 1;
-  //     }
-  //   }
+      if (currentDay.weekday == DateTime.saturday) {
+        nbDays += 1;
+      }
+    }
 
-  //   return nbDays;
-  // }
+    return nbDays;
+  }
 }

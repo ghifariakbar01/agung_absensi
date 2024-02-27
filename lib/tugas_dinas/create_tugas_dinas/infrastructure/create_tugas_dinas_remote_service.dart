@@ -35,14 +35,13 @@ class CreateTugasDinasRemoteService {
     required bool khusus,
   }) async {
     try {
-      final Map<String, String> submitSakit = {
+      final Map<String, String> submitTugasDinas = {
         "command": "INSERT INTO $dbName ("
             "id_user, ket, tgl_start, tgl_end, jam_start, jam_end, "
             "kategori, perusahaan, lokasi, id_comp, id_dept, id_pemberi, "
-            "spv_sta, spv_nm, spv_tgl, hrd_sta, hrd_nm, hrd_tgl, hrd_note, spv_note, "
+            "spv_sta, spv_nm, spv_tgl, hrd_sta, hrd_nm, hrd_tgl, "
             "coo_sta, coo_nm, coo_tgl, gm_sta, gm_nm, gm_tgl, jenis, "
             "c_date, c_user, u_date, u_user) VALUES ("
-            "(select isnull(max(id_absenmnl),0) + 1 from $dbName), "
             "$idUser, "
             "'$ket', "
             "'$tglAwal', "
@@ -52,8 +51,8 @@ class CreateTugasDinasRemoteService {
             "'$kategori', "
             "'$perusahaan', "
             "'$lokasi', "
-            "(SELECT id_comp FROM mst_user WHERE id_user = $idUser), "
-            "(SELECT id_dept FROM mst_user WHERE id_user = $idUser), "
+            "(SELECT id_comp FROM $dbMstUser WHERE id_user = $idUser), "
+            "(SELECT id_dept FROM $dbMstUser WHERE id_user = $idUser), "
             "$idPemberi, "
             "'0', "
             "'', "
@@ -61,24 +60,23 @@ class CreateTugasDinasRemoteService {
             "'0', "
             "'', "
             "GETDATE(), "
-            "'', "
-            "'', "
             "'0', "
             "'', "
             "GETDATE(), "
             "'0', "
             "'', "
             "GETDATE(), "
-            "${khusus ? '1' : '0'}, "
+            "${khusus ? "'1'" : "'0'"}, "
             "GETDATE(), "
             "'$cUser', "
             "GETDATE(), "
-            "'$cUser',) ",
+            "'$cUser') ",
         "mode": "INSERT"
       };
 
       final data = _dioRequest;
-      data.addAll(submitSakit);
+      data.addAll(submitTugasDinas);
+      log('query $submitTugasDinas');
       debugger();
 
       final response = await _dio.post('',
@@ -125,7 +123,7 @@ class CreateTugasDinasRemoteService {
   }) async {
     try {
       // add spv / hrd note
-      final Map<String, String> submitSakit = {
+      final Map<String, String> submitTugasDinas = {
         "command": " UPDATE $dbName SET "
             "  id_user = $idUser, "
             "  id_pemberi = $idPemberi, "
@@ -137,17 +135,17 @@ class CreateTugasDinasRemoteService {
             "  kategori = '$kategori', "
             "  perusahaan = '$perusahaan', "
             "  lokasi = '$lokasi', "
-            "  id_comp = (SELECT id_comp FROM mst_user WHERE id_user = $idUser), "
-            "  id_dept = (SELECT id_dept FROM mst_user WHERE id_user = $idUser), "
+            "  id_comp = (SELECT id_comp FROM $dbMstUser WHERE id_user = $idUser), "
+            "  id_dept = (SELECT id_dept FROM $dbMstUser WHERE id_user = $idUser), "
             "  u_date = GETDATE(), "
-            "  jenis = ${khusus ? '1' : '0'} "
+            "  jenis = ${khusus ? '1' : '0'}, "
             "  u_user = '$uUser' "
             "  WHERE id_dinas = $id ",
         "mode": "UPDATE"
       };
 
       final data = _dioRequest;
-      data.addAll(submitSakit);
+      data.addAll(submitTugasDinas);
 
       final response = await _dio.post('',
           data: jsonEncode(data), options: Options(contentType: 'text/plain'));
@@ -179,13 +177,13 @@ class CreateTugasDinasRemoteService {
 
   // Future<List<JenisAbsen>> getJenisAbsen() async {
   //   try {
-  //     final Map<String, String> submitSakit = {
+  //     final Map<String, String> submitTugasDinas = {
   //       "command": "SELECT * FROM $dbHrMstJenisAbsen ",
   //       "mode": "SELECT"
   //     };
 
   //     final data = _dioRequest;
-  //     data.addAll(submitSakit);
+  //     data.addAll(submitTugasDinas);
 
   //     final response = await _dio.post('',
   //         data: jsonEncode(data), options: Options(contentType: 'text/plain'));
@@ -228,7 +226,7 @@ class CreateTugasDinasRemoteService {
 
   Future<List<UserList>> getPemohonListNamed(String name) async {
     try {
-      final Map<String, String> submitSakit = {
+      final Map<String, String> submitTugasDinas = {
         "command": "SELECT * "
             "  FROM "
             "      $dbMstUser "
@@ -241,7 +239,7 @@ class CreateTugasDinasRemoteService {
       };
 
       final data = _dioRequest;
-      data.addAll(submitSakit);
+      data.addAll(submitTugasDinas);
 
       final response = await _dio.post('',
           data: jsonEncode(data), options: Options(contentType: 'text/plain'));

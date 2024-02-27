@@ -22,15 +22,8 @@ UserList _$UserListFromJson(Map<String, dynamic> json) {
 mixin _$UserList {
   @JsonKey(name: 'id_user')
   int? get idUser => throw _privateConstructorUsedError;
-  @JsonKey(name: 'id_dept')
-  int? get idDept => throw _privateConstructorUsedError;
   String? get nama => throw _privateConstructorUsedError;
-  @JsonKey(name: 'fullname')
-  String? get fullName => throw _privateConstructorUsedError;
-  @JsonKey(name: 'no_telp1')
-  String? get noTelp1 => throw _privateConstructorUsedError;
-  @JsonKey(name: 'no_telp2')
-  String? get noTelp2 => throw _privateConstructorUsedError;
+  String? get fullname => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -44,12 +37,7 @@ abstract class $UserListCopyWith<$Res> {
       _$UserListCopyWithImpl<$Res, UserList>;
   @useResult
   $Res call(
-      {@JsonKey(name: 'id_user') int? idUser,
-      @JsonKey(name: 'id_dept') int? idDept,
-      String? nama,
-      @JsonKey(name: 'fullname') String? fullName,
-      @JsonKey(name: 'no_telp1') String? noTelp1,
-      @JsonKey(name: 'no_telp2') String? noTelp2});
+      {@JsonKey(name: 'id_user') int? idUser, String? nama, String? fullname});
 }
 
 /// @nodoc
@@ -66,36 +54,21 @@ class _$UserListCopyWithImpl<$Res, $Val extends UserList>
   @override
   $Res call({
     Object? idUser = freezed,
-    Object? idDept = freezed,
     Object? nama = freezed,
-    Object? fullName = freezed,
-    Object? noTelp1 = freezed,
-    Object? noTelp2 = freezed,
+    Object? fullname = freezed,
   }) {
     return _then(_value.copyWith(
       idUser: freezed == idUser
           ? _value.idUser
           : idUser // ignore: cast_nullable_to_non_nullable
               as int?,
-      idDept: freezed == idDept
-          ? _value.idDept
-          : idDept // ignore: cast_nullable_to_non_nullable
-              as int?,
       nama: freezed == nama
           ? _value.nama
           : nama // ignore: cast_nullable_to_non_nullable
               as String?,
-      fullName: freezed == fullName
-          ? _value.fullName
-          : fullName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      noTelp1: freezed == noTelp1
-          ? _value.noTelp1
-          : noTelp1 // ignore: cast_nullable_to_non_nullable
-              as String?,
-      noTelp2: freezed == noTelp2
-          ? _value.noTelp2
-          : noTelp2 // ignore: cast_nullable_to_non_nullable
+      fullname: freezed == fullname
+          ? _value.fullname
+          : fullname // ignore: cast_nullable_to_non_nullable
               as String?,
     ) as $Val);
   }
@@ -109,12 +82,7 @@ abstract class _$$_UserListCopyWith<$Res> implements $UserListCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'id_user') int? idUser,
-      @JsonKey(name: 'id_dept') int? idDept,
-      String? nama,
-      @JsonKey(name: 'fullname') String? fullName,
-      @JsonKey(name: 'no_telp1') String? noTelp1,
-      @JsonKey(name: 'no_telp2') String? noTelp2});
+      {@JsonKey(name: 'id_user') int? idUser, String? nama, String? fullname});
 }
 
 /// @nodoc
@@ -129,36 +97,21 @@ class __$$_UserListCopyWithImpl<$Res>
   @override
   $Res call({
     Object? idUser = freezed,
-    Object? idDept = freezed,
     Object? nama = freezed,
-    Object? fullName = freezed,
-    Object? noTelp1 = freezed,
-    Object? noTelp2 = freezed,
+    Object? fullname = freezed,
   }) {
     return _then(_$_UserList(
       idUser: freezed == idUser
           ? _value.idUser
           : idUser // ignore: cast_nullable_to_non_nullable
               as int?,
-      idDept: freezed == idDept
-          ? _value.idDept
-          : idDept // ignore: cast_nullable_to_non_nullable
-              as int?,
       nama: freezed == nama
           ? _value.nama
           : nama // ignore: cast_nullable_to_non_nullable
               as String?,
-      fullName: freezed == fullName
-          ? _value.fullName
-          : fullName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      noTelp1: freezed == noTelp1
-          ? _value.noTelp1
-          : noTelp1 // ignore: cast_nullable_to_non_nullable
-              as String?,
-      noTelp2: freezed == noTelp2
-          ? _value.noTelp2
-          : noTelp2 // ignore: cast_nullable_to_non_nullable
+      fullname: freezed == fullname
+          ? _value.fullname
+          : fullname // ignore: cast_nullable_to_non_nullable
               as String?,
     ));
   }
@@ -169,11 +122,8 @@ class __$$_UserListCopyWithImpl<$Res>
 class _$_UserList implements _UserList {
   _$_UserList(
       {@JsonKey(name: 'id_user') required this.idUser,
-      @JsonKey(name: 'id_dept') required this.idDept,
       required this.nama,
-      @JsonKey(name: 'fullname') required this.fullName,
-      @JsonKey(name: 'no_telp1') this.noTelp1,
-      @JsonKey(name: 'no_telp2') required this.noTelp2});
+      required this.fullname});
 
   factory _$_UserList.fromJson(Map<String, dynamic> json) =>
       _$$_UserListFromJson(json);
@@ -182,23 +132,13 @@ class _$_UserList implements _UserList {
   @JsonKey(name: 'id_user')
   final int? idUser;
   @override
-  @JsonKey(name: 'id_dept')
-  final int? idDept;
-  @override
   final String? nama;
   @override
-  @JsonKey(name: 'fullname')
-  final String? fullName;
-  @override
-  @JsonKey(name: 'no_telp1')
-  final String? noTelp1;
-  @override
-  @JsonKey(name: 'no_telp2')
-  final String? noTelp2;
+  final String? fullname;
 
   @override
   String toString() {
-    return 'UserList(idUser: $idUser, idDept: $idDept, nama: $nama, fullName: $fullName, noTelp1: $noTelp1, noTelp2: $noTelp2)';
+    return 'UserList(idUser: $idUser, nama: $nama, fullname: $fullname)';
   }
 
   @override
@@ -207,18 +147,14 @@ class _$_UserList implements _UserList {
         (other.runtimeType == runtimeType &&
             other is _$_UserList &&
             (identical(other.idUser, idUser) || other.idUser == idUser) &&
-            (identical(other.idDept, idDept) || other.idDept == idDept) &&
             (identical(other.nama, nama) || other.nama == nama) &&
-            (identical(other.fullName, fullName) ||
-                other.fullName == fullName) &&
-            (identical(other.noTelp1, noTelp1) || other.noTelp1 == noTelp1) &&
-            (identical(other.noTelp2, noTelp2) || other.noTelp2 == noTelp2));
+            (identical(other.fullname, fullname) ||
+                other.fullname == fullname));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, idUser, idDept, nama, fullName, noTelp1, noTelp2);
+  int get hashCode => Object.hash(runtimeType, idUser, nama, fullname);
 
   @JsonKey(ignore: true)
   @override
@@ -237,11 +173,8 @@ class _$_UserList implements _UserList {
 abstract class _UserList implements UserList {
   factory _UserList(
       {@JsonKey(name: 'id_user') required final int? idUser,
-      @JsonKey(name: 'id_dept') required final int? idDept,
       required final String? nama,
-      @JsonKey(name: 'fullname') required final String? fullName,
-      @JsonKey(name: 'no_telp1') final String? noTelp1,
-      @JsonKey(name: 'no_telp2') required final String? noTelp2}) = _$_UserList;
+      required final String? fullname}) = _$_UserList;
 
   factory _UserList.fromJson(Map<String, dynamic> json) = _$_UserList.fromJson;
 
@@ -249,19 +182,9 @@ abstract class _UserList implements UserList {
   @JsonKey(name: 'id_user')
   int? get idUser;
   @override
-  @JsonKey(name: 'id_dept')
-  int? get idDept;
-  @override
   String? get nama;
   @override
-  @JsonKey(name: 'fullname')
-  String? get fullName;
-  @override
-  @JsonKey(name: 'no_telp1')
-  String? get noTelp1;
-  @override
-  @JsonKey(name: 'no_telp2')
-  String? get noTelp2;
+  String? get fullname;
   @override
   @JsonKey(ignore: true)
   _$$_UserListCopyWith<_$_UserList> get copyWith =>
