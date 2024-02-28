@@ -145,7 +145,7 @@ Future<void> _onTimerIsUp(
       if (justSearched.value && searchController.value.text.isNotEmpty) {
         ref
             .read(pemberiTugasDinasNotifierProvider.notifier)
-            .getPemohonListNamed(searchTrimmed);
+            .getPemberiTugasListNamed(searchTrimmed);
         ref.read(lastSearchedProvider.notifier).state = searchTrimmed;
 
         justSearched.value = false;

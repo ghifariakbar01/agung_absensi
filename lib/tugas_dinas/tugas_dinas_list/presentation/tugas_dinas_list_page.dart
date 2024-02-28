@@ -1,4 +1,4 @@
-import 'package:face_net_authentication/absen_manual/absen_manual_approve/application/absen_manual_approve_notifier.dart';
+import 'package:face_net_authentication/tugas_dinas/tugas_dinas_approve/application/tugas_dinas_approve_notifier.dart';
 import 'package:face_net_authentication/tugas_dinas/tugas_dinas_list/application/tugas_dinas_list_notifier.dart';
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
 import 'package:face_net_authentication/send_wa/application/send_wa_notifier.dart';
@@ -26,9 +26,9 @@ class TugasDinasListPage extends HookConsumerWidget {
 
     final sendWa = ref.watch(sendWaNotifierProvider);
     final absenManualList = ref.watch(tugasDinasListControllerProvider);
-    final absenApprove = ref.watch(absenManualApproveControllerProvider);
+    final absenApprove = ref.watch(tugasDinasApproveControllerProvider);
 
-    ref.listen<AsyncValue>(absenManualApproveControllerProvider, (_, state) {
+    ref.listen<AsyncValue>(tugasDinasApproveControllerProvider, (_, state) {
       if (!state.isLoading &&
           state.hasValue &&
           state.value != '' &&

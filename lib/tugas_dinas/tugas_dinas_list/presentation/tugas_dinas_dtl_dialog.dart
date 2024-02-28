@@ -267,10 +267,7 @@ class TugasDinasDtlDialog extends StatelessWidget {
                             'dd MMM yyyy',
                           ).format(DateTime.parse(item.tglStart!)),
                           style: Themes.customColor(9,
-                              color: item.btlSta == true
-                                  ? Colors.white
-                                  : Palette.blue,
-                              fontWeight: FontWeight.w500),
+                              color: Palette.blue, fontWeight: FontWeight.w500),
                         ),
                       ],
                     ),
@@ -293,9 +290,7 @@ class TugasDinasDtlDialog extends StatelessWidget {
                             'dd MMM yyyy',
                           ).format(DateTime.parse(item.tglEnd!)),
                           style: Themes.customColor(9,
-                              color: item.btlSta == true
-                                  ? Colors.white
-                                  : Palette.tertiaryColor,
+                              color: Palette.tertiaryColor,
                               fontWeight: FontWeight.w500),
                         ),
                       ],

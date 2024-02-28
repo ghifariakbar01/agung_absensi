@@ -1,3 +1,4 @@
+import 'package:face_net_authentication/tugas_dinas/tugas_dinas_approve/application/tugas_dinas_approve_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
@@ -5,7 +6,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../constants/assets.dart';
-import '../../../sakit/sakit_list/presentation/sakit_dialog.dart';
 import '../../../shared/providers.dart';
 import '../../../style/style.dart';
 
@@ -101,25 +101,25 @@ class TugasDinasListItem extends HookConsumerWidget {
                         TappableSvg(
                             assetPath: Assets.iconBatal,
                             onTap: () {
-                              // showDialog(
-                              //   context: context,
-                              //   builder: (context) => VBatalDialog(
-                              //     onTap: () async {
-                              //       context.pop();
-                              //       await ref
-                              //           .read(
-                              //               absenManualApproveControllerProvider
-                              //                   .notifier)
-                              //           .batal(
-                              //             item: item,
-                              //             nama: ref
-                              //                 .read(userNotifierProvider)
-                              //                 .user
-                              //                 .nama!,
-                              //           );
-                              //     },
-                              //   ),
-                              // );
+                              showDialog(
+                                context: context,
+                                builder: (context) => VBatalDialog(
+                                  onTap: () async {
+                                    context.pop();
+                                    await ref
+                                        .read(
+                                            tugasDinasApproveControllerProvider
+                                                .notifier)
+                                        .batal(
+                                          item: item,
+                                          nama: ref
+                                              .read(userNotifierProvider)
+                                              .user
+                                              .nama!,
+                                        );
+                                  },
+                                ),
+                              );
                             }),
                     ],
                   ),
@@ -205,8 +205,10 @@ class TugasDinasListItem extends HookConsumerWidget {
                             children: [
                               Text(
                                 'Tanggal Awal',
-                                style:
-                                    Themes.customColor(7, color: Colors.grey),
+                                style: Themes.customColor(7,
+                                    color: item.btlSta == true
+                                        ? Colors.white
+                                        : Colors.grey),
                               ),
                               SizedBox(
                                 height: 2,
@@ -262,8 +264,10 @@ class TugasDinasListItem extends HookConsumerWidget {
                             children: [
                               Text(
                                 'Tanggal Akhir',
-                                style:
-                                    Themes.customColor(7, color: Colors.grey),
+                                style: Themes.customColor(7,
+                                    color: item.btlSta == true
+                                        ? Colors.white
+                                        : Colors.grey),
                               ),
                               SizedBox(
                                 height: 2,
@@ -294,7 +298,10 @@ class TugasDinasListItem extends HookConsumerWidget {
                     children: [
                       Text(
                         'Kategori',
-                        style: Themes.customColor(7, color: Colors.grey),
+                        style: Themes.customColor(7,
+                            color: item.btlSta == true
+                                ? Colors.white
+                                : Colors.grey),
                       ),
                       SizedBox(
                         height: 2,
@@ -471,64 +478,38 @@ class TugasDinasListItem extends HookConsumerWidget {
                                   color: Colors.transparent,
                                   child: InkWell(
                                     splashColor: Palette.primaryColor,
-                                    // onTap: () async {
-                                    //   if (!ref
-                                    //       .read(userNotifierProvider)
-                                    //       .user
-                                    //       .isSpvOrHrd!) {
-                                    //     showDialog(
-                                    //       context: context,
-                                    //       builder: (context) => VAksesDitolak(),
-                                    //     );
-                                    //   } else {
-                                    //     // jika belum diapprove maka approve
-                                    //     // kl udah di unapprove
-                                    //     if (item.spvSta == false) {
-                                    //       await showDialog(
-                                    //           context: context,
-                                    //           builder: (context) =>
-                                    //               VAlertDialog2(
-                                    //                   label:
-                                    //                       'Dibutuhkan Konfirmasi SPV (Approve)',
-                                    //                   onPressed: () async {
-                                    //                     context.pop();
-
-                                    //                     await ref
-                                    //                         .read(
-                                    //                             absenManualApproveControllerProvider
-                                    //                                 .notifier)
-                                    //                         .approveSpv(
-                                    //                             item: item,
-                                    //                             nama: ref
-                                    //                                 .read(
-                                    //                                     userNotifierProvider)
-                                    //                                 .user
-                                    //                                 .nama!);
-                                    //                   }));
-                                    //     } else {
-                                    //       await showDialog(
-                                    //           context: context,
-                                    //           builder: (context) =>
-                                    //               VAlertDialog2(
-                                    //                   label:
-                                    //                       'Dibutuhkan Konfirmasi SPV (Unapprove)',
-                                    //                   onPressed: () async {
-                                    //                     context.pop();
-                                    //                     await ref
-                                    //                         .read(
-                                    //                             absenManualApproveControllerProvider
-                                    //                                 .notifier)
-                                    //                         .unApproveSpv(
-                                    //                             item: item,
-                                    //                             nama: ref
-                                    //                                 .read(
-                                    //                                     userNotifierProvider)
-                                    //                                 .user
-                                    //                                 .nama!);
-                                    //                   }));
-                                    //     }
-                                    //   }
-                                    // },
+                                    onTap: () async {
+                                      if (!ref
+                                          .read(userNotifierProvider)
+                                          .user
+                                          .isSpvOrHrd!) {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) => VAksesDitolak(),
+                                        );
+                                      } else {
+                                        await showDialog(
+                                            context: context,
+                                            builder: (context) => VAlertDialog2(
+                                                label:
+                                                    'Dibutuhkan Konfirmasi SPV ${item.spvSta ? '(Unapprove)' : '(Approve)'}',
+                                                onPressed: () async {
+                                                  context.pop();
+                                                  await ref
+                                                      .read(
+                                                          tugasDinasApproveControllerProvider
+                                                              .notifier)
+                                                      .processSpv(
+                                                        item: item,
+                                                        nama: ref
+                                                            .read(
+                                                                userNotifierProvider)
+                                                            .user
+                                                            .nama!,
+                                                      );
+                                                }));
+                                      }
+                                    },
                                     child: Ink(
                                       height: 25,
                                       decoration: BoxDecoration(
@@ -555,7 +536,7 @@ class TugasDinasListItem extends HookConsumerWidget {
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            'Approve SPV',
+                                            'Approve SPV   ',
                                             style: Themes.customColor(7,
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.w500),
@@ -609,61 +590,41 @@ class TugasDinasListItem extends HookConsumerWidget {
                                   color: Colors.transparent,
                                   child: InkWell(
                                     splashColor: Palette.primaryColor,
-                                    // onTap: () async {
-                                    //   if (!ref
-                                    //       .read(userNotifierProvider)
-                                    //       .user
-                                    //       .isSpvOrHrd!) {
-                                    //     showDialog(
-                                    //       context: context,
-                                    //       builder: (context) => VAksesDitolak(),
-                                    //     );
-                                    //   } else {
-                                    //     final String? text =
-                                    //         await DialogHelper<void>()
-                                    //             .showFormDialog(
-                                    //       label: 'Note HRD',
-                                    //       context: context,
-                                    //     );
-
-                                    //     if (text != null) {
-                                    //       if (item.hrdSta == false)
-                                    //         await ref
-                                    //             .read(
-                                    //                 absenManualApproveControllerProvider
-                                    //                     .notifier)
-                                    //             .approveHrd(
-                                    //               note: text,
-                                    //               item: item,
-                                    //               namaHrd: ref
-                                    //                   .read(
-                                    //                       userNotifierProvider)
-                                    //                   .user
-                                    //                   .nama!,
-                                    //             );
-                                    //       else
-                                    //         await ref
-                                    //             .read(
-                                    //                 absenManualApproveControllerProvider
-                                    //                     .notifier)
-                                    //             .unApproveHrd(
-                                    //               idAbsenMnl: item.idAbsenmnl,
-                                    //               note: text,
-                                    //               namaHrd: ref
-                                    //                   .read(
-                                    //                       userNotifierProvider)
-                                    //                   .user
-                                    //                   .nama!,
-                                    //             );
-                                    //     }
-                                    //   }
-                                    // },
+                                    onTap: () async {
+                                      if (!ref
+                                          .read(userNotifierProvider)
+                                          .user
+                                          .isSpvOrHrd!) {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) => VAksesDitolak(),
+                                        );
+                                      } else {
+                                        return showDialog(
+                                            context: context,
+                                            builder: (context) => VAlertDialog2(
+                                                label:
+                                                    'Dibutuhkan Konfirmasi HRD ${item.hrdSta ? '(Unapprove)' : '(Approve)'}',
+                                                onPressed: () async {
+                                                  context.pop();
+                                                  await ref
+                                                      .read(
+                                                          tugasDinasApproveControllerProvider
+                                                              .notifier)
+                                                      .processHrd(
+                                                        item: item,
+                                                        namaHrd: ref
+                                                            .read(
+                                                                userNotifierProvider)
+                                                            .user
+                                                            .nama!,
+                                                      );
+                                                }));
+                                      }
+                                    },
                                     child: Ink(
                                       height: 25,
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.only(
-                                          bottomRight: Radius.circular(8),
-                                        ),
                                         color: item.hrdSta == true
                                             ? Palette.green
                                             : Palette.red2,
@@ -673,7 +634,7 @@ class TugasDinasListItem extends HookConsumerWidget {
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            'Approve HRD',
+                                            'Approve HRD    ',
                                             style: Themes.customColor(7,
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.w500),
@@ -686,31 +647,239 @@ class TugasDinasListItem extends HookConsumerWidget {
                               ),
                               if (item.hrdSta == true)
                                 Positioned(
-                                  left: 5,
+                                  right: 5,
                                   bottom: 0,
                                   top: 0,
-                                  child: Transform.scale(
-                                    scaleX: -1,
-                                    child: SvgPicture.asset(
-                                      Assets.iconThumbUp,
-                                    ),
+                                  child: SvgPicture.asset(
+                                    Assets.iconThumbUp,
                                   ),
                                 ),
                               if (item.hrdSta == false)
                                 Positioned(
-                                  left: 5,
+                                  right: 5,
                                   bottom: 0,
                                   top: 0,
-                                  child: Transform.scale(
-                                    scaleX: -1,
-                                    child: SvgPicture.asset(
-                                      Assets.iconThumbDown,
-                                    ),
+                                  child: SvgPicture.asset(
+                                    Assets.iconThumbDown,
                                   ),
                                 ),
                             ],
                           ),
-                        )
+                        ),
+
+                        Expanded(
+                          child: Stack(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(boxShadow: [
+                                  BoxShadow(
+                                    color: item.btlSta == true
+                                        ? Colors.white
+                                        : Colors.grey
+                                            .withOpacity(0.5), // Shadow color
+                                    spreadRadius: 1,
+                                    blurRadius: 3,
+                                    offset: Offset(0,
+                                        1), // Controls the position of the shadow
+                                  ),
+                                ]),
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    splashColor: Palette.primaryColor,
+                                    onTap: () async {
+                                      if (!ref
+                                          .read(userNotifierProvider)
+                                          .user
+                                          .isSpvOrHrd!) {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) => VAksesDitolak(),
+                                        );
+                                      } else {
+                                        return showDialog(
+                                            context: context,
+                                            builder: (context) => VAlertDialog2(
+                                                label:
+                                                    'Dibutuhkan Konfirmasi GM ${item.gmSta ? '(Unapprove)' : '(Approve)'}',
+                                                onPressed: () async {
+                                                  context.pop();
+                                                  await ref
+                                                      .read(
+                                                          tugasDinasApproveControllerProvider
+                                                              .notifier)
+                                                      .processGm(
+                                                        item: item,
+                                                        namaGm: ref
+                                                            .read(
+                                                                userNotifierProvider)
+                                                            .user
+                                                            .nama!,
+                                                        ptServer: ref
+                                                            .read(
+                                                                userNotifierProvider)
+                                                            .user
+                                                            .ptServer!,
+                                                      );
+                                                }));
+                                      }
+                                    },
+                                    child: Ink(
+                                      height: 25,
+                                      decoration: BoxDecoration(
+                                          color: item.gmSta == true
+                                              ? Palette.green
+                                              : Palette.red2,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: item.btlSta == true
+                                                  ? Colors.white
+                                                  : Colors.grey.withOpacity(
+                                                      0.5), // Shadow color
+                                              spreadRadius: 1,
+                                              blurRadius: 3,
+                                              offset: Offset(0,
+                                                  1), // Controls the position of the shadow
+                                            ),
+                                          ]),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            'Approve GM   ',
+                                            style: Themes.customColor(7,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              if (item.gmSta == true)
+                                Positioned(
+                                  right: 5,
+                                  bottom: 0,
+                                  top: 0,
+                                  child: SvgPicture.asset(
+                                    Assets.iconThumbUp,
+                                  ),
+                                ),
+                              if (item.gmSta == false)
+                                Positioned(
+                                  right: 5,
+                                  bottom: 0,
+                                  top: 0,
+                                  child: SvgPicture.asset(
+                                    Assets.iconThumbDown,
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+
+                        // not ok
+                        Expanded(
+                          child: Stack(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(boxShadow: [
+                                  BoxShadow(
+                                    color: item.btlSta == true
+                                        ? Colors.white
+                                        : Colors.grey
+                                            .withOpacity(0.5), // Shadow color
+                                    spreadRadius: 1,
+                                    blurRadius: 3,
+                                    offset: Offset(0,
+                                        1), // Controls the position of the shadow
+                                  ),
+                                ]),
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    splashColor: Palette.primaryColor,
+                                    onTap: () async {
+                                      if (!ref
+                                          .read(userNotifierProvider)
+                                          .user
+                                          .isSpvOrHrd!) {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) => VAksesDitolak(),
+                                        );
+                                      } else {
+                                        return showDialog(
+                                            context: context,
+                                            builder: (context) => VAlertDialog2(
+                                                label:
+                                                    'Dibutuhkan Konfirmasi COO ${item.cooSta ? '(Unapprove)' : '(Approve)'}',
+                                                onPressed: () async {
+                                                  context.pop();
+                                                  await ref
+                                                      .read(
+                                                          tugasDinasApproveControllerProvider
+                                                              .notifier)
+                                                      .processCOO(
+                                                        item: item,
+                                                        namaCoo: ref
+                                                            .read(
+                                                                userNotifierProvider)
+                                                            .user
+                                                            .nama!,
+                                                      );
+                                                }));
+                                      }
+                                    },
+                                    child: Ink(
+                                      height: 25,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.only(
+                                          bottomRight: Radius.circular(8),
+                                        ),
+                                        color: item.cooSta == true
+                                            ? Palette.green
+                                            : Palette.red2,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            'Approve COO    ',
+                                            style: Themes.customColor(7,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              if (item.cooSta == true)
+                                Positioned(
+                                  right: 5,
+                                  bottom: 0,
+                                  top: 0,
+                                  child: SvgPicture.asset(
+                                    Assets.iconThumbUp,
+                                  ),
+                                ),
+                              if (item.cooSta == false)
+                                Positioned(
+                                  right: 5,
+                                  bottom: 0,
+                                  top: 0,
+                                  child: SvgPicture.asset(
+                                    Assets.iconThumbDown,
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
                       ]
                     ],
                   ),

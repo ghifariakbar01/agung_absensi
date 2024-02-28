@@ -224,7 +224,7 @@ class CreateTugasDinasRemoteService {
   //   }
   // }
 
-  Future<List<UserList>> getPemohonListNamed(String name) async {
+  Future<List<UserList>> getPemberiTugasListNamed(String name) async {
     try {
       final Map<String, String> submitTugasDinas = {
         "command": "SELECT * "

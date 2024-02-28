@@ -73,7 +73,7 @@ class CreateTugasDinasRepository {
   //   return _remoteService.getJenisAbsen();
   // }
 
-  Future<List<UserList>> getPemohonListNamed(String name) async {
-    return _remoteService.getPemohonListNamed(name);
+  Future<List<UserList>> getPemberiTugasListNamed(String name) async {
+    return _remoteService.getPemberiTugasListNamed(name);
   }
 }

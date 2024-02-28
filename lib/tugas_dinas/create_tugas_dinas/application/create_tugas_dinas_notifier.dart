@@ -47,11 +47,12 @@ class PemberiTugasDinasNotifier extends _$PemberiTugasDinasNotifier {
     return [];
   }
 
-  Future<void> getPemohonListNamed(String nama) async {
+  Future<void> getPemberiTugasListNamed(String nama) async {
     state = const AsyncLoading();
 
-    state = await AsyncValue.guard(() =>
-        ref.read(createTugasDinasRepositoryProvider).getPemohonListNamed(nama));
+    state = await AsyncValue.guard(() => ref
+        .read(createTugasDinasRepositoryProvider)
+        .getPemberiTugasListNamed(nama));
   }
 }
 
