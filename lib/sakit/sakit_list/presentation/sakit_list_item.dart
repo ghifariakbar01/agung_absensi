@@ -1,4 +1,3 @@
-import 'package:face_net_authentication/sakit/sakit_list/application/sakit_list_notifier.dart';
 import 'package:face_net_authentication/shared/providers.dart';
 import 'package:face_net_authentication/widgets/tappable_widget.dart';
 import 'package:flutter/material.dart';

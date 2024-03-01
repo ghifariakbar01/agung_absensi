@@ -20,6 +20,7 @@ class UserHelperNotifier extends _$UserHelperNotifier {
     if (user.payroll == null) {
       await repo.saveUserPayrollOnCreateFormSakit(
           server: server, userId: userId, password: password);
+      // ignore: unused_result
       ref.refresh(getUserFutureProvider);
       ref.notifyListeners();
     }

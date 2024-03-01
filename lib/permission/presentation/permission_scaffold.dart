@@ -1,5 +1,4 @@
 import 'package:face_net_authentication/widgets/v_dialogs.dart';
-import 'package:face_net_authentication/style/style.dart';
 import 'package:flutter/material.dart';
 import 'package:geofence_service/geofence_service.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';

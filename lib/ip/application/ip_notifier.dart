@@ -86,7 +86,7 @@ class IpNotifier extends _$IpNotifier {
       'PT Agung Lintas Raya'
           'PT Agung Tama Raya'
     ],
-    ipPriyok: ['PT Agung Raya', 'PT Agung Jasa Logistik'],
+    // ipPriyok: ['PT Agung Raya', 'PT Agung Jasa Logistik'],
   };
 
   String _initializeIp(String pt) {

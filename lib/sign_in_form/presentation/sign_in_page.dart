@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/ip/application/ip_notifier.dart';
 import 'package:face_net_authentication/widgets/v_async_widget.dart';

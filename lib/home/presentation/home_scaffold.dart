@@ -77,6 +77,7 @@ class HomeScaffold extends ConsumerWidget {
 
     ref.listen<AsyncValue>(themeControllerProvider, (_, state) {
       if (!state.isLoading && state.hasValue && state.value != null) {
+        // ignore: unused_result
         ref.refresh(themeNotifierProvider);
       } else {
         return state.showAlertDialogOnError(context);

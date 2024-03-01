@@ -1,4 +1,3 @@
-import 'package:face_net_authentication/izin/izin_list/application/izin_list_notifier.dart';
 import 'package:face_net_authentication/sakit/sakit_list/application/sakit_list_notifier.dart';
 import 'package:face_net_authentication/utils/enums.dart';
 import 'package:face_net_authentication/widgets/tappable_widget.dart';

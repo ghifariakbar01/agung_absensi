@@ -45,15 +45,9 @@ class RiwayatAbsenPage extends ConsumerWidget {
                                 ))), (list) {
                   log('list.length ${list.length}');
 
-                  final oldList = ref
-                      .read(riwayatAbsenNotifierProvider.notifier)
-                      .state
-                      .riwayatAbsen;
-
-                  final page = ref
-                      .read(riwayatAbsenNotifierProvider.notifier)
-                      .state
-                      .page;
+                  final oldList =
+                      ref.read(riwayatAbsenNotifierProvider).riwayatAbsen;
+                  final page = ref.read(riwayatAbsenNotifierProvider).page;
 
                   if (list.length < 1 && page != 1) {
                     // debugger(message: 'called');

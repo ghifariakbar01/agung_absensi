@@ -52,9 +52,9 @@ class AbsenRemoteService {
     // required int hrdSta,
     // required String periode,
   }) async {
-    final currentMonth = StringUtils.monthDate(dbDate);
-    //
-    final currentDate = StringUtils.midnightDate(date);
+    // final currentMonth = StringUtils.monthDate(dbDate);
+    // //
+    // final currentDate = StringUtils.midnightDate(date);
     final trimmedDate = StringUtils.trimmedDate(date);
     //
     final trimmedDateDb = StringUtils.trimmedDate(dbDate);
