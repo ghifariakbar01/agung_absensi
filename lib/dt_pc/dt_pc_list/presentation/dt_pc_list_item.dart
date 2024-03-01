@@ -101,24 +101,33 @@ class DtPcListItem extends HookConsumerWidget {
                         TappableSvg(
                             assetPath: Assets.iconBatal,
                             onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) => VBatalDialog(
-                                  onTap: () async {
-                                    context.pop();
-                                    await ref
-                                        .read(dtPcApproveControllerProvider
-                                            .notifier)
-                                        .batal(
-                                          itemDt: item,
-                                          nama: ref
-                                              .read(userNotifierProvider)
-                                              .user
-                                              .nama!,
-                                        );
-                                  },
-                                ),
-                              );
+                              if ((!ref
+                                  .read(dtPcApproveControllerProvider.notifier)
+                                  .canBatal(item))) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => VAksesDitolak(),
+                                );
+                              } else {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => VBatalDialog(
+                                    onTap: () async {
+                                      context.pop();
+                                      await ref
+                                          .read(dtPcApproveControllerProvider
+                                              .notifier)
+                                          .batal(
+                                            itemDt: item,
+                                            nama: ref
+                                                .read(userNotifierProvider)
+                                                .user
+                                                .nama!,
+                                          );
+                                    },
+                                  ),
+                                );
+                              }
                             }),
                     ],
                   ),
@@ -342,9 +351,9 @@ class DtPcListItem extends HookConsumerWidget {
                                     splashColor: Palette.primaryColor,
                                     onTap: () async {
                                       if (!ref
-                                          .read(userNotifierProvider)
-                                          .user
-                                          .isSpvOrHrd!) {
+                                          .read(dtPcApproveControllerProvider
+                                              .notifier)
+                                          .canSpvApprove(item)) {
                                         showDialog(
                                           context: context,
                                           builder: (context) => VAksesDitolak(),
@@ -480,9 +489,9 @@ class DtPcListItem extends HookConsumerWidget {
                                     splashColor: Palette.primaryColor,
                                     onTap: () async {
                                       if (!ref
-                                          .read(userNotifierProvider)
-                                          .user
-                                          .isSpvOrHrd!) {
+                                          .read(dtPcApproveControllerProvider
+                                              .notifier)
+                                          .canHrdApprove(item)) {
                                         showDialog(
                                           context: context,
                                           builder: (context) => VAksesDitolak(),

@@ -231,7 +231,10 @@ class SakitApproveController extends _$SakitApproveController {
       return false;
     }
 
-    if (ref.read(sakitListControllerProvider.notifier).isHrdOrSpv() == false) {
+    final spv = ref.read(userNotifierProvider).user.spv;
+
+    if (ref.read(sakitListControllerProvider.notifier).isHrdOrSpv(spv) ==
+        false) {
       return false;
     }
 
@@ -260,7 +263,10 @@ class SakitApproveController extends _$SakitApproveController {
       return false;
     }
 
-    if (ref.read(sakitListControllerProvider.notifier).isHrdOrSpv() == false) {
+    final hrd = ref.read(userNotifierProvider).user.fin;
+
+    if (ref.read(sakitListControllerProvider.notifier).isHrdOrSpv(hrd) ==
+        false) {
       return false;
     }
 
@@ -268,8 +274,12 @@ class SakitApproveController extends _$SakitApproveController {
       return false;
     }
 
-    if (calcDiffSaturdaySunday(DateTime.parse(item.cDate!), DateTime.now()) >=
-        1) {
+    final jumlahHari =
+        DateTime.now().difference(DateTime.parse(item.cDate!)).inDays;
+    final jumlahHariLibur =
+        calcDiffSaturdaySunday(DateTime.parse(item.cDate!), DateTime.now());
+
+    if (jumlahHari - jumlahHariLibur >= 1) {
       return false;
     }
 

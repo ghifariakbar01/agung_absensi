@@ -25,7 +25,7 @@ _$_UserModelWithPassword _$$_UserModelWithPasswordFromJson(
       photo: json['photo'] as String?,
       passwordUpdate: json['pass_update'] as String?,
       payroll: json['payroll'] as String?,
-      fullAkses: json['full_akses'] as bool?,
+      fullAkses: json['full_akses'] as bool,
       lihat: json['lihat'] as String?,
       baru: json['baru'] as String?,
       ubah: json['ubah'] as String?,
@@ -36,9 +36,9 @@ _$_UserModelWithPassword _$$_UserModelWithPasswordFromJson(
       coo: json['coo'] as String?,
       gm: json['gm'] as String?,
       oth: json['oth'] as String?,
+      staff: json['staff'] as String?,
       password: json['password'] as String? ?? '',
       ptServer: json['ptServer'] as String? ?? '',
-      isSpvOrHrd: json['isSpvOrHrd'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$_UserModelWithPasswordToJson(
@@ -71,7 +71,7 @@ Map<String, dynamic> _$$_UserModelWithPasswordToJson(
       'coo': instance.coo,
       'gm': instance.gm,
       'oth': instance.oth,
+      'staff': instance.staff,
       'password': instance.password,
       'ptServer': instance.ptServer,
-      'isSpvOrHrd': instance.isSpvOrHrd,
     };

@@ -27,7 +27,7 @@ class UserModelWithPassword with _$UserModelWithPassword {
     @JsonKey(name: 'pass_update') required String? passwordUpdate,
     required String? payroll,
     // user access
-    @JsonKey(name: "full_akses") required bool? fullAkses,
+    @JsonKey(name: "full_akses") required bool fullAkses,
     final String? lihat,
     final String? baru,
     final String? ubah,
@@ -38,11 +38,10 @@ class UserModelWithPassword with _$UserModelWithPassword {
     final String? coo,
     final String? gm,
     final String? oth,
+    final String? staff,
     //
     @JsonKey(defaultValue: '') required String? password,
     @JsonKey(defaultValue: '') required String? ptServer,
-    // Is SPV or HRD
-    @JsonKey(defaultValue: false) required bool? isSpvOrHrd,
   }) = _UserModelWithPassword;
 
   factory UserModelWithPassword.fromJson(Map<String, Object?> json) =>
@@ -67,8 +66,8 @@ class UserModelWithPassword with _$UserModelWithPassword {
         photo: '',
         ptServer: '',
         payroll: '',
-        fullAkses: null,
-        isSpvOrHrd: false,
+        staff: '',
+        fullAkses: false,
         //
       );
 }

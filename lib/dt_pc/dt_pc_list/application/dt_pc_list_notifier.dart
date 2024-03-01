@@ -53,7 +53,11 @@ class DtPcListController extends _$DtPcListController {
   }
 
   Future<List<DtPcList>> _determineAndGetIzinListOn({required int page}) async {
-    if (isHrdOrSpv()) {
+    final hrd = ref.read(userNotifierProvider).user.fin;
+    final spv = ref.read(userNotifierProvider).user.spv;
+    final fullAkses = ref.read(userNotifierProvider).user.fullAkses;
+
+    if (fullAkses || isHrdOrSpv(hrd) || isHrdOrSpv(spv)) {
       return ref.read(dtPcListRepositoryProvider).getDtPcList(page: page);
     } else {
       final idUser = ref.read(userNotifierProvider).user.idUser;
@@ -67,7 +71,45 @@ class DtPcListController extends _$DtPcListController {
     }
   }
 
-  bool isHrdOrSpv() {
-    return ref.read(userNotifierProvider).user.isSpvOrHrd ?? false;
+  bool _isAct() {
+    final server = ref.read(userNotifierProvider).user.ptServer;
+    return server == 'gs_12';
+  }
+
+  bool isSpvEdit() {
+    final spv = ref.read(userNotifierProvider).user.spv;
+    final fullAkses = ref.read(userNotifierProvider).user.fullAkses;
+
+    if (spv == null) {
+      return false;
+    }
+
+    if (fullAkses == false) {
+      return false;
+    }
+
+    if (_isAct()) {
+      return spv.contains(',10,');
+    } else {
+      return spv.contains(',5013,');
+    }
+  }
+
+  bool isHrdOrSpv(String? access) {
+    final fullAkses = ref.read(userNotifierProvider).user.fullAkses;
+
+    if (access == null) {
+      return false;
+    }
+
+    if (fullAkses == false) {
+      return false;
+    }
+
+    if (_isAct()) {
+      return access.contains(',5,');
+    } else {
+      return access.contains(',5104,');
+    }
   }
 }

@@ -56,7 +56,11 @@ class AbsenManualListController extends _$AbsenManualListController {
 
   Future<List<AbsenManualList>> _determineAndGetIzinListOn(
       {required int page}) async {
-    if (isHrdOrSpv()) {
+    final hrd = ref.read(userNotifierProvider).user.fin;
+    final spv = ref.read(userNotifierProvider).user.spv;
+    final fullAkses = ref.read(userNotifierProvider).user.fullAkses;
+
+    if (fullAkses || isHrdOrSpv(hrd) || isHrdOrSpv(spv)) {
       return ref
           .read(absenManualListRepositoryProvider)
           .getAbsenManualList(page: page);
@@ -74,7 +78,45 @@ class AbsenManualListController extends _$AbsenManualListController {
     }
   }
 
-  bool isHrdOrSpv() {
-    return ref.read(userNotifierProvider).user.isSpvOrHrd ?? false;
+  bool _isAct() {
+    final server = ref.read(userNotifierProvider).user.ptServer;
+    return server == 'gs_12';
+  }
+
+  bool isSpvEdit() {
+    final spv = ref.read(userNotifierProvider).user.spv;
+    final fullAkses = ref.read(userNotifierProvider).user.fullAkses;
+
+    if (spv == null) {
+      return false;
+    }
+
+    if (fullAkses == false) {
+      return false;
+    }
+
+    if (_isAct()) {
+      return spv.contains(',10,');
+    } else {
+      return spv.contains(',5014,');
+    }
+  }
+
+  bool isHrdOrSpv(String? access) {
+    final fullAkses = ref.read(userNotifierProvider).user.fullAkses;
+
+    if (access == null) {
+      return false;
+    }
+
+    if (fullAkses == false) {
+      return false;
+    }
+
+    if (_isAct()) {
+      return access.contains(',16,');
+    } else {
+      return access.contains(',5105,');
+    }
   }
 }

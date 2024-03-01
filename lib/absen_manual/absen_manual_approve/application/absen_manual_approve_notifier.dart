@@ -1,5 +1,3 @@
-import 'package:face_net_authentication/absen_manual/absen_manual_approve/infrastructure/absen_manual_approve_repository.dart';
-import 'package:face_net_authentication/dt_pc/dt_pc_list/application/dt_pc_list_notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../send_wa/application/phone_num.dart';
@@ -8,7 +6,9 @@ import '../../../shared/providers.dart';
 
 import '../../absen_manual_list/application/absen_manual_list.dart';
 
+import '../../absen_manual_list/application/absen_manual_list_notifier.dart';
 import '../infrastructure/absen_manual_approve_remote_service.dart.dart';
+import '../infrastructure/absen_manual_approve_repository.dart';
 
 part 'absen_manual_approve_notifier.g.dart';
 
@@ -155,23 +155,52 @@ class AbsenManualApproveController extends _$AbsenManualApproveController {
     }
   }
 
+  int _calcDiffSaturdaySunday(DateTime startDate, DateTime endDate) {
+    int nbDays = 0;
+    DateTime currentDay = startDate;
+
+    while (currentDay.isBefore(endDate)) {
+      currentDay = currentDay.add(Duration(days: 1));
+
+      if (currentDay.weekday == DateTime.saturday &&
+          currentDay.weekday == DateTime.sunday) {
+        nbDays += 1;
+      }
+    }
+
+    return nbDays;
+  }
+
   bool canSpvApprove(AbsenManualList item) {
     if (item.hrdSta == true) {
       return false;
     }
 
-    if (ref.read(dtPcListControllerProvider.notifier).isHrdOrSpv() == false) {
+    final spv = ref.read(userNotifierProvider).user.spv;
+
+    if (ref.read(absenManualListControllerProvider.notifier).isHrdOrSpv(spv) ==
+        false) {
       return false;
     }
 
-    if (ref.read(userNotifierProvider).user.idUser == item.idUser) {
+    final staff = ref.read(userNotifierProvider).user.staff;
+
+    if (staff!.contains(item.idUser.toString()) == false) {
       return false;
     }
 
-    // if (calcDiffSaturdaySunday(DateTime.parse(item.cDate!), DateTime.now()) >=
-    //     3) {
-    //   return false;
-    // }
+    final jumlahHari =
+        _calcDiffSaturdaySunday(DateTime.parse(item.cDate), DateTime.now());
+
+    if (DateTime.now().difference(DateTime.parse(item.cDate)).inDays -
+            jumlahHari >=
+        3) {
+      return false;
+    }
+
+    if (ref.read(userNotifierProvider).user.idUser != item.idUser) {
+      return false;
+    }
 
     if (ref.read(userNotifierProvider).user.fullAkses == true) {
       return true;
@@ -185,27 +214,34 @@ class AbsenManualApproveController extends _$AbsenManualApproveController {
       return false;
     }
 
-    if (item.hrdSta == true) {
+    final hrd = ref.read(userNotifierProvider).user.fin;
+
+    if (ref.read(absenManualListControllerProvider.notifier).isHrdOrSpv(hrd) ==
+        false) {
       return false;
     }
 
-    if (ref.read(dtPcListControllerProvider.notifier).isHrdOrSpv() == false) {
+    final jumlahHari =
+        _calcDiffSaturdaySunday(DateTime.parse(item.spvTgl), DateTime.now());
+
+    if (DateTime.now().difference(DateTime.parse(item.cDate)).inDays -
+            jumlahHari >=
+        1) {
       return false;
     }
-
-    if (ref.read(userNotifierProvider).user.idUser == item.idUser) {
-      return false;
-    }
-
-    // if (calcDiffSaturdaySunday(DateTime.parse(item.cDate!), DateTime.now()) >=
-    //     1) {
-    //   return false;
-    // }
 
     if (ref.read(userNotifierProvider).user.fullAkses == true) {
       return true;
     }
 
     return false;
+  }
+
+  bool canBatal(AbsenManualList item) {
+    if (item.btlSta == true && item.hrdSta == true) {
+      return false;
+    }
+
+    return true;
   }
 }

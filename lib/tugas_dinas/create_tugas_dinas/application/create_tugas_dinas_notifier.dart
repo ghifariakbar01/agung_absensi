@@ -198,7 +198,7 @@ class CreateTugasDinasNotifier extends _$CreateTugasDinasNotifier {
     final int _jumlahhari = _getJumlahHari(
         create, DateTime.parse(tglAwal), DateTime.parse(tglAkhir));
     int _diffIndays() =>
-        DateTime.parse(tglAwal).difference(DateTime.now()).inDays + _jumlahhari;
+        DateTime.now().difference(DateTime.parse(tglAwal)).inDays + _jumlahhari;
 
     if (kategori == 'lk' && khusus == false) {
       final bool lewatDariMinTigaHari = _diffIndays() > -2;
@@ -213,7 +213,7 @@ class CreateTugasDinasNotifier extends _$CreateTugasDinasNotifier {
       }
     }
 
-    if (DateTime.parse(tglAwal).difference(DateTime.parse(tglAkhir)).inDays >
+    if (DateTime.parse(tglAkhir).difference(DateTime.parse(tglAwal)).inDays >
         0) {
       throw AssertionError(
           'Tanggal Awal Tidak Boleh Lebih Besar Dari Tanggal Akhir');

@@ -1,4 +1,3 @@
-import 'package:face_net_authentication/tugas_dinas/tugas_dinas_approve/application/tugas_dinas_approve_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
@@ -12,6 +11,7 @@ import '../../../style/style.dart';
 import '../../../widgets/tappable_widget.dart';
 import '../../../widgets/v_dialogs.dart';
 
+import '../../tugas_dinas_approve/application/tugas_dinas_approve_notifier.dart';
 import '../application/tugas_dinas_list.dart';
 import 'tugas_dinas_dtl_dialog.dart';
 
@@ -101,25 +101,35 @@ class TugasDinasListItem extends HookConsumerWidget {
                         TappableSvg(
                             assetPath: Assets.iconBatal,
                             onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) => VBatalDialog(
-                                  onTap: () async {
-                                    context.pop();
-                                    await ref
-                                        .read(
-                                            tugasDinasApproveControllerProvider
-                                                .notifier)
-                                        .batal(
-                                          item: item,
-                                          nama: ref
-                                              .read(userNotifierProvider)
-                                              .user
-                                              .nama!,
-                                        );
-                                  },
-                                ),
-                              );
+                              if (!ref
+                                  .read(tugasDinasApproveControllerProvider
+                                      .notifier)
+                                  .canBatal(item)) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => VAksesDitolak(),
+                                );
+                              } else {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => VBatalDialog(
+                                    onTap: () async {
+                                      context.pop();
+                                      await ref
+                                          .read(
+                                              tugasDinasApproveControllerProvider
+                                                  .notifier)
+                                          .batal(
+                                            item: item,
+                                            nama: ref
+                                                .read(userNotifierProvider)
+                                                .user
+                                                .nama!,
+                                          );
+                                    },
+                                  ),
+                                );
+                              }
                             }),
                     ],
                   ),
@@ -480,9 +490,10 @@ class TugasDinasListItem extends HookConsumerWidget {
                                     splashColor: Palette.primaryColor,
                                     onTap: () async {
                                       if (!ref
-                                          .read(userNotifierProvider)
-                                          .user
-                                          .isSpvOrHrd!) {
+                                          .read(
+                                              tugasDinasApproveControllerProvider
+                                                  .notifier)
+                                          .canSpvApprove(item)) {
                                         showDialog(
                                           context: context,
                                           builder: (context) => VAksesDitolak(),
@@ -592,9 +603,10 @@ class TugasDinasListItem extends HookConsumerWidget {
                                     splashColor: Palette.primaryColor,
                                     onTap: () async {
                                       if (!ref
-                                          .read(userNotifierProvider)
-                                          .user
-                                          .isSpvOrHrd!) {
+                                          .read(
+                                              tugasDinasApproveControllerProvider
+                                                  .notifier)
+                                          .canHrdApprove(item)) {
                                         showDialog(
                                           context: context,
                                           builder: (context) => VAksesDitolak(),
@@ -689,9 +701,10 @@ class TugasDinasListItem extends HookConsumerWidget {
                                     splashColor: Palette.primaryColor,
                                     onTap: () async {
                                       if (!ref
-                                          .read(userNotifierProvider)
-                                          .user
-                                          .isSpvOrHrd!) {
+                                          .read(
+                                              tugasDinasApproveControllerProvider
+                                                  .notifier)
+                                          .canGmApprove(item)) {
                                         showDialog(
                                           context: context,
                                           builder: (context) => VAksesDitolak(),
@@ -803,9 +816,10 @@ class TugasDinasListItem extends HookConsumerWidget {
                                     splashColor: Palette.primaryColor,
                                     onTap: () async {
                                       if (!ref
-                                          .read(userNotifierProvider)
-                                          .user
-                                          .isSpvOrHrd!) {
+                                          .read(
+                                              tugasDinasApproveControllerProvider
+                                                  .notifier)
+                                          .canCooApprove(item)) {
                                         showDialog(
                                           context: context,
                                           builder: (context) => VAksesDitolak(),

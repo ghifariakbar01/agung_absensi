@@ -182,7 +182,7 @@ class CreateDtPcNotifier extends _$CreateDtPcNotifier {
     required DateTime tglAkhirInDateTime,
   }) {
     final int daysDiff =
-        tglAwalInDateTime.difference(tglAkhirInDateTime).inDays;
+        tglAkhirInDateTime.difference(tglAwalInDateTime).inDays;
     // final bool isFullAkses = ref.read(userNotifierProvider).user.fullAkses!;
 
     if (daysDiff >= 1 && kategori == 'DT') {
@@ -200,7 +200,7 @@ class CreateDtPcNotifier extends _$CreateDtPcNotifier {
     required DateTime tglAkhirInDateTime,
   }) async {
     final int daysDiff =
-        tglAwalInDateTime.difference(tglAkhirInDateTime).inDays;
+        tglAkhirInDateTime.difference(tglAwalInDateTime).inDays;
     // final bool isFullAkses = ref.read(userNotifierProvider).user.fullAkses!;
 
     if (daysDiff >= 1) {

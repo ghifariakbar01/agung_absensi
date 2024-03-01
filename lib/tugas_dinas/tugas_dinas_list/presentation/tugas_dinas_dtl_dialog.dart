@@ -1,20 +1,112 @@
+import 'package:face_net_authentication/tugas_dinas/tugas_dinas_list/application/tugas_dinas_list_notifier.dart';
 import 'package:face_net_authentication/widgets/tappable_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../constants/assets.dart';
 import '../../../routes/application/route_names.dart';
+import '../../../shared/providers.dart';
 import '../../../style/style.dart';
+import '../../../utils/enums.dart';
 import '../application/tugas_dinas_list.dart';
 
-class TugasDinasDtlDialog extends StatelessWidget {
+class TugasDinasDtlDialog extends ConsumerWidget {
   const TugasDinasDtlDialog({Key? key, required this.item}) : super(key: key);
 
   final TugasDinasList item;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // tambah coo
+    final bool isHrdApproved = item.hrdSta;
+
+    final String? fin = ref.watch(userNotifierProvider).user.fin;
+    final bool isHrd =
+        ref.watch(tugasDinasListControllerProvider.notifier).isHrdOrSpv(fin!);
+
+    final String? coo = ref.watch(userNotifierProvider).user.coo;
+    final bool isCoo =
+        ref.watch(tugasDinasListControllerProvider.notifier).isHrdOrSpv(coo!);
+
+    final bool isCurrentUser =
+        ref.watch(userNotifierProvider).user.idUser == item.idUser;
+
+    final bool isSpvApproved = item.spvSta;
+    final bool isSpvEditable =
+        ref.watch(tugasDinasListControllerProvider.notifier).isSpvEdit();
+
+    final bool fullAkses = ref.watch(userNotifierProvider).user.fullAkses;
+
+    _returnVisibility(ColumnCommandButtonType buttonType) {
+      if (isHrd) {
+        if (isCurrentUser == false) {
+          if (isSpvApproved) {
+            switch (buttonType) {
+              case ColumnCommandButtonType.Edit:
+                return true;
+              case ColumnCommandButtonType.Delete:
+                return false;
+            }
+          }
+        } else {
+          return true;
+        }
+      } else if (isCoo) {
+        if (isCurrentUser) {
+          return true;
+        } else {
+          switch (buttonType) {
+            case ColumnCommandButtonType.Edit:
+              return true;
+            case ColumnCommandButtonType.Delete:
+              return false;
+          }
+        }
+      } else if (!isCoo) {
+        if (isCurrentUser) {
+          return true;
+        }
+      }
+      //
+      else {
+        if (isCurrentUser) {
+          if (isSpvEditable && isSpvApproved) {
+            return true;
+          } else if (isSpvEditable && isSpvApproved == false) {
+            return true;
+          } else if (!isSpvEditable && isSpvApproved) {
+            return false;
+          } else {
+            switch (buttonType) {
+              case ColumnCommandButtonType.Edit:
+                return true;
+              case ColumnCommandButtonType.Delete:
+                return false;
+            }
+          }
+        } else {
+          switch (buttonType) {
+            case ColumnCommandButtonType.Edit:
+              return true;
+            case ColumnCommandButtonType.Delete:
+              return false;
+          }
+        }
+      }
+
+      if (isHrdApproved) {
+        return false;
+      }
+
+      if (fullAkses) {
+        return true;
+      }
+
+      return false;
+    }
+
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.0),
@@ -423,17 +515,20 @@ class TugasDinasDtlDialog extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  TappableSvg(
-                      assetPath: Assets.iconEdit,
-                      onTap: () {
-                        context.pop();
-                        return context.pushNamed(RouteNames.editTugasDinasRoute,
-                            extra: item);
-                      }),
+                  if (_returnVisibility(ColumnCommandButtonType.Edit))
+                    TappableSvg(
+                        assetPath: Assets.iconEdit,
+                        onTap: () {
+                          context.pop();
+                          return context.pushNamed(
+                              RouteNames.editTugasDinasRoute,
+                              extra: item);
+                        }),
                   SizedBox(
                     width: 8,
                   ),
-                  TappableSvg(assetPath: Assets.iconDelete, onTap: () {})
+                  if (_returnVisibility(ColumnCommandButtonType.Delete))
+                    TappableSvg(assetPath: Assets.iconDelete, onTap: () {})
                 ],
               )
           ],

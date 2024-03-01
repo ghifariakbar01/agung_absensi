@@ -1,20 +1,120 @@
+import 'package:face_net_authentication/izin/izin_list/application/izin_list_notifier.dart';
 import 'package:face_net_authentication/widgets/tappable_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../constants/assets.dart';
 import '../../../routes/application/route_names.dart';
+import '../../../shared/providers.dart';
 import '../../../style/style.dart';
+import '../../../utils/enums.dart';
 import '../application/izin_list.dart';
 
-class IzinDtlDialog extends StatelessWidget {
+class IzinDtlDialog extends ConsumerWidget {
   const IzinDtlDialog({Key? key, required this.item}) : super(key: key);
 
   final IzinList item;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final bool isHrdApproved = item.hrdSta ?? false;
+
+    final String? fin = ref.watch(userNotifierProvider).user.fin;
+    final bool isHrd =
+        ref.watch(izinListControllerProvider.notifier).isHrdOrSpv(fin!);
+
+    final bool isCurrentUser =
+        ref.watch(userNotifierProvider).user.idUser == item.idUser;
+
+    final bool isSpvApproved = item.spvSta ?? false;
+    final bool isSpvEditable =
+        ref.watch(izinListControllerProvider.notifier).isSpvEdit();
+
+    final bool fullAkses = ref.watch(userNotifierProvider).user.fullAkses;
+
+    _returnVisibility(ColumnCommandButtonType buttonType) {
+      if (isHrd) {
+        if (isCurrentUser == false) {
+          if (isSpvApproved) {
+            switch (buttonType) {
+              case ColumnCommandButtonType.Edit:
+                return true;
+              case ColumnCommandButtonType.Delete:
+                return false;
+            }
+          }
+        } else {
+          switch (buttonType) {
+            case ColumnCommandButtonType.Edit:
+              return true;
+            case ColumnCommandButtonType.Delete:
+              return true;
+          }
+        }
+      } else {
+        if (isCurrentUser) {
+          if (isSpvEditable && isSpvApproved) {
+            switch (buttonType) {
+              case ColumnCommandButtonType.Edit:
+                return true;
+              case ColumnCommandButtonType.Delete:
+                return true;
+            }
+          } else if (isSpvEditable && isSpvApproved == false) {
+            switch (buttonType) {
+              case ColumnCommandButtonType.Edit:
+                return true;
+              case ColumnCommandButtonType.Delete:
+                return true;
+            }
+          } else if (!isSpvEditable && isSpvApproved) {
+            switch (buttonType) {
+              case ColumnCommandButtonType.Edit:
+                return false;
+              case ColumnCommandButtonType.Delete:
+                return false;
+            }
+          } else {
+            switch (buttonType) {
+              case ColumnCommandButtonType.Edit:
+                return true;
+              case ColumnCommandButtonType.Delete:
+                return false;
+            }
+          }
+        } else {
+          switch (buttonType) {
+            case ColumnCommandButtonType.Edit:
+              return true;
+            case ColumnCommandButtonType.Delete:
+              return false;
+          }
+        }
+      }
+
+      if (isHrdApproved) {
+        switch (buttonType) {
+          case ColumnCommandButtonType.Edit:
+            return false;
+          case ColumnCommandButtonType.Delete:
+            return false;
+        }
+      }
+
+      if (fullAkses) {
+        switch (buttonType) {
+          case ColumnCommandButtonType.Edit:
+            return true;
+          case ColumnCommandButtonType.Delete:
+            return true;
+        }
+      }
+
+      return false;
+    }
+
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.0),
@@ -301,17 +401,19 @@ class IzinDtlDialog extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  TappableSvg(
-                      assetPath: Assets.iconEdit,
-                      onTap: () {
-                        context.pop();
-                        return context.pushNamed(RouteNames.editIzinRoute,
-                            extra: item);
-                      }),
+                  if (_returnVisibility(ColumnCommandButtonType.Edit))
+                    TappableSvg(
+                        assetPath: Assets.iconEdit,
+                        onTap: () {
+                          context.pop();
+                          return context.pushNamed(RouteNames.editIzinRoute,
+                              extra: item);
+                        }),
                   SizedBox(
                     width: 8,
                   ),
-                  TappableSvg(assetPath: Assets.iconDelete, onTap: () {})
+                  if (_returnVisibility(ColumnCommandButtonType.Delete))
+                    TappableSvg(assetPath: Assets.iconDelete, onTap: () {})
                 ],
               )
           ],

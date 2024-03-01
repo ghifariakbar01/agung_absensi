@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:face_net_authentication/cuti/create_cuti/application/create_cuti_notifier.dart';
 import 'package:face_net_authentication/cuti/cuti_approve/infrastructure/cuti_approve_remote_service.dart.dart';
 import 'package:face_net_authentication/sakit/create_sakit/application/create_sakit_notifier.dart';
 import 'package:face_net_authentication/send_wa/application/send_wa_notifier.dart';
@@ -404,32 +405,35 @@ class CutiApproveController extends _$CutiApproveController {
       return false;
     }
 
-    final user = ref.read(userNotifierProvider).user;
+    final spv = ref.read(userNotifierProvider).user.spv;
 
-    if (user.isSpvOrHrd == false) {
+    if (ref.read(createCutiNotifierProvider.notifier).isHrdOrSpv(spv) ==
+        false) {
       return false;
     }
 
-    if (user.idUser == item.idUser) {
+    if (item.jenisCuti != 'CR') {
+      final int jumlahHari =
+          DateTime.now().difference(DateTime.parse(item.cDate!)).inDays;
+
+      final int jumlahHariLibur =
+          calcDiffSaturdaySunday(DateTime.parse(item.cDate!), DateTime.now());
+
+      final CreateSakit createSakit = await ref
+          .read(createSakitNotifierProvider.notifier)
+          .getCreateSakit(item.idUser!, item.tglStart!, item.tglEnd!);
+
+      if (jumlahHari - jumlahHariLibur - createSakit.hitungLibur! >= 3 &&
+          item.jenisCuti == 'CT') {
+        return false;
+      }
+    }
+
+    if (item.idUser == ref.read(userNotifierProvider).user.idUser) {
       return false;
     }
 
-    final int jumlahHari =
-        DateTime.parse(item.cDate!).difference(DateTime.now()).inDays;
-
-    final int jumlahHariLibur =
-        calcDiffSaturdaySunday(DateTime.parse(item.cDate!), DateTime.now());
-
-    final CreateSakit createSakit = await ref
-        .read(createSakitNotifierProvider.notifier)
-        .getCreateSakit(item.idUser!, item.tglStart!, item.tglEnd!);
-
-    if (jumlahHari - jumlahHariLibur - createSakit.hitungLibur! >= 3 &&
-        item.jenisCuti == 'CT') {
-      return false;
-    }
-
-    if (user.fullAkses == true) {
+    if (ref.read(userNotifierProvider).user.fullAkses == true) {
       return true;
     }
 
@@ -443,47 +447,39 @@ class CutiApproveController extends _$CutiApproveController {
 
     final user = ref.read(userNotifierProvider).user;
 
-    if (item.hrdSta == true) {
+    if (ref.read(createCutiNotifierProvider.notifier).isHrdOrSpv(user.fin) ==
+        false) {
       return false;
     }
 
-    if (user.isSpvOrHrd == false) {
-      return false;
-    }
+    if (item.jenisCuti != 'CR') {
+      final int jumlahHari =
+          DateTime.now().difference(DateTime.parse(item.cDate!)).inDays;
 
-    if (user.idUser == item.idUser) {
-      return false;
-    }
+      final int jumlahHariLibur =
+          calcDiffSaturdaySunday(DateTime.parse(item.cDate!), DateTime.now());
 
-    if (calcDiffSaturdaySunday(DateTime.parse(item.cDate!), DateTime.now()) >=
-        1) {
-      return false;
+      final CreateSakit createSakit = await ref
+          .read(createSakitNotifierProvider.notifier)
+          .getCreateSakit(item.idUser!, item.tglStart!, item.tglEnd!);
+
+      if (jumlahHari - jumlahHariLibur - createSakit.hitungLibur! >= 1 &&
+          item.jenisCuti == 'CT') {
+        return false;
+      }
     }
 
     if (user.fullAkses == true) {
       return true;
     }
 
-    final int jumlahHari =
-        DateTime.parse(item.cDate!).difference(DateTime.now()).inDays;
-
-    final int jumlahHariLibur =
-        calcDiffSaturdaySunday(DateTime.parse(item.cDate!), DateTime.now());
-
-    final CreateSakit createSakit = await ref
-        .read(createSakitNotifierProvider.notifier)
-        .getCreateSakit(item.idUser!, item.tglStart!, item.tglEnd!);
-    final MstKaryawanCuti mstCuti = await ref
-        .read(mstKaryawanCutiNotifierProvider.notifier)
-        .getSaldoMasterCutiById(user.idUser!);
-
-    if (jumlahHari - jumlahHariLibur - createSakit.hitungLibur! >= 3 &&
-        item.jenisCuti == 'CT') {
-      return false;
-    }
-
     if (item.jenisCuti != 'CR') {
-      if (mstCuti.openDate!.year.toString() != item.tahunCuti) {
+      final MstKaryawanCuti mstCuti = await ref
+          .read(mstKaryawanCutiNotifierProvider.notifier)
+          .getSaldoMasterCutiById(user.idUser!);
+
+      if (item.hrdSta == true &&
+          mstCuti.openDate!.year != int.parse(item.tahunCuti!)) {
         return false;
       }
     }

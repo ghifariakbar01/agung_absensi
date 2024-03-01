@@ -452,10 +452,12 @@ class CutiListItem extends HookConsumerWidget {
                                   child: InkWell(
                                     splashColor: Palette.primaryColor,
                                     onTap: () async {
-                                      if (!ref
-                                          .read(userNotifierProvider)
-                                          .user
-                                          .isSpvOrHrd!) {
+                                      if (await ref
+                                              .read(
+                                                  cutiApproveControllerProvider
+                                                      .notifier)
+                                              .canSpvApprove(item) ==
+                                          false) {
                                         showDialog(
                                           context: context,
                                           builder: (context) => VAksesDitolak(),
@@ -586,10 +588,12 @@ class CutiListItem extends HookConsumerWidget {
                                   child: InkWell(
                                     splashColor: Palette.primaryColor,
                                     onTap: () async {
-                                      if (!ref
-                                          .read(userNotifierProvider)
-                                          .user
-                                          .isSpvOrHrd!) {
+                                      if (await ref
+                                              .read(
+                                                  cutiApproveControllerProvider
+                                                      .notifier)
+                                              .canHrdApprove(item) ==
+                                          false) {
                                         showDialog(
                                           context: context,
                                           builder: (context) => VAksesDitolak(),

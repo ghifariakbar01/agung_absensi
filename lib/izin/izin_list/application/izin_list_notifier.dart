@@ -58,7 +58,11 @@ class IzinListController extends _$IzinListController {
   }
 
   Future<List<IzinList>> _determineAndGetIzinListOn({required int page}) async {
-    if (isHrdOrSpv()) {
+    final hrd = ref.read(userNotifierProvider).user.fin;
+    final spv = ref.read(userNotifierProvider).user.spv;
+    final fullAkses = ref.read(userNotifierProvider).user.fullAkses;
+
+    if (fullAkses || isHrdOrSpv(hrd) || isHrdOrSpv(spv)) {
       return ref.read(izinListRepositoryProvider).getIzinList(page: page);
     } else {
       final idUser = ref.read(userNotifierProvider).user.idUser;
@@ -72,7 +76,45 @@ class IzinListController extends _$IzinListController {
     }
   }
 
-  bool isHrdOrSpv() {
-    return ref.read(userNotifierProvider).user.isSpvOrHrd ?? false;
+  bool _isAct() {
+    final server = ref.read(userNotifierProvider).user.ptServer;
+    return server == 'gs_12';
+  }
+
+  bool isSpvEdit() {
+    final spv = ref.read(userNotifierProvider).user.spv;
+    final fullAkses = ref.read(userNotifierProvider).user.fullAkses;
+
+    if (spv == null) {
+      return false;
+    }
+
+    if (fullAkses == false) {
+      return false;
+    }
+
+    if (_isAct()) {
+      return spv.contains(',10,');
+    } else {
+      return spv.contains(',5012,');
+    }
+  }
+
+  bool isHrdOrSpv(String? access) {
+    final fullAkses = ref.read(userNotifierProvider).user.fullAkses;
+
+    if (access == null) {
+      return false;
+    }
+
+    if (fullAkses == false) {
+      return false;
+    }
+
+    if (_isAct()) {
+      return access.contains(',18,');
+    } else {
+      return access.contains(',5103,');
+    }
   }
 }

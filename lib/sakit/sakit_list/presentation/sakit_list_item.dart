@@ -1,3 +1,4 @@
+import 'package:face_net_authentication/sakit/sakit_list/application/sakit_list_notifier.dart';
 import 'package:face_net_authentication/shared/providers.dart';
 import 'package:face_net_authentication/widgets/tappable_widget.dart';
 import 'package:flutter/material.dart';
@@ -449,9 +450,9 @@ class SakitListItem extends HookConsumerWidget {
                                     splashColor: Palette.primaryColor,
                                     onTap: () async {
                                       if (!ref
-                                          .read(userNotifierProvider)
-                                          .user
-                                          .isSpvOrHrd!) {
+                                          .read(sakitApproveControllerProvider
+                                              .notifier)
+                                          .canSpvApprove(item)) {
                                         showDialog(
                                           context: context,
                                           builder: (context) => VAksesDitolak(),
@@ -589,9 +590,9 @@ class SakitListItem extends HookConsumerWidget {
                                     splashColor: Palette.primaryColor,
                                     onTap: () async {
                                       if (!ref
-                                          .read(userNotifierProvider)
-                                          .user
-                                          .isSpvOrHrd!) {
+                                          .read(sakitApproveControllerProvider
+                                              .notifier)
+                                          .canHrdApprove(item)) {
                                         showDialog(
                                           context: context,
                                           builder: (context) => VAksesDitolak(),
@@ -752,72 +753,3 @@ class SakitListItem extends HookConsumerWidget {
     );
   }
 }
-
-//                 // LOWER RIGHT
-//                 Material(
-//                   color: Colors.transparent,
-//                   child: InkWell(
-//                     onTap: () async {
-//                       // if (ref
-//                       //     .read(sakitApproveControllerProvider.notifier)
-//                       //     .canHrdApprove(item)) {
-//                       //   log('message');
-//                       // }
-
-//                         }
-//                       } else {
-//                         if (item.surat!.toLowerCase() == 'ds') {
-//                           await ref
-//                               .read(sakitApproveControllerProvider.notifier)
-//                               .unApproveHrdDenganSurat(
-//                                 itemSakit: item,
-//                                 nama:
-//                                     ref.read(userNotifierProvider).user.nama!,
-//                               );
-//                         } else {
-//                           await ref
-//                               .read(sakitApproveControllerProvider.notifier)
-//                               .unApproveHrdTanpaSurat(
-//                                 itemSakit: item,
-//                                 nama:
-//                                     ref.read(userNotifierProvider).user.nama!,
-//                               );
-//                         }
-//                       }
-//                     },
-//                     child: Ink(
-//                       child: Column(
-//                         mainAxisAlignment: MainAxisAlignment.center,
-//                         crossAxisAlignment: CrossAxisAlignment.center,
-//                         children: [
-//                           if (item.hrdSta != null)
-//                             item.hrdSta == true
-//                                 ? Icon(Icons.thumb_up,
-//                                     size: 20, color: Colors.green)
-//                                 : Icon(
-//                                     Icons.thumb_down,
-//                                     size: 20,
-//                                     color: Palette.greyDisabled,
-//                                   ),
-//                           SizedBox(
-//                             height: 2,
-//                           ),
-//                           Text(
-//                             'Approve HRD',
-//                             style: Themes.customColor(10,
-//                                 color:
-//                                     Theme.of(context).unselectedWidgetColor),
-//                           ),
-//                           if (item.hrdTgl != null) ...[
-//                             Text(
-//                               'HRD Aging : $hrdAging',
-//                               style: Themes.customColor(10,
-//                                   color: Theme.of(context)
-//                                       .unselectedWidgetColor),
-//                             ),
-//                           ],
-//                         ],
-//                       ),
-//                     ),
-//                   ),
-//                 )

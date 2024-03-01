@@ -1,0 +1,1 @@
+enum ColumnCommandButtonType { Edit, Delete }

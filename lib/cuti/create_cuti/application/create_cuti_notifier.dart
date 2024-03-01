@@ -195,9 +195,9 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
     // Begin VALIDATE DATA MASTER CUTI
     await _validateMasterCuti(create: create, jenisCuti: jenisCuti);
 
-    final isSpvOrHrd = ref.read(userNotifierProvider).user.isSpvOrHrd!;
+    final hrd = ref.read(userNotifierProvider).user.fin;
 
-    if (!isSpvOrHrd) {
+    if (!isHrdOrSpv(hrd)) {
       await _notHrCondition(
           jenisCuti: jenisCuti,
           jumlahhari: jumlahhari,
@@ -308,9 +308,9 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
     // Begin VALIDATE DATA MASTER CUTI
     await _validateMasterCuti(create: create, jenisCuti: jenisCuti);
 
-    final isSpvOrHrd = ref.read(userNotifierProvider).user.isSpvOrHrd!;
+    final hrd = ref.read(userNotifierProvider).user.fin;
 
-    if (!isSpvOrHrd) {
+    if (!isHrdOrSpv(hrd)) {
       await _notHrCondition(
           jenisCuti: jenisCuti,
           jumlahhari: jumlahhari,
@@ -574,6 +574,31 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
     if (DateTime.now().difference(tglAwalInDateTime).inDays - jumlahhari > 5 &&
         jenisCuti == 'CT') {
       throw AssertionError('Tanggal input lewat dari 5 hari');
+    }
+  }
+
+  bool _isAct() {
+    final server = ref.read(userNotifierProvider).user.ptServer;
+    return server == 'gs_12';
+  }
+
+  bool isHrdOrSpv(String? access) {
+    final special = ref.read(userNotifierProvider).user.fullAkses;
+
+    if (access == null) {
+      return false;
+    }
+
+    if (special == true) {
+      return true;
+    }
+    // verify below,
+    // in case have access
+
+    if (_isAct()) {
+      return access.contains(',2,');
+    } else {
+      return access.contains(',5101,');
     }
   }
 

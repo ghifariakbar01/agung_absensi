@@ -1,7 +1,3 @@
-import 'package:face_net_authentication/izin/izin_approve/application/izin_approve_notifier.dart';
-import 'package:face_net_authentication/izin/izin_list/presentation/izin_dtl_dialog.dart';
-import 'package:face_net_authentication/shared/providers.dart';
-import 'package:face_net_authentication/widgets/tappable_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
@@ -10,11 +6,15 @@ import 'package:intl/intl.dart';
 
 import '../../../constants/assets.dart';
 import '../../../sakit/sakit_list/presentation/sakit_dialog.dart';
+import '../../../shared/providers.dart';
 import '../../../style/style.dart';
 
+import '../../../widgets/tappable_widget.dart';
 import '../../../widgets/v_dialogs.dart';
 
+import '../../izin_approve/application/izin_approve_notifier.dart';
 import '../application/izin_list.dart';
+import 'izin_dtl_dialog.dart';
 
 class IzinListItem extends HookConsumerWidget {
   const IzinListItem(
@@ -408,9 +408,9 @@ class IzinListItem extends HookConsumerWidget {
                                     splashColor: Palette.primaryColor,
                                     onTap: () async {
                                       if (!ref
-                                          .read(userNotifierProvider)
-                                          .user
-                                          .isSpvOrHrd!) {
+                                          .read(izinApproveControllerProvider
+                                              .notifier)
+                                          .canSpvApprove(item)) {
                                         showDialog(
                                           context: context,
                                           builder: (context) => VAksesDitolak(),
@@ -546,9 +546,9 @@ class IzinListItem extends HookConsumerWidget {
                                     splashColor: Palette.primaryColor,
                                     onTap: () async {
                                       if (!ref
-                                          .read(userNotifierProvider)
-                                          .user
-                                          .isSpvOrHrd!) {
+                                          .read(izinApproveControllerProvider
+                                              .notifier)
+                                          .canHrdApprove(item)) {
                                         showDialog(
                                           context: context,
                                           builder: (context) => VAksesDitolak(),

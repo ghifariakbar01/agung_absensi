@@ -42,7 +42,7 @@ final createTugasDinasRepositoryProvider =
 
 typedef CreateTugasDinasRepositoryRef = ProviderRef<CreateTugasDinasRepository>;
 String _$pemberiTugasDinasNotifierHash() =>
-    r'97921af84f413761a56d95dee4aa4a9e43094a56';
+    r'b481b2bffef6ef916f0a1d0552181eaf63da3209';
 
 /// See also [PemberiTugasDinasNotifier].
 @ProviderFor(PemberiTugasDinasNotifier)

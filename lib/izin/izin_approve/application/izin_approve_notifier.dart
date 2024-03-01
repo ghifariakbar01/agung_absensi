@@ -160,18 +160,25 @@ class IzinApproveController extends _$IzinApproveController {
       return false;
     }
 
-    if (ref.read(izinListControllerProvider.notifier).isHrdOrSpv() == false) {
+    final spv = ref.read(userNotifierProvider).user.spv;
+
+    if (ref.read(izinListControllerProvider.notifier).isHrdOrSpv(spv) ==
+        false) {
+      return false;
+    }
+
+    final jumlahHari =
+        calcDiffSaturdaySunday(DateTime.parse(item.cDate!), DateTime.now());
+    final dateDiff =
+        DateTime.now().difference(DateTime.parse(item.cDate!)).inDays;
+
+    if (dateDiff - jumlahHari >= 3) {
       return false;
     }
 
     if (ref.read(userNotifierProvider).user.idUser == item.idUser) {
       return false;
     }
-
-    // if (calcDiffSaturdaySunday(DateTime.parse(item.cDate!), DateTime.now()) >=
-    //     3) {
-    //   return false;
-    // }
 
     if (ref.read(userNotifierProvider).user.fullAkses == true) {
       return true;
@@ -185,27 +192,42 @@ class IzinApproveController extends _$IzinApproveController {
       return false;
     }
 
-    if (item.hrdSta == true) {
+    final hrd = ref.read(userNotifierProvider).user.fin;
+
+    if (ref.read(izinListControllerProvider.notifier).isHrdOrSpv(hrd) ==
+        false) {
       return false;
     }
 
-    if (ref.read(izinListControllerProvider.notifier).isHrdOrSpv() == false) {
+    final jumlahHari =
+        calcDiffSaturdaySunday(DateTime.parse(item.spvTgl!), DateTime.now());
+    final dateDiff =
+        DateTime.now().difference(DateTime.parse(item.spvTgl!)).inDays;
+
+    if (dateDiff - jumlahHari >= 1) {
       return false;
     }
-
-    if (ref.read(userNotifierProvider).user.idUser == item.idUser) {
-      return false;
-    }
-
-    // if (calcDiffSaturdaySunday(DateTime.parse(item.cDate!), DateTime.now()) >=
-    //     1) {
-    //   return false;
-    // }
 
     if (ref.read(userNotifierProvider).user.fullAkses == true) {
       return true;
     }
 
     return false;
+  }
+
+  int calcDiffSaturdaySunday(DateTime startDate, DateTime endDate) {
+    int nbDays = 0;
+    DateTime currentDay = startDate;
+
+    while (currentDay.isBefore(endDate)) {
+      currentDay = currentDay.add(Duration(days: 1));
+
+      if (currentDay.weekday == DateTime.saturday &&
+          currentDay.weekday == DateTime.sunday) {
+        nbDays += 1;
+      }
+    }
+
+    return nbDays;
   }
 }

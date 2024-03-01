@@ -1,6 +1,3 @@
-import 'package:face_net_authentication/absen_manual/absen_manual_approve/application/absen_manual_approve_notifier.dart';
-import 'package:face_net_authentication/absen_manual/absen_manual_list/presentation/absen_manual_dtl_dialog.dart';
-import 'package:face_net_authentication/widgets/tappable_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
@@ -12,8 +9,11 @@ import '../../../sakit/sakit_list/presentation/sakit_dialog.dart';
 import '../../../shared/providers.dart';
 import '../../../style/style.dart';
 
+import '../../../widgets/tappable_widget.dart';
 import '../../../widgets/v_dialogs.dart';
+import '../../absen_manual_approve/application/absen_manual_approve_notifier.dart';
 import '../application/absen_manual_list.dart';
+import 'absen_manual_dtl_dialog.dart';
 
 class AbsenManualListItem extends HookConsumerWidget {
   const AbsenManualListItem(
@@ -101,25 +101,35 @@ class AbsenManualListItem extends HookConsumerWidget {
                         TappableSvg(
                             assetPath: Assets.iconBatal,
                             onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) => VBatalDialog(
-                                  onTap: () async {
-                                    context.pop();
-                                    await ref
-                                        .read(
-                                            absenManualApproveControllerProvider
-                                                .notifier)
-                                        .batal(
-                                          item: item,
-                                          nama: ref
-                                              .read(userNotifierProvider)
-                                              .user
-                                              .nama!,
-                                        );
-                                  },
-                                ),
-                              );
+                              if (!ref
+                                  .read(absenManualApproveControllerProvider
+                                      .notifier)
+                                  .canBatal(item)) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => VAksesDitolak(),
+                                );
+                              } else {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => VBatalDialog(
+                                    onTap: () async {
+                                      context.pop();
+                                      await ref
+                                          .read(
+                                              absenManualApproveControllerProvider
+                                                  .notifier)
+                                          .batal(
+                                            item: item,
+                                            nama: ref
+                                                .read(userNotifierProvider)
+                                                .user
+                                                .nama!,
+                                          );
+                                    },
+                                  ),
+                                );
+                              }
                             }),
                     ],
                   ),
@@ -351,9 +361,10 @@ class AbsenManualListItem extends HookConsumerWidget {
                                     splashColor: Palette.primaryColor,
                                     onTap: () async {
                                       if (!ref
-                                          .read(userNotifierProvider)
-                                          .user
-                                          .isSpvOrHrd!) {
+                                          .read(
+                                              absenManualApproveControllerProvider
+                                                  .notifier)
+                                          .canSpvApprove(item)) {
                                         showDialog(
                                           context: context,
                                           builder: (context) => VAksesDitolak(),
@@ -489,9 +500,10 @@ class AbsenManualListItem extends HookConsumerWidget {
                                     splashColor: Palette.primaryColor,
                                     onTap: () async {
                                       if (!ref
-                                          .read(userNotifierProvider)
-                                          .user
-                                          .isSpvOrHrd!) {
+                                          .read(
+                                              absenManualApproveControllerProvider
+                                                  .notifier)
+                                          .canHrdApprove(item)) {
                                         showDialog(
                                           context: context,
                                           builder: (context) => VAksesDitolak(),
