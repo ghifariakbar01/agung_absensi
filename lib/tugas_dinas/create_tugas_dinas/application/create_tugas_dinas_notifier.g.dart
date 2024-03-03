@@ -59,7 +59,7 @@ final pemberiTugasDinasNotifierProvider = AutoDisposeAsyncNotifierProvider<
 
 typedef _$PemberiTugasDinasNotifier = AutoDisposeAsyncNotifier<List<UserList>>;
 String _$createTugasDinasNotifierHash() =>
-    r'069f0fb4bc94281f3ad02dce52db8982ecf57fb8';
+    r'78c51cd7de65466db118ef8507a970b78a52da10';
 
 /// See also [CreateTugasDinasNotifier].
 @ProviderFor(CreateTugasDinasNotifier)

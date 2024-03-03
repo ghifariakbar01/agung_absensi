@@ -8,13 +8,17 @@ class Assets {
   static const String imgInstructionPrefix = 'assets/img_instruction_';
   static const String imgRegisterWa = 'assets/wa_register.png';
   // home
-  static const String iconAbsenManual = 'assets/ic_absenmanual.svg';
+  static const String iconWa = 'assets/ic_wa.svg';
+  static const String iconWaReregist = 'assets/ic_wa_2.svg';
+  static const String iconApproval = 'assets/ic_approval.svg';
   static const String iconAbsen = 'assets/ic_absen.svg';
+  static const String iconAbsenManual = 'assets/ic_absenmanual.svg';
   static const String iconCuti = 'assets/ic_cuti.svg';
   static const String iconDtPc = 'assets/ic_dtpc.svg';
   static const String iconIzin = 'assets/ic_izin.svg';
   static const String iconRiwayat = 'assets/ic_riwayat.svg';
   static const String iconSakit = 'assets/ic_sakit.svg';
+  static const String iconTugasDinas = 'assets/ic_tugas_dinas.svg';
   // icon
   static const String iconDetail = 'assets/ic_detail.svg';
   static const String iconBatal = 'assets/ic_batal.svg';

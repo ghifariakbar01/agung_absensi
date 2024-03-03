@@ -73,7 +73,7 @@ final alasanCutiNotifierProvider = AutoDisposeAsyncNotifierProvider<
 
 typedef _$AlasanCutiNotifier = AutoDisposeAsyncNotifier<List<AlasanCuti>>;
 String _$createCutiNotifierHash() =>
-    r'c1065ce4ccd5f559a93337e4c04f32ae31d69a12';
+    r'1295ef03e77f044ca520bbf87662e50386d743ee';
 
 /// See also [CreateCutiNotifier].
 @ProviderFor(CreateCutiNotifier)

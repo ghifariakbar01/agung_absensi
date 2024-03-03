@@ -46,7 +46,7 @@ class AuthRemoteService {
                 "     (select nama from mst_dept where id_dept = A.id_dept) as dept, " +
                 "     (select nama from mst_comp where id_comp = A.id_comp) as comp, " +
                 "     (select nama from mst_jabatan where id_jbt = A.id_jbt) as jbt, " +
-                "     isnull((select full_akses from hr_user_grp where id_user_grp = A.id_user_grp), 'false) as full_akses,   " +
+                "     isnull((select full_akses from hr_user_grp where id_user_grp = A.id_user_grp), 'false') as full_akses,   " +
                 "     isnull((select lihat from hr_user_grp where id_user_grp = A.id_user_grp),'0') as lihat, " +
                 "     isnull((select baru from hr_user_grp where id_user_grp = A.id_user_grp),'0') as baru, " +
                 "     isnull((select ubah from hr_user_grp where id_user_grp = A.id_user_grp),'0') as ubah, " +
@@ -56,16 +56,15 @@ class AuthRemoteService {
                 "     isnull((select app_fin from hr_user_grp where id_user_grp = A.id_user_grp),'0') as fin, " +
                 "     isnull((select app_coo from hr_user_grp where id_user_grp = A.id_user_grp),'0') as coo, " +
                 "     isnull((select app_gm from hr_user_grp where id_user_grp = A.id_user_grp),'0') as gm,  " +
-                "     isnull((select app_oth from hr_user_grp where id_user_grp = A.id_user_grp),'0') as oth " +
-                "     ISNULL( " +
-                "             (SELECT LTRIM(STR(id_user))  " +
-                "             FROM mst_user_head  " +
-                "             WHERE id_user_head = (SELECT id_user  " +
-                "                                 FROM mst_user  " +
-                "                                 WHERE nama = '$userId'  " +
-                "                                     AND payroll IS NOT NULL  " +
-                "                                     AND payroll != '')), '0') AS staff " +
-                " FROM mst_user A WHERE nama = '$userId'  AND payroll IS NOT NULL AND payroll != '' ",
+                "     isnull((select app_oth from hr_user_grp where id_user_grp = A.id_user_grp),'0') as oth, " +
+                "     ISNULL((SELECT LTRIM(STR(id_user))  "
+                    "             FROM mst_user_head  "
+                    "             WHERE id_user_head = (SELECT id_user                                  "
+                    "                                    FROM mst_user                                  "
+                    "                                 WHERE nama = '$userId'                            "
+                    "                                     AND payroll IS NOT NULL                       "
+                    "                                     AND payroll != '')), '0') AS staff            "
+                    " FROM mst_user A WHERE nama = '$userId'  AND payroll IS NOT NULL AND payroll != '' ",
       });
 
       log('data ${jsonEncode(data)}');
@@ -150,7 +149,7 @@ class AuthRemoteService {
                 "        (select nama from mst_dept where id_dept = A.id_dept) as dept,  " +
                 "        (select nama from mst_comp where id_comp = A.id_comp) as comp,  " +
                 "        (select nama from mst_jabatan where id_jbt = A.id_jbt) as jbt,  " +
-                "        isnull((select full_akses from hr_user_grp where id_user_grp = A.id_user_grp), 'false) as full_akses,   " +
+                "        isnull((select full_akses from hr_user_grp where id_user_grp = A.id_user_grp), 'false') as full_akses,   " +
                 "        isnull((select lihat from mst_user_autho where id_user_grp = A.id_user_grp),'0') as lihat,  " +
                 "        isnull((select baru from mst_user_autho where id_user_grp = A.id_user_grp),'0') as baru,  " +
                 "        isnull((select ubah from mst_user_autho where id_user_grp = A.id_user_grp),'0') as ubah,  " +
@@ -160,16 +159,15 @@ class AuthRemoteService {
                 "        isnull((select app_fin from mst_user_autho where id_user_grp = A.id_user_grp),'0') as fin,  " +
                 "        isnull((select app_coo from mst_user_autho where id_user_grp = A.id_user_grp),'0') as coo,  " +
                 "        isnull((select app_gm from mst_user_autho where id_user_grp = A.id_user_grp),'0') as gm,  " +
-                "        isnull((select app_oth from mst_user_autho where id_user_grp = A.id_user_grp),'0') as oth  " +
-                "        ISNULL( " +
-                "                (SELECT LTRIM(STR(id_user))  " +
-                "                FROM mst_user_head  " +
-                "                WHERE id_user_head = (SELECT id_user  " +
-                "                                    FROM mst_user  " +
-                "                                    WHERE nama = '$userId'  " +
-                "                                        AND payroll IS NOT NULL  " +
-                "                                        AND payroll != '')), '0') AS staff " +
-                " FROM mst_user A WHERE nama = '$userId'  AND payroll IS NOT NULL AND payroll != '' ",
+                "        isnull((select app_oth from mst_user_autho where id_user_grp = A.id_user_grp),'0') as oth,  " +
+                "     ISNULL((SELECT LTRIM(STR(id_user))  "
+                    "             FROM mst_user_head  "
+                    "             WHERE id_user_head = (SELECT id_user                                  "
+                    "                                    FROM mst_user                                  "
+                    "                                 WHERE nama = '$userId'                            "
+                    "                                     AND payroll IS NOT NULL                       "
+                    "                                     AND payroll != '')), '0') AS staff            "
+                    " FROM mst_user A WHERE nama = '$userId'  AND payroll IS NOT NULL AND payroll != '' ",
       });
 
       log('data ${jsonEncode(data)}');

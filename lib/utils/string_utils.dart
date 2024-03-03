@@ -77,7 +77,7 @@ class StringUtils {
   // Output: 21-06-2023 23:59
   static String formatTanggalJam(String dateTimeString) {
     DateTime dateTime = DateTime.parse(dateTimeString);
-    return DateFormat('dd-MM-yyyy HH:mm').format(dateTime);
+    return DateFormat('dd MMM yyyy HH:mm').format(dateTime);
   }
 
   // Output: 2023-06-21 00:00:00

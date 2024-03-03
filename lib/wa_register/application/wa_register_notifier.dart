@@ -3,9 +3,10 @@ import 'dart:developer';
 
 import 'package:face_net_authentication/send_wa/application/send_wa_notifier.dart';
 import 'package:face_net_authentication/widgets/v_button.dart';
-import 'package:face_net_authentication/widgets/v_dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -125,8 +126,8 @@ class WaRegisterNotifier extends _$WaRegisterNotifier {
   Future<void> retryRegisterWa({
     required BuildContext context,
   }) async {
-    await ref.read(waRegisterRepositoryProvider).clear();
-    confirmRegisterWa(context: context);
+    // await ref.read(waRegisterRepositoryProvider).clear();
+    return confirmRegisterWa(context: context);
   }
 
   Future<void> _registerWaForNotif(
@@ -222,53 +223,64 @@ class WaPhoneBottomSheet extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final _formKey = useMemoized(GlobalKey<FormState>.new, const []);
 
-    return Padding(
-      padding:
-          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-      child: Container(
-        color: Colors.transparent,
-        height: MediaQuery.of(context).size.height / 3,
-        child: Form(
-          key: _formKey,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Gunakan nomor hp ini untuk menerima pesan Whatsapp ',
-                  style: Themes.customColor(12),
-                ),
-              ),
-              Expanded(child: Container()),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFormField(
-                  controller: formController,
-                  decoration: Themes.formStyleBordered('Nomor hp'),
-                  validator: (value) {
-                    if (value == null) {
-                      return 'Tidak boleh kosong';
-                    }
+    return KeyboardDismissOnTap(
+      child: Padding(
+        padding:
+            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        child: Container(
+          color: Colors.transparent,
+          height: MediaQuery.of(context).size.height / 3,
+          child: Form(
+            key: _formKey,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            child: ListView(
+              children: [
+                Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
+                        text:
+                            'Isi dengan nomor HP yang ingin digunakan untuk menerima notifikasi pesan via ',
+                        style: Themes.customColor(9, color: Colors.black),
+                        children: <TextSpan>[
+                          TextSpan(
+                              text: 'WhatsApp',
+                              style:
+                                  Themes.customColor(9, color: Colors.green)),
+                        ],
+                      ),
+                    )),
+                Expanded(child: Container()),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: TextFormField(
+                    controller: formController,
+                    decoration: Themes.formStyleBordered('Nomor hp'),
+                    validator: (value) {
+                      if (value == null) {
+                        return 'Tidak boleh kosong';
+                      }
 
-                    if (!value.startsWith('62')) {
-                      return ' Nomor harus diawal 62 (Contoh 62896xxxxxxxx)';
-                    }
+                      if (!value.startsWith('62')) {
+                        return ' Nomor harus diawal 62 (Contoh 62896xxxxxxxx)';
+                      }
 
-                    return null;
-                  },
+                      return null;
+                    },
+                  ),
                 ),
-              ),
-              Expanded(child: Container()),
-              VButton(
-                  label: 'Konfirmasi',
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      _formKey.currentState!.save();
-                      context.pop(formController.text);
-                    }
-                  })
-            ],
+                Expanded(child: Container()),
+                VButton(
+                    label: 'Konfirmasi',
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        _formKey.currentState!.save();
+                        context.pop(formController.text);
+                      }
+                    })
+              ],
+            ),
           ),
         ),
       ),
@@ -282,62 +294,167 @@ class WaRegisterDialog extends HookConsumerWidget {
   //
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
-      color: Theme.of(context).cardColor,
-      padding: EdgeInsets.all(4),
-      child: Column(
-        children: [
-          Text(
-            'Apakah sudah pernah meregistrasi nomor anda ke +852 5420 1273 ? (Contoh gambar di bawah)',
-            style: Themes.customColor(12, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(
-            height: 4,
-          ),
-          SizedBox(
-            height: 200,
-            width: 200,
-            child: Image.asset(Assets.imgRegisterWa),
-          ),
-          SizedBox(
-            height: 4,
-          ),
-          Text(
-            " Jika belum, pilih Belum dan kirim pesan 'hi' yang sudah diketik ke nomor tersebut. ",
-            style: Themes.customColor(12),
-          ),
-          SizedBox(
-            height: 4,
-          ),
-          VButton(
+    final theme = Theme.of(context);
+    return SafeArea(
+      child: Container(
+        color: theme.canvasColor,
+        // padding: EdgeInsets.all(4),
+        child: Column(
+          children: [
+            Container(
+              height: 48,
+              width: MediaQuery.of(context).size.width,
+              color: Palette.primaryColor,
+              child: Center(
+                child: Text(
+                  'Register Notifikasi WhatsApp',
+                  style: Themes.customColor(18,
+                      fontWeight: FontWeight.bold, color: Colors.white),
+                ),
+              ),
+            ),
+            Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    text: 'Apakah sudah pernah meregistrasi nomor anda ke ',
+                    style: Themes.customColor(9, color: Colors.black),
+                    children: <TextSpan>[
+                      TextSpan(
+                          text: '+852 5420 1273',
+                          style: Themes.customColor(9,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold)),
+                      TextSpan(
+                          text: '  ? (Contoh gambar di bawah)',
+                          style: Themes.customColor(
+                            9,
+                            color: Colors.black,
+                          )),
+                    ],
+                  ),
+                )),
+            SizedBox(
+              height: 4,
+            ),
+            SizedBox(
+              height: 200,
+              width: 200,
+              child: Image.asset(Assets.imgRegisterWa),
+            ),
+            SizedBox(
+              height: 4,
+            ),
+            Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    text: 'Jika belum, pilih ',
+                    style: Themes.customColor(9, color: Colors.black),
+                    children: <TextSpan>[
+                      TextSpan(
+                          text: 'Tombol Belum',
+                          style: Themes.customColor(9,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold)),
+                      TextSpan(
+                          text:
+                              ' dan kirim pesan “hi” yang sudah diketik ke nomor tersebut.',
+                          style: Themes.customColor(
+                            9,
+                            color: Colors.black,
+                          )),
+                    ],
+                  ),
+                )),
+            SizedBox(
+              height: 4,
+            ),
+            VButton(
               label: 'Belum',
               onPressed: () => launchUrl(
                       Uri.parse("https://wa.me/+85254201273?text=hi"),
                       mode: LaunchMode.externalApplication)
                   // show dialog
                   .then((_) => showDialog(
-                            context: context,
-                            builder: (context) => VSimpleDialog(
-                              asset: Assets.iconChecked,
-                              label: 'Menunggu...',
-                              labelDescription:
-                                  'Jika anda sudah mengirim pesan, anda sudah bisa menerima pesan wa. Selamat!',
-                            ),
-                            // after show dialog
-                          ).then((_) => context.pop(true))
+                          context: context,
+                          builder: (context) => Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Dialog(
+                                  // backgroundColor: Theme.of(context).primaryColor,
+                                  // alignment: Alignment.center,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: Container(
+                                    height: 234,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        SizedBox(
+                                            height: 36,
+                                            width: 36,
+                                            child: SvgPicture.asset(
+                                                Assets.iconWa)),
+                                        SizedBox(
+                                          height: 13,
+                                        ),
+                                        RichText(
+                                          textAlign: TextAlign.center,
+                                          text: TextSpan(
+                                            text: 'Membuka ',
+                                            style: Themes.customColor(11,
+                                                color: Palette.primaryColor),
+                                            children: <TextSpan>[
+                                              TextSpan(
+                                                  text: 'WhatsApp...',
+                                                  style: Themes.customColor(
+                                                    11,
+                                                    color: Colors.green,
+                                                  )),
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 4,
+                                        ),
+                                        Text(
+                                            'Beberapa saat lagi anda akan diarahkan ke aplikasi WhatsApp',
+                                            textAlign: TextAlign.center,
+                                            style: Themes.customColor(11,
+                                                color: Palette.primaryColor)),
+                                      ],
+                                    ),
+                                  ),
+                                  // after show dialog
+                                ),
+                              ))
+                      .then((_) => context.pop(true))
                       // after show dialog dismissed
-                      )
-                  .then((_) => context.pop(true))),
-          SizedBox(
-            height: 12,
-          ),
-          Text(
-            " Jika sudah, anda tidak perlu melakukan tahap selanjutnya. "
-            " Anda sudah bisa menerima pesan Wa. Terimakasih!",
-            style: Themes.customColor(12),
-          ),
-          VButton(label: 'Sudah', onPressed: () => context.pop(true))
-        ],
+
+                      .then((_) => context.pop(true))),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Text(
+              " Jika sudah, anda tidak perlu melakukan tahap selanjutnya. "
+              " Anda sudah bisa menerima pesan Wa. Terimakasih!",
+              textAlign: TextAlign.center,
+              style: Themes.customColor(
+                9,
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            VButton(label: 'Sudah', onPressed: () => context.pop(true))
+          ],
+        ),
       ),
     );
   }

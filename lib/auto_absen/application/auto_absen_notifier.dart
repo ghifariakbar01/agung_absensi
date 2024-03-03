@@ -111,8 +111,8 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
                         await ref
                             .read(absenAuthNotifierProvidier.notifier)
                             .absenOneLiner(
-                              backgroundItemState: absenSaved,
                               jenisAbsen: jenisAbsen,
+                              backgroundItemState: absenSaved,
                               idGeof: idGeofSaved ?? '',
                               imei: imei,
                               onAbsen: getSavedLocations,
@@ -158,8 +158,8 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
                         await ref
                             .read(absenAuthNotifierProvidier.notifier)
                             .absenOneLiner(
-                              backgroundItemState: absenSaved,
                               jenisAbsen: jenisAbsen,
+                              backgroundItemState: absenSaved,
                               idGeof: idGeofSaved ?? '',
                               imei: imei,
                               onAbsen: getSavedLocations,
@@ -257,6 +257,7 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
     savedItems.forEach((element) {
       locations.add(SavedLocation(
           dbDate: dbDate,
+          //
           date: element.date,
           alamat: element.alamat,
           idGeof: element.idGeof,

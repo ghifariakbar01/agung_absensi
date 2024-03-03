@@ -1,18 +1,18 @@
 import 'package:dartz/dartz.dart';
-import 'package:face_net_authentication/err_log/application/err_log_notifier.dart';
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
-import 'package:face_net_authentication/widgets/v_async_widget.dart';
-import 'package:face_net_authentication/style/style.dart';
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../domain/imei_failure.dart';
+import '../../err_log/application/err_log_notifier.dart';
 import '../../ip/application/ip_notifier.dart';
 import '../../shared/future_providers.dart';
 import '../../shared/providers.dart';
 import '../../widgets/alert_helper.dart';
+import '../../widgets/error_message_widget.dart';
 import '../../widgets/loading_overlay.dart';
+import '../../widgets/v_async_widget.dart';
 import '../../widgets/v_button.dart';
 
 class InitUserScaffold extends ConsumerStatefulWidget {
@@ -35,6 +35,13 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
   Widget build(BuildContext context) {
     final imeiInitFuture = ref.watch(imeiInitFutureProvider(context));
 
+    ref.listen<AsyncValue>(imeiInitFutureProvider(context), (_, state) {
+      state.showAlertDialogOnError(context);
+    });
+    ref.listen<AsyncValue>(errLogControllerProvider, (_, state) {
+      state.showAlertDialogOnError(context);
+    });
+
     ref.listen<Option<Either<ImeiFailure, Unit?>>>(
         imeiResetNotifierProvider
             .select((value) => value.failureOrSuccessOption),
@@ -50,14 +57,6 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
                     )),
                 (_) => ref.read(userNotifierProvider.notifier).logout())));
 
-    ref.listen<AsyncValue>(imeiInitFutureProvider(context), (_, state) {
-      state.showAlertDialogOnError(context);
-    });
-
-    ref.listen<AsyncValue>(errLogControllerProvider, (_, state) {
-      state.showAlertDialogOnError(context);
-    });
-
     final ip = ref.watch(ipNotifierProvider);
     final errLog = ref.watch(errLogControllerProvider);
 
@@ -69,81 +68,14 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
           body: Stack(children: [
             imeiInitFuture.when(
               data: (_) => LoadingOverlay(
-                  loadingMessage: 'Initializing User & Installation ID...',
-                  isLoading: true),
+                isLoading: true,
+                loadingMessage: 'Initializing User & Installation ID...',
+              ),
               loading: () => LoadingOverlay(
-                  loadingMessage: 'Getting Data...', isLoading: true),
-              error: (error, stackTrace) => ListView(
-                children: [
-                  Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Icon(
-                        Icons.error,
-                        size: 50,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 8,
-                  ),
-                  Center(
-                      child: Text(
-                    'Oops. Something Went Wrong.',
-                    style: Themes.customColor(
-                      18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  )),
-                  SizedBox(
-                    height: 8,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      padding: EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        color: Palette.grey,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Theme(
-                        data: ThemeData(
-                          dividerColor: Colors.transparent,
-                        ),
-                        child: ExpansionTile(
-                          iconColor: Colors.black,
-                          collapsedIconColor: Colors.black,
-                          title: Text(
-                            'Display Error',
-                            style: Themes.customColor(
-                              14,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          subtitle: Text(
-                            'Error & Stack Trace',
-                            style: Themes.customColor(
-                              14,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          children: [
-                            Text(
-                              'idKary: ${ref.read(userNotifierProvider).user.IdKary}\n '
-                              'Error: $error \n'
-                              'StackTrace: $stackTrace \n',
-                              style: Themes.customColor(
-                                12,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 8,
-                  ),
+                  isLoading: true, loadingMessage: 'Getting Data...'),
+              error: (error, stackTrace) => ErrorMessageWidget(
+                errorMessage: error.toString(),
+                additionalWidgets: [
                   VButton(
                       label: 'Logout & Retry',
                       onPressed: () => ref
@@ -152,9 +84,7 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
                 ],
               ),
             ),
-            //
           ]),
-          // backgroundColor: Colors.white.withOpacity(0.9),
         ),
       ),
     );

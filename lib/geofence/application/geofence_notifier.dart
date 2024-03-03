@@ -57,7 +57,9 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
 
     state = state.copyWith(isGetting: true, failureOrSuccessOption: none());
 
+    log.log('geofence got 1');
     failureOrSuccess = await _repository.readGeofenceList();
+    log.log('geofence got 2');
 
     state = state.copyWith(
         isGetting: false, failureOrSuccessOption: optionOf(failureOrSuccess));
@@ -88,11 +90,12 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
   // END
 
   Future<void> startAutoAbsen({
-    required Function showDialogAndLogout,
-    required List<SavedLocation> savedBackgroundItems,
-    required List<GeofenceResponse> geofenceResponseList,
-    required Future<void> Function(List<SavedLocation>) startAbsen,
     required Future<void> Function(List<GeofenceResponse>) saveGeofence,
+    required Function showDialogAndLogout,
+    required Future<void> Function(List<SavedLocation>) startAbsenSaved,
+    //
+    required List<GeofenceResponse> geofenceResponseList,
+    required List<SavedLocation> savedBackgroundItems,
   }) async {
     await saveGeofence(geofenceResponseList);
     await this.state.failureOrSuccessOptionStorage.fold(
@@ -101,7 +104,7 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
             //
             (_) => showDialogAndLogout(),
             //
-            (_) => startAbsen(savedBackgroundItems)
+            (_) => startAbsenSaved(savedBackgroundItems)
             //
             ));
   }

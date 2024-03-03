@@ -15,8 +15,8 @@ class BuildConfig {
       : this._(
           baseUrl: '',
           socketUrl: '',
-          connectTimeout: 20000,
-          receiveTimeout: 20000,
+          connectTimeout: 9000,
+          receiveTimeout: 9000,
           flavor: Flavor.development,
         );
 
@@ -24,8 +24,8 @@ class BuildConfig {
       : this._(
           baseUrl: '',
           socketUrl: '',
-          connectTimeout: 20000,
-          receiveTimeout: 20000,
+          connectTimeout: 9000,
+          receiveTimeout: 9000,
           flavor: Flavor.staging,
         );
 
@@ -33,8 +33,8 @@ class BuildConfig {
       : this._(
           baseUrl: '',
           socketUrl: '',
-          connectTimeout: 20000,
-          receiveTimeout: 20000,
+          connectTimeout: 9000,
+          receiveTimeout: 9000,
           flavor: Flavor.release,
         );
 

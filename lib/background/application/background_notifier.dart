@@ -16,11 +16,6 @@ class BackgroundNotifier extends StateNotifier<BackgroundState> {
 
   final BackgroundRepository _backgroundRepository;
 
-  Future<List<SavedLocation>> getSaved() => _backgroundRepository.getSaved();
-
-  List<SavedLocation>? getSavedLocationsAsList(List<SavedLocation> items) =>
-      items.map((e) => e).toList();
-
   void changeBackgroundItems(List<SavedLocation> backgroundItems) {
     state = state.copyWith(savedBackgroundItems: [...backgroundItems]);
   }

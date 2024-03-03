@@ -41,42 +41,23 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
       (_, failureOrSuccessOption) => failureOrSuccessOption.fold(
           () {},
           (either) => either.fold(
-                  (failure) => failure.maybeMap(
-                        noConnection: (_) => null,
-                        orElse: () => showDialog(
-                          context: context,
-                          barrierDismissible: true,
-                          builder: (_) => VSimpleDialog(
-                            label: 'Error',
-                            labelDescription: failure.maybeMap(
-                                server: (server) => 'error server $server',
-                                passwordExpired: (password) => '$password',
-                                passwordWrong: (password) => '$password',
-                                orElse: () => ''),
-                            asset: Assets.iconCrossed,
-                          ),
-                        ),
-                      ), (_) async {
-                bool isSuccess = await ref
-                    .read(imeiNotifierProvider.notifier)
-                    .clearImeiSuccess(
-                        idKary: ref.read(userNotifierProvider).user.IdKary ??
-                            'null');
-
-                if (Platform.isIOS) {
-                  if (isSuccess) {
-                    await ref
-                        .read(imeiNotifierProvider.notifier)
-                        .clearImeiFromDBAndLogoutiOS(ref);
-                  }
-                } else {
-                  if (isSuccess) {
-                    await ref
-                        .read(imeiNotifierProvider.notifier)
-                        .clearImeiFromDBAndLogout(ref);
-                  }
-                }
-              })),
+              (failure) => failure.maybeMap(
+                    noConnection: (_) => null,
+                    orElse: () => showDialog(
+                      context: context,
+                      barrierDismissible: true,
+                      builder: (_) => VSimpleDialog(
+                        label: 'Error',
+                        labelDescription: failure.maybeMap(
+                            server: (server) => 'error server $server',
+                            passwordExpired: (password) => '$password',
+                            passwordWrong: (password) => '$password',
+                            orElse: () => ''),
+                        asset: Assets.iconCrossed,
+                      ),
+                    ),
+                  ),
+              (_) async => _onImeiCleared())),
     );
 
     return Stack(
@@ -85,5 +66,28 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         const LoadingOverlay(isLoading: false)
       ],
     );
+  }
+
+  Future<void> _onImeiCleared() async {
+    {
+      bool isSuccess = await ref
+          .read(imeiNotifierProvider.notifier)
+          .clearImeiSuccess(
+              idKary: ref.read(userNotifierProvider).user.IdKary ?? 'null');
+
+      if (Platform.isIOS) {
+        if (isSuccess) {
+          await ref
+              .read(imeiNotifierProvider.notifier)
+              .clearImeiFromDBAndLogoutiOS(ref);
+        }
+      } else {
+        if (isSuccess) {
+          await ref
+              .read(imeiNotifierProvider.notifier)
+              .clearImeiFromDBAndLogout(ref);
+        }
+      }
+    }
   }
 }

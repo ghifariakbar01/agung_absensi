@@ -61,9 +61,9 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                 (failure) => failure.maybeWhen(
                     noConnection: () => _onNoConnection(
                         //
+                        context,
                         currentLocationLatitude,
                         currentLocationLongitude,
-                        context,
                         absenState: ref.read(absenNotifierProvidier)),
                     orElse: () => _onErrOther(failure, context)),
                 (_) => _onBerhasilAbsen(context))));
@@ -213,8 +213,7 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                   await HapticFeedback.vibrate();
 
                   // ALAMAT GEOFENCE
-                  final alamat = ref.watch(geofenceProvider
-                      .select((value) => value.nearestCoordinates));
+                  final alamat = ref.read(geofenceProvider).nearestCoordinates;
 
                   // SAVE ABSEN
                   await ref
@@ -244,8 +243,7 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                   await HapticFeedback.vibrate();
 
                   // ALAMAT GEOFENCE
-                  final alamat = ref.watch(geofenceProvider
-                      .select((value) => value.nearestCoordinates));
+                  final alamat = ref.read(geofenceProvider).nearestCoordinates;
 
                   // SAVE ABSEN
                   await ref
@@ -279,10 +277,8 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
 
   Future<void> _onBerhasilSimpanAbsen(BuildContext context) async {
     {
-      await ref.read(backgroundNotifierProvider.notifier).getSavedLocations();
-
       await HapticFeedback.vibrate();
-
+      await ref.read(backgroundNotifierProvider.notifier).getSavedLocations();
       await showDialog(
           context: context,
           barrierDismissible: true,
@@ -291,8 +287,6 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                 label: 'Saved',
                 labelDescription: 'Absen tersimpan',
               ));
-
-      await ref.read(backgroundNotifierProvider.notifier).getSavedLocations();
     }
   }
 
@@ -300,15 +294,12 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
     {
       // RESET BUTTON
       ref.read(buttonResetVisibilityProvider.notifier).state = false;
-
+      ref.read(absenOfflineModeProvider.notifier).state = false;
+      await HapticFeedback.vibrate();
       await ref.read(absenNotifierProvidier.notifier).getAbsenToday();
 
       String jamBerhasilStr = StringUtils.hoursDate(
           await ref.refresh(networkTimeFutureProvider.future));
-
-      ref.read(absenOfflineModeProvider.notifier).state = false;
-
-      await HapticFeedback.vibrate();
 
       await showDialog(
               context: context,
@@ -332,7 +323,6 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
 
       final String imeiSaved =
           await ref.read(imeiNotifierProvider.notifier).getImeiString();
-
       final String imeiDb =
           await ref.read(imeiNotifierProvider.notifier).getImeiString();
 
@@ -356,14 +346,13 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
 
   _onNoConnection(
       //
+      BuildContext context,
       double currentLocationLatitude,
       double currentLocationLongitude,
-      BuildContext context,
       {required AbsenState absenState}) async {
     {
       // ALAMAT GEOFENCE
-      final alamat = ref
-          .watch(geofenceProvider.select((value) => value.nearestCoordinates));
+      final alamat = ref.read(geofenceProvider).nearestCoordinates;
 
       // SAVE ABSEN
       await ref.read(backgroundNotifierProvider.notifier).addSavedLocation(
@@ -377,7 +366,7 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
             longitude: currentLocationLongitude,
           ));
 
-      await showDialog(
+      return showDialog(
           context: context,
           barrierDismissible: true,
           builder: (_) => VSimpleDialog(
@@ -393,8 +382,6 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                 label: 'Saved',
                 labelDescription: 'Absen tersimpan',
               )));
-
-      return Future.value(true);
     }
   }
 
@@ -427,7 +414,6 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
               labelDescription: 'JAM : ' + StringUtils.hoursDate(refreshed),
               onPressed: () async {
                 debugger(message: 'called');
-
                 await isTester.maybeWhen(
                     tester: () =>
                         ref.read(absenAuthNotifierProvidier.notifier).absen(
@@ -451,9 +437,7 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                               dbDate: refreshed,
                               inOrOut: JenisAbsen.absenOut,
                             ));
-
                 debugger(message: 'called');
-
                 context.pop();
               }));
     }
@@ -467,12 +451,9 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
   }) async {
     {
       await HapticFeedback.vibrate();
-
       DateTime refreshed = await ref.refresh(networkTimeFutureProvider.future);
-      String idGeof = ref.read(
-          geofenceProvider.select((value) => value.nearestCoordinates.id));
-      String imei =
-          ref.read(imeiNotifierProvider.select((value) => value.imei));
+      String idGeof = ref.read(geofenceProvider).nearestCoordinates.id;
+      String imei = ref.read(imeiNotifierProvider).imei;
       String lokasi = await GeofenceUtil.getLokasiStr(
           lat: currentLocationLatitude, long: currentLocationLongitude);
 
@@ -487,7 +468,6 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
               labelDescription: 'JAM : ' + StringUtils.hoursDate(refreshed),
               onPressed: () async {
                 debugger(message: 'called');
-
                 await isTester.maybeWhen(
                     tester: () =>
                         ref.read(absenAuthNotifierProvidier.notifier).absen(
@@ -511,9 +491,7 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                               dbDate: refreshed,
                               inOrOut: JenisAbsen.absenIn,
                             ));
-
                 debugger(message: 'called');
-
                 context.pop();
               }));
     }

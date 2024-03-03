@@ -24,7 +24,7 @@ class BackgroundItem extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
-        height: 105,
+        height: 125,
         width: width,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(14),
@@ -53,7 +53,7 @@ class BackgroundItem extends ConsumerWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 2.0),
                 child: Container(
                     width: width,
-                    padding: EdgeInsets.all(4),
+                    padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
                         color: Palette.primaryColor.withOpacity(0.9),
                         borderRadius: BorderRadius.circular(10)),

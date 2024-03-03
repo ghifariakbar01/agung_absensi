@@ -100,27 +100,29 @@ final imeiInitFutureProvider =
       if (user.IdKary!.isNotEmpty) {
         log('imeiInitFutureProvider -- 3');
 
-        // final imeiNotifier = ref.read(imeiNotifierProvider.notifier);
+        final imeiNotifier = ref.read(imeiNotifierProvider.notifier);
 
-        // // // 3. GET IMEI DATA
-        // // String imei = await imeiNotifier.getImeiString();
+        // 3. GET IMEI DATA
+        String imei = await imeiNotifier.getImeiString();
 
-        // // log('imeiInitFutureProvider -- 4');
+        log('imeiInitFutureProvider -- 4');
 
-        // // await Future.delayed(
-        // //     Duration(seconds: 1), () => imeiNotifier.changeSavedImei(imei));
+        await Future.delayed(
+            Duration(seconds: 1), () => imeiNotifier.changeSavedImei(imei));
 
-        // // log('imeiInitFutureProvider -- 5');
+        log('imeiInitFutureProvider -- 5');
 
-        // // String imeiDb = await ref
-        // //     .read(imeiNotifierProvider.notifier)
-        // //     .getImeiStringDb(idKary: user.IdKary ?? 'null');
+        String imeiDb = await ref
+            .read(imeiNotifierProvider.notifier)
+            .getImeiStringDb(idKary: user.IdKary ?? 'null');
 
-        // // log('imeiInitFutureProvider -- 6');
+        log('imeiInitFutureProvider -- 6');
 
-        // // await ref
-        // //     .read(imeiAuthNotifierProvider.notifier)
-        // //     .checkAndUpdateImei(imeiDb: imeiDb);
+        await ref
+            .read(imeiAuthNotifierProvider.notifier)
+            .checkAndUpdateImei(imeiDb: imeiDb);
+
+        log('imeiInitFutureProvider -- $imeiDb');
 
         log('imeiInitFutureProvider -- 7');
 
@@ -128,16 +130,16 @@ final imeiInitFutureProvider =
 
         // 4. PROCESS IMEI DATA
         // IF OFFLINE FROM USER INIT
-        // final isOfflineFromInit = ref.read(absenOfflineModeProvider);
+        final isOfflineFromInit = ref.read(absenOfflineModeProvider);
 
-        // if (!isOfflineFromInit) {
-        //   await ref
-        //       .read(imeiNotifierProvider.notifier)
-        //       .processImei(imei: imeiDb, ref: ref, context: context);
-        // } else {
-        //   ref.read(initUserStatusNotifierProvider.notifier).letYouThrough();
-        //   return unit;
-        // }
+        if (!isOfflineFromInit) {
+          await ref
+              .read(imeiNotifierProvider.notifier)
+              .processImei(imei: imeiDb, ref: ref, context: context);
+        } else {
+          ref.read(initUserStatusNotifierProvider.notifier).letYouThrough();
+          return unit;
+        }
       } else {
         await ref.read(getUserFutureProvider.future);
         ref.read(initUserStatusNotifierProvider.notifier).letYouThrough();

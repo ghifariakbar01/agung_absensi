@@ -37,7 +37,7 @@ class TugasDinasDtlDialog extends ConsumerWidget {
     final bool isSpvEditable =
         ref.watch(tugasDinasListControllerProvider.notifier).isSpvEdit();
 
-    final bool fullAkses = ref.watch(userNotifierProvider).user.fullAkses;
+    final bool fullAkses = ref.watch(userNotifierProvider).user.fullAkses!;
 
     _returnVisibility(ColumnCommandButtonType buttonType) {
       if (isHrd) {

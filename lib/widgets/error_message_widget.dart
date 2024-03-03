@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../copyright/presentation/copyright_page.dart';
 import '../shared/providers.dart';
 import '../style/style.dart';
 
 class ErrorMessageWidget extends ConsumerWidget {
-  const ErrorMessageWidget(
-    this.errorMessage,
-  );
+  const ErrorMessageWidget({
+    required this.errorMessage,
+    this.additionalWidgets,
+  });
   final String errorMessage;
+  final List<Widget>? additionalWidgets;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final packageInfo = ref.watch(packageInfoProvider);
+
     return Scaffold(
       appBar: AppBar(automaticallyImplyLeading: true),
       body: ListView(
@@ -54,7 +60,12 @@ class ErrorMessageWidget extends ConsumerWidget {
                   iconColor: Colors.black,
                   collapsedIconColor: Colors.black,
                   title: Text(
-                    'Display Error',
+                    '${packageInfo.when(
+                      loading: () => '',
+                      data: (packageInfo) => packageInfo,
+                      error: (error, stackTrace) =>
+                          'Error: $error StackTrace: $stackTrace',
+                    )} Display Error',
                     style: Themes.customColor(
                       14,
                       fontWeight: FontWeight.bold,
@@ -86,6 +97,7 @@ class ErrorMessageWidget extends ConsumerWidget {
           SizedBox(
             height: 8,
           ),
+          if (additionalWidgets != null) ...additionalWidgets!,
         ],
       ),
     );

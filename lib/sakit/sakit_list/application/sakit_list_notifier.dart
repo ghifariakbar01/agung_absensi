@@ -58,7 +58,7 @@ class SakitListController extends _$SakitListController {
     final spv = ref.read(userNotifierProvider).user.spv;
     final fullAkses = ref.read(userNotifierProvider).user.fullAkses;
 
-    if (fullAkses || isHrdOrSpv(hrd) || isHrdOrSpv(spv)) {
+    if (fullAkses! || isHrdOrSpv(hrd) || isHrdOrSpv(spv)) {
       return ref.read(sakitListRepositoryProvider).getSakitList(page: page);
     } else {
       final idUser = ref.read(userNotifierProvider).user.idUser;
@@ -85,7 +85,7 @@ class SakitListController extends _$SakitListController {
       return false;
     }
 
-    if (fullAkses == false) {
+    if (fullAkses! == false) {
       return false;
     }
 
@@ -103,7 +103,7 @@ class SakitListController extends _$SakitListController {
       return false;
     }
 
-    if (fullAkses == false) {
+    if (fullAkses! == false) {
       return false;
     }
 

@@ -31,7 +31,7 @@ class EditProfileRepostiroy {
     } on FormatException catch (e) {
       return left(EditFailure.server(0, e.message));
     } on NoConnectionException {
-      return left(const EditFailure.noConnection());
+      return left(EditFailure.noConnection());
     } on RestApiExceptionWithMessage catch (e) {
       return left(EditFailure.server(e.errorCode, e.message));
     } on RestApiException catch (e) {

@@ -24,32 +24,7 @@ class _SignInFormState extends ConsumerState<SignInForm> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      ref.read(passwordVisibleProvider.notifier).state = false;
-
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      final rememberMe = prefs.getString('remember_me');
-
-      if (rememberMe != null) {
-        final saved = RememberMeModel.fromJson(jsonDecode(rememberMe));
-        final savedPt = saved.ptName;
-
-        ref.read(signInFormNotifierProvider.notifier).changeAllData(
-              isChecked: true,
-              ptNameStr: savedPt,
-              userStr: saved.nama,
-              idKaryawanStr: saved.nik,
-              passwordStr: saved.password,
-              isKaryawan: saved.isKaryawan,
-            );
-
-        if (savedPt.isNotEmpty) {
-          ref
-              .read(signInFormNotifierProvider.notifier)
-              .changeInitializeNamaPT(namaPT: savedPt);
-        }
-      }
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) async => _getSavedLogin());
   }
 
   @override
@@ -73,6 +48,8 @@ class _SignInFormState extends ConsumerState<SignInForm> {
           SizedBox(
             height: 4,
           ),
+
+          // dropdown pt
           DropdownButtonFormField<String>(
             value: ptDropdownSelected,
             elevation: 16,
@@ -114,7 +91,10 @@ class _SignInFormState extends ConsumerState<SignInForm> {
               );
             }).toList(),
           ),
+
           const SizedBox(height: 16),
+
+          // user name
           ProfileLabel(icon: Icons.person, label: 'Username'),
           SizedBox(
             height: 4,
@@ -145,6 +125,8 @@ class _SignInFormState extends ConsumerState<SignInForm> {
                     ),
           ),
           const SizedBox(height: 16),
+
+          // password
           ProfileLabel(icon: Icons.lock_rounded, label: 'Password'),
           SizedBox(
             height: 4,
@@ -183,6 +165,8 @@ class _SignInFormState extends ConsumerState<SignInForm> {
                     ),
           ),
           const SizedBox(height: 8),
+
+          // jadwal shift
           Row(
             children: [
               Checkbox(
@@ -210,7 +194,32 @@ class _SignInFormState extends ConsumerState<SignInForm> {
     );
   }
 
-  bool toggleBool(bool visibility) {
-    return visibility ? false : true;
+  Future<void> _getSavedLogin() async {
+    {
+      ref.read(passwordVisibleProvider.notifier).state = false;
+
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final rememberMe = prefs.getString('remember_me');
+
+      if (rememberMe != null) {
+        final saved = RememberMeModel.fromJson(jsonDecode(rememberMe));
+        final savedPt = saved.ptName;
+
+        ref.read(signInFormNotifierProvider.notifier).changeAllData(
+              isChecked: true,
+              ptNameStr: savedPt,
+              userStr: saved.nama,
+              idKaryawanStr: saved.nik,
+              passwordStr: saved.password,
+              isKaryawan: saved.isKaryawan,
+            );
+
+        if (savedPt.isNotEmpty) {
+          ref
+              .read(signInFormNotifierProvider.notifier)
+              .changeInitializeNamaPT(namaPT: savedPt);
+        }
+      }
+    }
   }
 }

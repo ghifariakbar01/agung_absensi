@@ -27,7 +27,7 @@ class UserModelWithPassword with _$UserModelWithPassword {
     @JsonKey(name: 'pass_update') required String? passwordUpdate,
     required String? payroll,
     // user access
-    @JsonKey(name: "full_akses") required bool fullAkses,
+    @JsonKey(name: "full_akses", defaultValue: false) required bool? fullAkses,
     final String? lihat,
     final String? baru,
     final String? ubah,

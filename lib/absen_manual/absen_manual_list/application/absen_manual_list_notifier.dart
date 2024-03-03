@@ -60,7 +60,7 @@ class AbsenManualListController extends _$AbsenManualListController {
     final spv = ref.read(userNotifierProvider).user.spv;
     final fullAkses = ref.read(userNotifierProvider).user.fullAkses;
 
-    if (fullAkses || isHrdOrSpv(hrd) || isHrdOrSpv(spv)) {
+    if (fullAkses! || isHrdOrSpv(hrd) || isHrdOrSpv(spv)) {
       return ref
           .read(absenManualListRepositoryProvider)
           .getAbsenManualList(page: page);
@@ -91,7 +91,7 @@ class AbsenManualListController extends _$AbsenManualListController {
       return false;
     }
 
-    if (fullAkses == false) {
+    if (fullAkses! == false) {
       return false;
     }
 
@@ -109,7 +109,7 @@ class AbsenManualListController extends _$AbsenManualListController {
       return false;
     }
 
-    if (fullAkses == false) {
+    if (fullAkses! == false) {
       return false;
     }
 

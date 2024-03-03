@@ -42,7 +42,7 @@ final tugasDinasListRepositoryProvider =
 
 typedef TugasDinasListRepositoryRef = ProviderRef<TugasDinasListRepository>;
 String _$tugasDinasListControllerHash() =>
-    r'a23e07ca3d397eede209290f0a564e4a5735e338';
+    r'9850df62e93d87f6d5b72fcaf573c781c3085578';
 
 /// See also [TugasDinasListController].
 @ProviderFor(TugasDinasListController)

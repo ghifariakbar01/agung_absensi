@@ -62,7 +62,7 @@ class TugasDinasListController extends _$TugasDinasListController {
     final coo = ref.read(userNotifierProvider).user.coo;
     final fullAkses = ref.read(userNotifierProvider).user.fullAkses;
 
-    if (fullAkses ||
+    if (fullAkses! ||
         isHrdOrSpv(hrd) ||
         isHrdOrSpv(spv) ||
         isHrdOrSpv(gm) ||
@@ -97,7 +97,7 @@ class TugasDinasListController extends _$TugasDinasListController {
       return false;
     }
 
-    if (fullAkses == false) {
+    if (fullAkses! == false) {
       return false;
     }
 
@@ -115,7 +115,7 @@ class TugasDinasListController extends _$TugasDinasListController {
       return false;
     }
 
-    if (fullAkses == false) {
+    if (fullAkses! == false) {
       return false;
     }
 

@@ -42,7 +42,7 @@ final currentlySavedPhoneNumberNotifierProvider =
 typedef _$CurrentlySavedPhoneNumberNotifier
     = AutoDisposeAsyncNotifier<PhoneNum>;
 String _$waRegisterNotifierHash() =>
-    r'348484bd24c610c7eea91f369e7092d01432b529';
+    r'7f345d6dc65e18221b7e4770cea588934d25c190';
 
 /// See also [WaRegisterNotifier].
 @ProviderFor(WaRegisterNotifier)

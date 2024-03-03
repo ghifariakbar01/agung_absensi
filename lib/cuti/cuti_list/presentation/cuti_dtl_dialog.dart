@@ -39,7 +39,7 @@ class CutiDtlDialog extends ConsumerWidget {
     final bool isSpvEditable =
         ref.watch(cutiListControllerProvider.notifier).isSpvEdit();
 
-    final bool fullAkses = ref.watch(userNotifierProvider).user.fullAkses;
+    final bool fullAkses = ref.watch(userNotifierProvider).user.fullAkses!;
 
     _returnVisibility(ColumnCommandButtonType buttonType) {
       if (isHrd) {

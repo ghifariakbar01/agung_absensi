@@ -5,6 +5,7 @@ import 'package:face_net_authentication/widgets/v_scaffold_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../style/style.dart';
 import 'error_message_widget.dart';
 
 class VAsyncWidgetScaffold<T> extends StatelessWidget {
@@ -31,11 +32,11 @@ class VAsyncWidgetScaffold<T> extends StatelessWidget {
 
         log('errMessage is $errMessage');
 
-        return Center(child: ErrorMessageWidget(errMessage));
+        return Center(child: ErrorMessageWidget(errorMessage: errMessage));
       },
       loading: () => VScaffoldWidget(
         scaffoldTitle: 'Loading ...',
-        scaffoldBody: const Center(child: CircularProgressIndicator()),
+        scaffoldBody: Center(child: CircularProgressIndicator()),
       ),
     );
   }
@@ -50,8 +51,9 @@ class VAsyncValueWidget<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return value.when(
       data: data,
-      error: (e, st) => Center(child: ErrorMessageWidget(e.toString())),
-      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, st) =>
+          Center(child: ErrorMessageWidget(errorMessage: e.toString())),
+      loading: () => Center(child: CircularProgressIndicator()),
     );
   }
 }

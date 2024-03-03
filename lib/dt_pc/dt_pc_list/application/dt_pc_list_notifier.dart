@@ -57,7 +57,7 @@ class DtPcListController extends _$DtPcListController {
     final spv = ref.read(userNotifierProvider).user.spv;
     final fullAkses = ref.read(userNotifierProvider).user.fullAkses;
 
-    if (fullAkses || isHrdOrSpv(hrd) || isHrdOrSpv(spv)) {
+    if (fullAkses! || isHrdOrSpv(hrd) || isHrdOrSpv(spv)) {
       return ref.read(dtPcListRepositoryProvider).getDtPcList(page: page);
     } else {
       final idUser = ref.read(userNotifierProvider).user.idUser;
@@ -84,7 +84,7 @@ class DtPcListController extends _$DtPcListController {
       return false;
     }
 
-    if (fullAkses == false) {
+    if (fullAkses! == false) {
       return false;
     }
 
@@ -102,7 +102,7 @@ class DtPcListController extends _$DtPcListController {
       return false;
     }
 
-    if (fullAkses == false) {
+    if (fullAkses! == false) {
       return false;
     }
 

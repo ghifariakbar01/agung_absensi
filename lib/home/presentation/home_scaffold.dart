@@ -1,17 +1,13 @@
-import 'dart:developer';
-
 import 'package:face_net_authentication/send_wa/application/phone_num.dart';
 import 'package:face_net_authentication/shared/providers.dart';
 import 'package:face_net_authentication/wa_register/application/wa_register_notifier.dart';
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../constants/assets.dart';
 import '../../copyright/presentation/copyright_page.dart';
-import '../../imei_introduction/application/shared/imei_introduction_providers.dart';
 import '../../routes/application/route_names.dart';
 import '../../style/style.dart';
 import '../../theme/application/theme_notifier.dart';
@@ -20,10 +16,10 @@ import '../../wa_register/application/wa_register.dart';
 import '../../widgets/alert_helper.dart';
 import '../../widgets/app_logo.dart';
 import '../../widgets/copyright_text.dart';
-import '../../widgets/network_widget.dart';
 import '../../widgets/v_async_widget.dart';
 import '../../widgets/v_dialogs.dart';
 import '../applicatioin/home_state.dart';
+import 'home_appbar.dart';
 import 'home_item.dart';
 import 'home_register_wa.dart';
 import 'home_tester_off.dart';
@@ -49,7 +45,15 @@ final List<Item> leaveRequest = [
   Item('Sakit', Assets.iconSakit, RouteNames.sakitListNameRoute),
   Item('Izin', Assets.iconIzin, RouteNames.izinListNameRoute),
   Item('DT / PC', Assets.iconDtPc, RouteNames.dtPcListNameRoute),
-  Item('Tugas Dinas', Assets.iconDtPc, RouteNames.tugasDinasListNameRoute),
+];
+
+final List<Item> admin = [
+  Item('Approval', Assets.iconApproval, RouteNames.tugasDinasListNameRoute),
+];
+
+final List<Item> activity = [
+  Item(
+      'Tugas Dinas', Assets.iconTugasDinas, RouteNames.tugasDinasListNameRoute),
 ];
 
 class HomeScaffold extends ConsumerWidget {
@@ -92,7 +96,6 @@ class HomeScaffold extends ConsumerWidget {
       }
     });
 
-    final themeAsync = ref.watch(themeNotifierProvider);
     final themeController = ref.watch(themeControllerProvider);
 
     final waRegisterAsync = ref.watch(waRegisterNotifierProvider);
@@ -112,81 +115,7 @@ class HomeScaffold extends ConsumerWidget {
         value: waRegisterAsync,
         data: (waRegister) {
           return Scaffold(
-            appBar: AppBar(
-              automaticallyImplyLeading: false,
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              toolbarHeight: 45,
-              actions: [
-                SizedBox(
-                  width: 8,
-                ),
-                InkWell(
-                  onTap: () => context.pushNamed(RouteNames.copyrightNameRoute),
-                  child: Icon(
-                    Icons.copyright,
-                    color: Palette.tertiaryColor,
-                  ),
-                ),
-                SizedBox(
-                  width: 8,
-                ),
-                VAsyncWidgetScaffold<String>(
-                    value: themeAsync,
-                    data: (theme) => InkWell(
-                        onTap: () => ref
-                            .read(themeControllerProvider.notifier)
-                            .saveTheme(theme == 'dark' || theme == ''
-                                ? 'light'
-                                : 'dark'),
-                        child: theme == 'dark'
-                            ? Icon(
-                                Icons.dark_mode,
-                                color: Palette.tertiaryColor,
-                              )
-                            : Icon(Icons.dark_mode_outlined,
-                                color: Palette.tertiaryColor))),
-                Expanded(child: Container()),
-                SizedBox(
-                  width: 16,
-                ),
-                InkWell(
-                  onTap: () async {
-                    debugger(message: 'called');
-                    await ref
-                        .read(imeiIntroNotifierProvider.notifier)
-                        .clearVisitedIMEIIntroduction();
-                    await ref
-                        .read(imeiIntroNotifierProvider.notifier)
-                        .checkAndUpdateImeiIntro();
-                    await context
-                        .pushNamed(RouteNames.imeiInstructionNameRoute);
-                  },
-                  child: Ink(
-                    child: Icon(
-                      Icons.help_outline_outlined,
-                      color: Palette.tertiaryColor,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 8,
-                ),
-                InkWell(
-                  onTap: () => context.pushNamed(RouteNames.profileNameRoute),
-                  child: Ink(
-                    child: Icon(
-                      Icons.person,
-                      color: Palette.tertiaryColor,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 8,
-                ),
-                NetworkWidget(),
-              ],
-            ),
+            appBar: HomeAppBar(),
             body: SafeArea(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -237,11 +166,15 @@ class HomeScaffold extends ConsumerWidget {
                                 //
                                 ),
 
+                            SizedBox(
+                              height: 24,
+                            ),
+
                             // REGISTER WA
                             if (waRegister.phone == null ||
                                 waRegister.isRegistered == null) ...[
                               Text(
-                                'Mohon Register Wa Anda',
+                                'Register Notifikasi Whatsapp',
                                 style: Themes.customColor(10,
                                     fontWeight: FontWeight.bold),
                               ),
@@ -262,7 +195,7 @@ class HomeScaffold extends ConsumerWidget {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    'Ulangi Register Wa (Jika Perlu)',
+                                    'Register Notifikasi Whatsapp',
                                     style: Themes.customColor(10,
                                         fontWeight: FontWeight.bold),
                                   ),
@@ -270,33 +203,30 @@ class HomeScaffold extends ConsumerWidget {
                                       user.user.noTelp2 != null)
                                     VAsyncValueWidget<PhoneNum>(
                                       value: currentlySavedPhoneAsync,
-                                      data: (phone) => SizedBox(
-                                        width: 100,
-                                        child: Ink(
-                                          child: InkWell(
-                                            onTap: () {
-                                              HapticFeedback.vibrate().then(
-                                                  (_) => showDialog(
-                                                      context: context,
-                                                      barrierDismissible: true,
-                                                      builder: (_) =>
-                                                          VSimpleDialog(
-                                                            asset: Assets
-                                                                .iconChecked,
-                                                            label:
-                                                                'Tidak Sesuai ?',
-                                                            labelDescription:
-                                                                'Jika nomor tidak sesuai, silahkan hubungi HRD untuk mengubah data',
-                                                          )).then(
-                                                      (_) => onRefresh()));
-                                            },
-                                            child: Text(
-                                              'Nomor Wa: ${phone.noTelp1!.isEmpty ? "-" : "${phone.noTelp1}"}'
-                                              '${phone.noTelp2!.isEmpty ? "-" : "/${phone.noTelp2}"}',
-                                              style: Themes.customColor(10,
-                                                  fontWeight: FontWeight.bold),
-                                              maxLines: 2,
-                                            ),
+                                      data: (phone) => Ink(
+                                        child: InkWell(
+                                          onTap: () {
+                                            HapticFeedback.vibrate().then((_) =>
+                                                showDialog(
+                                                    context: context,
+                                                    barrierDismissible: true,
+                                                    builder: (_) =>
+                                                        VSimpleDialog(
+                                                          asset: Assets
+                                                              .iconChecked,
+                                                          label:
+                                                              'Tidak Sesuai ?',
+                                                          labelDescription:
+                                                              'Jika nomor tidak sesuai, silahkan hubungi HRD untuk mengubah data',
+                                                        )).then(
+                                                    (_) => onRefresh()));
+                                          },
+                                          child: Text(
+                                            '${phone.noTelp1!.isEmpty ? "-" : "${phone.noTelp1}"}'
+                                            '${phone.noTelp2!.isEmpty ? "-" : "/${phone.noTelp2}"}',
+                                            style: Themes.customColor(7,
+                                                fontWeight: FontWeight.bold),
+                                            maxLines: 2,
                                           ),
                                         ),
                                       ),
@@ -311,17 +241,43 @@ class HomeScaffold extends ConsumerWidget {
                                 height: 8,
                               )
                             ],
-
+                            // Admin
+                            SizedBox(
+                              height: 24,
+                            ),
+                            Text(
+                              'Admin Menu',
+                              style: Themes.customColor(10,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(
+                              height: 8,
+                            ),
+                            SizedBox(
+                              height: 68,
+                              width: width,
+                              child: ListView.separated(
+                                scrollDirection: Axis.horizontal,
+                                separatorBuilder: (context, index) => SizedBox(
+                                  width: 16,
+                                ),
+                                itemBuilder: (context, index) =>
+                                    HomeItem(item: admin[index]),
+                                itemCount: admin.length,
+                              ),
+                            ),
+                            // Attendance
+                            SizedBox(
+                              height: 24,
+                            ),
                             Text(
                               'Attendance',
                               style: Themes.customColor(10,
                                   fontWeight: FontWeight.bold),
                             ),
-
                             SizedBox(
                               height: 8,
                             ),
-                            //
                             SizedBox(
                               height: 68,
                               width: width,
@@ -335,23 +291,20 @@ class HomeScaffold extends ConsumerWidget {
                                 itemCount: attendance.length,
                               ),
                             ),
-
+                            // Leave Request
                             SizedBox(
                               height: 24,
                             ),
-
                             Text(
                               'Leave Request',
                               style: Themes.customColor(10,
                                   fontWeight: FontWeight.bold),
                             ),
-
                             SizedBox(
                               height: 8,
                             ),
-                            //
                             SizedBox(
-                              height: 158,
+                              height: 68,
                               width: width,
                               child: GridView.count(
                                 primary: false,
@@ -363,6 +316,34 @@ class HomeScaffold extends ConsumerWidget {
                                   (index) =>
                                       HomeItem(item: leaveRequest[index]),
                                 ),
+                                physics: const NeverScrollableScrollPhysics(),
+                              ),
+                            ),
+                            // Action
+                            SizedBox(
+                              height: 24,
+                            ),
+                            Text(
+                              'Activity',
+                              style: Themes.customColor(10,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(
+                              height: 8,
+                            ),
+                            SizedBox(
+                              height: 68,
+                              width: width,
+                              child: GridView.count(
+                                primary: false,
+                                crossAxisSpacing: 15,
+                                mainAxisSpacing: 15,
+                                crossAxisCount: 4,
+                                children: List.generate(
+                                  activity.length,
+                                  (index) => HomeItem(item: activity[index]),
+                                ),
+                                physics: const NeverScrollableScrollPhysics(),
                               ),
                             ),
 

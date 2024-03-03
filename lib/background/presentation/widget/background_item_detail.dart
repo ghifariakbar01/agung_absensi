@@ -42,7 +42,7 @@ class BackgroundItemDetail extends StatelessWidget {
                       children: [
                         Icon(
                           Icons.pin_drop_rounded,
-                          size: 25,
+                          size: 15,
                           color: Theme.of(context).primaryColorLight,
                         ),
                         SizedBox(
@@ -93,7 +93,11 @@ class BackgroundItemDetail extends StatelessWidget {
                           children: [
                             Icon(
                               Icons.numbers,
+                              size: 20,
                               color: Theme.of(context).primaryColorLight,
+                            ),
+                            SizedBox(
+                              width: 5,
                             ),
                             Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -102,7 +106,7 @@ class BackgroundItemDetail extends StatelessWidget {
                                 Text(
                                   'Latitude',
                                   style: Themes.customColor(
-                                    11,
+                                    10,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -140,7 +144,11 @@ class BackgroundItemDetail extends StatelessWidget {
                           children: [
                             Icon(
                               Icons.numbers,
+                              size: 15,
                               color: Theme.of(context).primaryColorLight,
+                            ),
+                            SizedBox(
+                              width: 5,
                             ),
                             Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -149,7 +157,7 @@ class BackgroundItemDetail extends StatelessWidget {
                                 Text(
                                   'Longitude',
                                   style: Themes.customColor(
-                                    11,
+                                    10,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -188,6 +196,7 @@ class BackgroundItemDetail extends StatelessWidget {
                       children: [
                         Icon(
                           Icons.date_range,
+                          size: 15,
                           color: Theme.of(context).primaryColorLight,
                         ),
                         SizedBox(
@@ -195,7 +204,7 @@ class BackgroundItemDetail extends StatelessWidget {
                         ),
                         Text(
                           'Date',
-                          style: Themes.customColor(11,
+                          style: Themes.customColor(10,
                               fontWeight: FontWeight.bold),
                         ),
                       ],
@@ -208,7 +217,7 @@ class BackgroundItemDetail extends StatelessWidget {
                         Flexible(
                           child: Text(
                             StringUtils.formatTanggalJam(date),
-                            maxLines: 5,
+                            maxLines: 3,
                             style: Themes.customColor(10,
                                 fontWeight: FontWeight.bold),
                           ),

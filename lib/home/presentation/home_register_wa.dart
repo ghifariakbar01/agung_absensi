@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../constants/assets.dart';
 import '../../style/style.dart';
 import '../../wa_register/application/wa_register_notifier.dart';
 
@@ -40,7 +42,7 @@ class HomeRegisterWa extends ConsumerWidget {
                 padding: EdgeInsets.all(4),
                 child: Column(
                   children: [
-                    Icon(Icons.message),
+                    SvgPicture.asset(Assets.iconWa),
                     Spacer(),
                     Text(
                       'Register Wa ',
@@ -95,12 +97,12 @@ class HomeRetryRegisterWa extends ConsumerWidget {
                 padding: EdgeInsets.all(4),
                 child: Column(
                   children: [
-                    Icon(Icons.message),
+                    SvgPicture.asset(Assets.iconWaReregist),
                     Spacer(),
                     Text(
                       'Ulangi Register Wa ',
                       style: Themes.customColor(
-                        7,
+                        6,
                         fontWeight: FontWeight.normal,
                       ),
                     )

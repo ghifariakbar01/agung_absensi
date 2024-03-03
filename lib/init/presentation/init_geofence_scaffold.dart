@@ -38,7 +38,12 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await ref.read(backgroundNotifierProvider.notifier).getSavedLocations();
-      await ref.read(geofenceProvider.notifier).getGeofenceList();
+      final isOffline = ref.read(absenOfflineModeProvider);
+      if (isOffline) {
+        await ref.read(geofenceProvider.notifier).getGeofenceListFromStorage();
+      } else {
+        await ref.read(geofenceProvider.notifier).getGeofenceList();
+      }
     });
   }
 
@@ -65,56 +70,16 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
       (_, failureOrSuccessOption) => failureOrSuccessOption.fold(
           () {},
           (either) => either.fold((failure) async {
+                log('failure $failure');
                 failure.maybeWhen(
                     noConnection: () => ref
                         .read(geofenceProvider.notifier)
                         .getGeofenceListFromStorage(),
                     empty: () => _geofenceEmptyError(),
                     orElse: () => _otherError(failure));
-              }, (geofenceList) async {
-                final Function(Location location) mockListener = ref
-                    .read(mockLocationNotifierProvider.notifier)
-                    .addMockLocationListener;
-                //
-                if (geofenceList.isNotEmpty) {
-                  //
-                  final List<Geofence> geofence = ref
-                      .read(geofenceProvider.notifier)
-                      .geofenceResponseToList(geofenceList);
-
-                  final isOffline = ref.read(absenOfflineModeProvider);
-                  log('isOffline Geofeonce $isOffline');
-
-                  // Is currently offline
-                  if (!isOffline) {
-                    _onGeonfeceNotOffline(
-                        //
-                        geofenceList,
-                        geofence,
-                        mockListener,
-                        buildContext);
-                  } else {
-                    //
-                    await ref
-                        .read(geofenceProvider.notifier)
-                        .initializeGeoFence(geofence,
-                            onError: (e) => log('error geofence $e'));
-
-                    await ref
-                        .read(geofenceProvider.notifier)
-                        .addGeofenceMockListener(mockListener: mockListener);
-
-                    // debugger();
-                  }
-                } else {
-                  await ref
-                      .read(geofenceProvider.notifier)
-                      .getGeofenceListFromStorage();
-
-                  // debugger();
-                  // }
-                }
-              })),
+              },
+                  (geofenceList) async =>
+                      _getAndInitializeGeofence(geofenceList, buildContext))),
     );
 
     final isLoading =
@@ -142,6 +107,51 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
     );
   }
 
+  Future<void> _getAndInitializeGeofence(
+      List<GeofenceResponse> geofenceList, BuildContext buildContext) async {
+    {
+      final Function(Location location) mockListener = ref
+          .read(mockLocationNotifierProvider.notifier)
+          .addMockLocationListener;
+      //
+      if (geofenceList.isNotEmpty) {
+        //
+        final List<Geofence> geofence = ref
+            .read(geofenceProvider.notifier)
+            .geofenceResponseToList(geofenceList);
+
+        final isOffline = ref.read(absenOfflineModeProvider);
+        log('isOffline Geofeonce $isOffline');
+
+        // Is currently offline
+        if (!isOffline) {
+          await _onGeonfeceNotOffline(
+              //
+              geofenceList,
+              geofence,
+              mockListener,
+              buildContext);
+        } else {
+          log('onGeofenceOffline');
+          await _onGeofenceOffline(geofence, mockListener);
+        }
+      } else {
+        await ref.read(geofenceProvider.notifier).getGeofenceListFromStorage();
+      }
+    }
+  }
+
+  Future<void> _onGeofenceOffline(
+      List<Geofence> geofence, mockListener(Location location)) async {
+    await ref
+        .read(geofenceProvider.notifier)
+        .initializeGeoFence(geofence, onError: (e) => log('error geofence $e'));
+
+    await ref
+        .read(geofenceProvider.notifier)
+        .addGeofenceMockListener(mockListener: mockListener);
+  }
+
   Future<void> _onGeonfeceNotOffline(
       List<GeofenceResponse> geofenceList,
       List<Geofence> geofence,
@@ -152,12 +162,11 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
       final List<SavedLocation> savedItems =
           ref.read(backgroundNotifierProvider).savedBackgroundItems;
 
-      //
-      await ref.read(geofenceProvider.notifier).startAutoAbsen(
+      final geofenceNotifier = ref.read(geofenceProvider.notifier);
+      await geofenceNotifier.startAutoAbsen(
           geofenceResponseList: geofenceList,
           savedBackgroundItems: savedItems,
-          saveGeofence: (geofenceList) =>
-              ref.read(geofenceProvider.notifier).saveGeofence(geofenceList),
+          saveGeofence: geofenceNotifier.saveGeofence,
           showDialogAndLogout: () => showDialog(
                   context: context,
                   builder: (context) => VSimpleDialog(
@@ -167,10 +176,11 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
                             'Mohon Maaf Storage Anda penuh. Mohon luangkan storage Anda agar bisa menyimpan data Geofence.',
                       ))
               .then((_) => ref.read(userNotifierProvider.notifier).logout()),
-          startAbsen: (savedItems) async {
+          startAbsenSaved: (savedItems) async {
             // ABSEN TERSIMPAN
             if (savedItems.isNotEmpty) {
-              await ref.read(geofenceProvider.notifier).initializeGeoFence(
+              await geofenceNotifier.initializeGeoFence(
+                  //
                   geofence,
                   onError: (e) => log('error geofence $e'));
               await ref
@@ -179,17 +189,16 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
 
               // debugger();
               log('savedItems $savedItems');
+
               // [AUTO ABSEN]
+              final imei = ref.read(imeiNotifierProvider).imei;
 
-              final imei =
-                  ref.read(imeiNotifierProvider.select((value) => value.imei));
-
+              // REFRESH CURRENT NETWORK TIME
               final dbDate =
                   await ref.refresh(networkTimeFutureProvider.future);
-
               // GET CURRENT NETWORK TIME
               await ref.read(networkTimeFutureProvider.future);
-
+              //
               final List<SavedLocation> savedItemsCurrent = ref
                   .read(autoAbsenNotifierProvider.notifier)
                   .currentNetworkTimeForSavedAbsen(
@@ -213,22 +222,21 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
 
               // debugger();
             } else {
-              if (geofence.isNotEmpty) {
+              final thereAreGeofences = geofence.isNotEmpty;
+              if (thereAreGeofences) {
                 //
-                await ref.read(geofenceProvider.notifier).initializeGeoFence(
-                    geofence,
+                await geofenceNotifier.initializeGeoFence(geofence,
                     onError: (e) => log('error geofence $e'));
-
                 await ref
                     .read(geofenceProvider.notifier)
                     .addGeofenceMockListener(mockListener: mockListener);
               } else {
-                //
                 await ref
                     .read(geofenceProvider.notifier)
                     .getGeofenceListFromStorage();
               }
-              //
+
+              // might be redundant
               await ref
                   .read(backgroundNotifierProvider.notifier)
                   .getSavedLocations();

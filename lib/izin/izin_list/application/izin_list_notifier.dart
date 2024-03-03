@@ -62,7 +62,7 @@ class IzinListController extends _$IzinListController {
     final spv = ref.read(userNotifierProvider).user.spv;
     final fullAkses = ref.read(userNotifierProvider).user.fullAkses;
 
-    if (fullAkses || isHrdOrSpv(hrd) || isHrdOrSpv(spv)) {
+    if (fullAkses! || isHrdOrSpv(hrd) || isHrdOrSpv(spv)) {
       return ref.read(izinListRepositoryProvider).getIzinList(page: page);
     } else {
       final idUser = ref.read(userNotifierProvider).user.idUser;
@@ -89,7 +89,7 @@ class IzinListController extends _$IzinListController {
       return false;
     }
 
-    if (fullAkses == false) {
+    if (fullAkses! == false) {
       return false;
     }
 
@@ -107,7 +107,7 @@ class IzinListController extends _$IzinListController {
       return false;
     }
 
-    if (fullAkses == false) {
+    if (fullAkses! == false) {
       return false;
     }
 

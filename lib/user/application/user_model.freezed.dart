@@ -47,8 +47,8 @@ mixin _$UserModelWithPassword {
   @JsonKey(name: 'pass_update')
   String? get passwordUpdate => throw _privateConstructorUsedError;
   String? get payroll => throw _privateConstructorUsedError; // user access
-  @JsonKey(name: "full_akses")
-  bool get fullAkses => throw _privateConstructorUsedError;
+  @JsonKey(name: "full_akses", defaultValue: false)
+  bool? get fullAkses => throw _privateConstructorUsedError;
   String? get lihat => throw _privateConstructorUsedError;
   String? get baru => throw _privateConstructorUsedError;
   String? get ubah => throw _privateConstructorUsedError;
@@ -94,7 +94,7 @@ abstract class $UserModelWithPasswordCopyWith<$Res> {
       String? photo,
       @JsonKey(name: 'pass_update') String? passwordUpdate,
       String? payroll,
-      @JsonKey(name: "full_akses") bool fullAkses,
+      @JsonKey(name: "full_akses", defaultValue: false) bool? fullAkses,
       String? lihat,
       String? baru,
       String? ubah,
@@ -140,7 +140,7 @@ class _$UserModelWithPasswordCopyWithImpl<$Res,
     Object? photo = freezed,
     Object? passwordUpdate = freezed,
     Object? payroll = freezed,
-    Object? fullAkses = null,
+    Object? fullAkses = freezed,
     Object? lihat = freezed,
     Object? baru = freezed,
     Object? ubah = freezed,
@@ -220,10 +220,10 @@ class _$UserModelWithPasswordCopyWithImpl<$Res,
           ? _value.payroll
           : payroll // ignore: cast_nullable_to_non_nullable
               as String?,
-      fullAkses: null == fullAkses
+      fullAkses: freezed == fullAkses
           ? _value.fullAkses
           : fullAkses // ignore: cast_nullable_to_non_nullable
-              as bool,
+              as bool?,
       lihat: freezed == lihat
           ? _value.lihat
           : lihat // ignore: cast_nullable_to_non_nullable
@@ -305,7 +305,7 @@ abstract class _$$_UserModelWithPasswordCopyWith<$Res>
       String? photo,
       @JsonKey(name: 'pass_update') String? passwordUpdate,
       String? payroll,
-      @JsonKey(name: "full_akses") bool fullAkses,
+      @JsonKey(name: "full_akses", defaultValue: false) bool? fullAkses,
       String? lihat,
       String? baru,
       String? ubah,
@@ -348,7 +348,7 @@ class __$$_UserModelWithPasswordCopyWithImpl<$Res>
     Object? photo = freezed,
     Object? passwordUpdate = freezed,
     Object? payroll = freezed,
-    Object? fullAkses = null,
+    Object? fullAkses = freezed,
     Object? lihat = freezed,
     Object? baru = freezed,
     Object? ubah = freezed,
@@ -428,10 +428,10 @@ class __$$_UserModelWithPasswordCopyWithImpl<$Res>
           ? _value.payroll
           : payroll // ignore: cast_nullable_to_non_nullable
               as String?,
-      fullAkses: null == fullAkses
+      fullAkses: freezed == fullAkses
           ? _value.fullAkses
           : fullAkses // ignore: cast_nullable_to_non_nullable
-              as bool,
+              as bool?,
       lihat: freezed == lihat
           ? _value.lihat
           : lihat // ignore: cast_nullable_to_non_nullable
@@ -508,7 +508,7 @@ class _$_UserModelWithPassword implements _UserModelWithPassword {
       required this.photo,
       @JsonKey(name: 'pass_update') required this.passwordUpdate,
       required this.payroll,
-      @JsonKey(name: "full_akses") required this.fullAkses,
+      @JsonKey(name: "full_akses", defaultValue: false) required this.fullAkses,
       this.lihat,
       this.baru,
       this.ubah,
@@ -570,8 +570,8 @@ class _$_UserModelWithPassword implements _UserModelWithPassword {
   final String? payroll;
 // user access
   @override
-  @JsonKey(name: "full_akses")
-  final bool fullAkses;
+  @JsonKey(name: "full_akses", defaultValue: false)
+  final bool? fullAkses;
   @override
   final String? lihat;
   @override
@@ -703,37 +703,48 @@ class _$_UserModelWithPassword implements _UserModelWithPassword {
 
 abstract class _UserModelWithPassword implements UserModelWithPassword {
   const factory _UserModelWithPassword(
-          {@JsonKey(name: 'id_user') required final int? idUser,
-          required final String? IdKary,
-          @JsonKey(name: 'ktp') required final String? ktp,
-          @JsonKey(name: 'dept') required final String? deptList,
-          @JsonKey(name: 'comp') required final String? company,
-          @JsonKey(name: 'jbt') required final String? jabatan,
-          @JsonKey(name: 'imei_hp') required final String? imeiHp,
-          required final String? nama,
-          required final String? fullname,
-          @JsonKey(name: 'no_telp1') required final String? noTelp1,
-          @JsonKey(name: 'no_telp2') required final String? noTelp2,
-          required final String? email,
-          required final String? email2,
-          required final String? photo,
-          @JsonKey(name: 'pass_update') required final String? passwordUpdate,
-          required final String? payroll,
-          @JsonKey(name: "full_akses") required final bool fullAkses,
-          final String? lihat,
-          final String? baru,
-          final String? ubah,
-          final String? hapus,
-          final String? spv,
-          final String? mgr,
-          final String? fin,
-          final String? coo,
-          final String? gm,
-          final String? oth,
-          final String? staff,
-          @JsonKey(defaultValue: '') required final String? password,
-          @JsonKey(defaultValue: '') required final String? ptServer}) =
-      _$_UserModelWithPassword;
+      {@JsonKey(name: 'id_user')
+          required final int? idUser,
+      required final String? IdKary,
+      @JsonKey(name: 'ktp')
+          required final String? ktp,
+      @JsonKey(name: 'dept')
+          required final String? deptList,
+      @JsonKey(name: 'comp')
+          required final String? company,
+      @JsonKey(name: 'jbt')
+          required final String? jabatan,
+      @JsonKey(name: 'imei_hp')
+          required final String? imeiHp,
+      required final String? nama,
+      required final String? fullname,
+      @JsonKey(name: 'no_telp1')
+          required final String? noTelp1,
+      @JsonKey(name: 'no_telp2')
+          required final String? noTelp2,
+      required final String? email,
+      required final String? email2,
+      required final String? photo,
+      @JsonKey(name: 'pass_update')
+          required final String? passwordUpdate,
+      required final String? payroll,
+      @JsonKey(name: "full_akses", defaultValue: false)
+          required final bool? fullAkses,
+      final String? lihat,
+      final String? baru,
+      final String? ubah,
+      final String? hapus,
+      final String? spv,
+      final String? mgr,
+      final String? fin,
+      final String? coo,
+      final String? gm,
+      final String? oth,
+      final String? staff,
+      @JsonKey(defaultValue: '')
+          required final String? password,
+      @JsonKey(defaultValue: '')
+          required final String? ptServer}) = _$_UserModelWithPassword;
 
   factory _UserModelWithPassword.fromJson(Map<String, dynamic> json) =
       _$_UserModelWithPassword.fromJson;
@@ -780,8 +791,8 @@ abstract class _UserModelWithPassword implements UserModelWithPassword {
   @override
   String? get payroll;
   @override // user access
-  @JsonKey(name: "full_akses")
-  bool get fullAkses;
+  @JsonKey(name: "full_akses", defaultValue: false)
+  bool? get fullAkses;
   @override
   String? get lihat;
   @override

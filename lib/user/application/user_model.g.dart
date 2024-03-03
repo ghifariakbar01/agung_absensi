@@ -25,7 +25,7 @@ _$_UserModelWithPassword _$$_UserModelWithPasswordFromJson(
       photo: json['photo'] as String?,
       passwordUpdate: json['pass_update'] as String?,
       payroll: json['payroll'] as String?,
-      fullAkses: json['full_akses'] as bool,
+      fullAkses: json['full_akses'] as bool? ?? false,
       lihat: json['lihat'] as String?,
       baru: json['baru'] as String?,
       ubah: json['ubah'] as String?,
