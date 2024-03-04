@@ -30,17 +30,19 @@ extension AsyncValueUI on AsyncValue {
         message = error.toString();
       }
 
-      // send err log
-      final imeiNotifier = ref.read(imeiNotifierProvider.notifier);
-      final user = ref.read(userNotifierProvider).user;
+      if (error is NoConnectionException == false) {
+        // send err log
+        final imeiNotifier = ref.read(imeiNotifierProvider.notifier);
+        final user = ref.read(userNotifierProvider).user;
 
-      final String imeiDb = await imeiNotifier.getImeiStringDb(
-          idKary: user.IdKary ?? 'null or no internet');
-      final String imei = await imeiNotifier.getImeiString();
+        final String imeiDb = await imeiNotifier.getImeiStringDb(
+            idKary: user.IdKary ?? 'null or no internet');
+        final String imei = await imeiNotifier.getImeiString();
 
-      await ref
-          .read(errLogControllerProvider.notifier)
-          .sendLog(imeiDb: imeiDb, imeiSaved: imei, errMessage: message);
+        await ref
+            .read(errLogControllerProvider.notifier)
+            .sendLog(imeiDb: imeiDb, imeiSaved: imei, errMessage: message);
+      }
 
       return showExceptionAlertDialog(
         context: context,

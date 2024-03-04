@@ -27,7 +27,7 @@ class ErrLogRemoteService {
       required String imeiSaved,
       required String errMessage}) async {
     try {
-      debugger();
+      // debugger();
       final data = _dioRequest;
 
       final cDate = StringUtils.trimmedDate(DateTime.now());
@@ -50,7 +50,7 @@ class ErrLogRemoteService {
 
       log('response $response');
 
-      debugger();
+      // debugger();
 
       final items = response.data?[0];
 

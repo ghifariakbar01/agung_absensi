@@ -27,6 +27,10 @@ class CutiListPage extends HookConsumerWidget {
       return state.showAlertDialogOnError(context, ref);
     });
 
+    ref.listen<AsyncValue>(cutiListControllerProvider, (_, state) async {
+      return state.showAlertDialogOnError(context, ref);
+    });
+
     final mstCuti = ref.watch(mstKaryawanCutiNotifierProvider);
     final cutiList = ref.watch(cutiListControllerProvider);
 
