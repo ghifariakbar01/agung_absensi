@@ -1,6 +1,7 @@
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
 import 'package:face_net_authentication/sakit/sakit_approve/application/sakit_approve_notifier.dart';
 import 'package:face_net_authentication/send_wa/application/send_wa_notifier.dart';
+import 'package:face_net_authentication/widgets/v_additional_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -72,12 +73,19 @@ class SakitListPage extends HookConsumerWidget {
       return Future.value();
     };
 
+    final infoMessage =
+        "1. Input sakit harus dimasukan pada hari pertama kerja s/d maksimal H+3 sejak masuk kerja.\n"
+        "2. Approve Atasan maksimal H+3 dari penginputan.\n"
+        "3. Approve HR maksimal H+1 dari approve Atasan.\n"
+        "4. Perhitungan Hari berdasarkan hari kerja.";
+
     return VAsyncWidgetScaffold(
       value: sakitApprove,
       data: (_) => VAsyncWidgetScaffold(
         value: sendWa,
         data: (_) => VScaffoldTabLayout(
           scaffoldTitle: 'List Form Sakit',
+          additionalInfo: VAdditionalInfo(infoMessage: infoMessage),
           scaffoldFAB: FloatingActionButton.small(
               backgroundColor: Palette.primaryColor,
               child: Icon(

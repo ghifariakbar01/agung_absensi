@@ -86,11 +86,13 @@ class VScaffoldTabLayout extends HookWidget {
       required this.scaffoldBody,
       required this.onPageChanged,
       this.scaffoldFAB,
-      this.appbarColor});
+      this.appbarColor,
+      this.additionalInfo});
   final Color? appbarColor;
   final String scaffoldTitle;
   final List<Widget> scaffoldBody;
   final Widget? scaffoldFAB;
+  final Widget? additionalInfo;
   final Future<void> Function() onPageChanged;
 
   @override
@@ -151,6 +153,7 @@ class VScaffoldTabLayout extends HookWidget {
             ),
             toolbarHeight: 45,
             actions: [
+              additionalInfo != null ? additionalInfo! : Container(),
               NetworkWidget(),
             ],
           ),

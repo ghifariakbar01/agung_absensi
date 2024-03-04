@@ -2,6 +2,7 @@ import 'package:face_net_authentication/dt_pc/dt_pc_list/application/dt_pc_list_
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
 import 'package:face_net_authentication/sakit/sakit_approve/application/sakit_approve_notifier.dart';
 import 'package:face_net_authentication/send_wa/application/send_wa_notifier.dart';
+import 'package:face_net_authentication/widgets/v_additional_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -72,12 +73,18 @@ class DtPcListPage extends HookConsumerWidget {
       return Future.value();
     };
 
+    final infoMessage =
+        "1. Input DT/PC harus di input maksimal pada hari H DT/PC (H-0)\n"
+        "2. harus sudah Approve atasan maksimal (H+3) dari penginputan\n"
+        "3. dari HR sudah harus di approve maksimal H+1 dari approve atasan.";
+
     return VAsyncWidgetScaffold(
       value: sakitApprove,
       data: (_) => VAsyncWidgetScaffold(
         value: sendWa,
         data: (_) => VScaffoldTabLayout(
           scaffoldTitle: 'List Form DT / PC',
+          additionalInfo: VAdditionalInfo(infoMessage: infoMessage),
           scaffoldFAB: FloatingActionButton.small(
               backgroundColor: Palette.primaryColor,
               child: Icon(

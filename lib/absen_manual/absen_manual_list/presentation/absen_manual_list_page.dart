@@ -2,6 +2,7 @@ import 'package:face_net_authentication/absen_manual/absen_manual_approve/applic
 import 'package:face_net_authentication/absen_manual/absen_manual_list/application/absen_manual_list_notifier.dart';
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
 import 'package:face_net_authentication/send_wa/application/send_wa_notifier.dart';
+import 'package:face_net_authentication/widgets/v_additional_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -72,12 +73,19 @@ class AbsenManualListPage extends HookConsumerWidget {
       return Future.value();
     };
 
+    final infoMessage =
+        "1. Absen Manual Di input Maks H=0 dan di approve oleh atasan dan HR maks H+1\n"
+        "2. WFH : khusus untuk karyawan yang bekerja dari rumah (work from home)\n"
+        "3. Absen Harian : untuk karyawan yang lokasi kerjanya tidak tersedia mesin finger print.\n"
+        "4. Absen Lainnya / Kasus : untuk kasus-kasus tidak melakukan finger print karena listrik mati, mesin error / rusak, sidik jari tidak terbaca, lupa absen, jaringan trouble / internet mati saat akan input absen manual dll.";
+
     return VAsyncWidgetScaffold(
       value: absenApprove,
       data: (_) => VAsyncWidgetScaffold(
         value: sendWa,
         data: (_) => VScaffoldTabLayout(
-          scaffoldTitle: 'List Form Absen Manual',
+          scaffoldTitle: 'Absen Manual',
+          additionalInfo: VAdditionalInfo(infoMessage: infoMessage),
           scaffoldFAB: FloatingActionButton.small(
               backgroundColor: Palette.primaryColor,
               child: Icon(

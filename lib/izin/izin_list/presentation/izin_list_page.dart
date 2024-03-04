@@ -1,6 +1,7 @@
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
 import 'package:face_net_authentication/sakit/sakit_approve/application/sakit_approve_notifier.dart';
 import 'package:face_net_authentication/send_wa/application/send_wa_notifier.dart';
+import 'package:face_net_authentication/widgets/v_additional_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -72,12 +73,18 @@ class IzinListPage extends HookConsumerWidget {
       return Future.value();
     };
 
+    final infoMessage = "1. Ijin wajib diinput paling lambat H-5\n"
+        "2. persetujuan atasan paling lambat H-1.\n"
+        "3. Khusus untuk ijin terkait kedukaan, istri melahirkan/keguguran, dan force majeur ijin diinput paling lambat hari H masuk bekerja.\n"
+        "4. Ijin melahirkan diinput H-30.";
+
     return VAsyncWidgetScaffold(
       value: sakitApprove,
       data: (_) => VAsyncWidgetScaffold(
         value: sendWa,
         data: (_) => VScaffoldTabLayout(
           scaffoldTitle: 'List Form Izin',
+          additionalInfo: VAdditionalInfo(infoMessage: infoMessage),
           scaffoldFAB: FloatingActionButton.small(
               backgroundColor: Palette.primaryColor,
               child: Icon(
