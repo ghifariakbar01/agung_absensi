@@ -43,7 +43,7 @@ class DtPcListItem extends HookConsumerWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: SizedBox(
-        height: 130,
+        height: 150,
         child: Stack(
           children: [
             Container(
@@ -164,18 +164,21 @@ class DtPcListItem extends HookConsumerWidget {
                           SizedBox(
                             height: 2,
                           ),
-                          Text(
-                            item.fullname!,
-                            style: Themes.customColor(9,
-                                color: item.btlSta == true
-                                    ? Colors.white
-                                    : Palette.primaryColor,
-                                fontWeight: FontWeight.w500),
+                          SizedBox(
+                            width: 90,
+                            child: Text(
+                              item.fullname!,
+                              style: Themes.customColor(9,
+                                  color: item.btlSta == true
+                                      ? Colors.white
+                                      : Palette.primaryColor,
+                                  fontWeight: FontWeight.w500),
+                            ),
                           ),
                         ],
                       ),
                       SizedBox(
-                        width: 25,
+                        width: 15,
                       ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.start,

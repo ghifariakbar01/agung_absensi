@@ -60,7 +60,7 @@ class RiwayatList extends ConsumerWidget {
             ),
           ],
           SizedBox(
-            height: 12,
+            height: 4,
           ),
           Flexible(
               flex: 1,

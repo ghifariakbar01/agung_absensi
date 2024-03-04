@@ -241,35 +241,35 @@ class HomeScaffold extends ConsumerWidget {
                                 height: 8,
                               )
                             ],
-                            // Admin
+                            // // Admin
+                            // SizedBox(
+                            //   height: 24,
+                            // ),
+                            // Text(
+                            //   'Admin Menu',
+                            //   style: Themes.customColor(10,
+                            //       fontWeight: FontWeight.bold),
+                            // ),
+                            // SizedBox(
+                            //   height: 8,
+                            // ),
+                            // SizedBox(
+                            //   height: 68,
+                            //   width: width,
+                            //   child: ListView.separated(
+                            //     scrollDirection: Axis.horizontal,
+                            //     separatorBuilder: (context, index) => SizedBox(
+                            //       width: 16,
+                            //     ),
+                            //     itemBuilder: (context, index) =>
+                            //         HomeItem(item: admin[index]),
+                            //     itemCount: admin.length,
+                            //   ),
+                            // ),
                             SizedBox(
                               height: 24,
-                            ),
-                            Text(
-                              'Admin Menu',
-                              style: Themes.customColor(10,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            SizedBox(
-                              height: 68,
-                              width: width,
-                              child: ListView.separated(
-                                scrollDirection: Axis.horizontal,
-                                separatorBuilder: (context, index) => SizedBox(
-                                  width: 16,
-                                ),
-                                itemBuilder: (context, index) =>
-                                    HomeItem(item: admin[index]),
-                                itemCount: admin.length,
-                              ),
                             ),
                             // Attendance
-                            SizedBox(
-                              height: 24,
-                            ),
                             Text(
                               'Attendance',
                               style: Themes.customColor(10,
