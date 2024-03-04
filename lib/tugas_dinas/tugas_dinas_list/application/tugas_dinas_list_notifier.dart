@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../shared/providers.dart';
@@ -62,6 +64,8 @@ class TugasDinasListController extends _$TugasDinasListController {
 
     final staff = ref.read(userNotifierProvider).user.staf!;
     final staffStr = staff.replaceAll('"', '').substring(0, staff.length - 1);
+
+    log('fullAkses $fullAkses');
 
     if (fullAkses! ||
         isHrdOrSpv(hrd) ||
