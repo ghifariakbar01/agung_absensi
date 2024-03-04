@@ -8,6 +8,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../err_log/application/err_log_notifier.dart';
 import '../../../routes/application/route_names.dart';
 import '../../../widgets/alert_helper.dart';
 import '../../../widgets/v_async_widget.dart';
@@ -20,8 +21,8 @@ class AbsenManualListPage extends HookConsumerWidget {
   const AbsenManualListPage();
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen<AsyncValue>(absenManualListControllerProvider, (_, state) {
-      state.showAlertDialogOnError(context);
+    ref.listen<AsyncValue>(absenManualListControllerProvider, (_, state) async {
+      return state.showAlertDialogOnError(context, ref);
     });
 
     final sendWa = ref.watch(sendWaNotifierProvider);
@@ -79,52 +80,56 @@ class AbsenManualListPage extends HookConsumerWidget {
         "3. Absen Harian : untuk karyawan yang lokasi kerjanya tidak tersedia mesin finger print.\n"
         "4. Absen Lainnya / Kasus : untuk kasus-kasus tidak melakukan finger print karena listrik mati, mesin error / rusak, sidik jari tidak terbaca, lupa absen, jaringan trouble / internet mati saat akan input absen manual dll.";
 
-    return VAsyncWidgetScaffold(
-      value: absenApprove,
+    final errLog = ref.watch(errLogControllerProvider);
+    return VAsyncWidgetScaffold<void>(
+      value: errLog,
       data: (_) => VAsyncWidgetScaffold(
-        value: sendWa,
-        data: (_) => VScaffoldTabLayout(
-          scaffoldTitle: 'Absen Manual',
-          additionalInfo: VAdditionalInfo(infoMessage: infoMessage),
-          scaffoldFAB: FloatingActionButton.small(
-              backgroundColor: Palette.primaryColor,
-              child: Icon(
-                Icons.add,
-                color: Colors.white,
-              ),
-              onPressed: () => context.pushNamed(
-                    RouteNames.createAbsenManualNameRoute,
-                  )),
-          onPageChanged: onRefresh,
-          scaffoldBody: [
-            VAsyncValueWidget<List<AbsenManualList>>(
-                value: absenManualList,
-                data: (list) {
-                  final waiting = list
-                      .where((e) =>
-                          (e.spvSta == false || e.hrdSta == false) &&
-                          e.btlSta == false)
-                      .toList();
-                  return _list(scrollController, waiting, onRefresh);
-                }),
-            VAsyncValueWidget<List<AbsenManualList>>(
-                value: absenManualList,
-                data: (list) {
-                  final approved = list
-                      .where((e) =>
-                          (e.spvSta == true && e.hrdSta == true) &&
-                          e.btlSta == false)
-                      .toList();
-                  return _list(scrollController, approved, onRefresh);
-                }),
-            VAsyncValueWidget<List<AbsenManualList>>(
-                value: absenManualList,
-                data: (list) {
-                  final cancelled =
-                      list.where((e) => e.btlSta == true).toList();
-                  return _list(scrollController, cancelled, onRefresh);
-                }),
-          ],
+        value: absenApprove,
+        data: (_) => VAsyncWidgetScaffold(
+          value: sendWa,
+          data: (_) => VScaffoldTabLayout(
+            scaffoldTitle: 'Absen Manual',
+            additionalInfo: VAdditionalInfo(infoMessage: infoMessage),
+            scaffoldFAB: FloatingActionButton.small(
+                backgroundColor: Palette.primaryColor,
+                child: Icon(
+                  Icons.add,
+                  color: Colors.white,
+                ),
+                onPressed: () => context.pushNamed(
+                      RouteNames.createAbsenManualNameRoute,
+                    )),
+            onPageChanged: onRefresh,
+            scaffoldBody: [
+              VAsyncValueWidget<List<AbsenManualList>>(
+                  value: absenManualList,
+                  data: (list) {
+                    final waiting = list
+                        .where((e) =>
+                            (e.spvSta == false || e.hrdSta == false) &&
+                            e.btlSta == false)
+                        .toList();
+                    return _list(scrollController, waiting, onRefresh);
+                  }),
+              VAsyncValueWidget<List<AbsenManualList>>(
+                  value: absenManualList,
+                  data: (list) {
+                    final approved = list
+                        .where((e) =>
+                            (e.spvSta == true && e.hrdSta == true) &&
+                            e.btlSta == false)
+                        .toList();
+                    return _list(scrollController, approved, onRefresh);
+                  }),
+              VAsyncValueWidget<List<AbsenManualList>>(
+                  value: absenManualList,
+                  data: (list) {
+                    final cancelled =
+                        list.where((e) => e.btlSta == true).toList();
+                    return _list(scrollController, cancelled, onRefresh);
+                  }),
+            ],
+          ),
         ),
       ),
     );

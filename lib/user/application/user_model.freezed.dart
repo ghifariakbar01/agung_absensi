@@ -59,7 +59,7 @@ mixin _$UserModelWithPassword {
   String? get coo => throw _privateConstructorUsedError;
   String? get gm => throw _privateConstructorUsedError;
   String? get oth => throw _privateConstructorUsedError;
-  String? get staff => throw _privateConstructorUsedError; //
+  String? get staf => throw _privateConstructorUsedError; //
   @JsonKey(defaultValue: '')
   String? get password => throw _privateConstructorUsedError;
   @JsonKey(defaultValue: '')
@@ -105,7 +105,7 @@ abstract class $UserModelWithPasswordCopyWith<$Res> {
       String? coo,
       String? gm,
       String? oth,
-      String? staff,
+      String? staf,
       @JsonKey(defaultValue: '') String? password,
       @JsonKey(defaultValue: '') String? ptServer});
 }
@@ -151,7 +151,7 @@ class _$UserModelWithPasswordCopyWithImpl<$Res,
     Object? coo = freezed,
     Object? gm = freezed,
     Object? oth = freezed,
-    Object? staff = freezed,
+    Object? staf = freezed,
     Object? password = freezed,
     Object? ptServer = freezed,
   }) {
@@ -264,9 +264,9 @@ class _$UserModelWithPasswordCopyWithImpl<$Res,
           ? _value.oth
           : oth // ignore: cast_nullable_to_non_nullable
               as String?,
-      staff: freezed == staff
-          ? _value.staff
-          : staff // ignore: cast_nullable_to_non_nullable
+      staf: freezed == staf
+          ? _value.staf
+          : staf // ignore: cast_nullable_to_non_nullable
               as String?,
       password: freezed == password
           ? _value.password
@@ -316,7 +316,7 @@ abstract class _$$_UserModelWithPasswordCopyWith<$Res>
       String? coo,
       String? gm,
       String? oth,
-      String? staff,
+      String? staf,
       @JsonKey(defaultValue: '') String? password,
       @JsonKey(defaultValue: '') String? ptServer});
 }
@@ -359,7 +359,7 @@ class __$$_UserModelWithPasswordCopyWithImpl<$Res>
     Object? coo = freezed,
     Object? gm = freezed,
     Object? oth = freezed,
-    Object? staff = freezed,
+    Object? staf = freezed,
     Object? password = freezed,
     Object? ptServer = freezed,
   }) {
@@ -472,9 +472,9 @@ class __$$_UserModelWithPasswordCopyWithImpl<$Res>
           ? _value.oth
           : oth // ignore: cast_nullable_to_non_nullable
               as String?,
-      staff: freezed == staff
-          ? _value.staff
-          : staff // ignore: cast_nullable_to_non_nullable
+      staf: freezed == staf
+          ? _value.staf
+          : staf // ignore: cast_nullable_to_non_nullable
               as String?,
       password: freezed == password
           ? _value.password
@@ -519,7 +519,7 @@ class _$_UserModelWithPassword implements _UserModelWithPassword {
       this.coo,
       this.gm,
       this.oth,
-      this.staff,
+      this.staf,
       @JsonKey(defaultValue: '') required this.password,
       @JsonKey(defaultValue: '') required this.ptServer});
 
@@ -593,7 +593,7 @@ class _$_UserModelWithPassword implements _UserModelWithPassword {
   @override
   final String? oth;
   @override
-  final String? staff;
+  final String? staf;
 //
   @override
   @JsonKey(defaultValue: '')
@@ -604,7 +604,7 @@ class _$_UserModelWithPassword implements _UserModelWithPassword {
 
   @override
   String toString() {
-    return 'UserModelWithPassword(idUser: $idUser, IdKary: $IdKary, ktp: $ktp, deptList: $deptList, company: $company, jabatan: $jabatan, imeiHp: $imeiHp, nama: $nama, fullname: $fullname, noTelp1: $noTelp1, noTelp2: $noTelp2, email: $email, email2: $email2, photo: $photo, passwordUpdate: $passwordUpdate, payroll: $payroll, fullAkses: $fullAkses, lihat: $lihat, baru: $baru, ubah: $ubah, hapus: $hapus, spv: $spv, mgr: $mgr, fin: $fin, coo: $coo, gm: $gm, oth: $oth, staff: $staff, password: $password, ptServer: $ptServer)';
+    return 'UserModelWithPassword(idUser: $idUser, IdKary: $IdKary, ktp: $ktp, deptList: $deptList, company: $company, jabatan: $jabatan, imeiHp: $imeiHp, nama: $nama, fullname: $fullname, noTelp1: $noTelp1, noTelp2: $noTelp2, email: $email, email2: $email2, photo: $photo, passwordUpdate: $passwordUpdate, payroll: $payroll, fullAkses: $fullAkses, lihat: $lihat, baru: $baru, ubah: $ubah, hapus: $hapus, spv: $spv, mgr: $mgr, fin: $fin, coo: $coo, gm: $gm, oth: $oth, staf: $staf, password: $password, ptServer: $ptServer)';
   }
 
   @override
@@ -643,7 +643,7 @@ class _$_UserModelWithPassword implements _UserModelWithPassword {
             (identical(other.coo, coo) || other.coo == coo) &&
             (identical(other.gm, gm) || other.gm == gm) &&
             (identical(other.oth, oth) || other.oth == oth) &&
-            (identical(other.staff, staff) || other.staff == staff) &&
+            (identical(other.staf, staf) || other.staf == staf) &&
             (identical(other.password, password) ||
                 other.password == password) &&
             (identical(other.ptServer, ptServer) ||
@@ -681,7 +681,7 @@ class _$_UserModelWithPassword implements _UserModelWithPassword {
         coo,
         gm,
         oth,
-        staff,
+        staf,
         password,
         ptServer
       ]);
@@ -740,7 +740,7 @@ abstract class _UserModelWithPassword implements UserModelWithPassword {
       final String? coo,
       final String? gm,
       final String? oth,
-      final String? staff,
+      final String? staf,
       @JsonKey(defaultValue: '')
           required final String? password,
       @JsonKey(defaultValue: '')
@@ -814,7 +814,7 @@ abstract class _UserModelWithPassword implements UserModelWithPassword {
   @override
   String? get oth;
   @override
-  String? get staff;
+  String? get staf;
   @override //
   @JsonKey(defaultValue: '')
   String? get password;

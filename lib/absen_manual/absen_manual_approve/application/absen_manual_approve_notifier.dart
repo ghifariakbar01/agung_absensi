@@ -172,21 +172,21 @@ class AbsenManualApproveController extends _$AbsenManualApproveController {
   }
 
   bool canSpvApprove(AbsenManualList item) {
+    bool spvApprove = true;
+
     if (item.hrdSta == true) {
-      return false;
+      spvApprove = false;
     }
 
     final spv = ref.read(userNotifierProvider).user.spv;
-
     if (ref.read(absenManualListControllerProvider.notifier).isHrdOrSpv(spv) ==
         false) {
-      return false;
+      spvApprove = false;
     }
 
-    final staff = ref.read(userNotifierProvider).user.staff;
-
+    final staff = ref.read(userNotifierProvider).user.staf;
     if (staff!.contains(item.idUser.toString()) == false) {
-      return false;
+      spvApprove = false;
     }
 
     final jumlahHari =
@@ -195,30 +195,32 @@ class AbsenManualApproveController extends _$AbsenManualApproveController {
     if (DateTime.now().difference(DateTime.parse(item.cDate)).inDays -
             jumlahHari >=
         3) {
-      return false;
+      spvApprove = false;
     }
 
     if (ref.read(userNotifierProvider).user.idUser != item.idUser) {
-      return false;
+      spvApprove = false;
     }
 
     if (ref.read(userNotifierProvider).user.fullAkses == true) {
-      return true;
+      spvApprove = true;
     }
 
-    return false;
+    return spvApprove;
   }
 
   bool canHrdApprove(AbsenManualList item) {
+    bool hrdApprove = true;
+
     if (item.spvSta == false) {
-      return false;
+      hrdApprove = false;
     }
 
     final hrd = ref.read(userNotifierProvider).user.fin;
 
     if (ref.read(absenManualListControllerProvider.notifier).isHrdOrSpv(hrd) ==
         false) {
-      return false;
+      hrdApprove = false;
     }
 
     final jumlahHari =
@@ -227,14 +229,14 @@ class AbsenManualApproveController extends _$AbsenManualApproveController {
     if (DateTime.now().difference(DateTime.parse(item.cDate)).inDays -
             jumlahHari >=
         1) {
-      return false;
+      hrdApprove = false;
     }
 
     if (ref.read(userNotifierProvider).user.fullAkses == true) {
-      return true;
+      hrdApprove = true;
     }
 
-    return false;
+    return hrdApprove;
   }
 
   bool canBatal(AbsenManualList item) {

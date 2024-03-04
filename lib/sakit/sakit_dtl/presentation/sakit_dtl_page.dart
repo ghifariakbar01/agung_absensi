@@ -4,6 +4,7 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../err_log/application/err_log_notifier.dart';
 import '../../../routes/application/route_names.dart';
 import '../../../widgets/v_async_widget.dart';
 import '../../../widgets/v_scaffold_widget.dart';
@@ -35,47 +36,52 @@ class _SakitDtlPageByState extends ConsumerState<SakitDtlPageBy> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen<AsyncValue>(sakitDtlNotifierProvider, (_, state) {
-      state.showAlertDialogOnError(context);
+    ref.listen<AsyncValue>(sakitDtlNotifierProvider, (_, state) async {
+      return state.showAlertDialogOnError(context, ref);
     });
 
     final sakitDtl = ref.watch(sakitDtlNotifierProvider);
 
-    return VAsyncWidgetScaffold<List<SakitDtl>>(
-        value: sakitDtl,
-        data: (dtl) => RefreshIndicator(
-              onRefresh: () {
-                ref
-                    .read(sakitDtlNotifierProvider.notifier)
-                    .loadSakitDetail(idSakit: dtl.first.idSakit);
-                return Future.value();
-              },
-              child: VScaffoldWidget(
-                scaffoldTitle: 'Upload Gambar',
-                scaffoldFAB: FloatingActionButton.small(
-                    backgroundColor: Palette.primaryColor,
-                    child: Icon(
-                      Icons.upload,
-                      color: Colors.white,
+    final errLog = ref.watch(errLogControllerProvider);
+
+    return VAsyncWidgetScaffold<void>(
+      value: errLog,
+      data: (_) => VAsyncWidgetScaffold<List<SakitDtl>>(
+          value: sakitDtl,
+          data: (dtl) => RefreshIndicator(
+                onRefresh: () {
+                  ref
+                      .read(sakitDtlNotifierProvider.notifier)
+                      .loadSakitDetail(idSakit: dtl.first.idSakit);
+                  return Future.value();
+                },
+                child: VScaffoldWidget(
+                  scaffoldTitle: 'Upload Gambar',
+                  scaffoldFAB: FloatingActionButton.small(
+                      backgroundColor: Palette.primaryColor,
+                      child: Icon(
+                        Icons.upload,
+                        color: Colors.white,
+                      ),
+                      onPressed: () => context.pushNamed(
+                          RouteNames.sakitUploadRoute,
+                          extra: dtl.first.idSakit)),
+                  scaffoldBody: ListView.separated(
+                    itemCount: dtl.length,
+                    separatorBuilder: (context, index) => SizedBox(
+                      height: 8,
                     ),
-                    onPressed: () => context.pushNamed(
-                        RouteNames.sakitUploadRoute,
-                        extra: dtl.first.idSakit)),
-                scaffoldBody: ListView.separated(
-                  itemCount: dtl.length,
-                  separatorBuilder: (context, index) => SizedBox(
-                    height: 8,
+                    itemBuilder: (context, index) => InkWell(
+                        onTap: () => context.pushNamed(
+                            RouteNames.sakitPhotoDtlRoute,
+                            extra: ref
+                                .read(sakitDtlNotifierProvider.notifier)
+                                .urlImageFormSakit(dtl[index].namaImg)),
+                        child: Ink(child: SakitDtlWidget(dtl[index]))),
                   ),
-                  itemBuilder: (context, index) => InkWell(
-                      onTap: () => context.pushNamed(
-                          RouteNames.sakitPhotoDtlRoute,
-                          extra: ref
-                              .read(sakitDtlNotifierProvider.notifier)
-                              .urlImageFormSakit(dtl[index].namaImg)),
-                      child: Ink(child: SakitDtlWidget(dtl[index]))),
                 ),
-              ),
-            ));
+              )),
+    );
   }
 }
 

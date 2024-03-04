@@ -11,8 +11,7 @@ class DtPcListRepository {
   }
 
   Future<List<DtPcList>> getDtPcListLimitedAccess(
-      {required int page, required int idUserHead}) {
-    return _remoteService.getDtPcListLimitedAccess(
-        page: page, idUserHead: idUserHead);
+      {required int page, required String staff}) {
+    return _remoteService.getDtPcListLimitedAccess(page: page, staff: staff);
   }
 }

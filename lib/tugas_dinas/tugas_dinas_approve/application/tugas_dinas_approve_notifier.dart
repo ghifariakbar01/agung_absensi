@@ -312,12 +312,19 @@ class TugasDinasApproveController extends _$TugasDinasApproveController {
   }
 
   bool canSpvApprove(TugasDinasList item) {
+    bool approveSpv = true;
+
     if (item.gmSta == true) {
-      return false;
+      approveSpv = false;
+    }
+
+    final staff = ref.read(userNotifierProvider).user.staf!;
+    if (staff.contains(item.idUser.toString()) == false) {
+      approveSpv = false;
     }
 
     if (ref.read(userNotifierProvider).user.idUser == item.idUser) {
-      return true;
+      approveSpv = true;
     }
 
     if (item.kategori != null) {
@@ -328,14 +335,14 @@ class TugasDinasApproveController extends _$TugasDinasApproveController {
         if (DateTime.now().difference(DateTime.parse(item.tglStart!)).inDays +
                 jumlahHari >
             -2) {
-          return false;
+          approveSpv = false;
         }
       } else {
         if (item.jenis == false &&
             (DateTime.now().difference(DateTime.parse(item.cDate!)).inDays -
                     jumlahHari >
                 1)) {
-          return false;
+          approveSpv = false;
         }
       }
     }
@@ -344,62 +351,66 @@ class TugasDinasApproveController extends _$TugasDinasApproveController {
 
     if (ref.read(tugasDinasListControllerProvider.notifier).isHrdOrSpv(spv) ==
         false) {
-      return false;
+      approveSpv = false;
     }
 
     if (ref.read(userNotifierProvider).user.fullAkses == true) {
-      return true;
+      approveSpv = true;
     }
 
-    return false;
+    return approveSpv;
   }
 
   bool canGmApprove(TugasDinasList item) {
+    bool approveGm = true;
+
     if (item.spvSta == false) {
-      return false;
+      approveGm = false;
     }
 
     if (item.hrdSta == true) {
-      return false;
+      approveGm = false;
     }
 
     final gm = ref.read(userNotifierProvider).user.gm;
 
     if (ref.read(tugasDinasListControllerProvider.notifier).isHrdOrSpv(gm) ==
         false) {
-      return false;
+      approveGm = false;
     }
 
     final dept = ref.read(userNotifierProvider).user.deptList;
 
     if (dept!.contains(item.idDept.toString()) == false) {
-      return false;
+      approveGm = false;
     }
 
     if (ref.read(userNotifierProvider).user.fullAkses == true) {
-      return true;
+      approveGm = true;
     }
 
     if (item.kategori != 'LK' && item.kategori != 'KJ') {
-      return false;
+      approveGm = false;
     }
 
-    return false;
+    return approveGm;
   }
 
   bool canHrdApprove(TugasDinasList item) {
+    bool approveHrd = true;
+
     if (item.cooSta == true) {
-      return false;
+      approveHrd = false;
     }
 
     if (item.gmSta == false) {
-      return false;
+      approveHrd = false;
     }
 
     final hrd = ref.read(userNotifierProvider).user.fin;
     if (ref.read(tugasDinasListControllerProvider.notifier).isHrdOrSpv(hrd) ==
         false) {
-      return false;
+      approveHrd = false;
     }
 
     final jumlahHari =
@@ -408,41 +419,43 @@ class TugasDinasApproveController extends _$TugasDinasApproveController {
         _calcDiffSaturdaySunday(DateTime.parse(item.gmTgl!), DateTime.now());
 
     if (jumlahHari - jumlahHariLibur >= 2) {
-      return false;
+      approveHrd = false;
     }
 
     if (ref.read(userNotifierProvider).user.fullAkses == true) {
-      return true;
+      approveHrd = true;
     }
 
-    return false;
+    return approveHrd;
   }
 
   bool canCooApprove(TugasDinasList item) {
+    bool approveCoo = true;
+
     if (item.hrdSta == false) {
-      return false;
+      approveCoo = false;
     }
 
     final coo = ref.read(userNotifierProvider).user.coo;
     if (ref.read(tugasDinasListControllerProvider.notifier).isHrdOrSpv(coo) ==
         false) {
-      return false;
+      approveCoo = false;
     }
 
     if (ref.read(userNotifierProvider).user.fullAkses == true) {
-      return true;
+      approveCoo = true;
     }
 
     if (item.kategori != 'LK') {
-      return false;
+      approveCoo = false;
     }
 
     final ptServer = ref.read(userNotifierProvider).user.ptServer;
     if (ptServer == 'gs_18') {
-      return false;
+      approveCoo = false;
     }
 
-    return false;
+    return approveCoo;
   }
 
   bool canBatal(TugasDinasList item) {

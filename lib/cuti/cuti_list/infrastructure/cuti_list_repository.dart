@@ -6,13 +6,19 @@ class CutiListRepository {
 
   final CutiListRemoteService _remoteService;
 
-  Future<List<CutiList>> getCutiList({required int page}) {
-    return _remoteService.getCutiList(page: page);
+  Future<List<CutiList>> getCutiList({
+    required int page,
+  }) {
+    return _remoteService.getCutiList(
+      page: page,
+    );
   }
 
   Future<List<CutiList>> getCutiListLimitedAccess(
-      {required int page, required int idUserHead}) {
+      {required int page, required String staff}) {
     return _remoteService.getCutiListLimitedAccess(
-        page: page, idUserHead: idUserHead);
+      page: page,
+      staff: staff,
+    );
   }
 }

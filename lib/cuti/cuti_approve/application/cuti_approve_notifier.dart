@@ -401,15 +401,16 @@ class CutiApproveController extends _$CutiApproveController {
   }
 
   Future<bool> canSpvApprove(CutiList item) async {
+    bool approveSpv = true;
+
     if (item.hrdSta == true) {
-      return false;
+      approveSpv = false;
     }
 
     final spv = ref.read(userNotifierProvider).user.spv;
-
     if (ref.read(createCutiNotifierProvider.notifier).isHrdOrSpv(spv) ==
         false) {
-      return false;
+      approveSpv = false;
     }
 
     if (item.jenisCuti != 'CR') {
@@ -423,33 +424,39 @@ class CutiApproveController extends _$CutiApproveController {
           .read(createSakitNotifierProvider.notifier)
           .getCreateSakit(item.idUser!, item.tglStart!, item.tglEnd!);
 
+      final staff = ref.read(userNotifierProvider).user.staf!;
+      if (staff.contains(item.idUser.toString()) == false) {
+        approveSpv = false;
+      }
+
       if (jumlahHari - jumlahHariLibur - createSakit.hitungLibur! >= 3 &&
           item.jenisCuti == 'CT') {
-        return false;
+        approveSpv = false;
       }
     }
 
     if (item.idUser == ref.read(userNotifierProvider).user.idUser) {
-      return false;
+      approveSpv = false;
     }
 
     if (ref.read(userNotifierProvider).user.fullAkses == true) {
-      return true;
+      approveSpv = true;
     }
 
-    return false;
+    return approveSpv;
   }
 
   Future<bool> canHrdApprove(CutiList item) async {
+    bool approveHrd = true;
+
     if (item.spvSta == false) {
-      return false;
+      approveHrd = false;
     }
 
     final user = ref.read(userNotifierProvider).user;
-
     if (ref.read(createCutiNotifierProvider.notifier).isHrdOrSpv(user.fin) ==
         false) {
-      return false;
+      approveHrd = false;
     }
 
     if (item.jenisCuti != 'CR') {
@@ -465,12 +472,12 @@ class CutiApproveController extends _$CutiApproveController {
 
       if (jumlahHari - jumlahHariLibur - createSakit.hitungLibur! >= 1 &&
           item.jenisCuti == 'CT') {
-        return false;
+        approveHrd = false;
       }
     }
 
     if (user.fullAkses == true) {
-      return true;
+      approveHrd = true;
     }
 
     if (item.jenisCuti != 'CR') {
@@ -480,11 +487,30 @@ class CutiApproveController extends _$CutiApproveController {
 
       if (item.hrdSta == true &&
           mstCuti.openDate!.year != int.parse(item.tahunCuti!)) {
-        return false;
+        approveHrd = false;
       }
     }
 
-    return false;
+    return approveHrd;
+  }
+
+  Future<bool> canBatal(CutiList item) async {
+    bool approveBatal = true;
+
+    if (item.btlSta == true) {
+      approveBatal = false;
+    }
+
+    if (item.jenisCuti == 'CR') {
+      final MstKaryawanCuti mstCuti = await ref
+          .read(mstKaryawanCutiNotifierProvider.notifier)
+          .getSaldoMasterCutiById(item.idUser!);
+      if (mstCuti.openDate!.year.toString() != item.tahunCuti) {
+        approveBatal = false;
+      }
+    }
+
+    return approveBatal;
   }
 }
 

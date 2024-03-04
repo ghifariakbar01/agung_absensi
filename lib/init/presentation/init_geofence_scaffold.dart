@@ -88,7 +88,7 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
                 backgroundNotifierProvider.select((value) => value.isGetting));
 
     ref.listen<AsyncValue>(errLogControllerProvider, (_, state) {
-      state.showAlertDialogOnError(context);
+      state.showAlertDialogOnError(context, ref);
     });
 
     final errLog = ref.watch(errLogControllerProvider);

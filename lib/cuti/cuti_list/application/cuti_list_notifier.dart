@@ -2,8 +2,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../shared/providers.dart';
 
-import '../../../wa_head_helper/application/wa_head.dart';
-import '../../../wa_head_helper/application/wa_head_helper_notifier.dart';
 import '../infrastructure/cuti_list_remote_service.dart';
 import '../infrastructure/cuti_list_repository.dart';
 import 'cuti_list.dart';
@@ -55,20 +53,20 @@ class CutiListController extends _$CutiListController {
 
   Future<List<CutiList>> _determineAndGetCutiListOn({required int page}) async {
     final hrd = ref.read(userNotifierProvider).user.fin;
-    final spv = ref.read(userNotifierProvider).user.spv;
     final fullAkses = ref.read(userNotifierProvider).user.fullAkses;
 
-    if (fullAkses! || isHrdOrSpv(hrd) || isHrdOrSpv(spv)) {
-      return ref.read(cutiListRepositoryProvider).getCutiList(page: page);
+    final staff = ref.read(userNotifierProvider).user.staf!;
+    final staffStr = staff.replaceAll('"', '').substring(0, staff.length - 1);
+
+    if (fullAkses! || isHrdOrSpv(hrd)) {
+      return ref.read(cutiListRepositoryProvider).getCutiList(
+            page: page,
+          );
     } else {
-      final idUser = ref.read(userNotifierProvider).user.idUser;
-
-      final List<WaHead> waHeads = await ref
-          .read(waHeadHelperNotifierProvider.notifier)
-          .getWaHeads(idUser: idUser!);
-
       return ref.read(cutiListRepositoryProvider).getCutiListLimitedAccess(
-          page: page, idUserHead: waHeads.first.idUserHead!);
+            page: page,
+            staff: staffStr,
+          );
     }
   }
 

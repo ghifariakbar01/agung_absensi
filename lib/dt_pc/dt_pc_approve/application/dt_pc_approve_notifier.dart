@@ -156,14 +156,21 @@ class DtPcApproveController extends _$DtPcApproveController {
   }
 
   bool canSpvApprove(DtPcList item) {
+    bool approveSpv = true;
+
     if (item.hrdSta == true) {
-      return false;
+      approveSpv = false;
     }
 
     final spv = ref.read(userNotifierProvider).user.spv;
     if (ref.read(dtPcListControllerProvider.notifier).isHrdOrSpv(spv) ==
         false) {
-      return false;
+      approveSpv = false;
+    }
+
+    final staff = ref.read(userNotifierProvider).user.staf!;
+    if (staff.contains(item.idUser.toString()) == false) {
+      approveSpv = false;
     }
 
     final int jumlahHari =
@@ -173,29 +180,31 @@ class DtPcApproveController extends _$DtPcApproveController {
         calcDiffSaturdaySunday(DateTime.parse(item.cDate!), DateTime.now());
 
     if (jumlahHari - jumlahHariLibur >= 3) {
-      return false;
+      approveSpv = false;
     }
 
     if (ref.read(userNotifierProvider).user.idUser == item.idUser) {
-      return false;
+      approveSpv = false;
     }
 
     if (ref.read(userNotifierProvider).user.fullAkses == true) {
-      return true;
+      approveSpv = true;
     }
 
-    return false;
+    return approveSpv;
   }
 
   bool canHrdApprove(DtPcList item) {
+    bool approveHrd = true;
+
     if (item.spvSta == false) {
-      return false;
+      approveHrd = false;
     }
 
     final hrd = ref.read(userNotifierProvider).user.fin;
     if (ref.read(dtPcListControllerProvider.notifier).isHrdOrSpv(hrd) ==
         false) {
-      return false;
+      approveHrd = false;
     }
 
     final int jumlahHari =
@@ -205,14 +214,14 @@ class DtPcApproveController extends _$DtPcApproveController {
         calcDiffSaturdaySunday(DateTime.parse(item.spvTgl!), DateTime.now());
 
     if (jumlahHari - jumlahHariLibur >= 1) {
-      return false;
+      approveHrd = false;
     }
 
     if (ref.read(userNotifierProvider).user.fullAkses == true) {
-      return true;
+      approveHrd = true;
     }
 
-    return false;
+    return approveHrd;
   }
 
   bool canBatal(DtPcList item) {

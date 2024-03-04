@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:face_net_authentication/infrastructure/dio_extensions.dart';
@@ -101,7 +102,7 @@ class CutiListRemoteService {
   }
 
   Future<List<CutiList>> getCutiListLimitedAccess(
-      {required int page, required int idUserHead}) async {
+      {required int page, required String staff}) async {
     try {
       // debugger();
       final data = _dioRequest;
@@ -125,7 +126,7 @@ class CutiListRemoteService {
                 "      JOIN "
                 "          $dbMstDept ON $dbMstUser.id_dept = $dbMstDept.id_dept "
                 "      WHERE "
-                "          ($dbName.id_user IN (SELECT id_user FROM mst_user_head WHERE id_user_head = $idUserHead)) "
+                "          $dbName.id_user IN ($staff) "
                 "          AND $dbName.id_cuti IS NOT NULL "
                 "      ORDER BY "
                 "          $dbName.c_date DESC "
@@ -139,8 +140,8 @@ class CutiListRemoteService {
       final response = await _dio.post('',
           data: jsonEncode(data), options: Options(contentType: 'text/plain'));
 
-      // log('data ${jsonEncode(data)}');
-      // log('response page $page : $response');
+      log('data ${jsonEncode(data)}');
+      log('response page $page : $response');
 
       final items = response.data?[0];
 

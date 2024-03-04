@@ -38,7 +38,7 @@ class UserModelWithPassword with _$UserModelWithPassword {
     final String? coo,
     final String? gm,
     final String? oth,
-    final String? staff,
+    final String? staf,
     //
     @JsonKey(defaultValue: '') required String? password,
     @JsonKey(defaultValue: '') required String? ptServer,
@@ -66,7 +66,7 @@ class UserModelWithPassword with _$UserModelWithPassword {
         photo: '',
         ptServer: '',
         payroll: '',
-        staff: '',
+        staf: '',
         fullAkses: false,
         //
       );

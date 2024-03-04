@@ -63,7 +63,24 @@ class GetUserNotifier extends _$GetUserNotifier {
   }
 }
 
-// 1. GET AND SET USER
+// 1. CHECK USER STAFF NULL
+final completeUserInfo = FutureProvider<void>((ref) async {
+  UserNotifier userNotifier = ref.read(userNotifierProvider.notifier);
+  String userString = await userNotifier.getUserString();
+
+  if (userString.isNotEmpty) {
+    final json = jsonDecode(userString) as Map<String, Object?>;
+    final user = UserModelWithPassword.fromJson(json);
+
+    if (user.staf == null) {
+      // IF USER STAFF NULL LOGOUT, MAKE USER LOGIN AGAIN
+      await ref.read(userNotifierProvider.notifier).logout();
+      return;
+    }
+  }
+});
+
+// 2. GET AND SET USER
 final getUserFutureProvider = FutureProvider<Unit>((ref) async {
   UserNotifier userNotifier = ref.read(userNotifierProvider.notifier);
   String userString = await userNotifier.getUserString();
@@ -83,9 +100,12 @@ final getUserFutureProvider = FutureProvider<Unit>((ref) async {
   return unit;
 });
 
-// 2. INIT IMEI WITH USER
+// 3. INIT IMEI WITH USER
 final imeiInitFutureProvider =
     FutureProvider.family<Unit, BuildContext>((ref, context) async {
+  log('imeiInitFutureProvider -- 0');
+  await ref.read(completeUserInfo.future);
+
   log('imeiInitFutureProvider -- 1');
   final res = await ref.refresh(getUserFutureProvider.future);
 
@@ -93,7 +113,6 @@ final imeiInitFutureProvider =
     await ref.read(getUserFutureProvider.future);
 
     log('imeiInitFutureProvider -- 2');
-
     final user = ref.read(userNotifierProvider).user;
 
     if (user.IdKary != null) {
@@ -112,9 +131,8 @@ final imeiInitFutureProvider =
 
         log('imeiInitFutureProvider -- 5');
 
-        String imeiDb = await ref
-            .read(imeiNotifierProvider.notifier)
-            .getImeiStringDb(idKary: user.IdKary ?? 'null');
+        String imeiDb =
+            await imeiNotifier.getImeiStringDb(idKary: user.IdKary ?? 'null');
 
         log('imeiInitFutureProvider -- 6');
 
@@ -122,11 +140,9 @@ final imeiInitFutureProvider =
             .read(imeiAuthNotifierProvider.notifier)
             .checkAndUpdateImei(imeiDb: imeiDb);
 
-        log('imeiInitFutureProvider -- $imeiDb');
-
         log('imeiInitFutureProvider -- 7');
 
-        ref.read(initUserStatusNotifierProvider.notifier).letYouThrough();
+        // ref.read(initUserStatusNotifierProvider.notifier).letYouThrough();
 
         // 4. PROCESS IMEI DATA
         // IF OFFLINE FROM USER INIT

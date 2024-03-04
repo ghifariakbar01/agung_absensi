@@ -79,20 +79,21 @@ class HomeScaffold extends ConsumerWidget {
       ),
     );
 
-    ref.listen<AsyncValue>(themeControllerProvider, (_, state) {
+    ref.listen<AsyncValue>(themeControllerProvider, (_, state) async {
       if (!state.isLoading && state.hasValue && state.value != null) {
         // ignore: unused_result
         ref.refresh(themeNotifierProvider);
       } else {
-        return state.showAlertDialogOnError(context);
+        return state.showAlertDialogOnError(context, ref);
       }
     });
 
-    ref.listen<AsyncValue<WaRegister>>(waRegisterNotifierProvider, (_, state) {
+    ref.listen<AsyncValue<WaRegister>>(waRegisterNotifierProvider,
+        (_, state) async {
       if (!state.isLoading && state.hasValue && state.value != null) {
         //
       } else {
-        return state.showAlertDialogOnError(context);
+        return state.showAlertDialogOnError(context, ref);
       }
     });
 
@@ -306,17 +307,14 @@ class HomeScaffold extends ConsumerWidget {
                             SizedBox(
                               height: 68,
                               width: width,
-                              child: GridView.count(
-                                primary: false,
-                                crossAxisSpacing: 15,
-                                mainAxisSpacing: 15,
-                                crossAxisCount: 4,
-                                children: List.generate(
-                                  leaveRequest.length,
-                                  (index) =>
-                                      HomeItem(item: leaveRequest[index]),
+                              child: ListView.separated(
+                                scrollDirection: Axis.horizontal,
+                                separatorBuilder: (context, index) => SizedBox(
+                                  width: 16,
                                 ),
-                                physics: const NeverScrollableScrollPhysics(),
+                                itemBuilder: (context, index) =>
+                                    HomeItem(item: leaveRequest[index]),
+                                itemCount: leaveRequest.length,
                               ),
                             ),
                             // Action
@@ -334,16 +332,14 @@ class HomeScaffold extends ConsumerWidget {
                             SizedBox(
                               height: 68,
                               width: width,
-                              child: GridView.count(
-                                primary: false,
-                                crossAxisSpacing: 15,
-                                mainAxisSpacing: 15,
-                                crossAxisCount: 4,
-                                children: List.generate(
-                                  activity.length,
-                                  (index) => HomeItem(item: activity[index]),
+                              child: ListView.separated(
+                                scrollDirection: Axis.horizontal,
+                                separatorBuilder: (context, index) => SizedBox(
+                                  width: 16,
                                 ),
-                                physics: const NeverScrollableScrollPhysics(),
+                                itemBuilder: (context, index) =>
+                                    HomeItem(item: activity[index]),
+                                itemCount: activity.length,
                               ),
                             ),
 

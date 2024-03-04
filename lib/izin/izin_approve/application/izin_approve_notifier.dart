@@ -156,15 +156,21 @@ class IzinApproveController extends _$IzinApproveController {
   }
 
   bool canSpvApprove(IzinList item) {
+    bool approveSpv = true;
+
     if (item.hrdSta == true) {
-      return false;
+      approveSpv = false;
     }
 
     final spv = ref.read(userNotifierProvider).user.spv;
-
     if (ref.read(izinListControllerProvider.notifier).isHrdOrSpv(spv) ==
         false) {
-      return false;
+      approveSpv = false;
+    }
+
+    final staff = ref.read(userNotifierProvider).user.staf!;
+    if (staff.contains(item.idUser.toString()) == false) {
+      approveSpv = false;
     }
 
     final jumlahHari =
@@ -173,30 +179,32 @@ class IzinApproveController extends _$IzinApproveController {
         DateTime.now().difference(DateTime.parse(item.cDate!)).inDays;
 
     if (dateDiff - jumlahHari >= 3) {
-      return false;
+      approveSpv = false;
     }
 
     if (ref.read(userNotifierProvider).user.idUser == item.idUser) {
-      return false;
+      approveSpv = false;
     }
 
     if (ref.read(userNotifierProvider).user.fullAkses == true) {
-      return true;
+      approveSpv = true;
     }
 
-    return false;
+    return approveSpv;
   }
 
   bool canHrdApprove(IzinList item) {
+    bool approveHrd = true;
+
     if (item.spvSta == false) {
-      return false;
+      approveHrd = false;
     }
 
     final hrd = ref.read(userNotifierProvider).user.fin;
 
     if (ref.read(izinListControllerProvider.notifier).isHrdOrSpv(hrd) ==
         false) {
-      return false;
+      approveHrd = false;
     }
 
     final jumlahHari =
@@ -205,14 +213,22 @@ class IzinApproveController extends _$IzinApproveController {
         DateTime.now().difference(DateTime.parse(item.spvTgl!)).inDays;
 
     if (dateDiff - jumlahHari >= 1) {
-      return false;
+      approveHrd = false;
     }
 
     if (ref.read(userNotifierProvider).user.fullAkses == true) {
-      return true;
+      approveHrd = true;
     }
 
-    return false;
+    return approveHrd;
+  }
+
+  bool canBatal(IzinList item) {
+    if (item.btlSta == true || item.hrdSta == true) {
+      return false;
+    }
+
+    return true;
   }
 
   int calcDiffSaturdaySunday(DateTime startDate, DateTime endDate) {

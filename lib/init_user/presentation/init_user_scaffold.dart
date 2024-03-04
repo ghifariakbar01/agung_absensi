@@ -35,11 +35,11 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
   Widget build(BuildContext context) {
     final imeiInitFuture = ref.watch(imeiInitFutureProvider(context));
 
-    ref.listen<AsyncValue>(imeiInitFutureProvider(context), (_, state) {
-      state.showAlertDialogOnError(context);
+    ref.listen<AsyncValue>(imeiInitFutureProvider(context), (_, state) async {
+      return state.showAlertDialogOnError(context, ref);
     });
-    ref.listen<AsyncValue>(errLogControllerProvider, (_, state) {
-      state.showAlertDialogOnError(context);
+    ref.listen<AsyncValue>(errLogControllerProvider, (_, state) async {
+      return state.showAlertDialogOnError(context, ref);
     });
 
     ref.listen<Option<Either<ImeiFailure, Unit?>>>(

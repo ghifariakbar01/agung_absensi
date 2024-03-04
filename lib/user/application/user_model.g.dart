@@ -36,7 +36,7 @@ _$_UserModelWithPassword _$$_UserModelWithPasswordFromJson(
       coo: json['coo'] as String?,
       gm: json['gm'] as String?,
       oth: json['oth'] as String?,
-      staff: json['staff'] as String?,
+      staf: json['staf'] as String?,
       password: json['password'] as String? ?? '',
       ptServer: json['ptServer'] as String? ?? '',
     );
@@ -71,7 +71,7 @@ Map<String, dynamic> _$$_UserModelWithPasswordToJson(
       'coo': instance.coo,
       'gm': instance.gm,
       'oth': instance.oth,
-      'staff': instance.staff,
+      'staf': instance.staf,
       'password': instance.password,
       'ptServer': instance.ptServer,
     };

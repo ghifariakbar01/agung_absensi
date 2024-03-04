@@ -101,7 +101,7 @@ class SakitListRemoteService {
   }
 
   Future<List<SakitList>> getSakitListLimitedAccess(
-      {required int page, required int idUserHead}) async {
+      {required int page, required String staff}) async {
     try {
       // debugger();
       log('page $page');
@@ -123,7 +123,7 @@ class SakitListRemoteService {
                 " $dbName " +
                 " JOIN " +
                 " $dbMstUser ON $dbName.id_user = $dbMstUser.id_user " +
-                " WHERE $dbName.id_user IN (SELECT id_user FROM $dbMstUserHead WHERE id_user_head = $idUserHead) " +
+                " WHERE $dbName.id_user IN ($staff) " +
                 " ORDER BY " +
                 " $dbName.c_date DESC " +
                 " OFFSET " +

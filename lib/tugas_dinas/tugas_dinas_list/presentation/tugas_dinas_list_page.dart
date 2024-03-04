@@ -8,6 +8,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../err_log/application/err_log_notifier.dart';
 import '../../../routes/application/route_names.dart';
 import '../../../widgets/alert_helper.dart';
 import '../../../widgets/v_async_widget.dart';
@@ -21,8 +22,8 @@ class TugasDinasListPage extends HookConsumerWidget {
   const TugasDinasListPage();
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen<AsyncValue>(tugasDinasListControllerProvider, (_, state) {
-      state.showAlertDialogOnError(context);
+    ref.listen<AsyncValue>(tugasDinasListControllerProvider, (_, state) async {
+      return state.showAlertDialogOnError(context, ref);
     });
 
     final sendWa = ref.watch(sendWaNotifierProvider);
@@ -79,52 +80,57 @@ class TugasDinasListPage extends HookConsumerWidget {
         "2. Harus sudah Approve atasan maksimal H-3 dari keberangkatan \n"
         "3. dari HR sudah harus di approve maksimal H+1 dari approve atasan. (Perhitungan Hari Berdasarkan Hari Kerja)";
 
-    return VAsyncWidgetScaffold(
-      value: absenApprove,
+    final errLog = ref.watch(errLogControllerProvider);
+
+    return VAsyncWidgetScaffold<void>(
+      value: errLog,
       data: (_) => VAsyncWidgetScaffold(
-        value: sendWa,
-        data: (_) => VScaffoldTabLayout(
-          scaffoldTitle: 'List Form Tugas Dinas',
-          additionalInfo: VAdditionalInfo(infoMessage: infoMessage),
-          scaffoldFAB: FloatingActionButton.small(
-              backgroundColor: Palette.primaryColor,
-              child: Icon(
-                Icons.add,
-                color: Colors.white,
-              ),
-              onPressed: () => context.pushNamed(
-                    RouteNames.createTugasDinasNameRoute,
-                  )),
-          onPageChanged: onRefresh,
-          scaffoldBody: [
-            VAsyncValueWidget<List<TugasDinasList>>(
-                value: absenManualList,
-                data: (list) {
-                  final waiting = list
-                      .where((e) =>
-                          (e.spvSta == false || e.hrdSta == false) &&
-                          e.btlSta == false)
-                      .toList();
-                  return _list(scrollController, waiting, onRefresh);
-                }),
-            VAsyncValueWidget<List<TugasDinasList>>(
-                value: absenManualList,
-                data: (list) {
-                  final approved = list
-                      .where((e) =>
-                          (e.spvSta == true && e.hrdSta == true) &&
-                          e.btlSta == false)
-                      .toList();
-                  return _list(scrollController, approved, onRefresh);
-                }),
-            VAsyncValueWidget<List<TugasDinasList>>(
-                value: absenManualList,
-                data: (list) {
-                  final cancelled =
-                      list.where((e) => e.btlSta == true).toList();
-                  return _list(scrollController, cancelled, onRefresh);
-                }),
-          ],
+        value: absenApprove,
+        data: (_) => VAsyncWidgetScaffold(
+          value: sendWa,
+          data: (_) => VScaffoldTabLayout(
+            scaffoldTitle: 'List Form Tugas Dinas',
+            additionalInfo: VAdditionalInfo(infoMessage: infoMessage),
+            scaffoldFAB: FloatingActionButton.small(
+                backgroundColor: Palette.primaryColor,
+                child: Icon(
+                  Icons.add,
+                  color: Colors.white,
+                ),
+                onPressed: () => context.pushNamed(
+                      RouteNames.createTugasDinasNameRoute,
+                    )),
+            onPageChanged: onRefresh,
+            scaffoldBody: [
+              VAsyncValueWidget<List<TugasDinasList>>(
+                  value: absenManualList,
+                  data: (list) {
+                    final waiting = list
+                        .where((e) =>
+                            (e.spvSta == false || e.hrdSta == false) &&
+                            e.btlSta == false)
+                        .toList();
+                    return _list(scrollController, waiting, onRefresh);
+                  }),
+              VAsyncValueWidget<List<TugasDinasList>>(
+                  value: absenManualList,
+                  data: (list) {
+                    final approved = list
+                        .where((e) =>
+                            (e.spvSta == true && e.hrdSta == true) &&
+                            e.btlSta == false)
+                        .toList();
+                    return _list(scrollController, approved, onRefresh);
+                  }),
+              VAsyncValueWidget<List<TugasDinasList>>(
+                  value: absenManualList,
+                  data: (list) {
+                    final cancelled =
+                        list.where((e) => e.btlSta == true).toList();
+                    return _list(scrollController, cancelled, onRefresh);
+                  }),
+            ],
+          ),
         ),
       ),
     );

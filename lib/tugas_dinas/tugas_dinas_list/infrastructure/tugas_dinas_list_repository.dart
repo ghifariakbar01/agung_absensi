@@ -11,8 +11,8 @@ class TugasDinasListRepository {
   }
 
   Future<List<TugasDinasList>> getTugasDinasListLimitedAccess(
-      {required int page, required int idUserHead}) {
+      {required int page, required String staff}) {
     return _remoteService.getTugasDinasListLimitedAccess(
-        page: page, idUserHead: idUserHead);
+        page: page, staff: staff);
   }
 }

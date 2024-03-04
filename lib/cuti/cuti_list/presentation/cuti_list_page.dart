@@ -6,6 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../err_log/application/err_log_notifier.dart';
 import '../../../mst_karyawan_cuti/application/mst_karyawan_cuti.dart';
 import '../../../routes/application/route_names.dart';
 import '../../../widgets/alert_helper.dart';
@@ -22,8 +23,8 @@ class CutiListPage extends HookConsumerWidget {
   const CutiListPage();
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen<AsyncValue>(mstKaryawanCutiNotifierProvider, (_, state) {
-      state.showAlertDialogOnError(context);
+    ref.listen<AsyncValue>(mstKaryawanCutiNotifierProvider, (_, state) async {
+      return state.showAlertDialogOnError(context, ref);
     });
 
     final mstCuti = ref.watch(mstKaryawanCutiNotifierProvider);
@@ -49,7 +50,7 @@ class CutiListPage extends HookConsumerWidget {
       return () => scrollController.removeListener(onScrolled);
     }, [scrollController]);
 
-    ref.listen<AsyncValue>(cutiApproveControllerProvider, (_, state) {
+    ref.listen<AsyncValue>(cutiApproveControllerProvider, (_, state) async {
       if (!state.isLoading &&
           state.hasValue &&
           state.value != '' &&
@@ -65,7 +66,7 @@ class CutiListPage extends HookConsumerWidget {
           message: '${state.value} ',
         );
       } else {
-        return state.showAlertDialogOnError(context);
+        return state.showAlertDialogOnError(context, ref);
       }
     });
 
@@ -82,52 +83,57 @@ class CutiListPage extends HookConsumerWidget {
       return Future.value();
     };
 
-    return VAsyncWidgetScaffold<MstKaryawanCuti>(
-        value: mstCuti,
-        data: (mst) {
-          return VScaffoldTabLayout(
-            scaffoldTitle: 'List Form Cuti',
-            scaffoldFAB: FloatingActionButton.small(
-                backgroundColor: Palette.primaryColor,
-                child: Icon(
-                  Icons.add,
-                  color: Colors.white,
-                ),
-                onPressed: () => context.pushNamed(
-                      RouteNames.createCutiNameRoute,
-                    )),
-            onPageChanged: onPageChanged,
-            scaffoldBody: [
-              VAsyncValueWidget<List<CutiList>>(
-                  value: cutiList,
-                  data: (list) {
-                    final waiting = list
-                        .where((e) =>
-                            (e.spvSta == false || e.hrdSta == false) &&
-                            e.btlSta == false)
-                        .toList();
-                    return _list(mst, waiting, scrollController, onRefresh);
-                  }),
-              VAsyncValueWidget<List<CutiList>>(
-                  value: cutiList,
-                  data: (list) {
-                    final approved = list
-                        .where((e) =>
-                            (e.spvSta == true || e.hrdSta == true) &&
-                            e.btlSta != true)
-                        .toList();
-                    return _list(mst, approved, scrollController, onRefresh);
-                  }),
-              VAsyncValueWidget<List<CutiList>>(
-                  value: cutiList,
-                  data: (list) {
-                    final cancelled =
-                        list.where((e) => e.btlSta == true).toList();
-                    return _list(mst, cancelled, scrollController, onRefresh);
-                  }),
-            ],
-          );
-        });
+    final errLog = ref.watch(errLogControllerProvider);
+
+    return VAsyncWidgetScaffold<void>(
+      value: errLog,
+      data: (_) => VAsyncWidgetScaffold<MstKaryawanCuti>(
+          value: mstCuti,
+          data: (mst) {
+            return VScaffoldTabLayout(
+              scaffoldTitle: 'List Form Cuti',
+              scaffoldFAB: FloatingActionButton.small(
+                  backgroundColor: Palette.primaryColor,
+                  child: Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
+                  onPressed: () => context.pushNamed(
+                        RouteNames.createCutiNameRoute,
+                      )),
+              onPageChanged: onPageChanged,
+              scaffoldBody: [
+                VAsyncValueWidget<List<CutiList>>(
+                    value: cutiList,
+                    data: (list) {
+                      final waiting = list
+                          .where((e) =>
+                              (e.spvSta == false || e.hrdSta == false) &&
+                              e.btlSta == false)
+                          .toList();
+                      return _list(mst, waiting, scrollController, onRefresh);
+                    }),
+                VAsyncValueWidget<List<CutiList>>(
+                    value: cutiList,
+                    data: (list) {
+                      final approved = list
+                          .where((e) =>
+                              (e.spvSta == true || e.hrdSta == true) &&
+                              e.btlSta != true)
+                          .toList();
+                      return _list(mst, approved, scrollController, onRefresh);
+                    }),
+                VAsyncValueWidget<List<CutiList>>(
+                    value: cutiList,
+                    data: (list) {
+                      final cancelled =
+                          list.where((e) => e.btlSta == true).toList();
+                      return _list(mst, cancelled, scrollController, onRefresh);
+                    }),
+              ],
+            );
+          }),
+    );
   }
 }
 

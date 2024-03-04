@@ -14,6 +14,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../constants/assets.dart';
+import '../../../err_log/application/err_log_notifier.dart';
 import '../../../shared/providers.dart';
 import '../../../widgets/alert_helper.dart';
 import '../../../widgets/v_async_widget.dart';
@@ -53,11 +54,11 @@ class EditIzinPage extends HookConsumerWidget {
     final spvTextController = useTextEditingController();
     final hrdTextController = useTextEditingController();
 
-    ref.listen<AsyncValue>(userHelperNotifierProvider, (_, state) {
-      state.showAlertDialogOnError(context);
+    ref.listen<AsyncValue>(userHelperNotifierProvider, (_, state) async {
+      return state.showAlertDialogOnError(context, ref);
     });
 
-    ref.listen<AsyncValue>(createIzinNotifierProvider, (_, state) {
+    ref.listen<AsyncValue>(createIzinNotifierProvider, (_, state) async {
       if (!state.isLoading &&
           state.hasValue &&
           state.value != null &&
@@ -71,7 +72,7 @@ class EditIzinPage extends HookConsumerWidget {
           return Future.value(true);
         });
       }
-      return state.showAlertDialogOnError(context);
+      return state.showAlertDialogOnError(context, ref);
     });
 
     final userHelper = ref.watch(userHelperNotifierProvider);
@@ -80,256 +81,266 @@ class EditIzinPage extends HookConsumerWidget {
 
     final _formKey = useMemoized(GlobalKey<FormState>.new, const []);
 
+    final errLog = ref.watch(errLogControllerProvider);
+
     return KeyboardDismissOnTap(
       child: VAsyncWidgetScaffold<void>(
-        value: userHelper,
+        value: errLog,
         data: (_) => VAsyncWidgetScaffold<void>(
-          value: createIzin,
-          data: (_) => VScaffoldWidget(
-              scaffoldTitle: 'Edit Form Izin',
-              scaffoldBody: Padding(
-                padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom),
-                child: Form(
-                  key: _formKey,
-                  child: ListView(
-                    children: [
-                      // NAMA
-                      TextFormField(
-                          enabled: false,
-                          controller: namaTextController,
-                          cursorColor: Palette.primaryColor,
-                          keyboardType: TextInputType.name,
-                          decoration: Themes.formStyleBordered(
-                            'Nama',
-                          ),
-                          style: Themes.customColor(
-                            14,
-                          ),
-                          validator: (item) {
-                            if (item == null) {
-                              return 'Form tidak boleh kosong';
-                            } else if (item.isEmpty) {
-                              return 'Form tidak boleh kosong';
-                            }
+          value: userHelper,
+          data: (_) => VAsyncWidgetScaffold<void>(
+            value: createIzin,
+            data: (_) => VScaffoldWidget(
+                scaffoldTitle: 'Edit Form Izin',
+                scaffoldBody: Padding(
+                  padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).viewInsets.bottom),
+                  child: Form(
+                    key: _formKey,
+                    child: ListView(
+                      children: [
+                        // NAMA
+                        TextFormField(
+                            enabled: false,
+                            controller: namaTextController,
+                            cursorColor: Palette.primaryColor,
+                            keyboardType: TextInputType.name,
+                            decoration: Themes.formStyleBordered(
+                              'Nama',
+                            ),
+                            style: Themes.customColor(
+                              14,
+                            ),
+                            validator: (item) {
+                              if (item == null) {
+                                return 'Form tidak boleh kosong';
+                              } else if (item.isEmpty) {
+                                return 'Form tidak boleh kosong';
+                              }
 
-                            return null;
-                          }),
+                              return null;
+                            }),
 
-                      SizedBox(
-                        height: 16,
-                      ),
+                        SizedBox(
+                          height: 16,
+                        ),
 
-                      // PT
-                      TextFormField(
-                          enabled: false,
-                          controller: ptTextController,
-                          cursorColor: Palette.primaryColor,
-                          keyboardType: TextInputType.name,
-                          decoration: Themes.formStyleBordered(
-                            'PT',
-                          ),
-                          style: Themes.customColor(
-                            14,
-                          ),
-                          validator: (item) {
-                            if (item == null) {
-                              return 'Form tidak boleh kosong';
-                            } else if (item.isEmpty) {
-                              return 'Form tidak boleh kosong';
-                            }
+                        // PT
+                        TextFormField(
+                            enabled: false,
+                            controller: ptTextController,
+                            cursorColor: Palette.primaryColor,
+                            keyboardType: TextInputType.name,
+                            decoration: Themes.formStyleBordered(
+                              'PT',
+                            ),
+                            style: Themes.customColor(
+                              14,
+                            ),
+                            validator: (item) {
+                              if (item == null) {
+                                return 'Form tidak boleh kosong';
+                              } else if (item.isEmpty) {
+                                return 'Form tidak boleh kosong';
+                              }
 
-                            return null;
-                          }),
+                              return null;
+                            }),
 
-                      SizedBox(
-                        height: 16,
-                      ),
+                        SizedBox(
+                          height: 16,
+                        ),
 
-                      // SURAT DOKTER
-                      VAsyncValueWidget<List<JenisIzin>>(
-                        value: jenisIzin,
-                        data: (item) => DropdownButtonFormField<JenisIzin>(
-                          elevation: 0,
-                          iconSize: 20,
-                          padding: EdgeInsets.all(0),
-                          icon: Icon(Icons.keyboard_arrow_down_rounded,
-                              color: Palette.primaryColor),
-                          decoration: Themes.formStyleBordered(
-                            'Jenis Izin',
-                          ),
-                          value: item.firstWhere(
-                            (element) =>
-                                element.idMstIzin ==
-                                jenisIzinTextController.value,
-                            orElse: () => item.first,
-                          ),
-                          validator: (value) {
-                            if (value == null) {
-                              return 'Form tidak boleh kosong';
-                            }
+                        // SURAT DOKTER
+                        VAsyncValueWidget<List<JenisIzin>>(
+                          value: jenisIzin,
+                          data: (item) => DropdownButtonFormField<JenisIzin>(
+                            elevation: 0,
+                            iconSize: 20,
+                            padding: EdgeInsets.all(0),
+                            icon: Icon(Icons.keyboard_arrow_down_rounded,
+                                color: Palette.primaryColor),
+                            decoration: Themes.formStyleBordered(
+                              'Jenis Izin',
+                            ),
+                            value: item.firstWhere(
+                              (element) =>
+                                  element.idMstIzin ==
+                                  jenisIzinTextController.value,
+                              orElse: () => item.first,
+                            ),
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Form tidak boleh kosong';
+                              }
 
-                            if (value.nama!.isEmpty) {
-                              return 'Form tidak boleh kosong';
-                            }
-                            return null;
-                          },
-                          onChanged: (JenisIzin? value) {
-                            if (value != null) {
-                              jenisIzinTextController.value = value.idMstIzin!;
-                            }
-                          },
-                          isExpanded: true,
-                          items: item.map<DropdownMenuItem<JenisIzin>>(
-                              (JenisIzin value) {
-                            return DropdownMenuItem<JenisIzin>(
-                              value: value,
-                              child: Text(
-                                value.nama ?? "",
-                                style: Themes.customColor(
-                                  14,
+                              if (value.nama!.isEmpty) {
+                                return 'Form tidak boleh kosong';
+                              }
+                              return null;
+                            },
+                            onChanged: (JenisIzin? value) {
+                              if (value != null) {
+                                jenisIzinTextController.value =
+                                    value.idMstIzin!;
+                              }
+                            },
+                            isExpanded: true,
+                            items: item.map<DropdownMenuItem<JenisIzin>>(
+                                (JenisIzin value) {
+                              return DropdownMenuItem<JenisIzin>(
+                                value: value,
+                                child: Text(
+                                  value.nama ?? "",
+                                  style: Themes.customColor(
+                                    14,
+                                  ),
                                 ),
-                              ),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+
+                        SizedBox(
+                          height: 16,
+                        ),
+
+                        // TGL
+                        InkWell(
+                          onTap: () async {
+                            final picked = await showDateRangePicker(
+                              context: context,
+                              lastDate: DateTime.now(),
+                              firstDate: new DateTime(2021),
                             );
-                          }).toList(),
-                        ),
-                      ),
+                            if (picked != null) {
+                              print(picked);
 
-                      SizedBox(
-                        height: 16,
-                      ),
+                              final start =
+                                  StringUtils.midnightDate(picked.start)
+                                      .replaceAll('.000', '');
+                              final end = StringUtils.midnightDate(picked.end)
+                                  .replaceAll('.000', '');
 
-                      // TGL
-                      InkWell(
-                        onTap: () async {
-                          final picked = await showDateRangePicker(
-                            context: context,
-                            lastDate: DateTime.now(),
-                            firstDate: new DateTime(2021),
-                          );
-                          if (picked != null) {
-                            print(picked);
+                              tglAwalTextController.value = start;
+                              tglAkhirTextController.value = end;
 
-                            final start = StringUtils.midnightDate(picked.start)
-                                .replaceAll('.000', '');
-                            final end = StringUtils.midnightDate(picked.end)
-                                .replaceAll('.000', '');
+                              final startPlaceHolder =
+                                  StringUtils.formatTanggal(
+                                      picked.start.toString());
+                              final endPlaceHolder = StringUtils.formatTanggal(
+                                  picked.end.toString());
 
-                            tglAwalTextController.value = start;
-                            tglAkhirTextController.value = end;
+                              tglPlaceholderTextController.text =
+                                  'Dari $startPlaceHolder Sampai $endPlaceHolder';
 
-                            final startPlaceHolder = StringUtils.formatTanggal(
-                                picked.start.toString());
-                            final endPlaceHolder = StringUtils.formatTanggal(
-                                picked.end.toString());
+                              log('START $start END $end');
+                            }
+                          },
+                          child: Ink(
+                            child: IgnorePointer(
+                              ignoring: true,
+                              child: TextFormField(
+                                  maxLines: 1,
+                                  controller: tglPlaceholderTextController,
+                                  cursorColor: Palette.primaryColor,
+                                  decoration: Themes.formStyleBordered(
+                                    'Tanggal',
+                                  ),
+                                  style: Themes.customColor(
+                                    14,
+                                  ),
+                                  validator: (item) {
+                                    if (item == null) {
+                                      return 'Form tidak boleh kosong';
+                                    } else if (item.isEmpty) {
+                                      return 'Form tidak boleh kosong';
+                                    }
 
-                            tglPlaceholderTextController.text =
-                                'Dari $startPlaceHolder Sampai $endPlaceHolder';
-
-                            log('START $start END $end');
-                          }
-                        },
-                        child: Ink(
-                          child: IgnorePointer(
-                            ignoring: true,
-                            child: TextFormField(
-                                maxLines: 1,
-                                controller: tglPlaceholderTextController,
-                                cursorColor: Palette.primaryColor,
-                                decoration: Themes.formStyleBordered(
-                                  'Tanggal',
-                                ),
-                                style: Themes.customColor(
-                                  14,
-                                ),
-                                validator: (item) {
-                                  if (item == null) {
-                                    return 'Form tidak boleh kosong';
-                                  } else if (item.isEmpty) {
-                                    return 'Form tidak boleh kosong';
-                                  }
-
-                                  return null;
-                                }),
+                                    return null;
+                                  }),
+                            ),
                           ),
                         ),
-                      ),
 
-                      SizedBox(
-                        height: 16,
-                      ),
+                        SizedBox(
+                          height: 16,
+                        ),
 
-                      // DIAGNOSA
-                      TextFormField(
-                          maxLines: 5,
-                          controller: keteranganTextController,
-                          cursorColor: Palette.primaryColor,
-                          decoration: Themes.formStyleBordered(
-                            'Diagnosa',
-                          ),
-                          style: Themes.customColor(
-                            14,
-                          ),
-                          validator: (item) {
-                            if (item == null) {
-                              return 'Form tidak boleh kosong';
-                            } else if (item.isEmpty) {
-                              return 'Form tidak boleh kosong';
-                            }
+                        // DIAGNOSA
+                        TextFormField(
+                            maxLines: 5,
+                            controller: keteranganTextController,
+                            cursorColor: Palette.primaryColor,
+                            decoration: Themes.formStyleBordered(
+                              'Diagnosa',
+                            ),
+                            style: Themes.customColor(
+                              14,
+                            ),
+                            validator: (item) {
+                              if (item == null) {
+                                return 'Form tidak boleh kosong';
+                              } else if (item.isEmpty) {
+                                return 'Form tidak boleh kosong';
+                              }
 
-                            return null;
-                          }),
+                              return null;
+                            }),
 
-                      SizedBox(
-                        height: 16,
-                      ),
+                        SizedBox(
+                          height: 16,
+                        ),
 
-                      VButton(
-                          label: 'Update Form Izin',
-                          onPressed: () async {
-                            log(' VARIABLES : \n  Nama : ${namaTextController.value.text} ');
-                            log(' Payroll: ${ptTextController.value.text} \n ');
-                            log(' Diagnosa: ${keteranganTextController.value.text} \n ');
-                            log(' Surat Dokter: ${jenisIzinTextController.value}  \n ');
-                            log(' Tgl Awal: ${tglAwalTextController.value} Tgl Akhir: ${tglAkhirTextController.value} \n ');
-                            log(' SPV Note : ${spvTextController.value.text} HRD Note : ${hrdTextController.value.text} \n  ');
+                        VButton(
+                            label: 'Update Form Izin',
+                            onPressed: () async {
+                              log(' VARIABLES : \n  Nama : ${namaTextController.value.text} ');
+                              log(' Payroll: ${ptTextController.value.text} \n ');
+                              log(' Diagnosa: ${keteranganTextController.value.text} \n ');
+                              log(' Surat Dokter: ${jenisIzinTextController.value}  \n ');
+                              log(' Tgl Awal: ${tglAwalTextController.value} Tgl Akhir: ${tglAkhirTextController.value} \n ');
+                              log(' SPV Note : ${spvTextController.value.text} HRD Note : ${hrdTextController.value.text} \n  ');
 
-                            final totalHari = DateTime.parse(
-                                    tglAkhirTextController.value)
-                                .difference(
-                                    DateTime.parse(tglAwalTextController.value))
-                                .inDays;
-                            log(' Date Diff: $totalHari');
+                              final totalHari =
+                                  DateTime.parse(tglAkhirTextController.value)
+                                      .difference(DateTime.parse(
+                                          tglAwalTextController.value))
+                                      .inDays;
+                              log(' Date Diff: $totalHari');
 
-                            if (_formKey.currentState!.validate()) {
-                              _formKey.currentState!.save();
-                              await ref
-                                  .read(createIzinNotifierProvider.notifier)
-                                  .updateIzin(
-                                      idIzin: item.idIzin!,
-                                      idUser: item.idUser!,
-                                      uUser: user.nama!,
-                                      totalHari: totalHari,
-                                      ket: keteranganTextController.text,
-                                      idMstIzin: jenisIzinTextController.value!,
-                                      tglAwal: tglAwalTextController.value,
-                                      tglAkhir: tglAkhirTextController.value,
-                                      onError: (msg) => HapticFeedback.vibrate()
-                                          .then((_) => showDialog(
-                                              context: context,
-                                              barrierDismissible: true,
-                                              builder: (_) => VSimpleDialog(
-                                                    color: Palette.red,
-                                                    asset: Assets.iconCrossed,
-                                                    label: 'Oops',
-                                                    labelDescription: msg,
-                                                  ))));
-                            }
-                          })
-                    ],
+                              if (_formKey.currentState!.validate()) {
+                                _formKey.currentState!.save();
+                                await ref
+                                    .read(createIzinNotifierProvider.notifier)
+                                    .updateIzin(
+                                        idIzin: item.idIzin!,
+                                        idUser: item.idUser!,
+                                        uUser: user.nama!,
+                                        totalHari: totalHari,
+                                        ket: keteranganTextController.text,
+                                        idMstIzin:
+                                            jenisIzinTextController.value!,
+                                        tglAwal: tglAwalTextController.value,
+                                        tglAkhir: tglAkhirTextController.value,
+                                        onError: (msg) => HapticFeedback
+                                                .vibrate()
+                                            .then((_) => showDialog(
+                                                context: context,
+                                                barrierDismissible: true,
+                                                builder: (_) => VSimpleDialog(
+                                                      color: Palette.red,
+                                                      asset: Assets.iconCrossed,
+                                                      label: 'Oops',
+                                                      labelDescription: msg,
+                                                    ))));
+                              }
+                            })
+                      ],
+                    ),
                   ),
-                ),
-              )),
+                )),
+          ),
         ),
       ),
     );

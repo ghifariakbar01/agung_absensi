@@ -48,12 +48,11 @@ class _HomeSavedState extends ConsumerState<HomeSaved> {
                     ),
                 (_) {})));
 
-    ref.listen<AsyncValue>(errLogControllerProvider, (_, state) {
-      state.showAlertDialogOnError(context);
+    ref.listen<AsyncValue>(errLogControllerProvider, (_, state) async {
+      return state.showAlertDialogOnError(context, ref);
     });
 
     final errLog = ref.watch(errLogControllerProvider);
-
     return VAsyncWidgetScaffold<void>(
         value: errLog, data: (_) => HomeScaffold());
   }

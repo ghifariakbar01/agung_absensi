@@ -7,7 +7,7 @@ part of 'central_approve_notifier.dart';
 // **************************************************************************
 
 String _$centralApproveNotifierHash() =>
-    r'06f367b78e5cb66918436db84ad7aabe369b3480';
+    r'd513a45577360f31ef220314af582b4849750bef';
 
 /// See also [CentralApproveNotifier].
 @ProviderFor(CentralApproveNotifier)

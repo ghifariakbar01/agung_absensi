@@ -109,7 +109,7 @@ class IzinListRemoteService {
   }
 
   Future<List<IzinList>> getIzinListLimitedAccess(
-      {required int page, required int idUserHead}) async {
+      {required int page, required String staff}) async {
     try {
       // debugger();
       log('page $page');
@@ -136,7 +136,7 @@ class IzinListRemoteService {
                 "      FROM "
                 "          $dbName "
                 "      WHERE "
-                "          $dbName.id_user IN (SELECT id_user FROM $dbMstUserHead WHERE id_user_head = $idUserHead) AND id_izin IS NOT NULL "
+                "          $dbName.id_user IN ($staff) AND id_izin IS NOT NULL "
                 "      ORDER BY "
                 "          c_date DESC "
                 "      OFFSET "

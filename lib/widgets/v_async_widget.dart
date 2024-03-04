@@ -5,7 +5,6 @@ import 'package:face_net_authentication/widgets/v_scaffold_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../style/style.dart';
 import 'error_message_widget.dart';
 
 class VAsyncWidgetScaffold<T> extends StatelessWidget {

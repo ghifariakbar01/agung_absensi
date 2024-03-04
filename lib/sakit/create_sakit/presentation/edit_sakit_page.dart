@@ -14,6 +14,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../constants/assets.dart';
+import '../../../err_log/application/err_log_notifier.dart';
 import '../../../widgets/alert_helper.dart';
 import '../../../widgets/v_async_widget.dart';
 import '../../../widgets/v_dialogs.dart';
@@ -53,11 +54,11 @@ class EditSakitPage extends HookConsumerWidget {
     final spvTextController = useTextEditingController();
     final hrdTextController = useTextEditingController();
 
-    ref.listen<AsyncValue>(userHelperNotifierProvider, (_, state) {
-      state.showAlertDialogOnError(context);
+    ref.listen<AsyncValue>(userHelperNotifierProvider, (_, state) async {
+      return state.showAlertDialogOnError(context, ref);
     });
 
-    ref.listen<AsyncValue>(createSakitNotifierProvider, (_, state) {
+    ref.listen<AsyncValue>(createSakitNotifierProvider, (_, state) async {
       if (!state.isLoading &&
           state.hasValue &&
           state.value != null &&
@@ -71,234 +72,239 @@ class EditSakitPage extends HookConsumerWidget {
           return Future.value(true);
         });
       }
-      return state.showAlertDialogOnError(context);
+      return state.showAlertDialogOnError(context, ref);
     });
 
     final userHelper = ref.watch(userHelperNotifierProvider);
     final createSakit = ref.watch(createSakitNotifierProvider);
 
+    final errLog = ref.watch(errLogControllerProvider);
+
     return KeyboardDismissOnTap(
       child: VAsyncWidgetScaffold<void>(
-        value: userHelper,
+        value: errLog,
         data: (_) => VAsyncWidgetScaffold<void>(
-          value: createSakit,
-          data: (_) => VScaffoldWidget(
-              scaffoldTitle: 'Edit Form Sakit',
-              scaffoldBody: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // NAMA
-                  TextFormField(
-                      enabled: false,
-                      controller: namaTextController,
-                      cursorColor: Palette.primaryColor,
-                      keyboardType: TextInputType.name,
-                      decoration: Themes.formStyleBordered(
-                        'Nama',
-                      ),
-                      style: Themes.customColor(
-                        14,
-                      ),
-                      validator: (item) {
-                        if (item == null) {
-                          return 'Form tidak boleh kosong';
-                        } else if (item.isEmpty) {
-                          return 'Form tidak boleh kosong';
-                        }
-
-                        return null;
-                      }),
-
-                  SizedBox(
-                    height: 16,
-                  ),
-
-                  // PT
-                  TextFormField(
-                      enabled: false,
-                      controller: ptTextController,
-                      cursorColor: Palette.primaryColor,
-                      keyboardType: TextInputType.name,
-                      decoration: Themes.formStyleBordered(
-                        'PT',
-                      ),
-                      style: Themes.customColor(
-                        14,
-                      ),
-                      validator: (item) {
-                        if (item == null) {
-                          return 'Form tidak boleh kosong';
-                        } else if (item.isEmpty) {
-                          return 'Form tidak boleh kosong';
-                        }
-
-                        return null;
-                      }),
-
-                  SizedBox(
-                    height: 16,
-                  ),
-
-                  // SURAT DOKTER
-                  DropdownButtonFormField<String>(
-                    elevation: 16,
-                    iconSize: 20,
-                    value: suratDokterTextController.value,
-                    decoration: Themes.formStyleBordered('Surat Dokter'),
-                    icon: Icon(
-                      Icons.keyboard_arrow_down_rounded,
-                      color: Palette.primaryColor,
-                    ),
-                    onChanged: (String? value) {
-                      if (value != null) {
-                        suratDokterTextController.value = value;
-                      }
-                    },
-                    items: ['Dengan Surat', 'Tanpa Surat']
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(
-                          value,
-                          style: Themes.customColor(
-                            14,
-                          ),
+          value: userHelper,
+          data: (_) => VAsyncWidgetScaffold<void>(
+            value: createSakit,
+            data: (_) => VScaffoldWidget(
+                scaffoldTitle: 'Edit Form Sakit',
+                scaffoldBody: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // NAMA
+                    TextFormField(
+                        enabled: false,
+                        controller: namaTextController,
+                        cursorColor: Palette.primaryColor,
+                        keyboardType: TextInputType.name,
+                        decoration: Themes.formStyleBordered(
+                          'Nama',
                         ),
-                      );
-                    }).toList(),
-                  ),
+                        style: Themes.customColor(
+                          14,
+                        ),
+                        validator: (item) {
+                          if (item == null) {
+                            return 'Form tidak boleh kosong';
+                          } else if (item.isEmpty) {
+                            return 'Form tidak boleh kosong';
+                          }
 
-                  SizedBox(
-                    height: 16,
-                  ),
+                          return null;
+                        }),
 
-                  // TGL
-                  InkWell(
-                    onTap: () async {
-                      final picked = await showDateRangePicker(
-                        context: context,
-                        lastDate: DateTime.now(),
-                        firstDate: new DateTime(2021),
-                      );
-                      if (picked != null) {
-                        print(picked);
+                    SizedBox(
+                      height: 16,
+                    ),
 
-                        final start = StringUtils.midnightDate(picked.start)
-                            .replaceAll('.000', '');
-                        final end = StringUtils.midnightDate(picked.end)
-                            .replaceAll('.000', '');
+                    // PT
+                    TextFormField(
+                        enabled: false,
+                        controller: ptTextController,
+                        cursorColor: Palette.primaryColor,
+                        keyboardType: TextInputType.name,
+                        decoration: Themes.formStyleBordered(
+                          'PT',
+                        ),
+                        style: Themes.customColor(
+                          14,
+                        ),
+                        validator: (item) {
+                          if (item == null) {
+                            return 'Form tidak boleh kosong';
+                          } else if (item.isEmpty) {
+                            return 'Form tidak boleh kosong';
+                          }
 
-                        tglAwalTextController.value = start;
-                        tglAkhirTextController.value = end;
+                          return null;
+                        }),
 
-                        final startPlaceHolder =
-                            StringUtils.formatTanggal(picked.start.toString());
-                        final endPlaceHolder =
-                            StringUtils.formatTanggal(picked.end.toString());
+                    SizedBox(
+                      height: 16,
+                    ),
 
-                        tglPlaceholderTextController.text =
-                            'Dari $startPlaceHolder Sampai $endPlaceHolder';
-
-                        log('START $start END $end');
-                      }
-                    },
-                    child: Ink(
-                      child: IgnorePointer(
-                        ignoring: true,
-                        child: TextFormField(
-                            maxLines: 1,
-                            controller: tglPlaceholderTextController,
-                            cursorColor: Palette.primaryColor,
-                            decoration: Themes.formStyleBordered(
-                              'Tanggal',
-                            ),
+                    // SURAT DOKTER
+                    DropdownButtonFormField<String>(
+                      elevation: 16,
+                      iconSize: 20,
+                      value: suratDokterTextController.value,
+                      decoration: Themes.formStyleBordered('Surat Dokter'),
+                      icon: Icon(
+                        Icons.keyboard_arrow_down_rounded,
+                        color: Palette.primaryColor,
+                      ),
+                      onChanged: (String? value) {
+                        if (value != null) {
+                          suratDokterTextController.value = value;
+                        }
+                      },
+                      items: ['Dengan Surat', 'Tanpa Surat']
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(
+                            value,
                             style: Themes.customColor(
                               14,
                             ),
-                            validator: (item) {
-                              if (item == null) {
-                                return 'Form tidak boleh kosong';
-                              } else if (item.isEmpty) {
-                                return 'Form tidak boleh kosong';
-                              }
+                          ),
+                        );
+                      }).toList(),
+                    ),
 
-                              return null;
-                            }),
+                    SizedBox(
+                      height: 16,
+                    ),
+
+                    // TGL
+                    InkWell(
+                      onTap: () async {
+                        final picked = await showDateRangePicker(
+                          context: context,
+                          lastDate: DateTime.now(),
+                          firstDate: new DateTime(2021),
+                        );
+                        if (picked != null) {
+                          print(picked);
+
+                          final start = StringUtils.midnightDate(picked.start)
+                              .replaceAll('.000', '');
+                          final end = StringUtils.midnightDate(picked.end)
+                              .replaceAll('.000', '');
+
+                          tglAwalTextController.value = start;
+                          tglAkhirTextController.value = end;
+
+                          final startPlaceHolder = StringUtils.formatTanggal(
+                              picked.start.toString());
+                          final endPlaceHolder =
+                              StringUtils.formatTanggal(picked.end.toString());
+
+                          tglPlaceholderTextController.text =
+                              'Dari $startPlaceHolder Sampai $endPlaceHolder';
+
+                          log('START $start END $end');
+                        }
+                      },
+                      child: Ink(
+                        child: IgnorePointer(
+                          ignoring: true,
+                          child: TextFormField(
+                              maxLines: 1,
+                              controller: tglPlaceholderTextController,
+                              cursorColor: Palette.primaryColor,
+                              decoration: Themes.formStyleBordered(
+                                'Tanggal',
+                              ),
+                              style: Themes.customColor(
+                                14,
+                              ),
+                              validator: (item) {
+                                if (item == null) {
+                                  return 'Form tidak boleh kosong';
+                                } else if (item.isEmpty) {
+                                  return 'Form tidak boleh kosong';
+                                }
+
+                                return null;
+                              }),
+                        ),
                       ),
                     ),
-                  ),
 
-                  SizedBox(
-                    height: 16,
-                  ),
+                    SizedBox(
+                      height: 16,
+                    ),
 
-                  // DIAGNOSA
-                  TextFormField(
-                      maxLines: 5,
-                      controller: diagnosaTextController,
-                      cursorColor: Palette.primaryColor,
-                      decoration: Themes.formStyleBordered(
-                        'Diagnosa',
-                      ),
-                      style: Themes.customColor(
-                        14,
-                      ),
-                      validator: (item) {
-                        if (item == null) {
-                          return 'Form tidak boleh kosong';
-                        } else if (item.isEmpty) {
-                          return 'Form tidak boleh kosong';
-                        }
+                    // DIAGNOSA
+                    TextFormField(
+                        maxLines: 5,
+                        controller: diagnosaTextController,
+                        cursorColor: Palette.primaryColor,
+                        decoration: Themes.formStyleBordered(
+                          'Diagnosa',
+                        ),
+                        style: Themes.customColor(
+                          14,
+                        ),
+                        validator: (item) {
+                          if (item == null) {
+                            return 'Form tidak boleh kosong';
+                          } else if (item.isEmpty) {
+                            return 'Form tidak boleh kosong';
+                          }
 
-                        return null;
-                      }),
+                          return null;
+                        }),
 
-                  SizedBox(
-                    height: 16,
-                  ),
+                    SizedBox(
+                      height: 16,
+                    ),
 
-                  Expanded(child: Container()),
+                    Expanded(child: Container()),
 
-                  VButton(
-                      label: suratDokterTextController.value == 'DS'
-                          ? 'Update Form Sakit dan Upload Surat'
-                          : 'Update Form Sakit',
-                      onPressed: () async {
-                        final String suratDokterText =
-                            suratDokterTextController.value.toLowerCase() ==
-                                    'dengan surat dokter'
-                                ? 'DS'
-                                : 'TS';
+                    VButton(
+                        label: suratDokterTextController.value == 'DS'
+                            ? 'Update Form Sakit dan Upload Surat'
+                            : 'Update Form Sakit',
+                        onPressed: () async {
+                          final String suratDokterText =
+                              suratDokterTextController.value.toLowerCase() ==
+                                      'dengan surat dokter'
+                                  ? 'DS'
+                                  : 'TS';
 
-                        log(' VARIABLES : \n  Nama : ${namaTextController.value.text} ');
-                        log(' Payroll: ${ptTextController.value.text} \n ');
-                        log(' Diagnosa: ${diagnosaTextController.value.text} \n ');
-                        log(' Surat Dokter: $suratDokterText \n ');
-                        log(' Tgl Awal: ${tglAwalTextController.value} Tgl Akhir: ${tglAkhirTextController.value} \n ');
-                        log(' SPV Note : ${spvTextController.value.text} HRD Note : ${hrdTextController.value.text} \n  ');
+                          log(' VARIABLES : \n  Nama : ${namaTextController.value.text} ');
+                          log(' Payroll: ${ptTextController.value.text} \n ');
+                          log(' Diagnosa: ${diagnosaTextController.value.text} \n ');
+                          log(' Surat Dokter: $suratDokterText \n ');
+                          log(' Tgl Awal: ${tglAwalTextController.value} Tgl Akhir: ${tglAkhirTextController.value} \n ');
+                          log(' SPV Note : ${spvTextController.value.text} HRD Note : ${hrdTextController.value.text} \n  ');
 
-                        await ref
-                            .read(createSakitNotifierProvider.notifier)
-                            .updateSakit(
-                                id: item.idSakit!,
-                                idUser: item.idUser!,
-                                suratDokter: suratDokterText,
-                                tglAwal: tglAwalTextController.value,
-                                tglAkhir: tglAkhirTextController.value,
-                                keterangan: diagnosaTextController.text,
-                                onError: (msg) => HapticFeedback.vibrate()
-                                    .then((_) => showDialog(
-                                        context: context,
-                                        barrierDismissible: true,
-                                        builder: (_) => VSimpleDialog(
-                                              color: Palette.red,
-                                              asset: Assets.iconCrossed,
-                                              label: 'Oops',
-                                              labelDescription: msg,
-                                            ))));
-                      })
-                ],
-              )),
+                          await ref
+                              .read(createSakitNotifierProvider.notifier)
+                              .updateSakit(
+                                  id: item.idSakit!,
+                                  idUser: item.idUser!,
+                                  suratDokter: suratDokterText,
+                                  tglAwal: tglAwalTextController.value,
+                                  tglAkhir: tglAkhirTextController.value,
+                                  keterangan: diagnosaTextController.text,
+                                  onError: (msg) => HapticFeedback.vibrate()
+                                      .then((_) => showDialog(
+                                          context: context,
+                                          barrierDismissible: true,
+                                          builder: (_) => VSimpleDialog(
+                                                color: Palette.red,
+                                                asset: Assets.iconCrossed,
+                                                label: 'Oops',
+                                                labelDescription: msg,
+                                              ))));
+                        })
+                  ],
+                )),
+          ),
         ),
       ),
     );

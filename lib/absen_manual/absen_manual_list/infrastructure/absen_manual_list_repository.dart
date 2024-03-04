@@ -6,13 +6,17 @@ class AbsenManualListRepository {
 
   final AbsenManualListRemoteService _remoteService;
 
-  Future<List<AbsenManualList>> getAbsenManualList({required int page}) {
-    return _remoteService.getAbsenManualList(page: page);
+  Future<List<AbsenManualList>> getAbsenManualList({
+    required int page,
+  }) {
+    return _remoteService.getAbsenManualList(
+      page: page,
+    );
   }
 
   Future<List<AbsenManualList>> getAbsenManualListLimitedAccess(
-      {required int page, required int idUserHead}) {
+      {required int page, required String staff}) {
     return _remoteService.getAbsenManualListLimitedAccess(
-        page: page, idUserHead: idUserHead);
+        page: page, staff: staff);
   }
 }

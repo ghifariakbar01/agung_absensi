@@ -1,8 +1,6 @@
-import 'package:face_net_authentication/wa_head_helper/application/wa_head_helper_notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../shared/providers.dart';
-import '../../../wa_head_helper/application/wa_head.dart';
 import '../infrastructure/sakit_list_remote_service.dart';
 import '../infrastructure/sakit_list_repository.dart';
 import 'sakit_list.dart';
@@ -58,17 +56,15 @@ class SakitListController extends _$SakitListController {
     final spv = ref.read(userNotifierProvider).user.spv;
     final fullAkses = ref.read(userNotifierProvider).user.fullAkses;
 
+    final staff = ref.read(userNotifierProvider).user.staf!;
+    final staffStr = staff.replaceAll('"', '').substring(0, staff.length - 1);
+
     if (fullAkses! || isHrdOrSpv(hrd) || isHrdOrSpv(spv)) {
       return ref.read(sakitListRepositoryProvider).getSakitList(page: page);
     } else {
-      final idUser = ref.read(userNotifierProvider).user.idUser;
-
-      final List<WaHead> waHeads = await ref
-          .read(waHeadHelperNotifierProvider.notifier)
-          .getWaHeads(idUser: idUser!);
-
-      return ref.read(sakitListRepositoryProvider).getSakitListLimitedAccess(
-          page: page, idUserHead: waHeads.first.idUserHead!);
+      return ref
+          .read(sakitListRepositoryProvider)
+          .getSakitListLimitedAccess(page: page, staff: staffStr);
     }
   }
 

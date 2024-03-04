@@ -12,9 +12,8 @@ class IzinListRepository {
   }
 
   Future<List<IzinList>> getIzinListLimitedAccess(
-      {required int page, required int idUserHead}) {
-    return _remoteService.getIzinListLimitedAccess(
-        page: page, idUserHead: idUserHead);
+      {required int page, required String staff}) {
+    return _remoteService.getIzinListLimitedAccess(page: page, staff: staff);
   }
 
   Future<List<JenisIzin>> getJenisIzin() {

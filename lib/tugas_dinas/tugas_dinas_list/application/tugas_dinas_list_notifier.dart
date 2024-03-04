@@ -1,8 +1,6 @@
-import 'package:face_net_authentication/wa_head_helper/application/wa_head_helper_notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../shared/providers.dart';
-import '../../../wa_head_helper/application/wa_head.dart';
 import '../infrastructure/tugas_dinas_list_remote_service.dart';
 import '../infrastructure/tugas_dinas_list_repository.dart';
 import 'tugas_dinas_list.dart';
@@ -62,6 +60,9 @@ class TugasDinasListController extends _$TugasDinasListController {
     final coo = ref.read(userNotifierProvider).user.coo;
     final fullAkses = ref.read(userNotifierProvider).user.fullAkses;
 
+    final staff = ref.read(userNotifierProvider).user.staf!;
+    final staffStr = staff.replaceAll('"', '').substring(0, staff.length - 1);
+
     if (fullAkses! ||
         isHrdOrSpv(hrd) ||
         isHrdOrSpv(spv) ||
@@ -71,16 +72,9 @@ class TugasDinasListController extends _$TugasDinasListController {
           .read(tugasDinasListRepositoryProvider)
           .getTugasDinasList(page: page);
     } else {
-      final idUser = ref.read(userNotifierProvider).user.idUser;
-
-      final List<WaHead> waHeads = await ref
-          .read(waHeadHelperNotifierProvider.notifier)
-          .getWaHeads(idUser: idUser!);
-
       return ref
           .read(tugasDinasListRepositoryProvider)
-          .getTugasDinasListLimitedAccess(
-              page: page, idUserHead: waHeads.first.idUserHead!);
+          .getTugasDinasListLimitedAccess(page: page, staff: staffStr);
     }
   }
 

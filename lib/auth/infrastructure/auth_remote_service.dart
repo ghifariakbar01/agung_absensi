@@ -57,14 +57,8 @@ class AuthRemoteService {
                 "     isnull((select app_coo from hr_user_grp where id_user_grp = A.id_user_grp),'0') as coo, " +
                 "     isnull((select app_gm from hr_user_grp where id_user_grp = A.id_user_grp),'0') as gm,  " +
                 "     isnull((select app_oth from hr_user_grp where id_user_grp = A.id_user_grp),'0') as oth, " +
-                "     ISNULL((SELECT LTRIM(STR(id_user))  "
-                    "             FROM mst_user_head  "
-                    "             WHERE id_user_head = (SELECT id_user                                  "
-                    "                                    FROM mst_user                                  "
-                    "                                 WHERE nama = '$userId'                            "
-                    "                                     AND payroll IS NOT NULL                       "
-                    "                                     AND payroll != '')), '0') AS staff            "
-                    " FROM mst_user A WHERE nama = '$userId'  AND payroll IS NOT NULL AND payroll != '' ",
+                "     ISNULL((CONCAT(A.id_user,',') + (select LTRIM(str(id_user)) + ',' from mst_user_head where id_user_head = A.id_user for xml path(''))), CONCAT(A.id_user, ',')) as staf " +
+                " FROM mst_user A WHERE nama = '$userId'  AND payroll IS NOT NULL AND payroll != '' ",
       });
 
       log('data ${jsonEncode(data)}');
@@ -160,13 +154,7 @@ class AuthRemoteService {
                 "        isnull((select app_coo from mst_user_autho where id_user_grp = A.id_user_grp),'0') as coo,  " +
                 "        isnull((select app_gm from mst_user_autho where id_user_grp = A.id_user_grp),'0') as gm,  " +
                 "        isnull((select app_oth from mst_user_autho where id_user_grp = A.id_user_grp),'0') as oth,  " +
-                "     ISNULL((SELECT LTRIM(STR(id_user))  "
-                    "             FROM mst_user_head  "
-                    "             WHERE id_user_head = (SELECT id_user                                  "
-                    "                                    FROM mst_user                                  "
-                    "                                 WHERE nama = '$userId'                            "
-                    "                                     AND payroll IS NOT NULL                       "
-                    "                                     AND payroll != '')), '0') AS staff            "
+                "        ISNULL((CONCAT(A.id_user,',') + (select LTRIM(str(id_user)) + ',' from mst_user_head where id_user_head = A.id_user for xml path(''))), CONCAT(A.id_user, ',')) as staf"
                     " FROM mst_user A WHERE nama = '$userId'  AND payroll IS NOT NULL AND payroll != '' ",
       });
 

@@ -227,51 +227,60 @@ class SakitApproveController extends _$SakitApproveController {
   }
 
   bool canSpvApprove(SakitList item) {
+    bool approveSpv = true;
+
     if (item.hrdSta == true) {
-      return false;
+      approveSpv = false;
     }
 
     final spv = ref.read(userNotifierProvider).user.spv;
 
     if (ref.read(sakitListControllerProvider.notifier).isHrdOrSpv(spv) ==
         false) {
-      return false;
+      approveSpv = false;
+    }
+
+    final staff = ref.read(userNotifierProvider).user.staf!;
+    if (staff.contains(item.idUser.toString()) == false) {
+      approveSpv = false;
     }
 
     if (ref.read(userNotifierProvider).user.idUser == item.idUser) {
-      return false;
+      approveSpv = false;
     }
 
     if (calcDiffSaturdaySunday(DateTime.parse(item.cDate!), DateTime.now()) >=
         3) {
-      return false;
+      approveSpv = false;
     }
 
     if (ref.read(userNotifierProvider).user.fullAkses == true) {
-      return true;
+      approveSpv = true;
     }
 
-    return false;
+    return approveSpv;
   }
 
   bool canHrdApprove(SakitList item) {
+    bool approveHrd = true;
+
     if (item.spvSta == false) {
-      return false;
+      approveHrd = false;
     }
 
     if (item.hrdSta == true) {
-      return false;
+      approveHrd = false;
     }
 
     final hrd = ref.read(userNotifierProvider).user.fin;
 
     if (ref.read(sakitListControllerProvider.notifier).isHrdOrSpv(hrd) ==
         false) {
-      return false;
+      approveHrd = false;
     }
 
     if (ref.read(userNotifierProvider).user.idUser == item.idUser) {
-      return false;
+      approveHrd = false;
     }
 
     final jumlahHari =
@@ -280,13 +289,13 @@ class SakitApproveController extends _$SakitApproveController {
         calcDiffSaturdaySunday(DateTime.parse(item.cDate!), DateTime.now());
 
     if (jumlahHari - jumlahHariLibur >= 1) {
-      return false;
+      approveHrd = false;
     }
 
     if (ref.read(userNotifierProvider).user.fullAkses == true) {
-      return true;
+      approveHrd = true;
     }
 
-    return false;
+    return approveHrd;
   }
 }
