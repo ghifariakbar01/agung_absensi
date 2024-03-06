@@ -53,12 +53,11 @@ class CutiListController extends _$CutiListController {
 
   Future<List<CutiList>> _determineAndGetCutiListOn({required int page}) async {
     final hrd = ref.read(userNotifierProvider).user.fin;
-    final fullAkses = ref.read(userNotifierProvider).user.fullAkses;
 
     final staff = ref.read(userNotifierProvider).user.staf!;
     final staffStr = staff.replaceAll('"', '').substring(0, staff.length - 1);
 
-    if (fullAkses! || isHrdOrSpv(hrd)) {
+    if (isHrdOrSpv(hrd)) {
       return ref.read(cutiListRepositoryProvider).getCutiList(
             page: page,
           );
@@ -88,9 +87,9 @@ class CutiListController extends _$CutiListController {
     }
 
     if (_isAct()) {
-      return spv.contains(',10,');
+      return spv.contains('10,');
     } else {
-      return spv.contains(',5011,');
+      return spv.contains('5011,');
     }
   }
 
@@ -106,9 +105,9 @@ class CutiListController extends _$CutiListController {
     }
 
     if (_isAct()) {
-      return access.contains(',1,');
+      return access.contains('1,');
     } else {
-      return access.contains(',5102,');
+      return access.contains('5102,');
     }
   }
 }

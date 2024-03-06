@@ -10,6 +10,7 @@ _$_UserModelWithPassword _$$_UserModelWithPasswordFromJson(
         Map<String, dynamic> json) =>
     _$_UserModelWithPassword(
       idUser: json['id_user'] as int?,
+      idDept: json['id_dept'] as int?,
       IdKary: json['IdKary'] as String?,
       ktp: json['ktp'] as String?,
       deptList: json['dept'] as String?,
@@ -45,6 +46,7 @@ Map<String, dynamic> _$$_UserModelWithPasswordToJson(
         _$_UserModelWithPassword instance) =>
     <String, dynamic>{
       'id_user': instance.idUser,
+      'id_dept': instance.idDept,
       'IdKary': instance.IdKary,
       'ktp': instance.ktp,
       'dept': instance.deptList,

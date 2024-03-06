@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../shared/providers.dart';
@@ -57,21 +55,14 @@ class TugasDinasListController extends _$TugasDinasListController {
   Future<List<TugasDinasList>> _determineAndGetTugasDinasListOn(
       {required int page}) async {
     final hrd = ref.read(userNotifierProvider).user.fin;
-    final spv = ref.read(userNotifierProvider).user.spv;
     final gm = ref.read(userNotifierProvider).user.gm;
     final coo = ref.read(userNotifierProvider).user.coo;
-    final fullAkses = ref.read(userNotifierProvider).user.fullAkses;
+    final idDept = ref.read(userNotifierProvider).user.idDept;
 
     final staff = ref.read(userNotifierProvider).user.staf!;
     final staffStr = staff.replaceAll('"', '').substring(0, staff.length - 1);
 
-    log('fullAkses $fullAkses');
-
-    if (fullAkses! ||
-        isHrdOrSpv(hrd) ||
-        isHrdOrSpv(spv) ||
-        isHrdOrSpv(gm) ||
-        isHrdOrSpv(coo)) {
+    if (idDept == 2 || isHrdOrSpv(hrd) || isHrdOrSpv(gm) || isHrdOrSpv(coo)) {
       return ref
           .read(tugasDinasListRepositoryProvider)
           .getTugasDinasList(page: page);
@@ -100,9 +91,9 @@ class TugasDinasListController extends _$TugasDinasListController {
     }
 
     if (_isAct()) {
-      return spv.contains(',10,');
+      return spv.contains('10,');
     } else {
-      return spv.contains(',5017,');
+      return spv.contains('5017,');
     }
   }
 
@@ -118,9 +109,9 @@ class TugasDinasListController extends _$TugasDinasListController {
     }
 
     if (_isAct()) {
-      return access.contains(',4,');
+      return access.contains('4,');
     } else {
-      return access.contains(',5108,');
+      return access.contains('5108,');
     }
   }
 }

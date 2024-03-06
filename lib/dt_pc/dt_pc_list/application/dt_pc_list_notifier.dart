@@ -52,13 +52,11 @@ class DtPcListController extends _$DtPcListController {
 
   Future<List<DtPcList>> _determineAndGetIzinListOn({required int page}) async {
     final hrd = ref.read(userNotifierProvider).user.fin;
-    final spv = ref.read(userNotifierProvider).user.spv;
-    final fullAkses = ref.read(userNotifierProvider).user.fullAkses;
 
     final staff = ref.read(userNotifierProvider).user.staf!;
     final staffStr = staff.replaceAll('"', '').substring(0, staff.length - 1);
 
-    if (fullAkses! || isHrdOrSpv(hrd) || isHrdOrSpv(spv)) {
+    if (isHrdOrSpv(hrd)) {
       return ref.read(dtPcListRepositoryProvider).getDtPcList(page: page);
     } else {
       return ref
@@ -85,9 +83,9 @@ class DtPcListController extends _$DtPcListController {
     }
 
     if (_isAct()) {
-      return spv.contains(',10,');
+      return spv.contains('10,');
     } else {
-      return spv.contains(',5013,');
+      return spv.contains('5013,');
     }
   }
 
@@ -103,9 +101,9 @@ class DtPcListController extends _$DtPcListController {
     }
 
     if (_isAct()) {
-      return access.contains(',5,');
+      return access.contains('5,');
     } else {
-      return access.contains(',5104,');
+      return access.contains('5104,');
     }
   }
 }

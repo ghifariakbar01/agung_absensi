@@ -10,6 +10,7 @@ part 'user_model.g.dart';
 class UserModelWithPassword with _$UserModelWithPassword {
   const factory UserModelWithPassword({
     @JsonKey(name: 'id_user') required int? idUser,
+    @JsonKey(name: 'id_dept') required int? idDept,
     // ignore: non_constant_identifier_names
     required String? IdKary,
     @JsonKey(name: 'ktp') required String? ktp,
@@ -49,6 +50,7 @@ class UserModelWithPassword with _$UserModelWithPassword {
 
   factory UserModelWithPassword.initial() => UserModelWithPassword(
         idUser: null,
+        idDept: null,
         company: '',
         deptList: '',
         email: '',

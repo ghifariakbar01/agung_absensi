@@ -596,9 +596,9 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
     // in case have access
 
     if (_isAct()) {
-      return access.contains(',2,');
+      return access.contains('2,');
     } else {
-      return access.contains(',5101,');
+      return access.contains('5101,');
     }
   }
 

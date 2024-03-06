@@ -57,15 +57,13 @@ class AbsenManualListController extends _$AbsenManualListController {
   Future<List<AbsenManualList>> _determineAndGetAbsenManualListOn(
       {required int page}) async {
     final hrd = ref.read(userNotifierProvider).user.fin;
-    final spv = ref.read(userNotifierProvider).user.spv;
-    final fullAkses = ref.read(userNotifierProvider).user.fullAkses;
 
     final staff = ref.read(userNotifierProvider).user.staf!;
     final staffStr = staff.replaceAll('"', '').substring(0, staff.length - 1);
 
-    log('fullAkses $fullAkses isHrdOrSpv(hrd) ${isHrdOrSpv(hrd)} isHrdOrSpv(spv) ${isHrdOrSpv(spv)}');
+    log('isHrdOrSpv(hrd) ${isHrdOrSpv(hrd)}');
 
-    if (fullAkses! || isHrdOrSpv(hrd) || isHrdOrSpv(spv)) {
+    if (isHrdOrSpv(hrd)) {
       return ref.read(absenManualListRepositoryProvider).getAbsenManualList(
             page: page,
           );
@@ -112,9 +110,9 @@ class AbsenManualListController extends _$AbsenManualListController {
     }
 
     if (_isAct()) {
-      return access.contains(',16,');
+      return access.contains('16,');
     } else {
-      return access.contains(',5105,');
+      return access.contains('5105,');
     }
   }
 }

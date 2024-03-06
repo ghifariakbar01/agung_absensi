@@ -22,7 +22,9 @@ UserModelWithPassword _$UserModelWithPasswordFromJson(
 /// @nodoc
 mixin _$UserModelWithPassword {
   @JsonKey(name: 'id_user')
-  int? get idUser =>
+  int? get idUser => throw _privateConstructorUsedError;
+  @JsonKey(name: 'id_dept')
+  int? get idDept =>
       throw _privateConstructorUsedError; // ignore: non_constant_identifier_names
   String? get IdKary => throw _privateConstructorUsedError;
   @JsonKey(name: 'ktp')
@@ -79,6 +81,7 @@ abstract class $UserModelWithPasswordCopyWith<$Res> {
   @useResult
   $Res call(
       {@JsonKey(name: 'id_user') int? idUser,
+      @JsonKey(name: 'id_dept') int? idDept,
       String? IdKary,
       @JsonKey(name: 'ktp') String? ktp,
       @JsonKey(name: 'dept') String? deptList,
@@ -125,6 +128,7 @@ class _$UserModelWithPasswordCopyWithImpl<$Res,
   @override
   $Res call({
     Object? idUser = freezed,
+    Object? idDept = freezed,
     Object? IdKary = freezed,
     Object? ktp = freezed,
     Object? deptList = freezed,
@@ -159,6 +163,10 @@ class _$UserModelWithPasswordCopyWithImpl<$Res,
       idUser: freezed == idUser
           ? _value.idUser
           : idUser // ignore: cast_nullable_to_non_nullable
+              as int?,
+      idDept: freezed == idDept
+          ? _value.idDept
+          : idDept // ignore: cast_nullable_to_non_nullable
               as int?,
       IdKary: freezed == IdKary
           ? _value.IdKary
@@ -290,6 +298,7 @@ abstract class _$$_UserModelWithPasswordCopyWith<$Res>
   @useResult
   $Res call(
       {@JsonKey(name: 'id_user') int? idUser,
+      @JsonKey(name: 'id_dept') int? idDept,
       String? IdKary,
       @JsonKey(name: 'ktp') String? ktp,
       @JsonKey(name: 'dept') String? deptList,
@@ -333,6 +342,7 @@ class __$$_UserModelWithPasswordCopyWithImpl<$Res>
   @override
   $Res call({
     Object? idUser = freezed,
+    Object? idDept = freezed,
     Object? IdKary = freezed,
     Object? ktp = freezed,
     Object? deptList = freezed,
@@ -367,6 +377,10 @@ class __$$_UserModelWithPasswordCopyWithImpl<$Res>
       idUser: freezed == idUser
           ? _value.idUser
           : idUser // ignore: cast_nullable_to_non_nullable
+              as int?,
+      idDept: freezed == idDept
+          ? _value.idDept
+          : idDept // ignore: cast_nullable_to_non_nullable
               as int?,
       IdKary: freezed == IdKary
           ? _value.IdKary
@@ -493,6 +507,7 @@ class __$$_UserModelWithPasswordCopyWithImpl<$Res>
 class _$_UserModelWithPassword implements _UserModelWithPassword {
   const _$_UserModelWithPassword(
       {@JsonKey(name: 'id_user') required this.idUser,
+      @JsonKey(name: 'id_dept') required this.idDept,
       required this.IdKary,
       @JsonKey(name: 'ktp') required this.ktp,
       @JsonKey(name: 'dept') required this.deptList,
@@ -529,6 +544,9 @@ class _$_UserModelWithPassword implements _UserModelWithPassword {
   @override
   @JsonKey(name: 'id_user')
   final int? idUser;
+  @override
+  @JsonKey(name: 'id_dept')
+  final int? idDept;
 // ignore: non_constant_identifier_names
   @override
   final String? IdKary;
@@ -604,7 +622,7 @@ class _$_UserModelWithPassword implements _UserModelWithPassword {
 
   @override
   String toString() {
-    return 'UserModelWithPassword(idUser: $idUser, IdKary: $IdKary, ktp: $ktp, deptList: $deptList, company: $company, jabatan: $jabatan, imeiHp: $imeiHp, nama: $nama, fullname: $fullname, noTelp1: $noTelp1, noTelp2: $noTelp2, email: $email, email2: $email2, photo: $photo, passwordUpdate: $passwordUpdate, payroll: $payroll, fullAkses: $fullAkses, lihat: $lihat, baru: $baru, ubah: $ubah, hapus: $hapus, spv: $spv, mgr: $mgr, fin: $fin, coo: $coo, gm: $gm, oth: $oth, staf: $staf, password: $password, ptServer: $ptServer)';
+    return 'UserModelWithPassword(idUser: $idUser, idDept: $idDept, IdKary: $IdKary, ktp: $ktp, deptList: $deptList, company: $company, jabatan: $jabatan, imeiHp: $imeiHp, nama: $nama, fullname: $fullname, noTelp1: $noTelp1, noTelp2: $noTelp2, email: $email, email2: $email2, photo: $photo, passwordUpdate: $passwordUpdate, payroll: $payroll, fullAkses: $fullAkses, lihat: $lihat, baru: $baru, ubah: $ubah, hapus: $hapus, spv: $spv, mgr: $mgr, fin: $fin, coo: $coo, gm: $gm, oth: $oth, staf: $staf, password: $password, ptServer: $ptServer)';
   }
 
   @override
@@ -613,6 +631,7 @@ class _$_UserModelWithPassword implements _UserModelWithPassword {
         (other.runtimeType == runtimeType &&
             other is _$_UserModelWithPassword &&
             (identical(other.idUser, idUser) || other.idUser == idUser) &&
+            (identical(other.idDept, idDept) || other.idDept == idDept) &&
             (identical(other.IdKary, IdKary) || other.IdKary == IdKary) &&
             (identical(other.ktp, ktp) || other.ktp == ktp) &&
             (identical(other.deptList, deptList) ||
@@ -655,6 +674,7 @@ class _$_UserModelWithPassword implements _UserModelWithPassword {
   int get hashCode => Object.hashAll([
         runtimeType,
         idUser,
+        idDept,
         IdKary,
         ktp,
         deptList,
@@ -705,6 +725,8 @@ abstract class _UserModelWithPassword implements UserModelWithPassword {
   const factory _UserModelWithPassword(
       {@JsonKey(name: 'id_user')
           required final int? idUser,
+      @JsonKey(name: 'id_dept')
+          required final int? idDept,
       required final String? IdKary,
       @JsonKey(name: 'ktp')
           required final String? ktp,
@@ -752,6 +774,9 @@ abstract class _UserModelWithPassword implements UserModelWithPassword {
   @override
   @JsonKey(name: 'id_user')
   int? get idUser;
+  @override
+  @JsonKey(name: 'id_dept')
+  int? get idDept;
   @override // ignore: non_constant_identifier_names
   String? get IdKary;
   @override

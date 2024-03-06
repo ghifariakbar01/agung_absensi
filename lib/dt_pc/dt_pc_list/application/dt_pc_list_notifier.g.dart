@@ -39,7 +39,7 @@ final dtPcListRepositoryProvider = Provider<DtPcListRepository>.internal(
 
 typedef DtPcListRepositoryRef = ProviderRef<DtPcListRepository>;
 String _$dtPcListControllerHash() =>
-    r'71016e58cad0f89c43b29b6eba0b2293eee71dab';
+    r'd8856da303b8f11a8496e38662e0a5786c4ede03';
 
 /// See also [DtPcListController].
 @ProviderFor(DtPcListController)

@@ -57,13 +57,11 @@ class IzinListController extends _$IzinListController {
 
   Future<List<IzinList>> _determineAndGetIzinListOn({required int page}) async {
     final hrd = ref.read(userNotifierProvider).user.fin;
-    final spv = ref.read(userNotifierProvider).user.spv;
-    final fullAkses = ref.read(userNotifierProvider).user.fullAkses;
 
     final staff = ref.read(userNotifierProvider).user.staf!;
     final staffStr = staff.replaceAll('"', '').substring(0, staff.length - 1);
 
-    if (fullAkses! || isHrdOrSpv(hrd) || isHrdOrSpv(spv)) {
+    if (isHrdOrSpv(hrd)) {
       return ref.read(izinListRepositoryProvider).getIzinList(page: page);
     } else {
       return ref
@@ -90,9 +88,9 @@ class IzinListController extends _$IzinListController {
     }
 
     if (_isAct()) {
-      return spv.contains(',10,');
+      return spv.contains('10,');
     } else {
-      return spv.contains(',5012,');
+      return spv.contains('5012,');
     }
   }
 
@@ -108,9 +106,9 @@ class IzinListController extends _$IzinListController {
     }
 
     if (_isAct()) {
-      return access.contains(',18,');
+      return access.contains('18,');
     } else {
-      return access.contains(',5103,');
+      return access.contains('5103,');
     }
   }
 }

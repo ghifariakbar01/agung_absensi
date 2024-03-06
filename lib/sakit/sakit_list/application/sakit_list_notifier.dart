@@ -53,13 +53,11 @@ class SakitListController extends _$SakitListController {
   Future<List<SakitList>> _determineAndGetSakitListOn(
       {required int page}) async {
     final hrd = ref.read(userNotifierProvider).user.fin;
-    final spv = ref.read(userNotifierProvider).user.spv;
-    final fullAkses = ref.read(userNotifierProvider).user.fullAkses;
 
     final staff = ref.read(userNotifierProvider).user.staf!;
     final staffStr = staff.replaceAll('"', '').substring(0, staff.length - 1);
 
-    if (fullAkses! || isHrdOrSpv(hrd) || isHrdOrSpv(spv)) {
+    if (isHrdOrSpv(hrd)) {
       return ref.read(sakitListRepositoryProvider).getSakitList(page: page);
     } else {
       return ref
@@ -86,9 +84,9 @@ class SakitListController extends _$SakitListController {
     }
 
     if (_isAct()) {
-      return spv.contains(',10,');
+      return spv.contains('10,');
     } else {
-      return spv.contains(',5010,');
+      return spv.contains('5010,');
     }
   }
 
@@ -104,9 +102,9 @@ class SakitListController extends _$SakitListController {
     }
 
     if (_isAct()) {
-      return access.contains(',2,');
+      return access.contains('2,');
     } else {
-      return access.contains(',5101,');
+      return access.contains('5101,');
     }
   }
 }

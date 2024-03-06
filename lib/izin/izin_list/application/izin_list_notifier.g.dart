@@ -39,7 +39,7 @@ final izinListRepositoryProvider = Provider<IzinListRepository>.internal(
 
 typedef IzinListRepositoryRef = ProviderRef<IzinListRepository>;
 String _$izinListControllerHash() =>
-    r'bc314fe0bec5c4cbce2b3ab2c2c4a65d36fb9688';
+    r'f5463a8c1a2df99648114270430e627fba2decc4';
 
 /// See also [IzinListController].
 @ProviderFor(IzinListController)
