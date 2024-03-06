@@ -52,19 +52,19 @@ class EditAbsenManualPage extends HookConsumerWidget {
     final jenisTextController = useState(item.jenisAbsen);
 
     final tglPlaceholderTextController =
-        useTextEditingController(text: _returnPlaceHolderText(item.tgl));
+        useTextEditingController(text: _returnPlaceHolderText(item.tgl!));
 
     final tglTextController = useState(item.tgl);
     final jamAwalTextController = useState(item.jamAwal);
     final jamAwalPlaceholderTextController = useTextEditingController(
         text: DateFormat('HH:mm')
-            .format(DateTime.parse(item.jamAwal))
+            .format(DateTime.parse(item.jamAwal!))
             .toString());
 
     final jamAkhirTextController = useState(item.jamAkhir);
     final jamAkhirPlaceholderTextController = useTextEditingController(
         text: DateFormat('HH:mm')
-            .format(DateTime.parse(item.jamAkhir))
+            .format(DateTime.parse(item.jamAkhir!))
             .toString());
 
     ref.listen<AsyncValue>(userHelperNotifierProvider, (_, state) async {
@@ -275,7 +275,7 @@ class EditAbsenManualPage extends HookConsumerWidget {
 
                       // JAM AWAL
                       IgnorePointer(
-                        ignoring: tglTextController.value.isEmpty,
+                        ignoring: tglTextController.value!.isEmpty,
                         child: Ink(
                           child: InkWell(
                             onTap: () async {
@@ -294,7 +294,7 @@ class EditAbsenManualPage extends HookConsumerWidget {
 
                               final tgl = tglTextController.value;
                               final tglDateTime =
-                                  DateTime.parse(tglTextController.value);
+                                  DateTime.parse(tglTextController.value!);
 
                               final jam = DateTime(
                                   tglDateTime.year,
@@ -344,13 +344,13 @@ class EditAbsenManualPage extends HookConsumerWidget {
                       // JAM AKHIR
                       IgnorePointer(
                         ignoring: //
-                            tglTextController.value.isEmpty &&
-                                jamAkhirTextController.value.isEmpty,
+                            tglTextController.value!.isEmpty &&
+                                jamAkhirTextController.value!.isEmpty,
                         child: Ink(
                           child: InkWell(
                             onTap: () async {
                               final jamAwalAddOneHour = TimeOfDay.fromDateTime(
-                                  DateTime.parse(jamAwalTextController.value)
+                                  DateTime.parse(jamAwalTextController.value!)
                                       .add(Duration(hours: 1)));
 
                               final hour = await showTimePicker(
@@ -368,7 +368,7 @@ class EditAbsenManualPage extends HookConsumerWidget {
 
                               final tgl = tglTextController.value;
                               final tglDateTime =
-                                  DateTime.parse(tglTextController.value);
+                                  DateTime.parse(tglTextController.value!);
 
                               final jam = DateTime(
                                   tglDateTime.year,
@@ -405,9 +405,9 @@ class EditAbsenManualPage extends HookConsumerWidget {
                                     }
 
                                     final akhir = DateTime.parse(
-                                        jamAkhirTextController.value);
+                                        jamAkhirTextController.value!);
                                     final awal = DateTime.parse(
-                                        jamAwalTextController.value);
+                                        jamAwalTextController.value!);
 
                                     if (akhir.difference(awal).inMinutes < 0) {
                                       return 'Jam akhir tidak boleh melewati jam awal';
@@ -437,7 +437,7 @@ class EditAbsenManualPage extends HookConsumerWidget {
                             fontWeight: FontWeight.normal,
                           ),
                           validator: (item) {
-                            if (jenisTextController.value.toLowerCase() ==
+                            if (jenisTextController.value!.toLowerCase() ==
                                 'lln') {
                               if (item == null) {
                                 return 'Bila Pilih Absen Lainnya / Kasus -> Wajib Mengisi Kolom Keterangan';
@@ -477,10 +477,10 @@ class EditAbsenManualPage extends HookConsumerWidget {
                                       id: item.idAbsenmnl,
                                       idUser: user.idUser!,
                                       uUser: user.nama!,
-                                      tgl: tglTextController.value,
-                                      jamAwal: jamAwalTextController.value,
-                                      jenisAbsen: jenisTextController.value,
-                                      jamAkhir: jamAkhirTextController.value,
+                                      tgl: tglTextController.value!,
+                                      jamAwal: jamAwalTextController.value!,
+                                      jenisAbsen: jenisTextController.value!,
+                                      jamAkhir: jamAkhirTextController.value!,
                                       ket: keteranganTextController.text,
                                       onError: (msg) => HapticFeedback.vibrate()
                                           .then((_) => showDialog(

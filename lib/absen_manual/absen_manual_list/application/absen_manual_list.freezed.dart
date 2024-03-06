@@ -24,32 +24,32 @@ mixin _$AbsenManualList {
   int get idAbsenmnl => throw _privateConstructorUsedError;
   @JsonKey(name: 'id_user')
   int get idUser => throw _privateConstructorUsedError;
-  String get tgl => throw _privateConstructorUsedError;
+  String? get tgl => throw _privateConstructorUsedError;
   @JsonKey(name: 'jam_awal')
-  String get jamAwal => throw _privateConstructorUsedError;
+  String? get jamAwal => throw _privateConstructorUsedError;
   @JsonKey(name: 'jam_akhir')
-  String get jamAkhir => throw _privateConstructorUsedError;
-  String get ket => throw _privateConstructorUsedError;
+  String? get jamAkhir => throw _privateConstructorUsedError;
+  String? get ket => throw _privateConstructorUsedError;
   @JsonKey(name: 'c_date')
-  String get cDate => throw _privateConstructorUsedError;
+  String? get cDate => throw _privateConstructorUsedError;
   @JsonKey(name: 'c_user')
-  String get cUser => throw _privateConstructorUsedError;
+  String? get cUser => throw _privateConstructorUsedError;
   @JsonKey(name: 'u_date')
-  String get uDate => throw _privateConstructorUsedError;
+  String? get uDate => throw _privateConstructorUsedError;
   @JsonKey(name: 'u_user')
-  String get uUser => throw _privateConstructorUsedError;
+  String? get uUser => throw _privateConstructorUsedError;
   @JsonKey(name: 'spv_sta')
   bool get spvSta => throw _privateConstructorUsedError;
   @JsonKey(name: 'spv_nm')
-  String get spvNm => throw _privateConstructorUsedError;
+  String? get spvNm => throw _privateConstructorUsedError;
   @JsonKey(name: 'spv_tgl')
-  String get spvTgl => throw _privateConstructorUsedError;
+  String? get spvTgl => throw _privateConstructorUsedError;
   @JsonKey(name: 'hrd_sta')
   bool get hrdSta => throw _privateConstructorUsedError;
   @JsonKey(name: 'hrd_nm')
-  String get hrdNm => throw _privateConstructorUsedError;
+  String? get hrdNm => throw _privateConstructorUsedError;
   @JsonKey(name: 'hrd_tgl')
-  String get hrdTgl => throw _privateConstructorUsedError;
+  String? get hrdTgl => throw _privateConstructorUsedError;
   @JsonKey(name: 'btl_sta')
   bool get btlSta => throw _privateConstructorUsedError;
   @JsonKey(name: 'btl_nm')
@@ -57,12 +57,12 @@ mixin _$AbsenManualList {
   @JsonKey(name: 'btl_tgl')
   String? get btlTgl => throw _privateConstructorUsedError;
   @JsonKey(name: 'spv_note')
-  String get spvNote => throw _privateConstructorUsedError;
+  String? get spvNote => throw _privateConstructorUsedError;
   @JsonKey(name: 'hrd_note')
-  String get hrdNote => throw _privateConstructorUsedError;
-  String get periode => throw _privateConstructorUsedError;
+  String? get hrdNote => throw _privateConstructorUsedError;
+  String? get periode => throw _privateConstructorUsedError;
   @JsonKey(name: 'jenis_absen')
-  String get jenisAbsen => throw _privateConstructorUsedError;
+  String? get jenisAbsen => throw _privateConstructorUsedError;
   @JsonKey(name: 'latitude_masuk')
   dynamic get latitudeMasuk => throw _privateConstructorUsedError;
   @JsonKey(name: 'longtitude_masuk')
@@ -76,26 +76,26 @@ mixin _$AbsenManualList {
   @JsonKey(name: 'lokasi_keluar')
   dynamic get lokasiKeluar => throw _privateConstructorUsedError;
   @JsonKey(name: 'app_spv')
-  String get appSpv => throw _privateConstructorUsedError;
+  String? get appSpv => throw _privateConstructorUsedError;
   @JsonKey(name: 'app_hrd')
-  String get appHrd => throw _privateConstructorUsedError;
+  String? get appHrd => throw _privateConstructorUsedError;
   @JsonKey(name: 'u_by')
-  String get uBy => throw _privateConstructorUsedError;
+  String? get uBy => throw _privateConstructorUsedError;
   @JsonKey(name: 'c_by')
-  String get cBy => throw _privateConstructorUsedError;
+  String? get cBy => throw _privateConstructorUsedError;
   @JsonKey(name: 'idkar')
-  String get idKar => throw _privateConstructorUsedError;
+  String? get idKar => throw _privateConstructorUsedError;
   @JsonKey(name: 'id_dept')
   int get idDept => throw _privateConstructorUsedError;
-  String get payroll => throw _privateConstructorUsedError;
+  String? get payroll => throw _privateConstructorUsedError;
   @JsonKey(name: 'no_telp1')
-  String get noTelp1 => throw _privateConstructorUsedError;
+  String? get noTelp1 => throw _privateConstructorUsedError;
   @JsonKey(name: 'no_telp2')
-  String get noTelp2 => throw _privateConstructorUsedError;
+  String? get noTelp2 => throw _privateConstructorUsedError;
   @JsonKey(name: 'fullname')
-  String get fullname => throw _privateConstructorUsedError;
-  String get dept => throw _privateConstructorUsedError;
-  String get comp => throw _privateConstructorUsedError;
+  String? get fullname => throw _privateConstructorUsedError;
+  String? get dept => throw _privateConstructorUsedError;
+  String? get comp => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -112,45 +112,45 @@ abstract class $AbsenManualListCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: 'id_absenmnl') int idAbsenmnl,
       @JsonKey(name: 'id_user') int idUser,
-      String tgl,
-      @JsonKey(name: 'jam_awal') String jamAwal,
-      @JsonKey(name: 'jam_akhir') String jamAkhir,
-      String ket,
-      @JsonKey(name: 'c_date') String cDate,
-      @JsonKey(name: 'c_user') String cUser,
-      @JsonKey(name: 'u_date') String uDate,
-      @JsonKey(name: 'u_user') String uUser,
+      String? tgl,
+      @JsonKey(name: 'jam_awal') String? jamAwal,
+      @JsonKey(name: 'jam_akhir') String? jamAkhir,
+      String? ket,
+      @JsonKey(name: 'c_date') String? cDate,
+      @JsonKey(name: 'c_user') String? cUser,
+      @JsonKey(name: 'u_date') String? uDate,
+      @JsonKey(name: 'u_user') String? uUser,
       @JsonKey(name: 'spv_sta') bool spvSta,
-      @JsonKey(name: 'spv_nm') String spvNm,
-      @JsonKey(name: 'spv_tgl') String spvTgl,
+      @JsonKey(name: 'spv_nm') String? spvNm,
+      @JsonKey(name: 'spv_tgl') String? spvTgl,
       @JsonKey(name: 'hrd_sta') bool hrdSta,
-      @JsonKey(name: 'hrd_nm') String hrdNm,
-      @JsonKey(name: 'hrd_tgl') String hrdTgl,
+      @JsonKey(name: 'hrd_nm') String? hrdNm,
+      @JsonKey(name: 'hrd_tgl') String? hrdTgl,
       @JsonKey(name: 'btl_sta') bool btlSta,
       @JsonKey(name: 'btl_nm') String? btlNm,
       @JsonKey(name: 'btl_tgl') String? btlTgl,
-      @JsonKey(name: 'spv_note') String spvNote,
-      @JsonKey(name: 'hrd_note') String hrdNote,
-      String periode,
-      @JsonKey(name: 'jenis_absen') String jenisAbsen,
+      @JsonKey(name: 'spv_note') String? spvNote,
+      @JsonKey(name: 'hrd_note') String? hrdNote,
+      String? periode,
+      @JsonKey(name: 'jenis_absen') String? jenisAbsen,
       @JsonKey(name: 'latitude_masuk') dynamic latitudeMasuk,
       @JsonKey(name: 'longtitude_masuk') dynamic longtitudeMasuk,
       @JsonKey(name: 'latitude_keluar') dynamic latitudeKeluar,
       @JsonKey(name: 'longtitude_keluar') dynamic longtitudeKeluar,
       @JsonKey(name: 'lokasi_masuk') dynamic lokasiMasuk,
       @JsonKey(name: 'lokasi_keluar') dynamic lokasiKeluar,
-      @JsonKey(name: 'app_spv') String appSpv,
-      @JsonKey(name: 'app_hrd') String appHrd,
-      @JsonKey(name: 'u_by') String uBy,
-      @JsonKey(name: 'c_by') String cBy,
-      @JsonKey(name: 'idkar') String idKar,
+      @JsonKey(name: 'app_spv') String? appSpv,
+      @JsonKey(name: 'app_hrd') String? appHrd,
+      @JsonKey(name: 'u_by') String? uBy,
+      @JsonKey(name: 'c_by') String? cBy,
+      @JsonKey(name: 'idkar') String? idKar,
       @JsonKey(name: 'id_dept') int idDept,
-      String payroll,
-      @JsonKey(name: 'no_telp1') String noTelp1,
-      @JsonKey(name: 'no_telp2') String noTelp2,
-      @JsonKey(name: 'fullname') String fullname,
-      String dept,
-      String comp});
+      String? payroll,
+      @JsonKey(name: 'no_telp1') String? noTelp1,
+      @JsonKey(name: 'no_telp2') String? noTelp2,
+      @JsonKey(name: 'fullname') String? fullname,
+      String? dept,
+      String? comp});
 }
 
 /// @nodoc
@@ -168,45 +168,45 @@ class _$AbsenManualListCopyWithImpl<$Res, $Val extends AbsenManualList>
   $Res call({
     Object? idAbsenmnl = null,
     Object? idUser = null,
-    Object? tgl = null,
-    Object? jamAwal = null,
-    Object? jamAkhir = null,
-    Object? ket = null,
-    Object? cDate = null,
-    Object? cUser = null,
-    Object? uDate = null,
-    Object? uUser = null,
+    Object? tgl = freezed,
+    Object? jamAwal = freezed,
+    Object? jamAkhir = freezed,
+    Object? ket = freezed,
+    Object? cDate = freezed,
+    Object? cUser = freezed,
+    Object? uDate = freezed,
+    Object? uUser = freezed,
     Object? spvSta = null,
-    Object? spvNm = null,
-    Object? spvTgl = null,
+    Object? spvNm = freezed,
+    Object? spvTgl = freezed,
     Object? hrdSta = null,
-    Object? hrdNm = null,
-    Object? hrdTgl = null,
+    Object? hrdNm = freezed,
+    Object? hrdTgl = freezed,
     Object? btlSta = null,
     Object? btlNm = freezed,
     Object? btlTgl = freezed,
-    Object? spvNote = null,
-    Object? hrdNote = null,
-    Object? periode = null,
-    Object? jenisAbsen = null,
+    Object? spvNote = freezed,
+    Object? hrdNote = freezed,
+    Object? periode = freezed,
+    Object? jenisAbsen = freezed,
     Object? latitudeMasuk = freezed,
     Object? longtitudeMasuk = freezed,
     Object? latitudeKeluar = freezed,
     Object? longtitudeKeluar = freezed,
     Object? lokasiMasuk = freezed,
     Object? lokasiKeluar = freezed,
-    Object? appSpv = null,
-    Object? appHrd = null,
-    Object? uBy = null,
-    Object? cBy = null,
-    Object? idKar = null,
+    Object? appSpv = freezed,
+    Object? appHrd = freezed,
+    Object? uBy = freezed,
+    Object? cBy = freezed,
+    Object? idKar = freezed,
     Object? idDept = null,
-    Object? payroll = null,
-    Object? noTelp1 = null,
-    Object? noTelp2 = null,
-    Object? fullname = null,
-    Object? dept = null,
-    Object? comp = null,
+    Object? payroll = freezed,
+    Object? noTelp1 = freezed,
+    Object? noTelp2 = freezed,
+    Object? fullname = freezed,
+    Object? dept = freezed,
+    Object? comp = freezed,
   }) {
     return _then(_value.copyWith(
       idAbsenmnl: null == idAbsenmnl
@@ -217,62 +217,62 @@ class _$AbsenManualListCopyWithImpl<$Res, $Val extends AbsenManualList>
           ? _value.idUser
           : idUser // ignore: cast_nullable_to_non_nullable
               as int,
-      tgl: null == tgl
+      tgl: freezed == tgl
           ? _value.tgl
           : tgl // ignore: cast_nullable_to_non_nullable
-              as String,
-      jamAwal: null == jamAwal
+              as String?,
+      jamAwal: freezed == jamAwal
           ? _value.jamAwal
           : jamAwal // ignore: cast_nullable_to_non_nullable
-              as String,
-      jamAkhir: null == jamAkhir
+              as String?,
+      jamAkhir: freezed == jamAkhir
           ? _value.jamAkhir
           : jamAkhir // ignore: cast_nullable_to_non_nullable
-              as String,
-      ket: null == ket
+              as String?,
+      ket: freezed == ket
           ? _value.ket
           : ket // ignore: cast_nullable_to_non_nullable
-              as String,
-      cDate: null == cDate
+              as String?,
+      cDate: freezed == cDate
           ? _value.cDate
           : cDate // ignore: cast_nullable_to_non_nullable
-              as String,
-      cUser: null == cUser
+              as String?,
+      cUser: freezed == cUser
           ? _value.cUser
           : cUser // ignore: cast_nullable_to_non_nullable
-              as String,
-      uDate: null == uDate
+              as String?,
+      uDate: freezed == uDate
           ? _value.uDate
           : uDate // ignore: cast_nullable_to_non_nullable
-              as String,
-      uUser: null == uUser
+              as String?,
+      uUser: freezed == uUser
           ? _value.uUser
           : uUser // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       spvSta: null == spvSta
           ? _value.spvSta
           : spvSta // ignore: cast_nullable_to_non_nullable
               as bool,
-      spvNm: null == spvNm
+      spvNm: freezed == spvNm
           ? _value.spvNm
           : spvNm // ignore: cast_nullable_to_non_nullable
-              as String,
-      spvTgl: null == spvTgl
+              as String?,
+      spvTgl: freezed == spvTgl
           ? _value.spvTgl
           : spvTgl // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       hrdSta: null == hrdSta
           ? _value.hrdSta
           : hrdSta // ignore: cast_nullable_to_non_nullable
               as bool,
-      hrdNm: null == hrdNm
+      hrdNm: freezed == hrdNm
           ? _value.hrdNm
           : hrdNm // ignore: cast_nullable_to_non_nullable
-              as String,
-      hrdTgl: null == hrdTgl
+              as String?,
+      hrdTgl: freezed == hrdTgl
           ? _value.hrdTgl
           : hrdTgl // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       btlSta: null == btlSta
           ? _value.btlSta
           : btlSta // ignore: cast_nullable_to_non_nullable
@@ -285,22 +285,22 @@ class _$AbsenManualListCopyWithImpl<$Res, $Val extends AbsenManualList>
           ? _value.btlTgl
           : btlTgl // ignore: cast_nullable_to_non_nullable
               as String?,
-      spvNote: null == spvNote
+      spvNote: freezed == spvNote
           ? _value.spvNote
           : spvNote // ignore: cast_nullable_to_non_nullable
-              as String,
-      hrdNote: null == hrdNote
+              as String?,
+      hrdNote: freezed == hrdNote
           ? _value.hrdNote
           : hrdNote // ignore: cast_nullable_to_non_nullable
-              as String,
-      periode: null == periode
+              as String?,
+      periode: freezed == periode
           ? _value.periode
           : periode // ignore: cast_nullable_to_non_nullable
-              as String,
-      jenisAbsen: null == jenisAbsen
+              as String?,
+      jenisAbsen: freezed == jenisAbsen
           ? _value.jenisAbsen
           : jenisAbsen // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       latitudeMasuk: freezed == latitudeMasuk
           ? _value.latitudeMasuk
           : latitudeMasuk // ignore: cast_nullable_to_non_nullable
@@ -325,54 +325,54 @@ class _$AbsenManualListCopyWithImpl<$Res, $Val extends AbsenManualList>
           ? _value.lokasiKeluar
           : lokasiKeluar // ignore: cast_nullable_to_non_nullable
               as dynamic,
-      appSpv: null == appSpv
+      appSpv: freezed == appSpv
           ? _value.appSpv
           : appSpv // ignore: cast_nullable_to_non_nullable
-              as String,
-      appHrd: null == appHrd
+              as String?,
+      appHrd: freezed == appHrd
           ? _value.appHrd
           : appHrd // ignore: cast_nullable_to_non_nullable
-              as String,
-      uBy: null == uBy
+              as String?,
+      uBy: freezed == uBy
           ? _value.uBy
           : uBy // ignore: cast_nullable_to_non_nullable
-              as String,
-      cBy: null == cBy
+              as String?,
+      cBy: freezed == cBy
           ? _value.cBy
           : cBy // ignore: cast_nullable_to_non_nullable
-              as String,
-      idKar: null == idKar
+              as String?,
+      idKar: freezed == idKar
           ? _value.idKar
           : idKar // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       idDept: null == idDept
           ? _value.idDept
           : idDept // ignore: cast_nullable_to_non_nullable
               as int,
-      payroll: null == payroll
+      payroll: freezed == payroll
           ? _value.payroll
           : payroll // ignore: cast_nullable_to_non_nullable
-              as String,
-      noTelp1: null == noTelp1
+              as String?,
+      noTelp1: freezed == noTelp1
           ? _value.noTelp1
           : noTelp1 // ignore: cast_nullable_to_non_nullable
-              as String,
-      noTelp2: null == noTelp2
+              as String?,
+      noTelp2: freezed == noTelp2
           ? _value.noTelp2
           : noTelp2 // ignore: cast_nullable_to_non_nullable
-              as String,
-      fullname: null == fullname
+              as String?,
+      fullname: freezed == fullname
           ? _value.fullname
           : fullname // ignore: cast_nullable_to_non_nullable
-              as String,
-      dept: null == dept
+              as String?,
+      dept: freezed == dept
           ? _value.dept
           : dept // ignore: cast_nullable_to_non_nullable
-              as String,
-      comp: null == comp
+              as String?,
+      comp: freezed == comp
           ? _value.comp
           : comp // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
     ) as $Val);
   }
 }
@@ -388,45 +388,45 @@ abstract class _$$_AbsenManualListCopyWith<$Res>
   $Res call(
       {@JsonKey(name: 'id_absenmnl') int idAbsenmnl,
       @JsonKey(name: 'id_user') int idUser,
-      String tgl,
-      @JsonKey(name: 'jam_awal') String jamAwal,
-      @JsonKey(name: 'jam_akhir') String jamAkhir,
-      String ket,
-      @JsonKey(name: 'c_date') String cDate,
-      @JsonKey(name: 'c_user') String cUser,
-      @JsonKey(name: 'u_date') String uDate,
-      @JsonKey(name: 'u_user') String uUser,
+      String? tgl,
+      @JsonKey(name: 'jam_awal') String? jamAwal,
+      @JsonKey(name: 'jam_akhir') String? jamAkhir,
+      String? ket,
+      @JsonKey(name: 'c_date') String? cDate,
+      @JsonKey(name: 'c_user') String? cUser,
+      @JsonKey(name: 'u_date') String? uDate,
+      @JsonKey(name: 'u_user') String? uUser,
       @JsonKey(name: 'spv_sta') bool spvSta,
-      @JsonKey(name: 'spv_nm') String spvNm,
-      @JsonKey(name: 'spv_tgl') String spvTgl,
+      @JsonKey(name: 'spv_nm') String? spvNm,
+      @JsonKey(name: 'spv_tgl') String? spvTgl,
       @JsonKey(name: 'hrd_sta') bool hrdSta,
-      @JsonKey(name: 'hrd_nm') String hrdNm,
-      @JsonKey(name: 'hrd_tgl') String hrdTgl,
+      @JsonKey(name: 'hrd_nm') String? hrdNm,
+      @JsonKey(name: 'hrd_tgl') String? hrdTgl,
       @JsonKey(name: 'btl_sta') bool btlSta,
       @JsonKey(name: 'btl_nm') String? btlNm,
       @JsonKey(name: 'btl_tgl') String? btlTgl,
-      @JsonKey(name: 'spv_note') String spvNote,
-      @JsonKey(name: 'hrd_note') String hrdNote,
-      String periode,
-      @JsonKey(name: 'jenis_absen') String jenisAbsen,
+      @JsonKey(name: 'spv_note') String? spvNote,
+      @JsonKey(name: 'hrd_note') String? hrdNote,
+      String? periode,
+      @JsonKey(name: 'jenis_absen') String? jenisAbsen,
       @JsonKey(name: 'latitude_masuk') dynamic latitudeMasuk,
       @JsonKey(name: 'longtitude_masuk') dynamic longtitudeMasuk,
       @JsonKey(name: 'latitude_keluar') dynamic latitudeKeluar,
       @JsonKey(name: 'longtitude_keluar') dynamic longtitudeKeluar,
       @JsonKey(name: 'lokasi_masuk') dynamic lokasiMasuk,
       @JsonKey(name: 'lokasi_keluar') dynamic lokasiKeluar,
-      @JsonKey(name: 'app_spv') String appSpv,
-      @JsonKey(name: 'app_hrd') String appHrd,
-      @JsonKey(name: 'u_by') String uBy,
-      @JsonKey(name: 'c_by') String cBy,
-      @JsonKey(name: 'idkar') String idKar,
+      @JsonKey(name: 'app_spv') String? appSpv,
+      @JsonKey(name: 'app_hrd') String? appHrd,
+      @JsonKey(name: 'u_by') String? uBy,
+      @JsonKey(name: 'c_by') String? cBy,
+      @JsonKey(name: 'idkar') String? idKar,
       @JsonKey(name: 'id_dept') int idDept,
-      String payroll,
-      @JsonKey(name: 'no_telp1') String noTelp1,
-      @JsonKey(name: 'no_telp2') String noTelp2,
-      @JsonKey(name: 'fullname') String fullname,
-      String dept,
-      String comp});
+      String? payroll,
+      @JsonKey(name: 'no_telp1') String? noTelp1,
+      @JsonKey(name: 'no_telp2') String? noTelp2,
+      @JsonKey(name: 'fullname') String? fullname,
+      String? dept,
+      String? comp});
 }
 
 /// @nodoc
@@ -442,45 +442,45 @@ class __$$_AbsenManualListCopyWithImpl<$Res>
   $Res call({
     Object? idAbsenmnl = null,
     Object? idUser = null,
-    Object? tgl = null,
-    Object? jamAwal = null,
-    Object? jamAkhir = null,
-    Object? ket = null,
-    Object? cDate = null,
-    Object? cUser = null,
-    Object? uDate = null,
-    Object? uUser = null,
+    Object? tgl = freezed,
+    Object? jamAwal = freezed,
+    Object? jamAkhir = freezed,
+    Object? ket = freezed,
+    Object? cDate = freezed,
+    Object? cUser = freezed,
+    Object? uDate = freezed,
+    Object? uUser = freezed,
     Object? spvSta = null,
-    Object? spvNm = null,
-    Object? spvTgl = null,
+    Object? spvNm = freezed,
+    Object? spvTgl = freezed,
     Object? hrdSta = null,
-    Object? hrdNm = null,
-    Object? hrdTgl = null,
+    Object? hrdNm = freezed,
+    Object? hrdTgl = freezed,
     Object? btlSta = null,
     Object? btlNm = freezed,
     Object? btlTgl = freezed,
-    Object? spvNote = null,
-    Object? hrdNote = null,
-    Object? periode = null,
-    Object? jenisAbsen = null,
+    Object? spvNote = freezed,
+    Object? hrdNote = freezed,
+    Object? periode = freezed,
+    Object? jenisAbsen = freezed,
     Object? latitudeMasuk = freezed,
     Object? longtitudeMasuk = freezed,
     Object? latitudeKeluar = freezed,
     Object? longtitudeKeluar = freezed,
     Object? lokasiMasuk = freezed,
     Object? lokasiKeluar = freezed,
-    Object? appSpv = null,
-    Object? appHrd = null,
-    Object? uBy = null,
-    Object? cBy = null,
-    Object? idKar = null,
+    Object? appSpv = freezed,
+    Object? appHrd = freezed,
+    Object? uBy = freezed,
+    Object? cBy = freezed,
+    Object? idKar = freezed,
     Object? idDept = null,
-    Object? payroll = null,
-    Object? noTelp1 = null,
-    Object? noTelp2 = null,
-    Object? fullname = null,
-    Object? dept = null,
-    Object? comp = null,
+    Object? payroll = freezed,
+    Object? noTelp1 = freezed,
+    Object? noTelp2 = freezed,
+    Object? fullname = freezed,
+    Object? dept = freezed,
+    Object? comp = freezed,
   }) {
     return _then(_$_AbsenManualList(
       idAbsenmnl: null == idAbsenmnl
@@ -491,62 +491,62 @@ class __$$_AbsenManualListCopyWithImpl<$Res>
           ? _value.idUser
           : idUser // ignore: cast_nullable_to_non_nullable
               as int,
-      tgl: null == tgl
+      tgl: freezed == tgl
           ? _value.tgl
           : tgl // ignore: cast_nullable_to_non_nullable
-              as String,
-      jamAwal: null == jamAwal
+              as String?,
+      jamAwal: freezed == jamAwal
           ? _value.jamAwal
           : jamAwal // ignore: cast_nullable_to_non_nullable
-              as String,
-      jamAkhir: null == jamAkhir
+              as String?,
+      jamAkhir: freezed == jamAkhir
           ? _value.jamAkhir
           : jamAkhir // ignore: cast_nullable_to_non_nullable
-              as String,
-      ket: null == ket
+              as String?,
+      ket: freezed == ket
           ? _value.ket
           : ket // ignore: cast_nullable_to_non_nullable
-              as String,
-      cDate: null == cDate
+              as String?,
+      cDate: freezed == cDate
           ? _value.cDate
           : cDate // ignore: cast_nullable_to_non_nullable
-              as String,
-      cUser: null == cUser
+              as String?,
+      cUser: freezed == cUser
           ? _value.cUser
           : cUser // ignore: cast_nullable_to_non_nullable
-              as String,
-      uDate: null == uDate
+              as String?,
+      uDate: freezed == uDate
           ? _value.uDate
           : uDate // ignore: cast_nullable_to_non_nullable
-              as String,
-      uUser: null == uUser
+              as String?,
+      uUser: freezed == uUser
           ? _value.uUser
           : uUser // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       spvSta: null == spvSta
           ? _value.spvSta
           : spvSta // ignore: cast_nullable_to_non_nullable
               as bool,
-      spvNm: null == spvNm
+      spvNm: freezed == spvNm
           ? _value.spvNm
           : spvNm // ignore: cast_nullable_to_non_nullable
-              as String,
-      spvTgl: null == spvTgl
+              as String?,
+      spvTgl: freezed == spvTgl
           ? _value.spvTgl
           : spvTgl // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       hrdSta: null == hrdSta
           ? _value.hrdSta
           : hrdSta // ignore: cast_nullable_to_non_nullable
               as bool,
-      hrdNm: null == hrdNm
+      hrdNm: freezed == hrdNm
           ? _value.hrdNm
           : hrdNm // ignore: cast_nullable_to_non_nullable
-              as String,
-      hrdTgl: null == hrdTgl
+              as String?,
+      hrdTgl: freezed == hrdTgl
           ? _value.hrdTgl
           : hrdTgl // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       btlSta: null == btlSta
           ? _value.btlSta
           : btlSta // ignore: cast_nullable_to_non_nullable
@@ -559,22 +559,22 @@ class __$$_AbsenManualListCopyWithImpl<$Res>
           ? _value.btlTgl
           : btlTgl // ignore: cast_nullable_to_non_nullable
               as String?,
-      spvNote: null == spvNote
+      spvNote: freezed == spvNote
           ? _value.spvNote
           : spvNote // ignore: cast_nullable_to_non_nullable
-              as String,
-      hrdNote: null == hrdNote
+              as String?,
+      hrdNote: freezed == hrdNote
           ? _value.hrdNote
           : hrdNote // ignore: cast_nullable_to_non_nullable
-              as String,
-      periode: null == periode
+              as String?,
+      periode: freezed == periode
           ? _value.periode
           : periode // ignore: cast_nullable_to_non_nullable
-              as String,
-      jenisAbsen: null == jenisAbsen
+              as String?,
+      jenisAbsen: freezed == jenisAbsen
           ? _value.jenisAbsen
           : jenisAbsen // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       latitudeMasuk: freezed == latitudeMasuk
           ? _value.latitudeMasuk
           : latitudeMasuk // ignore: cast_nullable_to_non_nullable
@@ -599,54 +599,54 @@ class __$$_AbsenManualListCopyWithImpl<$Res>
           ? _value.lokasiKeluar
           : lokasiKeluar // ignore: cast_nullable_to_non_nullable
               as dynamic,
-      appSpv: null == appSpv
+      appSpv: freezed == appSpv
           ? _value.appSpv
           : appSpv // ignore: cast_nullable_to_non_nullable
-              as String,
-      appHrd: null == appHrd
+              as String?,
+      appHrd: freezed == appHrd
           ? _value.appHrd
           : appHrd // ignore: cast_nullable_to_non_nullable
-              as String,
-      uBy: null == uBy
+              as String?,
+      uBy: freezed == uBy
           ? _value.uBy
           : uBy // ignore: cast_nullable_to_non_nullable
-              as String,
-      cBy: null == cBy
+              as String?,
+      cBy: freezed == cBy
           ? _value.cBy
           : cBy // ignore: cast_nullable_to_non_nullable
-              as String,
-      idKar: null == idKar
+              as String?,
+      idKar: freezed == idKar
           ? _value.idKar
           : idKar // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       idDept: null == idDept
           ? _value.idDept
           : idDept // ignore: cast_nullable_to_non_nullable
               as int,
-      payroll: null == payroll
+      payroll: freezed == payroll
           ? _value.payroll
           : payroll // ignore: cast_nullable_to_non_nullable
-              as String,
-      noTelp1: null == noTelp1
+              as String?,
+      noTelp1: freezed == noTelp1
           ? _value.noTelp1
           : noTelp1 // ignore: cast_nullable_to_non_nullable
-              as String,
-      noTelp2: null == noTelp2
+              as String?,
+      noTelp2: freezed == noTelp2
           ? _value.noTelp2
           : noTelp2 // ignore: cast_nullable_to_non_nullable
-              as String,
-      fullname: null == fullname
+              as String?,
+      fullname: freezed == fullname
           ? _value.fullname
           : fullname // ignore: cast_nullable_to_non_nullable
-              as String,
-      dept: null == dept
+              as String?,
+      dept: freezed == dept
           ? _value.dept
           : dept // ignore: cast_nullable_to_non_nullable
-              as String,
-      comp: null == comp
+              as String?,
+      comp: freezed == comp
           ? _value.comp
           : comp // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
     ));
   }
 }
@@ -707,45 +707,45 @@ class _$_AbsenManualList implements _AbsenManualList {
   @JsonKey(name: 'id_user')
   final int idUser;
   @override
-  final String tgl;
+  final String? tgl;
   @override
   @JsonKey(name: 'jam_awal')
-  final String jamAwal;
+  final String? jamAwal;
   @override
   @JsonKey(name: 'jam_akhir')
-  final String jamAkhir;
+  final String? jamAkhir;
   @override
-  final String ket;
+  final String? ket;
   @override
   @JsonKey(name: 'c_date')
-  final String cDate;
+  final String? cDate;
   @override
   @JsonKey(name: 'c_user')
-  final String cUser;
+  final String? cUser;
   @override
   @JsonKey(name: 'u_date')
-  final String uDate;
+  final String? uDate;
   @override
   @JsonKey(name: 'u_user')
-  final String uUser;
+  final String? uUser;
   @override
   @JsonKey(name: 'spv_sta')
   final bool spvSta;
   @override
   @JsonKey(name: 'spv_nm')
-  final String spvNm;
+  final String? spvNm;
   @override
   @JsonKey(name: 'spv_tgl')
-  final String spvTgl;
+  final String? spvTgl;
   @override
   @JsonKey(name: 'hrd_sta')
   final bool hrdSta;
   @override
   @JsonKey(name: 'hrd_nm')
-  final String hrdNm;
+  final String? hrdNm;
   @override
   @JsonKey(name: 'hrd_tgl')
-  final String hrdTgl;
+  final String? hrdTgl;
   @override
   @JsonKey(name: 'btl_sta')
   final bool btlSta;
@@ -757,15 +757,15 @@ class _$_AbsenManualList implements _AbsenManualList {
   final String? btlTgl;
   @override
   @JsonKey(name: 'spv_note')
-  final String spvNote;
+  final String? spvNote;
   @override
   @JsonKey(name: 'hrd_note')
-  final String hrdNote;
+  final String? hrdNote;
   @override
-  final String periode;
+  final String? periode;
   @override
   @JsonKey(name: 'jenis_absen')
-  final String jenisAbsen;
+  final String? jenisAbsen;
   @override
   @JsonKey(name: 'latitude_masuk')
   final dynamic latitudeMasuk;
@@ -786,37 +786,37 @@ class _$_AbsenManualList implements _AbsenManualList {
   final dynamic lokasiKeluar;
   @override
   @JsonKey(name: 'app_spv')
-  final String appSpv;
+  final String? appSpv;
   @override
   @JsonKey(name: 'app_hrd')
-  final String appHrd;
+  final String? appHrd;
   @override
   @JsonKey(name: 'u_by')
-  final String uBy;
+  final String? uBy;
   @override
   @JsonKey(name: 'c_by')
-  final String cBy;
+  final String? cBy;
   @override
   @JsonKey(name: 'idkar')
-  final String idKar;
+  final String? idKar;
   @override
   @JsonKey(name: 'id_dept')
   final int idDept;
   @override
-  final String payroll;
+  final String? payroll;
   @override
   @JsonKey(name: 'no_telp1')
-  final String noTelp1;
+  final String? noTelp1;
   @override
   @JsonKey(name: 'no_telp2')
-  final String noTelp2;
+  final String? noTelp2;
   @override
   @JsonKey(name: 'fullname')
-  final String fullname;
+  final String? fullname;
   @override
-  final String dept;
+  final String? dept;
   @override
-  final String comp;
+  final String? comp;
 
   @override
   String toString() {
@@ -948,32 +948,32 @@ abstract class _AbsenManualList implements AbsenManualList {
           required final int idAbsenmnl,
       @JsonKey(name: 'id_user')
           required final int idUser,
-      required final String tgl,
+      required final String? tgl,
       @JsonKey(name: 'jam_awal')
-          required final String jamAwal,
+          required final String? jamAwal,
       @JsonKey(name: 'jam_akhir')
-          required final String jamAkhir,
-      required final String ket,
+          required final String? jamAkhir,
+      required final String? ket,
       @JsonKey(name: 'c_date')
-          required final String cDate,
+          required final String? cDate,
       @JsonKey(name: 'c_user')
-          required final String cUser,
+          required final String? cUser,
       @JsonKey(name: 'u_date')
-          required final String uDate,
+          required final String? uDate,
       @JsonKey(name: 'u_user')
-          required final String uUser,
+          required final String? uUser,
       @JsonKey(name: 'spv_sta')
           required final bool spvSta,
       @JsonKey(name: 'spv_nm')
-          required final String spvNm,
+          required final String? spvNm,
       @JsonKey(name: 'spv_tgl')
-          required final String spvTgl,
+          required final String? spvTgl,
       @JsonKey(name: 'hrd_sta')
           required final bool hrdSta,
       @JsonKey(name: 'hrd_nm')
-          required final String hrdNm,
+          required final String? hrdNm,
       @JsonKey(name: 'hrd_tgl')
-          required final String hrdTgl,
+          required final String? hrdTgl,
       @JsonKey(name: 'btl_sta')
           required final bool btlSta,
       @JsonKey(name: 'btl_nm')
@@ -981,12 +981,12 @@ abstract class _AbsenManualList implements AbsenManualList {
       @JsonKey(name: 'btl_tgl')
           required final String? btlTgl,
       @JsonKey(name: 'spv_note')
-          required final String spvNote,
+          required final String? spvNote,
       @JsonKey(name: 'hrd_note')
-          required final String hrdNote,
-      required final String periode,
+          required final String? hrdNote,
+      required final String? periode,
       @JsonKey(name: 'jenis_absen')
-          required final String jenisAbsen,
+          required final String? jenisAbsen,
       @JsonKey(name: 'latitude_masuk')
           required final dynamic latitudeMasuk,
       @JsonKey(name: 'longtitude_masuk')
@@ -1000,26 +1000,26 @@ abstract class _AbsenManualList implements AbsenManualList {
       @JsonKey(name: 'lokasi_keluar')
           required final dynamic lokasiKeluar,
       @JsonKey(name: 'app_spv')
-          required final String appSpv,
+          required final String? appSpv,
       @JsonKey(name: 'app_hrd')
-          required final String appHrd,
+          required final String? appHrd,
       @JsonKey(name: 'u_by')
-          required final String uBy,
+          required final String? uBy,
       @JsonKey(name: 'c_by')
-          required final String cBy,
+          required final String? cBy,
       @JsonKey(name: 'idkar')
-          required final String idKar,
+          required final String? idKar,
       @JsonKey(name: 'id_dept')
           required final int idDept,
-      required final String payroll,
+      required final String? payroll,
       @JsonKey(name: 'no_telp1')
-          required final String noTelp1,
+          required final String? noTelp1,
       @JsonKey(name: 'no_telp2')
-          required final String noTelp2,
+          required final String? noTelp2,
       @JsonKey(name: 'fullname')
-          required final String fullname,
-      required final String dept,
-      required final String comp}) = _$_AbsenManualList;
+          required final String? fullname,
+      required final String? dept,
+      required final String? comp}) = _$_AbsenManualList;
 
   factory _AbsenManualList.fromJson(Map<String, dynamic> json) =
       _$_AbsenManualList.fromJson;
@@ -1031,45 +1031,45 @@ abstract class _AbsenManualList implements AbsenManualList {
   @JsonKey(name: 'id_user')
   int get idUser;
   @override
-  String get tgl;
+  String? get tgl;
   @override
   @JsonKey(name: 'jam_awal')
-  String get jamAwal;
+  String? get jamAwal;
   @override
   @JsonKey(name: 'jam_akhir')
-  String get jamAkhir;
+  String? get jamAkhir;
   @override
-  String get ket;
+  String? get ket;
   @override
   @JsonKey(name: 'c_date')
-  String get cDate;
+  String? get cDate;
   @override
   @JsonKey(name: 'c_user')
-  String get cUser;
+  String? get cUser;
   @override
   @JsonKey(name: 'u_date')
-  String get uDate;
+  String? get uDate;
   @override
   @JsonKey(name: 'u_user')
-  String get uUser;
+  String? get uUser;
   @override
   @JsonKey(name: 'spv_sta')
   bool get spvSta;
   @override
   @JsonKey(name: 'spv_nm')
-  String get spvNm;
+  String? get spvNm;
   @override
   @JsonKey(name: 'spv_tgl')
-  String get spvTgl;
+  String? get spvTgl;
   @override
   @JsonKey(name: 'hrd_sta')
   bool get hrdSta;
   @override
   @JsonKey(name: 'hrd_nm')
-  String get hrdNm;
+  String? get hrdNm;
   @override
   @JsonKey(name: 'hrd_tgl')
-  String get hrdTgl;
+  String? get hrdTgl;
   @override
   @JsonKey(name: 'btl_sta')
   bool get btlSta;
@@ -1081,15 +1081,15 @@ abstract class _AbsenManualList implements AbsenManualList {
   String? get btlTgl;
   @override
   @JsonKey(name: 'spv_note')
-  String get spvNote;
+  String? get spvNote;
   @override
   @JsonKey(name: 'hrd_note')
-  String get hrdNote;
+  String? get hrdNote;
   @override
-  String get periode;
+  String? get periode;
   @override
   @JsonKey(name: 'jenis_absen')
-  String get jenisAbsen;
+  String? get jenisAbsen;
   @override
   @JsonKey(name: 'latitude_masuk')
   dynamic get latitudeMasuk;
@@ -1110,37 +1110,37 @@ abstract class _AbsenManualList implements AbsenManualList {
   dynamic get lokasiKeluar;
   @override
   @JsonKey(name: 'app_spv')
-  String get appSpv;
+  String? get appSpv;
   @override
   @JsonKey(name: 'app_hrd')
-  String get appHrd;
+  String? get appHrd;
   @override
   @JsonKey(name: 'u_by')
-  String get uBy;
+  String? get uBy;
   @override
   @JsonKey(name: 'c_by')
-  String get cBy;
+  String? get cBy;
   @override
   @JsonKey(name: 'idkar')
-  String get idKar;
+  String? get idKar;
   @override
   @JsonKey(name: 'id_dept')
   int get idDept;
   @override
-  String get payroll;
+  String? get payroll;
   @override
   @JsonKey(name: 'no_telp1')
-  String get noTelp1;
+  String? get noTelp1;
   @override
   @JsonKey(name: 'no_telp2')
-  String get noTelp2;
+  String? get noTelp2;
   @override
   @JsonKey(name: 'fullname')
-  String get fullname;
+  String? get fullname;
   @override
-  String get dept;
+  String? get dept;
   @override
-  String get comp;
+  String? get comp;
   @override
   @JsonKey(ignore: true)
   _$$_AbsenManualListCopyWith<_$_AbsenManualList> get copyWith =>

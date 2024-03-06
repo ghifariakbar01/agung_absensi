@@ -177,8 +177,8 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
         case false:
           // debugger(message: 'called');
 
-          await _onTesterElseRegister(
-              appleUsername, onImeiNotRegistered, onImeiAlreadyRegistered);
+          await _onTesterElseRegister(appleUsername, onImeiOK(),
+              onImeiNotRegistered, onImeiAlreadyRegistered);
 
           break;
       }
@@ -191,8 +191,8 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
         case true:
           // debugger(message: 'called');
           // FOR APPLE REVIEW
-          await _onTesterElseRegister(
-              appleUsername, onImeiNotRegistered, onImeiAlreadyRegistered);
+          await _onTesterElseRegister(appleUsername, onImeiOK(),
+              onImeiNotRegistered, onImeiAlreadyRegistered);
 
           break;
         case false:
@@ -204,8 +204,8 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
             } else if (imeiDBString != savedImei) {
               // debugger(message: 'called');
               // FOR APPLE REVIEW
-              await _onTesterElseRegister(
-                  appleUsername, onImeiNotRegistered, onImeiAlreadyRegistered);
+              await _onTesterElseRegister(appleUsername, onImeiOK(),
+                  onImeiNotRegistered, onImeiAlreadyRegistered);
             }
           }();
           break;
@@ -216,19 +216,22 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
   }
 
   Future<void> _onTesterElseRegister(
-      String? appleUsername,
-      Future<void> onImeiNotRegistered(),
-      Future<void> onImeiAlreadyRegistered()) async {
+    String? appleUsername,
+    Future<void> onImeiOK(),
+    Future<void> onImeiNotRegistered(),
+    Future<void> onImeiAlreadyRegistered(),
+  ) async {
     if (appleUsername != null) {
       // || appleUsername == 'Alfin'
       if (appleUsername == 'Ghifar') {
         await onImeiNotRegistered();
       } else {
-        await onImeiAlreadyRegistered();
-        // onImeiOK();
+        // await onImeiAlreadyRegistered();
+        onImeiOK();
       }
     } else {
-      await onImeiAlreadyRegistered();
+      // await onImeiAlreadyRegistered();
+      onImeiOK();
     }
   }
 

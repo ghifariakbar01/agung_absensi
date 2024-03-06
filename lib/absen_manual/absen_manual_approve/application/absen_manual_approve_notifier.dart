@@ -190,9 +190,9 @@ class AbsenManualApproveController extends _$AbsenManualApproveController {
     }
 
     final jumlahHari =
-        _calcDiffSaturdaySunday(DateTime.parse(item.cDate), DateTime.now());
+        _calcDiffSaturdaySunday(DateTime.parse(item.cDate!), DateTime.now());
 
-    if (DateTime.now().difference(DateTime.parse(item.cDate)).inDays -
+    if (DateTime.now().difference(DateTime.parse(item.cDate!)).inDays -
             jumlahHari >=
         3) {
       spvApprove = false;
@@ -224,9 +224,9 @@ class AbsenManualApproveController extends _$AbsenManualApproveController {
     }
 
     final jumlahHari =
-        _calcDiffSaturdaySunday(DateTime.parse(item.spvTgl), DateTime.now());
+        _calcDiffSaturdaySunday(DateTime.parse(item.spvTgl!), DateTime.now());
 
-    if (DateTime.now().difference(DateTime.parse(item.cDate)).inDays -
+    if (DateTime.now().difference(DateTime.parse(item.cDate!)).inDays -
             jumlahHari >=
         1) {
       hrdApprove = false;

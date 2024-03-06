@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../shared/providers.dart';
@@ -60,6 +62,8 @@ class AbsenManualListController extends _$AbsenManualListController {
 
     final staff = ref.read(userNotifierProvider).user.staf!;
     final staffStr = staff.replaceAll('"', '').substring(0, staff.length - 1);
+
+    log('fullAkses $fullAkses isHrdOrSpv(hrd) ${isHrdOrSpv(hrd)} isHrdOrSpv(spv) ${isHrdOrSpv(spv)}');
 
     if (fullAkses! || isHrdOrSpv(hrd) || isHrdOrSpv(spv)) {
       return ref.read(absenManualListRepositoryProvider).getAbsenManualList(

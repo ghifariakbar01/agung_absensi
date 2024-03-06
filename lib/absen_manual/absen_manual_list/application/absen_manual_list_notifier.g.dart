@@ -42,7 +42,7 @@ final absenManualListRepositoryProvider =
 
 typedef AbsenManualListRepositoryRef = ProviderRef<AbsenManualListRepository>;
 String _$absenManualListControllerHash() =>
-    r'c7f506e2f0f66944d7ea9d3ff4e9072f28d0fa13';
+    r'520c15a3502d5c9a36286347f221f9932bd425bb';
 
 /// See also [AbsenManualListController].
 @ProviderFor(AbsenManualListController)

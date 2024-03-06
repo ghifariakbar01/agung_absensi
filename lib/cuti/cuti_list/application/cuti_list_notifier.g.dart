@@ -39,7 +39,7 @@ final cutiListRepositoryProvider = Provider<CutiListRepository>.internal(
 
 typedef CutiListRepositoryRef = ProviderRef<CutiListRepository>;
 String _$cutiListControllerHash() =>
-    r'f0f3a33dc0f16ed7e9b1d5bfe08da12739e28ef6';
+    r'8638d9c5d50d16d00b991a02ba9926e3a7145366';
 
 /// See also [CutiListController].
 @ProviderFor(CutiListController)

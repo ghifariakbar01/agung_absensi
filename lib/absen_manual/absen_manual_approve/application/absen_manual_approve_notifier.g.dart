@@ -43,7 +43,7 @@ final absenManualApproveRepositoryProvider =
 typedef AbsenManualApproveRepositoryRef
     = ProviderRef<AbsenManualApproveRepository>;
 String _$absenManualApproveControllerHash() =>
-    r'248758a4bf0d62f95f800ce23dd7b25e83ab0ed0';
+    r'5d84e71c4e5a1133a4c1fb4d6a6272a3012f90f3';
 
 /// See also [AbsenManualApproveController].
 @ProviderFor(AbsenManualApproveController)

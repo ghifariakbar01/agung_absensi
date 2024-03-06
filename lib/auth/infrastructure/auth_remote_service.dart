@@ -152,7 +152,7 @@ class AuthRemoteService {
                 "        (select nama from mst_dept where id_dept = A.id_dept) as dept,  " +
                 "        (select nama from mst_comp where id_comp = A.id_comp) as comp,  " +
                 "        (select nama from mst_jabatan where id_jbt = A.id_jbt) as jbt,  " +
-                "        isnull((select full_akses from hr_user_grp where id_user_grp = A.id_user_grp), 'false') as full_akses,   " +
+                "        isnull((select full_akses from mst_user_autho where id_user_grp = A.id_user_grp), 'false') as full_akses,   " +
                 "        isnull((select lihat from mst_user_autho where id_user_grp = A.id_user_grp),'0') as lihat,  " +
                 "        isnull((select baru from mst_user_autho where id_user_grp = A.id_user_grp),'0') as baru,  " +
                 "        isnull((select ubah from mst_user_autho where id_user_grp = A.id_user_grp),'0') as ubah,  " +

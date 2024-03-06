@@ -162,7 +162,7 @@ class AbsenManualDtlDialog extends ConsumerWidget {
                           height: 2,
                         ),
                         Text(
-                          item.fullname,
+                          item.fullname ?? '-',
                           style: Themes.customColor(9,
                               color: Palette.primaryColor,
                               fontWeight: FontWeight.w500),
@@ -185,7 +185,7 @@ class AbsenManualDtlDialog extends ConsumerWidget {
                           height: 2,
                         ),
                         Text(
-                          item.comp,
+                          item.comp ?? '-',
                           style: Themes.customColor(9,
                               color: Palette.primaryColor,
                               fontWeight: FontWeight.w500),
@@ -210,7 +210,7 @@ class AbsenManualDtlDialog extends ConsumerWidget {
                         SizedBox(
                           width: 90,
                           child: Text(
-                            item.dept,
+                            item.dept ?? '-',
                             style: Themes.customColor(9,
                                 color: Palette.primaryColor,
                                 fontWeight: FontWeight.w500),
@@ -240,7 +240,7 @@ class AbsenManualDtlDialog extends ConsumerWidget {
                         Text(
                           DateFormat(
                             'dd MMM yyyy',
-                          ).format(DateTime.parse(item.tgl)),
+                          ).format(DateTime.parse(item.tgl ?? '-')),
                           style: Themes.customColor(9,
                               color: Palette.blue, fontWeight: FontWeight.w500),
                         ),
@@ -263,7 +263,7 @@ class AbsenManualDtlDialog extends ConsumerWidget {
                         Text(
                           DateFormat(
                             'hh:mm a',
-                          ).format(DateTime.parse(item.jamAwal)),
+                          ).format(DateTime.parse(item.jamAwal ?? '-')),
                           style: Themes.customColor(9,
                               color: Palette.blue, fontWeight: FontWeight.w500),
                         ),
@@ -286,7 +286,7 @@ class AbsenManualDtlDialog extends ConsumerWidget {
                         Text(
                           DateFormat(
                             'hh:mm a',
-                          ).format(DateTime.parse(item.jamAkhir)),
+                          ).format(DateTime.parse(item.jamAkhir ?? '-')),
                           style: Themes.customColor(9,
                               color: Palette.tertiaryColor,
                               fontWeight: FontWeight.w500),

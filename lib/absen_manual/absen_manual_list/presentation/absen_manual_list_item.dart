@@ -74,7 +74,7 @@ class AbsenManualListItem extends HookConsumerWidget {
                       Text(
                         DateFormat(
                           'EEEE, dd MMMM yyyy',
-                        ).format(DateTime.parse(item.cDate)),
+                        ).format(DateTime.parse(item.cDate!)),
                         style: Themes.customColor(10,
                             fontWeight: FontWeight.w500,
                             color: item.btlSta == true ? Colors.white : null),
@@ -167,7 +167,7 @@ class AbsenManualListItem extends HookConsumerWidget {
                             height: 2,
                           ),
                           Text(
-                            item.fullname,
+                            item.fullname ?? '-',
                             style: Themes.customColor(9,
                                 color: item.btlSta == true
                                     ? Colors.white
@@ -192,9 +192,11 @@ class AbsenManualListItem extends HookConsumerWidget {
                             height: 2,
                           ),
                           Text(
-                            DateFormat(
-                              'hh:mm a',
-                            ).format(DateTime.parse(item.jamAwal)),
+                            item.jamAwal == null
+                                ? '-'
+                                : DateFormat(
+                                    'hh:mm a',
+                                  ).format(DateTime.parse(item.jamAwal!)),
                             style: Themes.customColor(9,
                                 color: item.btlSta == true
                                     ? Colors.white
@@ -218,9 +220,11 @@ class AbsenManualListItem extends HookConsumerWidget {
                             height: 2,
                           ),
                           Text(
-                            DateFormat(
-                              'hh:mm a',
-                            ).format(DateTime.parse(item.jamAkhir)),
+                            item.jamAkhir == null
+                                ? '-'
+                                : DateFormat(
+                                    'hh:mm a',
+                                  ).format(DateTime.parse(item.jamAkhir!)),
                             style: Themes.customColor(9,
                                 color: item.btlSta == true
                                     ? Colors.white
