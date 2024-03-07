@@ -40,71 +40,81 @@ class TugasDinasDtlDialog extends ConsumerWidget {
     final bool fullAkses = ref.watch(userNotifierProvider).user.fullAkses!;
 
     _returnVisibility(ColumnCommandButtonType buttonType) {
+      bool isVisible = false;
+
       if (isHrd) {
         if (isCurrentUser == false) {
           if (isSpvApproved) {
             switch (buttonType) {
               case ColumnCommandButtonType.Edit:
-                return true;
+                isVisible = true;
+                break;
               case ColumnCommandButtonType.Delete:
-                return false;
+                isVisible = false;
+                break;
             }
           }
         } else {
-          return true;
+          isVisible = true;
         }
       } else if (isCoo) {
         if (isCurrentUser) {
-          return true;
+          isVisible = true;
         } else {
           switch (buttonType) {
             case ColumnCommandButtonType.Edit:
-              return true;
+              isVisible = true;
+              break;
             case ColumnCommandButtonType.Delete:
-              return false;
+              isVisible = false;
+              break;
           }
         }
       } else if (!isCoo) {
         if (isCurrentUser) {
-          return true;
+          isVisible = true;
         }
       }
       //
       else {
         if (isCurrentUser) {
           if (isSpvEditable && isSpvApproved) {
-            return true;
+            isVisible = true;
           } else if (isSpvEditable && isSpvApproved == false) {
-            return true;
+            isVisible = true;
           } else if (!isSpvEditable && isSpvApproved) {
-            return false;
+            isVisible = false;
           } else {
             switch (buttonType) {
               case ColumnCommandButtonType.Edit:
-                return true;
+                isVisible = true;
+                break;
               case ColumnCommandButtonType.Delete:
-                return false;
+                isVisible = false;
+                break;
             }
           }
         } else {
           switch (buttonType) {
             case ColumnCommandButtonType.Edit:
-              return true;
+              isVisible = true;
+              break;
             case ColumnCommandButtonType.Delete:
-              return false;
+              isVisible = false;
+              break;
           }
         }
       }
 
       if (isHrdApproved) {
-        return false;
+        isVisible = false;
       }
 
       if (fullAkses) {
-        return true;
+        isVisible = true;
       }
 
-      return false;
+      return isVisible;
     }
 
     return Dialog(

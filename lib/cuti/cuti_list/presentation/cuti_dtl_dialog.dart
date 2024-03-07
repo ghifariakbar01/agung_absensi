@@ -42,22 +42,28 @@ class CutiDtlDialog extends ConsumerWidget {
     final bool fullAkses = ref.watch(userNotifierProvider).user.fullAkses!;
 
     _returnVisibility(ColumnCommandButtonType buttonType) {
+      bool isVisible = false;
+
       if (isHrd) {
         if (isCurrentUser == false) {
           if (isSpvApproved) {
             switch (buttonType) {
               case ColumnCommandButtonType.Edit:
-                return true;
+                isVisible = true;
+                break;
               case ColumnCommandButtonType.Delete:
-                return false;
+                isVisible = false;
+                break;
             }
           }
         } else {
           switch (buttonType) {
             case ColumnCommandButtonType.Edit:
-              return true;
+              isVisible = true;
+              break;
             case ColumnCommandButtonType.Delete:
-              return true;
+              isVisible = true;
+              break;
           }
         }
       } else {
@@ -65,38 +71,48 @@ class CutiDtlDialog extends ConsumerWidget {
           if (isSpvEditable && isSpvApproved) {
             switch (buttonType) {
               case ColumnCommandButtonType.Edit:
-                return true;
+                isVisible = true;
+                break;
               case ColumnCommandButtonType.Delete:
-                return true;
+                isVisible = true;
+                break;
             }
           } else if (isSpvEditable && isSpvApproved == false) {
             switch (buttonType) {
               case ColumnCommandButtonType.Edit:
-                return true;
+                isVisible = true;
+                break;
               case ColumnCommandButtonType.Delete:
-                return true;
+                isVisible = true;
+                break;
             }
           } else if (!isSpvEditable && isSpvApproved) {
             switch (buttonType) {
               case ColumnCommandButtonType.Edit:
-                return false;
+                isVisible = false;
+                break;
               case ColumnCommandButtonType.Delete:
-                return false;
+                isVisible = false;
+                break;
             }
           } else {
             switch (buttonType) {
               case ColumnCommandButtonType.Edit:
-                return true;
+                isVisible = true;
+                break;
               case ColumnCommandButtonType.Delete:
-                return false;
+                isVisible = false;
+                break;
             }
           }
         } else {
           switch (buttonType) {
             case ColumnCommandButtonType.Edit:
-              return true;
+              isVisible = true;
+              break;
             case ColumnCommandButtonType.Delete:
-              return false;
+              isVisible = false;
+              break;
           }
         }
       }
@@ -104,22 +120,26 @@ class CutiDtlDialog extends ConsumerWidget {
       if (isHrdApproved) {
         switch (buttonType) {
           case ColumnCommandButtonType.Edit:
-            return false;
+            isVisible = false;
+            break;
           case ColumnCommandButtonType.Delete:
-            return false;
+            isVisible = false;
+            break;
         }
       }
 
       if (fullAkses) {
         switch (buttonType) {
           case ColumnCommandButtonType.Edit:
-            return true;
+            isVisible = true;
+            break;
           case ColumnCommandButtonType.Delete:
-            return true;
+            isVisible = true;
+            break;
         }
       }
 
-      return false;
+      return isVisible;
     }
 
     return Dialog(
