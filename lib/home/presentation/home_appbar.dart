@@ -7,16 +7,14 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../imei_introduction/application/shared/imei_introduction_providers.dart';
 import '../../routes/application/route_names.dart';
 import '../../style/style.dart';
-import '../../theme/application/theme_notifier.dart';
 import '../../widgets/network_widget.dart';
-import '../../widgets/v_async_widget.dart';
 
 class HomeAppBar extends ConsumerWidget implements PreferredSizeWidget {
   const HomeAppBar();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final themeAsync = ref.watch(themeNotifierProvider);
+    // final themeAsync = ref.watch(themeNotifierProvider);
 
     return AppBar(
       automaticallyImplyLeading: false,
@@ -37,20 +35,20 @@ class HomeAppBar extends ConsumerWidget implements PreferredSizeWidget {
         SizedBox(
           width: 8,
         ),
-        VAsyncWidgetScaffold<String>(
-            value: themeAsync,
-            data: (theme) => InkWell(
-                onTap: () => ref
-                    .read(themeControllerProvider.notifier)
-                    .saveTheme(
-                        theme == 'dark' || theme == '' ? 'light' : 'dark'),
-                child: theme == 'dark'
-                    ? Icon(
-                        Icons.dark_mode,
-                        color: Palette.tertiaryColor,
-                      )
-                    : Icon(Icons.dark_mode_outlined,
-                        color: Palette.tertiaryColor))),
+        // VAsyncWidgetScaffold<String>(
+        //     value: themeAsync,
+        //     data: (theme) => InkWell(
+        //         onTap: () => ref
+        //             .read(themeControllerProvider.notifier)
+        //             .saveTheme(
+        //                 theme == 'dark' || theme == '' ? 'light' : 'dark'),
+        //         child: theme == 'dark'
+        //             ? Icon(
+        //                 Icons.dark_mode,
+        //                 color: Palette.tertiaryColor,
+        //               )
+        //             : Icon(Icons.dark_mode_outlined,
+        //                 color: Palette.tertiaryColor))),
         Expanded(child: Container()),
         SizedBox(
           width: 16,

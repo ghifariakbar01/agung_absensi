@@ -292,7 +292,7 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
     // 2. CALC JUMLAH HARI LIBUR
     // if (create.hitungLibur == 0) {
     //   throw AssertionError(
-    //       "Master Data Cuti Anda Belum Ada! Silahkan Hubungi HR");
+    //       "Master Data Cuti Anda Belum Ada! Silahkan hubungi HR untuk mengubah data");
     // }
     //
     // 3. CALC JUMLAH MASA KERJA, JIKA KURANG DARI 12 BULAN

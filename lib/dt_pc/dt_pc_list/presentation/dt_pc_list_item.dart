@@ -107,7 +107,7 @@ class DtPcListItem extends HookConsumerWidget {
                                   .canBatal(item))) {
                                 showDialog(
                                   context: context,
-                                  builder: (context) => VAksesDitolak(),
+                                  builder: (context) => VFailedDialog(),
                                 );
                               } else {
                                 showDialog(
@@ -213,7 +213,10 @@ class DtPcListItem extends HookConsumerWidget {
                         children: [
                           Text(
                             'Jam',
-                            style: Themes.customColor(7, color: Colors.grey),
+                            style: Themes.customColor(7,
+                                color: item.btlSta == true
+                                    ? Colors.white
+                                    : Colors.grey),
                           ),
                           SizedBox(
                             height: 2,
@@ -223,7 +226,9 @@ class DtPcListItem extends HookConsumerWidget {
                               'hh:mm a',
                             ).format(DateTime.parse(item.jam!)),
                             style: Themes.customColor(9,
-                                color: Palette.tertiaryColor,
+                                color: item.btlSta == true
+                                    ? Colors.white
+                                    : Palette.orange,
                                 fontWeight: FontWeight.w500),
                           ),
                         ],
@@ -234,7 +239,10 @@ class DtPcListItem extends HookConsumerWidget {
                         children: [
                           Text(
                             'Jenis',
-                            style: Themes.customColor(7, color: Colors.grey),
+                            style: Themes.customColor(7,
+                                color: item.btlSta == true
+                                    ? Colors.white
+                                    : Colors.grey),
                           ),
                           SizedBox(
                             height: 2,
@@ -244,7 +252,9 @@ class DtPcListItem extends HookConsumerWidget {
                             child: Text(
                               '${item.kategori!.toLowerCase() == 'dt' ? 'Datang Telat' : 'Pulang Cepat'}',
                               style: Themes.customColor(9,
-                                  color: Palette.orange,
+                                  color: item.btlSta == true
+                                      ? Colors.white
+                                      : Palette.orange,
                                   fontWeight: FontWeight.w500),
                             ),
                           ),
@@ -385,7 +395,7 @@ class DtPcListItem extends HookConsumerWidget {
                                           .canSpvApprove(item)) {
                                         showDialog(
                                           context: context,
-                                          builder: (context) => VAksesDitolak(),
+                                          builder: (context) => VFailedDialog(),
                                         );
                                       } else {
                                         // jika belum diapprove maka approve
@@ -523,7 +533,7 @@ class DtPcListItem extends HookConsumerWidget {
                                           .canHrdApprove(item)) {
                                         showDialog(
                                           context: context,
-                                          builder: (context) => VAksesDitolak(),
+                                          builder: (context) => VFailedDialog(),
                                         );
                                       } else {
                                         final String? text =

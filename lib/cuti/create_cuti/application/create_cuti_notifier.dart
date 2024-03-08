@@ -544,7 +544,7 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
     //
     // if (create == ) {
     //   throw AssertionError(
-    //       "Master Data Cuti Anda Belum Ada! Silahkan Hubungi HR");
+    //       "Master Data Cuti Anda Belum Ada! Silahkan hubungi HR untuk mengubah data");
     // }
 
     final isCutiEmergencyOrTahunan = jenisCuti == 'CE' || jenisCuti == 'CT';

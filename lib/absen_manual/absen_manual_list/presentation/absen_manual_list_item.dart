@@ -107,7 +107,7 @@ class AbsenManualListItem extends HookConsumerWidget {
                                   .canBatal(item)) {
                                 showDialog(
                                   context: context,
-                                  builder: (context) => VAksesDitolak(),
+                                  builder: (context) => VFailedDialog(),
                                 );
                               } else {
                                 showDialog(
@@ -371,7 +371,7 @@ class AbsenManualListItem extends HookConsumerWidget {
                                           .canSpvApprove(item)) {
                                         showDialog(
                                           context: context,
-                                          builder: (context) => VAksesDitolak(),
+                                          builder: (context) => VFailedDialog(),
                                         );
                                       } else {
                                         // jika belum diapprove maka approve
@@ -510,7 +510,7 @@ class AbsenManualListItem extends HookConsumerWidget {
                                           .canHrdApprove(item)) {
                                         showDialog(
                                           context: context,
-                                          builder: (context) => VAksesDitolak(),
+                                          builder: (context) => VFailedDialog(),
                                         );
                                       } else {
                                         final String? text =

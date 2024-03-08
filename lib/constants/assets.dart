@@ -7,6 +7,7 @@ class Assets {
   static const String iconChain = 'assets/ic_chain.png';
   static const String imgInstructionPrefix = 'assets/img_instruction_';
   static const String imgRegisterWa = 'assets/wa_register.png';
+  static const String iconLocationOff = 'assets/ic_location_off.svg';
   // home
   static const String iconWa = 'assets/ic_wa.svg';
   static const String iconWaReregist = 'assets/ic_wa_2.svg';

@@ -480,7 +480,7 @@ class SakitListItem extends HookConsumerWidget {
                                           .canSpvApprove(item)) {
                                         showDialog(
                                           context: context,
-                                          builder: (context) => VAksesDitolak(),
+                                          builder: (context) => VFailedDialog(),
                                         );
                                       } else {
                                         // jika belum diapprove maka approve
@@ -620,7 +620,7 @@ class SakitListItem extends HookConsumerWidget {
                                           .canHrdApprove(item)) {
                                         showDialog(
                                           context: context,
-                                          builder: (context) => VAksesDitolak(),
+                                          builder: (context) => VFailedDialog(),
                                         );
                                       } else {
                                         if (item.hrdSta == false) {

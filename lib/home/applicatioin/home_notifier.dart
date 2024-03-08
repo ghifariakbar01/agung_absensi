@@ -1,11 +1,14 @@
+import 'package:face_net_authentication/wa_register/application/wa_register_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:geofence_service/geofence_service.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../constants/assets.dart';
 import '../../permission/application/shared/permission_introduction_providers.dart';
 import '../../routes/application/route_names.dart';
 import '../../tester/application/tester_state.dart';
+import '../../wa_register/application/wa_register.dart';
 import '../../widgets/v_dialogs.dart';
 import '../../shared/providers.dart';
 
@@ -30,39 +33,64 @@ class HomeNotifier extends StateNotifier<HomeState> {
       required WidgetRef ref,
       required BuildContext context}) async {
     bool isAbsenRoute = route == RouteNames.absenRoute;
-    bool isLocationOn = await FlLocation.isLocationServicesEnabled;
+    bool isGpsOn = await FlLocation.isLocationServicesEnabled;
 
-    bool isTester =
-        ref.read(testerNotifierProvider) != TesterState.forcedRegularUser();
-    bool isLocationDenied =
-        await ref.read(permissionNotifierProvider.notifier).isLocationDenied();
+    final tester = ref.read(testerNotifierProvider);
+    bool isTester = tester != TesterState.forcedRegularUser();
+
+    final permissionNotifier = ref.read(permissionNotifierProvider.notifier);
+    bool isLocationDenied = await permissionNotifier.isLocationDenied();
+
+    final waRegister = await ref.read(waRegisterNotifierProvider.future);
+
+    final nama = ref.read(userNotifierProvider).user.nama;
+    final isMe = nama == 'Ghifar';
+
+    if (!isAbsenRoute) {
+      if (!isMe && waRegister == WaRegister.initial()) {
+        return showDialog(
+          context: context,
+          builder: (context) => VSimpleDialog(
+            asset: Assets.iconWa,
+            label: 'Nomor Wa Belum Terdaftar',
+            labelDescription:
+                'Mohon lakukan registrasi nomor Wa terlebih dahulu, agar bisa menerima notifikasi pesan Wa. Terimakasih 🙏',
+          ),
+        );
+      }
+    }
 
     if (isAbsenRoute && !isTester) {
-      if (!isLocationOn) {
-        await showDialog(
+      if (!isGpsOn) {
+        return showDialog(
           context: context,
           builder: (context) => VSimpleDialog(
               label: 'GPS Tidak Berfungsi',
               labelDescription:
-                  'Mohon nyalakan GPS pada device anda. Terimakasih',
-              asset: 'assets/ic_location_off.svg'),
+                  'Mohon nyalakan GPS pada device anda. Terimakasih 🙏',
+              asset: Assets.iconLocationOff),
         );
       } else {
+        final redirectToPermission =
+            context.pushNamed(RouteNames.permissionRoute);
+
         if (isLocationDenied) {
-          await showDialog(
+          return showDialog(
             context: context,
             builder: (context) => VSimpleDialog(
                 label: 'Izin Lokasi Tidak Aktif',
                 labelDescription:
-                    'Mohon nyalakan Izin Lokasi untuk E-FINGER. Terimakasih',
-                asset: 'assets/ic_location_off.svg'),
-          ).then((_) => context.pushNamed(RouteNames.permissionRoute));
+                    'Mohon nyalakan Izin Lokasi untuk E-FINGER. Terimakasih 🙏',
+                asset: Assets.iconLocationOff),
+          ).then((_) => redirectToPermission);
         } else {
           await context.pushNamed(route);
+          return;
         }
       }
     } else {
       await context.pushNamed(route);
+      return;
     }
   }
 }

@@ -486,7 +486,7 @@ class CutiListItem extends HookConsumerWidget {
                                           false) {
                                         showDialog(
                                           context: context,
-                                          builder: (context) => VAksesDitolak(),
+                                          builder: (context) => VFailedDialog(),
                                         );
                                       } else {
                                         if (item.spvSta == false) {
@@ -622,7 +622,7 @@ class CutiListItem extends HookConsumerWidget {
                                           false) {
                                         showDialog(
                                           context: context,
-                                          builder: (context) => VAksesDitolak(),
+                                          builder: (context) => VFailedDialog(),
                                         );
                                       } else {
                                         if (item.hrdSta == false) {

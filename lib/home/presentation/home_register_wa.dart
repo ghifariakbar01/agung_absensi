@@ -43,7 +43,7 @@ class HomeRegisterWa extends ConsumerWidget {
                 child: Column(
                   children: [
                     SvgPicture.asset(Assets.iconWa),
-                    Spacer(),
+                    Expanded(child: Container()),
                     Text(
                       'Register Wa ',
                       style: Themes.customColor(

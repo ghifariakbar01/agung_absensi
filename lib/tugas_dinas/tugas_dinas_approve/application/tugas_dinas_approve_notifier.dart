@@ -55,7 +55,7 @@ class TugasDinasApproveController extends _$TugasDinasApproveController {
             notifContent: '$messageContent');
     } else {
       throw AssertionError(
-          'User yang dituju tidak memiliki nomor telfon. Silahkan hubungi HR ');
+          'User yang dituju tidak memiliki nomor telfon. Silahkan hubungi HR untuk mengubah data ');
     }
   }
 

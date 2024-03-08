@@ -54,7 +54,7 @@ class DtPcApproveController extends _$DtPcApproveController {
           notifContent: '$messageContent');
     } else {
       throw AssertionError(
-          'User yang dituju tidak memiliki nomor telfon. Silahkan hubungi HR ');
+          'User yang dituju tidak memiliki nomor telfon. Silahkan hubungi HR untuk mengubah data ');
     }
   }
 

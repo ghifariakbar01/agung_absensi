@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:face_net_authentication/send_wa/application/send_wa_notifier.dart';
 import 'package:face_net_authentication/widgets/v_button.dart';
+import 'package:face_net_authentication/widgets/v_dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -115,7 +117,36 @@ class WaRegisterNotifier extends _$WaRegisterNotifier {
           await showWaBottomSheet(phone: phone ?? "", context: context);
 
       if (newPhone != null) {
-        await _registerWaForNotif(phone, newPhone, context);
+        // check if same
+        final noTelp1 = ref.read(userNotifierProvider).user.noTelp1;
+        final noTelp2 = ref.read(userNotifierProvider).user.noTelp2;
+
+        if (noTelp1 != null) {
+          if (newPhone == noTelp1) {
+            debugger();
+
+            await _registerWaForNotif(newPhone, context);
+            return;
+          }
+        }
+
+        if (noTelp2 != null) {
+          if (newPhone == noTelp2) {
+            debugger();
+
+            await _registerWaForNotif(newPhone, context);
+            return;
+          }
+        }
+
+        return showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (_) => VFailedDialog(
+            message:
+                'Nomor hp tidak sama dengan database. Silahkan hubungi HR untuk mengubah data',
+          ),
+        );
       }
     } catch (e) {
       state = AsyncError(e, StackTrace.current);
@@ -130,15 +161,13 @@ class WaRegisterNotifier extends _$WaRegisterNotifier {
   }
 
   Future<void> _registerWaForNotif(
-    String? phone,
     String newPhone,
     BuildContext context,
   ) async {
     state = const AsyncLoading();
 
     try {
-      final bool? isRegistered =
-          await showWaDialog(phone: phone ?? "", context: context);
+      final bool? isRegistered = await showWaDialog(context: context);
 
       // debugger();
 
@@ -196,7 +225,6 @@ Future<String?> showWaBottomSheet({
 }
 
 Future<bool?> showWaDialog({
-  required String phone,
   required BuildContext context,
 }) async {
   final bool? result = await showDialog(
@@ -261,8 +289,8 @@ class WaPhoneBottomSheet extends HookConsumerWidget {
                         return 'Tidak boleh kosong';
                       }
 
-                      if (!value.startsWith('62')) {
-                        return ' Nomor harus diawal 62 (Contoh 62896xxxxxxxx)';
+                      if (!value.startsWith('08')) {
+                        return ' Nomor harus diawal 08 (Contoh 0896xxxxxxxx)';
                       }
 
                       return null;

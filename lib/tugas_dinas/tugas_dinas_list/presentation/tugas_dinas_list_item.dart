@@ -108,7 +108,7 @@ class TugasDinasListItem extends HookConsumerWidget {
                                   .canBatal(item)) {
                                 showDialog(
                                   context: context,
-                                  builder: (context) => VAksesDitolak(),
+                                  builder: (context) => VFailedDialog(),
                                 );
                               } else {
                                 showDialog(
@@ -524,7 +524,7 @@ class TugasDinasListItem extends HookConsumerWidget {
                                           .canSpvApprove(item)) {
                                         showDialog(
                                           context: context,
-                                          builder: (context) => VAksesDitolak(),
+                                          builder: (context) => VFailedDialog(),
                                         );
                                       } else {
                                         await showDialog(
@@ -637,7 +637,7 @@ class TugasDinasListItem extends HookConsumerWidget {
                                           .canHrdApprove(item)) {
                                         showDialog(
                                           context: context,
-                                          builder: (context) => VAksesDitolak(),
+                                          builder: (context) => VFailedDialog(),
                                         );
                                       } else {
                                         return showDialog(
@@ -735,7 +735,7 @@ class TugasDinasListItem extends HookConsumerWidget {
                                           .canGmApprove(item)) {
                                         showDialog(
                                           context: context,
-                                          builder: (context) => VAksesDitolak(),
+                                          builder: (context) => VFailedDialog(),
                                         );
                                       } else {
                                         return showDialog(
@@ -850,7 +850,7 @@ class TugasDinasListItem extends HookConsumerWidget {
                                           .canCooApprove(item)) {
                                         showDialog(
                                           context: context,
-                                          builder: (context) => VAksesDitolak(),
+                                          builder: (context) => VFailedDialog(),
                                         );
                                       } else {
                                         return showDialog(

@@ -1,5 +1,4 @@
 import 'package:dartz/dartz.dart';
-import 'package:face_net_authentication/theme/application/theme_notifier.dart';
 // import 'package:face_net_authentication/locator.dart';
 
 import 'package:flutter/material.dart';
@@ -49,24 +48,16 @@ class MyApp extends ConsumerWidget {
     ref.listen(initializationProvider(context), (_, __) {});
 
     final router = ref.watch(routerProvider);
-    final theme = ref.watch(themeNotifierProvider);
 
     return MaterialApp.router(
-        routeInformationProvider: router.routeInformationProvider,
-        routeInformationParser: router.routeInformationParser,
-        routerDelegate: router.routerDelegate,
-        debugShowCheckedModeBanner: false,
-        debugShowMaterialGrid: false,
-        theme: Themes.lightTheme(context),
-        darkTheme: Themes.darkTheme(context),
-        themeMode: theme.when(
-          data: (t) => t.isEmpty
-              ? ThemeMode.system
-              : t == 'dark'
-                  ? ThemeMode.dark
-                  : ThemeMode.light,
-          loading: () => ThemeMode.dark,
-          error: (__, _) => ThemeMode.system,
-        ));
+      routeInformationProvider: router.routeInformationProvider,
+      routeInformationParser: router.routeInformationParser,
+      routerDelegate: router.routerDelegate,
+      debugShowCheckedModeBanner: false,
+      debugShowMaterialGrid: false,
+      themeMode: ThemeMode.light,
+      theme: Themes.lightTheme(context),
+      // darkTheme: Themes.darkTheme(context),
+    );
   }
 }

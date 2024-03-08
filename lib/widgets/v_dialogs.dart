@@ -125,8 +125,9 @@ class VSimpleDialog extends StatelessWidget {
           Center(
             child: Text(
               label,
+              textAlign: TextAlign.center,
               style: Themes.customColor(
-                20,
+                15,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -139,8 +140,9 @@ class VSimpleDialog extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 labelDescription,
+                textAlign: TextAlign.center,
                 style: Themes.customColor(
-                  15,
+                  11,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -323,8 +325,10 @@ class VBatalDialog extends StatelessWidget {
   }
 }
 
-class VAksesDitolak extends StatelessWidget {
-  const VAksesDitolak({Key? key}) : super(key: key);
+class VFailedDialog extends StatelessWidget {
+  const VFailedDialog({Key? key, this.message}) : super(key: key);
+
+  final String? message;
 
   @override
   Widget build(BuildContext context) {
@@ -352,7 +356,7 @@ class VAksesDitolak extends StatelessWidget {
                 height: 2,
               ),
               Text(
-                'Anda tidak memiliki akses untuk Approval',
+                message ?? 'Anda tidak memiliki akses untuk Approval',
                 textAlign: TextAlign.center,
                 style: Themes.customColor(14, color: Colors.white),
               ),
