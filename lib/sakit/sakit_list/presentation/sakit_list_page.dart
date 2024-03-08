@@ -117,7 +117,7 @@ class SakitListPage extends HookConsumerWidget {
                   data: (list) {
                     final approved = list
                         .where((e) =>
-                            (e.spvSta == true || e.hrdSta == true) &&
+                            (e.spvSta == true && e.hrdSta == true) &&
                             e.batalStatus == false)
                         .toList();
                     return _list(scrollController, approved, onRefresh);

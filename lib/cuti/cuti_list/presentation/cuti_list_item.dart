@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:face_net_authentication/cuti/create_cuti/application/create_cuti_notifier.dart';
 import 'package:face_net_authentication/cuti/cuti_approve/application/cuti_approve_notifier.dart';
 import 'package:face_net_authentication/cuti/cuti_list/presentation/cuti_dtl_dialog.dart';
@@ -369,14 +370,39 @@ class CutiListItem extends HookConsumerWidget {
                       SizedBox(
                         height: 2,
                       ),
-                      Text(
-                        '${item.ket}',
-                        style: Themes.customColor(9,
-                            color: item.btlSta == true
-                                ? Colors.white
-                                : Palette.primaryColor,
-                            fontWeight: FontWeight.w500),
-                      ),
+                      Ink(
+                          height: 15,
+                          child: InkWell(
+                              onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return SimpleDialog(
+                                        title: Text(
+                                          'Keterangan',
+                                          style: Themes.customColor(10),
+                                        ),
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(16.0),
+                                            child: Text(
+                                              item.ket!,
+                                              style: Themes.customColor(10),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  ),
+                              child: AutoSizeText(
+                                '${item.ket}',
+                                maxFontSize: 9,
+                                minFontSize: 5,
+                                style: Themes.customColor(9,
+                                    color: item.btlSta == true
+                                        ? Colors.white
+                                        : Palette.primaryColor,
+                                    fontWeight: FontWeight.w500),
+                              ))),
                     ],
                   ),
 

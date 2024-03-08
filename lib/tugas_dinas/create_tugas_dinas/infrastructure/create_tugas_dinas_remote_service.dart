@@ -77,7 +77,7 @@ class CreateTugasDinasRemoteService {
       final data = _dioRequest;
       data.addAll(submitTugasDinas);
       log('query $submitTugasDinas');
-      debugger();
+      // debugger();
 
       final response = await _dio.post('',
           data: jsonEncode(data), options: Options(contentType: 'text/plain'));

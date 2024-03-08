@@ -71,7 +71,6 @@ class HomeScaffold extends ConsumerWidget {
       homeNotifierProvider,
       (_, state) => state.maybeWhen(
         orElse: () => null,
-        success: () => null,
         failure: () => AlertHelper.showSnackBar(
             //
             context,
@@ -91,6 +90,13 @@ class HomeScaffold extends ConsumerWidget {
     ref.listen<AsyncValue<WaRegister>>(waRegisterNotifierProvider,
         (_, state) async {
       if (!state.isLoading && state.hasValue && state.value != null) {
+        final val = state.value;
+        if (val!.phone == null || val.isRegistered == null) {
+          return ref
+              .read(waRegisterNotifierProvider.notifier)
+              .confirmRegisterWa(context: context);
+        }
+
         //
       } else {
         return state.showAlertDialogOnError(context, ref);

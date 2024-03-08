@@ -116,7 +116,7 @@ class DtPcListPage extends HookConsumerWidget {
                   data: (list) {
                     final approved = list
                         .where((e) =>
-                            (e.spvSta == true || e.hrdSta == true) &&
+                            (e.spvSta == true && e.hrdSta == true) &&
                             e.btlSta == false)
                         .toList();
                     return _list(scrollController, approved, onRefresh);

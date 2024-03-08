@@ -122,8 +122,8 @@ class CutiListPage extends HookConsumerWidget {
                     data: (list) {
                       final approved = list
                           .where((e) =>
-                              (e.spvSta == true || e.hrdSta == true) &&
-                              e.btlSta != true)
+                              (e.spvSta == true && e.hrdSta == true) &&
+                              e.btlSta == false)
                           .toList();
                       return _list(mst, approved, scrollController, onRefresh);
                     }),

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:face_net_authentication/send_wa/application/send_wa_notifier.dart';
 import 'package:face_net_authentication/widgets/v_button.dart';
@@ -97,7 +96,7 @@ class WaRegisterNotifier extends _$WaRegisterNotifier {
         await ref.read(waRegisterRepositoryProvider).getWaRegister();
 
     if (response == null) {
-      debugger();
+      // debugger();
       return WaRegister.initial();
     }
 
@@ -141,7 +140,7 @@ class WaRegisterNotifier extends _$WaRegisterNotifier {
       final bool? isRegistered =
           await showWaDialog(phone: phone ?? "", context: context);
 
-      debugger();
+      // debugger();
 
       if (isRegistered != null) {
         final WaRegister waRegister =
@@ -154,7 +153,7 @@ class WaRegisterNotifier extends _$WaRegisterNotifier {
               .read(waRegisterRepositoryProvider)
               .save(waRegisterJsonEncode);
 
-          debugger();
+          // debugger();
           return waRegister;
         });
 

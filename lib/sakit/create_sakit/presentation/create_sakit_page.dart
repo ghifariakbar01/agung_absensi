@@ -61,7 +61,7 @@ class CreateSakitPage extends HookConsumerWidget {
             ref.invalidate(sakitListControllerProvider);
             log('suratDokterTextController.value ${suratDokterTextController.value}');
 
-            debugger();
+            // debugger();
 
             if (suratDokterTextController.value == 'DS') {
               final id = await ref

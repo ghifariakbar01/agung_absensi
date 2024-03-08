@@ -66,7 +66,7 @@ class CreateSakitRemoteService {
 
       log('data ${jsonEncode(data)}');
       log('response $response');
-      debugger();
+      // debugger();
       final items = response.data?[0];
 
       if (items['status'] == 'Success') {

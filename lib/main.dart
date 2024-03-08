@@ -60,12 +60,13 @@ class MyApp extends ConsumerWidget {
         theme: Themes.lightTheme(context),
         darkTheme: Themes.darkTheme(context),
         themeMode: theme.when(
-            data: (theme) => theme.isEmpty
-                ? ThemeMode.system
-                : theme == 'dark'
-                    ? ThemeMode.dark
-                    : ThemeMode.light,
-            error: (__, _) => ThemeMode.system,
-            loading: () => ThemeMode.dark));
+          data: (t) => t.isEmpty
+              ? ThemeMode.system
+              : t == 'dark'
+                  ? ThemeMode.dark
+                  : ThemeMode.light,
+          loading: () => ThemeMode.dark,
+          error: (__, _) => ThemeMode.system,
+        ));
   }
 }

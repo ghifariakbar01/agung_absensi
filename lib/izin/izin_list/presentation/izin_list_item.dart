@@ -156,13 +156,16 @@ class IzinListItem extends HookConsumerWidget {
                           SizedBox(
                             height: 2,
                           ),
-                          Text(
-                            item.fullname!,
-                            style: Themes.customColor(9,
-                                color: item.btlSta == true
-                                    ? Colors.white
-                                    : Palette.primaryColor,
-                                fontWeight: FontWeight.w500),
+                          SizedBox(
+                            width: 125,
+                            child: Text(
+                              item.fullname!,
+                              style: Themes.customColor(9,
+                                  color: item.btlSta == true
+                                      ? Colors.white
+                                      : Palette.primaryColor,
+                                  fontWeight: FontWeight.w500),
+                            ),
                           ),
                         ],
                       ),
@@ -324,14 +327,37 @@ class IzinListItem extends HookConsumerWidget {
                       SizedBox(
                         height: 2,
                       ),
-                      Text(
-                        '${item.ket}',
-                        style: Themes.customColor(9,
-                            color: item.btlSta == true
-                                ? Colors.white
-                                : Palette.primaryColor,
-                            fontWeight: FontWeight.w500),
-                      ),
+                      Ink(
+                          height: 15,
+                          child: InkWell(
+                              onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return SimpleDialog(
+                                        title: Text(
+                                          'Diagnosa',
+                                          style: Themes.customColor(10),
+                                        ),
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(16.0),
+                                            child: Text(
+                                              item.ket!,
+                                              style: Themes.customColor(10),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  ),
+                              child: Text(
+                                '${item.ket}',
+                                style: Themes.customColor(9,
+                                    color: item.btlSta == true
+                                        ? Colors.white
+                                        : Palette.primaryColor,
+                                    fontWeight: FontWeight.w500),
+                              ))),
                     ],
                   ),
                 ],

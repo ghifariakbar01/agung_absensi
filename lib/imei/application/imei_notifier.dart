@@ -177,8 +177,12 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
         case false:
           // debugger(message: 'called');
 
-          await _onImeiTester(appleUsername, onImeiOK(), onImeiNotRegistered,
-              onImeiAlreadyRegistered);
+          await _onImeiTester(
+            onImeiOK,
+            onImeiNotRegistered,
+            onImeiAlreadyRegistered,
+            appleUsername,
+          );
 
           break;
       }
@@ -191,8 +195,12 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
         case true:
           // debugger(message: 'called');
           // FOR APPLE REVIEW
-          await _onImeiTester(appleUsername, onImeiOK(), onImeiNotRegistered,
-              onImeiAlreadyRegistered);
+          await _onImeiTester(
+            onImeiOK,
+            onImeiNotRegistered,
+            onImeiAlreadyRegistered,
+            appleUsername,
+          );
 
           break;
         case false:
@@ -204,8 +212,12 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
             } else if (imeiDBString != savedImei) {
               // debugger(message: 'called');
               // FOR APPLE REVIEW
-              await _onImeiTester(appleUsername, onImeiOK(),
-                  onImeiNotRegistered, onImeiAlreadyRegistered);
+              await _onImeiTester(
+                onImeiOK,
+                onImeiNotRegistered,
+                onImeiAlreadyRegistered,
+                appleUsername,
+              );
             }
           }();
           break;
@@ -216,10 +228,10 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
   }
 
   Future<void> _onImeiTester(
-    String? appleUsername,
-    Future<void> onImeiOK(),
+    Function onImeiOK,
     Future<void> onImeiNotRegistered(),
     Future<void> onImeiAlreadyRegistered(),
+    String? appleUsername,
   ) async {
     if (appleUsername != null) {
       // || appleUsername == 'Alfin'
