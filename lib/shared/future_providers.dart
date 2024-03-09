@@ -23,14 +23,12 @@ final getUserFutureProvider = FutureProvider<Unit>((ref) async {
 
     if (user.staf == null) {
       // IF USER STAFF NULL LOGOUT, MAKE USER LOGIN AGAIN
-      await ref.read(userNotifierProvider.notifier).logout();
+      await userNotifier.logout();
       return unit;
     }
 
     if (json.isNotEmpty) {
-      await ref
-          .read(userNotifierProvider.notifier)
-          .onUserParsedRaw(ref: ref, userModelWithPassword: user);
+      await userNotifier.onUserParsedRaw(ref: ref, user: user);
       return unit;
     }
 
@@ -76,8 +74,7 @@ final imeiInitFutureProvider =
         // 3. GET IMEI DATA
         String imei = await imeiNotifier.getImeiString();
         log('imeiInitFutureProvider -- 4 -- getImeiString');
-        await Future.delayed(
-            Duration(seconds: 1), () => imeiNotifier.changeSavedImei(imei));
+        imeiNotifier.changeSavedImei(imei);
         log('imeiInitFutureProvider -- 5 -- getImeiStringDb');
         imeiDb =
             await imeiNotifier.getImeiStringDb(idKary: user.IdKary ?? 'null');
@@ -113,47 +110,36 @@ final imeiInitFutureProvider =
 });
 
 final userInitFutureProvider =
-    FutureProvider.family<Unit, BuildContext>((ref, context) async {
-  bool doNeedProcess = false;
-  //
-  final userFOSOUpdate = ref.watch(userNotifierProvider
-      .select((value) => value.failureOrSuccessOptionUpdate));
+    FutureProvider.family<void, BuildContext>((ref, context) async {
+  final update = ref.read(userNotifierProvider).failureOrSuccessOptionUpdate;
 
-  if (userFOSOUpdate != none()) {
-    await Future.delayed(
+  if (update != none()) {
+    return Future.delayed(
         Duration(seconds: 1),
-        () => userFOSOUpdate.fold(
+        () => update.fold(
             () {},
             (either) => either.fold(
-                (failure) => failure.maybeMap(
-                      noConnection: (_) => ref
-                          .read(initUserStatusNotifierProvider.notifier)
-                          .letYouThrough(),
-                      orElse: () => showDialog(
-                        context: context,
-                        barrierDismissible: true,
-                        builder: (_) => VSimpleDialog(
-                          label: 'Error',
-                          labelDescription: failure.maybeMap(
-                            orElse: () => '',
-                            storage: (_) => 'Storage Penuh',
-                            server: (server) =>
-                                '${server.errorCode} ${server.message}',
+                    (failure) => failure.maybeMap(
+                          noConnection: (_) => ref
+                              .read(initUserStatusNotifierProvider.notifier)
+                              .letYouThrough(),
+                          orElse: () => showDialog(
+                            context: context,
+                            barrierDismissible: true,
+                            builder: (_) => VSimpleDialog(
+                              label: 'Error',
+                              asset: Assets.iconCrossed,
+                              labelDescription: failure.maybeMap(
+                                orElse: () => '',
+                                storage: (_) => 'Storage Penuh',
+                                server: (server) =>
+                                    '${server.errorCode} ${server.message}',
+                              ),
+                            ),
                           ),
-                          asset: Assets.iconCrossed,
-                        ),
-                      ),
-                    ),
-                (_) => doNeedProcess = true)));
+                        ), (_) async {
+                  ref.invalidate(getUserFutureProvider);
+                  await ref.read(getUserFutureProvider.future);
+                })));
   }
-
-  if (doNeedProcess) {
-    ref.invalidate(getUserFutureProvider);
-    await ref.read(getUserFutureProvider.future);
-    // DON'T REMOVE
-    //
-    // await ref.read(imeiInitFutureProvider(context).future);
-  }
-
-  return unit;
 });

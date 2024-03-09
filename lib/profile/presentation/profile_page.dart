@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dartz/dartz.dart';
 
 import 'package:face_net_authentication/widgets/loading_overlay.dart';
+import 'package:face_net_authentication/widgets/v_async_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -21,16 +22,6 @@ class ProfilePage extends ConsumerStatefulWidget {
 }
 
 class _ProfilePageState extends ConsumerState<ProfilePage> {
-  @override
-  void initState() {
-    super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await ref.read(userInitFutureProvider(context).future);
-      // await ref.read(getUserFutureProvider.future);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     // FOR UNLINK DEVICE
@@ -57,15 +48,19 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                       ),
                     ),
                   ),
-              (_) async => _onImeiCleared())),
+              (_) => _onImeiCleared())),
     );
 
-    return Stack(
-      children: [
-        const ProfileScaffold(),
-        const LoadingOverlay(isLoading: false)
-      ],
-    );
+    final userUpdate = ref.watch(userInitFutureProvider(context));
+
+    return VAsyncValueWidget(
+        value: userUpdate,
+        data: (_) => Stack(
+              children: [
+                const ProfileScaffold(),
+                const LoadingOverlay(isLoading: false)
+              ],
+            ));
   }
 
   Future<void> _onImeiCleared() async {

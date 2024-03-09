@@ -71,6 +71,8 @@ class UserNotifier extends StateNotifier<UserState> {
   setUser(UserModelWithPassword user) {
     // debugger();
     state = state.copyWith(user: user);
+    state = state.copyWith(user: user);
+    state = state.copyWith(user: user);
   }
 
   setUserInitial() {
@@ -86,20 +88,19 @@ class UserNotifier extends StateNotifier<UserState> {
   }
 
   Future<void> onUserParsedRaw(
-          {required Ref ref,
-          required UserModelWithPassword userModelWithPassword}) =>
-      onUserParsed(
-        initializeUser: () => Future.delayed(
-            Duration(seconds: 2), () => setUser(userModelWithPassword)),
-        initializeDioRequest: () => Future.delayed(
-          Duration(seconds: 1),
-          () => ref.read(dioRequestProvider).addAll({
-            "username": "${userModelWithPassword.nama}",
-            "server": "${userModelWithPassword.ptServer}",
-            "password": "${userModelWithPassword.password}",
-          }),
-        ),
-      );
+      {required Ref ref, required UserModelWithPassword user}) async {
+    return onUserParsed(
+      initializeUser: () => setUser(user),
+      initializeDioRequest: () => Future.delayed(
+        Duration(seconds: 1),
+        () => ref.read(dioRequestProvider).addAll({
+          "username": "${user.nama}",
+          "server": "${user.ptServer}",
+          "password": "${user.password}",
+        }),
+      ),
+    );
+  }
 
   Future<void> logout() async {
     Either<AuthFailure, Unit> failureOrSuccessOption;
