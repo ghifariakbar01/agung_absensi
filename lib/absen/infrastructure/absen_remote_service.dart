@@ -16,11 +16,13 @@ import '../application/absen_state.dart';
 class AbsenRemoteService {
   AbsenRemoteService(
     this._dio,
+    this._dioHosting,
     this._dioRequest,
     this._userModelWithPassword,
   );
 
   final Dio _dio;
+  final Dio _dioHosting;
   final Map<String, String> _dioRequest;
   final UserModelWithPassword _userModelWithPassword;
 
@@ -107,6 +109,16 @@ class AbsenRemoteService {
       final responseProd = await _dio.post('',
           data: jsonEncode(dataProd),
           options: Options(contentType: 'text/plain'));
+      final responseHosting = await _dioHosting.post('',
+          data: jsonEncode(dataProd),
+          options: Options(contentType: 'text/plain'));
+
+      if (responseProd != responseHosting) {
+        final message = 'Error server hosting / original';
+        final errorCode = 404;
+
+        throw RestApiExceptionWithMessage(errorCode, message);
+      }
 
       // final items = response.data?[0];
 
@@ -271,6 +283,15 @@ class AbsenRemoteService {
 
       final response = await _dio.post('',
           data: jsonEncode(data), options: Options(contentType: 'text/plain'));
+      final responseHosting = await _dioHosting.post('',
+          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
+
+      if (responseHosting != response) {
+        final message = 'Error server hosting / original';
+        final errorCode = 404;
+
+        throw RestApiExceptionWithMessage(errorCode, message);
+      }
 
       final items = response.data?[0];
 
@@ -347,6 +368,15 @@ class AbsenRemoteService {
 
       final response = await _dio.post('',
           data: jsonEncode(data), options: Options(contentType: 'text/plain'));
+      final responseHosting = await _dioHosting.post('',
+          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
+
+      if (responseHosting != response) {
+        final message = 'Error server hosting / original';
+        final errorCode = 404;
+
+        throw RestApiExceptionWithMessage(errorCode, message);
+      }
 
       log('data baseUrl ${_dio.options.baseUrl}');
 

@@ -64,6 +64,7 @@ import '../user/application/user_state.dart';
 
 // NETWORKING & ROUTER
 final dioProvider = Provider((ref) => Dio());
+final dioProviderHosting = Provider((ref) => Dio());
 
 final dioRequestProvider = Provider<Map<String, String>>(
   (ref) => {"kode": "110011"},
@@ -165,6 +166,7 @@ final editProfileNotifierProvider =
 // ABSEN
 final absenRemoteServiceProvider = Provider((ref) => AbsenRemoteService(
     ref.watch(dioProvider),
+    ref.watch(dioProviderHosting),
     ref.watch(dioRequestProvider),
     ref.watch(userNotifierProvider).user));
 
