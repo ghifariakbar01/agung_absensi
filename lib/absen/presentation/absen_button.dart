@@ -210,7 +210,7 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                         ? isTesting
                         : nearest < minDistance && nearest != 0),
                 onPressed: () async {
-                  await HapticFeedback.vibrate();
+                  await HapticFeedback.selectionClick();
 
                   // ALAMAT GEOFENCE
                   final alamat = ref.read(geofenceProvider).nearestCoordinates;

@@ -43,7 +43,7 @@ final tugasDinasApproveRepositoryProvider =
 typedef TugasDinasApproveRepositoryRef
     = ProviderRef<TugasDinasApproveRepository>;
 String _$tugasDinasApproveControllerHash() =>
-    r'0ce39491a005120b286d20f9508b15c42c3eca7f';
+    r'5a9f94fc31b40f81a3bbbbe069da1e984d10b5bd';
 
 /// See also [TugasDinasApproveController].
 @ProviderFor(TugasDinasApproveController)
