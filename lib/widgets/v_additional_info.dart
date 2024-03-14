@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../style/style.dart';
+import '../utils/os_vibrate.dart';
 
 class VAdditionalInfo extends StatelessWidget {
   const VAdditionalInfo({Key? key, required this.infoMessage})
@@ -13,7 +13,7 @@ class VAdditionalInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Ink(
       child: InkWell(
-          onTap: () => HapticFeedback.vibrate().then((_) => showDialog(
+          onTap: () => OSVibrate.vibrate().then((_) => showDialog(
               context: context,
               builder: (context) => Dialog(
                     child: Container(

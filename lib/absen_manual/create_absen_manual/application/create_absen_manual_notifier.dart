@@ -96,10 +96,10 @@ class CreateAbsenManualNotifier extends _$CreateAbsenManualNotifier {
     try {
       debugger();
 
-      // final cUser = ref.read(userNotifierProvider).user.nama!;
-      // final String messageContent =
-      //     " ( Testing Apps ) Terdapat Waiting Aprove Pengajuan Absen Manual Baru Telah Diinput Oleh : $cUser ";
-      // await _sendWaToHead(idUser: idUser, messageContent: messageContent);
+      final cUser = ref.read(userNotifierProvider).user.nama!;
+      final String messageContent =
+          " ( Testing Apps ) Terdapat Waiting Aprove Pengajuan Absen Manual Baru Telah Diinput Oleh : $cUser ";
+      await _sendWaToHead(idUser: idUser, messageContent: messageContent);
 
       if (jenisAbsen.toLowerCase() == 'lln') {
         state = await AsyncValue.guard(() =>

@@ -1,14 +1,14 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:face_net_authentication/cuti/create_cuti/application/create_cuti_notifier.dart';
-import 'package:face_net_authentication/cuti/cuti_approve/application/cuti_approve_notifier.dart';
-import 'package:face_net_authentication/cuti/cuti_list/presentation/cuti_dtl_dialog.dart';
-import 'package:face_net_authentication/widgets/v_async_widget.dart';
+// import 'package:face_net_authentication/cuti/create_cuti/application/create_cuti_notifier.dart';
+// import 'package:face_net_authentication/cuti/cuti_approve/application/cuti_approve_notifier.dart';
+// import 'package:face_net_authentication/cuti/cuti_list/presentation/cuti_dtl_dialog.dart';
+// import 'package:face_net_authentication/widgets/v_async_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../sakit/sakit_list/presentation/sakit_dialog.dart';
-import '../../../shared/providers.dart';
+// import '../../../sakit/sakit_list/presentation/sakit_dialog.dart';
+// import '../../../shared/providers.dart';
 import '../../../style/style.dart';
 
 import '../../../widgets/v_dialogs.dart';
@@ -45,8 +45,8 @@ class GantiHariListItem extends HookConsumerWidget {
     //         .inDays
     //     : DateTime.now().difference(DateTime.parse(item.cDate!)).inDays;
 
-    final jenisCuti = ref.watch(jenisCutiNotifierProvider);
-    final alasanCuti = ref.watch(alasanCutiNotifierProvider);
+    // final jenisCuti = ref.watch(jenisCutiNotifierProvider);
+    // final alasanCuti = ref.watch(alasanCutiNotifierProvider);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -80,7 +80,7 @@ class GantiHariListItem extends HookConsumerWidget {
                       Text(
                         DateFormat(
                           'EEEE, dd MMMM yyyy',
-                        ).format(DateTime.parse(item.cDate!)),
+                        ).format(DateTime.parse(item.cDate)),
                         style: Themes.customColor(10,
                             fontWeight: FontWeight.w500,
                             color: item.btlSta == true ? Colors.white : null),
@@ -162,7 +162,7 @@ class GantiHariListItem extends HookConsumerWidget {
                             height: 2,
                           ),
                           Text(
-                            item.fullname!,
+                            item.fullname,
                             style: Themes.customColor(9,
                                 color: item.btlSta == true
                                     ? Colors.white
@@ -199,7 +199,7 @@ class GantiHariListItem extends HookConsumerWidget {
                                   Text(
                                     DateFormat(
                                       'dd MMM yyyy',
-                                    ).format(DateTime.parse(item.tglStart!)),
+                                    ).format(DateTime.parse(item.tglStart)),
                                     style: Themes.customColor(9,
                                         color: item.btlSta == true
                                             ? Colors.white
@@ -230,7 +230,7 @@ class GantiHariListItem extends HookConsumerWidget {
                                   Text(
                                     DateFormat(
                                       'dd MMM yyyy',
-                                    ).format(DateTime.parse(item.tglEnd!)),
+                                    ).format(DateTime.parse(item.tglEnd)),
                                     style: Themes.customColor(9,
                                         color: item.btlSta == true
                                             ? Colors.white
@@ -383,7 +383,7 @@ class GantiHariListItem extends HookConsumerWidget {
                                           Padding(
                                             padding: const EdgeInsets.all(16.0),
                                             child: Text(
-                                              item.ket!,
+                                              item.ket,
                                               style: Themes.customColor(10),
                                             ),
                                           ),
@@ -541,7 +541,7 @@ class GantiHariListItem extends HookConsumerWidget {
                                           borderRadius: BorderRadius.only(
                                             bottomLeft: Radius.circular(8),
                                           ),
-                                          color: item.spvSta! == true
+                                          color: item.spvSta == true
                                               ? Palette.green
                                               : Palette.red2,
                                           boxShadow: [
@@ -570,7 +570,7 @@ class GantiHariListItem extends HookConsumerWidget {
                                   ),
                                 ),
                               ),
-                              if (item.spvSta! == true)
+                              if (item.spvSta == true)
                                 Positioned(
                                   right: 5,
                                   bottom: 0,
@@ -579,7 +579,7 @@ class GantiHariListItem extends HookConsumerWidget {
                                     Assets.iconThumbUp,
                                   ),
                                 ),
-                              if (item.spvSta! == false)
+                              if (item.spvSta == false)
                                 Positioned(
                                   right: 5,
                                   bottom: 0,
@@ -677,7 +677,7 @@ class GantiHariListItem extends HookConsumerWidget {
                                         borderRadius: BorderRadius.only(
                                           bottomRight: Radius.circular(8),
                                         ),
-                                        color: item.hrdSta! == true
+                                        color: item.hrdSta == true
                                             ? Palette.green
                                             : Palette.red2,
                                       ),
@@ -697,7 +697,7 @@ class GantiHariListItem extends HookConsumerWidget {
                                   ),
                                 ),
                               ),
-                              if (item.hrdSta! == true)
+                              if (item.hrdSta == true)
                                 Positioned(
                                   left: 5,
                                   bottom: 0,
@@ -709,7 +709,7 @@ class GantiHariListItem extends HookConsumerWidget {
                                     ),
                                   ),
                                 ),
-                              if (item.hrdSta! == false)
+                              if (item.hrdSta == false)
                                 Positioned(
                                   left: 5,
                                   bottom: 0,

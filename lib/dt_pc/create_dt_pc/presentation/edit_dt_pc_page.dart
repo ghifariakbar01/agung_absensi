@@ -13,6 +13,7 @@ import 'package:intl/intl.dart';
 import '../../../constants/assets.dart';
 import '../../../err_log/application/err_log_notifier.dart';
 import '../../../shared/providers.dart';
+import '../../../utils/os_vibrate.dart';
 import '../../../widgets/alert_helper.dart';
 import '../../../widgets/v_async_widget.dart';
 import '../../../style/style.dart';
@@ -321,24 +322,23 @@ class EditDtPcPage extends HookConsumerWidget {
                                 await ref
                                     .read(createDtPcNotifierProvider.notifier)
                                     .updateDtPc(
-                                      id: item.idDt!,
-                                      uUser: user.nama!,
-                                      idUser: user.idUser!,
-                                      dtTgl: dtTglTextController.value,
-                                      jam: jamTextController.value,
-                                      kategori: kategori,
-                                      ket: keteranganTextController.text,
-                                      onError: (msg) => HapticFeedback.vibrate()
-                                          .then((_) => showDialog(
-                                              context: context,
-                                              barrierDismissible: true,
-                                              builder: (_) => VSimpleDialog(
-                                                    color: Palette.red,
-                                                    asset: Assets.iconCrossed,
-                                                    label: 'Oops',
-                                                    labelDescription: msg,
-                                                  ))),
-                                    );
+                                        id: item.idDt!,
+                                        uUser: user.nama!,
+                                        idUser: user.idUser!,
+                                        dtTgl: dtTglTextController.value,
+                                        jam: jamTextController.value,
+                                        kategori: kategori,
+                                        ket: keteranganTextController.text,
+                                        onError: (msg) => OSVibrate.vibrate()
+                                            .then((value) => showDialog(
+                                                context: context,
+                                                barrierDismissible: true,
+                                                builder: (_) => VSimpleDialog(
+                                                      color: Palette.red,
+                                                      asset: Assets.iconCrossed,
+                                                      label: 'Oops',
+                                                      labelDescription: msg,
+                                                    ))));
                               }
                             }),
                       )

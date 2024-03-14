@@ -71,9 +71,6 @@ class HomeNotifier extends StateNotifier<HomeState> {
               asset: Assets.iconLocationOff),
         );
       } else {
-        final redirectToPermission =
-            context.pushNamed(RouteNames.permissionRoute);
-
         if (isLocationDenied) {
           return showDialog(
             context: context,
@@ -82,7 +79,7 @@ class HomeNotifier extends StateNotifier<HomeState> {
                 labelDescription:
                     'Mohon nyalakan Izin Lokasi untuk E-FINGER. Terimakasih 🙏',
                 asset: Assets.iconLocationOff),
-          ).then((_) => redirectToPermission);
+          ).then((_) => context.pushNamed(RouteNames.permissionRoute));
         } else {
           await context.pushNamed(route);
           return;

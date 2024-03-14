@@ -103,10 +103,10 @@ class CreateDtPcNotifier extends _$CreateDtPcNotifier {
         tglAkhirInDateTime: DateTime.now(),
       );
 
-      // final cUser = ref.read(userNotifierProvider).user.nama!;
-      // final String messageContent =
-      //     " ( Testing Apps ) Terdapat Waiting Approve Pengajuan DT/PC Baru Telah Diinput Oleh : $cUser ";
-      // await _sendWaToHead(idUser: idUser, messageContent: messageContent);
+      final cUser = ref.read(userNotifierProvider).user.nama!;
+      final String messageContent =
+          " ( Testing Apps ) Terdapat Waiting Approve Pengajuan DT/PC Baru Telah Diinput Oleh : $cUser ";
+      await _sendWaToHead(idUser: idUser, messageContent: messageContent);
 
       state = await AsyncValue.guard(
           () => ref.read(createDtPcRepositoryProvider).submitDtPc(

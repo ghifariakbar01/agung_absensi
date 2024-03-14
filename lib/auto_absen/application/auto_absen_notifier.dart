@@ -1,10 +1,9 @@
 import 'dart:developer';
 
-import 'package:flutter/services.dart';
-
 import '../../absen/application/absen_enum.dart';
 import '../../absen/application/absen_state.dart';
 import '../../background/application/saved_location.dart';
+import '../../utils/os_vibrate.dart';
 import 'auto_absen_state.dart';
 
 import '../../constants/assets.dart';
@@ -74,12 +73,12 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
                         pressedLabel: 'ABSEN IN',
                         backPressedLabel: 'ABSEN OUT',
                         onPressed: () async {
-                          await HapticFeedback.vibrate();
+                          await OSVibrate.vibrate();
                           jenisAbsenShift = JenisAbsen.absenIn;
                           buildContext.pop();
                         },
                         onBackPressed: () async {
-                          await HapticFeedback.vibrate();
+                          await OSVibrate.vibrate();
                           jenisAbsenShift = JenisAbsen.absenOut;
                           buildContext.pop();
                         },
@@ -99,7 +98,7 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
 
               final date = absenSaved.date;
 
-              await HapticFeedback.vibrate().then((_) => showDialog(
+              await OSVibrate.vibrate().then((_) => showDialog(
                   context: buildContext,
                   barrierDismissible: false,
                   builder: (context) => VAlertDialog(
@@ -177,7 +176,7 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
                       },
                       onBackPressed: () async {
                         buildContext.pop();
-                        await HapticFeedback.vibrate();
+                        await OSVibrate.vibrate();
                         await deleteSavedLocation(
                             savedLocation: absenSaved, context: context);
                       }));
@@ -185,7 +184,7 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
               incrementIndex();
             } else if (udahAbsenMasukSamaKeluar) {
               // debugger();
-              await HapticFeedback.vibrate();
+              await OSVibrate.vibrate();
 
               // delete saved absen as we don't need them.
               await deleteSavedLocation(
@@ -217,7 +216,7 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
       BuildContext buildContext, SavedLocation absenSaved) async {
     {
       buildContext.pop();
-      await HapticFeedback.vibrate();
+      await OSVibrate.vibrate();
       await showDialog(
         context: buildContext,
         barrierDismissible: true,
@@ -235,7 +234,7 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
       BuildContext buildContext, String code, String message) async {
     {
       buildContext.pop();
-      await HapticFeedback.vibrate();
+      await OSVibrate.vibrate();
       await showDialog(
           context: buildContext,
           barrierDismissible: true,

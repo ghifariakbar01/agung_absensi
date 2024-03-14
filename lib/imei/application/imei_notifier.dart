@@ -13,7 +13,6 @@ import '../../domain/edit_failure.dart';
 import '../../domain/imei_failure.dart';
 import '../../edit_profile/infrastructure/edit_profile_repository.dart';
 import '../../imei_introduction/application/shared/imei_introduction_providers.dart';
-import '../../permission/application/shared/permission_introduction_providers.dart';
 import '../../tc/application/shared/tc_providers.dart';
 import '../../user/application/user_model.dart';
 import '../infrastructure/imei_repository.dart';
@@ -63,10 +62,6 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
 
     ref.read(userNotifierProvider.notifier).setUserInitial();
     ref.read(initUserStatusNotifierProvider.notifier).hold();
-
-    // reset route
-    final permissionNotifier = ref.read(permissionNotifierProvider.notifier);
-    await permissionNotifier.checkAndUpdateLocation();
 
     final tcNotifier = ref.read(tcNotifierProvider.notifier);
     await tcNotifier.checkAndUpdateStatusTC();

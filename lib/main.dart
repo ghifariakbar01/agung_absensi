@@ -8,7 +8,6 @@ import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'config/configuration.dart';
 import 'imei_introduction/application/shared/imei_introduction_providers.dart';
 import 'ip/application/ip_notifier.dart';
-import 'permission/application/shared/permission_introduction_providers.dart';
 import 'shared/providers.dart';
 import 'style/style.dart';
 import 'tc/application/shared/tc_providers.dart';
@@ -36,7 +35,6 @@ final initializationProvider =
 
   await ref.read(tcNotifierProvider.notifier).checkAndUpdateStatusTC();
   await ref.read(authNotifierProvider.notifier).checkAndUpdateAuthStatus();
-  await ref.read(permissionNotifierProvider.notifier).checkAndUpdateLocation();
   await ref.read(imeiIntroNotifierProvider.notifier).checkAndUpdateImeiIntro();
 
   return unit;
@@ -57,7 +55,6 @@ class MyApp extends ConsumerWidget {
       debugShowMaterialGrid: false,
       themeMode: ThemeMode.light,
       theme: Themes.lightTheme(context),
-      // darkTheme: Themes.darkTheme(context),
     );
   }
 }

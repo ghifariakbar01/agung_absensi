@@ -12,6 +12,7 @@ import 'package:intl/intl.dart';
 import '../../../constants/assets.dart';
 import '../../../err_log/application/err_log_notifier.dart';
 import '../../../shared/providers.dart';
+import '../../../utils/os_vibrate.dart';
 import '../../../widgets/alert_helper.dart';
 import '../../../widgets/v_async_widget.dart';
 import '../../../style/style.dart';
@@ -474,25 +475,27 @@ class EditAbsenManualPage extends HookConsumerWidget {
                                     .read(createAbsenManualNotifierProvider
                                         .notifier)
                                     .updateAbsenManual(
-                                      id: item.idAbsenmnl,
-                                      idUser: user.idUser!,
-                                      uUser: user.nama!,
-                                      tgl: tglTextController.value!,
-                                      jamAwal: jamAwalTextController.value!,
-                                      jenisAbsen: jenisTextController.value!,
-                                      jamAkhir: jamAkhirTextController.value!,
-                                      ket: keteranganTextController.text,
-                                      onError: (msg) => HapticFeedback.vibrate()
-                                          .then((_) => showDialog(
-                                              context: context,
-                                              barrierDismissible: true,
-                                              builder: (_) => VSimpleDialog(
-                                                    color: Palette.red,
-                                                    asset: Assets.iconCrossed,
-                                                    label: 'Oops',
-                                                    labelDescription: msg,
-                                                  ))),
-                                    );
+                                        id: item.idAbsenmnl,
+                                        idUser: user.idUser!,
+                                        uUser: user.nama!,
+                                        tgl: tglTextController.value!,
+                                        jamAwal: jamAwalTextController.value!,
+                                        jenisAbsen: jenisTextController.value!,
+                                        jamAkhir: jamAkhirTextController.value!,
+                                        ket: keteranganTextController.text,
+                                        onError: (msg) async =>
+                                            OSVibrate.vibrate().then(
+                                              (value) => showDialog(
+                                                  context: context,
+                                                  barrierDismissible: true,
+                                                  builder: (_) => VSimpleDialog(
+                                                        color: Palette.red,
+                                                        asset:
+                                                            Assets.iconCrossed,
+                                                        label: 'Oops',
+                                                        labelDescription: msg,
+                                                      )),
+                                            ));
                               }
                             }),
                       )

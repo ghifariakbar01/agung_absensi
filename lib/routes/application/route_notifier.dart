@@ -9,8 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-// import '../../../pages/change_pass/change_password_page.dart';
-
 import '../../absen/presentation/absen_page.dart';
 
 import '../../absen_manual/absen_manual_list/application/absen_manual_list.dart';
@@ -125,14 +123,6 @@ class RouterNotifier extends ChangeNotifier {
             return RouteNames.initUserNameRoute;
           }
         }
-
-        // if (weAlreadyDidAllProcedures) {
-        //   return RouteNames.initUserNameRoute;
-        // }
-
-        // log('state.location ${state.location} weInitializedUser');
-        // log('$initUserState $weInitializedUser weInitializedUser');
-        // log('$imeiIntroState $weVisitedImei weVisitedImei $weVisitedTC');
 
         return null;
       },

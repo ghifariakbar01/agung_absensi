@@ -113,10 +113,10 @@ class CreateTugasDinasNotifier extends _$CreateTugasDinasNotifier {
     state = const AsyncLoading();
 
     try {
-      // final cUser = ref.read(userNotifierProvider).user.nama!;
-      // final String messageContent =
-      //     " ( Testing Apps ) Terdapat Waiting Aprove Pengajuan Absen Manual Baru Telah Diinput Oleh : $cUser ";
-      // await _sendWaToHead(idUser: idUser, messageContent: messageContent);
+      final cUser = ref.read(userNotifierProvider).user.nama!;
+      final String messageContent =
+          " ( Testing Apps ) Terdapat Waiting Aprove Pengajuan Tugas Dinas Baru Telah Diinput Oleh : $cUser ";
+      await _sendWaToHead(idUser: idUser, messageContent: messageContent);
 
       // debugger();
       final CreateSakit create = await ref

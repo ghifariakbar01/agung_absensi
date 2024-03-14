@@ -9,6 +9,7 @@ import '../../routes/application/route_names.dart';
 import '../../send_wa/application/phone_num.dart';
 import '../../shared/providers.dart';
 import '../../style/style.dart';
+import '../../utils/os_vibrate.dart';
 import '../../wa_register/application/wa_register.dart';
 
 import '../../wa_register/application/wa_register_notifier.dart';
@@ -217,7 +218,7 @@ class HomeScaffold extends ConsumerWidget {
                                     data: (phone) => Ink(
                                       child: InkWell(
                                         onTap: () {
-                                          HapticFeedback.vibrate().then((_) =>
+                                          OSVibrate.vibrate().then((_) =>
                                               showDialog(
                                                   context: context,
                                                   barrierDismissible: true,

@@ -1,5 +1,7 @@
 import 'dart:developer';
+import 'dart:io';
 
+import 'package:face_net_authentication/utils/os_vibrate.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -39,7 +41,7 @@ class AbsenButton extends ConsumerStatefulWidget {
 
 class _AbsenButtonState extends ConsumerState<AbsenButton> {
   // MODIFY WHEN TESTING
-  bool isTesting = false;
+  bool isTesting = true;
 
   @override
   Widget build(BuildContext context) {
@@ -240,7 +242,7 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                         ? isTesting
                         : nearest < minDistance && nearest != 0),
                 onPressed: () async {
-                  await HapticFeedback.vibrate();
+                  await OSVibrate.vibrate();
 
                   // ALAMAT GEOFENCE
                   final alamat = ref.read(geofenceProvider).nearestCoordinates;
@@ -277,7 +279,7 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
 
   Future<void> _onBerhasilSimpanAbsen(BuildContext context) async {
     {
-      await HapticFeedback.vibrate();
+      await OSVibrate.vibrate();
       await ref.read(backgroundNotifierProvider.notifier).getSavedLocations();
       await showDialog(
           context: context,
@@ -295,7 +297,7 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
       // RESET BUTTON
       ref.read(buttonResetVisibilityProvider.notifier).state = false;
       ref.read(absenOfflineModeProvider.notifier).state = false;
-      await HapticFeedback.vibrate();
+      await OSVibrate.vibrate();
       await ref.read(absenNotifierProvidier.notifier).getAbsenToday();
 
       String jamBerhasilStr = StringUtils.hoursDate(
@@ -393,7 +395,7 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
     required double currentLocationLongitude,
   }) async {
     {
-      await HapticFeedback.vibrate();
+      await OSVibrate.vibrate();
 
       DateTime refreshed = await ref.refresh(networkTimeFutureProvider.future);
       String idGeof = ref.read(
@@ -450,7 +452,8 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
     required double currentLocationLongitude,
   }) async {
     {
-      await HapticFeedback.vibrate();
+      await OSVibrate.vibrate();
+
       DateTime refreshed = await ref.refresh(networkTimeFutureProvider.future);
       String idGeof = ref.read(geofenceProvider).nearestCoordinates.id;
       String imei = ref.read(imeiNotifierProvider).imei;

@@ -13,6 +13,7 @@ import '../../../constants/assets.dart';
 import '../../../err_log/application/err_log_notifier.dart';
 import '../../../routes/application/route_names.dart';
 import '../../../shared/providers.dart';
+import '../../../utils/os_vibrate.dart';
 import '../../../widgets/alert_helper.dart';
 import '../../../widgets/v_async_widget.dart';
 import '../../../style/style.dart';
@@ -525,7 +526,7 @@ class EditTugasDinasPage extends HookConsumerWidget {
                                       khusus: khusus.value,
                                       jamAkhir: jamAkhirTextController.value!,
                                       ket: keteranganTextController.text,
-                                      onError: (msg) => HapticFeedback.vibrate()
+                                      onError: (msg) => OSVibrate.vibrate()
                                           .then((_) => showDialog(
                                               context: context,
                                               barrierDismissible: true,
