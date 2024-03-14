@@ -75,10 +75,15 @@ class TugasDinasListPage extends HookConsumerWidget {
       return Future.value();
     };
 
-    final infoMessage =
+    final infoMessage = "Ketentuan Tugas Dinas Ketegori Luar Kota \n"
         "1. Input Pengajuan Tugas Dinas maksimal harus di input pada H-3 sebelum keberangkatan, \n"
         "2. Harus sudah Approve atasan maksimal H-3 dari keberangkatan \n"
-        "3. dari HR sudah harus di approve maksimal H+1 dari approve atasan. (Perhitungan Hari Berdasarkan Hari Kerja)";
+        "3. dari HR sudah harus di approve maksimal H+1 dari approve atasan. (Perhitungan Hari Berdasarkan Hari Kerja)\n\n"
+        "Ketentuan Tugas Dinas Ketegori Selain Luar Kota \n"
+        "1. Input tugas dinas dalam kota harus diinput H-0. \n"
+        "2. Diapprove atasan H+1 setelah karyawan input. \n"
+        "3. Approve HR H+1 setelah atasan approve.\n"
+        "4. Tugas dinas kategori Kunjungan diperlukan Approve dari GM";
 
     final errLog = ref.watch(errLogControllerProvider);
 
