@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/application/absen/absen_enum.dart';
 import 'package:face_net_authentication/application/background/saved_location.dart';
@@ -29,18 +27,15 @@ class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
     state = state.copyWith(isSubmitting: true, failureOrSuccessOption: none());
 
     failureOrSuccess = await _absenRepository.absen(
-        date: date,
-        dbDate: dbDate,
-        lokasi: lokasi,
-        latitude: latitude,
-        longitude: longitude,
-        inOrOut: inOrOut,
-        idGeof: idGeof,
-        imei: imei);
-
-    debugger(message: 'called');
-
-    log('failureOrSuccess $failureOrSuccess');
+      imei: imei,
+      date: date,
+      idGeof: idGeof,
+      dbDate: dbDate,
+      lokasi: lokasi,
+      inOrOut: inOrOut,
+      latitude: latitude,
+      longitude: longitude,
+    );
 
     state = state.copyWith(
         isSubmitting: false,

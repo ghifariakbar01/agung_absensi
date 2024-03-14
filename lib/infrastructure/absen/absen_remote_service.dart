@@ -16,11 +16,13 @@ import '../exceptions.dart';
 class AbsenRemoteService {
   AbsenRemoteService(
     this._dio,
+    this._dioHosting,
     this._dioRequest,
     this._userModelWithPassword,
   );
 
   final Dio _dio;
+  final Dio _dioHosting;
   final Map<String, String> _dioRequest;
   final UserModelWithPassword _userModelWithPassword;
 
@@ -52,9 +54,9 @@ class AbsenRemoteService {
     // required int hrdSta,
     // required String periode,
   }) async {
-    final currentMonth = StringUtils.monthDate(dbDate);
-    //
-    final currentDate = StringUtils.midnightDate(date);
+    // final currentMonth = StringUtils.monthDate(dbDate);
+    // //
+    // final currentDate = StringUtils.midnightDate(date);
     final trimmedDate = StringUtils.trimmedDate(date);
     //
     final trimmedDateDb = StringUtils.trimmedDate(dbDate);
@@ -63,38 +65,9 @@ class AbsenRemoteService {
     final coancenate = inOrOut == JenisAbsen.absenIn ? 'masuk' : 'keluar';
 
     try {
-      // final data = _dioRequest;
+      final data = _dioRequest;
 
-      debugger(message: 'called');
-
-      // data.addAll({
-      //   "mode": 'INSERT',
-      // });
-
-      // if (inOrOut == JenisAbsen.absenIn) {
-      //   data.addAll({
-      //     "command": "INSERT INTO $dbName " +
-      //         "(id_absenmnl, id_user, tgl, jam_awal, ket, c_date, hrd_tgl, c_user, u_date, u_user, spv_sta, spv_tgl, hrd_sta, btl_sta, periode, jenis_absen, latitude_$coancenate, longtitude_$coancenate, lokasi_$coancenate)" +
-      //         " VALUES " +
-      //         "('$idAbsenMnl', '${_userModelWithPassword.idUser}', '$currentDate', '$trimmedDate', 'ABSEN MASUK', '$trimmedDateDb', '$trimmedDateDb', '${_userModelWithPassword.nama}','$trimmedDateDb', '${_userModelWithPassword.nama}', 0, '$trimmedDateDb', 0, 0, '$currentMonth', '$jenisAbsen', '$latitude', '$longitude', '$lokasi')",
-      //   });
-      // }
-
-      // if (inOrOut == JenisAbsen.absenOut) {
-      //   data.addAll({
-      //     "command":
-      //         "UPDATE $dbName SET latitude_keluar = '$latitude', longtitude_keluar = '$longitude', jam_akhir = '$trimmedDate', u_date = '$trimmedDateDb', lokasi_keluar = '$lokasi', ket = 'ABSEN MASUK DAN ABSEN PULANG' WHERE id_user = '${_userModelWithPassword.idUser}' AND tgl = '$currentDate'",
-      //   });
-      // }
-
-      // final response = await _dio.post('',
-      //     data: jsonEncode(data), options: Options(contentType: 'text/plain'));
-
-      final dataProd = _dioRequest;
-
-      debugger(message: 'called');
-
-      dataProd.addAll({
+      data.addAll({
         "mode": 'INSERT',
         "command": "INSERT INTO $dbNameProd " +
             "(tgljam, mode, id_user, imei, id_geof, c_date, c_user, latitude_$coancenate, longitude_$coancenate, lokasi_$coancenate)" +
@@ -104,27 +77,40 @@ class AbsenRemoteService {
 
       debugger(message: 'called');
 
-      final responseProd = await _dio.post('',
-          data: jsonEncode(dataProd),
-          options: Options(contentType: 'text/plain'));
+      final response = await _dio.post('',
+          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
 
-      // final items = response.data?[0];
+      final response2 = await _dioHosting.post('',
+          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
 
-      final itemsProd = responseProd.data?[0];
+      log('response2 $response2');
+
+      final items = response.data?[0];
+      final isSuccess = items['status'] == 'Success';
+
+      final items2 = response2.data?[0];
+      final isSuccess2 = items2['status'] == 'Success';
+
+      if (isSuccess2 != isSuccess) {
+        debugger();
+        log('items2 $items2 items $items');
+
+        final message = 'Error server hosting / original';
+        final errorCode = 404;
+
+        throw RestApiExceptionWithMessage(errorCode, message);
+      }
 
       // log('ABSEN REMOTE: items $items');
 
-      log('ABSEN REMOTE: itemsProd $itemsProd');
+      log('ABSEN REMOTE: items $items');
 
-      if (itemsProd['status'] == 'Success') {
+      if (items['status'] == 'Success') {
         // final absenExist = items['items'] != null && items['items'] is List;
-
-        final absenProdExist =
-            itemsProd['items'] != null && itemsProd['items'] is List;
 
         debugger(message: 'called');
 
-        if (absenProdExist) {
+        if (items['items'] != null && items['items'] is List) {
           // if (items['errornum'] != null && items['errornum'] as int != 0) {
           //   debugger(message: 'called');
           //   final message = items['error'] as String?;
@@ -132,12 +118,11 @@ class AbsenRemoteService {
 
           //   throw RestApiExceptionWithMessage(errorCode, message);
           // }
-          if (itemsProd['errornum'] != null &&
-              itemsProd['errornum'] as int != 0) {
+          if (items['errornum'] != null && items['errornum'] as int != 0) {
             debugger(message: 'called');
 
-            final message = itemsProd['error'] as String?;
-            final errorCode = itemsProd['errornum'] as int;
+            final message = items['error'] as String?;
+            final errorCode = items['errornum'] as int;
 
             throw RestApiExceptionWithMessage(errorCode, message);
           }
@@ -153,8 +138,8 @@ class AbsenRemoteService {
           //   throw RestApiExceptionWithMessage(errorCode, message);
           // }
 
-          final message = itemsProd['error'] as String?;
-          final errorCode = itemsProd['errornum'] as int;
+          final message = items['error'] as String?;
+          final errorCode = items['errornum'] as int;
 
           throw RestApiExceptionWithMessage(errorCode, message);
         }
@@ -172,8 +157,8 @@ class AbsenRemoteService {
 
         debugger(message: 'called');
 
-        final message = itemsProd['error'] as String?;
-        final errorCode = itemsProd['errornum'] as int;
+        final message = items['error'] as String?;
+        final errorCode = items['errornum'] as int;
 
         throw RestApiExceptionWithMessage(errorCode, message);
       }
