@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 
+import '../application/jenis_tugas_dinas.dart';
 import '../application/user_list.dart';
 import 'create_tugas_dinas_remote_service.dart';
 
@@ -69,9 +70,9 @@ class CreateTugasDinasRepository {
     );
   }
 
-  // Future<List<JenisAbsen>> getJenisAbsen() async {
-  //   return _remoteService.getJenisAbsen();
-  // }
+  Future<List<JenisTugasDinas>> getJenisTugasDinas() async {
+    return _remoteService.getJenisTugasDinas();
+  }
 
   Future<List<UserList>> getPemberiTugasListNamed(String name) async {
     return _remoteService.getPemberiTugasListNamed(name);

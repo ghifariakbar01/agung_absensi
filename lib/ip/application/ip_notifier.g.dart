@@ -6,7 +6,7 @@ part of 'ip_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$ipNotifierHash() => r'6f3723461031302938e19d849c16f78c61a3e5aa';
+String _$ipNotifierHash() => r'600417e23cd7d4cfede58eebbf2e1f158d232f9b';
 
 /// See also [IpNotifier].
 @ProviderFor(IpNotifier)

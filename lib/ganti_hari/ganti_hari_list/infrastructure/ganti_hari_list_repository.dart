@@ -8,14 +8,14 @@ class GantiHariListRepository {
 
   Future<List<GantiHariList>> getGantiHariList({
     required int page,
-  }) {
+  }) async {
     return _remoteService.getGantiHariList(
       page: page,
     );
   }
 
   Future<List<GantiHariList>> getGantiHariListLimitedAccess(
-      {required int page, required String staff}) {
+      {required int page, required String staff}) async {
     return _remoteService.getGantiHariListLimitedAccess(
       page: page,
       staff: staff,

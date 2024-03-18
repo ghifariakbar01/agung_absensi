@@ -52,6 +52,7 @@ final List<Item> admin = [
 ];
 
 final List<Item> activity = [
+  Item('Ganti Hari', Assets.iconGantiHari, RouteNames.gantiHariListNameRoute),
   Item(
       'Tugas Dinas', Assets.iconTugasDinas, RouteNames.tugasDinasListNameRoute),
 ];

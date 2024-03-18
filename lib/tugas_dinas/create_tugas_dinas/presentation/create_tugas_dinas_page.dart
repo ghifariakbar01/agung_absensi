@@ -2,28 +2,26 @@ import 'dart:developer';
 
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
-import '../../../constants/assets.dart';
 import '../../../err_log/application/err_log_notifier.dart';
 import '../../../routes/application/route_names.dart';
 import '../../../shared/providers.dart';
-import '../../../utils/os_vibrate.dart';
+import '../../../utils/dialog_helper.dart';
 import '../../../widgets/alert_helper.dart';
 import '../../../widgets/v_async_widget.dart';
 import '../../../style/style.dart';
 import '../../../user_helper/user_helper_notifier.dart';
 import '../../../utils/string_utils.dart';
 import '../../../widgets/v_button.dart';
-import '../../../widgets/v_dialogs.dart';
 import '../../../widgets/v_scaffold_widget.dart';
 import '../../tugas_dinas_list/application/tugas_dinas_list_notifier.dart';
 import '../application/create_tugas_dinas_notifier.dart';
+import '../application/jenis_tugas_dinas.dart';
 import '../application/user_list.dart';
 
 class CreateTugasDinasPage extends HookConsumerWidget {
@@ -81,9 +79,9 @@ class CreateTugasDinasPage extends HookConsumerWidget {
 
     final createIzin = ref.watch(createTugasDinasNotifierProvider);
 
-    final _formKey = useMemoized(GlobalKey<FormState>.new, const []);
+    final jenisTugasDinas = ref.watch(jenisTugasDinasNotifierProvider);
 
-    final listTugasDinas = ['', 'DK', 'LK'];
+    final _formKey = useMemoized(GlobalKey<FormState>.new, const []);
 
     final errLog = ref.watch(errLogControllerProvider);
 
@@ -105,45 +103,50 @@ class CreateTugasDinasPage extends HookConsumerWidget {
                       SizedBox(
                         height: 8,
                       ),
-                      DropdownButtonFormField<String>(
-                        isExpanded: true,
-                        elevation: 0,
-                        iconSize: 20,
-                        padding: EdgeInsets.all(0),
-                        icon: Icon(Icons.keyboard_arrow_down_rounded,
-                            color: Palette.primaryColor),
-                        decoration: Themes.formStyleBordered(
-                          'Jenis Tugas Dinas',
-                        ),
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Form tidak boleh kosong';
-                          }
+                      VAsyncValueWidget<List<JenisTugasDinas>>(
+                        value: jenisTugasDinas,
+                        data: (jenis) =>
+                            DropdownButtonFormField<JenisTugasDinas>(
+                          isExpanded: true,
+                          elevation: 0,
+                          iconSize: 20,
+                          padding: EdgeInsets.all(0),
+                          icon: Icon(Icons.keyboard_arrow_down_rounded,
+                              color: Palette.primaryColor),
+                          decoration: Themes.formStyleBordered(
+                            'Jenis Tugas Dinas',
+                          ),
+                          validator: (value) {
+                            if (value == null) {
+                              return 'Form tidak boleh kosong';
+                            }
 
-                          return null;
-                        },
-                        value: listTugasDinas.firstWhere(
-                          (element) =>
-                              element == jenisTugasDinasTextController.text,
-                          orElse: () => listTugasDinas.first,
-                        ),
-                        onChanged: (String? value) {
-                          if (value != null) {
-                            jenisTugasDinasTextController.text = value;
-                          }
-                        },
-                        items: listTugasDinas
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(
-                              value,
-                              style: Themes.customColor(
-                                14,
+                            return null;
+                          },
+                          value: jenis.firstWhere(
+                            (element) =>
+                                element.kode ==
+                                jenisTugasDinasTextController.text,
+                            orElse: () => jenis.first,
+                          ),
+                          onChanged: (JenisTugasDinas? value) {
+                            if (value != null) {
+                              jenisTugasDinasTextController.text = value.kode;
+                            }
+                          },
+                          items: jenis.map<DropdownMenuItem<JenisTugasDinas>>(
+                              (JenisTugasDinas value) {
+                            return DropdownMenuItem<JenisTugasDinas>(
+                              value: value,
+                              child: Text(
+                                value.kategori,
+                                style: Themes.customColor(
+                                  14,
+                                ),
                               ),
-                            ),
-                          );
-                        }).toList(),
+                            );
+                          }).toList(),
+                        ),
                       ),
                       SizedBox(
                         height: 16,
@@ -514,16 +517,9 @@ class CreateTugasDinasPage extends HookConsumerWidget {
                                       khusus: khusus.value,
                                       jamAkhir: jamAkhirTextController.value,
                                       ket: keteranganTextController.text,
-                                      onError: (msg) => OSVibrate.vibrate()
-                                          .then((_) => showDialog(
-                                              context: context,
-                                              barrierDismissible: true,
-                                              builder: (_) => VSimpleDialog(
-                                                    color: Palette.red,
-                                                    asset: Assets.iconCrossed,
-                                                    label: 'Oops',
-                                                    labelDescription: msg,
-                                                  ))),
+                                      onError: (msg) =>
+                                          DialogHelper.showErrorDialog(
+                                              msg, context),
                                     );
                               }
                             }),

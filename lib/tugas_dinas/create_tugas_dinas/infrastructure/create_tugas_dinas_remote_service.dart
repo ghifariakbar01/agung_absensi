@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:face_net_authentication/infrastructure/dio_extensions.dart';
 
 import '../../../infrastructure/exceptions.dart';
+import '../application/jenis_tugas_dinas.dart';
 import '../application/user_list.dart';
 
 class CreateTugasDinasRemoteService {
@@ -19,6 +20,7 @@ class CreateTugasDinasRemoteService {
 
   static const String dbName = 'hr_trs_dinas';
   static const String dbMstUser = 'mst_user';
+  static const String dbHrMstJenisTugasDinas = 'hr_mst_dinas';
 
   Future<Unit> submitTugasDinas({
     required int idUser,
@@ -175,54 +177,54 @@ class CreateTugasDinasRemoteService {
     }
   }
 
-  // Future<List<JenisAbsen>> getJenisAbsen() async {
-  //   try {
-  //     final Map<String, String> submitTugasDinas = {
-  //       "command": "SELECT * FROM $dbHrMstJenisAbsen ",
-  //       "mode": "SELECT"
-  //     };
+  Future<List<JenisTugasDinas>> getJenisTugasDinas() async {
+    try {
+      final Map<String, String> submitTugasDinas = {
+        "command": "SELECT * FROM $dbHrMstJenisTugasDinas ",
+        "mode": "SELECT"
+      };
 
-  //     final data = _dioRequest;
-  //     data.addAll(submitTugasDinas);
+      final data = _dioRequest;
+      data.addAll(submitTugasDinas);
 
-  //     final response = await _dio.post('',
-  //         data: jsonEncode(data), options: Options(contentType: 'text/plain'));
+      final response = await _dio.post('',
+          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
 
-  //     log('data ${jsonEncode(data)}');
-  //     log('response $response');
-  //     final items = response.data?[0];
+      log('data ${jsonEncode(data)}');
+      log('response $response');
+      final items = response.data?[0];
 
-  //     if (items['status'] == 'Success') {
-  //       final list = items['items'] as List;
+      if (items['status'] == 'Success') {
+        final list = items['items'] as List;
 
-  //       if (list.isNotEmpty) {
-  //         return list
-  //             .map((e) => JenisAbsen.fromJson(e as Map<String, dynamic>))
-  //             .toList();
-  //       } else {
-  //         final message = 'List jenis cuti empty';
-  //         final errorCode = 404;
+        if (list.isNotEmpty) {
+          return list
+              .map((e) => JenisTugasDinas.fromJson(e as Map<String, dynamic>))
+              .toList();
+        } else {
+          final message = 'List jenis cuti empty';
+          final errorCode = 404;
 
-  //         throw RestApiExceptionWithMessage(errorCode, message);
-  //       }
-  //     } else {
-  //       final message = items['error'] as String?;
-  //       final errorCode = items['errornum'] as int;
+          throw RestApiExceptionWithMessage(errorCode, message);
+        }
+      } else {
+        final message = items['error'] as String?;
+        final errorCode = items['errornum'] as int;
 
-  //       throw RestApiExceptionWithMessage(errorCode, message);
-  //     }
-  //   } on FormatException catch (e) {
-  //     throw FormatException(e.message);
-  //   } on DioError catch (e) {
-  //     if (e.isNoConnectionError || e.isConnectionTimeout) {
-  //       throw NoConnectionException();
-  //     } else if (e.response != null) {
-  //       throw RestApiException(e.response?.statusCode);
-  //     } else {
-  //       rethrow;
-  //     }
-  //   }
-  // }
+        throw RestApiExceptionWithMessage(errorCode, message);
+      }
+    } on FormatException catch (e) {
+      throw FormatException(e.message);
+    } on DioError catch (e) {
+      if (e.isNoConnectionError || e.isConnectionTimeout) {
+        throw NoConnectionException();
+      } else if (e.response != null) {
+        throw RestApiException(e.response?.statusCode);
+      } else {
+        rethrow;
+      }
+    }
+  }
 
   Future<List<UserList>> getPemberiTugasListNamed(String name) async {
     try {

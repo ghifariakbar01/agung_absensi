@@ -118,4 +118,13 @@ class RouteNames {
 
   static const searchPemberiTugasDinasNameRoute = 'searchPemberiTugasDinas';
   static const searchPemberiTugasDinasRoute = 'searchPemberiTugasDinas';
+
+  static const gantiHariListNameRoute = 'gantiHariList';
+  static const gantiHariListRoute = 'gantiHariList';
+
+  static const createGantiHariNameRoute = 'createGantiHari';
+  static const createGantiHariRoute = 'createGantiHari';
+
+  static const editGantiHariNameRoute = 'editGantiHari';
+  static const editGantiHariRoute = 'editGantiHari';
 }

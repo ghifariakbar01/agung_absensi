@@ -41,6 +41,24 @@ final createTugasDinasRepositoryProvider =
 );
 
 typedef CreateTugasDinasRepositoryRef = ProviderRef<CreateTugasDinasRepository>;
+String _$jenisTugasDinasNotifierHash() =>
+    r'd3ad4078b98c00992434e9d0fee4f766d4026dc7';
+
+/// See also [JenisTugasDinasNotifier].
+@ProviderFor(JenisTugasDinasNotifier)
+final jenisTugasDinasNotifierProvider = AutoDisposeAsyncNotifierProvider<
+    JenisTugasDinasNotifier, List<JenisTugasDinas>>.internal(
+  JenisTugasDinasNotifier.new,
+  name: r'jenisTugasDinasNotifierProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$jenisTugasDinasNotifierHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$JenisTugasDinasNotifier
+    = AutoDisposeAsyncNotifier<List<JenisTugasDinas>>;
 String _$pemberiTugasDinasNotifierHash() =>
     r'b481b2bffef6ef916f0a1d0552181eaf63da3209';
 
@@ -59,7 +77,7 @@ final pemberiTugasDinasNotifierProvider = AutoDisposeAsyncNotifierProvider<
 
 typedef _$PemberiTugasDinasNotifier = AutoDisposeAsyncNotifier<List<UserList>>;
 String _$createTugasDinasNotifierHash() =>
-    r'78c51cd7de65466db118ef8507a970b78a52da10';
+    r'269759c121ef12003eaaf18fd08ff1d071642682';
 
 /// See also [CreateTugasDinasNotifier].
 @ProviderFor(CreateTugasDinasNotifier)

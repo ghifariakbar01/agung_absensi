@@ -1,6 +1,6 @@
+import 'package:face_net_authentication/dt_pc/dt_pc_approve/application/dt_pc_approve_notifier.dart';
 import 'package:face_net_authentication/dt_pc/dt_pc_list/application/dt_pc_list_notifier.dart';
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
-import 'package:face_net_authentication/sakit/sakit_approve/application/sakit_approve_notifier.dart';
 import 'package:face_net_authentication/send_wa/application/send_wa_notifier.dart';
 import 'package:face_net_authentication/widgets/v_additional_info.dart';
 import 'package:flutter/material.dart';
@@ -27,9 +27,9 @@ class DtPcListPage extends HookConsumerWidget {
 
     final sendWa = ref.watch(sendWaNotifierProvider);
     final dtPcList = ref.watch(dtPcListControllerProvider);
-    final sakitApprove = ref.watch(sakitApproveControllerProvider);
+    final sakitApprove = ref.watch(dtPcApproveControllerProvider);
 
-    ref.listen<AsyncValue>(sakitApproveControllerProvider, (_, state) {
+    ref.listen<AsyncValue>(dtPcApproveControllerProvider, (_, state) {
       if (!state.isLoading &&
           state.hasValue &&
           state.value != '' &&

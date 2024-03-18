@@ -10,17 +10,15 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
-import '../../../constants/assets.dart';
 import '../../../err_log/application/err_log_notifier.dart';
 import '../../../shared/providers.dart';
-import '../../../utils/os_vibrate.dart';
+import '../../../utils/dialog_helper.dart';
 import '../../../widgets/alert_helper.dart';
 import '../../../widgets/v_async_widget.dart';
 import '../../../style/style.dart';
 import '../../../user_helper/user_helper_notifier.dart';
 import '../../../utils/string_utils.dart';
 import '../../../widgets/v_button.dart';
-import '../../../widgets/v_dialogs.dart';
 import '../../../widgets/v_scaffold_widget.dart';
 import '../../dt_pc_list/application/dt_pc_list.dart';
 import '../application/create_dt_pc_notifier.dart';
@@ -329,16 +327,9 @@ class EditDtPcPage extends HookConsumerWidget {
                                         jam: jamTextController.value,
                                         kategori: kategori,
                                         ket: keteranganTextController.text,
-                                        onError: (msg) => OSVibrate.vibrate()
-                                            .then((value) => showDialog(
-                                                context: context,
-                                                barrierDismissible: true,
-                                                builder: (_) => VSimpleDialog(
-                                                      color: Palette.red,
-                                                      asset: Assets.iconCrossed,
-                                                      label: 'Oops',
-                                                      labelDescription: msg,
-                                                    ))));
+                                        onError: (msg) =>
+                                            DialogHelper.showErrorDialog(
+                                                msg, context));
                               }
                             }),
                       )

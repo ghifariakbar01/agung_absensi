@@ -26,7 +26,7 @@ class GantiHariListPage extends HookConsumerWidget {
     });
 
     final sendWa = ref.watch(sendWaNotifierProvider);
-    final dtPcList = ref.watch(gantiHariListControllerProvider);
+    final gantiHariList = ref.watch(gantiHariListControllerProvider);
     final sakitApprove = ref.watch(sakitApproveControllerProvider);
 
     ref.listen<AsyncValue>(sakitApproveControllerProvider, (_, state) {
@@ -100,7 +100,7 @@ class GantiHariListPage extends HookConsumerWidget {
             onPageChanged: onRefresh,
             scaffoldBody: [
               VAsyncValueWidget<List<GantiHariList>>(
-                  value: dtPcList,
+                  value: gantiHariList,
                   data: (list) {
                     final waiting = list
                         .where((e) =>
@@ -110,7 +110,7 @@ class GantiHariListPage extends HookConsumerWidget {
                     return _list(scrollController, waiting, onRefresh);
                   }),
               VAsyncValueWidget<List<GantiHariList>>(
-                  value: dtPcList,
+                  value: gantiHariList,
                   data: (list) {
                     final approved = list
                         .where((e) =>
@@ -120,7 +120,7 @@ class GantiHariListPage extends HookConsumerWidget {
                     return _list(scrollController, approved, onRefresh);
                   }),
               VAsyncValueWidget<List<GantiHariList>>(
-                  value: dtPcList,
+                  value: gantiHariList,
                   data: (list) {
                     final cancelled =
                         list.where((e) => e.btlSta == true).toList();

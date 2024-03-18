@@ -15,6 +15,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../constants/assets.dart';
 import '../../../err_log/application/err_log_notifier.dart';
+import '../../../utils/dialog_helper.dart';
 import '../../../utils/os_vibrate.dart';
 import '../../../widgets/alert_helper.dart';
 import '../../../widgets/v_async_widget.dart';
@@ -292,16 +293,9 @@ class EditSakitPage extends HookConsumerWidget {
                                   tglAwal: tglAwalTextController.value,
                                   tglAkhir: tglAkhirTextController.value,
                                   keterangan: diagnosaTextController.text,
-                                  onError: (msg) => OSVibrate.vibrate()
-                                      .then((_) => showDialog(
-                                          context: context,
-                                          barrierDismissible: true,
-                                          builder: (_) => VSimpleDialog(
-                                                color: Palette.red,
-                                                asset: Assets.iconCrossed,
-                                                label: 'Oops',
-                                                labelDescription: msg,
-                                              ))));
+                                  onError: (msg) =>
+                                      DialogHelper.showErrorDialog(
+                                          msg, context));
                         })
                   ],
                 )),

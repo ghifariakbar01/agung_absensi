@@ -80,10 +80,12 @@ class GantiHariListItem extends HookConsumerWidget {
                       Text(
                         DateFormat(
                           'EEEE, dd MMMM yyyy',
-                        ).format(DateTime.parse(item.cDate)),
+                        ).format(DateTime.parse(item.cDate!)),
                         style: Themes.customColor(10,
                             fontWeight: FontWeight.w500,
-                            color: item.btlSta == true ? Colors.white : null),
+                            color: item.btlSta == true
+                                ? Colors.white
+                                : Palette.primaryColor),
                       ),
 
                       Spacer(),
@@ -91,7 +93,9 @@ class GantiHariListItem extends HookConsumerWidget {
                       // tappable svg
                       TappableSvg(
                           assetPath: Assets.iconDetail,
-                          color: item.btlSta == true ? Colors.white : null,
+                          color: item.btlSta == true
+                              ? Colors.white
+                              : Palette.primaryColor,
                           onTap: () {
                             // showDialog(
                             //   context: context,
@@ -162,7 +166,7 @@ class GantiHariListItem extends HookConsumerWidget {
                             height: 2,
                           ),
                           Text(
-                            item.fullname,
+                            item.fullname ?? '-',
                             style: Themes.customColor(9,
                                 color: item.btlSta == true
                                     ? Colors.white
@@ -199,7 +203,7 @@ class GantiHariListItem extends HookConsumerWidget {
                                   Text(
                                     DateFormat(
                                       'dd MMM yyyy',
-                                    ).format(DateTime.parse(item.tglStart)),
+                                    ).format(DateTime.parse(item.tglStart!)),
                                     style: Themes.customColor(9,
                                         color: item.btlSta == true
                                             ? Colors.white
@@ -230,7 +234,7 @@ class GantiHariListItem extends HookConsumerWidget {
                                   Text(
                                     DateFormat(
                                       'dd MMM yyyy',
-                                    ).format(DateTime.parse(item.tglEnd)),
+                                    ).format(DateTime.parse(item.tglEnd!)),
                                     style: Themes.customColor(9,
                                         color: item.btlSta == true
                                             ? Colors.white
@@ -383,7 +387,7 @@ class GantiHariListItem extends HookConsumerWidget {
                                           Padding(
                                             padding: const EdgeInsets.all(16.0),
                                             child: Text(
-                                              item.ket,
+                                              item.ket ?? '-',
                                               style: Themes.customColor(10),
                                             ),
                                           ),

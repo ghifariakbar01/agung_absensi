@@ -85,7 +85,9 @@ class CutiListItem extends HookConsumerWidget {
                         ).format(DateTime.parse(item.cDate!)),
                         style: Themes.customColor(10,
                             fontWeight: FontWeight.w500,
-                            color: item.btlSta == true ? Colors.white : null),
+                            color: item.btlSta == true
+                                ? Colors.white
+                                : Palette.primaryColor),
                       ),
 
                       Spacer(),
@@ -93,7 +95,9 @@ class CutiListItem extends HookConsumerWidget {
                       // tappable svg
                       TappableSvg(
                           assetPath: Assets.iconDetail,
-                          color: item.btlSta == true ? Colors.white : null,
+                          color: item.btlSta == true
+                              ? Colors.white
+                              : Palette.primaryColor,
                           onTap: () {
                             showDialog(
                               context: context,

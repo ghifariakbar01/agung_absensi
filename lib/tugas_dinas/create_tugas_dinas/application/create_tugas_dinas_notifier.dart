@@ -13,6 +13,7 @@ import '../../../wa_head_helper/application/wa_head_helper_notifier.dart';
 
 import '../infrastructure/create_tugas_dinas_remote_service.dart';
 import '../infrastructure/create_tugas_dinas_repository.dart';
+import 'jenis_tugas_dinas.dart';
 import 'user_list.dart';
 
 part 'create_tugas_dinas_notifier.g.dart';
@@ -32,13 +33,13 @@ CreateTugasDinasRepository createTugasDinasRepository(
   );
 }
 
-// @riverpod
-// class JenisTugasDinasNotifier extends _$JenisTugasDinasNotifier {
-//   @override
-//   FutureOr<List<JenisAbsen>> build() async {
-//     return ref.read(createTugasDinasRepositoryProvider).getJenisAbsen();
-//   }
-// }
+@riverpod
+class JenisTugasDinasNotifier extends _$JenisTugasDinasNotifier {
+  @override
+  FutureOr<List<JenisTugasDinas>> build() async {
+    return ref.read(createTugasDinasRepositoryProvider).getJenisTugasDinas();
+  }
+}
 
 @riverpod
 class PemberiTugasDinasNotifier extends _$PemberiTugasDinasNotifier {

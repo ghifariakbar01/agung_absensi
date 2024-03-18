@@ -1,6 +1,7 @@
 import 'package:face_net_authentication/absen_manual/absen_manual_list/presentation/absen_manual_list_page.dart';
 import 'package:face_net_authentication/absen_manual/create_absen_manual/presentation/edit_absen_manual_page.dart';
 import 'package:face_net_authentication/dt_pc/create_dt_pc/presentation/edit_dt_pc_page.dart';
+import 'package:face_net_authentication/ganti_hari/ganti_hari_list/presentation/ganti_hari_list_page.dart';
 import 'package:face_net_authentication/sakit/create_sakit/presentation/edit_sakit_page.dart';
 import 'package:face_net_authentication/sakit/sakit_dtl/presentation/sakit_dtl_page.dart';
 import 'package:face_net_authentication/sakit/sakit_dtl/presentation/sakit_dtl_photo_page.dart';
@@ -339,20 +340,23 @@ class RouterNotifier extends ChangeNotifier {
               builder: (context, state) => SearchPemberiTugas(),
             ),
 
+            GoRoute(
+              name: RouteNames.gantiHariListNameRoute,
+              path: RouteNames.gantiHariListRoute,
+              builder: (context, state) => GantiHariListPage(),
+            ),
             // GoRoute(
-            //   name: RouteNames.changePassNameRoute,
-            //   path: RouteNames.changePassRoute,
-            //   builder: (context, state) => const ChangePasswordPage(),
+            //   name: RouteNames.createTugasDinasNameRoute,
+            //   path: RouteNames.createTugasDinasRoute,
+            //   builder: (context, state) => CreateTugasDinasPage(),
             // ),
             // GoRoute(
-            //   name: RouteNames.signUpNameRoute,
-            //   path: RouteNames.signUpRoute,
-            //   builder: (context, state) => const SignUp(),
-            // ),
-            // GoRoute(
-            //   name: RouteNames.cameraNameRoute,
-            //   path: RouteNames.cameraRoute,
-            //   builder: (context, state) => const CameraPage(),
+            //   name: RouteNames.editTugasDinasNameRoute,
+            //   path: RouteNames.editTugasDinasRoute,
+            //   builder: (context, state) {
+            //     final tugas = state.extra as TugasDinasList;
+            //     return EditTugasDinasPage(tugas);
+            //   },
             // ),
           ]),
     ];

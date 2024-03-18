@@ -41,7 +41,7 @@ final gantiHariListRepositoryProvider =
 
 typedef GantiHariListRepositoryRef = ProviderRef<GantiHariListRepository>;
 String _$gantiHariListControllerHash() =>
-    r'fb362782dcb42db72aae078fa0276bcc8d151241';
+    r'30ec3584f9a81e4fcad7d9583b3feb3c0fac0660';
 
 /// See also [GantiHariListController].
 @ProviderFor(GantiHariListController)

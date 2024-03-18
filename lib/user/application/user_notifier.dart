@@ -90,7 +90,8 @@ class UserNotifier extends StateNotifier<UserState> {
   Future<void> onUserParsedRaw(
       {required Ref ref, required UserModelWithPassword user}) async {
     return onUserParsed(
-      initializeUser: () => setUser(user),
+      initializeUser: () =>
+          Future.delayed(Duration(seconds: 1), () => setUser(user)),
       initializeDioRequest: () => Future.delayed(
         Duration(seconds: 1),
         () => ref.read(dioRequestProvider).addAll({

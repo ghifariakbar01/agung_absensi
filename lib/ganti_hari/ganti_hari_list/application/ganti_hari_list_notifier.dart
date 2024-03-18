@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../shared/providers.dart';
@@ -92,7 +94,7 @@ class GantiHariListController extends _$GantiHariListController {
     }
 
     if (_isAct()) {
-      return spv.contains('10,');
+      return spv.contains('38,');
     } else {
       return spv.contains('5015,');
     }

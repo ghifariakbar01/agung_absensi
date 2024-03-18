@@ -2,25 +2,22 @@ import 'dart:developer';
 
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
-import '../../../constants/assets.dart';
 import '../../../err_log/application/err_log_notifier.dart';
 import '../../../routes/application/route_names.dart';
 import '../../../shared/providers.dart';
-import '../../../utils/os_vibrate.dart';
+import '../../../utils/dialog_helper.dart';
 import '../../../widgets/alert_helper.dart';
 import '../../../widgets/v_async_widget.dart';
 import '../../../style/style.dart';
 import '../../../user_helper/user_helper_notifier.dart';
 import '../../../utils/string_utils.dart';
 import '../../../widgets/v_button.dart';
-import '../../../widgets/v_dialogs.dart';
 import '../../../widgets/v_scaffold_widget.dart';
 import '../../tugas_dinas_list/application/tugas_dinas_list.dart';
 import '../../tugas_dinas_list/application/tugas_dinas_list_notifier.dart';
@@ -526,16 +523,9 @@ class EditTugasDinasPage extends HookConsumerWidget {
                                       khusus: khusus.value,
                                       jamAkhir: jamAkhirTextController.value!,
                                       ket: keteranganTextController.text,
-                                      onError: (msg) => OSVibrate.vibrate()
-                                          .then((_) => showDialog(
-                                              context: context,
-                                              barrierDismissible: true,
-                                              builder: (_) => VSimpleDialog(
-                                                    color: Palette.red,
-                                                    asset: Assets.iconCrossed,
-                                                    label: 'Oops',
-                                                    labelDescription: msg,
-                                                  ))),
+                                      onError: (msg) =>
+                                          DialogHelper.showErrorDialog(
+                                              msg, context),
                                     );
                               }
                             }),
