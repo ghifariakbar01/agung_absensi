@@ -283,15 +283,6 @@ class AbsenRemoteService {
 
       final response = await _dio.post('',
           data: jsonEncode(data), options: Options(contentType: 'text/plain'));
-      final responseHosting = await _dioHosting.post('',
-          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
-
-      if (responseHosting != response) {
-        final message = 'Error server hosting / original';
-        final errorCode = 404;
-
-        throw RestApiExceptionWithMessage(errorCode, message);
-      }
 
       final items = response.data?[0];
 
@@ -368,15 +359,6 @@ class AbsenRemoteService {
 
       final response = await _dio.post('',
           data: jsonEncode(data), options: Options(contentType: 'text/plain'));
-      final responseHosting = await _dioHosting.post('',
-          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
-
-      if (responseHosting != response) {
-        final message = 'Error server hosting / original';
-        final errorCode = 404;
-
-        throw RestApiExceptionWithMessage(errorCode, message);
-      }
 
       log('data baseUrl ${_dio.options.baseUrl}');
 

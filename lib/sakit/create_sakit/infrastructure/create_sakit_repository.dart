@@ -60,7 +60,7 @@ class CreateSakitRepository {
   Future<CreateSakit> getCreateSakit(
       {required int idUser,
       required String tglAwal,
-      required String tglAkhir}) {
+      required String tglAkhir}) async {
     return _remoteService.getCreateSakit(
       idUser: idUser,
       tglAwal: tglAwal,

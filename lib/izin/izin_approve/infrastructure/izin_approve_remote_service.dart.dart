@@ -214,7 +214,7 @@ class IzinApproveRemoteService {
                 " btl_nm = '$nama', " +
             " btl_sta = 1, " +
             " btl_tgl = getdate() " +
-            " WHERE id_sakit = $idIzin ",
+            " WHERE id_izin = $idIzin ",
         "mode": "UPDATE"
       };
 

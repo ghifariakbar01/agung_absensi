@@ -222,9 +222,10 @@ class CreateSakitRemoteService {
     // 1. GET HITUNG LIBUR, BETWEEN DATES
     try {
       final Map<String, String> selectHitungLibur = {
-        'command': " SELECT COUNT(id_libur) AS hitunglibur " +
-            " FROM $dbMstLibur " +
-            " WHERE jenis <> 'LIBUR' AND tgl_awal BETWEEN '$tglAwal' AND '$tglAkhir' ",
+        'command':
+            " SELECT sum(DATEDIFF(day, '$tglAwal' , '$tglAkhir') + 1) AS hitunglibur " +
+                " FROM $dbMstLibur " +
+                " WHERE jenis <> 'LIBUR' AND tgl_awal BETWEEN '$tglAwal' AND '$tglAkhir' ",
         'mode': 'SELECT'
       };
 
