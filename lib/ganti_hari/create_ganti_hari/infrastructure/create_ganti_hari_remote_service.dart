@@ -17,44 +17,32 @@ class CreateGantiHariRemoteService {
   final Dio _dio;
   final Map<String, String> _dioRequest;
 
-  static const String dbName = 'hr_trs_dinas';
+  static const String dbName = 'hr_trs_dayoff';
   static const String dbMstUser = 'mst_user';
   static const String dbHrMstJenisAbsen = 'mst_absen';
 
-  Future<Unit> submitTugasDinas({
+  Future<Unit> submitGantiHari({
     required int idUser,
-    required int idPemberi,
+    required int idAbsen,
     required String ket,
-    required String tglAwal,
-    required String tglAkhir,
-    required String jamAwal,
-    required String jamAkhir,
-    required String kategori,
-    required String perusahaan,
-    required String lokasi,
+    required String tglOff,
+    required String tglGanti,
     required String cUser,
-    required bool khusus,
   }) async {
     try {
       final Map<String, String> submitTugasDinas = {
         "command": "INSERT INTO $dbName ("
-            "id_user, ket, tgl_start, tgl_end, jam_start, jam_end, "
-            "kategori, perusahaan, lokasi, id_comp, id_dept, id_pemberi, "
+            "id_user, ket, tgl_start, tgl_end, id_comp, id_dept, id_absen, "
             "spv_sta, spv_nm, spv_tgl, hrd_sta, hrd_nm, hrd_tgl, "
-            "coo_sta, coo_nm, coo_tgl, gm_sta, gm_nm, gm_tgl, jenis, "
+            "coo_sta, coo_nm, coo_tgl, gm_sta, gm_nm, gm_tgl, "
             "c_date, c_user, u_date, u_user) VALUES ("
             "$idUser, "
             "'$ket', "
-            "'$tglAwal', "
-            "'$tglAkhir', "
-            "'$jamAwal', "
-            "'$jamAkhir', "
-            "'$kategori', "
-            "'$perusahaan', "
-            "'$lokasi', "
+            "'$tglOff', "
+            "'$tglGanti', "
             "(SELECT id_comp FROM $dbMstUser WHERE id_user = $idUser), "
             "(SELECT id_dept FROM $dbMstUser WHERE id_user = $idUser), "
-            "$idPemberi, "
+            "$idAbsen, "
             "'0', "
             "'', "
             "GETDATE(), "
@@ -67,7 +55,6 @@ class CreateGantiHariRemoteService {
             "'0', "
             "'', "
             "GETDATE(), "
-            "${khusus ? "'1'" : "'0'"}, "
             "GETDATE(), "
             "'$cUser', "
             "GETDATE(), "
@@ -107,41 +94,24 @@ class CreateGantiHariRemoteService {
     }
   }
 
-  Future<Unit> updateTugasDinas({
+  Future<Unit> updateGantiHari({
     required int id,
-    required int idUser,
-    required int idPemberi,
+    required int idAbsen,
     required String ket,
-    required String tglAwal,
-    required String tglAkhir,
-    required String jamAwal,
-    required String jamAkhir,
-    required String kategori,
-    required String perusahaan,
-    required String lokasi,
-    required bool khusus,
+    required String tglOff,
+    required String tglGanti,
     required String uUser,
   }) async {
     try {
       // add spv / hrd note
       final Map<String, String> submitTugasDinas = {
         "command": " UPDATE $dbName SET "
-            "  id_user = $idUser, "
-            "  id_pemberi = $idPemberi, "
             "  ket = '$ket', "
-            "  tgl_start = '$tglAwal', "
-            "  tgl_end = '$tglAkhir', "
-            "  jam_start = '$jamAwal', "
-            "  jam_end = '$jamAkhir', "
-            "  kategori = '$kategori', "
-            "  perusahaan = '$perusahaan', "
-            "  lokasi = '$lokasi', "
-            "  id_comp = (SELECT id_comp FROM $dbMstUser WHERE id_user = $idUser), "
-            "  id_dept = (SELECT id_dept FROM $dbMstUser WHERE id_user = $idUser), "
+            "  tgl_start = '$tglOff', "
+            "  tgl_end = '$tglGanti', "
             "  u_date = GETDATE(), "
-            "  jenis = ${khusus ? '1' : '0'}, "
             "  u_user = '$uUser' "
-            "  WHERE id_dinas = $id ",
+            "  WHERE id_dayoff = $id ",
         "mode": "UPDATE"
       };
 

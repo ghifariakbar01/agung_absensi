@@ -1,3 +1,5 @@
+import 'package:dartz/dartz.dart';
+
 import '../application/absen_ganti_hari.dart';
 import 'create_ganti_hari_remote_service.dart';
 
@@ -6,59 +8,41 @@ class CreateGantiHariRepository {
 
   final CreateGantiHariRemoteService _remoteService;
 
-  // Future<Unit> updateCuti({
-  //   required String jenisCuti,
-  //   required String alasan,
-  //   required String ket,
-  //   required String tahunCuti,
-  //   required String nama,
-  //   required int idCuti,
-  //   required int idUser,
-  //   required int sisaCuti,
-  //   required int jumlahHari,
-  //   required int hitungLibur,
-  //   required DateTime tglAwalInDateTime,
-  //   required DateTime tglAkhirInDateTime,
-  // }) async {
-  //   return _remoteService.updateCuti(
-  //       jenisCuti: jenisCuti,
-  //       alasan: alasan,
-  //       ket: ket,
-  //       tahunCuti: tahunCuti,
-  //       nama: nama,
-  //       idCuti: idCuti,
-  //       idUser: idUser,
-  //       sisaCuti: sisaCuti,
-  //       jumlahHari: jumlahHari,
-  //       hitungLibur: hitungLibur,
-  //       tglAwalInDateTime: tglAwalInDateTime,
-  //       tglAkhirInDateTime: tglAkhirInDateTime);
-  // }
+  Future<Unit> updateGantiHari({
+    required int id,
+    required int idAbsen,
+    required String ket,
+    required String tglOff,
+    required String tglGanti,
+    required String uUser,
+  }) async {
+    return _remoteService.updateGantiHari(
+      id: id,
+      idAbsen: idAbsen,
+      ket: ket,
+      tglOff: tglOff,
+      tglGanti: tglGanti,
+      uUser: uUser,
+    );
+  }
 
-  // Future<Unit> submitCuti({
-  //   required String jenisCuti,
-  //   required String alasan,
-  //   required String ket,
-  //   required String tahunCuti,
-  //   required int idUser,
-  //   required int sisaCuti,
-  //   required int jumlahHari,
-  //   required int hitungLibur,
-  //   required DateTime tglAwalInDateTime,
-  //   required DateTime tglAkhirInDateTime,
-  // }) async {
-  //   return _remoteService.submitCuti(
-  //       jenisCuti: jenisCuti,
-  //       alasan: alasan,
-  //       ket: ket,
-  //       tahunCuti: tahunCuti,
-  //       idUser: idUser,
-  //       sisaCuti: sisaCuti,
-  //       jumlahHari: jumlahHari,
-  //       hitungLibur: hitungLibur,
-  //       tglAwalInDateTime: tglAwalInDateTime,
-  //       tglAkhirInDateTime: tglAkhirInDateTime);
-  // }
+  Future<Unit> submitGantiHari({
+    required int idUser,
+    required int idAbsen,
+    required String ket,
+    required String tglOff,
+    required String tglGanti,
+    required String cUser,
+  }) async {
+    return _remoteService.submitGantiHari(
+      idUser: idUser,
+      idAbsen: idAbsen,
+      ket: ket,
+      tglOff: tglOff,
+      tglGanti: tglGanti,
+      cUser: cUser,
+    );
+  }
 
   Future<List<AbsenGantiHari>> getAbsenGantiHari() async {
     return _remoteService.getAbsenGantiHari();

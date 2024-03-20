@@ -1,16 +1,17 @@
 import 'package:auto_size_text/auto_size_text.dart';
-// import 'package:face_net_authentication/cuti/create_cuti/application/create_cuti_notifier.dart';
-// import 'package:face_net_authentication/cuti/cuti_approve/application/cuti_approve_notifier.dart';
-// import 'package:face_net_authentication/cuti/cuti_list/presentation/cuti_dtl_dialog.dart';
-// import 'package:face_net_authentication/widgets/v_async_widget.dart';
+import 'package:collection/collection.dart';
+import 'package:face_net_authentication/ganti_hari/create_ganti_hari/application/create_ganti_hari_notifier.dart';
+import 'package:face_net_authentication/ganti_hari/ganti_hari_approve/application/ganti_hari_approve_notifier.dart';
+import 'package:face_net_authentication/widgets/v_async_widget.dart';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-// import '../../../sakit/sakit_list/presentation/sakit_dialog.dart';
-// import '../../../shared/providers.dart';
+import '../../../shared/providers.dart';
 import '../../../style/style.dart';
 
+import '../../../utils/dialog_helper.dart';
 import '../../../widgets/v_dialogs.dart';
 
 import 'package:face_net_authentication/widgets/tappable_widget.dart';
@@ -18,7 +19,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 
 import '../../../constants/assets.dart';
+import '../../create_ganti_hari/application/absen_ganti_hari.dart';
 import '../application/ganti_hari_list.dart';
+import 'ganti_hari_dtl_dialog.dart';
 
 class GantiHariListItem extends HookConsumerWidget {
   const GantiHariListItem(
@@ -46,12 +49,12 @@ class GantiHariListItem extends HookConsumerWidget {
     //     : DateTime.now().difference(DateTime.parse(item.cDate!)).inDays;
 
     // final jenisCuti = ref.watch(jenisCutiNotifierProvider);
-    // final alasanCuti = ref.watch(alasanCutiNotifierProvider);
+    final absenGantiHari = ref.watch(absenGantiHariNotifierProvider);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: SizedBox(
-        height: 210,
+        height: 175,
         child: Stack(
           children: [
             Container(
@@ -97,12 +100,12 @@ class GantiHariListItem extends HookConsumerWidget {
                               ? Colors.white
                               : Palette.primaryColor,
                           onTap: () {
-                            // showDialog(
-                            //   context: context,
-                            //   builder: (context) => CutiDtlDialog(
-                            //     item: item,
-                            //   ),
-                            // );
+                            showDialog(
+                              context: context,
+                              builder: (context) => GantiHariDtlDialog(
+                                item: item,
+                              ),
+                            );
                           }),
                       SizedBox(
                         width: 4,
@@ -116,16 +119,16 @@ class GantiHariListItem extends HookConsumerWidget {
                                 builder: (context) => VBatalDialog(
                                   onTap: () async {
                                     context.pop();
-                                    // await ref
-                                    //     .read(cutiApproveControllerProvider
-                                    //         .notifier)
-                                    //     .batal(
-                                    //       itemCuti: item,
-                                    //       nama: ref
-                                    //           .read(userNotifierProvider)
-                                    //           .user
-                                    //           .nama!,
-                                    //     );
+                                    await ref
+                                        .read(gantiHariApproveControllerProvider
+                                            .notifier)
+                                        .batal(
+                                          itemGantiHari: item,
+                                          nama: ref
+                                              .read(userNotifierProvider)
+                                              .user
+                                              .nama!,
+                                        );
                                   },
                                 ),
                               );
@@ -149,208 +152,154 @@ class GantiHariListItem extends HookConsumerWidget {
                   // MIDDLE
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Nama',
-                            style: Themes.customColor(7,
-                                color: item.btlSta == true
-                                    ? Colors.white
-                                    : Colors.grey),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Nama',
+                                style: Themes.customColor(7,
+                                    color: item.btlSta == true
+                                        ? Colors.white
+                                        : Colors.grey),
+                              ),
+                              SizedBox(
+                                height: 2,
+                              ),
+                              Text(
+                                item.fullname ?? '-',
+                                style: Themes.customColor(9,
+                                    color: item.btlSta == true
+                                        ? Colors.white
+                                        : Palette.primaryColor,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ],
                           ),
                           SizedBox(
-                            height: 2,
+                            height: 8,
                           ),
-                          Text(
-                            item.fullname ?? '-',
-                            style: Themes.customColor(9,
-                                color: item.btlSta == true
-                                    ? Colors.white
-                                    : Palette.primaryColor,
-                                fontWeight: FontWeight.w500),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Jadwal Ganti Hari',
+                                style: Themes.customColor(
+                                  7,
+                                  color: item.btlSta == true
+                                      ? Colors.white
+                                      : Colors.grey,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 2,
+                              ),
+                              VAsyncValueWidget<List<AbsenGantiHari>>(
+                                value: absenGantiHari,
+                                data: (absen) => Builder(builder: (context) {
+                                  final selected = absen.firstWhereOrNull(
+                                      (element) =>
+                                          element.idAbsen == item.idAbsen);
+
+                                  String jdw = '';
+
+                                  if (selected == null) {
+                                    jdw = '-';
+                                  } else {
+                                    jdw =
+                                        '${selected.nama} | ${selected.jdwIn} | ${selected.jdwOut}';
+                                  }
+
+                                  return Text(
+                                    jdw,
+                                    style: Themes.customColor(9,
+                                        color: item.btlSta == true
+                                            ? Colors.white
+                                            : Palette.orange,
+                                        fontWeight: FontWeight.w500),
+                                  );
+                                }),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-
                       SizedBox(
                         width: 25,
                       ),
-
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Row(
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Jadwal Ganti Hari',
-                                    style: Themes.customColor(7,
-                                        color: item.btlSta == true
-                                            ? Colors.white
-                                            : Colors.grey),
-                                  ),
-                                  SizedBox(
-                                    height: 2,
-                                  ),
-                                  Text(
-                                    DateFormat(
-                                      'dd MMM yyyy',
-                                    ).format(DateTime.parse(item.tglStart!)),
-                                    style: Themes.customColor(9,
-                                        color: item.btlSta == true
-                                            ? Colors.white
-                                            : Palette.blue,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ],
+                              Text(
+                                'Tanggal Off',
+                                style: Themes.customColor(7,
+                                    color: item.btlSta == true
+                                        ? Colors.white
+                                        : Colors.grey),
                               ),
                               SizedBox(
-                                width: 16,
+                                height: 2,
                               ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Tanggal Akhir',
-                                    style: Themes.customColor(
-                                      7,
-                                      color: item.btlSta == true
-                                          ? Colors.white
-                                          : Colors.grey,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 2,
-                                  ),
-                                  Text(
-                                    DateFormat(
-                                      'dd MMM yyyy',
-                                    ).format(DateTime.parse(item.tglEnd!)),
-                                    style: Themes.customColor(9,
-                                        color: item.btlSta == true
-                                            ? Colors.white
-                                            : Palette.tertiaryColor,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ],
-                              )
+                              Text(
+                                DateFormat(
+                                  'E, dd MMM yyyy HH:MM:ss',
+                                ).format(DateTime.parse(item.tglStart!)),
+                                style: Themes.customColor(9,
+                                    color: item.btlSta == true
+                                        ? Colors.white
+                                        : Palette.blue,
+                                    fontWeight: FontWeight.w500),
+                              ),
                             ],
                           ),
                           SizedBox(
-                            height: 4,
+                            height: 8,
                           ),
-                          Row(
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Jumlah Cuti',
-                                    style: Themes.customColor(
-                                      7,
-                                      color: item.btlSta == true
-                                          ? Colors.white
-                                          : Colors.grey,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 2,
-                                  ),
-                                  // Text(
-                                  //   item.totalHari!.toString() + " Hari",
-                                  //   style: Themes.customColor(
-                                  //     9,
-                                  //     fontWeight: FontWeight.w500,
-                                  //     color: item.btlSta == true
-                                  //         ? Colors.white
-                                  //         : Palette.primaryColor,
-                                  //   ),
-                                  // ),
-                                ],
+                              Text(
+                                'Tanggal Ganti',
+                                style: Themes.customColor(
+                                  7,
+                                  color: item.btlSta == true
+                                      ? Colors.white
+                                      : Colors.grey,
+                                ),
                               ),
                               SizedBox(
-                                width: 25,
+                                height: 2,
                               ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Jenis Cuti',
-                                    style: Themes.customColor(
-                                      7,
-                                      color: item.btlSta == true
-                                          ? Colors.white
-                                          : Colors.grey,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 2,
-                                  ),
-                                  // VAsyncValueWidget<List<JenisCuti>>(
-                                  //   value: jenisCuti,
-                                  //   data: (list) => Text(
-                                  //     '${list.firstWhere((element) => element.inisial == item.jenisCuti, orElse: () => list.first).nama}',
-                                  //     style: Themes.customColor(9,
-                                  //         color: item.btlSta == true
-                                  //             ? Colors.white
-                                  //             : Palette.tertiaryColor,
-                                  //         fontWeight: FontWeight.w500),
-                                  //   ),
-                                  // ),
-                                ],
-                              )
+                              Text(
+                                DateFormat(
+                                  'E, dd MMM yyyy HH:MM:ss',
+                                ).format(DateTime.parse(item.tglEnd!)),
+                                style: Themes.customColor(9,
+                                    color: item.btlSta == true
+                                        ? Colors.white
+                                        : Palette.tertiaryColor,
+                                    fontWeight: FontWeight.w500),
+                              ),
                             ],
                           ),
                         ],
                       )
-
-                      // tgl, jumlah sakit, surat info
                     ],
                   ),
 
                   SizedBox(
                     height: 4,
-                  ),
-
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Alasan Cuti',
-                        style: Themes.customColor(
-                          7,
-                          color:
-                              item.btlSta == true ? Colors.white : Colors.grey,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 2,
-                      ),
-                      // VAsyncValueWidget<List<AlasanCuti>>(
-                      //   value: alasanCuti,
-                      //   data: (list) => Text(
-                      //     '${list.firstWhere((element) => element.kode == item.alasan, orElse: () => list.first).alasan}',
-                      //     style: Themes.customColor(9,
-                      //         color: item.btlSta == true
-                      //             ? Colors.white
-                      //             : Palette.primaryColor,
-                      //         fontWeight: FontWeight.w500),
-                      //     overflow: TextOverflow.visible,
-                      //   ),
-                      // ),
-                    ],
                   ),
 
                   SizedBox(
@@ -479,66 +428,68 @@ class GantiHariListItem extends HookConsumerWidget {
                                   color: Colors.transparent,
                                   child: InkWell(
                                     splashColor: Palette.primaryColor,
-                                    // onTap: () async {
-                                    //   if (await ref
-                                    //           .read(
-                                    //               cutiApproveControllerProvider
-                                    //                   .notifier)
-                                    //           .canSpvApprove(item) ==
-                                    //       false) {
-                                    //     showDialog(
-                                    //       context: context,
-                                    //       builder: (context) => VFailedDialog(),
-                                    //     );
-                                    //   } else {
-                                    //     if (item.spvSta == false) {
-                                    //       await showDialog(
-                                    //           context: context,
-                                    //           builder: (context) =>
-                                    //               VAlertDialog2(
-                                    //                   label:
-                                    //                       'Dibutuhkan Konfirmasi SPV (Approve)',
-                                    //                   onPressed: () async {
-                                    //                     context.pop();
-                                    //                     await ref
-                                    //                         .read(
-                                    //                             cutiApproveControllerProvider
-                                    //                                 .notifier)
-                                    //                         .approveSpv(
-                                    //                           note: '',
-                                    //                           itemCuti: item,
-                                    //                           nama: ref
-                                    //                               .read(
-                                    //                                   userNotifierProvider)
-                                    //                               .user
-                                    //                               .nama!,
-                                    //                         );
-                                    //                   }));
-                                    //     } else {
-                                    //       await showDialog(
-                                    //           context: context,
-                                    //           builder: (context) =>
-                                    //               VAlertDialog2(
-                                    //                   label:
-                                    //                       'Dibutuhkan Konfirmasi SPV (Unapprove)',
-                                    //                   onPressed: () async {
-                                    //                     context.pop();
-                                    //                     await ref
-                                    //                         .read(
-                                    //                             cutiApproveControllerProvider
-                                    //                                 .notifier)
-                                    //                         .unapproveSpv(
-                                    //                           itemCuti: item,
-                                    //                           nama: ref
-                                    //                               .read(
-                                    //                                   userNotifierProvider)
-                                    //                               .user
-                                    //                               .nama!,
-                                    //                         );
-                                    //                   }));
-                                    //     }
-                                    //   }
-                                    // },
+                                    onTap: () async {
+                                      if (await ref
+                                              .read(
+                                                  gantiHariApproveControllerProvider
+                                                      .notifier)
+                                              .canSpvApprove(item) ==
+                                          false) {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) => VFailedDialog(),
+                                        );
+                                      } else {
+                                        if (item.spvSta == false) {
+                                          await showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  VAlertDialog2(
+                                                      label:
+                                                          'Dibutuhkan Konfirmasi SPV (Approve)',
+                                                      onPressed: () async {
+                                                        context.pop();
+                                                        await ref
+                                                            .read(
+                                                                gantiHariApproveControllerProvider
+                                                                    .notifier)
+                                                            .approveSpv(
+                                                              note: '',
+                                                              itemGantiHari:
+                                                                  item,
+                                                              nama: ref
+                                                                  .read(
+                                                                      userNotifierProvider)
+                                                                  .user
+                                                                  .nama!,
+                                                            );
+                                                      }));
+                                        } else {
+                                          await showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  VAlertDialog2(
+                                                      label:
+                                                          'Dibutuhkan Konfirmasi SPV (Unapprove)',
+                                                      onPressed: () async {
+                                                        context.pop();
+                                                        await ref
+                                                            .read(
+                                                                gantiHariApproveControllerProvider
+                                                                    .notifier)
+                                                            .unapproveSpv(
+                                                              itemGantiHari:
+                                                                  item,
+                                                              nama: ref
+                                                                  .read(
+                                                                      userNotifierProvider)
+                                                                  .user
+                                                                  .nama!,
+                                                            );
+                                                      }));
+                                        }
+                                      }
+                                    },
                                     child: Ink(
                                       height: 25,
                                       decoration: BoxDecoration(
@@ -615,66 +566,67 @@ class GantiHariListItem extends HookConsumerWidget {
                                   color: Colors.transparent,
                                   child: InkWell(
                                     splashColor: Palette.primaryColor,
-                                    // onTap: () async {
-                                    //   if (await ref
-                                    //           .read(
-                                    //               cutiApproveControllerProvider
-                                    //                   .notifier)
-                                    //           .canHrdApprove(item) ==
-                                    //       false) {
-                                    //     showDialog(
-                                    //       context: context,
-                                    //       builder: (context) => VFailedDialog(),
-                                    //     );
-                                    //   } else {
-                                    //     if (item.hrdSta == false) {
-                                    //       final String? text =
-                                    //           await DialogHelper<void>()
-                                    //               .showFormDialog(
-                                    //         context: context,
-                                    //       );
+                                    onTap: () async {
+                                      if (await ref
+                                              .read(
+                                                  gantiHariApproveControllerProvider
+                                                      .notifier)
+                                              .canHrdApprove(item) ==
+                                          false) {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) => VFailedDialog(),
+                                        );
+                                      } else {
+                                        if (item.hrdSta == false) {
+                                          final String? text =
+                                              await DialogHelper<void>()
+                                                  .showFormDialog(
+                                            context: context,
+                                          );
 
-                                    //       if (text != null) {
-                                    //         await ref
-                                    //             .read(
-                                    //                 cutiApproveControllerProvider
-                                    //                     .notifier)
-                                    //             .approveHrd(
-                                    //               note: text,
-                                    //               itemCuti: item,
-                                    //               nama: ref
-                                    //                   .read(
-                                    //                       userNotifierProvider)
-                                    //                   .user
-                                    //                   .nama!,
-                                    //             );
-                                    //         //
-                                    //       }
-                                    //     } else {
-                                    //       await showDialog(
-                                    //           context: context,
-                                    //           builder: (context) =>
-                                    //               VAlertDialog2(
-                                    //                   label:
-                                    //                       'Dibutuhkan Konfirmasi HRD (Unapprove)',
-                                    //                   onPressed: () async {
-                                    //                     context.pop();
-                                    //                     await ref
-                                    //                         .read(
-                                    //                             cutiApproveControllerProvider
-                                    //                                 .notifier)
-                                    //                         .unapproveHrd(
-                                    //                           itemCuti: item,
-                                    //                           nama: ref
-                                    //                               .read(
-                                    //                                   userNotifierProvider)
-                                    //                               .user
-                                    //                               .nama!,
-                                    //                         );
-                                    //                   }));
-                                    //     }
-                                    //   }
-                                    // },
+                                          if (text != null) {
+                                            await ref
+                                                .read(
+                                                    gantiHariApproveControllerProvider
+                                                        .notifier)
+                                                .approveHrd(
+                                                  note: text,
+                                                  itemGantiHari: item,
+                                                  nama: ref
+                                                      .read(
+                                                          userNotifierProvider)
+                                                      .user
+                                                      .nama!,
+                                                );
+                                            //
+                                          }
+                                        } else {
+                                          await showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  VAlertDialog2(
+                                                      label:
+                                                          'Dibutuhkan Konfirmasi HRD (Unapprove)',
+                                                      onPressed: () async {
+                                                        context.pop();
+                                                        await ref
+                                                            .read(
+                                                                gantiHariApproveControllerProvider
+                                                                    .notifier)
+                                                            .unapproveHrd(
+                                                              itemGantiHari:
+                                                                  item,
+                                                              nama: ref
+                                                                  .read(
+                                                                      userNotifierProvider)
+                                                                  .user
+                                                                  .nama!,
+                                                            );
+                                                      }));
+                                        }
+                                      }
+                                    },
                                     child: Ink(
                                       height: 25,
                                       decoration: BoxDecoration(

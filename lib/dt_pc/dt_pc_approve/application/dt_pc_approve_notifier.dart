@@ -156,7 +156,7 @@ class DtPcApproveController extends _$DtPcApproveController {
   }
 
   bool canSpvApprove(DtPcList item) {
-    bool approveSpv = true;
+    bool approveSpv = false;
 
     if (item.hrdSta == true) {
       approveSpv = false;
@@ -195,7 +195,7 @@ class DtPcApproveController extends _$DtPcApproveController {
   }
 
   bool canHrdApprove(DtPcList item) {
-    bool approveHrd = true;
+    bool approveHrd = false;
 
     if (item.spvSta == false) {
       approveHrd = false;

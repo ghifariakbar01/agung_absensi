@@ -401,7 +401,7 @@ class CutiApproveController extends _$CutiApproveController {
   }
 
   Future<bool> canSpvApprove(CutiList item) async {
-    bool approveSpv = true;
+    bool approveSpv = false;
 
     if (item.hrdSta == true) {
       approveSpv = false;
@@ -447,7 +447,7 @@ class CutiApproveController extends _$CutiApproveController {
   }
 
   Future<bool> canHrdApprove(CutiList item) async {
-    bool approveHrd = true;
+    bool approveHrd = false;
 
     if (item.spvSta == false) {
       approveHrd = false;
@@ -495,10 +495,10 @@ class CutiApproveController extends _$CutiApproveController {
   }
 
   Future<bool> canBatal(CutiList item) async {
-    bool approveBatal = true;
+    bool approveBatal = false;
 
-    if (item.btlSta == true) {
-      approveBatal = false;
+    if (item.btlSta == false) {
+      approveBatal = true;
     }
 
     if (item.jenisCuti == 'CR') {

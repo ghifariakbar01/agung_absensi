@@ -25,6 +25,9 @@ import '../../dt_pc/create_dt_pc/presentation/create_dt_pc_page.dart';
 import '../../dt_pc/dt_pc_list/application/dt_pc_list.dart';
 import '../../dt_pc/dt_pc_list/presentation/dt_pc_list_page.dart';
 import '../../edit_profile/presentation/edit_profile_page.dart';
+import '../../ganti_hari/create_ganti_hari/presentation/create_ganti_hari_page.dart';
+import '../../ganti_hari/create_ganti_hari/presentation/edit_ganti_hari_page.dart';
+import '../../ganti_hari/ganti_hari_list/application/ganti_hari_list.dart';
 import '../../home/presentation/home_page.dart';
 import '../../imei_introduction/application/imei_state.dart';
 import '../../imei_introduction/application/shared/imei_introduction_providers.dart';
@@ -173,7 +176,6 @@ class RouterNotifier extends ChangeNotifier {
               path: RouteNames.riwayatAbsenRoute,
               builder: (context, state) => const RiwayatAbsenPage(),
             ),
-
             GoRoute(
               name: RouteNames.editProfileNameRoute,
               path: RouteNames.editProfileRoute,
@@ -199,7 +201,6 @@ class RouterNotifier extends ChangeNotifier {
               path: RouteNames.copyrightRoute,
               builder: (context, state) => CopyRightPage(),
             ),
-
             GoRoute(
               name: RouteNames.sakitListNameRoute,
               path: RouteNames.sakitListRoute,
@@ -239,7 +240,6 @@ class RouterNotifier extends ChangeNotifier {
                   final imageUrl = state.extra as String;
                   return SakitDtlPhotoPage(imageUrl: imageUrl);
                 }),
-
             GoRoute(
               name: RouteNames.cutiListNameRoute,
               path: RouteNames.cutiListRoute,
@@ -258,7 +258,6 @@ class RouterNotifier extends ChangeNotifier {
                 return EditCutiPage(cuti);
               },
             ),
-
             GoRoute(
               name: RouteNames.izinListNameRoute,
               path: RouteNames.izinListRoute,
@@ -277,7 +276,6 @@ class RouterNotifier extends ChangeNotifier {
                 return EditIzinPage(izin);
               },
             ),
-
             GoRoute(
               name: RouteNames.dtPcListNameRoute,
               path: RouteNames.dtPcListRoute,
@@ -296,7 +294,6 @@ class RouterNotifier extends ChangeNotifier {
                 return EditDtPcPage(dtPc);
               },
             ),
-
             GoRoute(
               name: RouteNames.absenManualListNameRoute,
               path: RouteNames.absenManualListRoute,
@@ -315,7 +312,6 @@ class RouterNotifier extends ChangeNotifier {
                 return EditAbsenManualPage(absen);
               },
             ),
-
             GoRoute(
               name: RouteNames.tugasDinasListNameRoute,
               path: RouteNames.tugasDinasListRoute,
@@ -339,25 +335,24 @@ class RouterNotifier extends ChangeNotifier {
               path: RouteNames.searchPemberiTugasDinasRoute,
               builder: (context, state) => SearchPemberiTugas(),
             ),
-
             GoRoute(
               name: RouteNames.gantiHariListNameRoute,
               path: RouteNames.gantiHariListRoute,
               builder: (context, state) => GantiHariListPage(),
             ),
-            // GoRoute(
-            //   name: RouteNames.createTugasDinasNameRoute,
-            //   path: RouteNames.createTugasDinasRoute,
-            //   builder: (context, state) => CreateTugasDinasPage(),
-            // ),
-            // GoRoute(
-            //   name: RouteNames.editTugasDinasNameRoute,
-            //   path: RouteNames.editTugasDinasRoute,
-            //   builder: (context, state) {
-            //     final tugas = state.extra as TugasDinasList;
-            //     return EditTugasDinasPage(tugas);
-            //   },
-            // ),
+            GoRoute(
+              name: RouteNames.createGantiHariNameRoute,
+              path: RouteNames.createGantiHariRoute,
+              builder: (context, state) => CreateGantiHariPage(),
+            ),
+            GoRoute(
+              name: RouteNames.editGantiHariNameRoute,
+              path: RouteNames.editGantiHariRoute,
+              builder: (context, state) {
+                final dayoff = state.extra as GantiHariList;
+                return EditGantiHariPage(dayoff);
+              },
+            ),
           ]),
     ];
   }

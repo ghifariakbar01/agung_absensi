@@ -59,5 +59,21 @@ final absenGantiHariNotifierProvider = AutoDisposeAsyncNotifierProvider<
 
 typedef _$AbsenGantiHariNotifier
     = AutoDisposeAsyncNotifier<List<AbsenGantiHari>>;
+String _$createGantiHariHash() => r'03d3458abeb03c368d360ccca0a83c639837e8e7';
+
+/// See also [CreateGantiHari].
+@ProviderFor(CreateGantiHari)
+final createGantiHariProvider =
+    AutoDisposeAsyncNotifierProvider<CreateGantiHari, void>.internal(
+  CreateGantiHari.new,
+  name: r'createGantiHariProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$createGantiHariHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$CreateGantiHari = AutoDisposeAsyncNotifier<void>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

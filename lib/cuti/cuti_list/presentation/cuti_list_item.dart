@@ -7,10 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../sakit/sakit_list/presentation/sakit_dialog.dart';
 import '../../../shared/providers.dart';
 import '../../../style/style.dart';
 
+import '../../../utils/dialog_helper.dart';
 import '../../../widgets/v_dialogs.dart';
 import '../../create_cuti/application/alasan_cuti.dart';
 import '../../create_cuti/application/jenis_cuti.dart';
@@ -409,8 +409,6 @@ class CutiListItem extends HookConsumerWidget {
                               ))),
                     ],
                   ),
-
-                  // LOWER
                 ],
               ),
             ),

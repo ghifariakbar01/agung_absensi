@@ -172,7 +172,7 @@ class AbsenManualApproveController extends _$AbsenManualApproveController {
   }
 
   bool canSpvApprove(AbsenManualList item) {
-    bool spvApprove = true;
+    bool spvApprove = false;
 
     if (item.hrdSta == true) {
       spvApprove = false;
@@ -210,7 +210,7 @@ class AbsenManualApproveController extends _$AbsenManualApproveController {
   }
 
   bool canHrdApprove(AbsenManualList item) {
-    bool hrdApprove = true;
+    bool hrdApprove = false;
 
     if (item.spvSta == false) {
       hrdApprove = false;

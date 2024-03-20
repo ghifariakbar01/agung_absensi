@@ -227,7 +227,7 @@ class SakitApproveController extends _$SakitApproveController {
   }
 
   bool canSpvApprove(SakitList item) {
-    bool approveSpv = true;
+    bool approveSpv = false;
 
     if (item.hrdSta == true) {
       approveSpv = false;
@@ -262,7 +262,7 @@ class SakitApproveController extends _$SakitApproveController {
   }
 
   bool canHrdApprove(SakitList item) {
-    bool approveHrd = true;
+    bool approveHrd = false;
 
     if (item.spvSta == false) {
       approveHrd = false;

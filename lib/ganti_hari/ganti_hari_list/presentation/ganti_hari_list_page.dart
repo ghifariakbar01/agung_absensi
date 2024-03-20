@@ -1,6 +1,6 @@
+import 'package:face_net_authentication/ganti_hari/ganti_hari_approve/application/ganti_hari_approve_notifier.dart';
 import 'package:face_net_authentication/ganti_hari/ganti_hari_list/application/ganti_hari_list_notifier.dart';
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
-import 'package:face_net_authentication/sakit/sakit_approve/application/sakit_approve_notifier.dart';
 import 'package:face_net_authentication/send_wa/application/send_wa_notifier.dart';
 import 'package:face_net_authentication/widgets/v_additional_info.dart';
 import 'package:flutter/material.dart';
@@ -27,9 +27,9 @@ class GantiHariListPage extends HookConsumerWidget {
 
     final sendWa = ref.watch(sendWaNotifierProvider);
     final gantiHariList = ref.watch(gantiHariListControllerProvider);
-    final sakitApprove = ref.watch(sakitApproveControllerProvider);
+    final sakitApprove = ref.watch(gantiHariApproveControllerProvider);
 
-    ref.listen<AsyncValue>(sakitApproveControllerProvider, (_, state) {
+    ref.listen<AsyncValue>(gantiHariApproveControllerProvider, (_, state) {
       if (!state.isLoading &&
           state.hasValue &&
           state.value != '' &&
@@ -95,7 +95,7 @@ class GantiHariListPage extends HookConsumerWidget {
                   color: Colors.white,
                 ),
                 onPressed: () => context.pushNamed(
-                      RouteNames.createDtPcNameRoute,
+                      RouteNames.createGantiHariRoute,
                     )),
             onPageChanged: onRefresh,
             scaffoldBody: [

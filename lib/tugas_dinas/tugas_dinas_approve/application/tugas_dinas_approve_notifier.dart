@@ -312,7 +312,7 @@ class TugasDinasApproveController extends _$TugasDinasApproveController {
   }
 
   bool canSpvApprove(TugasDinasList item) {
-    bool approveSpv = true;
+    bool approveSpv = false;
 
     if (item.gmSta == true) {
       approveSpv = false;
@@ -362,7 +362,7 @@ class TugasDinasApproveController extends _$TugasDinasApproveController {
   }
 
   bool canGmApprove(TugasDinasList item) {
-    bool approveGm = true;
+    bool approveGm = false;
 
     if (item.spvSta == false) {
       approveGm = false;
@@ -397,7 +397,7 @@ class TugasDinasApproveController extends _$TugasDinasApproveController {
   }
 
   bool canHrdApprove(TugasDinasList item) {
-    bool approveHrd = true;
+    bool approveHrd = false;
 
     if (item.cooSta == true) {
       approveHrd = false;
@@ -430,7 +430,7 @@ class TugasDinasApproveController extends _$TugasDinasApproveController {
   }
 
   bool canCooApprove(TugasDinasList item) {
-    bool approveCoo = true;
+    bool approveCoo = false;
 
     if (item.hrdSta == false) {
       approveCoo = false;

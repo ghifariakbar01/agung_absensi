@@ -5,10 +5,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../constants/assets.dart';
-import '../../../sakit/sakit_list/presentation/sakit_dialog.dart';
+
 import '../../../shared/providers.dart';
 import '../../../style/style.dart';
 
+import '../../../utils/dialog_helper.dart';
 import '../../../widgets/tappable_widget.dart';
 import '../../../widgets/v_dialogs.dart';
 

@@ -156,7 +156,7 @@ class IzinApproveController extends _$IzinApproveController {
   }
 
   bool canSpvApprove(IzinList item) {
-    bool approveSpv = true;
+    bool approveSpv = false;
 
     if (item.hrdSta == true) {
       approveSpv = false;
@@ -194,7 +194,7 @@ class IzinApproveController extends _$IzinApproveController {
   }
 
   bool canHrdApprove(IzinList item) {
-    bool approveHrd = true;
+    bool approveHrd = false;
 
     if (item.spvSta == false) {
       approveHrd = false;
