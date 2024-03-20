@@ -25,7 +25,7 @@ final gantiHariApproveRemoteServiceProvider =
 typedef GantiHariApproveRemoteServiceRef
     = ProviderRef<GantiHariApproveRemoteService>;
 String _$gantiHariApproveRepositoryHash() =>
-    r'b6fc9f4b1b4c6639eb97755ed0370f2f8cf0ff94';
+    r'892a1d118689426bf66a87fca65cb20e3b9f5dbf';
 
 /// See also [gantiHariApproveRepository].
 @ProviderFor(gantiHariApproveRepository)
@@ -42,7 +42,7 @@ final gantiHariApproveRepositoryProvider =
 
 typedef GantiHariApproveRepositoryRef = ProviderRef<GantiHariApproveRepository>;
 String _$gantiHariApproveControllerHash() =>
-    r'5d4ac35240bcf4a98a1d6097b3ff26a14e365002';
+    r'd059b2d63a1a80a6315b03b4706d8468e5f56423';
 
 /// See also [GantiHariApproveController].
 @ProviderFor(GantiHariApproveController)

@@ -19,8 +19,8 @@ class HomeItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Ink(
-        height: 68,
-        width: 68,
+        height: 72,
+        width: 72,
         decoration: BoxDecoration(
           color: Theme.of(context).primaryColor,
           borderRadius: BorderRadius.circular(10),
@@ -48,8 +48,8 @@ class HomeItem extends ConsumerWidget {
                 Text(
                   item.name,
                   style: Themes.customColor(
-                    7,
-                    fontWeight: FontWeight.normal,
+                    8,
+                    fontWeight: FontWeight.w500,
                   ),
                 )
               ],

@@ -26,6 +26,8 @@ mixin _$CutiList {
   int? get idUser => throw _privateConstructorUsedError;
   @JsonKey(name: 'IdKary')
   String? get idKary => throw _privateConstructorUsedError;
+  @JsonKey(name: 'id_dept')
+  int? get idDept => throw _privateConstructorUsedError;
   @JsonKey(name: 'jenis_cuti')
   String? get jenisCuti => throw _privateConstructorUsedError;
   @JsonKey(name: 'alasan')
@@ -106,6 +108,7 @@ abstract class $CutiListCopyWith<$Res> {
       {@JsonKey(name: 'id_cuti') int? idCuti,
       @JsonKey(name: 'id_user') int? idUser,
       @JsonKey(name: 'IdKary') String? idKary,
+      @JsonKey(name: 'id_dept') int? idDept,
       @JsonKey(name: 'jenis_cuti') String? jenisCuti,
       @JsonKey(name: 'alasan') String? alasan,
       @JsonKey(name: 'ket') String? ket,
@@ -156,6 +159,7 @@ class _$CutiListCopyWithImpl<$Res, $Val extends CutiList>
     Object? idCuti = freezed,
     Object? idUser = freezed,
     Object? idKary = freezed,
+    Object? idDept = freezed,
     Object? jenisCuti = freezed,
     Object? alasan = freezed,
     Object? ket = freezed,
@@ -202,6 +206,10 @@ class _$CutiListCopyWithImpl<$Res, $Val extends CutiList>
           ? _value.idKary
           : idKary // ignore: cast_nullable_to_non_nullable
               as String?,
+      idDept: freezed == idDept
+          ? _value.idDept
+          : idDept // ignore: cast_nullable_to_non_nullable
+              as int?,
       jenisCuti: freezed == jenisCuti
           ? _value.jenisCuti
           : jenisCuti // ignore: cast_nullable_to_non_nullable
@@ -345,6 +353,7 @@ abstract class _$$_CutiListCopyWith<$Res> implements $CutiListCopyWith<$Res> {
       {@JsonKey(name: 'id_cuti') int? idCuti,
       @JsonKey(name: 'id_user') int? idUser,
       @JsonKey(name: 'IdKary') String? idKary,
+      @JsonKey(name: 'id_dept') int? idDept,
       @JsonKey(name: 'jenis_cuti') String? jenisCuti,
       @JsonKey(name: 'alasan') String? alasan,
       @JsonKey(name: 'ket') String? ket,
@@ -393,6 +402,7 @@ class __$$_CutiListCopyWithImpl<$Res>
     Object? idCuti = freezed,
     Object? idUser = freezed,
     Object? idKary = freezed,
+    Object? idDept = freezed,
     Object? jenisCuti = freezed,
     Object? alasan = freezed,
     Object? ket = freezed,
@@ -439,6 +449,10 @@ class __$$_CutiListCopyWithImpl<$Res>
           ? _value.idKary
           : idKary // ignore: cast_nullable_to_non_nullable
               as String?,
+      idDept: freezed == idDept
+          ? _value.idDept
+          : idDept // ignore: cast_nullable_to_non_nullable
+              as int?,
       jenisCuti: freezed == jenisCuti
           ? _value.jenisCuti
           : jenisCuti // ignore: cast_nullable_to_non_nullable
@@ -578,6 +592,7 @@ class _$_CutiList implements _CutiList {
       {@JsonKey(name: 'id_cuti') this.idCuti,
       @JsonKey(name: 'id_user') this.idUser,
       @JsonKey(name: 'IdKary') this.idKary,
+      @JsonKey(name: 'id_dept') this.idDept,
       @JsonKey(name: 'jenis_cuti') this.jenisCuti,
       @JsonKey(name: 'alasan') this.alasan,
       @JsonKey(name: 'ket') this.ket,
@@ -623,6 +638,9 @@ class _$_CutiList implements _CutiList {
   @override
   @JsonKey(name: 'IdKary')
   final String? idKary;
+  @override
+  @JsonKey(name: 'id_dept')
+  final int? idDept;
   @override
   @JsonKey(name: 'jenis_cuti')
   final String? jenisCuti;
@@ -722,7 +740,7 @@ class _$_CutiList implements _CutiList {
 
   @override
   String toString() {
-    return 'CutiList(idCuti: $idCuti, idUser: $idUser, idKary: $idKary, jenisCuti: $jenisCuti, alasan: $alasan, ket: $ket, bulanCuti: $bulanCuti, tahunCuti: $tahunCuti, totalHari: $totalHari, sisaCuti: $sisaCuti, tglStart: $tglStart, tglEnd: $tglEnd, tglStartHrd: $tglStartHrd, tglEndHrd: $tglEndHrd, spvSta: $spvSta, spvNm: $spvNm, spvTgl: $spvTgl, spvNote: $spvNote, hrdSta: $hrdSta, hrdNm: $hrdNm, hrdTgl: $hrdTgl, hrdNote: $hrdNote, btlSta: $btlSta, btlNm: $btlNm, btlTgl: $btlTgl, cDate: $cDate, cUser: $cUser, uDate: $uDate, uUser: $uUser, noTelp1: $noTelp1, noTelp2: $noTelp2, fullname: $fullname, pt: $pt, comp: $comp, dept: $dept)';
+    return 'CutiList(idCuti: $idCuti, idUser: $idUser, idKary: $idKary, idDept: $idDept, jenisCuti: $jenisCuti, alasan: $alasan, ket: $ket, bulanCuti: $bulanCuti, tahunCuti: $tahunCuti, totalHari: $totalHari, sisaCuti: $sisaCuti, tglStart: $tglStart, tglEnd: $tglEnd, tglStartHrd: $tglStartHrd, tglEndHrd: $tglEndHrd, spvSta: $spvSta, spvNm: $spvNm, spvTgl: $spvTgl, spvNote: $spvNote, hrdSta: $hrdSta, hrdNm: $hrdNm, hrdTgl: $hrdTgl, hrdNote: $hrdNote, btlSta: $btlSta, btlNm: $btlNm, btlTgl: $btlTgl, cDate: $cDate, cUser: $cUser, uDate: $uDate, uUser: $uUser, noTelp1: $noTelp1, noTelp2: $noTelp2, fullname: $fullname, pt: $pt, comp: $comp, dept: $dept)';
   }
 
   @override
@@ -733,6 +751,7 @@ class _$_CutiList implements _CutiList {
             (identical(other.idCuti, idCuti) || other.idCuti == idCuti) &&
             (identical(other.idUser, idUser) || other.idUser == idUser) &&
             (identical(other.idKary, idKary) || other.idKary == idKary) &&
+            (identical(other.idDept, idDept) || other.idDept == idDept) &&
             (identical(other.jenisCuti, jenisCuti) ||
                 other.jenisCuti == jenisCuti) &&
             (identical(other.alasan, alasan) || other.alasan == alasan) &&
@@ -783,6 +802,7 @@ class _$_CutiList implements _CutiList {
         idCuti,
         idUser,
         idKary,
+        idDept,
         jenisCuti,
         alasan,
         ket,
@@ -836,6 +856,7 @@ abstract class _CutiList implements CutiList {
       {@JsonKey(name: 'id_cuti') final int? idCuti,
       @JsonKey(name: 'id_user') final int? idUser,
       @JsonKey(name: 'IdKary') final String? idKary,
+      @JsonKey(name: 'id_dept') final int? idDept,
       @JsonKey(name: 'jenis_cuti') final String? jenisCuti,
       @JsonKey(name: 'alasan') final String? alasan,
       @JsonKey(name: 'ket') final String? ket,
@@ -880,6 +901,9 @@ abstract class _CutiList implements CutiList {
   @override
   @JsonKey(name: 'IdKary')
   String? get idKary;
+  @override
+  @JsonKey(name: 'id_dept')
+  int? get idDept;
   @override
   @JsonKey(name: 'jenis_cuti')
   String? get jenisCuti;

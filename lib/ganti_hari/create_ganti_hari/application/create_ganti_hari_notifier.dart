@@ -84,9 +84,9 @@ class CreateGantiHari extends _$CreateGantiHari {
     state = const AsyncLoading();
 
     try {
-      // final String messageContent =
-      //     " ( Testing Apps ) Terdapat Waiting Approve Pengajuan Ganti Hari Umum Baru Telah Diinput Oleh : $cUser ";
-      // await _sendWaToHead(idUser: idUser, messageContent: messageContent);
+      final String messageContent =
+          " ( Testing Apps ) Terdapat Waiting Approve Pengajuan Ganti Hari Umum Baru Telah Diinput Oleh : $cUser ";
+      await _sendWaToHead(idUser: idUser, messageContent: messageContent);
 
       state = await AsyncValue.guard(
           () => ref.read(createGantiHariRepositoryProvider).submitGantiHari(

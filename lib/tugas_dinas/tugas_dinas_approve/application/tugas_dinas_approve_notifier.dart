@@ -32,31 +32,16 @@ class TugasDinasApproveController extends _$TugasDinasApproveController {
 
   Future<void> _sendWa(
       {required TugasDinasList item, required String messageContent}) async {
-    final PhoneNum registeredWa = PhoneNum(
+    final PhoneNum phoneNum = PhoneNum(
       noTelp1: item.noTelp1,
       noTelp2: item.noTelp2,
     );
 
-    if (registeredWa.noTelp1 != null) {
-      if (registeredWa.noTelp1!.isNotEmpty)
-        await ref.read(sendWaNotifierProvider.notifier).sendWaDirect(
-            phone: int.parse(registeredWa.noTelp1!),
-            idUser: item.idUser,
-            idDept: item.idDept,
-            notifTitle: 'Notifikasi HRMS',
-            notifContent: '$messageContent');
-    } else if (registeredWa.noTelp2 != null) {
-      if (registeredWa.noTelp2!.isNotEmpty)
-        await ref.read(sendWaNotifierProvider.notifier).sendWaDirect(
-            phone: int.parse(registeredWa.noTelp2!),
-            idUser: item.idUser,
-            idDept: item.idDept,
-            notifTitle: 'Notifikasi HRMS',
-            notifContent: '$messageContent');
-    } else {
-      throw AssertionError(
-          'User yang dituju tidak memiliki nomor telfon. Silahkan hubungi HR untuk mengubah data ');
-    }
+    return ref.read(sendWaNotifierProvider.notifier).processAndSendWa(
+        idUser: item.idUser,
+        idDept: item.idDept,
+        phoneNum: phoneNum,
+        messageContent: messageContent);
   }
 
   Future<void> processSpv({

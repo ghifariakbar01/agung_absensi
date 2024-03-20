@@ -36,29 +36,16 @@ class SakitApproveController extends _$SakitApproveController {
 
   Future<void> _sendWa(
       {required SakitList itemSakit, required String messageContent}) async {
-    // debugger();
+    final PhoneNum phoneNum = PhoneNum(
+      noTelp1: itemSakit.noTelp1,
+      noTelp2: itemSakit.noTelp2,
+    );
 
-    final PhoneNum registeredWa =
-        PhoneNum(noTelp1: itemSakit.noTelp1, noTelp2: itemSakit.noTelp2);
-
-    if (registeredWa.noTelp1!.isNotEmpty) {
-      await ref.read(sendWaNotifierProvider.notifier).sendWaDirect(
-          phone: int.parse(registeredWa.noTelp1!),
-          idUser: itemSakit.idUser!,
-          idDept: itemSakit.idDept!,
-          notifTitle: 'Notifikasi HRMS',
-          notifContent: '$messageContent');
-    } else if (registeredWa.noTelp2!.isNotEmpty) {
-      await ref.read(sendWaNotifierProvider.notifier).sendWaDirect(
-          phone: int.parse(registeredWa.noTelp2!),
-          idUser: itemSakit.idUser!,
-          idDept: itemSakit.idDept!,
-          notifTitle: 'Notifikasi HRMS',
-          notifContent: '$messageContent');
-    } else {
-      throw AssertionError(
-          'User yang dituju tidak memiliki nomor telfon. Silahkan hubungi HR untuk mengubah data ');
-    }
+    return ref.read(sendWaNotifierProvider.notifier).processAndSendWa(
+        idUser: itemSakit.idUser!,
+        idDept: itemSakit.idDept!,
+        phoneNum: phoneNum,
+        messageContent: messageContent);
   }
 
   Future<void> approveSpv(

@@ -11,6 +11,7 @@ abstract class CutiList with _$CutiList {
     @JsonKey(name: 'id_cuti') int? idCuti,
     @JsonKey(name: 'id_user') int? idUser,
     @JsonKey(name: 'IdKary') String? idKary,
+    @JsonKey(name: 'id_dept') int? idDept,
     @JsonKey(name: 'jenis_cuti') String? jenisCuti,
     @JsonKey(name: 'alasan') String? alasan,
     @JsonKey(name: 'ket') String? ket,

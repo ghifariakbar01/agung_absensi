@@ -37,30 +37,16 @@ class GantiHariApproveController extends _$GantiHariApproveController {
     required String messageContent,
     required GantiHariList itemGantiHari,
   }) async {
-    final PhoneNum registeredWa = await ref
-        .read(sendWaNotifierProvider.notifier)
-        .getPhoneById(idUser: itemGantiHari.idUser!);
+    final PhoneNum phoneNum = PhoneNum(
+      noTelp1: itemGantiHari.noTelp1,
+      noTelp2: itemGantiHari.noTelp2,
+    );
 
-    if (registeredWa.noTelp1!.isNotEmpty) {
-      await ref.read(sendWaNotifierProvider.notifier).sendWaDirect(
-          phone: int.parse(registeredWa.noTelp1!),
-          idUser: itemGantiHari.idUser!,
-          // idDept: itemGantiHari.idDept!,
-          idDept: 1,
-          notifTitle: 'Notifikasi HRMS',
-          notifContent: '$messageContent');
-    } else if (registeredWa.noTelp2!.isNotEmpty) {
-      await ref.read(sendWaNotifierProvider.notifier).sendWaDirect(
-          phone: int.parse(registeredWa.noTelp2!),
-          idUser: itemGantiHari.idUser!,
-          // idDept: itemGantiHari.idDept!,
-          idDept: 1,
-          notifTitle: 'Notifikasi HRMS',
-          notifContent: '$messageContent');
-    } else {
-      throw AssertionError(
-          'User yang dituju tidak memiliki nomor telfon. Silahkan hubungi HR untuk mengubah data ');
-    }
+    return ref.read(sendWaNotifierProvider.notifier).processAndSendWa(
+        idUser: itemGantiHari.idUser!,
+        idDept: itemGantiHari.idDept!,
+        phoneNum: phoneNum,
+        messageContent: messageContent);
   }
 
   Future<void> approveSpv({

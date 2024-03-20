@@ -40,7 +40,7 @@ final cutiApproveRepositoryProvider = Provider<CutiApproveRepository>.internal(
 
 typedef CutiApproveRepositoryRef = ProviderRef<CutiApproveRepository>;
 String _$cutiApproveControllerHash() =>
-    r'aa919ca12dbda2d34c9ccebb7bfaf545ac829177';
+    r'7c1ff31ef9f143ffc533d64529f01b797cbd3293';
 
 /// See also [CutiApproveController].
 @ProviderFor(CutiApproveController)

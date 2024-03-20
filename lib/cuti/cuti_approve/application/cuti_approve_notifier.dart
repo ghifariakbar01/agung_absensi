@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:face_net_authentication/cuti/create_cuti/application/create_cuti_notifier.dart';
 import 'package:face_net_authentication/cuti/cuti_approve/infrastructure/cuti_approve_remote_service.dart.dart';
 import 'package:face_net_authentication/sakit/create_sakit/application/create_sakit_notifier.dart';
+import 'package:face_net_authentication/send_wa/application/phone_num.dart';
 import 'package:face_net_authentication/send_wa/application/send_wa_notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -10,7 +11,6 @@ import '../../../mst_karyawan_cuti/application/mst_karyawan_cuti.dart';
 import '../../../mst_karyawan_cuti/application/mst_karyawan_cuti_notifier.dart';
 import '../../../sakit/create_sakit/application/create_sakit.dart';
 
-import '../../../send_wa/application/phone_num.dart';
 import '../../../shared/providers.dart';
 
 import '../../cuti_list/application/cuti_list.dart';
@@ -40,30 +40,16 @@ class CutiApproveController extends _$CutiApproveController {
 
   Future<void> _sendWa(
       {required CutiList itemCuti, required String messageContent}) async {
-    final PhoneNum registeredWa = await ref
-        .read(sendWaNotifierProvider.notifier)
-        .getPhoneById(idUser: itemCuti.idUser!);
+    final PhoneNum phoneNum = PhoneNum(
+      noTelp1: itemCuti.noTelp1,
+      noTelp2: itemCuti.noTelp2,
+    );
 
-    if (registeredWa.noTelp1!.isNotEmpty) {
-      await ref.read(sendWaNotifierProvider.notifier).sendWaDirect(
-          phone: int.parse(registeredWa.noTelp1!),
-          idUser: itemCuti.idUser!,
-          // idDept: itemCuti.idDept!,
-          idDept: 1,
-          notifTitle: 'Notifikasi HRMS',
-          notifContent: '$messageContent');
-    } else if (registeredWa.noTelp2!.isNotEmpty) {
-      await ref.read(sendWaNotifierProvider.notifier).sendWaDirect(
-          phone: int.parse(registeredWa.noTelp2!),
-          idUser: itemCuti.idUser!,
-          // idDept: itemCuti.idDept!,
-          idDept: 1,
-          notifTitle: 'Notifikasi HRMS',
-          notifContent: '$messageContent');
-    } else {
-      throw AssertionError(
-          'User yang dituju tidak memiliki nomor telfon. Silahkan hubungi HR untuk mengubah data ');
-    }
+    return ref.read(sendWaNotifierProvider.notifier).processAndSendWa(
+        idUser: itemCuti.idUser!,
+        idDept: itemCuti.idDept!,
+        phoneNum: phoneNum,
+        messageContent: messageContent);
   }
 
   Future<void> approveSpv({

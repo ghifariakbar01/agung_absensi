@@ -40,7 +40,7 @@ final izinApproveRepositoryProvider = Provider<IzinApproveRepository>.internal(
 
 typedef IzinApproveRepositoryRef = ProviderRef<IzinApproveRepository>;
 String _$izinApproveControllerHash() =>
-    r'784cff06ec6829b5b2db6eb084d2875ba9b12b53';
+    r'27c0e9406b3e717f13d68e9fe431b3500cce6c00';
 
 /// See also [IzinApproveController].
 @ProviderFor(IzinApproveController)

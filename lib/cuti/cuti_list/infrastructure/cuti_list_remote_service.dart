@@ -33,21 +33,22 @@ class CutiListRemoteService {
       final Map<String, String> select = {
         'command': //
             " SELECT "
-                " $dbName.*, "
-                " (SELECT no_telp1 FROM $dbMstUser WHERE id_user = $dbName.id_user) AS no_telp1, "
-                " (SELECT no_telp2 FROM $dbMstUser WHERE id_user = $dbName.id_user) AS no_telp2, "
-                " (SELECT fullname FROM $dbMstUser WHERE id_user = $dbName.id_user) AS fullname, "
-                " (SELECT nama FROM mst_comp WHERE id_comp =  (SELECT id_comp FROM $dbMstUser WHERE id_user = $dbName.id_user) ) AS comp, "
-                " (SELECT pt FROM $dbKaryawan WHERE IdKary = $dbName.IdKary) AS pt, "
-                " (SELECT nama FROM $dbMstDept WHERE id_dept = (SELECT id_dept FROM $dbMstUser WHERE id_user = $dbName.id_user)) AS dept "
+                "     $dbName.*, "
+                "     (SELECT no_telp1 FROM $dbMstUser WHERE id_user = $dbName.id_user) AS no_telp1, "
+                "     (SELECT no_telp2 FROM $dbMstUser WHERE id_user = $dbName.id_user) AS no_telp2, "
+                "     (SELECT fullname FROM $dbMstUser WHERE id_user = $dbName.id_user) AS fullname, "
+                "     (SELECT nama FROM mst_comp WHERE id_comp =  (SELECT id_comp FROM $dbMstUser WHERE id_user = $dbName.id_user) ) AS comp, "
+                "     (SELECT pt FROM $dbKaryawan WHERE IdKary = $dbName.IdKary) AS pt, "
+                "     (SELECT nama FROM $dbMstDept WHERE id_dept = (SELECT id_dept FROM $dbMstUser WHERE id_user = $dbName.id_user)) AS dept, "
+                "     (SELECT id_dept FROM $dbMstUser WHERE id_user = $dbName.id_user) AS id_dept "
                 " FROM "
-                " $dbName "
+                "     $dbName "
                 " WHERE "
-                " id_cuti IS NOT NULL "
+                "     id_cuti IS NOT NULL "
                 " ORDER BY "
-                " c_date DESC "
+                "     c_date DESC "
                 " OFFSET "
-                " $page * 20 ROWS FETCH FIRST 20 ROWS ONLY ",
+                "     $page * 20 ROWS FETCH FIRST 20 ROWS ONLY ",
         'mode': 'SELECT'
       };
 
@@ -116,7 +117,8 @@ class CutiListRemoteService {
                 "          $dbMstUser.fullname, "
                 "          $dbKaryawan.pt, "
                 "          $dbMstDept.nama AS dept, "
-                "          (SELECT nama FROM mst_comp WHERE id_comp = (SELECT id_comp FROM $dbMstUser WHERE id_user = $dbName.id_user)) AS comp "
+                "          (SELECT nama FROM mst_comp WHERE id_comp = (SELECT id_comp FROM $dbMstUser WHERE id_user = $dbName.id_user)) AS comp, "
+                "          (SELECT id_dept FROM $dbMstUser WHERE id_user = $dbName.id_user) AS id_dept "
                 "      FROM "
                 "          $dbName "
                 "      JOIN "

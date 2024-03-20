@@ -45,6 +45,46 @@ class SendWaNotifier extends _$SendWaNotifier {
         notifContent: notifContent);
   }
 
+  Future<void> processAndSendWa(
+      {required int idUser,
+      required int idDept,
+      required PhoneNum phoneNum,
+      required String messageContent}) async {
+    bool noTelp1Empty = false;
+    bool noTelp2Empty = false;
+
+    if (phoneNum.noTelp1 != null) {
+      if (phoneNum.noTelp1!.isEmpty) {
+        noTelp1Empty = true;
+      } else {
+        await ref.read(sendWaNotifierProvider.notifier).sendWaDirect(
+            phone: int.parse(phoneNum.noTelp1!),
+            idUser: idUser,
+            idDept: idDept,
+            notifTitle: 'Notifikasi HRMS',
+            notifContent: '$messageContent');
+      }
+    }
+
+    if (phoneNum.noTelp2 != null) {
+      if (phoneNum.noTelp2!.isEmpty) {
+        noTelp2Empty = true;
+      } else {
+        await ref.read(sendWaNotifierProvider.notifier).sendWaDirect(
+            phone: int.parse(phoneNum.noTelp2!),
+            idUser: idUser,
+            idDept: idDept,
+            notifTitle: 'Notifikasi HRMS',
+            notifContent: '$messageContent');
+      }
+    }
+
+    if ((phoneNum.noTelp1 == null && phoneNum.noTelp2 == null) ||
+        (noTelp1Empty == true && noTelp2Empty == true))
+      throw AssertionError(
+          'User yang dituju tidak memiliki nomor telfon. Silahkan hubungi HR untuk mengubah data ');
+  }
+
   Future<PhoneNum> getPhoneById({required int idUser}) async {
     return ref.read(sendWaRepositoryProvider).getPhoneById(idUser: idUser);
   }
