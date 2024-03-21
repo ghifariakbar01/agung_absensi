@@ -28,6 +28,7 @@ class ProfilePassword extends ConsumerWidget {
             'PASSWORD : ',
             style: Themes.customColor(
               15,
+              color: Colors.white,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -35,6 +36,7 @@ class ProfilePassword extends ConsumerWidget {
             '${passwordVisible ? userProvider.user.password ?? '' : '*'.padRight(userProvider.user.password!.length, '*')}',
             style: Themes.customColor(
               10,
+              color: Colors.white,
               fontWeight: FontWeight.bold,
             ),
           ),

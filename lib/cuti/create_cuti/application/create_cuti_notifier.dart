@@ -165,16 +165,19 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
   }
 
   /* 
-
-    to submitCuti, initialize the following variables
+  1.1
+  ------------------------------------------------------
+    To submitCuti, initialize the following variables
 
       dateMasuk: dateMasuk,
       tahunCuti: tahunCuti,
       totalHariCutiBaru: totalHariCutiBaru,
       totalHariCutiTidakBaru: totalHariCutiTidakBaru,
 
-    for table insertion
+      for table insertion
+   ------------------------------------------------------
   */
+
   Future<void> _finalizeSubmit({
     required int idUser,
     required String tglAwal,
@@ -211,6 +214,12 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
     }
     // End VALIDATE DATA MASTER CUTI
 
+    /* 
+       -- REFER TO 1.1 -- 
+       totalHariCutiBaru untuk saldo cuti baru (karyawan baru)
+       totalHariCutiTidakBaru untuk saldo cuti lama (karyawan lama)
+
+      */
     final int totalHariCutiBaru = mstCuti.cutiBaru! -
         (tglAkhirInDateTime.difference(tglAwalInDateTime).inDays - jumlahhari) -
         create.hitungLibur!;
@@ -224,14 +233,17 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
     final DateTime createMasukInDateTime = DateTime.parse(create.masuk!);
 
     /* 
+       -- REFER TO 1.1 -- 
       dateMasuk untuk menghitung periode kapan cuti digunakan
     */
     final DateTime? dateMasuk =
         _returnDateMasuk(createMasukInDateTime: createMasukInDateTime);
+
     final Duration tglAwaltglMasukDiff =
         tglAwalInDateTime.difference(dateMasuk!);
 
     /* 
+      -- REFER TO 1.1 -- 
       tahunCuti untuk menghitung tahun kapan cuti digunakan
       dalam periode
     */
@@ -240,18 +252,14 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
       tglAwaltglMasukDiff: tglAwaltglMasukDiff.inDays,
     );
 
-    // 3. Menghitung Saldo Cuti
-    //    dan menghasilkan error jika habis
-    //
-
     await _validateSaldoCuti(
+      dateMasuk: dateMasuk,
+      tahunCuti: int.parse(tahunCuti!),
+      //
       idUser: idUser,
       create: create,
       mstCuti: mstCuti,
       jenisCuti: jenisCuti,
-      dateMasuk: dateMasuk,
-      tahunCuti: int.parse(tahunCuti!),
-      //
       openDateJan: openDateJan,
       tglAwalInDateTime: tglAwalInDateTime,
       totalHariCutiBaru: totalHariCutiBaru,
@@ -259,7 +267,7 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
     );
 
     final syarat2 = (mstCuti.cutiBaru! > 0 &&
-        !dateMasuk.difference(tglAwalInDateTime).isNegative);
+        tglAwalInDateTime.difference(dateMasuk).isNegative == false);
 
     final int? sisaCuti = mstCuti.cutiBaru == 0 || syarat2
         ? mstCuti.cutiBaru
@@ -324,6 +332,12 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
     }
     // End VALIDATE DATA MASTER CUTI
 
+    /* 
+       -- REFER TO 1.1 -- 
+       totalHariCutiBaru untuk saldo cuti baru (karyawan baru)
+       totalHariCutiTidakBaru untuk saldo cuti lama (karyawan lama)
+
+      */
     final int totalHariCutiBaru = mstCuti.cutiBaru! -
         (tglAkhirInDateTime.difference(tglAwalInDateTime).inDays - jumlahhari) -
         create.hitungLibur!;
@@ -337,6 +351,7 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
     final DateTime createMasukInDateTime = DateTime.parse(create.masuk!);
 
     /* 
+    -- REFER TO 1.1 -- 
       dateMasuk untuk menghitung periode kapan cuti digunakan
     */
     final DateTime? dateMasuk =
@@ -345,6 +360,7 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
         tglAwalInDateTime.difference(dateMasuk!);
 
     /* 
+    -- REFER TO 1.1 -- 
       tahunCuti untuk menghitung tahun kapan cuti digunakan
       dalam periode
     */
@@ -353,18 +369,14 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
       tglAwaltglMasukDiff: tglAwaltglMasukDiff.inDays,
     );
 
-    // 3. Menghitung Saldo Cuti
-    //    dan menghasilkan error jika habis
-    //
-
     await _validateSaldoCuti(
+      tahunCuti: int.parse(tahunCuti!),
+      dateMasuk: dateMasuk,
+      //
       idUser: idUser,
       create: create,
       mstCuti: mstCuti,
       jenisCuti: jenisCuti,
-      dateMasuk: dateMasuk,
-      tahunCuti: int.parse(tahunCuti!),
-      //
       openDateJan: openDateJan,
       tglAwalInDateTime: tglAwalInDateTime,
       totalHariCutiBaru: totalHariCutiBaru,
@@ -372,7 +384,7 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
     );
 
     final syarat2 = (mstCuti.cutiBaru! > 0 &&
-        !dateMasuk.difference(tglAwalInDateTime).isNegative);
+        tglAwalInDateTime.difference(dateMasuk).isNegative == false);
 
     final int? sisaCuti = mstCuti.cutiBaru == 0 || syarat2
         ? mstCuti.cutiBaru
@@ -433,21 +445,25 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
 
     final String nama = ref.read(userNotifierProvider).user.nama!;
 
-    // 4. Saldo Cuti Awal (Tahun Masuk)
-    //
-    //    Jika user masuk kerja saat tahun_cuti sama dengan tahun masuk
-    //
-    //    variables :
-    //
-    //    final createMasukInDateTime = DateTime.parse(create.masuk!);
-    //    final tglAwaltglMasukDiff = tglAwalInDateTime.difference(dateMasuk);
-    //
-    /*     
+    /* 
+      NOTES 
+
+      4. Saldo Cuti Awal (Tahun Masuk)
+    
+        Jika user masuk kerja saat tahun_cuti sama dengan tahun masuk
+    
+        variables :
+    
+        final createMasukInDateTime = DateTime.parse(create.masuk!);
+        final tglAwaltglMasukDiff = tglAwalInDateTime.difference(dateMasuk);
+    
+        
         totalHariCutiBaru =  createSakitCuti!.cutiBaru! -
                              tglAkhirInDateTime.difference(tglAwalInDateTime).inDays -
                              jumlahhari -
                              create.hitungLibur!;
     */
+
     final bool tglStartLebihDariTglMasuk =
         tglAwalInDateTime.difference(dateMasuk).isNegative == false;
 
@@ -566,7 +582,7 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
     required DateTime tglAkhirInDateTime,
   }) async {
     if (tglAwalInDateTime != tglAkhirInDateTime &&
-        !tglAwalInDateTime.difference(tglAkhirInDateTime).isNegative) {
+        tglAwalInDateTime.difference(tglAkhirInDateTime).isNegative == false) {
       throw AssertionError(
           'Tanggal Awal Tidak Boleh Lebih Besar Dari Tanggal Akhir');
     }

@@ -53,7 +53,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
     final userUpdate = ref.watch(userInitFutureProvider(context));
 
-    return VAsyncValueWidget(
+    return VAsyncWidgetScaffold(
         value: userUpdate,
         data: (_) => Stack(
               children: [

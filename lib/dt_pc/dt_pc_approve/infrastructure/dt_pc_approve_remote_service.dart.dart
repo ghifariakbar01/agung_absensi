@@ -26,7 +26,7 @@ class DtPcApproveRemoteService {
         "command": "UPDATE $dbName SET "
                 " spv_nm = '$nama', " +
             " spv_sta = 1, " +
-            " spv_tgl = getdate(), " +
+            " spv_tgl = getdate() " +
             " WHERE id_dt = $idDt ",
         "mode": "UPDATE"
       };
@@ -214,7 +214,7 @@ class DtPcApproveRemoteService {
                 " btl_nm = '$nama', " +
             " btl_sta = 1, " +
             " btl_tgl = getdate() " +
-            " WHERE id_sakit = $idDt ",
+            " WHERE id_dt = $idDt ",
         "mode": "UPDATE"
       };
 

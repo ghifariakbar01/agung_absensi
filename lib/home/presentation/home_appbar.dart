@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -55,7 +53,6 @@ class HomeAppBar extends ConsumerWidget implements PreferredSizeWidget {
         ),
         InkWell(
           onTap: () async {
-            debugger(message: 'called');
             await ref
                 .read(imeiIntroNotifierProvider.notifier)
                 .clearVisitedIMEIIntroduction();

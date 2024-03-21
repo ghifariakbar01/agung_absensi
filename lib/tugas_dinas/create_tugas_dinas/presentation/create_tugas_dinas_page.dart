@@ -29,7 +29,7 @@ class CreateTugasDinasPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final jenisTugasDinasTextController = useTextEditingController();
+    final jenisTugasDinasTextController = useTextEditingController(text: 'DK');
 
     final nama = ref.watch(userNotifierProvider);
     final namaTextController = useTextEditingController(text: nama.user.nama);
@@ -484,7 +484,7 @@ class CreateTugasDinasPage extends HookConsumerWidget {
                       Align(
                         alignment: Alignment.bottomCenter,
                         child: VButton(
-                            label: 'Update Form Tugas Dinas',
+                            label: 'Submit Form Tugas Dinas',
                             onPressed: () async {
                               log(' VARIABLES : \n  Nama : ${namaTextController.value.text} ');
                               log(' Jenis Tugas Dinas: ${jenisTugasDinasTextController.value.text} \n ');

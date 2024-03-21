@@ -114,11 +114,6 @@ class CreateTugasDinasNotifier extends _$CreateTugasDinasNotifier {
     state = const AsyncLoading();
 
     try {
-      final cUser = ref.read(userNotifierProvider).user.nama!;
-      final String messageContent =
-          " ( Testing Apps ) Terdapat Waiting Aprove Pengajuan Tugas Dinas Baru Telah Diinput Oleh : $cUser ";
-      await _sendWaToHead(idUser: idUser, messageContent: messageContent);
-
       // debugger();
       final CreateSakit create = await ref
           .read(createSakitNotifierProvider.notifier)
@@ -138,6 +133,10 @@ class CreateTugasDinasNotifier extends _$CreateTugasDinasNotifier {
           lokasi: lokasi,
           cUser: cUser,
           khusus: khusus);
+
+      // final String messageContent =
+      //     " ( Testing Apps ) Terdapat Waiting Aprove Pengajuan Tugas Dinas Baru Telah Diinput Oleh : $cUser ";
+      // await _sendWaToHead(idUser: idUser, messageContent: messageContent);
 
       state = const AsyncValue.data('Sukses Menginput Form Tugas Dinas');
     } catch (e) {
@@ -198,61 +197,36 @@ class CreateTugasDinasNotifier extends _$CreateTugasDinasNotifier {
     // 1. Calc jumlah harito substract sundays and saturdays
     final int _jumlahhari = _getJumlahHari(
         create, DateTime.parse(tglAwal), DateTime.parse(tglAkhir));
+
     int _diffIndays() =>
         DateTime.now().difference(DateTime.parse(tglAwal)).inDays + _jumlahhari;
 
-    if (kategori == 'lk' && khusus == false) {
+    int _diffIndaysPast() =>
+        DateTime.now().difference(DateTime.parse(tglAwal)).inDays - _jumlahhari;
+
+    final bool fullAkses = ref.read(userNotifierProvider).user.fullAkses!;
+
+    if (kategori == 'LK' && khusus == false) {
       final bool lewatDariMinTigaHari = _diffIndays() > -2;
       // final bool fullAkses = ref.read(userNotifierProvider).user.fullAkses
 
-      if (lewatDariMinTigaHari && khusus == false) {
+      if (lewatDariMinTigaHari && fullAkses == false && khusus == false) {
         throw AssertionError('Tanggal input lewat dari -3 hari');
       }
     } else {
-      if (_diffIndays() > 0 && khusus == false) {
+      if (_diffIndaysPast() > 0 && fullAkses == false && khusus == false) {
         throw AssertionError('Tanggal input lewat dari sehari');
       }
     }
 
-    if (DateTime.parse(tglAkhir).difference(DateTime.parse(tglAwal)).inDays >
-        0) {
+    if (DateTime.parse(tglAwal)
+            .difference(DateTime.parse(tglAkhir))
+            .isNegative ==
+        false) {
       throw AssertionError(
           'Tanggal Awal Tidak Boleh Lebih Besar Dari Tanggal Akhir');
     }
   }
-
-  // _validateJmlHariSubmit({
-  //   required int jumlahhari,
-  //   required String kategori,
-  //   required DateTime tglAwalInDateTime,
-  //   required DateTime tglAkhirInDateTime,
-  // }) {
-  //   final int daysDiff =
-  //       tglAwalInDateTime.difference(tglAkhirInDateTime).inDays;
-  //   // final bool isFullAkses = ref.read(userNotifierProvider).user.fullAkses!;
-
-  //   if (daysDiff >= 1 && kategori == 'DT') {
-  //     throw AssertionError('Tanggal input lewat dari 1 hari');
-  //   }
-
-  //   if (daysDiff >= 3 && kategori == 'PC') {
-  //     throw AssertionError('Tanggal input lewat dari 1 hari');
-  //   }
-  // }
-
-  // Future<void> _validateJmlHariUpdate({
-  //   required int jumlahhari,
-  //   required DateTime tglAwalInDateTime,
-  //   required DateTime tglAkhirInDateTime,
-  // }) async {
-  //   final int daysDiff =
-  //       tglAwalInDateTime.difference(tglAkhirInDateTime).inDays;
-  //   // final bool isFullAkses = ref.read(userNotifierProvider).user.fullAkses!;
-
-  //   if (daysDiff >= 1) {
-  //     throw AssertionError('Tanggal input lewat dari 1 hari');
-  //   }
-  // }
 
   int _getJumlahHari(
       //

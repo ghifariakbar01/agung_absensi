@@ -222,9 +222,6 @@ class TCPage extends ConsumerWidget {
                 height: 50,
                 textAlign: TextAlign.center,
                 label: 'CONTINUE',
-                textStyle: Themes.customColor(
-                  14,
-                ),
                 isEnabled: isPrivacy && isTerms,
                 onPressed: () async {
                   await showDialog(

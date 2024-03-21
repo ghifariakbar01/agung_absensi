@@ -67,8 +67,6 @@ class AbsenRemoteService {
     try {
       // final data = _dioRequest;
 
-      debugger(message: 'called');
-
       // data.addAll({
       //   "mode": 'INSERT',
       // });
@@ -94,8 +92,6 @@ class AbsenRemoteService {
 
       final dataProd = _dioRequest;
 
-      debugger(message: 'called');
-
       dataProd.addAll({
         "mode": 'INSERT',
         "command": "INSERT INTO $dbNameProd " +
@@ -104,8 +100,6 @@ class AbsenRemoteService {
             "('$trimmedDate', '$ket', '${_userModelWithPassword.idUser}', '$imei', '$idGeof', '$trimmedDateDb', '${_userModelWithPassword.nama}', '$latitude', '$longitude', '$lokasi')",
       });
 
-      debugger(message: 'called');
-
       final responseProd = await _dio.post('',
           data: jsonEncode(dataProd),
           options: Options(contentType: 'text/plain'));
@@ -113,32 +107,25 @@ class AbsenRemoteService {
           data: jsonEncode(dataProd),
           options: Options(contentType: 'text/plain'));
 
-      if (responseProd != responseHosting) {
+      final itemsProd = responseProd.data?[0];
+      final itemsHosting = responseHosting.data?[0];
+
+      if (itemsHosting != itemsProd) {
         final message = 'Error server hosting / original';
         final errorCode = 404;
 
         throw RestApiExceptionWithMessage(errorCode, message);
       }
 
-      // final items = response.data?[0];
-
-      final itemsProd = responseProd.data?[0];
-
-      // log('ABSEN REMOTE: items $items');
-
       log('ABSEN REMOTE: itemsProd $itemsProd');
 
       if (itemsProd['status'] == 'Success') {
-        // final absenExist = items['items'] != null && items['items'] is List;
-
         final absenProdExist =
             itemsProd['items'] != null && itemsProd['items'] is List;
 
-        debugger(message: 'called');
-
         if (absenProdExist) {
           // if (items['errornum'] != null && items['errornum'] as int != 0) {
-          //   debugger(message: 'called');
+          //
           //   final message = items['error'] as String?;
           //   final errorCode = items['errornum'] as int;
 
@@ -146,15 +133,11 @@ class AbsenRemoteService {
           // }
           if (itemsProd['errornum'] != null &&
               itemsProd['errornum'] as int != 0) {
-            debugger(message: 'called');
-
             final message = itemsProd['error'] as String?;
             final errorCode = itemsProd['errornum'] as int;
 
             throw RestApiExceptionWithMessage(errorCode, message);
           }
-
-          debugger(message: 'called');
 
           return unit;
         } else {
@@ -171,18 +154,14 @@ class AbsenRemoteService {
           throw RestApiExceptionWithMessage(errorCode, message);
         }
       } else {
-        debugger(message: 'called');
-
         // if (items['errornum'] != null && items['errornum'] as int != 0) {
-        //   debugger(message: 'called');
+        //
 
         //   final message = items['error'] as String?;
         //   final errorCode = items['errornum'] as int;
 
         //   throw RestApiExceptionWithMessage(errorCode, message);
         // }
-
-        debugger(message: 'called');
 
         final message = itemsProd['error'] as String?;
         final errorCode = itemsProd['errornum'] as int;
@@ -212,7 +191,7 @@ class AbsenRemoteService {
   //       "command": command,
   //     });
 
-  //     debugger(message: 'called');
+  //
 
   //     log('data ${jsonEncode(data)}');
 
@@ -385,8 +364,6 @@ class AbsenRemoteService {
 
           return [];
         } else {
-          debugger(message: 'called');
-
           return [];
         }
       } else {

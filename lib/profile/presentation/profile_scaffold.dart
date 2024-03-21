@@ -53,9 +53,9 @@ class ProfileScaffold extends ConsumerWidget {
                       context: context,
                       builder: (_) => Platform.isIOS && user.nama != 'Ghifar'
                           ? VAlertDialog(
-                              label: 'Unlink HP & Logout ?',
+                              label: 'Unlink HP & Uninstall ?',
                               labelDescription:
-                                  'Mohon Dibaca: Setelah Hapus Installation ID\n & Logout Akun Anda tidak akan bisa menggunakan device ini kembali.',
+                                  'Mohon Dibaca: Setelah Hapus Installation ID\n & Uninstall Akun Anda tidak akan bisa menggunakan device ini kembali.',
                               onPressed: () async {
                                 context.pop();
 
@@ -66,7 +66,7 @@ class ProfileScaffold extends ConsumerWidget {
                                         idUser: user.idUser.toString());
                               })
                           : VAlertDialog(
-                              label: 'Unlink HP & Logout ?',
+                              label: 'Unlink HP & Uninstall ?',
                               labelDescription:
                                   'Hapus Installation ID\n & Logout',
                               onPressed: () async {

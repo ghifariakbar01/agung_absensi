@@ -278,7 +278,6 @@ class WaPhoneBottomSheet extends HookConsumerWidget {
                         ],
                       ),
                     )),
-                Expanded(child: Container()),
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: TextFormField(
@@ -297,7 +296,6 @@ class WaPhoneBottomSheet extends HookConsumerWidget {
                     },
                   ),
                 ),
-                Expanded(child: Container()),
                 VButton(
                     label: 'Konfirmasi',
                     onPressed: () {

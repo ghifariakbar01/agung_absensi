@@ -1,4 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:face_net_authentication/tugas_dinas/create_tugas_dinas/application/create_tugas_dinas_notifier.dart';
+import 'package:face_net_authentication/widgets/v_async_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
@@ -12,6 +14,7 @@ import '../../../style/style.dart';
 import '../../../widgets/tappable_widget.dart';
 import '../../../widgets/v_dialogs.dart';
 
+import '../../create_tugas_dinas/application/jenis_tugas_dinas.dart';
 import '../../tugas_dinas_approve/application/tugas_dinas_approve_notifier.dart';
 import '../application/tugas_dinas_list.dart';
 import 'tugas_dinas_dtl_dialog.dart';
@@ -40,6 +43,8 @@ class TugasDinasListItem extends HookConsumerWidget {
     //         .difference(DateTime.parse(item.cDate!))
     //         .inDays
     //     : DateTime.now().difference(DateTime.parse(item.cDate!)).inDays;
+
+    final jenisTugasDinas = ref.watch(jenisTugasDinasNotifierProvider);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -307,32 +312,39 @@ class TugasDinasListItem extends HookConsumerWidget {
                     ],
                   ),
 
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Kategori',
-                        style: Themes.customColor(7,
-                            color: item.btlSta == true
-                                ? Colors.white
-                                : Colors.grey),
-                      ),
-                      SizedBox(
-                        height: 2,
-                      ),
-                      SizedBox(
-                        width: 90,
-                        child: Text(
-                          '${item.kategori}',
-                          style: Themes.customColor(9,
+                  VAsyncValueWidget<List<JenisTugasDinas>>(
+                    value: jenisTugasDinas,
+                    data: (jenis) => Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Kategori',
+                          style: Themes.customColor(7,
                               color: item.btlSta == true
                                   ? Colors.white
-                                  : Palette.orange,
-                              fontWeight: FontWeight.w500),
+                                  : Colors.grey),
                         ),
-                      ),
-                    ],
+                        SizedBox(
+                          height: 2,
+                        ),
+                        SizedBox(
+                          width: 90,
+                          child: Text(
+                            jenis
+                                .firstWhere(
+                                  (element) => element.kode == item.kategori,
+                                )
+                                .kategori,
+                            style: Themes.customColor(9,
+                                color: item.btlSta == true
+                                    ? Colors.white
+                                    : Palette.orange,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
 
                   SizedBox(
