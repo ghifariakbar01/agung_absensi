@@ -60,7 +60,6 @@ class CreateAbsenManualRemoteService {
 
       final data = _dioRequest;
       data.addAll(submitSakit);
-      debugger();
 
       final response = await _dio.post('',
           data: jsonEncode(data), options: Options(contentType: 'text/plain'));

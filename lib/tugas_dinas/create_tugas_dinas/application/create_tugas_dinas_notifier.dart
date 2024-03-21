@@ -134,9 +134,9 @@ class CreateTugasDinasNotifier extends _$CreateTugasDinasNotifier {
           cUser: cUser,
           khusus: khusus);
 
-      // final String messageContent =
-      //     " ( Testing Apps ) Terdapat Waiting Aprove Pengajuan Tugas Dinas Baru Telah Diinput Oleh : $cUser ";
-      // await _sendWaToHead(idUser: idUser, messageContent: messageContent);
+      final String messageContent =
+          " ( Testing Apps ) Terdapat Waiting Aprove Pengajuan Tugas Dinas Baru Telah Diinput Oleh : $cUser ";
+      await _sendWaToHead(idUser: idUser, messageContent: messageContent);
 
       state = const AsyncValue.data('Sukses Menginput Form Tugas Dinas');
     } catch (e) {

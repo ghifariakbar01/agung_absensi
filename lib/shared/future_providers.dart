@@ -21,6 +21,12 @@ final getUserFutureProvider = FutureProvider<Unit>((ref) async {
     final json = jsonDecode(userString) as Map<String, Object?>;
     final user = UserModelWithPassword.fromJson(json);
 
+    if (user.IdKary == null) {
+      // IF USER ID KARYAWAN NULL LOGOUT, MAKE USER LOGIN AGAIN
+      await ref.read(userNotifierProvider.notifier).logout();
+      return unit;
+    }
+
     if (user.staf == null) {
       // IF USER STAFF NULL LOGOUT, MAKE USER LOGIN AGAIN
       await userNotifier.logout();
@@ -49,6 +55,7 @@ final getUserFutureProvider = FutureProvider<Unit>((ref) async {
   which bypass current route directly to home
 
 */
+
 // 2. INIT IMEI WITH USER
 final imeiInitFutureProvider =
     FutureProvider.family<Unit, BuildContext>((ref, context) async {
@@ -62,50 +69,45 @@ final imeiInitFutureProvider =
 
   log('imeiInitFutureProvider -- 2');
   final user = ref.read(userNotifierProvider).user;
-  final hasIdKary = user.IdKary != null;
-  if (hasIdKary) {
-    //
-    if (user.IdKary!.isNotEmpty) {
-      final String? imeiDb;
 
-      try {
-        log('imeiInitFutureProvider -- 3');
-        final imeiNotifier = ref.read(imeiNotifierProvider.notifier);
-        // 3. GET IMEI DATA
-        String imei = await imeiNotifier.getImeiString();
-        log('imeiInitFutureProvider -- 4 -- getImeiString');
-        imeiNotifier.changeSavedImei(imei);
-        log('imeiInitFutureProvider -- 5 -- getImeiStringDb');
-        imeiDb =
-            await imeiNotifier.getImeiStringDb(idKary: user.IdKary ?? 'null');
-        log('imeiInitFutureProvider -- 6 -- checkAndUpdateImei');
-        await ref
-            .read(imeiAuthNotifierProvider.notifier)
-            .checkAndUpdateImei(imeiDb: imeiDb);
-        log('imeiInitFutureProvider -- 7');
-      } catch (e) {
-        throw AssertionError('Error validating imei. Error : $e');
-      }
+  if (user.IdKary!.isNotEmpty) {
+    final String? imeiDb;
 
-      // 4. PROCESS IMEI DATA
-      // IF OFFLINE FROM USER INIT
-      final isOfflineFromInit = ref.read(absenOfflineModeProvider);
+    try {
+      log('imeiInitFutureProvider -- 3');
+      final imeiNotifier = ref.read(imeiNotifierProvider.notifier);
+      // 3. GET IMEI DATA
+      String imei = await imeiNotifier.getImeiString();
+      log('imeiInitFutureProvider -- 4 -- getImeiString');
+      imeiNotifier.changeSavedImei(imei);
+      log('imeiInitFutureProvider -- 5 -- getImeiStringDb');
+      imeiDb =
+          await imeiNotifier.getImeiStringDb(idKary: user.IdKary ?? 'null');
+      log('imeiInitFutureProvider -- 6 -- checkAndUpdateImei');
+      await ref
+          .read(imeiAuthNotifierProvider.notifier)
+          .checkAndUpdateImei(imeiDb: imeiDb);
+      log('imeiInitFutureProvider -- 7');
+    } catch (e) {
+      throw AssertionError('Error validating imei. Error : $e');
+    }
 
-      if (!isOfflineFromInit) {
-        await ref
-            .read(imeiNotifierProvider.notifier)
-            .processImei(imei: imeiDb, ref: ref, context: context);
-        return unit;
-      } else {
-        // IF CURRENT APP IS OFFLINE
-        ref.read(initUserStatusNotifierProvider.notifier).letYouThrough();
-        return unit;
-      }
+    // 4. PROCESS IMEI DATA
+    // IF OFFLINE FROM USER INIT
+    final isOfflineFromInit = ref.read(absenOfflineModeProvider);
+
+    if (!isOfflineFromInit) {
+      await ref
+          .read(imeiNotifierProvider.notifier)
+          .processImei(imei: imeiDb, ref: ref, context: context);
+      return unit;
     } else {
-      throw AssertionError('Error validating user. IdKary user is empty');
+      // IF CURRENT APP IS OFFLINE
+      ref.read(initUserStatusNotifierProvider.notifier).letYouThrough();
+      return unit;
     }
   } else {
-    throw AssertionError('Error validating user. IdKary user null');
+    throw AssertionError('Error validating user. IdKary user is empty');
   }
 });
 

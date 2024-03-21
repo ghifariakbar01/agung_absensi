@@ -215,7 +215,7 @@ class AbsenManualApproveRemoteService {
                 " btl_nm = '$nama', " +
             " btl_sta = 1, " +
             " btl_tgl = getdate() " +
-            " WHERE id_sakit = $idAbsenMnl ",
+            " WHERE id_absenmnl = $idAbsenMnl ",
         "mode": "UPDATE"
       };
 

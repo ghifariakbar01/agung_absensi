@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 
 import '../../../err_log/application/err_log_notifier.dart';
 import '../../../routes/application/route_names.dart';
@@ -116,39 +117,31 @@ class SakitDtlWidget extends HookConsumerWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // UPPER
                   Text(
-                    'ID : ${item.idSakit}',
+                    '${item.namaImg}',
                     style: Themes.customColor(11,
+                        fontWeight: FontWeight.w500,
                         color: Theme.of(context).unselectedWidgetColor),
-                  ),
-                  SizedBox(
-                    height: 2,
-                  ),
-                  Text(
-                    'Nama : ${item.namaImg}',
-                    style: Themes.customColor(11,
-                        color: Theme.of(context).unselectedWidgetColor),
-                  ),
-                  SizedBox(
-                    height: 2,
                   ),
                   Text(
                     'Created By : ${item.cUser}',
                     style: Themes.customColor(10,
+                        fontWeight: FontWeight.w500,
                         color: Theme.of(context).unselectedWidgetColor),
                   ),
                 ],
               ),
+              Spacer(),
               SizedBox(
-                width: 50,
+                width: 75,
                 child: Row(
                   children: [
                     Flexible(
                       child: Text(
-                        'Tgl Upload : ${item.cDate}',
+                        '${DateFormat('E, dd-MM-yyyy HH:mm').format(DateTime.parse(item.cDate))}',
                         maxLines: 3,
-                        style: Themes.customColor(8,
+                        style: Themes.customColor(9,
+                            fontWeight: FontWeight.w500,
                             color: Theme.of(context).unselectedWidgetColor),
                       ),
                     ),

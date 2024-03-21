@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:collection/collection.dart';
 import 'package:face_net_authentication/tugas_dinas/create_tugas_dinas/application/create_tugas_dinas_notifier.dart';
 import 'package:face_net_authentication/widgets/v_async_widget.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../constants/assets.dart';
 import '../../../shared/providers.dart';
@@ -44,6 +46,7 @@ class TugasDinasListItem extends HookConsumerWidget {
     //         .inDays
     //     : DateTime.now().difference(DateTime.parse(item.cDate!)).inDays;
 
+    final user = ref.watch(userNotifierProvider).user;
     final jenisTugasDinas = ref.watch(jenisTugasDinasNotifierProvider);
 
     return Padding(
@@ -103,6 +106,20 @@ class TugasDinasListItem extends HookConsumerWidget {
                                 item: item,
                               ),
                             );
+                          }),
+                      SizedBox(
+                        width: 4,
+                      ),
+                      TappableSvg(
+                          assetPath: Assets.iconViewSurat,
+                          color: item.btlSta == true
+                              ? Colors.white
+                              : Palette.primaryColor,
+                          onTap: () {
+                            final Uri url = Uri.parse(
+                                'http://agunglogisticsapp.co.id:1232/page_print_mob.aspx?userid=${user.idUser}&userpass=${user.password}&mode=dinas&noid=${item.idDinas}');
+                            return launchUrl(url,
+                                mode: LaunchMode.externalApplication);
                           }),
                       SizedBox(
                         width: 4,
@@ -332,10 +349,12 @@ class TugasDinasListItem extends HookConsumerWidget {
                           width: 90,
                           child: Text(
                             jenis
-                                .firstWhere(
-                                  (element) => element.kode == item.kategori,
-                                )
-                                .kategori,
+                                    .firstWhereOrNull(
+                                      (element) =>
+                                          element.kode == item.kategori,
+                                    )
+                                    ?.kategori ??
+                                '-',
                             style: Themes.customColor(9,
                                 color: item.btlSta == true
                                     ? Colors.white

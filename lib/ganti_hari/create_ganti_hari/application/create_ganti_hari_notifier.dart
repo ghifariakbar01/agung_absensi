@@ -1,3 +1,4 @@
+import 'package:dartz/dartz.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../send_wa/application/send_wa_notifier.dart';
@@ -84,19 +85,22 @@ class CreateGantiHari extends _$CreateGantiHari {
     state = const AsyncLoading();
 
     try {
-      final String messageContent =
-          " ( Testing Apps ) Terdapat Waiting Approve Pengajuan Ganti Hari Umum Baru Telah Diinput Oleh : $cUser ";
-      await _sendWaToHead(idUser: idUser, messageContent: messageContent);
+      state = await AsyncValue.guard(() async {
+        await ref.read(createGantiHariRepositoryProvider).submitGantiHari(
+              idUser: idUser,
+              idAbsen: idAbsen,
+              ket: ket,
+              tglOff: tglOff,
+              tglGanti: tglGanti,
+              cUser: cUser,
+            );
 
-      state = await AsyncValue.guard(
-          () => ref.read(createGantiHariRepositoryProvider).submitGantiHari(
-                idUser: idUser,
-                idAbsen: idAbsen,
-                ket: ket,
-                tglOff: tglOff,
-                tglGanti: tglGanti,
-                cUser: cUser,
-              ));
+        final String messageContent =
+            " ( Testing Apps ) Terdapat Waiting Approve Pengajuan Ganti Hari Umum Baru Telah Diinput Oleh : $cUser ";
+        await _sendWaToHead(idUser: idUser, messageContent: messageContent);
+
+        return Future.value(unit);
+      });
     } catch (e) {
       state = const AsyncValue.data('');
       await onError('Error $e');

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../copyright/presentation/copyright_page.dart';
 import '../../shared/providers.dart';
+import '../../style/style.dart';
 import '../../widgets/copyright_text.dart';
 import '../../widgets/image_absen.dart';
 import '../../widgets/location_detail.dart';
@@ -61,72 +63,89 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
     final nama =
         ref.watch(userNotifierProvider.select((value) => value.user.nama));
 
-    return Stack(
-      children: [
-        Scaffold(
-            appBar: AppBar(
-              elevation: 0,
-              backgroundColor: Colors.transparent,
-              toolbarHeight: 45,
-              actions: [
-                NetworkWidget(),
-              ],
-            ),
-            body: SafeArea(
-              child: SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                child: SizedBox(
-                    height: displayImage == false
-                        ? MediaQuery.of(context).size.height + 200
-                        : MediaQuery.of(context).size.height + 475,
-                    width: MediaQuery.of(context).size.width,
-                    child: Stack(children: [
-                      ListView(
-                        physics: const NeverScrollableScrollPhysics(),
-                        children: <Widget>[
-                          ...logoAndName(isOfflineMode, nama ?? ''),
-                          ...isTester.maybeWhen(
-                            tester: () => [AbsenButton()],
-                            orElse: () => mockLocation.maybeWhen(
-                              mocked: () => [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                      'Anda diduga mengunakan Fake GPS. Harap matikan Fake GPS agar bisa menggunakan aplikasi.'),
-                                )
-                              ],
-                              original: () => [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
-                                  child: LocationDetail(),
-                                ),
-                                SizedBox(
-                                  height: 8,
-                                ),
-                                AbsenButton(),
-                              ],
-                              orElse: () => [
-                                Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                              ],
+    final packageInfo = ref.watch(packageInfoProvider);
+
+    return Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          toolbarHeight: 45,
+          actions: [
+            NetworkWidget(),
+          ],
+        ),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: SizedBox(
+                height: displayImage == false || isOfflineMode
+                    ? MediaQuery.of(context).size.height + 200
+                    : MediaQuery.of(context).size.height + 475,
+                width: MediaQuery.of(context).size.width,
+                child: Stack(children: [
+                  ListView(
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: <Widget>[
+                      ...logoAndName(isOfflineMode, nama ?? ''),
+                      ...isTester.maybeWhen(
+                        tester: () => [AbsenButton()],
+                        orElse: () => mockLocation.maybeWhen(
+                          mocked: () => [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                  'Anda diduga mengunakan Fake GPS. Harap matikan Fake GPS agar bisa menggunakan aplikasi.'),
+                            )
+                          ],
+                          original: () => [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: LocationDetail(),
+                            ),
+                            SizedBox(
+                              height: 8,
+                            ),
+                            AbsenButton(),
+                          ],
+                          orElse: () => [
+                            Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Center(child: CopyrightAgung()),
+                        Center(
+                          child: SelectableText(
+                            'APP VERSION: ${packageInfo.when(
+                              loading: () => '',
+                              data: (packageInfo) => packageInfo,
+                              error: (error, stackTrace) =>
+                                  'Error: $error StackTrace: $stackTrace',
+                            )}',
+                            textAlign: TextAlign.center,
+                            maxLines: 2,
+                            style: Themes.customColor(
+                              8,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                        ],
-                      ),
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: CopyrightAgung(),
                         ),
-                      )
-                    ])),
-              ),
-            )),
-      ],
-    );
+                      ],
+                    ),
+                  )
+                ])),
+          ),
+        ));
   }
 
   List<Widget> logoAndName(bool isOfflineMode, String nama) => [

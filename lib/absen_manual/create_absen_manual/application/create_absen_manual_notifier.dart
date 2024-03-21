@@ -2,6 +2,7 @@
 
 import 'dart:developer';
 
+import 'package:dartz/dartz.dart';
 import 'package:intl/intl.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -96,22 +97,24 @@ class CreateAbsenManualNotifier extends _$CreateAbsenManualNotifier {
     try {
       debugger();
 
-      final cUser = ref.read(userNotifierProvider).user.nama!;
-      final String messageContent =
-          " ( Testing Apps ) Terdapat Waiting Aprove Pengajuan Absen Manual Baru Telah Diinput Oleh : $cUser ";
-      await _sendWaToHead(idUser: idUser, messageContent: messageContent);
-
       if (jenisAbsen.toLowerCase() == 'lln') {
-        state = await AsyncValue.guard(() =>
-            ref.read(createAbsenManualRepositoryProvider).submitAbsenManual(
-                  idUser: idUser,
-                  ket: ket,
-                  tgl: tgl,
-                  jamAwal: jamAwal,
-                  jamAkhir: jamAkhir,
-                  jenisAbsen: jenisAbsen,
-                  cUser: cUser,
-                ));
+        state = await AsyncValue.guard(() async {
+          await ref.read(createAbsenManualRepositoryProvider).submitAbsenManual(
+                idUser: idUser,
+                ket: ket,
+                tgl: tgl,
+                cUser: cUser,
+                jamAwal: jamAwal,
+                jamAkhir: jamAkhir,
+                jenisAbsen: jenisAbsen,
+              );
+
+          final String messageContent =
+              " ( Testing Apps ) Terdapat Waiting Aprove Pengajuan Absen Manual Baru Telah Diinput Oleh : $cUser ";
+          await _sendWaToHead(idUser: idUser, messageContent: messageContent);
+
+          return Future.value(unit);
+        });
       } else {
         final String tglFinal =
             StringUtils.midnightDate(DateTime.now()).replaceAll('.000', '');
@@ -134,16 +137,23 @@ class CreateAbsenManualNotifier extends _$CreateAbsenManualNotifier {
         log('jamAwalFinal $jamAwalFinal');
         log('jamAkhirFinal $jamAkhirFinal');
 
-        state = await AsyncValue.guard(() =>
-            ref.read(createAbsenManualRepositoryProvider).submitAbsenManual(
-                  idUser: idUser,
-                  ket: ket,
-                  tgl: tglFinal,
-                  jamAwal: jamAwalFinal,
-                  jamAkhir: jamAkhirFinal,
-                  jenisAbsen: jenisAbsen,
-                  cUser: cUser,
-                ));
+        state = await AsyncValue.guard(() async {
+          await ref.read(createAbsenManualRepositoryProvider).submitAbsenManual(
+                idUser: idUser,
+                ket: ket,
+                tgl: tglFinal,
+                jamAwal: jamAwalFinal,
+                jamAkhir: jamAkhirFinal,
+                jenisAbsen: jenisAbsen,
+                cUser: cUser,
+              );
+
+          final String messageContent =
+              " ( Testing Apps ) Terdapat Waiting Aprove Pengajuan Absen Manual Baru Telah Diinput Oleh : $cUser ";
+          await _sendWaToHead(idUser: idUser, messageContent: messageContent);
+
+          return Future.value(unit);
+        });
       }
     } catch (e) {
       state = const AsyncValue.data('');

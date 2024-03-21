@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:dartz/dartz.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../sakit/create_sakit/application/create_sakit.dart';
@@ -103,20 +104,22 @@ class CreateDtPcNotifier extends _$CreateDtPcNotifier {
         tglAkhirInDateTime: DateTime.now(),
       );
 
-      final cUser = ref.read(userNotifierProvider).user.nama!;
-      final String messageContent =
-          " ( Testing Apps ) Terdapat Waiting Approve Pengajuan DT/PC Baru Telah Diinput Oleh : $cUser ";
-      await _sendWaToHead(idUser: idUser, messageContent: messageContent);
+      state = await AsyncValue.guard(() async {
+        await ref.read(createDtPcRepositoryProvider).submitDtPc(
+              idUser: idUser,
+              ket: ket,
+              dtTgl: dtTgl,
+              jam: jam,
+              kategori: kategori,
+              cUser: cUser,
+            );
 
-      state = await AsyncValue.guard(
-          () => ref.read(createDtPcRepositoryProvider).submitDtPc(
-                idUser: idUser,
-                ket: ket,
-                dtTgl: dtTgl,
-                jam: jam,
-                kategori: kategori,
-                cUser: cUser,
-              ));
+        final String messageContent =
+            " ( Testing Apps ) Terdapat Waiting Approve Pengajuan DT/PC Baru Telah Diinput Oleh : $cUser ";
+        await _sendWaToHead(idUser: idUser, messageContent: messageContent);
+
+        return Future.value(unit);
+      });
     } catch (e) {
       state = const AsyncValue.data('');
       await onError('Error $e');

@@ -127,4 +127,10 @@ class RouteNames {
 
   static const editGantiHariNameRoute = 'editGantiHari';
   static const editGantiHariRoute = 'editGantiHari';
+
+  static const slipGajiNameRoute = 'slipGaji';
+  static const slipGajiRoute = 'slipGaji';
+
+  static const viewSuratNameRoute = 'viewSurat';
+  static const viewSuratRoute = 'viewSurat';
 }

@@ -48,6 +48,7 @@ import '../../sakit/sakit_list/application/sakit_list.dart';
 import '../../sakit/sakit_list/presentation/sakit_list_page.dart';
 import '../../shared/providers.dart';
 import '../../sign_in_form/presentation/sign_in_page.dart';
+import '../../slip_gaji/slip_gaji_page.dart';
 import '../../tc/application/shared/tc_providers.dart';
 import '../../tc/application/tc_state.dart';
 import '../../tc/presentation/tc_page.dart';
@@ -55,6 +56,7 @@ import '../../tugas_dinas/create_tugas_dinas/presentation/edit_tugas_dinas_page.
 import '../../tugas_dinas/create_tugas_dinas/presentation/search_pemberi_tugas.dart';
 import '../../tugas_dinas/tugas_dinas_list/application/tugas_dinas_list.dart';
 import '../../tugas_dinas/tugas_dinas_list/presentation/tugas_dinas_list_page.dart';
+import '../../tugas_dinas/tugas_dinas_list/presentation/tugas_dinas_view_surat.dart';
 import '../../widgets/splash_page.dart';
 import 'route_names.dart';
 
@@ -351,6 +353,19 @@ class RouterNotifier extends ChangeNotifier {
               builder: (context, state) {
                 final dayoff = state.extra as GantiHariList;
                 return EditGantiHariPage(dayoff);
+              },
+            ),
+            GoRoute(
+              name: RouteNames.slipGajiNameRoute,
+              path: RouteNames.slipGajiRoute,
+              builder: (context, state) => SlipGajiPage(),
+            ),
+            GoRoute(
+              name: RouteNames.viewSuratNameRoute,
+              path: RouteNames.viewSuratRoute,
+              builder: (context, state) {
+                final id = state.extra as int;
+                return TugasDinasViewSuratPage(id);
               },
             ),
           ]),

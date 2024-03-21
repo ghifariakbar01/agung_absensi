@@ -1,3 +1,4 @@
+import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/mst_karyawan_cuti/application/mst_karyawan_cuti_notifier.dart';
 import 'package:face_net_authentication/sakit/create_sakit/application/create_sakit.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -101,21 +102,24 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
           suratDokter: suratDokter);
 
       final cUser = ref.read(userNotifierProvider).user.nama;
-      final String messageContent =
-          " ( Testing Apps ) Terdapat Waiting Approve Pengajuan Izin Sakit Baru Telah Diinput Oleh : $cUser ";
-      await _sendWaToHead(idUser: idUser, messageContent: messageContent);
 
-      state = await AsyncValue.guard(() => ref
-          .read(createSakitRepositoryProvider)
-          .submitSakit(
-              idUser: idUser,
-              ket: keterangan,
-              surat: suratDokter,
-              cUser: cUser!,
-              tglEnd: tglAkhir,
-              tglStart: tglAwal,
-              jumlahHari: jumlahhari,
-              hitungLibur: create.hitungLibur!));
+      state = await AsyncValue.guard(() async {
+        await ref.read(createSakitRepositoryProvider).submitSakit(
+            idUser: idUser,
+            ket: keterangan,
+            surat: suratDokter,
+            cUser: cUser!,
+            tglEnd: tglAkhir,
+            tglStart: tglAwal,
+            jumlahHari: jumlahhari,
+            hitungLibur: create.hitungLibur!);
+
+        final String messageContent =
+            " ( Testing Apps ) Terdapat Waiting Approve Pengajuan Izin Sakit Baru Telah Diinput Oleh : $cUser ";
+        await _sendWaToHead(idUser: idUser, messageContent: messageContent);
+
+        return Future.value(unit);
+      });
     } catch (e) {
       state = const AsyncValue.data('');
       await onError('Error $e');

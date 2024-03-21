@@ -1,23 +1,18 @@
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../constants/assets.dart';
 import '../../copyright/presentation/copyright_page.dart';
 import '../../routes/application/route_names.dart';
-import '../../send_wa/application/phone_num.dart';
 import '../../shared/providers.dart';
 import '../../style/style.dart';
-import '../../utils/os_vibrate.dart';
 import '../../wa_register/application/wa_register.dart';
 
 import '../../wa_register/application/wa_register_notifier.dart';
 import '../../widgets/alert_helper.dart';
 import '../../widgets/app_logo.dart';
 import '../../widgets/copyright_text.dart';
-import '../../widgets/v_async_widget.dart';
-import '../../widgets/v_dialogs.dart';
 import '../applicatioin/home_state.dart';
 import 'home_appbar.dart';
 import 'home_item.dart';
@@ -57,13 +52,17 @@ final List<Item> activity = [
       'Tugas Dinas', Assets.iconTugasDinas, RouteNames.tugasDinasListNameRoute),
 ];
 
+final List<Item> others = [
+  Item('Slip Gaji', Assets.iconSlipGaji, RouteNames.slipGajiNameRoute),
+];
+
 class HomeScaffold extends ConsumerWidget {
   const HomeScaffold();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userNotifierProvider);
-    final width = MediaQuery.of(context).size.width;
+
     final isTester = ref.watch(testerNotifierProvider);
     final packageInfo = ref.watch(packageInfoProvider);
 
@@ -112,10 +111,6 @@ class HomeScaffold extends ConsumerWidget {
       }
     });
 
-    final waRegisterAsync = ref.watch(waRegisterNotifierProvider);
-    final currentlySavedPhoneAsync =
-        ref.watch(currentlySavedPhoneNumberNotifierProvider);
-
     final onRefresh = () async {
       await ref.read(waRegisterNotifierProvider.notifier).refresh();
       await ref
@@ -123,274 +118,134 @@ class HomeScaffold extends ConsumerWidget {
           .refresh();
     };
 
-    return VAsyncWidgetScaffold<WaRegister>(
-      value: waRegisterAsync,
-      data: (waRegister) {
-        return Scaffold(
-          appBar: HomeAppBar(),
-          body: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Stack(
-                children: [
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height,
-                    width: width,
-                    child: RefreshIndicator(
-                      onRefresh: onRefresh,
-                      child: ListView(
-                        children: [
-                          const AppLogo(),
-                          const SizedBox(height: 24),
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
 
-                          ...isTester.maybeWhen(
-                              tester: () {
-                                return [
-                                  Text(
-                                    'Toggle Location',
-                                    style: Themes.customColor(10,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  SizedBox(
-                                    height: 8,
-                                  ),
-                                  HomeTesterOn(),
-                                ];
-                              },
-                              orElse: user.user.nama == 'Ghifar'
-                                  ? () {
-                                      return [
-                                        Text(
-                                          'Toggle Location',
-                                          style: Themes.customColor(10,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        SizedBox(
-                                          height: 8,
-                                        ),
-                                        HomeTesterOff(),
-                                      ];
-                                    }
-                                  : () {
-                                      return [Container()];
-                                    }
-
-                              //
+    return Scaffold(
+      appBar: HomeAppBar(),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Stack(
+            children: [
+              SizedBox(
+                height: height,
+                width: width,
+                child: RefreshIndicator(
+                  onRefresh: onRefresh,
+                  child: ListView(
+                    children: [
+                      const AppLogo(),
+                      const SizedBox(height: 24),
+                      ...isTester.maybeWhen(
+                          tester: () {
+                            return [
+                              Text(
+                                'Toggle Location',
+                                style: Themes.customColor(10,
+                                    fontWeight: FontWeight.bold),
                               ),
-
-                          // REGISTER WA
-                          if (user.user.nama == 'Ghifar') ...[
-                            Container()
-                          ] else if (waRegister.phone == null ||
-                              waRegister.isRegistered == null) ...[
-                            SizedBox(
-                              height: 24,
-                            ),
-                            Text(
-                              'Register Notifikasi Whatsapp',
-                              style: Themes.customColor(10,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            HomeRegisterWa(),
-                            SizedBox(
-                              height: 8,
-                            )
-                          ] else if (waRegister.phone != null &&
-                              waRegister.isRegistered != null) ...[
-                            SizedBox(
-                              height: 24,
-                            ),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Register Notifikasi Whatsapp',
-                                  style: Themes.customColor(10,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                if (user.user.noTelp1 != null &&
-                                    user.user.noTelp2 != null)
-                                  VAsyncValueWidget<PhoneNum>(
-                                    value: currentlySavedPhoneAsync,
-                                    data: (phone) => Ink(
-                                      child: InkWell(
-                                        onTap: () {
-                                          OSVibrate.vibrate().then((_) =>
-                                              showDialog(
-                                                  context: context,
-                                                  barrierDismissible: true,
-                                                  builder: (_) => VSimpleDialog(
-                                                        asset:
-                                                            Assets.iconChecked,
-                                                        label: 'Tidak Sesuai ?',
-                                                        labelDescription:
-                                                            'Jika nomor tidak sesuai, Silahkan hubungi HR untuk mengubah dataD untuk mengubah data',
-                                                      )).then(
-                                                  (_) => onRefresh()));
-                                        },
-                                        child: Text(
-                                          '${phone.noTelp1!.isEmpty ? "-" : "${phone.noTelp1}"}'
-                                          '${phone.noTelp2!.isEmpty ? "-" : "/${phone.noTelp2}"}',
-                                          style: Themes.customColor(7,
-                                              fontWeight: FontWeight.bold),
-                                          maxLines: 2,
-                                        ),
-                                      ),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              HomeTesterOn(),
+                            ];
+                          },
+                          orElse: user.user.nama == 'Ghifar'
+                              ? () {
+                                  return [
+                                    Text(
+                                      'Toggle Location',
+                                      style: Themes.customColor(10,
+                                          fontWeight: FontWeight.bold),
                                     ),
-                                  ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            HomeRetryRegisterWa(),
-                            SizedBox(
-                              height: 8,
-                            )
-                          ],
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                    HomeTesterOff(),
+                                  ];
+                                }
+                              : () {
+                                  return [Container()];
+                                }
 
-                          // // Admin
-                          // SizedBox(
-                          //   height: 24,
-                          // ),
-                          // Text(
-                          //   'Admin Menu',
-                          //   style: Themes.customColor(10,
-                          //       fontWeight: FontWeight.bold),
-                          // ),
-                          // SizedBox(
-                          //   height: 8,
-                          // ),
-                          // SizedBox(
-                          //   height: 68,
-                          //   width: width,
-                          //   child: ListView.separated(
-                          //     scrollDirection: Axis.horizontal,
-                          //     separatorBuilder: (context, index) => SizedBox(
-                          //       width: 16,
-                          //     ),
-                          //     itemBuilder: (context, index) =>
-                          //         HomeItem(item: admin[index]),
-                          //     itemCount: admin.length,
-                          //   ),
-                          // ),
-                          SizedBox(
-                            height: 24,
+                          //
                           ),
-                          // Attendance
-                          Text(
-                            'Attendance',
-                            style: Themes.customColor(10,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          SizedBox(
-                            height: 68,
-                            width: width,
-                            child: ListView.separated(
-                              scrollDirection: Axis.horizontal,
-                              separatorBuilder: (context, index) => SizedBox(
-                                width: 16,
-                              ),
-                              itemBuilder: (context, index) =>
-                                  HomeItem(item: attendance[index]),
-                              itemCount: attendance.length,
-                            ),
-                          ),
-                          // Leave Request
-                          SizedBox(
-                            height: 24,
-                          ),
-                          Text(
-                            'Leave Request',
-                            style: Themes.customColor(10,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          SizedBox(
-                            height: 68,
-                            width: width,
-                            child: ListView.separated(
-                              scrollDirection: Axis.horizontal,
-                              separatorBuilder: (context, index) => SizedBox(
-                                width: 16,
-                              ),
-                              itemBuilder: (context, index) =>
-                                  HomeItem(item: leaveRequest[index]),
-                              itemCount: leaveRequest.length,
-                            ),
-                          ),
-                          // Action
-                          SizedBox(
-                            height: 24,
-                          ),
-                          Text(
-                            'Activity',
-                            style: Themes.customColor(10,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          SizedBox(
-                            height: 68,
-                            width: width,
-                            child: ListView.separated(
-                              scrollDirection: Axis.horizontal,
-                              separatorBuilder: (context, index) => SizedBox(
-                                width: 16,
-                              ),
-                              itemBuilder: (context, index) =>
-                                  HomeItem(item: activity[index]),
-                              itemCount: activity.length,
-                            ),
-                          ),
-
-                          const SizedBox(height: 65),
-                        ],
+                      HomeWa(onRefresh),
+                      ...categories(
+                          title: 'Attendance', width: width, item: attendance),
+                      ...categories(
+                          title: 'Leave Request',
+                          width: width,
+                          item: leaveRequest),
+                      ...categories(
+                          title: 'Activity', width: width, item: activity),
+                      ...categories(
+                          title: 'Others', width: width, item: others),
+                      const SizedBox(height: 65),
+                    ],
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Center(child: CopyrightAgung()),
+                    Center(
+                      child: SelectableText(
+                        'APP VERSION: ${packageInfo.when(
+                          loading: () => '',
+                          data: (packageInfo) => packageInfo,
+                          error: (error, stackTrace) =>
+                              'Error: $error StackTrace: $stackTrace',
+                        )}',
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                        style: Themes.customColor(
+                          8,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Center(child: CopyrightAgung()),
-                        Center(
-                          child: SelectableText(
-                            'APP VERSION: ${packageInfo.when(
-                              loading: () => '',
-                              data: (packageInfo) => packageInfo,
-                              error: (error, stackTrace) =>
-                                  'Error: $error StackTrace: $stackTrace',
-                            )}',
-                            textAlign: TextAlign.center,
-                            maxLines: 2,
-                            style: Themes.customColor(
-                              8,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
+                  ],
+                ),
+              )
+            ],
           ),
-        );
-      },
+        ),
+      ),
     );
   }
+
+  List<Widget> categories(
+          {required String title,
+          required double width,
+          required List<Item> item}) =>
+      [
+        SizedBox(
+          height: 24,
+        ),
+        Text(
+          title,
+          style: Themes.customColor(10, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(
+          height: 8,
+        ),
+        SizedBox(
+          height: 68,
+          width: width,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            separatorBuilder: (context, index) => SizedBox(
+              width: 16,
+            ),
+            itemBuilder: (context, index) => HomeItem(item: item[index]),
+            itemCount: item.length,
+          ),
+        ),
+      ];
 }

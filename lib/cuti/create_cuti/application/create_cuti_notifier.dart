@@ -1,3 +1,4 @@
+import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/mst_karyawan_cuti/application/mst_karyawan_cuti_notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -274,25 +275,29 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
         : mstCuti.cutiTidakBaru;
 
     final cUser = ref.read(userNotifierProvider).user.nama;
-    final String messageContent =
-        " ( Testing Apps ) Terdapat Waiting Aprrove Pengajuan Cuti Baru Telah Diinput Oleh : $cUser ";
-    await _sendWaToHead(idUser: idUser, messageContent: messageContent);
 
-    state = await AsyncValue.guard(
-        () => ref.read(createCutiRepositoryProvider).submitCuti(
-              jumlahHari: jumlahhari,
-              hitungLibur: create.hitungLibur!,
-              tahunCuti: tahunCuti,
-              sisaCuti: sisaCuti!,
-              // raw variables
-              ket: keterangan,
-              alasan: alasanCuti,
-              jenisCuti: jenisCuti,
-              idUser: idUser,
-              // date time
-              tglAwalInDateTime: tglAwalInDateTime,
-              tglAkhirInDateTime: tglAkhirInDateTime,
-            ));
+    state = await AsyncValue.guard(() async {
+      await ref.read(createCutiRepositoryProvider).submitCuti(
+            jumlahHari: jumlahhari,
+            hitungLibur: create.hitungLibur!,
+            tahunCuti: tahunCuti,
+            sisaCuti: sisaCuti!,
+            // raw variables
+            ket: keterangan,
+            alasan: alasanCuti,
+            jenisCuti: jenisCuti,
+            idUser: idUser,
+            // date time
+            tglAwalInDateTime: tglAwalInDateTime,
+            tglAkhirInDateTime: tglAkhirInDateTime,
+          );
+
+      final String messageContent =
+          " ( Testing Apps ) Terdapat Waiting Approve Pengajuan Cuti Baru Telah Diinput Oleh : $cUser ";
+      await _sendWaToHead(idUser: idUser, messageContent: messageContent);
+
+      return Future.value(unit);
+    });
   }
 
   Future<void> _finalizeUpdate({

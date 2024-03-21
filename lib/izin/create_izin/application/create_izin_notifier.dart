@@ -1,3 +1,4 @@
+import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/izin/create_izin/infrastructure/create_izin_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -77,21 +78,22 @@ class CreateIzinNotifier extends _$CreateIzinNotifier {
     state = const AsyncLoading();
 
     try {
-      final cUser = ref.read(userNotifierProvider).user.nama!;
-      final String messageContent =
-          " ( Testing Apps ) Terdapat Waiting Approve Pengajuan Izin Umum Baru Telah Diinput Oleh : $cUser ";
-      await _sendWaToHead(idUser: idUser, messageContent: messageContent);
+      state = await AsyncValue.guard(() async {
+        await ref.read(createIzinRepositoryProvider).submitIzin(
+            idUser: idUser,
+            idMstIzin: idMstIzin,
+            totalHari: totalHari,
+            ket: ket,
+            cUser: cUser,
+            tglEnd: tglAkhir,
+            tglStart: tglAwal);
 
-      state = await AsyncValue.guard(() => ref
-          .read(createIzinRepositoryProvider)
-          .submitIzin(
-              idUser: idUser,
-              idMstIzin: idMstIzin,
-              totalHari: totalHari,
-              ket: ket,
-              cUser: cUser,
-              tglEnd: tglAkhir,
-              tglStart: tglAwal));
+        final String messageContent =
+            " ( Testing Apps ) Terdapat Waiting Approve Pengajuan Izin Umum Baru Telah Diinput Oleh : $cUser ";
+        await _sendWaToHead(idUser: idUser, messageContent: messageContent);
+
+        return Future.value(unit);
+      });
     } catch (e) {
       state = const AsyncValue.data('');
       await onError('Error $e');
