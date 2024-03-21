@@ -1,3 +1,5 @@
+// ignore_for_file: unused_result
+
 import 'dart:convert';
 import 'dart:developer';
 import 'package:dartz/dartz.dart';
@@ -33,68 +35,66 @@ final getUserFutureProvider = FutureProvider<Unit>((ref) async {
 
 // 2. INIT IMEI WITH USER
 final imeiInitFutureProvider =
-    FutureProvider.family<Unit, BuildContext>((ref, context) async {
+    FutureProvider.family<void, BuildContext>((ref, context) async {
   log('imeiInitFutureProvider -- 1');
-  final res = await ref.refresh(getUserFutureProvider.future);
 
-  if (res.runtimeType == Unit) {
-    await ref.read(getUserFutureProvider.future);
+  try {
+    await ref.refresh(getUserFutureProvider.future);
+  } catch (e) {
+    throw e;
+  }
 
-    log('imeiInitFutureProvider -- 2');
+  log('imeiInitFutureProvider -- 2');
 
-    final user = ref.read(userNotifierProvider).user;
+  final user = ref.read(userNotifierProvider).user;
 
-    if (user.idKary != null) {
-      if (user.idKary!.isNotEmpty) {
-        log('imeiInitFutureProvider -- 3');
+  if (user.idKary == null) {
+    return ref.read(userNotifierProvider.notifier).logout();
+  }
 
-        final imeiNotifier = ref.read(imeiNotifierProvider.notifier);
+  if (user.idKary!.isNotEmpty) {
+    log('imeiInitFutureProvider -- 3');
 
-        // 3. GET IMEI DATA
-        String imei = await imeiNotifier.getImeiString();
+    final imeiNotifier = ref.read(imeiNotifierProvider.notifier);
 
-        log('imeiInitFutureProvider -- 4');
+    // 3. GET IMEI DATA
+    String imei = await imeiNotifier.getImeiString();
 
-        await Future.delayed(
-            Duration(seconds: 1), () => imeiNotifier.changeSavedImei(imei));
+    log('imeiInitFutureProvider -- 4');
 
-        log('imeiInitFutureProvider -- 5');
+    await Future.delayed(
+        Duration(seconds: 1), () => imeiNotifier.changeSavedImei(imei));
 
-        String imeiDb = await ref
-            .read(imeiNotifierProvider.notifier)
-            .getImeiStringDb(idKary: user.idKary ?? 'null');
+    log('imeiInitFutureProvider -- 5');
 
-        log('imeiInitFutureProvider -- 6');
+    String imeiDb = await ref
+        .read(imeiNotifierProvider.notifier)
+        .getImeiStringDb(idKary: user.idKary ?? 'null');
 
-        await ref
-            .read(imeiAuthNotifierProvider.notifier)
-            .checkAndUpdateImei(imeiDb: imeiDb);
+    log('imeiInitFutureProvider -- 6');
 
-        log('imeiInitFutureProvider -- 7');
+    await ref
+        .read(imeiAuthNotifierProvider.notifier)
+        .checkAndUpdateImei(imeiDb: imeiDb);
 
-        // 4. PROCESS IMEI DATA
-        // IF OFFLINE FROM USER INIT
-        final isOfflineFromInit = ref.read(absenOfflineModeProvider);
+    log('imeiInitFutureProvider -- 7');
 
-        if (!isOfflineFromInit) {
-          await ref
-              .read(imeiNotifierProvider.notifier)
-              .processImei(imei: imeiDb, ref: ref, context: context);
-        } else {
-          ref.read(initUserStatusNotifierProvider.notifier).letYouThrough();
-          return unit;
-        }
-      } else {
-        await ref.read(getUserFutureProvider.future);
-        ref.read(initUserStatusNotifierProvider.notifier).letYouThrough();
-        return unit;
-      }
+    // 4. PROCESS IMEI DATA
+    // IF OFFLINE FROM USER INIT
+    final isOfflineFromInit = ref.read(absenOfflineModeProvider);
+
+    if (!isOfflineFromInit) {
+      await ref
+          .read(imeiNotifierProvider.notifier)
+          .processImei(imei: imeiDb, ref: ref, context: context);
+    } else {
+      ref.read(initUserStatusNotifierProvider.notifier).letYouThrough();
+      return;
     }
-
-    return unit;
   } else {
-    throw AssertionError(
-        'ref.refresh(getUserFutureProvider.future) is not a Unit');
+    await ref.read(getUserFutureProvider.future);
+    ref.read(initUserStatusNotifierProvider.notifier).letYouThrough();
+    return;
   }
 });
 
