@@ -40,7 +40,7 @@ final createIzinRepositoryProvider = Provider<CreateIzinRepository>.internal(
 
 typedef CreateIzinRepositoryRef = ProviderRef<CreateIzinRepository>;
 String _$createIzinNotifierHash() =>
-    r'1148e87f5f1eb7f13cafb41fc6dbdcd94807ae71';
+    r'b53518d574d4f5459db4b633858ea3eced77e5af';
 
 /// See also [CreateIzinNotifier].
 @ProviderFor(CreateIzinNotifier)

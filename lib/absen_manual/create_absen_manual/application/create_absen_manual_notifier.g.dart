@@ -60,7 +60,7 @@ final jenisAbsenManualNotifierProvider = AutoDisposeAsyncNotifierProvider<
 
 typedef _$JenisAbsenManualNotifier = AutoDisposeAsyncNotifier<List<JenisAbsen>>;
 String _$createAbsenManualNotifierHash() =>
-    r'5c9d9842b736021b40583bb3cdafdb9c62d357ce';
+    r'e751a434288d1e91faf7e5dbd592e796c527b91d';
 
 /// See also [CreateAbsenManualNotifier].
 @ProviderFor(CreateAbsenManualNotifier)

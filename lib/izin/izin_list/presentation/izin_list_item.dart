@@ -147,23 +147,23 @@ class IzinListItem extends HookConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Nama',
-                            style: Themes.customColor(7,
-                                color: item.btlSta == true
-                                    ? Colors.white
-                                    : Colors.grey),
-                          ),
-                          SizedBox(
-                            height: 2,
-                          ),
-                          SizedBox(
-                            width: 125,
-                            child: Text(
+                      SizedBox(
+                        width: 90,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Nama',
+                              style: Themes.customColor(7,
+                                  color: item.btlSta == true
+                                      ? Colors.white
+                                      : Colors.grey),
+                            ),
+                            SizedBox(
+                              height: 2,
+                            ),
+                            Text(
                               item.fullname!,
                               style: Themes.customColor(9,
                                   color: item.btlSta == true
@@ -171,8 +171,8 @@ class IzinListItem extends HookConsumerWidget {
                                       : Palette.primaryColor,
                                   fontWeight: FontWeight.w500),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
 
                       SizedBox(

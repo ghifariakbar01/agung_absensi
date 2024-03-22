@@ -37,7 +37,7 @@ final sendWaRepositoryProvider = Provider<SendWaRepository>.internal(
 );
 
 typedef SendWaRepositoryRef = ProviderRef<SendWaRepository>;
-String _$sendWaNotifierHash() => r'8207e8c2a11fdcd8df20497e232a02a7f400f5ac';
+String _$sendWaNotifierHash() => r'19b7b4cf86a6e16239f48fc698b8291b564fd83e';
 
 /// See also [SendWaNotifier].
 @ProviderFor(SendWaNotifier)

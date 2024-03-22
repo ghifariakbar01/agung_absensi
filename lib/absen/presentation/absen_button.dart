@@ -228,7 +228,7 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                         longitude: currentLocationLongitude,
                       ));
 
-                  // debugger();
+                  //
                 })),
 
         Visibility(
@@ -258,7 +258,7 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                         longitude: currentLocationLongitude,
                       ));
 
-                  // debugger();
+                  //
                 })),
 
         Visibility(
@@ -456,6 +456,7 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
       DateTime refreshed = await ref.refresh(networkTimeFutureProvider.future);
       String idGeof = ref.read(geofenceProvider).nearestCoordinates.id;
       String imei = ref.read(imeiNotifierProvider).imei;
+
       String lokasi = await GeofenceUtil.getLokasiStr(
           lat: currentLocationLatitude, long: currentLocationLongitude);
 

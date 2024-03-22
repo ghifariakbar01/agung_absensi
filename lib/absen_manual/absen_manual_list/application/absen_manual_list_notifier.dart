@@ -61,6 +61,8 @@ class AbsenManualListController extends _$AbsenManualListController {
     final staff = ref.read(userNotifierProvider).user.staf!;
     final staffStr = staff.replaceAll('"', '').substring(0, staff.length - 1);
 
+    debugger();
+
     log('isHrdOrSpv(hrd) ${isHrdOrSpv(hrd)}');
 
     if (isHrdOrSpv(hrd)) {

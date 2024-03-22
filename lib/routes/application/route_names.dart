@@ -133,4 +133,7 @@ class RouteNames {
 
   static const viewSuratNameRoute = 'viewSurat';
   static const viewSuratRoute = 'viewSurat';
+
+  static const centralApproveNameRoute = 'centralApprove';
+  static const centralApproveRoute = 'centralApprove';
 }

@@ -59,7 +59,7 @@ final absenGantiHariNotifierProvider = AutoDisposeAsyncNotifierProvider<
 
 typedef _$AbsenGantiHariNotifier
     = AutoDisposeAsyncNotifier<List<AbsenGantiHari>>;
-String _$createGantiHariHash() => r'03d3458abeb03c368d360ccca0a83c639837e8e7';
+String _$createGantiHariHash() => r'7514e924d529f108693ee8e57f13439366487bec';
 
 /// See also [CreateGantiHari].
 @ProviderFor(CreateGantiHari)

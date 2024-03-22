@@ -100,17 +100,22 @@ class AbsenRemoteService {
             "('$trimmedDate', '$ket', '${_userModelWithPassword.idUser}', '$imei', '$idGeof', '$trimmedDateDb', '${_userModelWithPassword.nama}', '$latitude', '$longitude', '$lokasi')",
       });
 
-      final responseProd = await _dio.post('',
-          data: jsonEncode(dataProd),
-          options: Options(contentType: 'text/plain'));
       final responseHosting = await _dioHosting.post('',
           data: jsonEncode(dataProd),
           options: Options(contentType: 'text/plain'));
+      final responseProd = await _dio.post('',
+          data: jsonEncode(dataProd),
+          options: Options(contentType: 'text/plain'));
+
+      final itemsHosting = responseHosting.data?[0];
+      final isSuccess = itemsHosting['status'] == 'Success';
 
       final itemsProd = responseProd.data?[0];
-      final itemsHosting = responseHosting.data?[0];
+      final isSuccess2 = itemsProd['status'] == 'Success';
 
-      if (itemsHosting != itemsProd) {
+      debugger();
+
+      if (isSuccess != isSuccess2) {
         final message = 'Error server hosting / original';
         final errorCode = 404;
 

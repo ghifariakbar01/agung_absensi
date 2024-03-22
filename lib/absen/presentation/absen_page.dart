@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -36,20 +38,22 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
   }
 
   Future<void> _initializeGeofenceImeiAndAbsen() async {
-    await ref.read(testerNotifierProvider).maybeWhen(
-        tester: () {},
-        orElse: () async {
-          final imeiNotifier = ref.read(imeiNotifierProvider.notifier);
+    await ref.read(testerNotifierProvider).maybeWhen(tester: () async {
+      final imeiNotifier = ref.read(imeiNotifierProvider.notifier);
+      String imei = await imeiNotifier.getImeiString();
+      await Future.delayed(
+          Duration(seconds: 1), () => imeiNotifier.changeSavedImei(imei));
+    }, orElse: () async {
+      final imeiNotifier = ref.read(imeiNotifierProvider.notifier);
 
-          String imei = await imeiNotifier.getImeiString();
-          await Future.delayed(
-              Duration(seconds: 1), () => imeiNotifier.changeSavedImei(imei));
-          await ref
-              .read(backgroundNotifierProvider.notifier)
-              .getSavedLocations();
-          await ref.read(geofenceProvider.notifier).getGeofenceList();
-          await ref.read(absenNotifierProvidier.notifier).getAbsenToday();
-        });
+      String imei = await imeiNotifier.getImeiString();
+      await Future.delayed(
+          Duration(seconds: 1), () => imeiNotifier.changeSavedImei(imei));
+      debugger();
+      await ref.read(backgroundNotifierProvider.notifier).getSavedLocations();
+      await ref.read(geofenceProvider.notifier).getGeofenceList();
+      await ref.read(absenNotifierProvidier.notifier).getAbsenToday();
+    });
   }
 
   @override

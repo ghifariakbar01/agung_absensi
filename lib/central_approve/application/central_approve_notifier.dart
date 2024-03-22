@@ -1,52 +1,81 @@
 import 'package:face_net_authentication/absen_manual/absen_manual_list/application/absen_manual_list_notifier.dart';
 import 'package:face_net_authentication/cuti/cuti_list/application/cuti_list_notifier.dart';
 import 'package:face_net_authentication/dt_pc/dt_pc_list/application/dt_pc_list_notifier.dart';
+import 'package:face_net_authentication/ganti_hari/ganti_hari_list/application/ganti_hari_list_notifier.dart';
 import 'package:face_net_authentication/izin/izin_list/application/izin_list_notifier.dart';
 import 'package:face_net_authentication/sakit/sakit_list/application/sakit_list_notifier.dart';
-import 'package:face_net_authentication/shared/providers.dart';
 import 'package:face_net_authentication/tugas_dinas/tugas_dinas_list/application/tugas_dinas_list_notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import 'central_approve.dart';
 part 'central_approve_notifier.g.dart';
 
 /*
-absen_manual
-cuti
-dt_pc
-izin
-sakit
-tugas_dinas
-*/
+    absen_manual
+    cuti
+    dt_pc
+    izin
+    sakit
+    tugas_dinas
+    ganti_hari
+  */
 
 @riverpod
-class CentralApproveNotifier extends _$CentralApproveNotifier {
+class CentralApproveListNotifier extends _$CentralApproveListNotifier {
   @override
-  FutureOr<void> build() async {}
+  FutureOr<CentralApprove> build() async {
+    final absenManualList =
+        await ref.read(absenManualListControllerProvider.notifier).build();
+    final cutiList =
+        await ref.read(cutiListControllerProvider.notifier).build();
+    final dtPcList =
+        await ref.read(dtPcListControllerProvider.notifier).build();
+    final gantiHariList =
+        await ref.read(gantiHariListControllerProvider.notifier).build();
+    final izinList =
+        await ref.read(izinListControllerProvider.notifier).build();
+    final sakitList =
+        await ref.read(sakitListControllerProvider.notifier).build();
+    final tugasDinasList =
+        await ref.read(tugasDinasListControllerProvider.notifier).build();
 
-  bool isSpv() {
-    final spv = ref.read(userNotifierProvider).user.spv;
+    return CentralApprove(
+        absenManualList: absenManualList,
+        cutiList: cutiList,
+        dtPcList: dtPcList,
+        gantiHariList: gantiHariList,
+        izinList: izinList,
+        sakitList: sakitList,
+        tugasDinasList: tugasDinasList);
+  }
 
-    final spvCuti =
-        ref.read(cutiListControllerProvider.notifier).isHrdOrSpv(spv);
-    final spvDtPc =
-        ref.read(dtPcListControllerProvider.notifier).isHrdOrSpv(spv);
-    final spvIzin =
-        ref.read(izinListControllerProvider.notifier).isHrdOrSpv(spv);
-    final spvSakit =
-        ref.read(sakitListControllerProvider.notifier).isHrdOrSpv(spv);
-    final spvTugasDinas =
-        ref.read(tugasDinasListControllerProvider.notifier).isHrdOrSpv(spv);
-    final spvAbsenManual =
-        ref.read(absenManualListControllerProvider.notifier).isHrdOrSpv(spv);
+  Future<void> refresh() async {
+    state = const AsyncLoading();
 
-    if (spvCuti ||
-        spvDtPc ||
-        spvIzin ||
-        spvSakit ||
-        spvTugasDinas ||
-        spvAbsenManual) {
-      return true;
-    }
+    state = await AsyncValue.guard<CentralApprove>(() async {
+      final absenManualList =
+          await ref.read(absenManualListControllerProvider.notifier).build();
+      final cutiList =
+          await ref.read(cutiListControllerProvider.notifier).build();
+      // final dtPcList =
+      //     await ref.read(dtPcListControllerProvider.notifier).build();
+      // final gantiHariList =
+      //     await ref.read(gantiHariListControllerProvider.notifier).build();
+      // final izinList =
+      //     await ref.read(izinListControllerProvider.notifier).build();
+      // final sakitList =
+      //     await ref.read(sakitListControllerProvider.notifier).build();
+      // final tugasDinasList =
+      //     await ref.read(tugasDinasListControllerProvider.notifier).build();
 
-    return false;
+      return CentralApprove(
+          absenManualList: absenManualList,
+          cutiList: cutiList,
+          dtPcList: [],
+          gantiHariList: [],
+          izinList: [],
+          sakitList: [],
+          tugasDinasList: []);
+    });
   }
 }

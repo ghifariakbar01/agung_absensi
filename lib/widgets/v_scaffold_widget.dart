@@ -85,9 +85,11 @@ class VScaffoldTabLayout extends HookWidget {
       {required this.scaffoldTitle,
       required this.scaffoldBody,
       required this.onPageChanged,
+      this.length,
       this.scaffoldFAB,
       this.appbarColor,
       this.additionalInfo});
+  final int? length;
   final Color? appbarColor;
   final String scaffoldTitle;
   final List<Widget> scaffoldBody;
@@ -99,7 +101,7 @@ class VScaffoldTabLayout extends HookWidget {
   Widget build(
     BuildContext context,
   ) {
-    final controller = useTabController(initialLength: 3);
+    final controller = useTabController(initialLength: length ?? 3);
     final changingIndex = useState(0);
 
     useEffect(() {
@@ -113,8 +115,26 @@ class VScaffoldTabLayout extends HookWidget {
           });
     }, [controller]);
 
+    List<Widget> tabs() => [
+          VTab(
+            isCurrent: changingIndex.value == 0,
+            color: Palette.orange,
+            text: '   Waiting   ',
+          ),
+          VTab(
+            isCurrent: changingIndex.value == 1,
+            color: Palette.green,
+            text: '  Approved  ',
+          ),
+          VTab(
+            isCurrent: changingIndex.value == 2,
+            color: Palette.red2,
+            text: ' Cancelled ',
+          ),
+        ];
+
     return DefaultTabController(
-      length: 3,
+      length: length ?? 3,
       child: Scaffold(
           appBar: AppBar(
             elevation: 0,
@@ -129,21 +149,9 @@ class VScaffoldTabLayout extends HookWidget {
               indicatorColor: Colors.transparent,
               overlayColor: MaterialStatePropertyAll(Colors.transparent),
               tabs: [
-                VTab(
-                  isCurrent: changingIndex.value == 0,
-                  color: Palette.orange,
-                  text: '   Waiting   ',
-                ),
-                VTab(
-                  isCurrent: changingIndex.value == 1,
-                  color: Palette.green,
-                  text: '  Approved  ',
-                ),
-                VTab(
-                  isCurrent: changingIndex.value == 2,
-                  color: Palette.red2,
-                  text: ' Cancelled ',
-                ),
+                for (int i = 0; i < (length == null ? 3 : length!); i++) ...[
+                  tabs()[i]
+                ]
               ],
             ),
             title: Text(

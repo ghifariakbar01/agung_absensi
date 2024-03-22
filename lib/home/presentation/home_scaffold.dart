@@ -43,7 +43,7 @@ final List<Item> leaveRequest = [
 ];
 
 final List<Item> admin = [
-  Item('Approval', Assets.iconApproval, RouteNames.tugasDinasListNameRoute),
+  Item('Approval', Assets.iconApproval, RouteNames.centralApproveNameRoute),
 ];
 
 final List<Item> activity = [
@@ -172,6 +172,7 @@ class HomeScaffold extends ConsumerWidget {
                           //
                           ),
                       HomeWa(onRefresh),
+                      // ...categories(title: 'Admin', width: width, item: admin),
                       ...categories(
                           title: 'Attendance', width: width, item: attendance),
                       ...categories(
