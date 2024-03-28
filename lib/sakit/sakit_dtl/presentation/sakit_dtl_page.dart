@@ -110,43 +110,27 @@ class SakitDtlWidget extends HookConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '${item.namaImg}',
-                    style: Themes.customColor(11,
-                        fontWeight: FontWeight.w500,
-                        color: Theme.of(context).unselectedWidgetColor),
-                  ),
-                  Text(
-                    'Created By : ${item.cUser}',
-                    style: Themes.customColor(10,
-                        fontWeight: FontWeight.w500,
-                        color: Theme.of(context).unselectedWidgetColor),
-                  ),
-                ],
+              Text(
+                'id : ${item.namaImg}',
+                style: Themes.customColor(11,
+                    fontWeight: FontWeight.w500,
+                    color: Theme.of(context).unselectedWidgetColor),
               ),
-              Spacer(),
-              SizedBox(
-                width: 75,
-                child: Row(
-                  children: [
-                    Flexible(
-                      child: Text(
-                        '${DateFormat('E, dd-MM-yyyy HH:mm').format(DateTime.parse(item.cDate))}',
-                        maxLines: 3,
-                        style: Themes.customColor(9,
-                            fontWeight: FontWeight.w500,
-                            color: Theme.of(context).unselectedWidgetColor),
-                      ),
-                    ),
-                  ],
-                ),
+              Text(
+                'by : ${item.cUser}',
+                style: Themes.customColor(11,
+                    fontWeight: FontWeight.w500,
+                    color: Theme.of(context).unselectedWidgetColor),
+              ),
+              Text(
+                'at : ${DateFormat('E, dd-MM-yyyy HH:mm').format(DateTime.parse(item.cDate))}',
+                maxLines: 3,
+                style: Themes.customColor(9,
+                    fontWeight: FontWeight.w500,
+                    color: Theme.of(context).unselectedWidgetColor),
               ),
             ],
           ),

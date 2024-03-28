@@ -46,7 +46,7 @@ class VScaffoldWidget extends StatelessWidget {
   }
 }
 
-class VTab extends StatelessWidget implements PreferredSizeWidget {
+class VTab extends StatelessWidget {
   final Color color;
   final String text;
   final bool isCurrent;
@@ -69,15 +69,17 @@ class VTab extends StatelessWidget implements PreferredSizeWidget {
           borderRadius: BorderRadius.circular(8)),
       child: Text(
         text,
-        style: Themes.customColor(10, fontWeight: FontWeight.w500),
+        style: Themes.customColor(10,
+            color: isCurrent ? Colors.white : Colors.grey,
+            fontWeight: FontWeight.w500),
       ),
     );
   }
 
-  @override
-  Size get preferredSize {
-    return Size.fromHeight(height!);
-  }
+  // @override
+  // Size get preferredSize {
+  //   return Size.fromHeight(height!);
+  // }
 }
 
 class VScaffoldTabLayout extends HookWidget {

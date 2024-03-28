@@ -50,11 +50,14 @@ class MyApp extends ConsumerWidget {
     final routerDelegate = router.routerDelegate;
 
     return MaterialApp.router(
-      routeInformationProvider: router.routeInformationProvider,
-      routeInformationParser: router.routeInformationParser,
-      routerDelegate: routerDelegate,
-      builder: (context, child) {
-        return UpgradeAlert(
+        debugShowCheckedModeBanner: false,
+        debugShowMaterialGrid: false,
+        themeMode: ThemeMode.light,
+        theme: Themes.lightTheme(context),
+        routeInformationProvider: router.routeInformationProvider,
+        routeInformationParser: router.routeInformationParser,
+        routerDelegate: routerDelegate,
+        builder: (context, child) => UpgradeAlert(
             navigatorKey: routerDelegate.navigatorKey,
             child: child,
             upgrader: Upgrader(
@@ -63,13 +66,7 @@ class MyApp extends ConsumerWidget {
               showIgnore: false,
               showReleaseNotes: false,
               messages: MyUpgraderMessages(),
-            ));
-      },
-      debugShowCheckedModeBanner: false,
-      debugShowMaterialGrid: false,
-      themeMode: ThemeMode.light,
-      theme: Themes.lightTheme(context),
-    );
+            )));
   }
 }
 

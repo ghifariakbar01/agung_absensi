@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:face_net_authentication/shared/providers.dart';
 import 'package:face_net_authentication/widgets/v_button.dart';
 import 'package:face_net_authentication/widgets/v_scaffold_widget.dart';
@@ -14,9 +16,9 @@ class SlipGajiPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userNotifierProvider).user;
-    final pinGaji = useState(0);
+    final pinGaji = useState('');
     final url = useState(
-        'http://agunglogisticsapp.co.id:1232/page_print_mob.aspx?userid=${user.idUser}&userpass=${user.password}&mode=slip_gaji&noid=$pinGaji');
+        'http://agunglogisticsapp.co.id:1232/page_print_mob.aspx?userid=${user.idUser}&userpass=${user.password}&mode=slip_gaji&noid=${pinGaji.value}');
 
     final pinGajiController = useTextEditingController();
 
@@ -29,11 +31,11 @@ class SlipGajiPage extends HookConsumerWidget {
             color: Colors.blue,
           ),
           onPressed: () {
-            pinGaji.value = 0;
+            pinGaji.value = '';
             pinGajiController.text = '';
           },
         ),
-        scaffoldBody: pinGaji.value == 0
+        scaffoldBody: pinGaji.value.isEmpty
             ? Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -42,7 +44,6 @@ class SlipGajiPage extends HookConsumerWidget {
                     controller: pinGajiController,
                     decoration:
                         Themes.formStyleBordered('Masukkan Pin Gaji Anda'),
-                    keyboardType: TextInputType.number,
                   ),
                   SizedBox(
                     height: 12,
@@ -50,12 +51,16 @@ class SlipGajiPage extends HookConsumerWidget {
                   VButton(
                       label: 'Submit',
                       onPressed: () {
-                        pinGaji.value = int.parse(pinGajiController.text);
+                        pinGaji.value = pinGajiController.text;
+                        url.value =
+                            'http://agunglogisticsapp.co.id:1232/page_print_mob.aspx?userid=${user.idUser}&userpass=${user.password}&mode=slip_gaji&noid=${pinGajiController.text}';
                       })
                 ],
               )
             : InAppWebView(
-                onWebViewCreated: (_) {},
+                onLoadStart: (controller, url) {
+                  log('url start $url');
+                },
                 initialUrlRequest: URLRequest(url: Uri.parse(url.value)),
                 onLoadStop: (controller, url) async {
                   String html = await controller.evaluateJavascript(

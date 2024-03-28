@@ -1,11 +1,15 @@
+import 'dart:developer';
+
 import 'package:face_net_authentication/absen_manual/absen_manual_approve/application/absen_manual_approve_notifier.dart';
 import 'package:face_net_authentication/absen_manual/absen_manual_list/application/absen_manual_list_notifier.dart';
 import 'package:face_net_authentication/absen_manual/absen_manual_list/presentation/absen_manual_list_item.dart';
+import 'package:face_net_authentication/cuti/cuti_list/application/cuti_list_notifier.dart';
 import 'package:face_net_authentication/cuti/cuti_list/presentation/cuti_list_item.dart';
 import 'package:face_net_authentication/dt_pc/dt_pc_list/presentation/dt_pc_list_item.dart';
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
 import 'package:face_net_authentication/send_wa/application/send_wa_notifier.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -88,19 +92,13 @@ class CentralApprovePage extends HookConsumerWidget {
 
     // final centralApproveList = ref.watch(centralApproveListNotifierProvider);
     final absenManual = ref.watch(absenManualListControllerProvider);
+    final cuti = ref.watch(cutiListControllerProvider);
+
+    final currentIndex = useState(0);
+    final availableList = [absenManual, cuti];
 
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-
-    /*
-      absen_manual
-      cuti
-      dt_pc
-      izin
-      sakit
-      tugas_dinas
-      ganti_hari
-    */
 
     return VAsyncWidgetScaffold<void>(
       value: errLog,
@@ -112,39 +110,54 @@ class CentralApprovePage extends HookConsumerWidget {
             scaffoldTitle: 'List Central Approval',
             length: 2,
             additionalInfo: Icon(Icons.sort),
-            scaffoldFAB: FloatingActionButton.small(
-                backgroundColor: Palette.primaryColor,
-                child: Icon(
-                  Icons.add,
-                  color: Colors.white,
-                ),
-                onPressed: () => context.pushNamed(
-                      RouteNames.createTugasDinasNameRoute,
-                    )),
             onPageChanged: onRefresh,
             scaffoldBody: [
               SingleChildScrollView(
-                child: SizedBox(
-                  height: height,
-                  width: width,
-                  child: VAsyncValueWidget<List<AbsenManualList>>(
-                      value: absenManual,
-                      data: (list) {
-                        // waiting
-                        final _list = list
-                            .where((e) =>
-                                (e.spvSta == false || e.hrdSta == false) &&
-                                e.btlSta == false)
-                            .toList();
-                        return GenericList<AbsenManualList>(
-                          title: 'Absen Manual',
-                          list: _list,
-                          onRefresh: onRefresh,
-                          scrollController: scrollController,
-                        );
-                      }),
-                ),
-              ),
+                  child: SizedBox(
+                      height: height,
+                      width: width,
+                      child: currentIndex.value == 0
+                          ? VAsyncValueWidget<List<AbsenManualList>>(
+                              value: absenManual,
+                              data: (list) {
+                                // waiting
+                                final _list = list
+                                    .where((e) =>
+                                        (e.spvSta == false ||
+                                            e.hrdSta == false) &&
+                                        e.btlSta == false)
+                                    .toList();
+                                return GenericList(
+                                  onTap: (index) {
+                                    currentIndex.value = index;
+                                  },
+                                  idx: currentIndex,
+                                  list: _list,
+                                  onRefresh: onRefresh,
+                                  scrollController: scrollController,
+                                );
+                              })
+                          : VAsyncValueWidget<List<CutiList>>(
+                              value: cuti,
+                              data: (list) {
+                                // waiting
+                                final _list = list
+                                    .where((e) =>
+                                        (e.spvSta == false ||
+                                            e.hrdSta == false) &&
+                                        e.btlSta == false)
+                                    .toList();
+                                return GenericList(
+                                  onTap: (index) {
+                                    currentIndex.value = index;
+                                  },
+                                  idx: currentIndex,
+                                  list: _list,
+                                  onRefresh: onRefresh,
+                                  scrollController: scrollController,
+                                );
+                              }))),
+
               // VAsyncValueWidget<List<TugasDinasList>>,
               Container()
             ],
@@ -153,24 +166,67 @@ class CentralApprovePage extends HookConsumerWidget {
       ),
     );
   }
+
+  _determineAsyncValue(T) {
+    if (T is AbsenManualList) {
+      return AsyncValue<List<AbsenManualList>>;
+    } else if (T is CutiList) {
+      return AsyncValue<List<CutiList>>;
+    } else if (T is DtPcList) {
+      return AsyncValue<List<DtPcList>>;
+    } else if (T is IzinList) {
+      return AsyncValue<List<IzinList>>;
+    } else if (T is SakitList) {
+      return AsyncValue<List<SakitList>>;
+    } else if (T is TugasDinasList) {
+      return AsyncValue<List<TugasDinasList>>;
+    } else if (T is GantiHariList) {
+      return AsyncValue<List<GantiHariList>>;
+    } else {
+      return null;
+    }
+  }
 }
 
-class GenericList<T> extends StatelessWidget {
-  const GenericList(
-      {Key? key,
-      required this.onRefresh,
-      required this.scrollController,
-      required this.list,
-      required this.title})
-      : super(key: key);
+final selector = [
+  'Absen Manual',
+  'Cuti',
+  'DT/PC',
+  'Izin',
+  'Sakit',
+  'Tugas Dinas',
+  'Ganti Hari'
+];
 
+/*
+      absen_manual
+      cuti
+      dt_pc
+      izin
+      sakit
+      tugas_dinas
+      ganti_hari
+    */
+
+class GenericList extends HookWidget {
+  const GenericList({
+    Key? key,
+    required this.onTap,
+    required this.onRefresh,
+    required this.scrollController,
+    required this.list,
+    required this.idx,
+  }) : super(key: key);
+
+  final Function(int index) onTap;
   final Future<void> Function() onRefresh;
   final ScrollController scrollController;
-  final List<T> list;
-  final String title;
+  final List list;
+  final ValueNotifier<int> idx;
 
   @override
   Widget build(BuildContext context) {
+    log('idx.value ${idx.value}');
     return RefreshIndicator(
       onRefresh: onRefresh,
       child: ListView.separated(
@@ -192,14 +248,28 @@ class GenericList<T> extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(
                             horizontal: 24.0,
                           ),
-                          child: Row(
-                            children: [
-                              Text(
-                                '$title',
-                                style: Themes.customColor(10,
-                                    fontWeight: FontWeight.w500),
+                          child: SizedBox(
+                            height: 45,
+                            width: MediaQuery.of(context).size.width,
+                            child: ListView.separated(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: selector.length,
+                              separatorBuilder: (context, index) => SizedBox(
+                                width: 4,
                               ),
-                            ],
+                              itemBuilder: (context, indexBuilder) =>
+                                  TextButton(
+                                onPressed: () => onTap(indexBuilder),
+                                style: ButtonStyle(
+                                    padding: MaterialStatePropertyAll(
+                                        EdgeInsets.zero)),
+                                child: VTab(
+                                  isCurrent: indexBuilder == idx.value,
+                                  color: Palette.orange,
+                                  text: '   ${selector[indexBuilder]}   ',
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                         SizedBox(
