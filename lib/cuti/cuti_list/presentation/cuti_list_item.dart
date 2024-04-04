@@ -346,7 +346,9 @@ class CutiListItem extends HookConsumerWidget {
                       VAsyncValueWidget<List<AlasanCuti>>(
                         value: alasanCuti,
                         data: (list) => Text(
-                          '${list.firstWhere((element) => element.kode == item.alasan, orElse: () => list.first).alasan}',
+                          item.alasan == null
+                              ? '-'
+                              : '${item.alasan!.isEmpty ? '-' : list.firstWhere((element) => element.kode == item.alasan, orElse: () => list.first).alasan}',
                           style: Themes.customColor(9,
                               color: item.btlSta == true
                                   ? Colors.white

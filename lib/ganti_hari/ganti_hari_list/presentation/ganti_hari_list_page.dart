@@ -27,7 +27,7 @@ class GantiHariListPage extends HookConsumerWidget {
 
     final sendWa = ref.watch(sendWaNotifierProvider);
     final gantiHariList = ref.watch(gantiHariListControllerProvider);
-    final sakitApprove = ref.watch(gantiHariApproveControllerProvider);
+    final gantiHariApprove = ref.watch(gantiHariApproveControllerProvider);
 
     ref.listen<AsyncValue>(gantiHariApproveControllerProvider, (_, state) {
       if (!state.isLoading &&
@@ -82,7 +82,7 @@ class GantiHariListPage extends HookConsumerWidget {
     return VAsyncWidgetScaffold<void>(
       value: errLog,
       data: (_) => VAsyncWidgetScaffold(
-        value: sakitApprove,
+        value: gantiHariApprove,
         data: (_) => VAsyncWidgetScaffold(
           value: sendWa,
           data: (_) => VScaffoldTabLayout(

@@ -100,27 +100,27 @@ class AbsenRemoteService {
             "('$trimmedDate', '$ket', '${_userModelWithPassword.idUser}', '$imei', '$idGeof', '$trimmedDateDb', '${_userModelWithPassword.nama}', '$latitude', '$longitude', '$lokasi')",
       });
 
-      final responseHosting = await _dioHosting.post('',
-          data: jsonEncode(dataProd),
-          options: Options(contentType: 'text/plain'));
+      // final responseHosting = await _dioHosting.post('',
+      //     data: jsonEncode(dataProd),
+      //     options: Options(contentType: 'text/plain'));
       final responseProd = await _dio.post('',
           data: jsonEncode(dataProd),
           options: Options(contentType: 'text/plain'));
 
-      final itemsHosting = responseHosting.data?[0];
-      final isSuccess = itemsHosting['status'] == 'Success';
+      // final itemsHosting = responseHosting.data?[0];
+      // final isSuccess = itemsHosting['status'] == 'Success';
 
       final itemsProd = responseProd.data?[0];
-      final isSuccess2 = itemsProd['status'] == 'Success';
+      // final isSuccess2 = itemsProd['status'] == 'Success';
 
-      debugger();
+      // debugger();
 
-      if (isSuccess != isSuccess2) {
-        final message = 'Error server hosting / original';
-        final errorCode = 404;
+      // if (isSuccess != isSuccess2) {
+      //   final message = 'Error server hosting / original';
+      //   final errorCode = 404;
 
-        throw RestApiExceptionWithMessage(errorCode, message);
-      }
+      //   throw RestApiExceptionWithMessage(errorCode, message);
+      // }
 
       log('ABSEN REMOTE: itemsProd $itemsProd');
 

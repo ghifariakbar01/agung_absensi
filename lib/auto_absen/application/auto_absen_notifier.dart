@@ -38,11 +38,9 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
 
       list.forEach((absensInDate) async {
         /// check if absen [AbsenState.empty()], [AbsenState.absenIn()] or [AbsenState.complete()]
-        debugger(message: 'called');
+        ///
 
         if (absensInDate.isNotEmpty) {
-          debugger(message: 'called');
-
           void incrementIndex() => startIndex = startIndex + 1;
 
           while (startIndex + 1 <= absensInDate.length) {
@@ -132,7 +130,9 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
                       onBackPressed: () async {
                         buildContext.pop();
                         await deleteSavedLocation(
-                            savedLocation: absenSaved, context: context);
+                          context: buildContext,
+                          savedLocation: absenSaved,
+                        );
                       })));
 
               incrementIndex();
@@ -163,7 +163,9 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
                               imei: imei,
                               onAbsen: getSavedLocations,
                               deleteSaved: () => deleteSavedLocation(
-                                  savedLocation: absenSaved, context: context),
+                                context: buildContext,
+                                savedLocation: absenSaved,
+                              ),
                               showSuccessDialog: () =>
                                   _showSuccessDialog(buildContext, absenSaved),
                               showFailureDialog: (code, message) =>
@@ -178,7 +180,9 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
                         buildContext.pop();
                         await OSVibrate.vibrate();
                         await deleteSavedLocation(
-                            savedLocation: absenSaved, context: context);
+                          context: buildContext,
+                          savedLocation: absenSaved,
+                        );
                       }));
 
               incrementIndex();
@@ -188,7 +192,9 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
 
               // delete saved absen as we don't need them.
               await deleteSavedLocation(
-                  savedLocation: absenSaved, context: buildContext);
+                context: buildContext,
+                savedLocation: absenSaved,
+              );
 
               // Trigger another build [FOR DELETION]
               await getSavedLocations();
@@ -202,7 +208,7 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
 
           final Function(Location location) mockListener = ref
               .read(mockLocationNotifierProvider.notifier)
-              .addMockLocationListener;
+              .checkMockLocationState;
 
           // REINITIALIZE
           await reinitializeDependencies(
@@ -298,23 +304,7 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
     await ref
         .read(backgroundNotifierProvider.notifier)
         .removeLocationFromSaved(savedLocation, onSaved: () async {
-      // final savedLocations = await ref
-      //     .read(backgroundNotifierProvider.notifier)
-      //     .getSavedLocationsOneLiner();
-
-      // final bgItems = ref
-      //     .read(backgroundNotifierProvider.notifier)
-      //     .getBackgroundItemsAsList(savedLocations);
-
-      // log('bgItems savedLocations $bgItems $savedLocations');
-
-      // ref
-      //     .read(backgroundNotifierProvider.notifier)
-      //     .changeBackgroundItems(bgItems ?? []);
-
-      // // Trigger another build [FOR DELETION]
-      // await getSavedLocations();
-      // await ref.read(geofenceProvider.notifier).getGeofenceList();
+      // change background item, for popup trigger
     });
   }
 

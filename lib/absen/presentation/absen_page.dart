@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -49,7 +47,6 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
       String imei = await imeiNotifier.getImeiString();
       await Future.delayed(
           Duration(seconds: 1), () => imeiNotifier.changeSavedImei(imei));
-      debugger();
       await ref.read(backgroundNotifierProvider.notifier).getSavedLocations();
       await ref.read(geofenceProvider.notifier).getGeofenceList();
       await ref.read(absenNotifierProvidier.notifier).getAbsenToday();

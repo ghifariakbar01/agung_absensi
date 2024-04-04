@@ -112,7 +112,7 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
     {
       final Function(Location location) mockListener = ref
           .read(mockLocationNotifierProvider.notifier)
-          .addMockLocationListener;
+          .checkMockLocationState;
       //
       if (geofenceList.isNotEmpty) {
         //

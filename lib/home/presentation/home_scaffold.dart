@@ -126,95 +126,85 @@ class HomeScaffold extends ConsumerWidget {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Stack(
-            children: [
-              SizedBox(
-                height: height,
-                width: width,
-                child: RefreshIndicator(
-                  onRefresh: onRefresh,
-                  child: ListView(
-                    children: [
-                      const AppLogo(),
-                      const SizedBox(height: 24),
-                      ...isTester.maybeWhen(
-                          tester: () {
-                            return [
-                              Text(
-                                'Toggle Location',
-                                style: Themes.customColor(10,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(
-                                height: 8,
-                              ),
-                              HomeTesterOn(),
-                            ];
-                          },
-                          orElse: user.user.nama == 'Ghifar'
-                              ? () {
-                                  return [
-                                    Text(
-                                      'Toggle Location',
-                                      style: Themes.customColor(10,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    SizedBox(
-                                      height: 8,
-                                    ),
-                                    HomeTesterOff(),
-                                  ];
-                                }
-                              : () {
-                                  return [Container()];
-                                }
-
-                          //
+          child: SizedBox(
+            height: height,
+            width: width,
+            child: RefreshIndicator(
+              onRefresh: onRefresh,
+              child: ListView(
+                children: [
+                  const AppLogo(),
+                  const SizedBox(height: 24),
+                  ...isTester.maybeWhen(
+                      tester: () {
+                        return [
+                          Text(
+                            'Toggle Location',
+                            style: Themes.customColor(10,
+                                fontWeight: FontWeight.bold),
                           ),
-                      HomeWa(onRefresh),
-                      // ...categories(title: 'Admin', width: width, item: admin),
-                      ...categories(
-                          title: 'Attendance', width: width, item: attendance),
-                      ...categories(
-                          title: 'Leave Request',
-                          width: width,
-                          item: leaveRequest),
-                      ...categories(
-                          title: 'Activity', width: width, item: activity),
-                      ...categories(
-                          title: 'Others', width: width, item: others),
-                      const SizedBox(height: 65),
-                    ],
-                  ),
-                ),
-              ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Center(child: CopyrightAgung()),
-                    Center(
-                      child: SelectableText(
-                        'APP VERSION: ${packageInfo.when(
-                          loading: () => '',
-                          data: (packageInfo) => packageInfo,
-                          error: (error, stackTrace) =>
-                              'Error: $error StackTrace: $stackTrace',
-                        )}',
-                        textAlign: TextAlign.center,
-                        maxLines: 2,
-                        style: Themes.customColor(
-                          8,
-                          fontWeight: FontWeight.bold,
+                          SizedBox(
+                            height: 8,
+                          ),
+                          HomeTesterOn(),
+                        ];
+                      },
+                      orElse: user.user.nama == 'Ghifar'
+                          ? () {
+                              return [
+                                Text(
+                                  'Toggle Location',
+                                  style: Themes.customColor(10,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(
+                                  height: 8,
+                                ),
+                                HomeTesterOff(),
+                              ];
+                            }
+                          : () {
+                              return [Container()];
+                            }
+
+                      //
+                      ),
+                  HomeWa(onRefresh),
+                  // ...categories(title: 'Admin', width: width, item: admin),
+                  ...categories(
+                      title: 'Attendance', width: width, item: attendance),
+                  ...categories(
+                      title: 'Leave Request', width: width, item: leaveRequest),
+                  ...categories(
+                      title: 'Activity', width: width, item: activity),
+                  ...categories(title: 'Others', width: width, item: others),
+                  const SizedBox(height: 15),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Center(child: CopyrightAgung()),
+                      Center(
+                        child: SelectableText(
+                          'APP VERSION: ${packageInfo.when(
+                            loading: () => '',
+                            data: (packageInfo) => packageInfo,
+                            error: (error, stackTrace) =>
+                                'Error: $error StackTrace: $stackTrace',
+                          )}',
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          style: Themes.customColor(
+                            8,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              )
-            ],
+                    ],
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       ),

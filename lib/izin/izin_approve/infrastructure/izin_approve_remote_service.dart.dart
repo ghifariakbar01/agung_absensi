@@ -26,7 +26,7 @@ class IzinApproveRemoteService {
         "command": "UPDATE $dbName SET "
                 " spv_nm = '$nama', " +
             " spv_sta = 1, " +
-            " spv_tgl = getdate(), " +
+            " spv_tgl = getdate() " +
             " WHERE id_izin = $idIzin ",
         "mode": "UPDATE"
       };

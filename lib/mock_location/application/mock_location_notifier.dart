@@ -6,7 +6,7 @@ import 'mock_location_state.dart';
 class MockLocationNotifier extends StateNotifier<MockLocationState> {
   MockLocationNotifier() : super(MockLocationState.initial());
 
-  addMockLocationListener(Location location) {
+  checkMockLocationState(Location location) {
     if (location.isMock) {
       state = const MockLocationState.mocked();
     } else {

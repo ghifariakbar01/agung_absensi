@@ -1,3 +1,4 @@
+import 'package:face_net_authentication/widgets/v_async_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
@@ -13,6 +14,8 @@ import '../../../utils/dialog_helper.dart';
 import '../../../widgets/tappable_widget.dart';
 import '../../../widgets/v_dialogs.dart';
 import '../../absen_manual_approve/application/absen_manual_approve_notifier.dart';
+import '../../create_absen_manual/application/create_absen_manual_notifier.dart';
+import '../../create_absen_manual/application/jenis_absen.dart';
 import '../application/absen_manual_list.dart';
 import 'absen_manual_dtl_dialog.dart';
 
@@ -40,6 +43,8 @@ class AbsenManualListItem extends HookConsumerWidget {
     //         .difference(DateTime.parse(item.cDate!))
     //         .inDays
     //     : DateTime.now().difference(DateTime.parse(item.cDate!)).inDays;
+
+    final jenisAbsen = ref.watch(jenisAbsenManualNotifierProvider);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -257,13 +262,16 @@ class AbsenManualListItem extends HookConsumerWidget {
                           ),
                           SizedBox(
                             width: 90,
-                            child: Text(
-                              '${item.jenisAbsen}',
-                              style: Themes.customColor(9,
-                                  color: item.btlSta == true
-                                      ? Colors.white
-                                      : Palette.orange,
-                                  fontWeight: FontWeight.w500),
+                            child: VAsyncValueWidget<List<JenisAbsen>>(
+                              value: jenisAbsen,
+                              data: (list) => Text(
+                                "${list.firstWhere((element) => element.Kode == item.jenisAbsen).Nama}",
+                                style: Themes.customColor(9,
+                                    color: item.btlSta == true
+                                        ? Colors.white
+                                        : Palette.orange,
+                                    fontWeight: FontWeight.w500),
+                              ),
                             ),
                           ),
                         ],

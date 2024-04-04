@@ -7,6 +7,8 @@ import '../../config/configuration.dart';
 
 part 'ip_notifier.g.dart';
 
+const bool isTesting = true;
+
 const ip = 'http://agunglogisticsapp.co.id:1225/service_mobile.asmx/Perintah';
 const ipHosting = 'http://202.157.184.229:1001/service_mobile.asmx/Perintah';
 
@@ -34,30 +36,10 @@ const ipHosting = 'http://202.157.184.229:1001/service_mobile.asmx/Perintah';
 class IpNotifier extends _$IpNotifier {
   @override
   FutureOr<void> build() async {
+    initOnLogin('');
+
     // final SharedPreferences prefs = await SharedPreferences.getInstance();
     // final String? _json = prefs.getString('remember_me');
-
-    ref.read(dioProvider)
-      ..options = BaseOptions(
-        connectTimeout: BuildConfig.get().connectTimeout,
-        receiveTimeout: BuildConfig.get().receiveTimeout,
-        validateStatus: (status) {
-          return true;
-        },
-        baseUrl: ip,
-      )
-      ..interceptors.add(ref.read(authInterceptorProvider));
-
-    ref.read(dioProviderHosting)
-      ..options = BaseOptions(
-        connectTimeout: BuildConfig.get().connectTimeout,
-        receiveTimeout: BuildConfig.get().receiveTimeout,
-        validateStatus: (status) {
-          return true;
-        },
-        baseUrl: ipHosting,
-      )
-      ..interceptors.add(ref.read(authInterceptorProvider));
 
     // if (_json != null) {
     //   final model = _parseJson(_json);
@@ -79,7 +61,7 @@ class IpNotifier extends _$IpNotifier {
         validateStatus: (status) {
           return true;
         },
-        baseUrl: ip,
+        baseUrl: isTesting ? ipHosting : ip,
       )
       ..interceptors.add(ref.read(authInterceptorProvider));
 

@@ -48,7 +48,7 @@ class CreateGantiHariPage extends HookConsumerWidget {
         return AlertHelper.showSnackBar(
           context,
           color: Palette.primaryColor,
-          message: 'Sukses Menginput Form Tugas Dinas',
+          message: 'Sukses Menginput Form Ganti Hari',
           onDone: () {
             ref.invalidate(gantiHariListControllerProvider);
             context.pop();

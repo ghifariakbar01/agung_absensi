@@ -9,6 +9,8 @@ import 'phone_num.dart';
 
 part 'send_wa_notifier.g.dart';
 
+const bool isTesting = true;
+
 @Riverpod(keepAlive: true)
 SendWaRemoteService sendWaRemoteService(SendWaRemoteServiceRef ref) {
   return SendWaRemoteService(
@@ -37,6 +39,10 @@ class SendWaNotifier extends _$SendWaNotifier {
       required String notifContent
       //
       }) async {
+    if (isTesting) {
+      return unit;
+    }
+
     return ref.read(sendWaRepositoryProvider).sendWa(
         phone: phone,
         idUser: idUser,
@@ -52,6 +58,10 @@ class SendWaNotifier extends _$SendWaNotifier {
       required String messageContent}) async {
     bool noTelp1Empty = false;
     bool noTelp2Empty = false;
+
+    if (isTesting) {
+      return;
+    }
 
     if (phoneNum.noTelp1 != null) {
       if (phoneNum.noTelp1!.isEmpty) {
