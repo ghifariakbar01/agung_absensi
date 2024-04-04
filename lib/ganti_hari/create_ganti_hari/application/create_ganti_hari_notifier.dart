@@ -15,7 +15,7 @@ part 'create_ganti_hari_notifier.g.dart';
 CreateGantiHariRemoteService createGantiHariRemoteService(
     CreateGantiHariRemoteServiceRef ref) {
   return CreateGantiHariRemoteService(
-      ref.watch(dioProvider), ref.watch(dioRequestProvider));
+      ref.watch(dioProviderHosting), ref.watch(dioRequestProvider));
 }
 
 @Riverpod(keepAlive: true)

@@ -14,7 +14,7 @@ const bool isTesting = true;
 @Riverpod(keepAlive: true)
 SendWaRemoteService sendWaRemoteService(SendWaRemoteServiceRef ref) {
   return SendWaRemoteService(
-      ref.watch(dioProvider), ref.watch(dioRequestProvider));
+      ref.watch(dioProviderHosting), ref.watch(dioRequestProvider));
 }
 
 @Riverpod(keepAlive: true)

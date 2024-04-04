@@ -11,7 +11,7 @@ part 'cuti_list_notifier.g.dart';
 @Riverpod(keepAlive: true)
 CutiListRemoteService cutiListRemoteService(CutiListRemoteServiceRef ref) {
   return CutiListRemoteService(
-      ref.watch(dioProvider), ref.watch(dioRequestProvider));
+      ref.watch(dioProviderHosting), ref.watch(dioRequestProvider));
 }
 
 @Riverpod(keepAlive: true)

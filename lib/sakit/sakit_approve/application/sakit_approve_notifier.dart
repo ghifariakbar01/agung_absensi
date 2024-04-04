@@ -19,7 +19,7 @@ part 'sakit_approve_notifier.g.dart';
 SakitApproveRemoteService sakitApproveRemoteService(
     SakitApproveRemoteServiceRef ref) {
   return SakitApproveRemoteService(
-      ref.watch(dioProvider), ref.watch(dioRequestProvider));
+      ref.watch(dioProviderHosting), ref.watch(dioRequestProvider));
 }
 
 @Riverpod(keepAlive: true)

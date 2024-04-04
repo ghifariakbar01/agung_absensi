@@ -17,7 +17,7 @@ part 'create_sakit_notifier.g.dart';
 CreateSakitRemoteService createSakitRemoteService(
     CreateSakitRemoteServiceRef ref) {
   return CreateSakitRemoteService(
-      ref.watch(dioProvider), ref.watch(dioRequestProvider));
+      ref.watch(dioProviderHosting), ref.watch(dioRequestProvider));
 }
 
 @Riverpod(keepAlive: true)

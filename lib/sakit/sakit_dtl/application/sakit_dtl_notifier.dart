@@ -10,7 +10,7 @@ part 'sakit_dtl_notifier.g.dart';
 @Riverpod(keepAlive: true)
 SakitDtlRemoteService sakitDtlRemoteService(SakitDtlRemoteServiceRef ref) {
   return SakitDtlRemoteService(
-      ref.watch(dioProvider), ref.watch(dioRequestProvider));
+      ref.watch(dioProviderHosting), ref.watch(dioRequestProvider));
 }
 
 @Riverpod(keepAlive: true)

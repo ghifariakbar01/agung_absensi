@@ -16,7 +16,7 @@ part 'absen_manual_approve_notifier.g.dart';
 AbsenManualApproveRemoteService absenManualApproveRemoteService(
     AbsenManualApproveRemoteServiceRef ref) {
   return AbsenManualApproveRemoteService(
-      ref.watch(dioProvider), ref.watch(dioRequestProvider));
+      ref.watch(dioProviderHosting), ref.watch(dioRequestProvider));
 }
 
 @Riverpod(keepAlive: true)

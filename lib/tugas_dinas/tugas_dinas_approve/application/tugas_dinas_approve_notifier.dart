@@ -14,7 +14,7 @@ part 'tugas_dinas_approve_notifier.g.dart';
 TugasDinasApproveRemoteService tugasDinasApproveRemoteService(
     TugasDinasApproveRemoteServiceRef ref) {
   return TugasDinasApproveRemoteService(
-      ref.watch(dioProvider), ref.watch(dioRequestProvider));
+      ref.watch(dioProviderHosting), ref.watch(dioRequestProvider));
 }
 
 @Riverpod(keepAlive: true)

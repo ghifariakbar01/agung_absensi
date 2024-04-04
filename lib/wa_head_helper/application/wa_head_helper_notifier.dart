@@ -12,7 +12,7 @@ part 'wa_head_helper_notifier.g.dart';
 WaHeadHelperRemoteService waHeadHelperRemoteService(
     WaHeadHelperRemoteServiceRef ref) {
   return WaHeadHelperRemoteService(
-      ref.watch(dioProvider), ref.watch(dioRequestProvider));
+      ref.watch(dioProviderHosting), ref.watch(dioRequestProvider));
 }
 
 @Riverpod(keepAlive: true)

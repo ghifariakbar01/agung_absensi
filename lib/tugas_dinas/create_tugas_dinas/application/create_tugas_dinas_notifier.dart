@@ -22,7 +22,7 @@ part 'create_tugas_dinas_notifier.g.dart';
 CreateTugasDinasRemoteService createTugasDinasRemoteService(
     CreateTugasDinasRemoteServiceRef ref) {
   return CreateTugasDinasRemoteService(
-      ref.watch(dioProvider), ref.watch(dioRequestProvider));
+      ref.watch(dioProviderHosting), ref.watch(dioRequestProvider));
 }
 
 @Riverpod(keepAlive: true)

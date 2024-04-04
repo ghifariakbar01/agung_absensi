@@ -100,27 +100,25 @@ class AbsenRemoteService {
             "('$trimmedDate', '$ket', '${_userModelWithPassword.idUser}', '$imei', '$idGeof', '$trimmedDateDb', '${_userModelWithPassword.nama}', '$latitude', '$longitude', '$lokasi')",
       });
 
-      // final responseHosting = await _dioHosting.post('',
-      //     data: jsonEncode(dataProd),
-      //     options: Options(contentType: 'text/plain'));
+      final responseHosting = await _dioHosting.post('',
+          data: jsonEncode(dataProd),
+          options: Options(contentType: 'text/plain'));
       final responseProd = await _dio.post('',
           data: jsonEncode(dataProd),
           options: Options(contentType: 'text/plain'));
 
-      // final itemsHosting = responseHosting.data?[0];
-      // final isSuccess = itemsHosting['status'] == 'Success';
+      final itemsHosting = responseHosting.data?[0];
+      final isSuccess = itemsHosting['status'] == 'Success';
 
       final itemsProd = responseProd.data?[0];
-      // final isSuccess2 = itemsProd['status'] == 'Success';
+      final isSuccess2 = itemsProd['status'] == 'Success';
 
-      // debugger();
+      if (isSuccess != isSuccess2) {
+        final message = 'Error server hosting / original';
+        final errorCode = 404;
 
-      // if (isSuccess != isSuccess2) {
-      //   final message = 'Error server hosting / original';
-      //   final errorCode = 404;
-
-      //   throw RestApiExceptionWithMessage(errorCode, message);
-      // }
+        throw RestApiExceptionWithMessage(errorCode, message);
+      }
 
       log('ABSEN REMOTE: itemsProd $itemsProd');
 
@@ -130,7 +128,7 @@ class AbsenRemoteService {
 
         if (absenProdExist) {
           // if (items['errornum'] != null && items['errornum'] as int != 0) {
-          //
+
           //   final message = items['error'] as String?;
           //   final errorCode = items['errornum'] as int;
 
@@ -183,63 +181,6 @@ class AbsenRemoteService {
       }
     }
   }
-
-  // Future<int?> getAbsenID() async {
-  //   try {
-  //     final String command =
-  //         "SELECT TOP 1 id_absenmnl FROM $dbName ORDER BY id_absenmnl DESC";
-
-  //     final data = _dioRequest;
-
-  //     data.addAll({
-  //       "mode": "SELECT",
-  //       "command": command,
-  //     });
-
-  //
-
-  //     log('data ${jsonEncode(data)}');
-
-  //     final response = await _dio.post('',
-  //         data: jsonEncode(data), options: Options(contentType: 'text/plain'));
-
-  //     final items = response.data?[0];
-
-  //     if (items['status'] == 'Success') {
-  //       final absenExist = items['items'] != null && items['items'] is List;
-
-  //       if (absenExist) {
-  //         final list = items['items'] as List;
-
-  //         if (list.isNotEmpty) {
-  //           final item = list[0];
-
-  //           return item['id_absenmnl'];
-  //         } else {
-  //           final message = items['error'] as String?;
-  //           final errorCode = items['errornum'] as int;
-
-  //           throw RestApiExceptionWithMessage(errorCode, message);
-  //         }
-  //       }
-  //     } else {
-  //       final message = items['error'] as String?;
-  //       final errorCode = items['errornum'] as int;
-
-  //       throw RestApiExceptionWithMessage(errorCode, message);
-  //     }
-
-  //     return null;
-  //   } on DioError catch (e) {
-  //     if (e.isNoConnectionError || e.isConnectionTimeout) {
-  //       throw NoConnectionException();
-  //     } else if (e.response != null) {
-  //       throw RestApiException(e.response?.statusCode);
-  //     } else {
-  //       rethrow;
-  //     }
-  //   }
-  // }
 
   Future<AbsenState> getAbsen({
     required DateTime date,

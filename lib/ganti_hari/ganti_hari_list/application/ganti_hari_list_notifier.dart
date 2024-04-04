@@ -12,7 +12,7 @@ part 'ganti_hari_list_notifier.g.dart';
 GantiHariListRemoteService gantiHariListRemoteService(
     GantiHariListRemoteServiceRef ref) {
   return GantiHariListRemoteService(
-      ref.watch(dioProvider), ref.watch(dioRequestProvider));
+      ref.watch(dioProviderHosting), ref.watch(dioRequestProvider));
 }
 
 @Riverpod(keepAlive: true)

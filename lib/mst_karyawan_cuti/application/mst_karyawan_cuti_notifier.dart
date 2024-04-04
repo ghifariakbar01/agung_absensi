@@ -11,7 +11,7 @@ part 'mst_karyawan_cuti_notifier.g.dart';
 MstKaryawanCutiRemoteService mstKaryawanCutiRemoteService(
     MstKaryawanCutiRemoteServiceRef ref) {
   return MstKaryawanCutiRemoteService(
-      ref.watch(dioProvider), ref.watch(dioRequestProvider));
+      ref.watch(dioProviderHosting), ref.watch(dioRequestProvider));
 }
 
 @Riverpod(keepAlive: true)

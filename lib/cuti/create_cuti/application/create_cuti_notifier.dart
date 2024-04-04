@@ -21,7 +21,7 @@ part 'create_cuti_notifier.g.dart';
 CreateCutiRemoteService createCutiRemoteService(
     CreateCutiRemoteServiceRef ref) {
   return CreateCutiRemoteService(
-      ref.watch(dioProvider), ref.watch(dioRequestProvider));
+      ref.watch(dioProviderHosting), ref.watch(dioRequestProvider));
 }
 
 @Riverpod(keepAlive: true)

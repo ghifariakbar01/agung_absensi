@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../shared/providers.dart';
@@ -13,7 +11,7 @@ part 'absen_manual_list_notifier.g.dart';
 AbsenManualListRemoteService absenManualListRemoteService(
     AbsenManualListRemoteServiceRef ref) {
   return AbsenManualListRemoteService(
-      ref.watch(dioProvider), ref.watch(dioRequestProvider));
+      ref.watch(dioProviderHosting), ref.watch(dioRequestProvider));
 }
 
 @Riverpod(keepAlive: true)

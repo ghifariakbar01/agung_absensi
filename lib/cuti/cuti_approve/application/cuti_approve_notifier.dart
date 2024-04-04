@@ -23,7 +23,7 @@ part 'cuti_approve_notifier.g.dart';
 CutiApproveRemoteService cutiApproveRemoteService(
     CutiApproveRemoteServiceRef ref) {
   return CutiApproveRemoteService(
-      ref.watch(dioProvider), ref.watch(dioRequestProvider));
+      ref.watch(dioProviderHosting), ref.watch(dioRequestProvider));
 }
 
 @Riverpod(keepAlive: true)

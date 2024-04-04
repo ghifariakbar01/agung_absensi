@@ -7,8 +7,6 @@ import '../../config/configuration.dart';
 
 part 'ip_notifier.g.dart';
 
-const bool isTesting = true;
-
 const ip = 'http://agunglogisticsapp.co.id:1225/service_mobile.asmx/Perintah';
 const ipHosting = 'http://202.157.184.229:1001/service_mobile.asmx/Perintah';
 
@@ -61,7 +59,7 @@ class IpNotifier extends _$IpNotifier {
         validateStatus: (status) {
           return true;
         },
-        baseUrl: isTesting ? ipHosting : ip,
+        baseUrl: ip,
       )
       ..interceptors.add(ref.read(authInterceptorProvider));
 

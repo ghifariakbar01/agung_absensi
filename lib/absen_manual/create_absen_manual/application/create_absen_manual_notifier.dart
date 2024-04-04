@@ -22,7 +22,7 @@ part 'create_absen_manual_notifier.g.dart';
 CreateAbsenManualRemoteService createAbsenManualRemoteService(
     CreateAbsenManualRemoteServiceRef ref) {
   return CreateAbsenManualRemoteService(
-      ref.watch(dioProvider), ref.watch(dioRequestProvider));
+      ref.watch(dioProviderHosting), ref.watch(dioRequestProvider));
 }
 
 @Riverpod(keepAlive: true)

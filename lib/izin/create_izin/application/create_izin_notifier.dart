@@ -15,7 +15,7 @@ part 'create_izin_notifier.g.dart';
 CreateIzinRemoteService createIzinRemoteService(
     CreateIzinRemoteServiceRef ref) {
   return CreateIzinRemoteService(
-      ref.watch(dioProvider), ref.watch(dioRequestProvider));
+      ref.watch(dioProviderHosting), ref.watch(dioRequestProvider));
 }
 
 @Riverpod(keepAlive: true)

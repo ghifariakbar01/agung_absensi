@@ -16,7 +16,7 @@ part 'izin_approve_notifier.g.dart';
 IzinApproveRemoteService izinApproveRemoteService(
     IzinApproveRemoteServiceRef ref) {
   return IzinApproveRemoteService(
-      ref.watch(dioProvider), ref.watch(dioRequestProvider));
+      ref.watch(dioProviderHosting), ref.watch(dioRequestProvider));
 }
 
 @Riverpod(keepAlive: true)

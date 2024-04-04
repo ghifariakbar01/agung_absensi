@@ -20,7 +20,7 @@ part 'create_dt_pc_notifier.g.dart';
 CreateDtPcRemoteService createDtPcRemoteService(
     CreateDtPcRemoteServiceRef ref) {
   return CreateDtPcRemoteService(
-      ref.watch(dioProvider), ref.watch(dioRequestProvider));
+      ref.watch(dioProviderHosting), ref.watch(dioRequestProvider));
 }
 
 @Riverpod(keepAlive: true)

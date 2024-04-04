@@ -97,8 +97,8 @@ final imeiCredentialsStorageProvider = Provider<CredentialsStorage>(
 );
 
 final authRemoteServiceProvider = Provider(
-  (ref) =>
-      AuthRemoteService(ref.watch(dioProvider), ref.watch(dioRequestProvider)),
+  (ref) => AuthRemoteService(
+      ref.watch(dioProviderHosting), ref.watch(dioRequestProvider)),
 );
 
 final authRepositoryProvider = Provider((ref) => AuthRepository(
@@ -146,7 +146,7 @@ final backgroundNotifierProvider =
 // EDIT PROFILE
 final editProfileRemoteServiceProvider = Provider(
   (ref) => EditProfileRemoteService(
-    ref.watch(dioProvider),
+    ref.watch(dioProviderHosting),
     ref.watch(dioRequestProvider),
   ),
 );
@@ -203,7 +203,7 @@ final geofenceSecureStorageProvider = Provider<CredentialsStorage>(
     (ref) => GeofenceSecureStorage(ref.watch(flutterSecureStorageProvider)));
 
 final geofenceRemoteServiceProvider = Provider((ref) => GeofenceRemoteService(
-    ref.watch(dioProvider), ref.watch(dioRequestProvider)));
+    ref.watch(dioProviderHosting), ref.watch(dioRequestProvider)));
 
 final geofenceRepositoryProvider = Provider(
   (ref) => GeofenceRepository(ref.watch(geofenceRemoteServiceProvider),

@@ -17,7 +17,7 @@ part 'ganti_hari_approve_notifier.g.dart';
 GantiHariApproveRemoteService gantiHariApproveRemoteService(
     GantiHariApproveRemoteServiceRef ref) {
   return GantiHariApproveRemoteService(
-      ref.watch(dioProvider), ref.watch(dioRequestProvider));
+      ref.watch(dioProviderHosting), ref.watch(dioRequestProvider));
 }
 
 @Riverpod(keepAlive: true)

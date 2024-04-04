@@ -10,7 +10,7 @@ part 'delete_sakit_notifier.g.dart';
 DeleteSakitRemoteService deleteSakitRemoteService(
     DeleteSakitRemoteServiceRef ref) {
   return DeleteSakitRemoteService(
-      ref.watch(dioProvider), ref.watch(dioRequestProvider));
+      ref.watch(dioProviderHosting), ref.watch(dioRequestProvider));
 }
 
 @Riverpod(keepAlive: true)

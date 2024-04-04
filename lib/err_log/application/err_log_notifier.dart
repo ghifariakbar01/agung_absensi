@@ -11,7 +11,7 @@ part 'err_log_notifier.g.dart';
 @Riverpod(keepAlive: true)
 ErrLogRemoteService errLogRemoteService(ErrLogRemoteServiceRef ref) {
   return ErrLogRemoteService(
-      ref.watch(dioProvider), ref.watch(dioRequestProvider));
+      ref.watch(dioProviderHosting), ref.watch(dioRequestProvider));
 }
 
 @Riverpod(keepAlive: true)

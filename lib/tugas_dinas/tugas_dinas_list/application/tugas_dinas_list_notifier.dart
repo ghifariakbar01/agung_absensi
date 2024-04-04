@@ -11,7 +11,7 @@ part 'tugas_dinas_list_notifier.g.dart';
 TugasDinasListRemoteService tugasDinasListRemoteService(
     TugasDinasListRemoteServiceRef ref) {
   return TugasDinasListRemoteService(
-      ref.watch(dioProvider), ref.watch(dioRequestProvider));
+      ref.watch(dioProviderHosting), ref.watch(dioRequestProvider));
 }
 
 @Riverpod(keepAlive: true)

@@ -10,7 +10,7 @@ part 'dt_pc_list_notifier.g.dart';
 @Riverpod(keepAlive: true)
 DtPcListRemoteService dtPcListRemoteService(DtPcListRemoteServiceRef ref) {
   return DtPcListRemoteService(
-      ref.watch(dioProvider), ref.watch(dioRequestProvider));
+      ref.watch(dioProviderHosting), ref.watch(dioRequestProvider));
 }
 
 @Riverpod(keepAlive: true)

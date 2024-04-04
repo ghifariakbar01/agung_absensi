@@ -16,7 +16,7 @@ part 'dt_pc_approve_notifier.g.dart';
 DtPcApproveRemoteService dtPcApproveRemoteService(
     DtPcApproveRemoteServiceRef ref) {
   return DtPcApproveRemoteService(
-      ref.watch(dioProvider), ref.watch(dioRequestProvider));
+      ref.watch(dioProviderHosting), ref.watch(dioRequestProvider));
 }
 
 @Riverpod(keepAlive: true)
