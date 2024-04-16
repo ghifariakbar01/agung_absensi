@@ -23,8 +23,7 @@ Future<void> main() async {
   runApp(ProviderScope(child: MyApp()));
 }
 
-final initializationProvider =
-    FutureProvider.family<Unit, BuildContext>((ref, context) async {
+final initializationProvider = FutureProvider<Unit>((ref) async {
   await ref.read(ipNotifierProvider.future);
 
   if (!BuildConfig.isProduction) {
@@ -44,7 +43,7 @@ final initializationProvider =
 class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen(initializationProvider(context), (_, __) {});
+    ref.listen(initializationProvider, (_, __) {});
 
     final router = ref.watch(routerProvider);
     final routerDelegate = router.routerDelegate;
@@ -57,15 +56,14 @@ class MyApp extends ConsumerWidget {
         routeInformationProvider: router.routeInformationProvider,
         routeInformationParser: router.routeInformationParser,
         routerDelegate: routerDelegate,
-        builder: (context, child) => UpgradeAlert(
+        builder: (_, child) => UpgradeAlert(
             navigatorKey: routerDelegate.navigatorKey,
             child: child,
             upgrader: Upgrader(
-              dialogStyle: UpgradeDialogStyle.cupertino,
-              showLater: true,
               showIgnore: false,
               showReleaseNotes: false,
               messages: MyUpgraderMessages(),
+              dialogStyle: UpgradeDialogStyle.cupertino,
             )));
   }
 }
