@@ -39,7 +39,7 @@ class SignInFormState with _$SignInFormState {
         // 'PT Agung Raya'
       ],
       ptMap: {
-        'gs_12': [
+        'gs_testing': [
           'PT Agung Citra Transformasi',
           // 'PT Agung Transina Raya',
           // 'PT Agung Lintas Raya'
