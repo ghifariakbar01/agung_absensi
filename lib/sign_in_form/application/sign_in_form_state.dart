@@ -28,7 +28,7 @@ class SignInFormState with _$SignInFormState {
       userId: UserId(''),
       password: Password(''),
       idKaryawan: IdKaryawan(''),
-      ptServerSelected: PTName('gs_12'),
+      ptServerSelected: PTName('gs_testing'),
       ptDropdownSelected: 'PT Agung Citra Transformasi',
       ptDropdownList: [
         'PT Agung Citra Transformasi',

@@ -12,8 +12,6 @@ import '../../domain/value_objects_copy.dart';
 import 'user_model.dart';
 import 'user_state.dart';
 
-const bool isTesting = true;
-
 class UserNotifier extends StateNotifier<UserState> {
   UserNotifier(
     this._repository,
@@ -99,7 +97,7 @@ class UserNotifier extends StateNotifier<UserState> {
         () => ref.read(dioRequestProvider).addAll({
           "username": "${user.nama}",
           "password": "${user.password}",
-          "server": isTesting ? "gs_testing" : "${user.ptServer}",
+          "server": 'gs_testing',
         }),
       ),
     );

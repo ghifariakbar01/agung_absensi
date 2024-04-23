@@ -37,58 +37,23 @@ class AbsenRemoteService {
     required DateTime date,
     required DateTime dbDate,
     required JenisAbsen inOrOut,
-    // required String idAbsenMnl,
-    // required String jenisAbsen,
-    // required String idUser,
-    // required String tgl,
-    // required String jamAwal,
-    // required String jamAkhir,
-    // required String keterangan,
-    // required int btlSta,
-    // required String cDate,
-    // required String cUser,
-    // required String uDate,
-    // required String uUser,
-    // required int spvSta,
-    // required String spvTanggal,
-    // required int hrdSta,
-    // required String periode,
   }) async {
-    // final currentMonth = StringUtils.monthDate(dbDate);
-    // //
-    // final currentDate = StringUtils.midnightDate(date);
     final trimmedDate = StringUtils.trimmedDate(date);
-    //
     final trimmedDateDb = StringUtils.trimmedDate(dbDate);
-    //
+
     final ket = inOrOut == JenisAbsen.absenIn ? 'MASUK' : 'PULANG';
     final coancenate = inOrOut == JenisAbsen.absenIn ? 'masuk' : 'keluar';
 
     try {
-      // final data = _dioRequest;
+      /*
+        FOR TESTING,
+          use gs_12 on login, absen, riwayat
+      */
+      final _testing = _dioRequest.update('server', (_) => 'gs_12');
 
-      // data.addAll({
-      //   "mode": 'INSERT',
-      // });
-
-      // if (inOrOut == JenisAbsen.absenIn) {
-      //   data.addAll({
-      //     "command": "INSERT INTO $dbName " +
-      //         "(id_absenmnl, id_user, tgl, jam_awal, ket, c_date, hrd_tgl, c_user, u_date, u_user, spv_sta, spv_tgl, hrd_sta, btl_sta, periode, jenis_absen, latitude_$coancenate, longtitude_$coancenate, lokasi_$coancenate)" +
-      //         " VALUES " +
-      //         "('$idAbsenMnl', '${_userModelWithPassword.idUser}', '$currentDate', '$trimmedDate', 'ABSEN MASUK', '$trimmedDateDb', '$trimmedDateDb', '${_userModelWithPassword.nama}','$trimmedDateDb', '${_userModelWithPassword.nama}', 0, '$trimmedDateDb', 0, 0, '$currentMonth', '$jenisAbsen', '$latitude', '$longitude', '$lokasi')",
-      //   });
-      // }
-
-      // if (inOrOut == JenisAbsen.absenOut) {
-      //   data.addAll({
-      //     "command":
-      //         "UPDATE $dbName SET latitude_keluar = '$latitude', longtitude_keluar = '$longitude', jam_akhir = '$trimmedDate', u_date = '$trimmedDateDb', lokasi_keluar = '$lokasi', ket = 'ABSEN MASUK DAN ABSEN PULANG' WHERE id_user = '${_userModelWithPassword.idUser}' AND tgl = '$currentDate'",
-      //   });
-      // }
-
-      // final response = await _dio.post('',
-      //     data: jsonEncode(data), options: Options(contentType: 'text/plain'));
+      if (_testing != 'gs_12') {
+        throw Exception('server override invalid');
+      }
 
       final dataProd = _dioRequest;
 
@@ -99,6 +64,8 @@ class AbsenRemoteService {
             " VALUES " +
             "('$trimmedDate', '$ket', '${_userModelWithPassword.idUser}', '$imei', '$idGeof', '$trimmedDateDb', '${_userModelWithPassword.nama}', '$latitude', '$longitude', '$lokasi')",
       });
+
+      dataProd.update(key, (value) => null)
 
       final responseHosting = await _dioHosting.post('',
           data: jsonEncode(dataProd),
@@ -119,8 +86,6 @@ class AbsenRemoteService {
 
         throw RestApiExceptionWithMessage(errorCode, message);
       }
-
-      log('ABSEN REMOTE: itemsProd $itemsProd');
 
       if (itemsProd['status'] == 'Success') {
         final absenProdExist =
@@ -186,28 +151,32 @@ class AbsenRemoteService {
     required DateTime date,
   }) async {
     try {
-      final currentDate = StringUtils.midnightDate(date);
-      final currentDateRange =
-          StringUtils.midnightDate(DateTime.now().add(Duration(days: 1)));
+      /*
+        FOR TESTING,
+          use gs_12 on login, absen, riwayat
+      */
+      final _testing = _dioRequest.update('server', (_) => 'gs_12');
 
-      final String command =
-          "with contoh as (select format(tgljam,'yyyy-MM-dd') as tgl, id_user from $dbNameProd where id_user = ${_userModelWithPassword.idUser} and tgljam >= '$currentDate' and tgljam < '$currentDateRange' group by format(tgljam,'yyyy-MM-dd'), id_user) select *, (select max(lokasi_masuk) from $dbNameProd where id_user = contoh.id_user and mode = 'MASUK' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as lokasi_masuk, (select max(latitude_masuk) from $dbNameProd where id_user = contoh.id_user and mode = 'MASUK' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as latitude_masuk, (select max(longitude_masuk) from $dbNameProd where id_user = contoh.id_user and mode = 'MASUK' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as longitude_masuk, (select min(tgljam) from $dbNameProd where id_user = contoh.id_user and mode = 'MASUK' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as masuk, (select max(lokasi_keluar) from $dbNameProd where id_user = contoh.id_user and mode = 'PULANG' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as lokasi_keluar, (select max(latitude_keluar) from $dbNameProd where id_user = contoh.id_user and mode = 'PULANG' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as latitude_keluar, (select max(longitude_keluar) from $dbNameProd where id_user = contoh.id_user and mode = 'PULANG' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as longitude_keluar, (select max(tgljam) from $dbNameProd where id_user = contoh.id_user and mode = 'PULANG' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as pulang from contoh";
+      if (_testing != 'gs_12') {
+        throw Exception('server override invalid');
+      }
 
       final data = _dioRequest;
 
-      // debugger();
+      final String currentDate = StringUtils.midnightDate(date);
+      final String currentDateRange =
+          StringUtils.midnightDate(DateTime.now().add(Duration(days: 1)));
 
       data.addAll({
         "mode": "SELECT",
-        "command": command,
+        "command":
+            "with contoh as (select format(tgljam,'yyyy-MM-dd') as tgl, id_user from $dbNameProd where id_user = ${_userModelWithPassword.idUser} and tgljam >= '$currentDate' and tgljam < '$currentDateRange' group by format(tgljam,'yyyy-MM-dd'), id_user) select *, (select max(lokasi_masuk) from $dbNameProd where id_user = contoh.id_user and mode = 'MASUK' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as lokasi_masuk, (select max(latitude_masuk) from $dbNameProd where id_user = contoh.id_user and mode = 'MASUK' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as latitude_masuk, (select max(longitude_masuk) from $dbNameProd where id_user = contoh.id_user and mode = 'MASUK' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as longitude_masuk, (select min(tgljam) from $dbNameProd where id_user = contoh.id_user and mode = 'MASUK' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as masuk, (select max(lokasi_keluar) from $dbNameProd where id_user = contoh.id_user and mode = 'PULANG' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as lokasi_keluar, (select max(latitude_keluar) from $dbNameProd where id_user = contoh.id_user and mode = 'PULANG' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as latitude_keluar, (select max(longitude_keluar) from $dbNameProd where id_user = contoh.id_user and mode = 'PULANG' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as longitude_keluar, (select max(tgljam) from $dbNameProd where id_user = contoh.id_user and mode = 'PULANG' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as pulang from contoh",
       });
-
-      // debugger();
-
-      log('data ${jsonEncode(data)}');
 
       final response = await _dio.post('',
           data: jsonEncode(data), options: Options(contentType: 'text/plain'));
+
+      log('_dio baseUrl ${_dio.options.baseUrl}');
 
       final items = response.data?[0];
 
@@ -217,19 +186,14 @@ class AbsenRemoteService {
         if (absenExist) {
           final list = items['items'] as List<dynamic>;
 
-          log('GET ABSEN TODAY LIST: $list');
-
           if (list.isEmpty) {
             return AbsenState.empty();
           }
 
           final map = list[0] as Map<String, dynamic>;
 
-          log('GET ABSEN TODAY MAP: $map');
-
           if (map.isNotEmpty) {
             final sudahAbsen = map['pulang'] != null;
-
             final absenMasuk = map['masuk'] != null;
 
             if (sudahAbsen) {
@@ -241,8 +205,6 @@ class AbsenRemoteService {
             return AbsenState.empty();
           }
         } else {
-          // debugger();
-
           return AbsenState.empty();
         }
       } else {
@@ -270,22 +232,27 @@ class AbsenRemoteService {
       {required int page,
       required String? dateFirst,
       required String? dateSecond}) async {
-    // DATEFORMAT YYYY - MM - DD
     try {
-      final String command =
-          "with contoh as (select format(tgljam,'yyyy-MM-dd') as tgl, id_user from $dbNameProd where id_user = ${_userModelWithPassword.idUser} and tgljam >= '$dateSecond' and tgljam < '$dateFirst' group by format(tgljam,'yyyy-MM-dd'), id_user) select *, (select max(lokasi_masuk) from $dbNameProd where id_user = contoh.id_user and mode = 'MASUK' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as lokasi_masuk, (select max(latitude_masuk) from $dbNameProd where id_user = contoh.id_user and mode = 'MASUK' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as latitude_masuk, (select max(longitude_masuk) from $dbNameProd where id_user = contoh.id_user and mode = 'MASUK' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as longitude_masuk, (select min(tgljam) from $dbNameProd where id_user = contoh.id_user and mode = 'MASUK' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as masuk, (select max(lokasi_keluar) from $dbNameProd where id_user = contoh.id_user and mode = 'PULANG' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as lokasi_keluar, (select max(latitude_keluar) from $dbNameProd where id_user = contoh.id_user and mode = 'PULANG' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as latitude_keluar, (select max(longitude_keluar) from $dbNameProd where id_user = contoh.id_user and mode = 'PULANG' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as longitude_keluar, (select max(tgljam) from $dbNameProd where id_user = contoh.id_user and mode = 'PULANG' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as pulang from contoh";
+      /*
+        FOR TESTING,
+          use gs_12 on login, absen, riwayat
+      */
+      final _testing = _dioRequest.update('server', (_) => 'gs_12');
+
+      if (_testing != 'gs_12') {
+        throw Exception('server override invalid');
+      }
 
       final data = _dioRequest;
 
       data.addAll({
         "mode": "SELECT",
-        "command": command,
+        "command":
+            "with contoh as (select format(tgljam,'yyyy-MM-dd') as tgl, id_user from $dbNameProd where id_user = ${_userModelWithPassword.idUser} and tgljam >= '$dateSecond' and tgljam < '$dateFirst' group by format(tgljam,'yyyy-MM-dd'), id_user) select *, (select max(lokasi_masuk) from $dbNameProd where id_user = contoh.id_user and mode = 'MASUK' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as lokasi_masuk, (select max(latitude_masuk) from $dbNameProd where id_user = contoh.id_user and mode = 'MASUK' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as latitude_masuk, (select max(longitude_masuk) from $dbNameProd where id_user = contoh.id_user and mode = 'MASUK' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as longitude_masuk, (select min(tgljam) from $dbNameProd where id_user = contoh.id_user and mode = 'MASUK' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as masuk, (select max(lokasi_keluar) from $dbNameProd where id_user = contoh.id_user and mode = 'PULANG' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as lokasi_keluar, (select max(latitude_keluar) from $dbNameProd where id_user = contoh.id_user and mode = 'PULANG' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as latitude_keluar, (select max(longitude_keluar) from $dbNameProd where id_user = contoh.id_user and mode = 'PULANG' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as longitude_keluar, (select max(tgljam) from $dbNameProd where id_user = contoh.id_user and mode = 'PULANG' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as pulang from contoh",
       });
 
       final response = await _dio.post('',
           data: jsonEncode(data), options: Options(contentType: 'text/plain'));
-
-      log('data baseUrl ${_dio.options.baseUrl}');
 
       final items = response.data?[0];
 
@@ -294,8 +261,6 @@ class AbsenRemoteService {
 
         if (riwayatExist) {
           final list = items['items'] as List;
-
-          // log('list $list');
 
           if (list.isNotEmpty) {
             final List<RiwayatAbsenModel> riwayatList = [];
@@ -313,8 +278,6 @@ class AbsenRemoteService {
           return [];
         }
       } else {
-        // debugger();
-
         final message = items['error'] as String?;
         final errorCode = items['errornum'] as int;
 
@@ -326,7 +289,6 @@ class AbsenRemoteService {
       if (e.isNoConnectionError || e.isConnectionTimeout) {
         throw NoConnectionException();
       } else if (e.response != null) {
-        log('e.response ${e.response}');
         throw RestApiException(e.response?.statusCode);
       } else {
         rethrow;

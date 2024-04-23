@@ -13,6 +13,7 @@ import '../../wa_register/application/wa_register_notifier.dart';
 import '../../widgets/alert_helper.dart';
 import '../../widgets/app_logo.dart';
 import '../../widgets/copyright_text.dart';
+import '../../widgets/testing.dart';
 import '../applicatioin/home_state.dart';
 import 'home_appbar.dart';
 import 'home_item.dart';
@@ -134,6 +135,9 @@ class HomeScaffold extends ConsumerWidget {
               child: ListView(
                 children: [
                   const AppLogo(),
+                  const SizedBox(height: 24),
+                  Testing(),
+
                   const SizedBox(height: 24),
                   ...isTester.maybeWhen(
                       tester: () {

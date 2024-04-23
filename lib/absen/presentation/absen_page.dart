@@ -8,6 +8,7 @@ import '../../widgets/copyright_text.dart';
 import '../../widgets/image_absen.dart';
 import '../../widgets/location_detail.dart';
 import '../../widgets/network_widget.dart';
+import '../../widgets/testing.dart';
 import '../../widgets/user_info.dart';
 import 'absen_button.dart';
 
@@ -88,6 +89,13 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
                     physics: const NeverScrollableScrollPhysics(),
                     children: <Widget>[
                       ...logoAndName(isOfflineMode, nama ?? ''),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Testing(),
+                      ),
+                      const SizedBox(
+                        height: 24,
+                      ),
                       ...isTester.maybeWhen(
                         tester: () => [AbsenButton()],
                         orElse: () => mockLocation.maybeWhen(

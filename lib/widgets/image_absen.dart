@@ -52,8 +52,10 @@ class _ImageAbsenState extends ConsumerState<ImageAbsen> {
                       webViewControllerDummy = controller;
                     },
                     initialUrlRequest: URLRequest(url: Uri.parse(imageUrl)),
-                    onLoadError: (controller, url, code, message) =>
-                        log('Err InAppWebView  $message Code $code'),
+                    onLoadError: (controller, url, code, message) {
+                      debugger();
+                      ref.read(displayImageProvider.notifier).state = false;
+                    },
                     onLoadStop: (controller, url) async {
                       String html = await controller.evaluateJavascript(
                           source:

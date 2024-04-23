@@ -28,7 +28,7 @@ class LoadingOverlay extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                loadingMessage ?? 'Please Wait',
+                loadingMessage ?? 'Please Wait (APK Testing)',
                 style: theme.textTheme.bodyMedium!.copyWith(
                   color: Colors.white,
                   fontSize: 16,

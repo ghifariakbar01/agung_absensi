@@ -10,10 +10,10 @@ import '../../user/application/user_model.dart';
 import 'auth_response.dart';
 
 class AuthRemoteService {
-  AuthRemoteService(this._dio, this._dioRequestNotifier);
+  AuthRemoteService(this._dio, this._dioRequest);
 
   final Dio _dio;
-  final Map<String, String> _dioRequestNotifier;
+  final Map<String, String> _dioRequest;
 
   Future<void> signOut() async {
     try {
@@ -34,7 +34,17 @@ class AuthRemoteService {
       required String password,
       required String server}) async {
     try {
-      final data = _dioRequestNotifier;
+      /*
+        FOR TESTING,
+          use gs_12 on login, absen, riwayat
+      */
+      final _testing = _dioRequest.update('server', (_) => 'gs_12');
+
+      if (_testing != 'gs_12') {
+        throw Exception('server override invalid');
+      }
+
+      final data = _dioRequest;
 
       data.addAll({
         "username": "$userId",
@@ -138,7 +148,17 @@ class AuthRemoteService {
       required String password,
       required String server}) async {
     try {
-      final data = _dioRequestNotifier;
+      /*
+        FOR TESTING,
+          use gs_12 on login, absen, riwayat
+      */
+      final _testing = _dioRequest.update('server', (_) => 'gs_12');
+
+      if (_testing != 'gs_12') {
+        throw Exception('server override invalid');
+      }
+
+      final data = _dioRequest;
 
       data.addAll({
         "username": "$userId",

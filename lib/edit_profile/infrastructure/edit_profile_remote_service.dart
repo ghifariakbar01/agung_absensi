@@ -24,7 +24,16 @@ class EditProfileRemoteService {
 
   Future<String?> getImei({required String idKary}) async {
     try {
-      // debugger();
+      /*
+        FOR TESTING,
+          use gs_12 on login, absen, riwayat
+      */
+      final _testing = _dioRequest.update('server', (_) => 'gs_12');
+
+      if (_testing != 'gs_12') {
+        throw Exception('server override invalid');
+      }
+
       final data = _dioRequest;
 
       final commandUpdate =
@@ -43,8 +52,6 @@ class EditProfileRemoteService {
       log('data ${jsonEncode(data)}');
 
       log('response $response');
-
-      // debugger();
 
       final items = response.data?[0];
 
@@ -84,6 +91,16 @@ class EditProfileRemoteService {
 
   Future<Unit> clearImei({required String idKary}) async {
     try {
+      /*
+        FOR TESTING,
+          use gs_12 on login, absen, riwayat
+      */
+      final _testing = _dioRequest.update('server', (_) => 'gs_12');
+
+      if (_testing != 'gs_12') {
+        throw Exception('server override invalid');
+      }
+
       final data = _dioRequest;
 
       final commandUpdate =
@@ -103,13 +120,9 @@ class EditProfileRemoteService {
 
       log('response $response');
 
-      // debugger();
-
       final items = response.data?[0];
 
       if (items['status'] == 'Success') {
-        // debugger();
-
         return unit;
       } else {
         final message = items['error'] as String?;
@@ -136,6 +149,16 @@ class EditProfileRemoteService {
     required String idUser,
   }) async {
     try {
+      /*
+        FOR TESTING,
+          use gs_12 on login, absen, riwayat
+      */
+      final _testing = _dioRequest.update('server', (_) => 'gs_12');
+
+      if (_testing != 'gs_12') {
+        throw Exception('server override invalid');
+      }
+
       final data = _dioRequest;
       final dateNow = DateTime.now();
 
@@ -190,6 +213,16 @@ class EditProfileRemoteService {
   Future<ImeiRegisterResponse> registerImei(
       {required String imei, required String idKary}) async {
     try {
+      /*
+        FOR TESTING,
+          use gs_12 on login, absen, riwayat
+      */
+      final _testing = _dioRequest.update('server', (_) => 'gs_12');
+
+      if (_testing != 'gs_12') {
+        throw Exception('server override invalid');
+      }
+
       final data = _dioRequest;
 
       final commandUpdate =
@@ -239,6 +272,16 @@ class EditProfileRemoteService {
       required String email2,
       required String idKary}) async {
     try {
+      /*
+        FOR TESTING,
+          use gs_12 on login, absen, riwayat
+      */
+      final _testing = _dioRequest.update('server', (_) => 'gs_12');
+
+      if (_testing != 'gs_12') {
+        throw Exception('server override invalid');
+      }
+
       final data = _dioRequest;
 
       final commandUpdate =

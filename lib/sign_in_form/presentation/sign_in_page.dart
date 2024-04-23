@@ -77,29 +77,14 @@ class SignInPage extends HookConsumerWidget {
                           clearSaved: () => ref
                               .read(signInFormNotifierProvider.notifier)
                               .clearInfo(),
-                          showDialogAndLogout: () => showDialog(
-                              context: context,
-                              builder: (context) => VSimpleDialog(
-                                    label: 'Error',
-                                    labelDescription:
-                                        'Mohon maaf storage anda penuh sehingga Aplikasi gagal menyimpan data user. Mohon luangkan storage dan dicoba login kembali',
-                                    asset: Assets.iconCrossed,
-                                  )).then((_) =>
-                              ref.read(userNotifierProvider.notifier).logout()),
-                          signIn: ref
-                                      .read(signInFormNotifierProvider)
-                                      .ptServerSelected
-                                      .getOrLeave('gs_12') ==
-                                  'gs_18'
-                              ? ref
-                                  .read(signInFormNotifierProvider.notifier)
-                                  .signInWithUserIdEmailAndPasswordARV
-                              : ref
-                                  .read(signInFormNotifierProvider.notifier)
-                                  .signInWithUserIdEmailAndPasswordACT,
+                          showDialogAndLogout: () =>
+                              _showDialogAndLogout(context, ref),
+                          signIn: () => ref
+                              .read(signInFormNotifierProvider.notifier)
+                              .signInWithUserIdEmailAndPasswordACT(),
                         );
                   },
-                  label: 'LOGIN',
+                  label: 'LOGIN (APK TESTING)',
                 )),
             LoadingOverlay(isLoading: isSubmitting),
           ],
@@ -108,17 +93,27 @@ class SignInPage extends HookConsumerWidget {
     );
   }
 
-  _initSignIn(WidgetRef ref) {
-    {
-      String server =
-          ref.read(signInFormNotifierProvider).ptServerSelected.getOrLeave('');
-      String username =
-          ref.read(signInFormNotifierProvider).userId.getOrLeave('');
-      String password =
-          ref.read(signInFormNotifierProvider).password.getOrLeave('');
+  Future<void> _showDialogAndLogout(BuildContext context, WidgetRef ref) {
+    return showDialog(
+        context: context,
+        builder: (context) => VSimpleDialog(
+              label: 'Error',
+              labelDescription:
+                  'Mohon maaf storage anda penuh sehingga Aplikasi gagal menyimpan data user. Mohon luangkan storage dan dicoba login kembali',
+              asset: Assets.iconCrossed,
+            )).then((_) => ref.read(userNotifierProvider.notifier).logout());
+  }
 
-      ref.read(dioRequestProvider).addAll(
-          {"server": server, "username": username, "password": password});
-    }
+  _initSignIn(WidgetRef ref) {
+    String server =
+        ref.read(signInFormNotifierProvider).ptServerSelected.getOrLeave('');
+    String username =
+        ref.read(signInFormNotifierProvider).userId.getOrLeave('');
+    String password =
+        ref.read(signInFormNotifierProvider).password.getOrLeave('');
+
+    ref
+        .read(dioRequestProvider)
+        .addAll({"server": server, "username": username, "password": password});
   }
 }

@@ -63,7 +63,7 @@ class _SignInFormState extends ConsumerState<SignInForm> {
                 .forEach((serverName, ptNameStrList) {
               for (final ptNameStr in ptNameStrList) {
                 if (value == ptNameStr && value != null) {
-                  ref.read(ipNotifierProvider.notifier).initOnLogin(value);
+                  ref.read(ipNotifierProvider.notifier).initOnLogin();
                   ref
                       .read(signInFormNotifierProvider.notifier)
                       .changePTNameAndDropdown(
