@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:face_net_authentication/application/remember_me/remember_me_state.dart';
-import 'package:face_net_authentication/ip/application/ip_notifier.dart';
 import 'package:face_net_authentication/pages/profile/widgets/profile_label.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -85,7 +84,7 @@ class _SignInFormState extends ConsumerState<SignInForm> {
                 .forEach((serverName, ptNameStrList) {
               for (final ptNameStr in ptNameStrList) {
                 if (value == ptNameStr && value != null) {
-                  ref.read(ipNotifierProvider.notifier).initOnLogin(pt: value);
+                  // ref.read(ipNotifierProvider.notifier).initOnLogin();
                   ref
                       .read(signInFormNotifierProvider.notifier)
                       .changePTNameAndDropdown(
