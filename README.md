@@ -5,15 +5,18 @@
 Flutter: >=3.3.0
 Dart SDK: >=2.17.0
 
-## Supported Platforms
+## Commit Message
 
-| Android | iOS | Web | Windows | MacOS | Linux |
-| :-----: | :-: | :-: | :-----: | :---: | :---: |
-|   ✅    | ✅  | ✅  |   ✅    |  ❌   |  ❌   |
+Untuk melakukan commit, gunakan template ini
 
-## Live Demo
+[commit documentation](http://karma-runner.github.io/4.0/dev/git-commit-msg.html "documentation")
 
-https://brizaldi.github.io/flutter-project-template-riverpod/
+dengan scope nama fitur dalam aplikasi, contoh :
+
+- riwayat
+- network
+- login
+- dst
 
 ## Installation
 

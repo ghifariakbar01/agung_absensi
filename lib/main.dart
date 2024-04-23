@@ -5,6 +5,7 @@ import 'package:face_net_authentication/theme/application/theme_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+import 'package:upgrader/upgrader.dart';
 
 import 'application/imei_introduction/shared/imei_introduction_providers.dart';
 import 'application/permission/shared/permission_introduction_providers.dart';
@@ -52,21 +53,33 @@ class MyApp extends ConsumerWidget {
     final theme = ref.watch(themeNotifierProvider);
 
     return MaterialApp.router(
-        routeInformationProvider: router.routeInformationProvider,
-        routeInformationParser: router.routeInformationParser,
-        routerDelegate: router.routerDelegate,
-        debugShowCheckedModeBanner: false,
-        debugShowMaterialGrid: false,
-        theme: Themes.lightTheme(context),
-        darkTheme: Themes.darkTheme(context),
-        themeMode: theme.when(
-            data: (theme) => theme.isEmpty
-                ? ThemeMode.system
-                : theme == 'dark'
-                    ? ThemeMode.dark
-                    : ThemeMode.light,
-            error: (__, _) => ThemeMode.system,
-            loading: () => ThemeMode.dark));
+      routeInformationProvider: router.routeInformationProvider,
+      routeInformationParser: router.routeInformationParser,
+      key: router.routerDelegate.navigatorKey,
+      routerDelegate: router.routerDelegate,
+      debugShowCheckedModeBanner: false,
+      debugShowMaterialGrid: false,
+      theme: Themes.lightTheme(context),
+      darkTheme: Themes.darkTheme(context),
+      builder: (_, child) {
+        return UpgradeAlert(
+            upgrader: Upgrader(
+                dialogStyle: UpgradeDialogStyle.cupertino,
+                showLater: true,
+                showIgnore: false,
+                messages: MyUpgraderMessages()),
+            child: child);
+      },
+      themeMode: theme.when(
+        data: (theme) => theme.isEmpty
+            ? ThemeMode.system
+            : theme == 'dark'
+                ? ThemeMode.dark
+                : ThemeMode.light,
+        loading: () => ThemeMode.dark,
+        error: (__, _) => ThemeMode.system,
+      ),
+    );
   }
 
   MaterialColor getMaterialColor(Color color) {
@@ -90,4 +103,12 @@ class MyApp extends ConsumerWidget {
 
     return MaterialColor(color.value, shades);
   }
+}
+
+class MyUpgraderMessages extends UpgraderMessages {
+  @override
+  String get body => 'Lakukan update dengan versi aplikasi E-FINGER terbaru.';
+
+  @override
+  String get buttonTitleIgnore => '-';
 }
