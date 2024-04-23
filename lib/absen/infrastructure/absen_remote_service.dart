@@ -49,13 +49,13 @@ class AbsenRemoteService {
         FOR TESTING,
           use gs_12 on login, absen, riwayat
       */
-      final _testing = _dioRequest.update('server', (_) => 'gs_12');
+      final Map<String, dynamic> dataProd = {};
+      dataProd.addAll(_dioRequest);
+      final _testing = dataProd.update('server', (_) => 'gs_12');
 
       if (_testing != 'gs_12') {
         throw Exception('server override invalid');
       }
-
-      final dataProd = _dioRequest;
 
       dataProd.addAll({
         "mode": 'INSERT',
@@ -64,8 +64,6 @@ class AbsenRemoteService {
             " VALUES " +
             "('$trimmedDate', '$ket', '${_userModelWithPassword.idUser}', '$imei', '$idGeof', '$trimmedDateDb', '${_userModelWithPassword.nama}', '$latitude', '$longitude', '$lokasi')",
       });
-
-      dataProd.update(key, (value) => null)
 
       final responseHosting = await _dioHosting.post('',
           data: jsonEncode(dataProd),
@@ -155,13 +153,13 @@ class AbsenRemoteService {
         FOR TESTING,
           use gs_12 on login, absen, riwayat
       */
-      final _testing = _dioRequest.update('server', (_) => 'gs_12');
+      final Map<String, dynamic> data = {};
+      data.addAll(_dioRequest);
+      final _testing = data.update('server', (_) => 'gs_12');
 
       if (_testing != 'gs_12') {
         throw Exception('server override invalid');
       }
-
-      final data = _dioRequest;
 
       final String currentDate = StringUtils.midnightDate(date);
       final String currentDateRange =
@@ -237,13 +235,13 @@ class AbsenRemoteService {
         FOR TESTING,
           use gs_12 on login, absen, riwayat
       */
-      final _testing = _dioRequest.update('server', (_) => 'gs_12');
+      final Map<String, dynamic> data = {};
+      data.addAll(_dioRequest);
+      final _testing = data.update('server', (_) => 'gs_12');
 
       if (_testing != 'gs_12') {
         throw Exception('server override invalid');
       }
-
-      final data = _dioRequest;
 
       data.addAll({
         "mode": "SELECT",

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:dio/dio.dart';
 
@@ -38,13 +37,13 @@ class AuthRemoteService {
         FOR TESTING,
           use gs_12 on login, absen, riwayat
       */
-      final _testing = _dioRequest.update('server', (_) => 'gs_12');
+      final Map<String, dynamic> data = {};
+      data.addAll(_dioRequest);
+      final _testing = data.update('server', (_) => 'gs_12');
 
       if (_testing != 'gs_12') {
         throw Exception('server override invalid');
       }
-
-      final data = _dioRequest;
 
       data.addAll({
         "username": "$userId",
@@ -78,14 +77,10 @@ class AuthRemoteService {
                 "    AND payroll != '' "
       });
 
-      log('data ${jsonEncode(data)}');
-
       final response = await _dio.post('',
           data: jsonEncode(data), options: Options(contentType: 'text/plain'));
 
       final items = response.data?[0];
-
-      // debugger();
 
       if (items['status'] == 'Success') {
         final userExist = items['items'] != null && items['items'] is List;
@@ -152,13 +147,13 @@ class AuthRemoteService {
         FOR TESTING,
           use gs_12 on login, absen, riwayat
       */
-      final _testing = _dioRequest.update('server', (_) => 'gs_12');
+      final Map<String, dynamic> data = {};
+      data.addAll(_dioRequest);
+      final _testing = data.update('server', (_) => 'gs_12');
 
       if (_testing != 'gs_12') {
         throw Exception('server override invalid');
       }
-
-      final data = _dioRequest;
 
       data.addAll({
         "username": "$userId",
@@ -185,8 +180,6 @@ class AuthRemoteService {
                 "        ISNULL((CONCAT(A.id_user,',') + (select LTRIM(str(id_user)) + ',' from mst_user_head where id_user_head = A.id_user for xml path(''))), CONCAT(A.id_user, ',')) as staf"
                     " FROM mst_user A WHERE nama = '$userId'  AND payroll IS NOT NULL AND payroll != '' ",
       });
-
-      log('data ${jsonEncode(data)}');
 
       final response = await _dio.post('',
           data: jsonEncode(data), options: Options(contentType: 'text/plain'));

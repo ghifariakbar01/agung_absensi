@@ -28,13 +28,13 @@ class EditProfileRemoteService {
         FOR TESTING,
           use gs_12 on login, absen, riwayat
       */
-      final _testing = _dioRequest.update('server', (_) => 'gs_12');
+      final Map<String, dynamic> data = {};
+      data.addAll(_dioRequest);
+      final _testing = data.update('server', (_) => 'gs_12');
 
       if (_testing != 'gs_12') {
         throw Exception('server override invalid');
       }
-
-      final data = _dioRequest;
 
       final commandUpdate =
           "SELECT imei_hp FROM $dbName WHERE idKary = '$idKary'";
@@ -95,13 +95,13 @@ class EditProfileRemoteService {
         FOR TESTING,
           use gs_12 on login, absen, riwayat
       */
-      final _testing = _dioRequest.update('server', (_) => 'gs_12');
+      final Map<String, dynamic> data = {};
+      data.addAll(_dioRequest);
+      final _testing = data.update('server', (_) => 'gs_12');
 
       if (_testing != 'gs_12') {
         throw Exception('server override invalid');
       }
-
-      final data = _dioRequest;
 
       final commandUpdate =
           "UPDATE $dbName SET imei_hp = '' WHERE idKary = '$idKary'";
@@ -153,13 +153,14 @@ class EditProfileRemoteService {
         FOR TESTING,
           use gs_12 on login, absen, riwayat
       */
-      final _testing = _dioRequest.update('server', (_) => 'gs_12');
+      final Map<String, dynamic> data = {};
+      data.addAll(_dioRequest);
+      final _testing = data.update('server', (_) => 'gs_12');
 
       if (_testing != 'gs_12') {
         throw Exception('server override invalid');
       }
 
-      final data = _dioRequest;
       final dateNow = DateTime.now();
 
       final commandInsert = "INSERT INTO $dbLogName " +
@@ -217,13 +218,13 @@ class EditProfileRemoteService {
         FOR TESTING,
           use gs_12 on login, absen, riwayat
       */
-      final _testing = _dioRequest.update('server', (_) => 'gs_12');
+      final Map<String, dynamic> data = {};
+      data.addAll(_dioRequest);
+      final _testing = data.update('server', (_) => 'gs_12');
 
       if (_testing != 'gs_12') {
         throw Exception('server override invalid');
       }
-
-      final data = _dioRequest;
 
       final commandUpdate =
           "UPDATE $dbName SET imei_hp = '$imei' WHERE idKary = '$idKary'";
@@ -276,13 +277,13 @@ class EditProfileRemoteService {
         FOR TESTING,
           use gs_12 on login, absen, riwayat
       */
-      final _testing = _dioRequest.update('server', (_) => 'gs_12');
+      final Map<String, dynamic> data = {};
+      data.addAll(_dioRequest);
+      final _testing = data.update('server', (_) => 'gs_12');
 
       if (_testing != 'gs_12') {
         throw Exception('server override invalid');
       }
-
-      final data = _dioRequest;
 
       final commandUpdate =
           "UPDATE $dbName SET no_telp1 = '$noTelp1', no_telp2 = '$noTelp2', email = '$email1', email2 = '$email2' WHERE idKary = '$idKary'";
