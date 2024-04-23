@@ -2,12 +2,8 @@ import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/domain/edit_failure.dart';
 import 'package:face_net_authentication/domain/value_objects_copy.dart';
 import 'package:face_net_authentication/infrastructure/profile/edit_profile_repository.dart';
-import 'package:face_net_authentication/shared/providers.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../constants/assets.dart';
-import '../../domain/auth_failure.dart';
-import '../../pages/widgets/v_dialogs.dart';
 import '../../utils/validator.dart';
 import 'edit_profile_state.dart';
 

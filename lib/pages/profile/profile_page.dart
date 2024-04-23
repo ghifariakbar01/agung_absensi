@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
@@ -7,7 +6,6 @@ import 'package:face_net_authentication/pages/widgets/loading_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../application/init_user/init_user_status.dart';
 import '../../constants/assets.dart';
 import '../../domain/edit_failure.dart';
 import '../../shared/future_providers.dart';

@@ -1,6 +1,5 @@
 import 'package:face_net_authentication/application/absen/absen_enum.dart';
 import 'package:face_net_authentication/shared/providers.dart';
-import 'package:face_net_authentication/style/style.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 

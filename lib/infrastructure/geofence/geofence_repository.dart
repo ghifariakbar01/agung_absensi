@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/application/geofence/geofence_response.dart';

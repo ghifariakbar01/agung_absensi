@@ -1,7 +1,3 @@
-import 'dart:developer';
-
-import 'package:face_net_authentication/constants/constants.dart';
-
 class CacheException implements Exception {}
 
 class RestApiException implements Exception {

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../application/absen/absen_state.dart';
 import '../../../style/style.dart';
 import '../../../utils/string_utils.dart';
 

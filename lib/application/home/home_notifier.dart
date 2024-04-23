@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:geofence_service/geofence_service.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 import '../../pages/widgets/v_dialogs.dart';
 import '../../shared/providers.dart';

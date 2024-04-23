@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:face_net_authentication/style/style.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
