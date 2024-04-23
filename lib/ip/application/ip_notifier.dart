@@ -57,7 +57,7 @@ class IpNotifier extends _$IpNotifier {
     String ip = '';
 
     if (pt == null) {
-      ip = domain;
+      ip = ipCut;
     } else {
       ip = _initializeIp(pt: pt);
     }

@@ -46,7 +46,7 @@ class AuthRemoteService {
             " FROM mst_user A WHERE nama = '$userId'  AND payroll IS NOT NULL AND payroll != ''",
       });
 
-      log('data ${jsonEncode(data)}');
+      log('_dio base url ${_dio.options.baseUrl}');
 
       final response = await _dio.post('',
           data: jsonEncode(data), options: Options(contentType: 'text/plain'));
