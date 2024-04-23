@@ -10,6 +10,8 @@ class LocationDetail extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final displayImage = ref.watch(displayImageProvider);
+    final isOffline = ref.watch(absenOfflineModeProvider);
     final nearest =
         ref.watch(geofenceProvider.select((value) => value.nearestCoordinates));
 
@@ -113,7 +115,7 @@ class LocationDetail extends ConsumerWidget {
           ],
         ),
 
-        ImageAbsen(),
+        displayImage == false || isOffline ? Container() : ImageAbsen(),
       ],
     );
   }

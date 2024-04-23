@@ -53,22 +53,21 @@ class MyApp extends ConsumerWidget {
     final theme = ref.watch(themeNotifierProvider);
 
     return MaterialApp.router(
-      routeInformationProvider: router.routeInformationProvider,
-      routeInformationParser: router.routeInformationParser,
-      key: router.routerDelegate.navigatorKey,
-      routerDelegate: router.routerDelegate,
+      routerConfig: router,
       debugShowCheckedModeBanner: false,
       debugShowMaterialGrid: false,
       theme: Themes.lightTheme(context),
       darkTheme: Themes.darkTheme(context),
       builder: (_, child) {
         return UpgradeAlert(
-            upgrader: Upgrader(
-                dialogStyle: UpgradeDialogStyle.cupertino,
-                showLater: true,
-                showIgnore: false,
-                messages: MyUpgraderMessages()),
-            child: child);
+          child: child ?? Text('data'),
+          navigatorKey: router.routerDelegate.navigatorKey,
+          upgrader: Upgrader(
+              dialogStyle: UpgradeDialogStyle.cupertino,
+              showLater: true,
+              showIgnore: false,
+              messages: MyUpgraderMessages()),
+        );
       },
       themeMode: theme.when(
         data: (theme) => theme.isEmpty

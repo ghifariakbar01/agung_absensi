@@ -75,15 +75,11 @@ class AbsenRemoteService {
             "('$trimmedDate', '$ket', '${_userModelWithPassword.idUser}', '$imei', '$idGeof', '$trimmedDateDb', '${_userModelWithPassword.nama}', '$latitude', '$longitude', '$lokasi')",
       });
 
-      debugger(message: 'called');
-
       final response = await _dio.post('',
           data: jsonEncode(data), options: Options(contentType: 'text/plain'));
 
       final response2 = await _dioHosting.post('',
           data: jsonEncode(data), options: Options(contentType: 'text/plain'));
-
-      log('response2 $response2');
 
       final items = response.data?[0];
       final isSuccess = items['status'] == 'Success';
@@ -92,9 +88,6 @@ class AbsenRemoteService {
       final isSuccess2 = items2['status'] == 'Success';
 
       if (isSuccess2 != isSuccess) {
-        debugger();
-        log('items2 $items2 items $items');
-
         final message = 'Error server hosting / original';
         final errorCode = 404;
 
