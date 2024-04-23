@@ -7,9 +7,7 @@ Dart SDK: >=2.17.0
 
 ## Commit Message
 
-Untuk melakukan commit, gunakan template ini
-
-[commit documentation](http://karma-runner.github.io/4.0/dev/git-commit-msg.html "documentation")
+Untuk melakukan commit, gunakan [template](http://karma-runner.github.io/4.0/dev/git-commit-msg.html "documentation") ini
 
 dengan scope nama fitur dalam aplikasi, contoh :
 
@@ -17,6 +15,14 @@ dengan scope nama fitur dalam aplikasi, contoh :
 - network
 - login
 - dst
+
+#### Example Commit Message
+
+        fix(riwayat): merubah data riwayat 
+
+        merubah data riwayat mengikuti model terbaru dari tabel
+
+        Fixes #1230
 
 ## Installation
 
