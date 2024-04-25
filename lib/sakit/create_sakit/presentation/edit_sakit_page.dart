@@ -294,7 +294,7 @@ class EditSakitPage extends HookConsumerWidget {
                                   tglAkhir: tglAkhirTextController.value,
                                   keterangan: diagnosaTextController.text,
                                   onError: (msg) =>
-                                      DialogHelper.showErrorDialog(
+                                      DialogHelper.showCustomDialog(
                                           msg, context));
                         })
                   ],

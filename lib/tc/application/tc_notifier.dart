@@ -4,7 +4,7 @@ import 'tc_repository.dart';
 import 'tc_state.dart';
 
 class TCNotifier extends StateNotifier<TCState> {
-  TCNotifier(this._repository) : super(TCState.initial());
+  TCNotifier(this._repository) : super(TCState.visited());
 
   final TCRepository _repository;
 

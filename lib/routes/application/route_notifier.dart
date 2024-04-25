@@ -90,14 +90,14 @@ class RouterNotifier extends ChangeNotifier {
     final initUserState = _ref.read(initUserStatusNotifierProvider);
     final imeiIntroState = _ref.read(imeiIntroNotifierProvider);
 
-    final areWeSigningIn = state.matchedLocation == RouteNames.signInRoute;
-    final areWeReadingTC =
-        state.matchedLocation == RouteNames.termsAndConditionRoute;
-    final areWeReadingImei =
-        state.matchedLocation == RouteNames.imeiInstructionRoute;
+    final String current = state.matchedLocation;
+    final areWeAtDefaultRoute = current == RouteNames.defaultRoute;
 
-    final areWeInitializingUser =
-        state.matchedLocation == RouteNames.initUserNameRoute;
+    final areWeSigningIn = current == RouteNames.signInRoute;
+    final areWeReadingTC = current == RouteNames.termsAndConditionRoute;
+    final areWeReadingImei = current == RouteNames.imeiInstructionRoute;
+
+    final areWeInitializingUser = current == RouteNames.initUserRoute;
 
     final weInitializedUser = initUserState == InitUserStatus.success();
 
@@ -111,10 +111,10 @@ class RouterNotifier extends ChangeNotifier {
       authenticated: (_) {
         if (areWeSigningIn) {
           if (weVisitedTC && weVisitedImei) {
-            return RouteNames.initUserNameRoute;
+            return RouteNames.initUserRoute;
+          } else {
+            return RouteNames.termsAndConditionRoute;
           }
-
-          return RouteNames.termsAndConditionNameRoute;
         }
 
         if (areWeReadingTC && weVisitedTC) {
@@ -125,7 +125,7 @@ class RouterNotifier extends ChangeNotifier {
           return RouteNames.initUserNameRoute;
         }
 
-        if (areWeInitializingUser) {
+        if (areWeInitializingUser || areWeAtDefaultRoute) {
           if (weAlreadyDidAllProcedures) {
             return RouteNames.homeNameRoute;
           } else {

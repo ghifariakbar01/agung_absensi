@@ -62,6 +62,13 @@ import '../user/application/user_notifier.dart';
 import '../user/application/user_state.dart';
 // import '../utils/string_utils.dart';
 
+/*
+  --------- ESSENTIALS ---------
+  - NETWORKING & ROUTER
+  - ROUTE
+  - STORAGE
+*/
+
 // NETWORKING & ROUTER
 final dioProvider = Provider((ref) => Dio());
 final dioProviderHosting = Provider((ref) => Dio());
@@ -70,6 +77,7 @@ final dioRequestProvider = Provider<Map<String, String>>(
   (ref) => {"kode": "110011"},
 );
 
+// ROUTE
 final routerProvider = Provider<GoRouter>((ref) {
   final router = RouterNotifier(ref);
   return GoRouter(
@@ -79,7 +87,7 @@ final routerProvider = Provider<GoRouter>((ref) {
   );
 });
 
-// AUTH
+// STORAGE
 final flutterSecureStorageProvider = Provider(
   (ref) => FlutterSecureStorage(
     aOptions: AndroidOptions(
@@ -87,6 +95,10 @@ final flutterSecureStorageProvider = Provider(
     ),
   ),
 );
+
+/*
+  ------------------
+*/
 
 final credentialsStorageProvider = Provider<CredentialsStorage>(
     (ref) => SecureCredentialsStorage(ref.watch(flutterSecureStorageProvider)));
@@ -111,7 +123,7 @@ final authInterceptorProvider = Provider(
 );
 
 final authNotifierProvider = StateNotifierProvider<AuthNotifier, AuthState>(
-  (ref) => AuthNotifier(ref, ref.watch(authRepositoryProvider)),
+  (ref) => AuthNotifier(ref.watch(authRepositoryProvider)),
 );
 
 final userNotifierProvider = StateNotifierProvider<UserNotifier, UserState>(
@@ -188,10 +200,6 @@ final absenAuthNotifierProvidier =
     StateNotifierProvider<AbsenAuthNotifier, AbsenAuthState>(
         (ref) => AbsenAuthNotifier(ref.watch(absenRepositoryProvider)));
 
-// final absenPrepNotifierProvider =
-//     StateNotifierProvider<AbsenPrepNotifier, AbsenPrepState>(
-//         (ref) => AbsenPrepNotifier(ref));
-
 final networkTimeFutureProvider = FutureProvider((ref) async {
   DateTime startDate = new DateTime.now().toLocal();
   int offset = await NTP.getNtpOffset(localTime: startDate);
@@ -226,6 +234,7 @@ final karyawanShiftFutureProvider = FutureProvider<bool>((ref) async {
 });
 
 // IMEI
+
 /// imeiCredentialsStorageProvider is used by [EditProfileRepostiroy] and [ImeiRepository]
 final imeiRepositoryProvider = Provider(
     (ref) => ImeiRepository(ref.watch(imeiCredentialsStorageProvider)));
@@ -246,24 +255,6 @@ final imeiResetNotifierProvider =
 
 final homeNotifierProvider =
     StateNotifierProvider<HomeNotifier, HomeState>((ref) => HomeNotifier());
-
-// PASS EXPIRED
-// final passwordExpiredStorageProvider = Provider<CredentialsStorage>(
-//   (ref) => PasswordExpiredStorage(ref.watch(flutterSecureStorageProvider)),
-// );
-
-// final passwordExpiredRepositoryProvider = Provider((ref) =>
-//     PasswordExpiredRepository(ref.watch(passwordExpiredStorageProvider)));
-
-// final passwordExpiredNotifierProvider = StateNotifierProvider<
-//         PasswordExpiredNotifier, PasswordExpiredNotifierState>(
-//     (ref) =>
-//         PasswordExpiredNotifier(ref.watch(passwordExpiredRepositoryProvider)));
-
-// final passwordExpiredNotifierStatusProvider =
-//     StateNotifierProvider<PasswordExpiredNotifierStatus, PasswordExpiredState>(
-//         (ref) => PasswordExpiredNotifierStatus(
-//             ref, ref.watch(passwordExpiredRepositoryProvider)));
 
 // MOCK LOCATION
 final mockLocationNotifierProvider =

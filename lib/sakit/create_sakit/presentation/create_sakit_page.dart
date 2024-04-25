@@ -321,7 +321,7 @@ class CreateSakitPage extends HookConsumerWidget {
                                           suratDokter:
                                               suratDokterTextController.value,
                                           onError: (msg) =>
-                                              DialogHelper.showErrorDialog(
+                                              DialogHelper.showCustomDialog(
                                                   msg, context));
                                 }
                               }),

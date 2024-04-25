@@ -5,7 +5,7 @@ import 'imei_state.dart';
 
 class ImeiIntroductionNotifier extends StateNotifier<ImeiIntroductionState> {
   ImeiIntroductionNotifier(this._repository)
-      : super(ImeiIntroductionState.initial());
+      : super(ImeiIntroductionState.visited());
 
   final ImeiIntroductionRepository _repository;
 
@@ -19,11 +19,11 @@ class ImeiIntroductionNotifier extends StateNotifier<ImeiIntroductionState> {
     }
   }
 
-  Future<void> saveVisitedIMEIIntroduction(String visited) {
+  Future<void> saveVisitedIMEIIntroduction(String visited) async {
     return _repository.save(visited);
   }
 
-  Future<void> clearVisitedIMEIIntroduction() {
+  Future<void> clearVisitedIMEIIntroduction() async {
     return _repository.clear();
   }
 }

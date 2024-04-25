@@ -24,7 +24,7 @@ class _SignInFormState extends ConsumerState<SignInForm> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async => _getSavedLogin());
+    WidgetsBinding.instance.addPostFrameCallback((_) => _getSavedLogin());
   }
 
   @override
@@ -195,30 +195,28 @@ class _SignInFormState extends ConsumerState<SignInForm> {
   }
 
   Future<void> _getSavedLogin() async {
-    {
-      ref.read(passwordVisibleProvider.notifier).state = false;
+    ref.read(passwordVisibleProvider.notifier).state = false;
 
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      final rememberMe = prefs.getString('remember_me');
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final rememberMe = prefs.getString('remember_me');
 
-      if (rememberMe != null) {
-        final saved = RememberMeModel.fromJson(jsonDecode(rememberMe));
-        final savedPt = saved.ptName;
+    if (rememberMe != null) {
+      final saved = RememberMeModel.fromJson(jsonDecode(rememberMe));
+      final savedPt = saved.ptName;
 
-        ref.read(signInFormNotifierProvider.notifier).changeAllData(
-              isChecked: true,
-              ptNameStr: savedPt,
-              userStr: saved.nama,
-              idKaryawanStr: saved.nik,
-              passwordStr: saved.password,
-              isKaryawan: saved.isKaryawan,
-            );
+      ref.read(signInFormNotifierProvider.notifier).changeAllData(
+            isChecked: true,
+            ptNameStr: savedPt,
+            userStr: saved.nama,
+            idKaryawanStr: saved.nik,
+            passwordStr: saved.password,
+            isKaryawan: saved.isKaryawan,
+          );
 
-        if (savedPt.isNotEmpty) {
-          ref
-              .read(signInFormNotifierProvider.notifier)
-              .changeInitializeNamaPT(namaPT: savedPt);
-        }
+      if (savedPt.isNotEmpty) {
+        ref
+            .read(signInFormNotifierProvider.notifier)
+            .changeInitializeNamaPT(namaPT: savedPt);
       }
     }
   }

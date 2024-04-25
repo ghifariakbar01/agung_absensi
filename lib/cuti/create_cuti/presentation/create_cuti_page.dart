@@ -309,7 +309,7 @@ class CreateCutiPage extends HookConsumerWidget {
                                         alasanCuti:
                                             alasanCutiTextController.value,
                                         onError: (msg) =>
-                                            DialogHelper.showErrorDialog(
+                                            DialogHelper.showCustomDialog(
                                                 msg, context));
                               }
                             }),

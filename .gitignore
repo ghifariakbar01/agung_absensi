@@ -21,6 +21,8 @@
 #.vscode/
 
 # Flutter/Dart/Pub related
+*.g.dart 
+*.freezed.dart
 **/doc/api/
 **/ios/Flutter/.last_build_id
 .dart_tool/

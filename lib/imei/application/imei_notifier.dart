@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/err_log/application/err_log_notifier.dart';
+import 'package:face_net_authentication/unlink/application/unlink_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,6 +16,7 @@ import '../../edit_profile/infrastructure/edit_profile_repository.dart';
 import '../../imei_introduction/application/shared/imei_introduction_providers.dart';
 import '../../tc/application/shared/tc_providers.dart';
 import '../../user/application/user_model.dart';
+import '../../utils/dialog_helper.dart';
 import '../infrastructure/imei_repository.dart';
 
 import '../../widgets/v_dialogs.dart';
@@ -51,33 +53,49 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
   }
 
   Future<void> clearImeiFromDBAndLogoutiOS(WidgetRef ref) async {
-    // debugger();
     final prefs = await SharedPreferences.getInstance();
     await prefs.clear();
 
-    await ref.read(tcNotifierProvider.notifier).clearVisitedTC();
-    await ref
-        .read(imeiIntroNotifierProvider.notifier)
-        .clearVisitedIMEIIntroduction();
+    await _saveUnlink(ref);
+    _backToLoginScreen(ref);
+    await _resetIntroScreens(ref);
+    await _authCheck(ref);
+  }
 
+  Future<void> clearImeiFromDBAndLogout(WidgetRef ref) async {
+    await _saveUnlink(ref);
+    _backToLoginScreen(ref);
+    await _resetIntroScreens(ref);
+    await _authCheck(ref);
+  }
+
+  Future<void> _saveUnlink(WidgetRef ref) async {
+    final curr = ref.read(userNotifierProvider).user.nama;
+    if (curr == 'Ghifar') {
+    } else {
+      await ref.read(unlinkNotifierProvider.notifier).saveUnlink();
+    }
+  }
+
+  _authCheck(WidgetRef ref) async {
+    await ref.read(userNotifierProvider.notifier).logout();
+    await ref.read(authNotifierProvider.notifier).checkAndUpdateAuthStatus();
+  }
+
+  _backToLoginScreen(WidgetRef ref) {
     ref.read(userNotifierProvider.notifier).setUserInitial();
     ref.read(initUserStatusNotifierProvider.notifier).hold();
+  }
 
+  _resetIntroScreens(WidgetRef ref) async {
     final tcNotifier = ref.read(tcNotifierProvider.notifier);
+    await tcNotifier.clearVisitedTC();
     await tcNotifier.checkAndUpdateStatusTC();
 
     final imeiInstructionNotifier =
         ref.read(imeiIntroNotifierProvider.notifier);
+    await imeiInstructionNotifier.clearVisitedIMEIIntroduction();
     await imeiInstructionNotifier.checkAndUpdateImeiIntro();
-
-    await ref.read(userNotifierProvider.notifier).logout();
-    // debugger();
-  }
-
-  Future<void> clearImeiFromDBAndLogout(WidgetRef ref) async {
-    ref.read(userNotifierProvider.notifier).setUserInitial();
-    ref.read(initUserStatusNotifierProvider.notifier).hold();
-    await ref.read(userNotifierProvider.notifier).logout();
   }
 
   Future<void> getImeiCredentials() async {
@@ -257,16 +275,6 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
             ),
           ));
 
-  Future<void> showFailedDialog(BuildContext context) => showDialog(
-        context: context,
-        barrierDismissible: true,
-        builder: (_) => VSimpleDialog(
-          label: 'Gagal',
-          labelDescription: 'Sudah punya INSTALLATION ID',
-          asset: Assets.iconCrossed,
-        ),
-      );
-
   Future<void> processImei(
       {required Ref ref,
       required String imei,
@@ -387,16 +395,22 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
     required String imeiSaved,
     required BuildContext context,
   }) async {
+    final msg =
+        'Sudah punya Installation ID. Mohon Uninstall Aplikasi. Terimakasih 🙏';
+
     return ref
         .read(imeiNotifierProvider.notifier)
         .onImeiAlreadyRegistered(
-          showDialog: () => showFailedDialog(context),
+          showDialog: () => DialogHelper.showCustomDialog(msg, context),
           logout: () => ref.read(userNotifierProvider.notifier).logout(),
-          sendLog: () => ref.read(errLogControllerProvider.notifier).sendLog(
-              imeiDb: imeiDb,
-              imeiSaved: imeiSaved,
-              errMessage: 'Sudah punya INSTALLATION ID'),
+          sendLog: () => ref
+              .read(errLogControllerProvider.notifier)
+              .sendLog(imeiDb: imeiDb, imeiSaved: imeiSaved, errMessage: msg),
         )
-        .then((_) => ref.read(initUserStatusNotifierProvider.notifier).hold());
+        .then((_) {
+      ref.read(initUserStatusNotifierProvider.notifier).hold();
+      ref.read(userNotifierProvider.notifier).logout();
+      ref.read(authNotifierProvider.notifier).checkAndUpdateAuthStatus();
+    });
   }
 }

@@ -107,9 +107,11 @@ class VSimpleDialog extends StatelessWidget {
     required this.labelDescription,
     required this.asset,
     this.color,
+    this.fontSize,
   }) : super(key: key);
 
   final Color? color;
+  final double? fontSize;
   final String asset;
   final String label;
   final String labelDescription;

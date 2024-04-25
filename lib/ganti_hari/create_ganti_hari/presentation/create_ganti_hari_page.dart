@@ -330,7 +330,7 @@ class CreateGantiHariPage extends HookConsumerWidget {
                                       idAbsen: int.parse(
                                           idAbsenGantiHariTextController.text),
                                       onError: (msg) =>
-                                          DialogHelper.showErrorDialog(
+                                          DialogHelper.showCustomDialog(
                                               msg, context),
                                     );
                               }

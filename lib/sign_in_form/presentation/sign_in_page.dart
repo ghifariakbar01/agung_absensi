@@ -1,13 +1,18 @@
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/ip/application/ip_notifier.dart';
+import 'package:face_net_authentication/tc/application/shared/tc_providers.dart';
+import 'package:face_net_authentication/unlink/application/unlink_notifier.dart';
 import 'package:face_net_authentication/widgets/v_async_widget.dart';
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 
 import '../../constants/assets.dart';
 import '../../domain/auth_failure.dart';
+import '../../imei_introduction/application/shared/imei_introduction_providers.dart';
 import '../../shared/providers.dart';
+import '../../style/style.dart';
 import '../../widgets/alert_helper.dart';
 import '../../widgets/loading_overlay.dart';
 import '../../widgets/v_button.dart';
@@ -54,42 +59,69 @@ class SignInPage extends HookConsumerWidget {
       signInFormNotifierProvider.select((state) => state.isSubmitting),
     );
 
+    final _tc = ref.watch(tcNotifierProvider);
+    final _imei = ref.watch(imeiIntroNotifierProvider);
+    final _hasVisitedScreens =
+        (_tc.maybeWhen(orElse: () => false, visited: () => true) &&
+            _imei.maybeWhen(orElse: () => false, visited: () => true));
+
     final ip = ref.watch(ipNotifierProvider);
+    final unlink = ref.watch(unlinkNotifierProvider);
 
     return VAsyncWidgetScaffold(
       value: ip,
       data: (_) => SafeArea(
-        child: Stack(
-          children: [
-            const SignInScaffold(),
-            Align(
-                alignment: Alignment.bottomCenter,
-                child: VButton(
-                  onPressed: () async {
-                    FocusScope.of(context).unfocus();
-                    await ref
-                        .read(signInFormNotifierProvider.notifier)
-                        .signInAndRemember(
-                          init: () => _initSignIn(ref),
-                          remember: () => ref
+          child: VAsyncValueWidget<String?>(
+        value: unlink,
+        data: (date) => date == null
+            ? Stack(
+                children: [
+                  const SignInScaffold(),
+                  Align(
+                      alignment: Alignment.bottomCenter,
+                      child: VButton(
+                        onPressed: () async {
+                          FocusScope.of(context).unfocus();
+                          await ref
                               .read(signInFormNotifierProvider.notifier)
-                              .rememberInfo(),
-                          clearSaved: () => ref
-                              .read(signInFormNotifierProvider.notifier)
-                              .clearInfo(),
-                          showDialogAndLogout: () =>
-                              _showDialogAndLogout(context, ref),
-                          signIn: () => ref
-                              .read(signInFormNotifierProvider.notifier)
-                              .signInWithUserIdEmailAndPasswordACT(),
-                        );
-                  },
-                  label: 'LOGIN (APK TESTING)',
-                )),
-            LoadingOverlay(isLoading: isSubmitting),
-          ],
-        ),
-      ),
+                              .signInAndRemember(
+                                init: () => _initSignIn(ref),
+                                remember: () => ref
+                                    .read(signInFormNotifierProvider.notifier)
+                                    .rememberInfo(),
+                                clearSaved: () => ref
+                                    .read(signInFormNotifierProvider.notifier)
+                                    .clearInfo(),
+                                showDialogAndLogout: () =>
+                                    _showDialogAndLogout(context, ref),
+                                signIn: () => ref
+                                    .read(signInFormNotifierProvider.notifier)
+                                    .signInWithUserIdEmailAndPasswordACT(),
+                                onSuccessLoginAfterRemember: () => ref
+                                    .read(authNotifierProvider.notifier)
+                                    .checkAndUpdateAuthStatus(),
+                              );
+                        },
+                        label: 'LOGIN (APK TESTING)',
+                      )),
+                  LoadingOverlay(isLoading: isSubmitting || _hasVisitedScreens),
+                ],
+              )
+            : Scaffold(
+                body: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Anda Telah Unlink Pada ${DateFormat('dd-MM-yyyy HH:mm:ss').format(DateTime.parse(date))}.\n\nMohon Uninstall dan Install kembali Aplikasi dari Play Store / App Store.',
+                      style: Themes.customColor(
+                        12,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ),
+      )),
     );
   }
 

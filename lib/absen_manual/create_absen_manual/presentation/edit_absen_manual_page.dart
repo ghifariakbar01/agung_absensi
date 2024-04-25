@@ -481,7 +481,7 @@ class EditAbsenManualPage extends HookConsumerWidget {
                                         jamAkhir: jamAkhirTextController.value!,
                                         ket: keteranganTextController.text,
                                         onError: (msg) =>
-                                            DialogHelper.showErrorDialog(
+                                            DialogHelper.showCustomDialog(
                                                 msg, context));
                               }
                             }),

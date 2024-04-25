@@ -328,7 +328,7 @@ class EditDtPcPage extends HookConsumerWidget {
                                         kategori: kategori,
                                         ket: keteranganTextController.text,
                                         onError: (msg) =>
-                                            DialogHelper.showErrorDialog(
+                                            DialogHelper.showCustomDialog(
                                                 msg, context));
                               }
                             }),

@@ -117,10 +117,11 @@ class SignInFormNotifier extends StateNotifier<SignInFormState> {
   }
 
   Future<void> signInAndRemember({
-    required Function init,
-    required Function signIn,
-    required Function clearSaved,
-    required Function showDialogAndLogout,
+    required Function() init,
+    required Future<void> Function() signIn,
+    required Future<void> Function() clearSaved,
+    required Future<void> Function() showDialogAndLogout,
+    required Future<void> Function() onSuccessLoginAfterRemember,
     required Future<Either<AuthFailure, Unit>> Function() remember,
   }) async {
     await init();
@@ -129,11 +130,11 @@ class SignInFormNotifier extends StateNotifier<SignInFormState> {
       await clearSaved();
     } else {
       final result = await remember();
-      result.fold(
+      await result.fold(
           // if remember failed
           (_) => showDialogAndLogout(),
           // if remember success
-          (_) {});
+          (_) => onSuccessLoginAfterRemember());
     }
   }
 

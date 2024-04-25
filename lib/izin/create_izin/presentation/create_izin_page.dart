@@ -316,7 +316,7 @@ class CreateIzinPage extends HookConsumerWidget {
                                         idMstIzin:
                                             jenisIzinTextController.value,
                                         onError: (msg) =>
-                                            DialogHelper.showErrorDialog(
+                                            DialogHelper.showCustomDialog(
                                                 msg, context));
                               }
                             }),
