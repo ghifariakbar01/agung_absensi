@@ -7,6 +7,7 @@ import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:upgrader/upgrader.dart';
 
 import 'config/configuration.dart';
+import 'helper.dart';
 import 'imei_introduction/application/shared/imei_introduction_providers.dart';
 import 'ip/application/ip_notifier.dart';
 import 'shared/providers.dart';
@@ -24,6 +25,9 @@ Future<void> main() async {
 }
 
 final initializationProvider = FutureProvider<Unit>((ref) async {
+  final helper = HelperImpl();
+  await helper.fixStorageOnAndroidDevices(ref);
+
   await ref.read(ipNotifierProvider.future);
 
   if (!BuildConfig.isProduction) {
@@ -33,8 +37,8 @@ final initializationProvider = FutureProvider<Unit>((ref) async {
         ));
   }
 
-  await ref.read(tcNotifierProvider.notifier).checkAndUpdateStatusTC();
   await ref.read(authNotifierProvider.notifier).checkAndUpdateAuthStatus();
+  await ref.read(tcNotifierProvider.notifier).checkAndUpdateStatusTC();
   await ref.read(imeiIntroNotifierProvider.notifier).checkAndUpdateImeiIntro();
 
   return unit;
@@ -56,12 +60,12 @@ class MyApp extends ConsumerWidget {
         routeInformationProvider: router.routeInformationProvider,
         routeInformationParser: router.routeInformationParser,
         routerDelegate: routerDelegate,
-        builder: (_, child) => UpgradeAlert(
+        builder: (_, c) => UpgradeAlert(
             navigatorKey: routerDelegate.navigatorKey,
-            child: child,
+            child: c,
             upgrader: Upgrader(
               showIgnore: false,
-              showReleaseNotes: false,
+              showReleaseNotes: true,
               messages: MyUpgraderMessages(),
               dialogStyle: UpgradeDialogStyle.cupertino,
             )));
