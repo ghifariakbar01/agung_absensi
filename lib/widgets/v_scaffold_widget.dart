@@ -24,7 +24,7 @@ class VScaffoldWidget extends StatelessWidget {
           iconTheme: IconThemeData(color: Colors.white),
           title: Text(
             scaffoldTitle,
-            style: Themes.customColor(20,
+            style: Themes.customColor(15,
                 fontWeight: FontWeight.bold, color: Colors.white),
           ),
           toolbarHeight: 45,
@@ -62,16 +62,19 @@ class VTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: double.infinity,
       padding: EdgeInsets.all(8),
       decoration: BoxDecoration(
           color: isCurrent ? color : Colors.transparent,
           border: isCurrent ? null : Border.all(width: 1, color: Colors.grey),
           borderRadius: BorderRadius.circular(8)),
-      child: Text(
-        text,
-        style: Themes.customColor(10,
-            color: isCurrent ? Colors.white : Colors.grey,
-            fontWeight: FontWeight.w500),
+      child: Center(
+        child: Text(
+          text,
+          style: Themes.customColor(10,
+              color: isCurrent ? Colors.white : Colors.grey,
+              fontWeight: FontWeight.w500),
+        ),
       ),
     );
   }
@@ -87,23 +90,41 @@ class VScaffoldTabLayout extends HookWidget {
       {required this.scaffoldTitle,
       required this.scaffoldBody,
       required this.onPageChanged,
+      this.onFilterSelected,
+      this.onDropdownChanged,
+      this.onFieldSubmitted,
       this.length,
       this.scaffoldFAB,
       this.appbarColor,
-      this.additionalInfo});
+      this.additionalInfo,
+      this.initialDateRange});
   final int? length;
   final Color? appbarColor;
   final String scaffoldTitle;
   final List<Widget> scaffoldBody;
   final Widget? scaffoldFAB;
   final Widget? additionalInfo;
+  final DateTimeRange? initialDateRange;
   final Future<void> Function() onPageChanged;
+  final Future<void> Function(String value)? onDropdownChanged;
+  final Future<void> Function(String value)? onFieldSubmitted;
+  final Future<void> Function(DateTimeRange value)? onFilterSelected;
 
   @override
   Widget build(
     BuildContext context,
   ) {
-    final controller = useTabController(initialLength: length ?? 3);
+    final _isSearching = useState(false);
+    final _searchFocus = useFocusNode();
+    final _searchController = useTextEditingController();
+
+    final controller = useTabController(
+        initialLength: length == null
+            ? _isSearching.value
+                ? 1
+                : 3
+            : length!);
+
     final changingIndex = useState(0);
 
     useEffect(() {
@@ -135,8 +156,15 @@ class VScaffoldTabLayout extends HookWidget {
           ),
         ];
 
+    final _listPt = ['ACT', 'AJL', 'ARV'];
+    final _currPt = useState('ACT');
+
     return DefaultTabController(
-      length: length ?? 3,
+      length: length == null
+          ? _isSearching.value
+              ? 1
+              : 3
+          : length!,
       child: Scaffold(
           appBar: AppBar(
             elevation: 0,
@@ -151,20 +179,147 @@ class VScaffoldTabLayout extends HookWidget {
               indicatorColor: Colors.transparent,
               overlayColor: MaterialStatePropertyAll(Colors.transparent),
               tabs: [
-                for (int i = 0; i < (length == null ? 3 : length!); i++) ...[
-                  tabs()[i]
+                if (_isSearching.value) ...[
+                  tabs()[changingIndex.value]
+                ] else ...[
+                  for (int i = 0; i < (length == null ? 3 : length!); i++) ...[
+                    tabs()[i]
+                  ]
                 ]
               ],
             ),
-            title: Text(
-              scaffoldTitle,
-              style: Themes.customColor(20,
-                  fontWeight: FontWeight.bold, color: Colors.white),
-            ),
+            leadingWidth: 20,
+            leading: _isSearching.value ? Container() : null,
+            title: _isSearching.value
+                ? Container()
+                : Text(
+                    scaffoldTitle,
+                    style: Themes.customColor(15,
+                        fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
             toolbarHeight: 45,
             actions: [
-              additionalInfo != null ? additionalInfo! : Container(),
-              NetworkWidget(),
+              if (_isSearching.value) ...[
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: SizedBox(
+                    height: 45,
+                    width: MediaQuery.of(context).size.width - 12,
+                    child: TextFormField(
+                      focusNode: _searchFocus,
+                      controller: _searchController,
+                      decoration: Themes.formStyle('Search Here',
+                          textColor: Colors.white),
+                      style: Themes.customColor(14, color: Colors.white),
+                      onTapOutside: (_) {
+                        _isSearching.value = false;
+                        _searchFocus.unfocus();
+                      },
+                      onFieldSubmitted: (value) {
+                        if (onFieldSubmitted != null) {
+                          onFieldSubmitted!(value);
+                        }
+                      },
+                    ),
+                  ),
+                )
+              ],
+              if (_isSearching.value == false) ...[
+                /*
+                  Dropdown bar
+                */
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SizedBox(
+                    width: 100,
+                    height: 50,
+                    child: DropdownButtonFormField<String>(
+                      elevation: 0,
+                      iconSize: 20,
+                      padding: EdgeInsets.all(0),
+                      icon: Icon(Icons.keyboard_arrow_down_rounded,
+                          color: Palette.primaryTextColor),
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Form tidak boleh kosong';
+                        }
+
+                        return null;
+                      },
+                      decoration: Themes.dropdown(),
+                      style: Themes.customColor(12, color: Colors.white),
+                      value: _listPt.firstWhere(
+                        (element) => element == _currPt.value,
+                        orElse: () => _listPt.first,
+                      ),
+                      onChanged: (String? value) {
+                        if (value != null) {
+                          _currPt.value = value;
+                          if (onDropdownChanged != null) {
+                            onDropdownChanged!(value);
+                          }
+                        }
+                      },
+                      isExpanded: true,
+                      items:
+                          _listPt.map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Container(
+                            child: Text(
+                              value,
+                              style:
+                                  Themes.customColor(14, color: Palette.orange),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+
+                /*
+                  Filter Icon
+                */
+                IconButton(
+                    onPressed: () async {
+                      final _oneYear = Duration(days: 365);
+                      final _oneMonth = Duration(days: 30);
+
+                      final picked = await showDateRangePicker(
+                          context: context,
+                          initialDateRange: initialDateRange ??
+                              DateTimeRange(
+                                  start: DateTime.now().subtract(_oneMonth),
+                                  end: DateTime.now().add(_oneMonth)),
+                          firstDate: DateTime.now().subtract(_oneYear),
+                          lastDate: DateTime.now().add(_oneYear));
+
+                      if (picked != null) {
+                        print(picked);
+
+                        if (onFilterSelected != null) {
+                          onFilterSelected!(picked);
+                        }
+                      }
+                    },
+                    icon: Icon(Icons.sort)),
+
+                /*
+                  Search bar
+                */
+                IconButton(
+                    onPressed: () {
+                      _isSearching.value
+                          ? _isSearching.value = false
+                          : _isSearching.value = true;
+
+                      _searchFocus.requestFocus();
+                    },
+                    icon: Icon(Icons.search)),
+                additionalInfo != null ? additionalInfo! : Container(),
+                NetworkWidget(),
+              ]
             ],
           ),
           resizeToAvoidBottomInset: false,

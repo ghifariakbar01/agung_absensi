@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../shared/providers.dart';
@@ -29,11 +30,16 @@ class AbsenManualListController extends _$AbsenManualListController {
     return _determineAndGetAbsenManualListOn(page: 0);
   }
 
-  Future<void> load({required int page}) async {
+  Future<void> load({
+    required int page,
+    String? searchUser,
+    DateTimeRange? dateRange,
+  }) async {
     state = const AsyncLoading<List<AbsenManualList>>().copyWithPrevious(state);
 
     state = await AsyncValue.guard(() async {
-      final res = await _determineAndGetAbsenManualListOn(page: page);
+      final res = await _determineAndGetAbsenManualListOn(
+          page: page, searchUser: searchUser, dateRange: dateRange);
 
       final List<AbsenManualList> list = [
         ...state.requireValue.toList(),
@@ -41,6 +47,18 @@ class AbsenManualListController extends _$AbsenManualListController {
       ];
 
       return list;
+    });
+  }
+
+  Future<void> search({
+    String? searchUser,
+    DateTimeRange? dateRange,
+  }) async {
+    state = const AsyncLoading();
+
+    state = await AsyncValue.guard(() {
+      return _determineAndGetAbsenManualListOn(
+          page: 0, searchUser: searchUser, dateRange: dateRange);
     });
   }
 
@@ -52,8 +70,11 @@ class AbsenManualListController extends _$AbsenManualListController {
     });
   }
 
-  Future<List<AbsenManualList>> _determineAndGetAbsenManualListOn(
-      {required int page}) async {
+  Future<List<AbsenManualList>> _determineAndGetAbsenManualListOn({
+    required int page,
+    String? searchUser,
+    DateTimeRange? dateRange,
+  }) async {
     final hrd = ref.read(userNotifierProvider).user.fin;
 
     final staff = ref.read(userNotifierProvider).user.staf!;
@@ -62,11 +83,25 @@ class AbsenManualListController extends _$AbsenManualListController {
     if (isHrdOrSpv(hrd)) {
       return ref.read(absenManualListRepositoryProvider).getAbsenManualList(
             page: page,
+            staff: staffStr,
+            searchUser: searchUser ?? '',
+            dateRange: dateRange ??
+                DateTimeRange(
+                    start: DateTime.now().subtract(Duration(days: 30)),
+                    end: DateTime.now()),
           );
     } else {
       return ref
           .read(absenManualListRepositoryProvider)
-          .getAbsenManualListLimitedAccess(page: page, staff: staffStr);
+          .getAbsenManualListLimitedAccess(
+            page: page,
+            staff: staffStr,
+            searchUser: searchUser ?? '',
+            dateRange: dateRange ??
+                DateTimeRange(
+                    start: DateTime.now().subtract(Duration(days: 30)),
+                    end: DateTime.now()),
+          );
     }
   }
 

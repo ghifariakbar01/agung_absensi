@@ -34,21 +34,24 @@ mixin Themes {
         borderSide: BorderSide(color: color ?? Palette.primaryColor));
   }
 
-  static InputDecoration formStyle(String hintText, {Widget? icon}) {
+  static InputDecoration formStyle(String hintText,
+      {Widget? icon, Color? textColor}) {
     return InputDecoration(
       hintText: hintText,
       suffixIcon: icon ?? null,
       border: InputBorder.none,
-      focusedBorder: InputBorder.none,
+      focusedBorder: Themes.focused(color: Palette.green),
       enabledBorder: Themes.notFocused(),
-      contentPadding: const EdgeInsets.all(16),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16),
       hintStyle: Themes.customColor(
         14,
         fontWeight: FontWeight.normal,
+        color: textColor,
       ),
       labelStyle: Themes.customColor(
         14,
         fontWeight: FontWeight.normal,
+        color: textColor,
       ),
     );
   }
@@ -70,6 +73,21 @@ mixin Themes {
     );
   }
 
+  static InputDecoration dropdown({Color? borderColor, Widget? icon}) {
+    return InputDecoration(
+      suffixIcon: icon ?? null,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+      hintStyle: Themes.customColor(14, color: Palette.primaryTextColor),
+      labelStyle: Themes.customColor(14, color: Palette.primaryTextColor),
+      helperStyle: Themes.customColor(14, color: Palette.primaryTextColor),
+      border: Themes.focused(color: borderColor ?? Palette.primaryColor),
+      focusedBorder:
+          Themes.focused(color: borderColor ?? Palette.primaryTextColor),
+      enabledBorder:
+          Themes.focused(color: borderColor ?? Palette.primaryTextColor),
+    );
+  }
+
   static ThemeData lightTheme(BuildContext context) {
     return ThemeData.light().copyWith(
         brightness: Brightness.light,
@@ -83,6 +101,14 @@ mixin Themes {
         cardColor: Palette.primaryLighter,
         unselectedWidgetColor: Palette.primaryLighter,
         disabledColor: Colors.black.withOpacity(0.15),
+        colorScheme: ColorScheme.fromSwatch().copyWith(
+          //  Selected dates background color
+          primary: Palette.primaryColor,
+          //  Month title and week days color
+          onSurface: Colors.black,
+          //  Header elements and selected dates text color
+          //  onPrimary: Colors.white
+        ),
         datePickerTheme: DatePickerThemeData(
             headerBackgroundColor: Palette.primaryColor,
             headerForegroundColor: Palette.primaryColor));
