@@ -21,4 +21,14 @@ class MstKaryawanCuti with _$MstKaryawanCuti {
       _$MstKaryawanCutiFromJson(json);
 
   factory MstKaryawanCuti.initial() => MstKaryawanCuti();
+
+  factory MstKaryawanCuti.crossed() => MstKaryawanCuti(
+        idMstCuti: 0,
+        cutiBaru: 0,
+        cutiTidakBaru: 0,
+        openDate: DateTime.now(),
+        closeDate: DateTime.now(),
+        tahunCutiBaru: DateTime.now().year.toString(),
+        tahunCutiTidakBaru: DateTime.now().year.toString(),
+      );
 }

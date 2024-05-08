@@ -93,6 +93,7 @@ class VScaffoldTabLayout extends HookWidget {
       this.onFilterSelected,
       this.onDropdownChanged,
       this.onFieldSubmitted,
+      this.currPT,
       this.length,
       this.scaffoldFAB,
       this.appbarColor,
@@ -101,13 +102,14 @@ class VScaffoldTabLayout extends HookWidget {
   final int? length;
   final Color? appbarColor;
   final String scaffoldTitle;
+  final List<String>? currPT;
   final List<Widget> scaffoldBody;
   final Widget? scaffoldFAB;
   final Widget? additionalInfo;
   final DateTimeRange? initialDateRange;
   final Future<void> Function() onPageChanged;
-  final Future<void> Function(String value)? onDropdownChanged;
   final Future<void> Function(String value)? onFieldSubmitted;
+  final Future<void> Function(List<String> value)? onDropdownChanged;
   final Future<void> Function(DateTimeRange value)? onFilterSelected;
 
   @override
@@ -157,16 +159,15 @@ class VScaffoldTabLayout extends HookWidget {
         ];
 
     final Map<String, List<String>> _mapPT = {
-      'gs_12': ['ACT', 'ATR(Transina)', 'ALR'],
-      'gs_14': ['ATR'],
-      'gs_18': ['AR'],
+      'gs_12': ['ACT', 'Transina', 'ALR'],
+      'gs_14': ['Tama Raya'],
+      'gs_18': ['ARV'],
       'gs_21': ['AJL'],
     };
 
-    final _mapPTValues = _mapPT.values.fold<List<String>>(
-        [], (previousValue, element) => [...previousValue, ...element]);
+    final _mapPTValues = _mapPT.values;
 
-    final _currPt = useState('ACT');
+    final _currPt = useState(currPT ?? ['ACT', 'Transina', 'ALR']);
 
     return DefaultTabController(
       length: length == null
@@ -242,7 +243,7 @@ class VScaffoldTabLayout extends HookWidget {
                   child: SizedBox(
                     width: 100,
                     height: 50,
-                    child: DropdownButtonFormField<String>(
+                    child: DropdownButtonFormField<List<String>>(
                       elevation: 0,
                       iconSize: 20,
                       padding: EdgeInsets.all(0),
@@ -258,10 +259,10 @@ class VScaffoldTabLayout extends HookWidget {
                       decoration: Themes.dropdown(),
                       style: Themes.customColor(12, color: Colors.white),
                       value: _mapPTValues.toList().firstWhere(
-                            (element) => element == _currPt.value,
+                            (element) => _equal(element, _currPt.value),
                             orElse: () => _mapPTValues.toList().first,
                           ),
-                      onChanged: (String? value) {
+                      onChanged: (List<String>? value) {
                         if (value != null) {
                           _currPt.value = value;
                           if (onDropdownChanged != null) {
@@ -270,13 +271,15 @@ class VScaffoldTabLayout extends HookWidget {
                         }
                       },
                       isExpanded: true,
-                      items: _mapPTValues
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
+                      items: _mapPTValues.map<DropdownMenuItem<List<String>>>(
+                          (List<String> value) {
+                        return DropdownMenuItem<List<String>>(
                           value: value,
                           child: Container(
                             child: Text(
-                              value,
+                              "${value.map((e) => e
+                                ..replaceAll('[', '(')
+                                ..replaceAll(']', ')'))..toList()}",
                               style:
                                   Themes.customColor(14, color: Palette.orange),
                             ),
@@ -336,5 +339,9 @@ class VScaffoldTabLayout extends HookWidget {
           body:
               TabBarView(controller: controller, children: [...scaffoldBody])),
     );
+  }
+
+  _equal(List<String> serv, List<String> serv2) {
+    return serv.first == serv2.first;
   }
 }

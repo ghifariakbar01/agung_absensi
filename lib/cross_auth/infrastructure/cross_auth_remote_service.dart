@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:face_net_authentication/infrastructure/dio_extensions.dart';
@@ -14,13 +15,16 @@ class CrossAuthRemoteService {
 
   final Map<String, String> _dioRequest;
 
-  Future<CrossAuthResponse> crossToACT(
-      {required String userId,
-      required String password,
-      required String server}) async {
+  Future<CrossAuthResponse> crossToACT({
+    required String server,
+    required String userId,
+    required String password,
+  }) async {
     try {
       final Map<String, dynamic> data = {};
       data.addAll(_dioRequest);
+
+      data.update('server', (_) => server);
 
       data.addAll({
         "username": "$userId",
@@ -36,6 +40,9 @@ class CrossAuthRemoteService {
 
       final response = await _dio.post('',
           data: jsonEncode(data), options: Options(contentType: 'text/plain'));
+
+      log('data $data');
+      log('response $response');
 
       final items = response.data?[0];
 
@@ -95,13 +102,16 @@ class CrossAuthRemoteService {
     }
   }
 
-  Future<CrossAuthResponse> crossToARV(
-      {required String userId,
-      required String password,
-      required String server}) async {
+  Future<CrossAuthResponse> crossToARV({
+    required String server,
+    required String userId,
+    required String password,
+  }) async {
     try {
       final Map<String, dynamic> data = {};
       data.addAll(_dioRequest);
+
+      data.update('server', (_) => server);
 
       data.addAll({
         "username": "$userId",

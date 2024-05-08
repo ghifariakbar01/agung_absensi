@@ -123,8 +123,6 @@ class WaRegisterNotifier extends _$WaRegisterNotifier {
 
         if (noTelp1 != null) {
           if (newPhone == noTelp1) {
-            debugger();
-
             await _registerWaForNotif(newPhone, context);
             return;
           }
@@ -132,8 +130,6 @@ class WaRegisterNotifier extends _$WaRegisterNotifier {
 
         if (noTelp2 != null) {
           if (newPhone == noTelp2) {
-            debugger();
-
             await _registerWaForNotif(newPhone, context);
             return;
           }

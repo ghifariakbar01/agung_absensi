@@ -62,8 +62,8 @@ class TugasDinasListRemoteService {
       final response = await _dio.post('',
           data: jsonEncode(data), options: Options(contentType: 'text/plain'));
 
-      // log('data ${jsonEncode(data)}');
-      // log('response page $page : $response');
+      log('data ${jsonEncode(data)}');
+      log('response page $page : $response');
 
       final items = response.data?[0];
 
@@ -110,7 +110,7 @@ class TugasDinasListRemoteService {
   Future<List<TugasDinasList>> getTugasDinasListLimitedAccess(
       {required int page, required String staff}) async {
     try {
-      // debugger();
+      debugger();
       log('page $page');
       final data = _dioRequest;
 
@@ -149,8 +149,10 @@ class TugasDinasListRemoteService {
       final response = await _dio.post('',
           data: jsonEncode(data), options: Options(contentType: 'text/plain'));
 
-      // log('data ${jsonEncode(data)}');
-      // log('response page $page : $response');
+      log('data ${jsonEncode(data)}');
+      log('response page $page : $response');
+
+      debugger();
 
       final items = response.data?[0];
 

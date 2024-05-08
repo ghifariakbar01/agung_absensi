@@ -3,6 +3,8 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:face_net_authentication/infrastructure/dio_extensions.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../../infrastructure/exceptions.dart';
 import '../application/cuti_list.dart';
@@ -25,30 +27,44 @@ class CutiListRemoteService {
   static const String dbKaryawan = 'karyawan';
   static const String dbMstDept = 'mst_dept';
 
-  Future<List<CutiList>> getCutiList({required int page}) async {
+  final _commonQueryList = "     $dbName.*, "
+      "     (SELECT no_telp1 FROM $dbMstUser WHERE id_user = $dbName.id_user) AS no_telp1, "
+      "     (SELECT no_telp2 FROM $dbMstUser WHERE id_user = $dbName.id_user) AS no_telp2, "
+      "     (SELECT fullname FROM $dbMstUser WHERE id_user = $dbName.id_user) AS fullname, "
+      "     (SELECT nama FROM mst_comp WHERE id_comp =  (SELECT id_comp FROM $dbMstUser WHERE id_user = $dbName.id_user) ) AS comp, "
+      "     (SELECT pt FROM $dbKaryawan WHERE IdKary = $dbName.IdKary) AS pt, "
+      "     (SELECT nama FROM $dbMstDept WHERE id_dept = (SELECT id_dept FROM $dbMstUser WHERE id_user = $dbName.id_user)) AS dept, "
+      "     (SELECT id_dept FROM $dbMstUser WHERE id_user = $dbName.id_user) AS id_dept "
+      " FROM "
+      "     $dbName ";
+
+  Future<List<CutiList>> getCutiList({
+    required int page,
+    required String searchUser,
+    required DateTimeRange dateRange,
+  }) async {
     try {
-      // debugger();
       final data = _dioRequest;
+
+      final d1 = DateFormat('yyyy-MM-dd').format(dateRange.start);
+      final d2 = DateFormat('yyyy-MM-dd').format(dateRange.end);
 
       final Map<String, String> select = {
         'command': //
-            " SELECT "
-                "     $dbName.*, "
-                "     (SELECT no_telp1 FROM $dbMstUser WHERE id_user = $dbName.id_user) AS no_telp1, "
-                "     (SELECT no_telp2 FROM $dbMstUser WHERE id_user = $dbName.id_user) AS no_telp2, "
-                "     (SELECT fullname FROM $dbMstUser WHERE id_user = $dbName.id_user) AS fullname, "
-                "     (SELECT nama FROM mst_comp WHERE id_comp =  (SELECT id_comp FROM $dbMstUser WHERE id_user = $dbName.id_user) ) AS comp, "
-                "     (SELECT pt FROM $dbKaryawan WHERE IdKary = $dbName.IdKary) AS pt, "
-                "     (SELECT nama FROM $dbMstDept WHERE id_dept = (SELECT id_dept FROM $dbMstUser WHERE id_user = $dbName.id_user)) AS dept, "
-                "     (SELECT id_dept FROM $dbMstUser WHERE id_user = $dbName.id_user) AS id_dept "
-                " FROM "
-                "     $dbName "
+            " SELECT " +
+                _commonQueryList +
                 " WHERE "
-                "     id_cuti IS NOT NULL "
-                " ORDER BY "
-                "     c_date DESC "
-                " OFFSET "
-                "     $page * 20 ROWS FETCH FIRST 20 ROWS ONLY ",
+                    "     id_cuti IS NOT NULL "
+                    "       AND    "
+                    "           c_user    "
+                    "                 LIKE '%$searchUser%'    "
+                    "       AND    "
+                    "           c_date    "
+                    "                 BETWEEN '$d1' AND '$d2'    "
+                    " ORDER BY "
+                    "     c_date DESC "
+                    " OFFSET "
+                    "     $page * 20 ROWS FETCH FIRST 20 ROWS ONLY ",
         'mode': 'SELECT'
       };
 
@@ -102,38 +118,54 @@ class CutiListRemoteService {
     }
   }
 
-  Future<List<CutiList>> getCutiListLimitedAccess(
-      {required int page, required String staff}) async {
+  final _commonQueryLimited = "          $dbName.*, "
+      "          $dbMstUser.no_telp1, "
+      "          $dbMstUser.no_telp2, "
+      "          $dbMstUser.fullname, "
+      "          $dbKaryawan.pt, "
+      "          $dbMstDept.nama AS dept, "
+      "          (SELECT nama FROM mst_comp WHERE id_comp = (SELECT id_comp FROM $dbMstUser WHERE id_user = $dbName.id_user)) AS comp, "
+      "          (SELECT id_dept FROM $dbMstUser WHERE id_user = $dbName.id_user) AS id_dept "
+      "      FROM "
+      "          $dbName "
+      "      JOIN "
+      "           $dbMstUser ON $dbName.id_user = $dbMstUser.id_user "
+      "      JOIN "
+      "          $dbKaryawan ON $dbName.IdKary = $dbKaryawan.IdKary "
+      "      JOIN "
+      "          $dbMstDept ON $dbMstUser.id_dept = $dbMstDept.id_dept ";
+
+  Future<List<CutiList>> getCutiListLimitedAccess({
+    required int page,
+    required String staff,
+    required String searchUser,
+    required DateTimeRange dateRange,
+  }) async {
     try {
       // debugger();
       final data = _dioRequest;
 
+      final d1 = DateFormat('yyyy-MM-dd').format(dateRange.start);
+      final d2 = DateFormat('yyyy-MM-dd').format(dateRange.end);
+
       final Map<String, String> select = {
         'command': //
-            " SELECT "
-                "          $dbName.*, "
-                "          $dbMstUser.no_telp1, "
-                "          $dbMstUser.no_telp2, "
-                "          $dbMstUser.fullname, "
-                "          $dbKaryawan.pt, "
-                "          $dbMstDept.nama AS dept, "
-                "          (SELECT nama FROM mst_comp WHERE id_comp = (SELECT id_comp FROM $dbMstUser WHERE id_user = $dbName.id_user)) AS comp, "
-                "          (SELECT id_dept FROM $dbMstUser WHERE id_user = $dbName.id_user) AS id_dept "
-                "      FROM "
-                "          $dbName "
-                "      JOIN "
-                "           $dbMstUser ON $dbName.id_user = $dbMstUser.id_user "
-                "      JOIN "
-                "          $dbKaryawan ON $dbName.IdKary = $dbKaryawan.IdKary "
-                "      JOIN "
-                "          $dbMstDept ON $dbMstUser.id_dept = $dbMstDept.id_dept "
-                "      WHERE "
-                "          $dbName.id_user IN ($staff) "
-                "          AND $dbName.id_cuti IS NOT NULL "
-                "      ORDER BY "
-                "          $dbName.c_date DESC "
-                "      OFFSET "
-                "          $page * 20 ROWS FETCH FIRST 20 ROWS ONLY ",
+            " SELECT " +
+                _commonQueryLimited +
+                "      WHERE    "
+                    "           $dbName.id_user IN ($staff) "
+                    "       AND     "
+                    "           $dbName.id_cuti IS NOT NULL "
+                    "       AND    "
+                    "           c_user    "
+                    "                 LIKE '%$searchUser%'    "
+                    "       AND    "
+                    "           c_date    "
+                    "                 BETWEEN '$d1' AND '$d2'    "
+                    "      ORDER BY "
+                    "          $dbName.c_date DESC "
+                    "      OFFSET "
+                    "          $page * 20 ROWS FETCH FIRST 20 ROWS ONLY ",
         'mode': 'SELECT'
       };
 

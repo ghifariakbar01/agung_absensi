@@ -1,3 +1,6 @@
+import 'package:collection/collection.dart';
+import 'package:face_net_authentication/cross_auth/application/cross_auth_notifier.dart';
+import 'package:face_net_authentication/shared/providers.dart';
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -21,6 +24,7 @@ import 'absen_manual_list_item.dart';
 
 class AbsenManualListPage extends HookConsumerWidget {
   const AbsenManualListPage();
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.listen<AsyncValue>(absenManualListControllerProvider, (_, state) async {
@@ -28,6 +32,7 @@ class AbsenManualListPage extends HookConsumerWidget {
     });
 
     final sendWa = ref.watch(sendWaNotifierProvider);
+    final crossAuth = ref.watch(crossAuthNotifierProvider);
     final absenManualList = ref.watch(absenManualListControllerProvider);
     final absenApprove = ref.watch(absenManualApproveControllerProvider);
 
@@ -70,8 +75,19 @@ class AbsenManualListPage extends HookConsumerWidget {
     final _d1 = DateFormat('dd MMMM y').format(_dateTimeRange.value.start);
     final _d2 = DateFormat('dd MMMM y').format(_dateTimeRange.value.end);
 
+    final _isScrollStopped = useState(false);
+
+    _resetScroll() {
+      if (scrollController.hasClients) {
+        _isScrollStopped.value = false;
+        scrollController.jumpTo(0.0);
+      }
+    }
+
     final onRefresh = () async {
       page.value = 0;
+      _resetScroll();
+
       await ref.read(absenManualListControllerProvider.notifier).search(
           //
           searchUser: _lastSearch.value,
@@ -81,6 +97,8 @@ class AbsenManualListPage extends HookConsumerWidget {
 
     final onFieldSubmitted = (String value) async {
       page.value = 0;
+      _resetScroll();
+
       _lastSearch.value = value;
       await ref.read(absenManualListControllerProvider.notifier).search(
           //
@@ -89,9 +107,40 @@ class AbsenManualListPage extends HookConsumerWidget {
       return Future.value();
     };
 
-    final onFilterSelected = (DateTimeRange value) async {
-      _dateTimeRange.value = value;
+    final Map<String, List<String>> _mapPT = {
+      'gs_12': ['ACT', 'Transina', 'ALR'],
+      'gs_14': ['Tama Raya'],
+      'gs_18': ['ARV'],
+      'gs_21': ['AJL'],
+    };
+
+    final _currPT = ref.watch(userNotifierProvider).user.ptServer;
+    final _initialDropdown = _mapPT.entries
+        .firstWhereOrNull((element) => element.key == _currPT)
+        ?.value;
+
+    final _dropdownValue = useState(_initialDropdown);
+
+    final onDropdownChanged = (List<String> value) async {
       page.value = 0;
+      _resetScroll();
+
+      _dropdownValue.value = value;
+      final user = ref.read(userNotifierProvider).user;
+
+      await ref.read(crossAuthNotifierProvider.notifier).cross(
+            userId: user.nama!,
+            password: user.password!,
+            pt: _dropdownValue.value ?? ['ACT', 'Transina', 'ALR'],
+          );
+      return Future.value();
+    };
+
+    final onFilterSelected = (DateTimeRange value) async {
+      page.value = 0;
+      _resetScroll();
+
+      _dateTimeRange.value = value;
       await ref.read(absenManualListControllerProvider.notifier).search(
             dateRange: value,
             searchUser: _lastSearch.value,
@@ -99,10 +148,53 @@ class AbsenManualListPage extends HookConsumerWidget {
       return Future.value();
     };
 
-    void onScrolled() {
-      if (scrollController.position.pixels >=
-          scrollController.position.maxScrollExtent) {
-        ref.read(absenManualListControllerProvider.notifier).load(
+    void onScrolledVisibility() {
+      final _isScrolling = scrollController.position.isScrollingNotifier.value;
+
+      scrollController.position.isScrollingNotifier.addListener(() {
+        if (_isScrolling) {
+          Future.delayed(
+              Duration(milliseconds: 500), () => _isScrollStopped.value = true);
+        } else {
+          if (scrollController.position.atEdge) {
+            Future.delayed(Duration(milliseconds: 500),
+                () => _isScrollStopped.value = false);
+          }
+        }
+      });
+    }
+
+    final _isAtBottom = useState(false);
+
+    ref.listen<AsyncValue>(absenManualListControllerProvider, (_, state) {
+      if (!state.isLoading &&
+          state.hasValue &&
+          state.value != '' &&
+          state.value != null &&
+          state.hasError == false) {
+        _isAtBottom.value = false;
+      }
+    });
+
+    ref.listen<AsyncValue>(crossAuthNotifierProvider, (_, state) {
+      if (!state.isLoading &&
+          state.hasValue &&
+          state.value != '' &&
+          state.value != null &&
+          state.hasError == false) {
+        ref.invalidate(absenManualListControllerProvider);
+      }
+    });
+
+    Future<void> onScrolled() async {
+      onScrolledVisibility();
+
+      if (_isAtBottom.value == false &&
+          scrollController.position.pixels >=
+              scrollController.position.maxScrollExtent) {
+        _isAtBottom.value = true;
+
+        await ref.read(absenManualListControllerProvider.notifier).load(
             page: page.value + 1,
             searchUser: _lastSearch.value,
             dateRange: _dateTimeRange.value);
@@ -130,87 +222,95 @@ class AbsenManualListPage extends HookConsumerWidget {
         value: absenApprove,
         data: (_) => VAsyncWidgetScaffold(
           value: sendWa,
-          data: (_) => VScaffoldTabLayout(
-            scaffoldTitle: 'Absen Manual',
-            additionalInfo: VAdditionalInfo(infoMessage: infoMessage),
-            scaffoldFAB: FloatingActionButton.small(
-                backgroundColor: Palette.primaryColor,
-                child: Icon(
-                  Icons.add,
-                  color: Colors.white,
+          data: (_) => VAsyncWidgetScaffold(
+            value: crossAuth,
+            data: (_) => VScaffoldTabLayout(
+              scaffoldTitle: 'Absen Manual',
+              additionalInfo: VAdditionalInfo(infoMessage: infoMessage),
+              scaffoldFAB: FloatingActionButton.small(
+                  backgroundColor: Palette.primaryColor,
+                  child: Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
+                  onPressed: () => context.pushNamed(
+                        RouteNames.createAbsenManualNameRoute,
+                      )),
+              currPT: _initialDropdown,
+              onPageChanged: onRefresh,
+              onFieldSubmitted: onFieldSubmitted,
+              onFilterSelected: onFilterSelected,
+              initialDateRange: _dateTimeRange.value,
+              onDropdownChanged: onDropdownChanged,
+              scaffoldBody: [
+                Stack(
+                  children: [
+                    VAsyncValueWidget<List<AbsenManualList>>(
+                        value: absenManualList,
+                        data: (list) {
+                          final waiting = list
+                              .where((e) =>
+                                  (e.spvSta == false || e.hrdSta == false) &&
+                                  e.btlSta == false)
+                              .toList();
+                          return _list(scrollController, waiting, onRefresh);
+                        }),
+                    Positioned(
+                        bottom: 20,
+                        left: 10,
+                        child: SearchFilterInfoWidget(
+                          d1: _d1,
+                          d2: _d2,
+                          lastSearch: _lastSearch.value,
+                          isScrolling: _isScrollStopped.value,
+                        ))
+                  ],
                 ),
-                onPressed: () => context.pushNamed(
-                      RouteNames.createAbsenManualNameRoute,
-                    )),
-            onPageChanged: onRefresh,
-            onFieldSubmitted: onFieldSubmitted,
-            onFilterSelected: onFilterSelected,
-            initialDateRange: _dateTimeRange.value,
-            scaffoldBody: [
-              Stack(
-                children: [
-                  VAsyncValueWidget<List<AbsenManualList>>(
-                      value: absenManualList,
-                      data: (list) {
-                        final waiting = list
-                            .where((e) =>
-                                (e.spvSta == false || e.hrdSta == false) &&
-                                e.btlSta == false)
-                            .toList();
-                        return _list(scrollController, waiting, onRefresh);
-                      }),
-                  Positioned(
-                      bottom: 20,
-                      left: 10,
-                      child: SearchFilterInfoWidget(
-                        d1: _d1,
-                        d2: _d2,
-                        lastSearch: _lastSearch.value,
-                      ))
-                ],
-              ),
-              Stack(
-                children: [
-                  VAsyncValueWidget<List<AbsenManualList>>(
-                      value: absenManualList,
-                      data: (list) {
-                        final approved = list
-                            .where((e) =>
-                                (e.spvSta == true && e.hrdSta == true) &&
-                                e.btlSta == false)
-                            .toList();
-                        return _list(scrollController, approved, onRefresh);
-                      }),
-                  Positioned(
-                      bottom: 20,
-                      left: 10,
-                      child: SearchFilterInfoWidget(
-                        d1: _d1,
-                        d2: _d2,
-                        lastSearch: _lastSearch.value,
-                      ))
-                ],
-              ),
-              Stack(
-                children: [
-                  VAsyncValueWidget<List<AbsenManualList>>(
-                      value: absenManualList,
-                      data: (list) {
-                        final cancelled =
-                            list.where((e) => e.btlSta == true).toList();
-                        return _list(scrollController, cancelled, onRefresh);
-                      }),
-                  Positioned(
-                      bottom: 20,
-                      left: 10,
-                      child: SearchFilterInfoWidget(
-                        d1: _d1,
-                        d2: _d2,
-                        lastSearch: _lastSearch.value,
-                      ))
-                ],
-              ),
-            ],
+                Stack(
+                  children: [
+                    VAsyncValueWidget<List<AbsenManualList>>(
+                        value: absenManualList,
+                        data: (list) {
+                          final approved = list
+                              .where((e) =>
+                                  (e.spvSta == true && e.hrdSta == true) &&
+                                  e.btlSta == false)
+                              .toList();
+                          return _list(scrollController, approved, onRefresh);
+                        }),
+                    Positioned(
+                        bottom: 20,
+                        left: 10,
+                        child: SearchFilterInfoWidget(
+                          d1: _d1,
+                          d2: _d2,
+                          lastSearch: _lastSearch.value,
+                          isScrolling: _isScrollStopped.value,
+                        ))
+                  ],
+                ),
+                Stack(
+                  children: [
+                    VAsyncValueWidget<List<AbsenManualList>>(
+                        value: absenManualList,
+                        data: (list) {
+                          final cancelled =
+                              list.where((e) => e.btlSta == true).toList();
+                          return _list(scrollController, cancelled, onRefresh);
+                        }),
+                    Positioned(
+                        bottom: 20,
+                        left: 10,
+                        child: SearchFilterInfoWidget(
+                          d1: _d1,
+                          d2: _d2,
+                          lastSearch: _lastSearch.value,
+                          isScrolling: _isScrollStopped.value,
+                        ))
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

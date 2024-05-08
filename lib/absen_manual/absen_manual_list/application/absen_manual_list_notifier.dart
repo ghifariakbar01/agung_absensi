@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -79,6 +81,9 @@ class AbsenManualListController extends _$AbsenManualListController {
 
     final staff = ref.read(userNotifierProvider).user.staf!;
     final staffStr = staff.replaceAll('"', '').substring(0, staff.length - 1);
+
+    log('hrd $hrd');
+    log('staffStr $staffStr');
 
     if (isHrdOrSpv(hrd)) {
       return ref.read(absenManualListRepositoryProvider).getAbsenManualList(

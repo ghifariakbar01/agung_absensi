@@ -28,7 +28,7 @@ class TugasDinasListPage extends HookConsumerWidget {
 
     final sendWa = ref.watch(sendWaNotifierProvider);
     final absenManualList = ref.watch(tugasDinasListControllerProvider);
-    final absenApprove = ref.watch(tugasDinasApproveControllerProvider);
+    final tugasDinasApprove = ref.watch(tugasDinasApproveControllerProvider);
 
     ref.listen<AsyncValue>(tugasDinasApproveControllerProvider, (_, state) {
       if (!state.isLoading &&
@@ -90,7 +90,7 @@ class TugasDinasListPage extends HookConsumerWidget {
     return VAsyncWidgetScaffold<void>(
       value: errLog,
       data: (_) => VAsyncWidgetScaffold(
-        value: absenApprove,
+        value: tugasDinasApprove,
         data: (_) => VAsyncWidgetScaffold(
           value: sendWa,
           data: (_) => VScaffoldTabLayout(

@@ -60,6 +60,9 @@ class SignInPage extends HookConsumerWidget {
     final ip = ref.watch(ipNotifierProvider);
     final unlink = ref.watch(unlinkNotifierProvider);
 
+    final _serverSelected =
+        ref.watch(signInFormNotifierProvider).ptServerSelected.getOrLeave('');
+
     return VAsyncWidgetScaffold(
       value: ip,
       data: (_) => SafeArea(
@@ -86,9 +89,15 @@ class SignInPage extends HookConsumerWidget {
                                     .clearInfo(),
                                 showDialogAndLogout: () =>
                                     _showDialogAndLogout(context, ref),
-                                signIn: () => ref
-                                    .read(signInFormNotifierProvider.notifier)
-                                    .signInWithUserIdEmailAndPasswordACT(),
+                                signIn: () => _serverSelected == 'gs_12'
+                                    ? ref
+                                        .read(
+                                            signInFormNotifierProvider.notifier)
+                                        .signInWithUserIdEmailAndPasswordACT()
+                                    : ref
+                                        .read(
+                                            signInFormNotifierProvider.notifier)
+                                        .signInWithUserIdEmailAndPasswordARV(),
                                 onSuccessLoginAfterRemember: () => ref
                                     .read(authNotifierProvider.notifier)
                                     .checkAndUpdateAuthStatus(),

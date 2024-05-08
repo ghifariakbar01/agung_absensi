@@ -13,7 +13,7 @@ class AbsenManualListRepository {
     required String staff,
     required String searchUser,
     required DateTimeRange dateRange,
-  }) {
+  }) async {
     return _remoteService.getAbsenManualList(
         page: page, staff: staff, searchUser: searchUser, dateRange: dateRange);
   }

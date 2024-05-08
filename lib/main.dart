@@ -26,6 +26,7 @@ Future<void> main() async {
 
 final initializationProvider = FutureProvider<Unit>((ref) async {
   final helper = HelperImpl();
+  // await helper.storageDebugMode(ref, isDebug: true);
   await helper.fixStorageOnAndroidDevices(ref);
 
   await ref.read(ipNotifierProvider.future);

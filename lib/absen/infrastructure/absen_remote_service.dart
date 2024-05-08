@@ -45,17 +45,8 @@ class AbsenRemoteService {
     final coancenate = inOrOut == JenisAbsen.absenIn ? 'masuk' : 'keluar';
 
     try {
-      /*
-        FOR TESTING,
-          use gs_12 on login, absen, riwayat
-      */
       final Map<String, dynamic> dataProd = {};
       dataProd.addAll(_dioRequest);
-      final _testing = dataProd.update('server', (_) => 'gs_12');
-
-      if (_testing != 'gs_12') {
-        throw Exception('server override invalid');
-      }
 
       dataProd.addAll({
         "mode": 'INSERT',
@@ -149,17 +140,8 @@ class AbsenRemoteService {
     required DateTime date,
   }) async {
     try {
-      /*
-        FOR TESTING,
-          use gs_12 on login, absen, riwayat
-      */
       final Map<String, dynamic> data = {};
       data.addAll(_dioRequest);
-      final _testing = data.update('server', (_) => 'gs_12');
-
-      if (_testing != 'gs_12') {
-        throw Exception('server override invalid');
-      }
 
       final String currentDate = StringUtils.midnightDate(date);
       final String currentDateRange =
@@ -231,17 +213,8 @@ class AbsenRemoteService {
       required String? dateFirst,
       required String? dateSecond}) async {
     try {
-      /*
-        FOR TESTING,
-          use gs_12 on login, absen, riwayat
-      */
       final Map<String, dynamic> data = {};
       data.addAll(_dioRequest);
-      final _testing = data.update('server', (_) => 'gs_12');
-
-      if (_testing != 'gs_12') {
-        throw Exception('server override invalid');
-      }
 
       data.addAll({
         "mode": "SELECT",

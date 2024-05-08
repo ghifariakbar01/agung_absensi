@@ -4,11 +4,16 @@ import '../style/style.dart';
 
 class SearchFilterInfoWidget extends StatelessWidget {
   const SearchFilterInfoWidget(
-      {Key? key, required this.d1, required this.d2, required this.lastSearch})
+      {Key? key,
+      required this.d1,
+      required this.d2,
+      required this.lastSearch,
+      required this.isScrolling})
       : super(key: key);
 
   final String d1;
   final String d2;
+  final bool isScrolling;
   final String lastSearch;
 
   @override
@@ -17,7 +22,9 @@ class SearchFilterInfoWidget extends StatelessWidget {
       child: Container(
           padding: EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Palette.primaryColor,
+            color: isScrolling
+                ? Palette.primaryColor.withOpacity(0.25)
+                : Palette.primaryColor,
             borderRadius: BorderRadius.circular(12),
           ),
           child: Text(

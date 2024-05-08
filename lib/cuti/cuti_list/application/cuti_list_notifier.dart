@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../shared/providers.dart';
@@ -25,14 +26,24 @@ CutiListRepository cutiListRepository(CutiListRepositoryRef ref) {
 class CutiListController extends _$CutiListController {
   @override
   FutureOr<List<CutiList>> build() {
-    return _determineAndGetCutiListOn(page: 0);
+    return _determineAndGetCutiListOn(
+      page: 0,
+    );
   }
 
-  Future<void> load({required int page}) async {
+  Future<void> load({
+    required int page,
+    required String searchUser,
+    required DateTimeRange dateRange,
+  }) async {
     state = const AsyncLoading<List<CutiList>>().copyWithPrevious(state);
 
     state = await AsyncValue.guard(() async {
-      final res = await _determineAndGetCutiListOn(page: page);
+      final res = await _determineAndGetCutiListOn(
+        page: page,
+        dateRange: dateRange,
+        searchUser: searchUser,
+      );
 
       final List<CutiList> list = [
         ...state.requireValue.toList(),
@@ -43,15 +54,23 @@ class CutiListController extends _$CutiListController {
     });
   }
 
-  Future<void> refresh() async {
+  Future<void> refresh({
+    required String searchUser,
+    required DateTimeRange dateRange,
+  }) async {
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(() {
-      return _determineAndGetCutiListOn(page: 0);
+      return _determineAndGetCutiListOn(
+          page: 0, searchUser: searchUser, dateRange: dateRange);
     });
   }
 
-  Future<List<CutiList>> _determineAndGetCutiListOn({required int page}) async {
+  Future<List<CutiList>> _determineAndGetCutiListOn({
+    required int page,
+    String? searchUser,
+    DateTimeRange? dateRange,
+  }) async {
     final hrd = ref.read(userNotifierProvider).user.fin;
 
     final staff = ref.read(userNotifierProvider).user.staf!;
@@ -60,11 +79,21 @@ class CutiListController extends _$CutiListController {
     if (isHrdOrSpv(hrd)) {
       return ref.read(cutiListRepositoryProvider).getCutiList(
             page: page,
+            searchUser: searchUser ?? '',
+            dateRange: dateRange ??
+                DateTimeRange(
+                    start: DateTime.now().subtract(Duration(days: 30)),
+                    end: DateTime.now()),
           );
     } else {
       return ref.read(cutiListRepositoryProvider).getCutiListLimitedAccess(
             page: page,
             staff: staffStr,
+            searchUser: searchUser ?? '',
+            dateRange: dateRange ??
+                DateTimeRange(
+                    start: DateTime.now().subtract(Duration(days: 30)),
+                    end: DateTime.now()),
           );
     }
   }

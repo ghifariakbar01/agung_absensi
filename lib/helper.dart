@@ -4,6 +4,8 @@ import 'package:riverpod/riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class Helper {
+  Future<void> storageDebugMode(Ref<Object?> ref,
+      {required bool isDebug}) async {}
   Future<void> fixStorageOnAndroidDevices(Ref ref) async {}
 }
 
@@ -38,6 +40,26 @@ class HelperImpl implements Helper {
       await _saveCurrentImei(_imei);
 
       prefs.setBool(name, false);
+    }
+  }
+
+  @override
+  Future<void> storageDebugMode(Ref<Object?> ref,
+      {required bool isDebug}) async {
+    Future<Unit> _deleteAll() async {
+      await ref.read(flutterSecureStorageProvider).deleteAll();
+      return unit;
+    }
+
+    Future<Unit> _deleteAllSharedPrefs() async {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.clear();
+      return unit;
+    }
+
+    if (isDebug) {
+      await _deleteAll();
+      await _deleteAllSharedPrefs();
     }
   }
 }

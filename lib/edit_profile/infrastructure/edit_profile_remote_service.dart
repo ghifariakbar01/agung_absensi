@@ -30,11 +30,6 @@ class EditProfileRemoteService {
       */
       final Map<String, dynamic> data = {};
       data.addAll(_dioRequest);
-      final _testing = data.update('server', (_) => 'gs_12');
-
-      if (_testing != 'gs_12') {
-        throw Exception('server override invalid');
-      }
 
       final commandUpdate =
           "SELECT imei_hp FROM $dbName WHERE idKary = '$idKary'";
@@ -97,11 +92,6 @@ class EditProfileRemoteService {
       */
       final Map<String, dynamic> data = {};
       data.addAll(_dioRequest);
-      final _testing = data.update('server', (_) => 'gs_12');
-
-      if (_testing != 'gs_12') {
-        throw Exception('server override invalid');
-      }
 
       final commandUpdate =
           "UPDATE $dbName SET imei_hp = '' WHERE idKary = '$idKary'";
@@ -155,11 +145,6 @@ class EditProfileRemoteService {
       */
       final Map<String, dynamic> data = {};
       data.addAll(_dioRequest);
-      final _testing = data.update('server', (_) => 'gs_12');
-
-      if (_testing != 'gs_12') {
-        throw Exception('server override invalid');
-      }
 
       final dateNow = DateTime.now();
 
@@ -220,11 +205,6 @@ class EditProfileRemoteService {
       */
       final Map<String, dynamic> data = {};
       data.addAll(_dioRequest);
-      final _testing = data.update('server', (_) => 'gs_12');
-
-      if (_testing != 'gs_12') {
-        throw Exception('server override invalid');
-      }
 
       final commandUpdate =
           "UPDATE $dbName SET imei_hp = '$imei' WHERE idKary = '$idKary'";

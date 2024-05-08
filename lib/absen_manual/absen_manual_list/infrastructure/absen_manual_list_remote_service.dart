@@ -77,8 +77,8 @@ class AbsenManualListRemoteService {
       final response = await _dio.post('',
           data: jsonEncode(data), options: Options(contentType: 'text/plain'));
 
-      // log('data ${jsonEncode(data)}');
-      // log('response page $page : $response');
+      log('data ${jsonEncode(data)}');
+      log('response page $page : $response');
 
       final items = response.data?[0];
 
@@ -163,7 +163,7 @@ class AbsenManualListRemoteService {
           data: jsonEncode(data), options: Options(contentType: 'text/plain'));
 
       log('data ${jsonEncode(data)}');
-      // log('response page $page : $response');
+      log('response page $page : $response');
 
       final items = response.data?[0];
 

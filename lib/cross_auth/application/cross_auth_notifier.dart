@@ -1,13 +1,22 @@
-import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/cross_auth/application/cross_auth_response.dart';
 import 'package:face_net_authentication/cross_auth/infrastructure/cross_auth_remote_service.dart';
 import 'package:face_net_authentication/cross_auth/infrastructure/cross_auth_repository.dart';
 import 'package:face_net_authentication/user/application/user_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../infrastructure/cache_storage/cross_auth_storage.dart';
 import '../../shared/providers.dart';
+import 'is_user_crossed.dart';
 
 part 'cross_auth_notifier.g.dart';
+
+@Riverpod(keepAlive: true)
+CrossAuthStorage crossAuthStorage(CrossAuthStorageRef ref) {
+  return CrossAuthStorage(
+    ref.watch(flutterSecureStorageProvider),
+  );
+}
 
 @Riverpod(keepAlive: true)
 CrossAuthRemoteService crossAuthRemoteService(CrossAuthRemoteServiceRef ref) {
@@ -18,8 +27,42 @@ CrossAuthRemoteService crossAuthRemoteService(CrossAuthRemoteServiceRef ref) {
 @Riverpod(keepAlive: true)
 CrossAuthRepository crossAuthRepository(CrossAuthRepositoryRef ref) {
   return CrossAuthRepository(
+    ref.watch(crossAuthStorageProvider),
     ref.watch(crossAuthRemoteServiceProvider),
   );
+}
+
+enum PT { ACT, ARV }
+
+@riverpod
+class IsUserCrossed extends _$IsUserCrossed {
+  @override
+  FutureOr<IsUserCrossedState> build() async {
+    return determine();
+  }
+
+  Future<bool> _hasStorage() async {
+    final repo = ref.read(crossAuthRepositoryProvider);
+    return await repo.hasStorage();
+  }
+
+  Future<IsUserCrossedState> determine() async {
+    final repo = ref.read(crossAuthRepositoryProvider);
+
+    if (await _hasStorage() == false) {
+      return IsUserCrossedState.notCrossed();
+    } else {
+      final UserModelWithPassword _userSaved = await repo.loadSavedCrossed();
+      final UserModelWithPassword _currentUser =
+          ref.read(userNotifierProvider).user;
+
+      if (_userSaved == _currentUser) {
+        return IsUserCrossedState.notCrossed();
+      } else {
+        return IsUserCrossedState.crossed();
+      }
+    }
+  }
 }
 
 @riverpod
@@ -34,21 +77,95 @@ class CrossAuthNotifier extends _$CrossAuthNotifier {
   //  ],
   //  'gs_14': ['PT Agung Tama Raya'],
   //  'gs_21': ['PT Agung Jasa Logistik'],
-  Future<void> crossToACT({
+
+  final Map<String, List<String>> _mapPT = {
+    'gs_12': ['ACT', 'Transina', 'ALR'],
+    'gs_14': ['Tama Raya'],
+    'gs_18': ['ARV'],
+    'gs_21': ['AJL'],
+  };
+
+  String? _determineServer(List<String> server) {
+    String serv = '';
+
+    _equal(List<String> serv, List<String> serv2) {
+      return serv.first == serv2.first;
+    }
+
+    _mapPT.entries.forEach((element) {
+      final String key = element.key;
+
+      if (_equal(server, element.value)) {
+        serv = key;
+      }
+    });
+
+    if (serv.isNotEmpty) {
+      return serv;
+    }
+
+    return null;
+  }
+
+  final _key = 'first_time_cross';
+
+  Future<bool> _firstTimeCross() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_key) == null;
+  }
+
+  Future<bool> _saveFirstTime() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.setString(_key, '${DateTime.now()}');
+  }
+
+  Future<void> _saveCross() async {
+    final user = ref.read(userNotifierProvider).user;
+    await ref.read(crossAuthRepositoryProvider).save(user);
+  }
+
+  Future<void> _firstTime() async {
+    if (await _firstTimeCross()) {
+      await _saveCross();
+      await _saveFirstTime();
+    }
+  }
+
+  Future<void> cross({
+    required String userId,
+    required String password,
+    required List<String> pt,
+  }) async {
+    await _firstTime();
+
+    final String? serv = _determineServer(pt);
+
+    if (serv == null) {
+      return;
+    }
+
+    if (serv == 'gs_18') {
+      await _crossToARV(server: 'gs_18', userId: userId, password: password);
+    } else {
+      await _crossToACT(server: serv, userId: userId, password: password);
+    }
+  }
+
+  Future<void> _crossToACT({
     required String server,
     required String userId,
     required String password,
   }) async {
     state = const AsyncLoading();
 
-    state = await AsyncValue.guard<Unit>(() async {
+    try {
       final _response = await ref.read(crossAuthRepositoryProvider).crossToACT(
             server: server,
             userId: userId,
             password: password,
           );
 
-      return _response.when(
+      await _response.when(
         withUser: (user) async {
           await _saveUser(user);
           await ref
@@ -58,33 +175,35 @@ class CrossAuthNotifier extends _$CrossAuthNotifier {
           await ref
               .read(userNotifierProvider.notifier)
               .onUserParsedRaw(ref: ref, user: user);
-
-          return unit;
         },
         failure: (errorCode, message) {
           throw CrossAuthResponse.failure(
               errorCode: errorCode, message: message);
         },
       );
-    });
+
+      state = AsyncData<void>('Sukses Cross ACT');
+    } catch (e) {
+      state = AsyncError(e, StackTrace.current);
+    }
   }
 
   //  'gs_18': ['PT Agung Raya'],
-  Future<void> crossToARV({
+  Future<void> _crossToARV({
     required String server,
     required String userId,
     required String password,
   }) async {
     state = const AsyncLoading();
 
-    state = await AsyncValue.guard<Unit>(() async {
+    try {
       final _response = await ref.read(crossAuthRepositoryProvider).crossToARV(
             server: server,
             userId: userId,
             password: password,
           );
 
-      return _response.when(
+      await _response.when(
         withUser: (user) async {
           await _saveUser(user);
           await ref
@@ -94,15 +213,17 @@ class CrossAuthNotifier extends _$CrossAuthNotifier {
           await ref
               .read(userNotifierProvider.notifier)
               .onUserParsedRaw(ref: ref, user: user);
-
-          return unit;
         },
         failure: (errorCode, message) {
           throw CrossAuthResponse.failure(
               errorCode: errorCode, message: message);
         },
       );
-    });
+
+      state = AsyncData<void>('Sukses Cross ARV');
+    } catch (e) {
+      state = AsyncError(e, StackTrace.current);
+    }
   }
 
   Future<void> _saveUser(UserModelWithPassword user) async {

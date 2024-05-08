@@ -243,9 +243,8 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
     String? appleUsername,
   ) async {
     if (appleUsername != null) {
-      // || appleUsername == 'Alfin'
-      if (appleUsername == 'Ghifar') {
-        await onImeiNotRegistered();
+      if (appleUsername == 'Ghifar' || appleUsername == 'Alfin') {
+        await onImeiOK();
       } else {
         await onImeiAlreadyRegistered();
         // onImeiOK();

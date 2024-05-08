@@ -1,10 +1,35 @@
+import 'dart:convert';
+
+import '../../infrastructure/cache_storage/cross_auth_storage.dart';
+import '../../user/application/user_model.dart';
 import '../application/cross_auth_response.dart';
 import 'cross_auth_remote_service.dart';
 
 class CrossAuthRepository {
-  CrossAuthRepository(this._remoteService);
+  CrossAuthRepository(
+    this._storage,
+    this._remoteService,
+  );
 
+  final CrossAuthStorage _storage;
   final CrossAuthRemoteService _remoteService;
+
+  Future<void> save(UserModelWithPassword user) async {
+    return _storage.save(jsonEncode(user.toJson()));
+  }
+
+  Future<void> clear() async {
+    return _storage.clear();
+  }
+
+  Future<bool> hasStorage() async {
+    return await _storage.read() != null;
+  }
+
+  Future<UserModelWithPassword> loadSavedCrossed() async {
+    final raw = await _storage.read();
+    return UserModelWithPassword.fromJson(jsonDecode(raw!));
+  }
 
   //  'gs_12': [
   //    'PT Agung Citra Transformasi',

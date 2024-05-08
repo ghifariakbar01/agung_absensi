@@ -1,3 +1,4 @@
+import 'package:face_net_authentication/cross_auth/application/cross_auth_notifier.dart';
 import 'package:face_net_authentication/mst_karyawan_cuti/application/mst_karyawan_cuti.dart';
 import 'package:face_net_authentication/mst_karyawan_cuti/infrastructure/mst_karyawan_cuti_remote_service.dart';
 import 'package:face_net_authentication/mst_karyawan_cuti/infrastructure/mst_karyawan_cuti_repository.dart';
@@ -26,11 +27,18 @@ MstKaryawanCutiRepository mstKaryawanCutiRepository(
 class MstKaryawanCutiNotifier extends _$MstKaryawanCutiNotifier {
   @override
   FutureOr<MstKaryawanCuti> build() async {
-    final idUser = ref.read(userNotifierProvider).user.idUser;
+    final _isUserCrossed = await ref.read(isUserCrossedProvider.future);
 
-    return await ref
-        .read(mstKaryawanCutiRepositoryProvider)
-        .getSaldoMasterCuti(idUser: idUser!);
+    return _isUserCrossed.when(
+      notCrossed: () async {
+        final idUser = ref.read(userNotifierProvider).user.idUser;
+
+        return await ref
+            .read(mstKaryawanCutiRepositoryProvider)
+            .getSaldoMasterCuti(idUser: idUser!);
+      },
+      crossed: MstKaryawanCuti.crossed,
+    );
   }
 
   Future<MstKaryawanCuti> getSaldoMasterCutiById(int idUser) {

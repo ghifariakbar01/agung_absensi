@@ -33,17 +33,8 @@ class AuthRemoteService {
       required String password,
       required String server}) async {
     try {
-      /*
-        FOR TESTING,
-          use gs_12 on login, absen, riwayat
-      */
       final Map<String, dynamic> data = {};
       data.addAll(_dioRequest);
-      final _testing = data.update('server', (_) => 'gs_12');
-
-      if (_testing != 'gs_12') {
-        throw Exception('server override invalid');
-      }
 
       data.addAll({
         "username": "$userId",
@@ -143,19 +134,10 @@ class AuthRemoteService {
       required String password,
       required String server}) async {
     try {
-      /*
-        FOR TESTING,
-          use gs_12 on login, absen, riwayat
-      */
       final Map<String, dynamic> data = {};
       data.addAll(_dioRequest);
-      final _testing = data.update('server', (_) => 'gs_12');
 
-      if (_testing != 'gs_12') {
-        throw Exception('server override invalid');
-      }
-
-      data.addAll({
+      _dioRequest.addAll({
         "username": "$userId",
         "password": "$password",
         "mode": "SELECT",
