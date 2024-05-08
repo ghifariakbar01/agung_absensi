@@ -68,7 +68,7 @@ class UserNotifier extends StateNotifier<UserState> {
         failureOrSuccessOptionUpdate: optionOf(failureOrSuccess));
   }
 
-  setUser(UserModelWithPassword user) {
+  _setUser(UserModelWithPassword user) {
     // debugger();
     state = state.copyWith(user: user);
     state = state.copyWith(user: user);
@@ -79,7 +79,7 @@ class UserNotifier extends StateNotifier<UserState> {
     state = UserState.initial();
   }
 
-  Future<void> onUserParsed({
+  Future<void> _onUserParsed({
     required Function initializeUser,
     required Function initializeDioRequest,
   }) async {
@@ -89,15 +89,15 @@ class UserNotifier extends StateNotifier<UserState> {
 
   Future<void> onUserParsedRaw(
       {required Ref ref, required UserModelWithPassword user}) async {
-    return onUserParsed(
+    return _onUserParsed(
       initializeUser: () =>
-          Future.delayed(Duration(seconds: 1), () => setUser(user)),
+          Future.delayed(Duration(seconds: 1), () => _setUser(user)),
       initializeDioRequest: () => Future.delayed(
         Duration(seconds: 1),
         () => ref.read(dioRequestProvider).addAll({
           "username": "${user.nama}",
           "password": "${user.password}",
-          "server": 'gs_testing',
+          "server": "${user.ptServer}",
         }),
       ),
     );

@@ -9,6 +9,7 @@ import '../../domain/value_objects_copy.dart';
 
 import '../../infrastructure/credentials_storage/credentials_storage.dart';
 import '../../infrastructure/exceptions.dart';
+import '../../user/application/user_model.dart';
 import 'auth_remote_service.dart';
 
 class AuthRepository {
@@ -30,6 +31,11 @@ class AuthRepository {
     return clearCredentialsStorage();
   }
 
+  Future<void> saveUser(UserModelWithPassword user) async {
+    final _encode = jsonEncode(user);
+    return _credentialsStorage.save(_encode);
+  }
+
   Future<Either<AuthFailure, Unit>> signInWithIdKaryawanUsernameAndPasswordACT({
     required PTName server,
     required UserId userId,
@@ -48,10 +54,8 @@ class AuthRepository {
 
       return await authResponse.when(
         withUser: (user) async {
-          String userSave = jsonEncode(user);
-          await _credentialsStorage.save(userSave);
-          await _credentialsStorage.save(userSave);
-          await _credentialsStorage.save(userSave);
+          await saveUser(user);
+          await saveUser(user);
 
           return right(unit);
         },

@@ -156,7 +156,16 @@ class VScaffoldTabLayout extends HookWidget {
           ),
         ];
 
-    final _listPt = ['ACT', 'AJL', 'ARV'];
+    final Map<String, List<String>> _mapPT = {
+      'gs_12': ['ACT', 'ATR(Transina)', 'ALR'],
+      'gs_14': ['ATR'],
+      'gs_18': ['AR'],
+      'gs_21': ['AJL'],
+    };
+
+    final _mapPTValues = _mapPT.values.fold<List<String>>(
+        [], (previousValue, element) => [...previousValue, ...element]);
+
     final _currPt = useState('ACT');
 
     return DefaultTabController(
@@ -248,10 +257,10 @@ class VScaffoldTabLayout extends HookWidget {
                       },
                       decoration: Themes.dropdown(),
                       style: Themes.customColor(12, color: Colors.white),
-                      value: _listPt.firstWhere(
-                        (element) => element == _currPt.value,
-                        orElse: () => _listPt.first,
-                      ),
+                      value: _mapPTValues.toList().firstWhere(
+                            (element) => element == _currPt.value,
+                            orElse: () => _mapPTValues.toList().first,
+                          ),
                       onChanged: (String? value) {
                         if (value != null) {
                           _currPt.value = value;
@@ -261,8 +270,8 @@ class VScaffoldTabLayout extends HookWidget {
                         }
                       },
                       isExpanded: true,
-                      items:
-                          _listPt.map<DropdownMenuItem<String>>((String value) {
+                      items: _mapPTValues
+                          .map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
                           child: Container(

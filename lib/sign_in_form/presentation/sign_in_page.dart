@@ -1,6 +1,5 @@
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/ip/application/ip_notifier.dart';
-import 'package:face_net_authentication/tc/application/shared/tc_providers.dart';
 import 'package:face_net_authentication/unlink/application/unlink_notifier.dart';
 import 'package:face_net_authentication/widgets/v_async_widget.dart';
 
@@ -10,7 +9,6 @@ import 'package:intl/intl.dart';
 
 import '../../constants/assets.dart';
 import '../../domain/auth_failure.dart';
-import '../../imei_introduction/application/shared/imei_introduction_providers.dart';
 import '../../shared/providers.dart';
 import '../../style/style.dart';
 import '../../widgets/alert_helper.dart';
@@ -59,12 +57,6 @@ class SignInPage extends HookConsumerWidget {
       signInFormNotifierProvider.select((state) => state.isSubmitting),
     );
 
-    final _tc = ref.watch(tcNotifierProvider);
-    final _imei = ref.watch(imeiIntroNotifierProvider);
-    final _hasVisitedScreens =
-        (_tc.maybeWhen(orElse: () => false, visited: () => true) &&
-            _imei.maybeWhen(orElse: () => false, visited: () => true));
-
     final ip = ref.watch(ipNotifierProvider);
     final unlink = ref.watch(unlinkNotifierProvider);
 
@@ -104,7 +96,7 @@ class SignInPage extends HookConsumerWidget {
                         },
                         label: 'LOGIN (APK TESTING)',
                       )),
-                  LoadingOverlay(isLoading: isSubmitting || _hasVisitedScreens),
+                  LoadingOverlay(isLoading: isSubmitting),
                 ],
               )
             : Scaffold(

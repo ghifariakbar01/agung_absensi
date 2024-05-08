@@ -33,6 +33,16 @@ final getUserFutureProvider = FutureProvider<Unit>((ref) async {
       return unit;
     }
 
+    final ptServer = user.ptServer;
+    // IF USER PT_SERVER TESTING
+    if (ptServer != null) {
+      if (ptServer.toLowerCase() == 'gs_testing') {
+        await userNotifier.logout();
+        return unit;
+      }
+      //
+    }
+
     if (json.isNotEmpty) {
       await userNotifier.onUserParsedRaw(ref: ref, user: user);
       return unit;
