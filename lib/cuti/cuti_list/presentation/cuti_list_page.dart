@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:collection/collection.dart';
 import 'package:face_net_authentication/cuti/cuti_approve/application/cuti_approve_notifier.dart';
 import 'package:face_net_authentication/mst_karyawan_cuti/application/mst_karyawan_cuti_notifier.dart';
@@ -12,9 +10,11 @@ import 'package:intl/intl.dart';
 
 import '../../../common/search_filter_info_widget.dart';
 import '../../../cross_auth/application/cross_auth_notifier.dart';
+import '../../../cross_auth/application/is_user_crossed.dart';
 import '../../../err_log/application/err_log_notifier.dart';
 import '../../../mst_karyawan_cuti/application/mst_karyawan_cuti.dart';
 import '../../../routes/application/route_names.dart';
+import '../../../send_wa/application/send_wa_notifier.dart';
 import '../../../shared/providers.dart';
 import '../../../widgets/alert_helper.dart';
 import '../../../widgets/v_async_widget.dart';
@@ -30,31 +30,9 @@ class CutiListPage extends HookConsumerWidget {
   const CutiListPage();
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen<AsyncValue>(cutiApproveControllerProvider, (_, state) async {
-      if (!state.isLoading &&
-          state.hasValue &&
-          state.value != '' &&
-          state.value != null &&
-          state.hasError == false) {
-        return AlertHelper.showSnackBar(
-          context,
-          onDone: () async {
-            ref.invalidate(cutiListControllerProvider);
-            ref.invalidate(mstKaryawanCutiNotifierProvider);
-          },
-          color: Palette.primaryColor,
-          message: '${state.value} ',
-        );
-      } else {
-        return state.showAlertDialogOnError(context, ref);
-      }
-    });
-
-    ref.listen<AsyncValue>(mstKaryawanCutiNotifierProvider, (_, state) async {
-      return state.showAlertDialogOnError(context, ref);
-    });
-
+    final sendWa = ref.watch(sendWaNotifierProvider);
     final mstCuti = ref.watch(mstKaryawanCutiNotifierProvider);
+    final cutiApprove = ref.watch(cutiApproveControllerProvider);
     final cutiList = ref.watch(cutiListControllerProvider);
     final crossAuth = ref.watch(crossAuthNotifierProvider);
 
@@ -197,9 +175,34 @@ class CutiListPage extends HookConsumerWidget {
           state.value != '' &&
           state.value != null &&
           state.hasError == false) {
+        ref.invalidate(isUserCrossedProvider);
         ref.invalidate(cutiListControllerProvider);
         ref.invalidate(mstKaryawanCutiNotifierProvider);
       }
+    });
+
+    ref.listen<AsyncValue>(cutiApproveControllerProvider, (_, state) async {
+      if (!state.isLoading &&
+          state.hasValue &&
+          state.value != '' &&
+          state.value != null &&
+          state.hasError == false) {
+        return AlertHelper.showSnackBar(
+          context,
+          onDone: () async {
+            ref.invalidate(cutiListControllerProvider);
+            ref.invalidate(mstKaryawanCutiNotifierProvider);
+          },
+          color: Palette.primaryColor,
+          message: '${state.value} ',
+        );
+      } else {
+        return state.showAlertDialogOnError(context, ref);
+      }
+    });
+
+    ref.listen<AsyncValue>(mstKaryawanCutiNotifierProvider, (_, state) async {
+      return state.showAlertDialogOnError(context, ref);
     });
 
     Future<void> onScrolled() async {
@@ -225,102 +228,148 @@ class CutiListPage extends HookConsumerWidget {
     }, [scrollController]);
 
     final errLog = ref.watch(errLogControllerProvider);
+    final _isUserCrossed = ref.watch(isUserCrossedProvider);
 
     return VAsyncWidgetScaffold<void>(
       value: errLog,
       data: (_) => VAsyncWidgetScaffold(
         value: crossAuth,
-        data: (_) => VAsyncWidgetScaffold<MstKaryawanCuti>(
-            value: mstCuti,
-            data: (mst) {
-              return VScaffoldTabLayout(
-                scaffoldTitle: 'List Form Cuti',
-                scaffoldFAB: FloatingActionButton.small(
-                    backgroundColor: Palette.primaryColor,
-                    child: Icon(
-                      Icons.add,
-                      color: Colors.white,
-                    ),
-                    onPressed: () => context.pushNamed(
-                          RouteNames.createCutiNameRoute,
+        data: (_) => VAsyncWidgetScaffold<IsUserCrossedState>(
+            value: _isUserCrossed,
+            data: (data) {
+              final _isCrossed = data.when(
+                crossed: () => true,
+                notCrossed: () => false,
+              );
+
+              return WillPopScope(
+                onWillPop: () async {
+                  final user = ref.read(userNotifierProvider).user;
+
+                  if (_isCrossed) {
+                    await ref.read(crossAuthNotifierProvider.notifier).uncross(
+                          userId: user.nama!,
+                          password: user.password!,
+                        );
+                  }
+
+                  return true;
+                },
+                child: VAsyncWidgetScaffold<MstKaryawanCuti>(
+                    value: mstCuti,
+                    data: (mst) => VAsyncValueWidget(
+                          value: cutiApprove,
+                          data: (_) => VAsyncWidgetScaffold(
+                            value: sendWa,
+                            data: (_) => VScaffoldTabLayout(
+                              scaffoldTitle: 'List Form Cuti',
+                              scaffoldFAB: FloatingActionButton.small(
+                                  backgroundColor: Palette.primaryColor,
+                                  child: Icon(
+                                    Icons.add,
+                                    color: Colors.white,
+                                  ),
+                                  onPressed: () => context.pushNamed(
+                                        RouteNames.createCutiNameRoute,
+                                      )),
+                              currPT: _initialDropdown,
+                              onPageChanged: onPageChanged,
+                              onFieldSubmitted: onFieldSubmitted,
+                              onFilterSelected: onFilterSelected,
+                              onDropdownChanged: onDropdownChanged,
+                              initialDateRange: _dateTimeRange.value,
+                              scaffoldBody: [
+                                Stack(
+                                  children: [
+                                    VAsyncValueWidget<List<CutiList>>(
+                                        value: cutiList,
+                                        data: (list) {
+                                          final waiting = list
+                                              .where((e) =>
+                                                  (e.spvSta == false ||
+                                                      e.hrdSta == false) &&
+                                                  e.btlSta == false)
+                                              .toList();
+                                          return _list(
+                                            _isCrossed,
+                                            mst,
+                                            waiting,
+                                            onRefresh,
+                                            scrollController,
+                                          );
+                                        }),
+                                    Positioned(
+                                        bottom: 20,
+                                        left: 10,
+                                        child: SearchFilterInfoWidget(
+                                          d1: _d1,
+                                          d2: _d2,
+                                          lastSearch: _lastSearch.value,
+                                          isScrolling: _isScrollStopped.value,
+                                        ))
+                                  ],
+                                ),
+                                Stack(
+                                  children: [
+                                    VAsyncValueWidget<List<CutiList>>(
+                                        value: cutiList,
+                                        data: (list) {
+                                          final approved = list
+                                              .where((e) =>
+                                                  (e.spvSta == true &&
+                                                      e.hrdSta == true) &&
+                                                  e.btlSta == false)
+                                              .toList();
+                                          return _list(
+                                            _isCrossed,
+                                            mst,
+                                            approved,
+                                            onRefresh,
+                                            scrollController,
+                                          );
+                                        }),
+                                    Positioned(
+                                        bottom: 20,
+                                        left: 10,
+                                        child: SearchFilterInfoWidget(
+                                          d1: _d1,
+                                          d2: _d2,
+                                          lastSearch: _lastSearch.value,
+                                          isScrolling: _isScrollStopped.value,
+                                        ))
+                                  ],
+                                ),
+                                Stack(
+                                  children: [
+                                    VAsyncValueWidget<List<CutiList>>(
+                                        value: cutiList,
+                                        data: (list) {
+                                          final cancelled = list
+                                              .where((e) => e.btlSta == true)
+                                              .toList();
+                                          return _list(
+                                            _isCrossed,
+                                            mst,
+                                            cancelled,
+                                            onRefresh,
+                                            scrollController,
+                                          );
+                                        }),
+                                    Positioned(
+                                        bottom: 20,
+                                        left: 10,
+                                        child: SearchFilterInfoWidget(
+                                          d1: _d1,
+                                          d2: _d2,
+                                          lastSearch: _lastSearch.value,
+                                          isScrolling: _isScrollStopped.value,
+                                        ))
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
                         )),
-                currPT: _initialDropdown,
-                onPageChanged: onPageChanged,
-                onFieldSubmitted: onFieldSubmitted,
-                onFilterSelected: onFilterSelected,
-                initialDateRange: _dateTimeRange.value,
-                onDropdownChanged: onDropdownChanged,
-                scaffoldBody: [
-                  Stack(
-                    children: [
-                      VAsyncValueWidget<List<CutiList>>(
-                          value: cutiList,
-                          data: (list) {
-                            final waiting = list
-                                .where((e) =>
-                                    (e.spvSta == false || e.hrdSta == false) &&
-                                    e.btlSta == false)
-                                .toList();
-                            return _list(
-                                mst, waiting, scrollController, onRefresh);
-                          }),
-                      Positioned(
-                          bottom: 20,
-                          left: 10,
-                          child: SearchFilterInfoWidget(
-                            d1: _d1,
-                            d2: _d2,
-                            lastSearch: _lastSearch.value,
-                            isScrolling: _isScrollStopped.value,
-                          ))
-                    ],
-                  ),
-                  Stack(
-                    children: [
-                      VAsyncValueWidget<List<CutiList>>(
-                          value: cutiList,
-                          data: (list) {
-                            final approved = list
-                                .where((e) =>
-                                    (e.spvSta == true && e.hrdSta == true) &&
-                                    e.btlSta == false)
-                                .toList();
-                            return _list(
-                                mst, approved, scrollController, onRefresh);
-                          }),
-                      Positioned(
-                          bottom: 20,
-                          left: 10,
-                          child: SearchFilterInfoWidget(
-                            d1: _d1,
-                            d2: _d2,
-                            lastSearch: _lastSearch.value,
-                            isScrolling: _isScrollStopped.value,
-                          ))
-                    ],
-                  ),
-                  Stack(
-                    children: [
-                      VAsyncValueWidget<List<CutiList>>(
-                          value: cutiList,
-                          data: (list) {
-                            final cancelled =
-                                list.where((e) => e.btlSta == true).toList();
-                            return _list(
-                                mst, cancelled, scrollController, onRefresh);
-                          }),
-                      Positioned(
-                          bottom: 20,
-                          left: 10,
-                          child: SearchFilterInfoWidget(
-                            d1: _d1,
-                            d2: _d2,
-                            lastSearch: _lastSearch.value,
-                            isScrolling: _isScrollStopped.value,
-                          ))
-                    ],
-                  ),
-                ],
               );
             }),
       ),
@@ -328,11 +377,13 @@ class CutiListPage extends HookConsumerWidget {
   }
 }
 
-Widget _list(MstKaryawanCuti mst, List<CutiList> list,
-    ScrollController scrollController, Future<void> Function() onRefresh) {
-  final _isCrossed =
-      mst.idMstCuti == 0 && mst.cutiBaru == 0 && mst.cutiTidakBaru == 0;
-
+Widget _list(
+  bool _isCrossed,
+  MstKaryawanCuti mst,
+  List<CutiList> list,
+  Future<void> Function() onRefresh,
+  ScrollController scrollController,
+) {
   return RefreshIndicator(
       onRefresh: onRefresh,
       child: list.isEmpty

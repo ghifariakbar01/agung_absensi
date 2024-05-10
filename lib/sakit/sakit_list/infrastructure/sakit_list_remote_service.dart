@@ -3,6 +3,8 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:face_net_authentication/infrastructure/dio_extensions.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../../infrastructure/exceptions.dart';
 import '../application/sakit_list.dart';
@@ -22,10 +24,17 @@ class SakitListRemoteService {
   static const String dbMstUser = 'mst_user';
   static const String dbMstUserHead = 'mst_user_head';
 
-  Future<List<SakitList>> getSakitList({required int page}) async {
+  Future<List<SakitList>> getSakitList({
+    required int page,
+    required String searchUser,
+    required DateTimeRange dateRange,
+  }) async {
     try {
       // debugger();
       final data = _dioRequest;
+
+      final d1 = DateFormat('yyyy-MM-dd').format(dateRange.start);
+      final d2 = DateFormat('yyyy-MM-dd').format(dateRange.end);
 
       final Map<String, String> select = {
         'command': //
@@ -38,17 +47,23 @@ class SakitListRemoteService {
                 " $dbMstUser.fullname, " +
                 " (SELECT nama FROM mst_comp WHERE id_comp = $dbMstUser.id_comp) AS comp, " +
                 " (SELECT nama FROM mst_dept WHERE id_dept = $dbMstUser.id_dept) AS dept, " +
-                " (SELECT COUNT(id_sakit) FROM $dbDetail WHERE id_sakit = $dbName.id_sakit ) AS qty_foto "
-                    " FROM " +
-                " $dbName " +
+                " (SELECT COUNT(id_sakit) FROM $dbDetail WHERE id_sakit = $dbName.id_sakit )AS qty_foto  FROM $dbName " +
                 " JOIN " +
-                " $dbMstUser ON $dbName.id_user = $dbMstUser.id_user " +
+                " $dbMstUser ON $dbName.id_user = $dbMstUser.id_user "
+                    " WHERE   "
+                    "  $dbName.c_user    "
+                    "                 LIKE '%$searchUser%'    "
+                    "       AND    "
+                    "           $dbName.c_date    "
+                    "                 BETWEEN '$d1' AND '$d2'    " +
                 " ORDER BY " +
                 " $dbName.c_date DESC " +
                 " OFFSET " +
-                " $page * 20 ROWS FETCH FIRST 20 ROWS ONLY ",
+                " $page * 20 ROWS FETCH NEXT 20 ROWS ONLY",
         'mode': 'SELECT'
       };
+
+      log('query ${select.entries.where((element) => element.key == 'command').first}');
 
       data.addAll(select);
 
@@ -100,12 +115,19 @@ class SakitListRemoteService {
     }
   }
 
-  Future<List<SakitList>> getSakitListLimitedAccess(
-      {required int page, required String staff}) async {
+  Future<List<SakitList>> getSakitListLimitedAccess({
+    required int page,
+    required String staff,
+    required String searchUser,
+    required DateTimeRange dateRange,
+  }) async {
     try {
       // debugger();
       log('page $page');
       final data = _dioRequest;
+
+      final d1 = DateFormat('yyyy-MM-dd').format(dateRange.start);
+      final d2 = DateFormat('yyyy-MM-dd').format(dateRange.end);
 
       final Map<String, String> select = {
         'command': //
@@ -118,16 +140,23 @@ class SakitListRemoteService {
                 " $dbMstUser.fullname, " +
                 " (SELECT nama FROM mst_comp WHERE id_comp = $dbMstUser.id_comp) AS comp, " +
                 " (SELECT nama FROM mst_dept WHERE id_dept = $dbMstUser.id_dept) AS dept, " +
-                " (SELECT COUNT(id_sakit) FROM $dbDetail WHERE id_sakit = $dbName.id_sakit ) AS qty_foto "
-                    " FROM " +
+                " (SELECT COUNT(id_sakit) FROM $dbDetail " +
+                " FROM " +
                 " $dbName " +
                 " JOIN " +
                 " $dbMstUser ON $dbName.id_user = $dbMstUser.id_user " +
                 " WHERE $dbName.id_user IN ($staff) " +
+                "  AND id_sakit = $dbName.id_sakit ) AS qty_foto "
+                    "       AND    "
+                    "           $dbName.c_user    "
+                    "                 LIKE '%$searchUser%'    "
+                    "       AND    "
+                    "           $dbName.c_date    "
+                    "                 BETWEEN '$d1' AND '$d2'    " +
                 " ORDER BY " +
                 " $dbName.c_date DESC " +
-                " OFFSET " +
-                " $page * 20 ROWS FETCH FIRST 20 ROWS ONLY ",
+                " OFFSET "
+                    " $page * 20 ROWS FETCH FIRST 20 ROWS ONLY ",
         'mode': 'SELECT'
       };
 

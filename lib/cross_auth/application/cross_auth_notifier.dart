@@ -131,6 +131,32 @@ class CrossAuthNotifier extends _$CrossAuthNotifier {
     }
   }
 
+  Future<void> uncross({
+    required String userId,
+    required String password,
+  }) async {
+    state = const AsyncLoading();
+
+    state = await AsyncValue.guard(() async {
+      final _crossRepo = ref.read(crossAuthRepositoryProvider);
+      final _savedCrossUser = await _crossRepo.loadSavedCrossed();
+
+      final String? serv = _savedCrossUser.ptServer;
+
+      if (serv == null) {
+        return;
+      }
+
+      if (serv == 'gs_18') {
+        await _crossToARV(server: 'gs_18', userId: userId, password: password);
+        return;
+      } else {
+        await _crossToACT(server: serv, userId: userId, password: password);
+        return;
+      }
+    });
+  }
+
   Future<void> cross({
     required String userId,
     required String password,

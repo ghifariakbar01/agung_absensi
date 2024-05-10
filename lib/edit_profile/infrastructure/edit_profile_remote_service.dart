@@ -45,19 +45,36 @@ class EditProfileRemoteService {
           data: jsonEncode(data), options: Options(contentType: 'text/plain'));
 
       log('data ${jsonEncode(data)}');
-
       log('response $response');
 
       final items = response.data?[0];
 
       if (items['status'] == 'Success') {
-        if (items['items'][0]['imei_hp'] != null) {
-          String imei = items['items'][0]['imei_hp'];
-          //
-          if (imei.isNotEmpty) {
-            return imei;
-          } else {
+        //
+        if (items['items'] == null) {
+          final message = items['error'] as String?;
+          final errorCode = items['errornum'] as int;
+
+          throw RestApiExceptionWithMessage(errorCode, message);
+        }
+
+        if (items['items'] is List) {
+          final _items = items['items'];
+          final isEmpty = (items['items'] as List).isEmpty;
+
+          if (isEmpty) {
             return null;
+          } else {
+            final _imei = _items[0]['imei_hp'];
+
+            if (_imei == null) {
+              final message = items['error'] as String?;
+              final errorCode = items['errornum'] as int;
+
+              throw RestApiExceptionWithMessage(errorCode, message);
+            } else {
+              return _imei;
+            }
           }
         } else {
           final message = items['error'] as String?;

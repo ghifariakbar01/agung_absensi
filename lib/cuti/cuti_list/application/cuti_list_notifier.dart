@@ -62,7 +62,10 @@ class CutiListController extends _$CutiListController {
 
     state = await AsyncValue.guard(() {
       return _determineAndGetCutiListOn(
-          page: 0, searchUser: searchUser, dateRange: dateRange);
+        page: 0,
+        dateRange: dateRange,
+        searchUser: searchUser,
+      );
     });
   }
 
@@ -104,39 +107,47 @@ class CutiListController extends _$CutiListController {
   }
 
   bool isSpvEdit() {
+    bool _isSpvEdit = true;
+
     final spv = ref.read(userNotifierProvider).user.spv;
     final fullAkses = ref.read(userNotifierProvider).user.fullAkses;
 
     if (spv == null) {
-      return false;
+      _isSpvEdit = false;
     }
 
     if (fullAkses! == false) {
-      return false;
+      _isSpvEdit = false;
     }
 
     if (_isAct()) {
-      return spv.contains('10,');
+      _isSpvEdit = spv!.contains('10,');
     } else {
-      return spv.contains('5011,');
+      _isSpvEdit = spv!.contains('5011,');
     }
+
+    return _isSpvEdit;
   }
 
   bool isHrdOrSpv(String? access) {
+    bool _isHrdOrSpv = true;
+
     final fullAkses = ref.read(userNotifierProvider).user.fullAkses;
 
     if (access == null) {
-      return false;
+      _isHrdOrSpv = false;
     }
 
     if (fullAkses! == false) {
-      return false;
+      _isHrdOrSpv = false;
     }
 
     if (_isAct()) {
-      return access.contains('1,');
+      _isHrdOrSpv = access!.contains('1,');
     } else {
-      return access.contains('5102,');
+      _isHrdOrSpv = access!.contains('5102,');
     }
+
+    return _isHrdOrSpv;
   }
 }

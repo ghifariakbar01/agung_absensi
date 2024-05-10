@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../shared/providers.dart';
@@ -24,14 +25,22 @@ DtPcListRepository dtPcListRepository(DtPcListRepositoryRef ref) {
 class DtPcListController extends _$DtPcListController {
   @override
   FutureOr<List<DtPcList>> build() {
-    return _determineAndGetIzinListOn(page: 0);
+    return _determineAndGetDTPCListOn(page: 0);
   }
 
-  Future<void> load({required int page}) async {
+  Future<void> load({
+    required int page,
+    required String searchUser,
+    required DateTimeRange dateRange,
+  }) async {
     state = const AsyncLoading<List<DtPcList>>().copyWithPrevious(state);
 
     state = await AsyncValue.guard(() async {
-      final res = await _determineAndGetIzinListOn(page: page);
+      final res = await _determineAndGetDTPCListOn(
+        page: page,
+        dateRange: dateRange,
+        searchUser: searchUser,
+      );
 
       final List<DtPcList> list = [
         ...state.requireValue.toList(),
@@ -42,26 +51,50 @@ class DtPcListController extends _$DtPcListController {
     });
   }
 
-  Future<void> refresh() async {
+  Future<void> refresh({
+    required String searchUser,
+    required DateTimeRange dateRange,
+  }) async {
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(() {
-      return _determineAndGetIzinListOn(page: 0);
+      return _determineAndGetDTPCListOn(
+        page: 0,
+        dateRange: dateRange,
+        searchUser: searchUser,
+      );
     });
   }
 
-  Future<List<DtPcList>> _determineAndGetIzinListOn({required int page}) async {
+  Future<List<DtPcList>> _determineAndGetDTPCListOn({
+    required int page,
+    String? searchUser,
+    DateTimeRange? dateRange,
+  }) async {
     final hrd = ref.read(userNotifierProvider).user.fin;
 
     final staff = ref.read(userNotifierProvider).user.staf!;
     final staffStr = staff.replaceAll('"', '').substring(0, staff.length - 1);
 
     if (isHrdOrSpv(hrd)) {
-      return ref.read(dtPcListRepositoryProvider).getDtPcList(page: page);
+      return ref.read(dtPcListRepositoryProvider).getDtPcList(
+            page: page,
+            searchUser: searchUser ?? '',
+            dateRange: dateRange ??
+                DateTimeRange(
+                    start: DateTime.now().subtract(Duration(days: 30)),
+                    end: DateTime.now()),
+          );
     } else {
-      return ref
-          .read(dtPcListRepositoryProvider)
-          .getDtPcListLimitedAccess(page: page, staff: staffStr);
+      return ref.read(dtPcListRepositoryProvider).getDtPcListLimitedAccess(
+            page: page,
+            staff: staffStr,
+            searchUser: searchUser ?? '',
+            dateRange: dateRange ??
+                DateTimeRange(
+                    start: DateTime.now().subtract(Duration(days: 30)),
+                    end: DateTime.now()),
+          );
     }
   }
 
@@ -71,39 +104,47 @@ class DtPcListController extends _$DtPcListController {
   }
 
   bool isSpvEdit() {
+    bool _isSpvEdit = true;
+
     final spv = ref.read(userNotifierProvider).user.spv;
     final fullAkses = ref.read(userNotifierProvider).user.fullAkses;
 
     if (spv == null) {
-      return false;
+      _isSpvEdit = false;
     }
 
     if (fullAkses! == false) {
-      return false;
+      _isSpvEdit = false;
     }
 
     if (_isAct()) {
-      return spv.contains('10,');
+      _isSpvEdit = spv!.contains('10,');
     } else {
-      return spv.contains('5013,');
+      _isSpvEdit = spv!.contains('5013,');
     }
+
+    return _isSpvEdit;
   }
 
   bool isHrdOrSpv(String? access) {
+    bool _isHrdOrSpv = true;
+
     final fullAkses = ref.read(userNotifierProvider).user.fullAkses;
 
     if (access == null) {
-      return false;
+      _isHrdOrSpv = false;
     }
 
     if (fullAkses! == false) {
-      return false;
+      _isHrdOrSpv = false;
     }
 
     if (_isAct()) {
-      return access.contains('5,');
+      _isHrdOrSpv = access!.contains('5,');
     } else {
-      return access.contains('5104,');
+      _isHrdOrSpv = access!.contains('5104,');
     }
+
+    return _isHrdOrSpv;
   }
 }

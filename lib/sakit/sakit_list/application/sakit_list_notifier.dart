@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../shared/providers.dart';
@@ -27,11 +28,19 @@ class SakitListController extends _$SakitListController {
     return _determineAndGetSakitListOn(page: 0);
   }
 
-  Future<void> load({required int page}) async {
+  Future<void> load({
+    required int page,
+    required String searchUser,
+    required DateTimeRange dateRange,
+  }) async {
     state = const AsyncLoading<List<SakitList>>().copyWithPrevious(state);
 
     state = await AsyncValue.guard(() async {
-      final res = await _determineAndGetSakitListOn(page: page);
+      final res = await _determineAndGetSakitListOn(
+        page: page,
+        dateRange: dateRange,
+        searchUser: searchUser,
+      );
 
       final List<SakitList> list = [
         ...state.requireValue.toList(),
@@ -42,27 +51,47 @@ class SakitListController extends _$SakitListController {
     });
   }
 
-  Future<void> refresh() async {
+  Future<void> refresh({
+    required String searchUser,
+    required DateTimeRange dateRange,
+  }) async {
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(() {
-      return _determineAndGetSakitListOn(page: 0);
+      return _determineAndGetSakitListOn(
+          page: 0, searchUser: searchUser, dateRange: dateRange);
     });
   }
 
-  Future<List<SakitList>> _determineAndGetSakitListOn(
-      {required int page}) async {
+  Future<List<SakitList>> _determineAndGetSakitListOn({
+    required int page,
+    String? searchUser,
+    DateTimeRange? dateRange,
+  }) async {
     final hrd = ref.read(userNotifierProvider).user.fin;
 
     final staff = ref.read(userNotifierProvider).user.staf!;
     final staffStr = staff.replaceAll('"', '').substring(0, staff.length - 1);
 
     if (isHrdOrSpv(hrd)) {
-      return ref.read(sakitListRepositoryProvider).getSakitList(page: page);
+      return ref.read(sakitListRepositoryProvider).getSakitList(
+            page: page,
+            searchUser: searchUser ?? '',
+            dateRange: dateRange ??
+                DateTimeRange(
+                    start: DateTime.now().subtract(Duration(days: 30)),
+                    end: DateTime.now()),
+          );
     } else {
-      return ref
-          .read(sakitListRepositoryProvider)
-          .getSakitListLimitedAccess(page: page, staff: staffStr);
+      return ref.read(sakitListRepositoryProvider).getSakitListLimitedAccess(
+            page: page,
+            staff: staffStr,
+            searchUser: searchUser ?? '',
+            dateRange: dateRange ??
+                DateTimeRange(
+                    start: DateTime.now().subtract(Duration(days: 30)),
+                    end: DateTime.now()),
+          );
     }
   }
 
@@ -72,39 +101,47 @@ class SakitListController extends _$SakitListController {
   }
 
   bool isSpvEdit() {
+    bool _isSpvEdit = true;
+
     final spv = ref.read(userNotifierProvider).user.spv;
     final fullAkses = ref.read(userNotifierProvider).user.fullAkses;
 
     if (spv == null) {
-      return false;
+      _isSpvEdit = false;
     }
 
     if (fullAkses! == false) {
-      return false;
+      _isSpvEdit = false;
     }
 
     if (_isAct()) {
-      return spv.contains('10,');
+      _isSpvEdit = spv!.contains('10,');
     } else {
-      return spv.contains('5010,');
+      _isSpvEdit = spv!.contains('5010,');
     }
+
+    return _isSpvEdit;
   }
 
   bool isHrdOrSpv(String? access) {
+    bool _isHrdOrSpv = true;
+
     final fullAkses = ref.read(userNotifierProvider).user.fullAkses;
 
     if (access == null) {
-      return false;
+      _isHrdOrSpv = false;
     }
 
     if (fullAkses! == false) {
-      return false;
+      _isHrdOrSpv = false;
     }
 
     if (_isAct()) {
-      return access.contains('2,');
+      _isHrdOrSpv = access!.contains('2,');
     } else {
-      return access.contains('5101,');
+      _isHrdOrSpv = access!.contains('5101,');
     }
+
+    return _isHrdOrSpv;
   }
 }

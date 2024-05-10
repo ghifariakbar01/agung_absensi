@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -82,9 +80,6 @@ class AbsenManualListController extends _$AbsenManualListController {
     final staff = ref.read(userNotifierProvider).user.staf!;
     final staffStr = staff.replaceAll('"', '').substring(0, staff.length - 1);
 
-    log('hrd $hrd');
-    log('staffStr $staffStr');
-
     if (isHrdOrSpv(hrd)) {
       return ref.read(absenManualListRepositoryProvider).getAbsenManualList(
             page: page,
@@ -116,39 +111,47 @@ class AbsenManualListController extends _$AbsenManualListController {
   }
 
   bool isSpvEdit() {
+    bool _isSpvEdit = true;
+
     final spv = ref.read(userNotifierProvider).user.spv;
     final fullAkses = ref.read(userNotifierProvider).user.fullAkses;
 
     if (spv == null) {
-      return false;
+      _isSpvEdit = false;
     }
 
     if (fullAkses! == false) {
-      return false;
+      _isSpvEdit = false;
     }
 
     if (_isAct()) {
-      return spv.contains(',10,');
+      _isSpvEdit = spv!.contains(',10,');
     } else {
-      return spv.contains(',5014,');
+      _isSpvEdit = spv!.contains(',5014,');
     }
+
+    return _isSpvEdit;
   }
 
   bool isHrdOrSpv(String? access) {
+    bool _isHrdOrSpv = true;
+
     final fullAkses = ref.read(userNotifierProvider).user.fullAkses;
 
     if (access == null) {
-      return false;
+      _isHrdOrSpv = false;
     }
 
     if (fullAkses! == false) {
-      return false;
+      _isHrdOrSpv = false;
     }
 
     if (_isAct()) {
-      return access.contains('16,');
+      _isHrdOrSpv = access!.contains('16,');
     } else {
-      return access.contains('5105,');
+      _isHrdOrSpv = access!.contains('5105,');
     }
+
+    return _isHrdOrSpv;
   }
 }

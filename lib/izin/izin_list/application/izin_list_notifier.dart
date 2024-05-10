@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../shared/providers.dart';
@@ -28,11 +29,19 @@ class IzinListController extends _$IzinListController {
     return _determineAndGetIzinListOn(page: 0);
   }
 
-  Future<void> load({required int page}) async {
+  Future<void> load({
+    required int page,
+    required String searchUser,
+    required DateTimeRange dateRange,
+  }) async {
     state = const AsyncLoading<List<IzinList>>().copyWithPrevious(state);
 
     state = await AsyncValue.guard(() async {
-      final res = await _determineAndGetIzinListOn(page: page);
+      final res = await _determineAndGetIzinListOn(
+        page: page,
+        dateRange: dateRange,
+        searchUser: searchUser,
+      );
 
       final List<IzinList> list = [
         ...state.requireValue.toList(),
@@ -47,26 +56,50 @@ class IzinListController extends _$IzinListController {
     return ref.read(izinListRepositoryProvider).getJenisIzin();
   }
 
-  Future<void> refresh() async {
+  Future<void> refresh({
+    required String searchUser,
+    required DateTimeRange dateRange,
+  }) async {
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(() {
-      return _determineAndGetIzinListOn(page: 0);
+      return _determineAndGetIzinListOn(
+        page: 0,
+        dateRange: dateRange,
+        searchUser: searchUser,
+      );
     });
   }
 
-  Future<List<IzinList>> _determineAndGetIzinListOn({required int page}) async {
+  Future<List<IzinList>> _determineAndGetIzinListOn({
+    required int page,
+    String? searchUser,
+    DateTimeRange? dateRange,
+  }) async {
     final hrd = ref.read(userNotifierProvider).user.fin;
 
     final staff = ref.read(userNotifierProvider).user.staf!;
     final staffStr = staff.replaceAll('"', '').substring(0, staff.length - 1);
 
     if (isHrdOrSpv(hrd)) {
-      return ref.read(izinListRepositoryProvider).getIzinList(page: page);
+      return ref.read(izinListRepositoryProvider).getIzinList(
+            page: page,
+            searchUser: searchUser ?? '',
+            dateRange: dateRange ??
+                DateTimeRange(
+                    start: DateTime.now().subtract(Duration(days: 30)),
+                    end: DateTime.now()),
+          );
     } else {
-      return ref
-          .read(izinListRepositoryProvider)
-          .getIzinListLimitedAccess(page: page, staff: staffStr);
+      return ref.read(izinListRepositoryProvider).getIzinListLimitedAccess(
+            page: page,
+            staff: staffStr,
+            searchUser: searchUser ?? '',
+            dateRange: dateRange ??
+                DateTimeRange(
+                    start: DateTime.now().subtract(Duration(days: 30)),
+                    end: DateTime.now()),
+          );
     }
   }
 

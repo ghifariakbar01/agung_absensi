@@ -9,6 +9,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../common/search_filter_info_widget.dart';
+import '../../../cross_auth/application/is_user_crossed.dart';
 import '../../../err_log/application/err_log_notifier.dart';
 import '../../../routes/application/route_names.dart';
 import '../../../send_wa/application/send_wa_notifier.dart';
@@ -27,34 +28,10 @@ class AbsenManualListPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen<AsyncValue>(absenManualListControllerProvider, (_, state) async {
-      return state.showAlertDialogOnError(context, ref);
-    });
-
     final sendWa = ref.watch(sendWaNotifierProvider);
     final crossAuth = ref.watch(crossAuthNotifierProvider);
     final absenManualList = ref.watch(absenManualListControllerProvider);
     final absenApprove = ref.watch(absenManualApproveControllerProvider);
-
-    ref.listen<AsyncValue>(absenManualApproveControllerProvider, (_, state) {
-      if (!state.isLoading &&
-          state.hasValue &&
-          state.value != '' &&
-          state.value != null &&
-          state.hasError == false) {
-        if (ModalRoute.of(context)?.isCurrent != true) {
-          context.pop();
-        }
-        return AlertHelper.showSnackBar(
-          context,
-          onDone: () async {
-            ref.invalidate(absenManualListControllerProvider);
-          },
-          color: Palette.primaryColor,
-          message: '${state.value} ',
-        );
-      }
-    });
 
     final scrollController = useScrollController();
     final page = useState(0);
@@ -72,12 +49,15 @@ class AbsenManualListPage extends HookConsumerWidget {
     final _lastSearch = useState('');
     final _dateTimeRange = useState(_initialDateRange);
 
+    /* 
+      _
+    */
     final _d1 = DateFormat('dd MMMM y').format(_dateTimeRange.value.start);
     final _d2 = DateFormat('dd MMMM y').format(_dateTimeRange.value.end);
 
     final _isScrollStopped = useState(false);
 
-    _resetScroll() {
+    void _resetScroll() {
       if (scrollController.hasClients) {
         _isScrollStopped.value = false;
         scrollController.jumpTo(0.0);
@@ -166,26 +146,6 @@ class AbsenManualListPage extends HookConsumerWidget {
 
     final _isAtBottom = useState(false);
 
-    ref.listen<AsyncValue>(absenManualListControllerProvider, (_, state) {
-      if (!state.isLoading &&
-          state.hasValue &&
-          state.value != '' &&
-          state.value != null &&
-          state.hasError == false) {
-        _isAtBottom.value = false;
-      }
-    });
-
-    ref.listen<AsyncValue>(crossAuthNotifierProvider, (_, state) {
-      if (!state.isLoading &&
-          state.hasValue &&
-          state.value != '' &&
-          state.value != null &&
-          state.hasError == false) {
-        ref.invalidate(absenManualListControllerProvider);
-      }
-    });
-
     Future<void> onScrolled() async {
       onScrolledVisibility();
 
@@ -203,10 +163,55 @@ class AbsenManualListPage extends HookConsumerWidget {
       }
     }
 
-    useEffect(() {
-      scrollController.addListener(onScrolled);
-      return () => scrollController.removeListener(onScrolled);
-    }, [scrollController]);
+    ref.listen<AsyncValue>(crossAuthNotifierProvider, (_, state) {
+      if (!state.isLoading &&
+          state.hasValue &&
+          state.value != '' &&
+          state.value != null &&
+          state.hasError == false) {
+        ref.invalidate(isUserCrossedProvider);
+        ref.invalidate(absenManualListControllerProvider);
+      }
+    });
+
+    ref.listen<AsyncValue>(absenManualListControllerProvider, (_, state) async {
+      if (!state.isLoading &&
+          state.hasValue &&
+          state.value != '' &&
+          state.value != null &&
+          state.hasError == false) {
+        _isAtBottom.value = false;
+      }
+
+      return state.showAlertDialogOnError(context, ref);
+    });
+
+    ref.listen<AsyncValue>(absenManualApproveControllerProvider, (_, state) {
+      if (!state.isLoading &&
+          state.hasValue &&
+          state.value != '' &&
+          state.value != null &&
+          state.hasError == false) {
+        if (ModalRoute.of(context)?.isCurrent != true) {
+          context.pop();
+        }
+        return AlertHelper.showSnackBar(
+          context,
+          onDone: () async {
+            ref.invalidate(absenManualListControllerProvider);
+          },
+          color: Palette.primaryColor,
+          message: '${state.value} ',
+        );
+      }
+    });
+
+    useEffect(
+      () {
+        scrollController.addListener(onScrolled);
+        return () => scrollController.removeListener(onScrolled);
+      },
+    );
 
     final infoMessage =
         "1. Absen Manual Di input Maks H=0 dan di approve oleh atasan dan HR maks H+1\n"
@@ -215,110 +220,160 @@ class AbsenManualListPage extends HookConsumerWidget {
         "4. Absen Lainnya / Kasus : untuk kasus-kasus tidak melakukan finger print karena listrik mati, mesin error / rusak, sidik jari tidak terbaca, lupa absen, jaringan trouble / internet mati saat akan input absen manual dll.";
 
     final errLog = ref.watch(errLogControllerProvider);
+    final _isUserCrossed = ref.watch(isUserCrossedProvider);
 
     return VAsyncWidgetScaffold<void>(
       value: errLog,
       data: (_) => VAsyncWidgetScaffold(
-        value: absenApprove,
+        value: crossAuth,
         data: (_) => VAsyncWidgetScaffold(
           value: sendWa,
           data: (_) => VAsyncWidgetScaffold(
-            value: crossAuth,
-            data: (_) => VScaffoldTabLayout(
-              scaffoldTitle: 'Absen Manual',
-              additionalInfo: VAdditionalInfo(infoMessage: infoMessage),
-              scaffoldFAB: FloatingActionButton.small(
-                  backgroundColor: Palette.primaryColor,
-                  child: Icon(
-                    Icons.add,
-                    color: Colors.white,
-                  ),
-                  onPressed: () => context.pushNamed(
-                        RouteNames.createAbsenManualNameRoute,
-                      )),
-              currPT: _initialDropdown,
-              onPageChanged: onRefresh,
-              onFieldSubmitted: onFieldSubmitted,
-              onFilterSelected: onFilterSelected,
-              initialDateRange: _dateTimeRange.value,
-              onDropdownChanged: onDropdownChanged,
-              scaffoldBody: [
-                Stack(
-                  children: [
-                    VAsyncValueWidget<List<AbsenManualList>>(
-                        value: absenManualList,
-                        data: (list) {
-                          final waiting = list
-                              .where((e) =>
-                                  (e.spvSta == false || e.hrdSta == false) &&
-                                  e.btlSta == false)
-                              .toList();
-                          return _list(scrollController, waiting, onRefresh);
-                        }),
-                    Positioned(
-                        bottom: 20,
-                        left: 10,
-                        child: SearchFilterInfoWidget(
-                          d1: _d1,
-                          d2: _d2,
-                          lastSearch: _lastSearch.value,
-                          isScrolling: _isScrollStopped.value,
-                        ))
-                  ],
-                ),
-                Stack(
-                  children: [
-                    VAsyncValueWidget<List<AbsenManualList>>(
-                        value: absenManualList,
-                        data: (list) {
-                          final approved = list
-                              .where((e) =>
-                                  (e.spvSta == true && e.hrdSta == true) &&
-                                  e.btlSta == false)
-                              .toList();
-                          return _list(scrollController, approved, onRefresh);
-                        }),
-                    Positioned(
-                        bottom: 20,
-                        left: 10,
-                        child: SearchFilterInfoWidget(
-                          d1: _d1,
-                          d2: _d2,
-                          lastSearch: _lastSearch.value,
-                          isScrolling: _isScrollStopped.value,
-                        ))
-                  ],
-                ),
-                Stack(
-                  children: [
-                    VAsyncValueWidget<List<AbsenManualList>>(
-                        value: absenManualList,
-                        data: (list) {
-                          final cancelled =
-                              list.where((e) => e.btlSta == true).toList();
-                          return _list(scrollController, cancelled, onRefresh);
-                        }),
-                    Positioned(
-                        bottom: 20,
-                        left: 10,
-                        child: SearchFilterInfoWidget(
-                          d1: _d1,
-                          d2: _d2,
-                          lastSearch: _lastSearch.value,
-                          isScrolling: _isScrollStopped.value,
-                        ))
-                  ],
-                ),
-              ],
-            ),
+            value: absenApprove,
+            data: (_) => VAsyncWidgetScaffold<IsUserCrossedState>(
+                value: _isUserCrossed,
+                data: (data) {
+                  final _isCrossed = data.when(
+                    crossed: () => true,
+                    notCrossed: () => false,
+                  );
+
+                  return WillPopScope(
+                    onWillPop: () async {
+                      final user = ref.read(userNotifierProvider).user;
+
+                      if (_isCrossed) {
+                        await ref
+                            .read(crossAuthNotifierProvider.notifier)
+                            .uncross(
+                              userId: user.nama!,
+                              password: user.password!,
+                            );
+                      }
+
+                      return true;
+                    },
+                    child: VScaffoldTabLayout(
+                      scaffoldTitle: 'Absen Manual',
+                      additionalInfo: VAdditionalInfo(infoMessage: infoMessage),
+                      scaffoldFAB: _isCrossed
+                          ? Container()
+                          : FloatingActionButton.small(
+                              backgroundColor: Palette.primaryColor,
+                              child: Icon(
+                                Icons.add,
+                                color: Colors.white,
+                              ),
+                              onPressed: () => context.pushNamed(
+                                    RouteNames.createAbsenManualNameRoute,
+                                  )),
+                      currPT: _initialDropdown,
+                      onPageChanged: onRefresh,
+                      onFieldSubmitted: onFieldSubmitted,
+                      onFilterSelected: onFilterSelected,
+                      onDropdownChanged: onDropdownChanged,
+                      initialDateRange: _dateTimeRange.value,
+                      scaffoldBody: [
+                        Stack(
+                          children: [
+                            VAsyncValueWidget<List<AbsenManualList>>(
+                                value: absenManualList,
+                                data: (list) {
+                                  final waiting = list
+                                      .where((e) =>
+                                          (e.spvSta == false ||
+                                              e.hrdSta == false) &&
+                                          e.btlSta == false)
+                                      .toList();
+                                  return _list(
+                                    _isCrossed,
+                                    waiting,
+                                    onRefresh,
+                                    scrollController,
+                                  );
+                                }),
+                            Positioned(
+                                bottom: 20,
+                                left: 10,
+                                child: SearchFilterInfoWidget(
+                                  d1: _d1,
+                                  d2: _d2,
+                                  lastSearch: _lastSearch.value,
+                                  isScrolling: _isScrollStopped.value,
+                                ))
+                          ],
+                        ),
+                        Stack(
+                          children: [
+                            VAsyncValueWidget<List<AbsenManualList>>(
+                                value: absenManualList,
+                                data: (list) {
+                                  final approved = list
+                                      .where((e) =>
+                                          (e.spvSta == true &&
+                                              e.hrdSta == true) &&
+                                          e.btlSta == false)
+                                      .toList();
+                                  return _list(
+                                    _isCrossed,
+                                    approved,
+                                    onRefresh,
+                                    scrollController,
+                                  );
+                                }),
+                            Positioned(
+                                bottom: 20,
+                                left: 10,
+                                child: SearchFilterInfoWidget(
+                                  d1: _d1,
+                                  d2: _d2,
+                                  lastSearch: _lastSearch.value,
+                                  isScrolling: _isScrollStopped.value,
+                                ))
+                          ],
+                        ),
+                        Stack(
+                          children: [
+                            VAsyncValueWidget<List<AbsenManualList>>(
+                                value: absenManualList,
+                                data: (list) {
+                                  final cancelled = list
+                                      .where((e) => e.btlSta == true)
+                                      .toList();
+                                  return _list(
+                                    _isCrossed,
+                                    cancelled,
+                                    onRefresh,
+                                    scrollController,
+                                  );
+                                }),
+                            Positioned(
+                                bottom: 20,
+                                left: 10,
+                                child: SearchFilterInfoWidget(
+                                  d1: _d1,
+                                  d2: _d2,
+                                  lastSearch: _lastSearch.value,
+                                  isScrolling: _isScrollStopped.value,
+                                ))
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                }),
           ),
         ),
       ),
     );
   }
 
-  Widget _list(ScrollController scrollController, List<AbsenManualList> list,
-      Future<void> Function() onRefresh) {
+  Widget _list(
+    bool _isCrossed,
+    List<AbsenManualList> list,
+    Future<void> Function() onRefresh,
+    ScrollController scrollController,
+  ) {
     return RefreshIndicator(
       onRefresh: onRefresh,
       child: ListView.separated(
@@ -334,6 +389,26 @@ class AbsenManualListPage extends HookConsumerWidget {
               : index == 0
                   ? Column(
                       children: [
+                        if (_isCrossed) ...[
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 10.0, left: 16.0, right: 16.0, bottom: 0),
+                            child: Container(
+                                height: 35,
+                                padding: EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: Palette.greyDisabled.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Sedang Melintas Server',
+                                    style: Themes.customColor(8,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                )),
+                          )
+                        ],
                         SizedBox(
                           height: 10,
                         ),

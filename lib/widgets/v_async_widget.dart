@@ -34,6 +34,7 @@ class VAsyncWidgetScaffold<T> extends StatelessWidget {
         return Center(child: ErrorMessageWidget(errorMessage: errMessage));
       },
       loading: () => VScaffoldWidget(
+        isLoading: true,
         scaffoldTitle: 'Loading ...',
         scaffoldBody: Center(child: CircularProgressIndicator()),
       ),

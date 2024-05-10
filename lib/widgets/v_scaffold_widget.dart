@@ -9,7 +9,9 @@ class VScaffoldWidget extends StatelessWidget {
       {required this.scaffoldTitle,
       required this.scaffoldBody,
       this.scaffoldFAB,
-      this.appbarColor});
+      this.appbarColor,
+      this.isLoading});
+  final bool? isLoading;
   final Color? appbarColor;
   final String scaffoldTitle;
   final Widget scaffoldBody;
@@ -19,6 +21,8 @@ class VScaffoldWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading:
+              isLoading == null ? true : isLoading == false,
           elevation: 0,
           backgroundColor: appbarColor ?? Palette.primaryColor,
           iconTheme: IconThemeData(color: Colors.white),
@@ -180,24 +184,23 @@ class VScaffoldTabLayout extends HookWidget {
             elevation: 0,
             backgroundColor: appbarColor ?? Palette.primaryColor,
             iconTheme: IconThemeData(color: Colors.white),
-            bottom: TabBar(
-              padding: EdgeInsets.only(bottom: 5),
-              controller: controller,
-              onTap: (value) {
-                controller.animateTo(value);
-              },
-              indicatorColor: Colors.transparent,
-              overlayColor: MaterialStatePropertyAll(Colors.transparent),
-              tabs: [
-                if (_isSearching.value) ...[
-                  tabs()[changingIndex.value]
-                ] else ...[
-                  for (int i = 0; i < (length == null ? 3 : length!); i++) ...[
-                    tabs()[i]
-                  ]
-                ]
-              ],
-            ),
+            bottom: _isSearching.value
+                ? PreferredSize(
+                    preferredSize: Size(double.infinity, 16), child: SizedBox())
+                : TabBar(
+                    padding: EdgeInsets.only(bottom: 5),
+                    controller: controller,
+                    onTap: (value) {
+                      controller.animateTo(value);
+                    },
+                    indicatorColor: Colors.transparent,
+                    overlayColor: MaterialStatePropertyAll(Colors.transparent),
+                    tabs: [
+                      for (int i = 0;
+                          i < (length == null ? 3 : length!);
+                          i++) ...[tabs()[i]]
+                    ],
+                  ),
             leadingWidth: 20,
             leading: _isSearching.value ? Container() : null,
             title: _isSearching.value
@@ -224,6 +227,10 @@ class VScaffoldTabLayout extends HookWidget {
                       onTapOutside: (_) {
                         _isSearching.value = false;
                         _searchFocus.unfocus();
+                      },
+                      onTap: () {
+                        _isSearching.value = true;
+                        _searchFocus.requestFocus();
                       },
                       onFieldSubmitted: (value) {
                         if (onFieldSubmitted != null) {
@@ -295,7 +302,6 @@ class VScaffoldTabLayout extends HookWidget {
                 */
                 IconButton(
                     onPressed: () async {
-                      final _oneYear = Duration(days: 365);
                       final _oneMonth = Duration(days: 30);
 
                       final picked = await showDateRangePicker(
@@ -304,8 +310,8 @@ class VScaffoldTabLayout extends HookWidget {
                               DateTimeRange(
                                   start: DateTime.now().subtract(_oneMonth),
                                   end: DateTime.now().add(_oneMonth)),
-                          firstDate: DateTime.now().subtract(_oneYear),
-                          lastDate: DateTime.now().add(_oneYear));
+                          firstDate: DateTime.now().subtract(_oneMonth),
+                          lastDate: DateTime.now());
 
                       if (picked != null) {
                         print(picked);
