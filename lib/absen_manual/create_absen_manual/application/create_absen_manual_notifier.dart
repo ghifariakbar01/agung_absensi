@@ -95,8 +95,6 @@ class CreateAbsenManualNotifier extends _$CreateAbsenManualNotifier {
     state = const AsyncLoading();
 
     try {
-      debugger();
-
       if (jenisAbsen.toLowerCase() == 'lln') {
         state = await AsyncValue.guard(() async {
           await ref.read(createAbsenManualRepositoryProvider).submitAbsenManual(

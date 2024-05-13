@@ -170,7 +170,7 @@ class CutiListItem extends HookConsumerWidget {
                               height: 2,
                             ),
                             Text(
-                              item.fullname!,
+                              item.cUser!,
                               style: Themes.customColor(9,
                                   color: item.btlSta == true
                                       ? Colors.white

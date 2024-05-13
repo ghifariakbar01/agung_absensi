@@ -137,19 +137,15 @@ class GantiHariApproveController extends _$GantiHariApproveController {
     state = const AsyncLoading();
 
     try {
-      debugger();
-
       await ref.read(gantiHariApproveRepositoryProvider).batal(
             nama: nama,
             itemGantiHari: itemGantiHari,
           );
 
       final String messageContent =
-          ' (Testing Apps) Izin Cuti Anda Telah Di Batalkan Oleh : $nama ';
+          ' (Testing Apps) Izin Ganti Hari Anda Telah Di Batalkan Oleh : $nama ';
       await _sendWa(
           itemGantiHari: itemGantiHari, messageContent: messageContent);
-
-      debugger();
 
       state = AsyncData<void>('Sukses Membatalkan Form Ganti Hari');
     } catch (e) {

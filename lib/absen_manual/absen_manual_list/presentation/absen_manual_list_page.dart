@@ -37,8 +37,9 @@ class AbsenManualListPage extends HookConsumerWidget {
     final page = useState(0);
 
     final _oneMonth = Duration(days: 30);
+    final _oneDay = Duration(days: 1);
     final _initialDateRange = DateTimeRange(
-      end: DateTime.now(),
+      end: DateTime.now().add(_oneDay),
       start: DateTime.now().subtract(_oneMonth),
     );
 
@@ -129,17 +130,11 @@ class AbsenManualListPage extends HookConsumerWidget {
     };
 
     void onScrolledVisibility() {
-      final _isScrolling = scrollController.position.isScrollingNotifier.value;
-
       scrollController.position.isScrollingNotifier.addListener(() {
-        if (_isScrolling) {
-          Future.delayed(
-              Duration(milliseconds: 500), () => _isScrollStopped.value = true);
+        if (scrollController.position.pixels > 0.0) {
+          _isScrollStopped.value = true;
         } else {
-          if (scrollController.position.atEdge) {
-            Future.delayed(Duration(milliseconds: 500),
-                () => _isScrollStopped.value = false);
-          }
+          _isScrollStopped.value = false;
         }
       });
     }

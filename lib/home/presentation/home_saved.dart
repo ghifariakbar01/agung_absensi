@@ -32,19 +32,7 @@ class _HomeSavedState extends ConsumerState<HomeSaved> {
                       noConnection: () => ref
                           .read(absenOfflineModeProvider.notifier)
                           .state = true,
-                      orElse: () => showDialog(
-                          context: context,
-                          barrierDismissible: true,
-                          builder: (_) => VSimpleDialog(
-                                asset: Assets.iconCrossed,
-                                label: 'Error',
-                                labelDescription: failure.maybeMap(
-                                  server: (server) => 'Error $server',
-                                  passwordExpired: (password) => '$password',
-                                  passwordWrong: (password) => '$password',
-                                  orElse: () => '',
-                                ),
-                              )),
+                      orElse: () => _onErrElse,
                     ),
                 (_) {})));
 
@@ -55,5 +43,21 @@ class _HomeSavedState extends ConsumerState<HomeSaved> {
     final errLog = ref.watch(errLogControllerProvider);
     return VAsyncWidgetScaffold<void>(
         value: errLog, data: (_) => HomeScaffold());
+  }
+
+  _onErrElse(AbsenFailure failure) {
+    return showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (_) => VSimpleDialog(
+              asset: Assets.iconCrossed,
+              label: 'Error',
+              labelDescription: failure.maybeMap(
+                server: (server) => 'Error $server',
+                passwordExpired: (password) => '$password',
+                passwordWrong: (password) => '$password',
+                orElse: () => '',
+              ),
+            ));
   }
 }

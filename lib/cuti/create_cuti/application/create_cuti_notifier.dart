@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:dartz/dartz.dart';
+import 'package:face_net_authentication/cuti/cuti_list/application/cuti_list_notifier.dart';
 import 'package:face_net_authentication/mst_karyawan_cuti/application/mst_karyawan_cuti_notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -201,7 +204,7 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
 
     final hrd = ref.read(userNotifierProvider).user.fin;
 
-    if (!isHrdOrSpv(hrd)) {
+    if (!ref.read(cutiListControllerProvider.notifier).isHrdOrSpv(hrd)) {
       await _notHrCondition(
           jenisCuti: jenisCuti,
           jumlahhari: jumlahhari,
@@ -292,9 +295,9 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
             tglAkhirInDateTime: tglAkhirInDateTime,
           );
 
-      final String messageContent =
-          " ( Testing Apps ) Terdapat Waiting Approve Pengajuan Cuti Baru Telah Diinput Oleh : $cUser ";
-      await _sendWaToHead(idUser: idUser, messageContent: messageContent);
+      // final String messageContent =
+      //     " ( Testing Apps ) Terdapat Waiting Approve Pengajuan Cuti Baru Telah Diinput Oleh : $cUser ";
+      // await _sendWaToHead(idUser: idUser, messageContent: messageContent);
 
       return Future.value(unit);
     });
@@ -323,7 +326,7 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
 
     final hrd = ref.read(userNotifierProvider).user.fin;
 
-    if (!isHrdOrSpv(hrd)) {
+    if (!ref.read(cutiListControllerProvider.notifier).isHrdOrSpv(hrd)) {
       await _notHrCondition(
           jenisCuti: jenisCuti,
           jumlahhari: jumlahhari,
@@ -482,7 +485,10 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
 
       if (mstCuti.cutiBaru! > 0 && tglStartLebihDariTglMasuk) {
         await ref.read(createCutiRepositoryProvider).resetCutiTahunMasuk(
-            idUser: idUser, nama: nama, masuk: create.masuk!);
+              masuk: create.masuk!,
+              nama: nama,
+              idUser: idUser,
+            );
       }
     }
 
@@ -514,7 +520,10 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
 
       if (mstCuti.cutiTidakBaru! > 0 && tglStartLebihDariTglMasuk) {
         await ref.read(createCutiRepositoryProvider).resetCutiSatuTahunLebih(
-            idUser: idUser, nama: nama, masuk: create.masuk!);
+              masuk: create.masuk!,
+              idUser: idUser,
+              nama: nama,
+            );
       }
     }
 
@@ -547,7 +556,10 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
 
       if (mstCuti.cutiTidakBaru! > 0 && tglStartLebihDariDateMax) {
         await ref.read(createCutiRepositoryProvider).resetCutiDuaTahunLebih(
-            idUser: idUser, nama: nama, masuk: create.masuk!);
+              masuk: create.masuk!,
+              idUser: idUser,
+              nama: nama,
+            );
       }
     }
   }
@@ -600,27 +612,7 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
 
   bool _isAct() {
     final server = ref.read(userNotifierProvider).user.ptServer;
-    return server == 'gs_12';
-  }
-
-  bool isHrdOrSpv(String? access) {
-    final special = ref.read(userNotifierProvider).user.fullAkses;
-
-    if (access == null) {
-      return false;
-    }
-
-    if (special == true) {
-      return true;
-    }
-    // verify below,
-    // in case have access
-
-    if (_isAct()) {
-      return access.contains('2,');
-    } else {
-      return access.contains('5101,');
-    }
+    return server != 'gs_18';
   }
 
   int _getJumlahHari(CreateSakit create, DateTime tglAwalInDateTime,

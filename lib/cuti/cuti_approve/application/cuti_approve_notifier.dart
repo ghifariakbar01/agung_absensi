@@ -1,7 +1,5 @@
-import 'dart:developer';
-
-import 'package:face_net_authentication/cuti/create_cuti/application/create_cuti_notifier.dart';
 import 'package:face_net_authentication/cuti/cuti_approve/infrastructure/cuti_approve_remote_service.dart.dart';
+import 'package:face_net_authentication/cuti/cuti_list/application/cuti_list_notifier.dart';
 import 'package:face_net_authentication/sakit/create_sakit/application/create_sakit_notifier.dart';
 import 'package:face_net_authentication/send_wa/application/phone_num.dart';
 import 'package:face_net_authentication/send_wa/application/send_wa_notifier.dart';
@@ -345,8 +343,6 @@ class CutiApproveController extends _$CutiApproveController {
         }
       }
 
-      debugger();
-
       await ref.read(cutiApproveRepositoryProvider).batal(
             nama: nama,
             itemCuti: itemCuti,
@@ -355,8 +351,6 @@ class CutiApproveController extends _$CutiApproveController {
       final String messageContent =
           ' (Testing Apps) Izin Cuti Anda Telah Di Batalkan Oleh : $nama ';
       await _sendWa(itemCuti: itemCuti, messageContent: messageContent);
-
-      debugger();
 
       state = AsyncData<void>('Sukses Membatalkan Form Cuti');
     } catch (e) {
@@ -394,7 +388,7 @@ class CutiApproveController extends _$CutiApproveController {
     }
 
     final spv = ref.read(userNotifierProvider).user.spv;
-    if (ref.read(createCutiNotifierProvider.notifier).isHrdOrSpv(spv) ==
+    if (ref.read(cutiListControllerProvider.notifier).isHrdOrSpv(spv) ==
         false) {
       approveSpv = false;
     }
@@ -440,7 +434,7 @@ class CutiApproveController extends _$CutiApproveController {
     }
 
     final user = ref.read(userNotifierProvider).user;
-    if (ref.read(createCutiNotifierProvider.notifier).isHrdOrSpv(user.fin) ==
+    if (ref.read(cutiListControllerProvider.notifier).isHrdOrSpv(user.fin) ==
         false) {
       approveHrd = false;
     }

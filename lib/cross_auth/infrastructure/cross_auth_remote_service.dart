@@ -125,6 +125,9 @@ class CrossAuthRemoteService {
       final response = await _dio.post('',
           data: jsonEncode(data), options: Options(contentType: 'text/plain'));
 
+      log('data $data');
+      log('response $response');
+
       final items = response.data?[0];
 
       if (items['status'] == 'Success') {

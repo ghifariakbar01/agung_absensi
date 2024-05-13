@@ -520,7 +520,7 @@ class EditTugasDinasPage extends HookConsumerWidget {
                                           jenisTugasDinasTextController.text,
                                       perusahaan: perusahaanTextController.text,
                                       lokasi: alamatTextController.text,
-                                      khusus: khusus.value,
+                                      khusus: khusus.value ?? false,
                                       jamAkhir: jamAkhirTextController.value!,
                                       ket: keteranganTextController.text,
                                       onError: (msg) =>

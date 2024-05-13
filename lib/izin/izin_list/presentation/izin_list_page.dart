@@ -33,8 +33,9 @@ class IzinListPage extends HookConsumerWidget {
     final crossAuth = ref.watch(crossAuthNotifierProvider);
 
     final _oneMonth = Duration(days: 30);
+    final _oneDay = Duration(days: 1);
     final _initialDateRange = DateTimeRange(
-      end: DateTime.now(),
+      end: DateTime.now().add(_oneDay),
       start: DateTime.now().subtract(_oneMonth),
     );
     /* 
@@ -134,17 +135,11 @@ class IzinListPage extends HookConsumerWidget {
     };
 
     void onScrolledVisibility() {
-      final _isScrolling = scrollController.position.isScrollingNotifier.value;
-
       scrollController.position.isScrollingNotifier.addListener(() {
-        if (_isScrolling) {
-          Future.delayed(
-              Duration(milliseconds: 500), () => _isScrollStopped.value = true);
+        if (scrollController.position.pixels > 0.0) {
+          _isScrollStopped.value = true;
         } else {
-          if (scrollController.position.atEdge) {
-            Future.delayed(Duration(milliseconds: 500),
-                () => _isScrollStopped.value = false);
-          }
+          _isScrollStopped.value = false;
         }
       });
     }
@@ -256,15 +251,17 @@ class IzinListPage extends HookConsumerWidget {
                     data: (_) => VScaffoldTabLayout(
                       scaffoldTitle: 'List Form Izin',
                       additionalInfo: VAdditionalInfo(infoMessage: infoMessage),
-                      scaffoldFAB: FloatingActionButton.small(
-                          backgroundColor: Palette.primaryColor,
-                          child: Icon(
-                            Icons.add,
-                            color: Colors.white,
-                          ),
-                          onPressed: () => context.pushNamed(
-                                RouteNames.createIzinNameRoute,
-                              )),
+                      scaffoldFAB: _isCrossed
+                          ? Container()
+                          : FloatingActionButton.small(
+                              backgroundColor: Palette.primaryColor,
+                              child: Icon(
+                                Icons.add,
+                                color: Colors.white,
+                              ),
+                              onPressed: () => context.pushNamed(
+                                    RouteNames.createIzinNameRoute,
+                                  )),
                       currPT: _initialDropdown,
                       onPageChanged: onPageChanged,
                       onFieldSubmitted: onFieldSubmitted,
@@ -284,7 +281,11 @@ class IzinListPage extends HookConsumerWidget {
                                           e.btlSta == false)
                                       .toList();
                                   return _list(
-                                      scrollController, waiting, onRefresh);
+                                    _isCrossed,
+                                    waiting,
+                                    onRefresh,
+                                    scrollController,
+                                  );
                                 }),
                             Positioned(
                                 bottom: 20,
@@ -309,7 +310,11 @@ class IzinListPage extends HookConsumerWidget {
                                           e.btlSta == false)
                                       .toList();
                                   return _list(
-                                      scrollController, approved, onRefresh);
+                                    _isCrossed,
+                                    approved,
+                                    onRefresh,
+                                    scrollController,
+                                  );
                                 }),
                             Positioned(
                                 bottom: 20,
@@ -331,7 +336,11 @@ class IzinListPage extends HookConsumerWidget {
                                       .where((e) => e.btlSta == true)
                                       .toList();
                                   return _list(
-                                      scrollController, cancelled, onRefresh);
+                                    _isCrossed,
+                                    cancelled,
+                                    onRefresh,
+                                    scrollController,
+                                  );
                                 }),
                             Positioned(
                                 bottom: 20,
@@ -354,8 +363,12 @@ class IzinListPage extends HookConsumerWidget {
     );
   }
 
-  Widget _list(ScrollController scrollController, List<IzinList> list,
-      Future<void> Function() onRefresh) {
+  Widget _list(
+    bool _isCrossed,
+    List<IzinList> list,
+    Future<void> Function() onRefresh,
+    ScrollController scrollController,
+  ) {
     return RefreshIndicator(
       onRefresh: onRefresh,
       child: ListView.separated(
@@ -371,6 +384,29 @@ class IzinListPage extends HookConsumerWidget {
               : index == 0
                   ? Column(
                       children: [
+                        if (_isCrossed) ...[
+                          Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 10.0,
+                                  left: 16.0,
+                                  right: 16.0,
+                                  bottom: 0),
+                              child: Container(
+                                  height: 35,
+                                  padding: EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color:
+                                        Palette.greyDisabled.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      'Sedang Melintas Server',
+                                      style: Themes.customColor(8,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ))),
+                        ],
                         SizedBox(
                           height: 10,
                         ),

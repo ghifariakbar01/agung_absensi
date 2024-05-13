@@ -1,9 +1,11 @@
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
+import 'package:face_net_authentication/widgets/v_async_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../constants/assets.dart';
 import '../../copyright/presentation/copyright_page.dart';
+import '../../cross_auth/application/cross_auth_notifier.dart';
 import '../../routes/application/route_names.dart';
 import '../../shared/providers.dart';
 import '../../style/style.dart';
@@ -79,21 +81,6 @@ class HomeScaffold extends ConsumerWidget {
       ),
     );
 
-    // ref.listen<AsyncValue>(themeControllerProvider, (_, state) async {
-    //   if (!state.isLoading && state.hasValue && state.value != null) {
-    //     // ignore: unused_result
-    //     ref.refresh(themeNotifierProvider);
-    //   } else {
-    //     return state.showAlertDialogOnError(context, ref);
-    //   }
-    // });
-
-    // final themeController = ref.watch(themeControllerProvider);
-
-    // VAsyncWidgetScaffold<void>(
-    //   value: themeController,
-    //   data: (_) =>
-
     ref.listen<AsyncValue<WaRegister>>(waRegisterNotifierProvider,
         (_, state) async {
       if (!state.isLoading && state.hasValue && state.value != null) {
@@ -122,91 +109,98 @@ class HomeScaffold extends ConsumerWidget {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
 
+    final crossAuth = ref.watch(crossAuthNotifierProvider);
+
     return Scaffold(
       appBar: HomeAppBar(),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: SizedBox(
-            height: height,
-            width: width,
-            child: RefreshIndicator(
-              onRefresh: onRefresh,
-              child: ListView(
-                children: [
-                  const AppLogo(),
-                  const SizedBox(height: 24),
-                  Testing(),
+      body: VAsyncValueWidget(
+        value: crossAuth,
+        data: (_) => SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: SizedBox(
+              height: height,
+              width: width,
+              child: RefreshIndicator(
+                onRefresh: onRefresh,
+                child: ListView(
+                  children: [
+                    const AppLogo(),
+                    const SizedBox(height: 24),
+                    Testing(),
 
-                  const SizedBox(height: 24),
-                  ...isTester.maybeWhen(
-                      tester: () {
-                        return [
-                          Text(
-                            'Toggle Location',
-                            style: Themes.customColor(10,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          HomeTesterOn(),
-                        ];
-                      },
-                      orElse: user.user.nama == 'Ghifar'
-                          ? () {
-                              return [
-                                Text(
-                                  'Toggle Location',
-                                  style: Themes.customColor(10,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                SizedBox(
-                                  height: 8,
-                                ),
-                                HomeTesterOff(),
-                              ];
-                            }
-                          : () {
-                              return [Container()];
-                            }
+                    const SizedBox(height: 24),
+                    ...isTester.maybeWhen(
+                        tester: () {
+                          return [
+                            Text(
+                              'Toggle Location',
+                              style: Themes.customColor(10,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(
+                              height: 8,
+                            ),
+                            HomeTesterOn(),
+                          ];
+                        },
+                        orElse: user.user.nama == 'Ghifar'
+                            ? () {
+                                return [
+                                  Text(
+                                    'Toggle Location',
+                                    style: Themes.customColor(10,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  SizedBox(
+                                    height: 8,
+                                  ),
+                                  HomeTesterOff(),
+                                ];
+                              }
+                            : () {
+                                return [Container()];
+                              }
 
-                      //
-                      ),
-                  HomeWa(onRefresh),
-                  // ...categories(title: 'Admin', width: width, item: admin),
-                  ...categories(
-                      title: 'Attendance', width: width, item: attendance),
-                  ...categories(
-                      title: 'Leave Request', width: width, item: leaveRequest),
-                  ...categories(
-                      title: 'Activity', width: width, item: activity),
-                  ...categories(title: 'Others', width: width, item: others),
-                  const SizedBox(height: 15),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Center(child: CopyrightAgung()),
-                      Center(
-                        child: SelectableText(
-                          'APP VERSION: ${packageInfo.when(
-                            loading: () => '',
-                            data: (packageInfo) => packageInfo,
-                            error: (error, stackTrace) =>
-                                'Error: $error StackTrace: $stackTrace',
-                          )}',
-                          textAlign: TextAlign.center,
-                          maxLines: 2,
-                          style: Themes.customColor(
-                            8,
-                            fontWeight: FontWeight.bold,
+                        //
+                        ),
+                    HomeWa(onRefresh),
+                    // ...categories(title: 'Admin', width: width, item: admin),
+                    ...categories(
+                        title: 'Attendance', width: width, item: attendance),
+                    ...categories(
+                        title: 'Leave Request',
+                        width: width,
+                        item: leaveRequest),
+                    ...categories(
+                        title: 'Activity', width: width, item: activity),
+                    ...categories(title: 'Others', width: width, item: others),
+                    const SizedBox(height: 15),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Center(child: CopyrightAgung()),
+                        Center(
+                          child: SelectableText(
+                            'APP VERSION: ${packageInfo.when(
+                              loading: () => '',
+                              data: (packageInfo) => packageInfo,
+                              error: (error, stackTrace) =>
+                                  'Error: $error StackTrace: $stackTrace',
+                            )}',
+                            textAlign: TextAlign.center,
+                            maxLines: 2,
+                            style: Themes.customColor(
+                              8,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

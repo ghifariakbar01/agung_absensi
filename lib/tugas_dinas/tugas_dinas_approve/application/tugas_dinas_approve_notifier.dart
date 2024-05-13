@@ -37,9 +37,13 @@ class TugasDinasApproveController extends _$TugasDinasApproveController {
       noTelp2: item.noTelp2,
     );
 
+    if (item.idDept == null) {
+      throw AssertionError('id Dept dari ${item.cUser} null');
+    }
+
     return ref.read(sendWaNotifierProvider.notifier).processAndSendWa(
         idUser: item.idUser,
-        idDept: item.idDept,
+        idDept: item.idDept!,
         phoneNum: phoneNum,
         messageContent: messageContent);
   }

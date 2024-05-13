@@ -26,7 +26,6 @@ class CreateDtPcRemoteService {
     required String kategori,
     required String cUser,
   }) async {
-    debugger();
     try {
       final Map<String, String> submitSakit = {
         "command": "INSERT INTO $dbName ("
@@ -56,7 +55,6 @@ class CreateDtPcRemoteService {
 
       final data = _dioRequest;
       data.addAll(submitSakit);
-      debugger();
 
       final response = await _dio.post('',
           data: jsonEncode(data), options: Options(contentType: 'text/plain'));

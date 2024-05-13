@@ -311,7 +311,7 @@ class VScaffoldTabLayout extends HookWidget {
                                   start: DateTime.now().subtract(_oneMonth),
                                   end: DateTime.now().add(_oneMonth)),
                           firstDate: DateTime.now().subtract(_oneMonth),
-                          lastDate: DateTime.now());
+                          lastDate: DateTime.now().add(Duration(days: 1)));
 
                       if (picked != null) {
                         print(picked);
@@ -334,6 +334,9 @@ class VScaffoldTabLayout extends HookWidget {
 
                       _searchFocus.requestFocus();
                     },
+                    color: _searchController.text.isNotEmpty
+                        ? Palette.orange
+                        : null,
                     icon: Icon(Icons.search)),
                 additionalInfo != null ? additionalInfo! : Container(),
                 NetworkWidget(),

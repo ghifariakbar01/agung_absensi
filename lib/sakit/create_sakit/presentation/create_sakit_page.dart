@@ -204,10 +204,13 @@ class CreateSakitPage extends HookConsumerWidget {
                         Ink(
                           child: InkWell(
                             onTap: () async {
+                              final _oneMonth = Duration(days: 30);
+                              final _threeDays = Duration(days: 3);
+
                               final picked = await showDateRangePicker(
                                 context: context,
-                                lastDate: DateTime.now(),
-                                firstDate: new DateTime(2021),
+                                lastDate: DateTime.now().add(_threeDays),
+                                firstDate: DateTime.now().subtract(_oneMonth),
                               );
                               if (picked != null) {
                                 print(picked);

@@ -81,8 +81,6 @@ class CreateDtPcNotifier extends _$CreateDtPcNotifier {
     state = const AsyncLoading();
 
     try {
-      debugger();
-
       final CreateSakit create = await ref
           .read(createSakitNotifierProvider.notifier)
           .getCreateSakit(

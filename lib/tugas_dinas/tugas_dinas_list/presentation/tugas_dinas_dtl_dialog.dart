@@ -20,7 +20,7 @@ class TugasDinasDtlDialog extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // tambah coo
-    final bool isHrdApproved = item.hrdSta;
+    final bool isHrdApproved = item.hrdSta ?? false;
 
     final String? fin = ref.watch(userNotifierProvider).user.fin;
     final bool isHrd =
@@ -33,7 +33,7 @@ class TugasDinasDtlDialog extends ConsumerWidget {
     final bool isCurrentUser =
         ref.watch(userNotifierProvider).user.idUser == item.idUser;
 
-    final bool isSpvApproved = item.spvSta;
+    final bool isSpvApproved = item.spvSta ?? false;
     final bool isSpvEditable =
         ref.watch(tugasDinasListControllerProvider.notifier).isSpvEdit();
 

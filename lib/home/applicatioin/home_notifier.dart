@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../constants/assets.dart';
+import '../../cross_auth/application/cross_auth_notifier.dart';
 import '../../permission/application/shared/permission_introduction_providers.dart';
 import '../../routes/application/route_names.dart';
 import '../../tester/application/tester_state.dart';
@@ -24,16 +25,19 @@ class HomeNotifier extends StateNotifier<HomeState> {
     state = const HomeState.inProgress();
 
     await _processRedirect(ref: ref, route: route, context: context);
+    await context.pushNamed(route);
 
     state = const HomeState.success();
   }
 
   Future<void> _processRedirect(
-      {required String route,
+      {
+      //
+      required String route,
       required WidgetRef ref,
       required BuildContext context}) async {
     bool isAbsenRoute = route == RouteNames.absenRoute;
-    bool isGpsOn = await FlLocation.isLocationServicesEnabled;
+    bool isGpsOff = await FlLocation.isLocationServicesEnabled == false;
 
     final tester = ref.read(testerNotifierProvider);
     bool isTester = tester != TesterState.forcedRegularUser();
@@ -60,17 +64,24 @@ class HomeNotifier extends StateNotifier<HomeState> {
       }
     }
 
-    if (isAbsenRoute && !isTester) {
-      if (!isGpsOn) {
-        return showDialog(
-          context: context,
-          builder: (context) => VSimpleDialog(
-              label: 'GPS Tidak Berfungsi',
-              labelDescription:
-                  'Mohon nyalakan GPS pada device anda. Terimakasih 🙏',
-              asset: Assets.iconLocationOff),
-        );
-      } else {
+    /*
+      Saat masuk ke Absen, atau Riwayat
+    */
+    if (isAbsenRoute) {
+      await _uncross(ref);
+
+      if (!isTester) {
+        if (isGpsOff) {
+          return showDialog(
+            context: context,
+            builder: (context) => VSimpleDialog(
+                label: 'GPS Tidak Berfungsi',
+                labelDescription:
+                    'Mohon nyalakan GPS pada device anda. Terimakasih 🙏',
+                asset: Assets.iconLocationOff),
+          );
+        }
+
         if (isLocationDenied) {
           return showDialog(
             context: context,
@@ -80,14 +91,27 @@ class HomeNotifier extends StateNotifier<HomeState> {
                     'Mohon nyalakan Izin Lokasi untuk E-FINGER. Terimakasih 🙏',
                 asset: Assets.iconLocationOff),
           ).then((_) => context.pushNamed(RouteNames.permissionRoute));
-        } else {
-          await context.pushNamed(route);
-          return;
         }
       }
-    } else {
-      await context.pushNamed(route);
-      return;
+    }
+
+    return;
+  }
+
+  Future<void> _uncross(WidgetRef ref) async {
+    final user = ref.read(userNotifierProvider).user;
+    final data = await ref.refresh(isUserCrossedProvider.future);
+
+    final _isCrossed = data.when(
+      crossed: () => true,
+      notCrossed: () => false,
+    );
+
+    if (_isCrossed) {
+      await ref.read(crossAuthNotifierProvider.notifier).uncross(
+            userId: user.nama!,
+            password: user.password!,
+          );
     }
   }
 }

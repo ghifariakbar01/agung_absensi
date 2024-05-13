@@ -195,10 +195,13 @@ class CreateIzinPage extends HookConsumerWidget {
                       Ink(
                         child: InkWell(
                           onTap: () async {
+                            final _threeMonth = Duration(days: 120);
+                            final _threeDays = Duration(days: 3);
+
                             final picked = await showDateRangePicker(
                               context: context,
-                              lastDate: DateTime.now().add(Duration(days: 365)),
-                              firstDate: new DateTime(2021),
+                              lastDate: DateTime.now().add(_threeMonth),
+                              firstDate: DateTime.now().subtract(_threeMonth),
                             );
                             if (picked != null) {
                               print(picked);

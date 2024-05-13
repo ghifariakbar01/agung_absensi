@@ -86,7 +86,7 @@ class CutiListController extends _$CutiListController {
             dateRange: dateRange ??
                 DateTimeRange(
                     start: DateTime.now().subtract(Duration(days: 30)),
-                    end: DateTime.now()),
+                    end: DateTime.now().add(Duration(days: 1))),
           );
     } else {
       return ref.read(cutiListRepositoryProvider).getCutiListLimitedAccess(
@@ -96,14 +96,14 @@ class CutiListController extends _$CutiListController {
             dateRange: dateRange ??
                 DateTimeRange(
                     start: DateTime.now().subtract(Duration(days: 30)),
-                    end: DateTime.now()),
+                    end: DateTime.now().add(Duration(days: 1))),
           );
     }
   }
 
   bool _isAct() {
     final server = ref.read(userNotifierProvider).user.ptServer;
-    return server == 'gs_12';
+    return server != 'gs_18';
   }
 
   bool isSpvEdit() {

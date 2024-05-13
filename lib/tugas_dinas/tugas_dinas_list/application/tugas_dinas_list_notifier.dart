@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../shared/providers.dart';
@@ -29,11 +30,19 @@ class TugasDinasListController extends _$TugasDinasListController {
     return _determineAndGetTugasDinasListOn(page: 0);
   }
 
-  Future<void> load({required int page}) async {
+  Future<void> load({
+    required int page,
+    required String searchUser,
+    required DateTimeRange dateRange,
+  }) async {
     state = const AsyncLoading<List<TugasDinasList>>().copyWithPrevious(state);
 
     state = await AsyncValue.guard(() async {
-      final res = await _determineAndGetTugasDinasListOn(page: page);
+      final res = await _determineAndGetTugasDinasListOn(
+        page: page,
+        dateRange: dateRange,
+        searchUser: searchUser,
+      );
 
       final List<TugasDinasList> list = [
         ...state.requireValue.toList(),
@@ -44,16 +53,23 @@ class TugasDinasListController extends _$TugasDinasListController {
     });
   }
 
-  Future<void> refresh() async {
+  Future<void> refresh({
+    required String searchUser,
+    required DateTimeRange dateRange,
+  }) async {
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(() {
-      return _determineAndGetTugasDinasListOn(page: 0);
+      return _determineAndGetTugasDinasListOn(
+          page: 0, searchUser: searchUser, dateRange: dateRange);
     });
   }
 
-  Future<List<TugasDinasList>> _determineAndGetTugasDinasListOn(
-      {required int page}) async {
+  Future<List<TugasDinasList>> _determineAndGetTugasDinasListOn({
+    required int page,
+    String? searchUser,
+    DateTimeRange? dateRange,
+  }) async {
     final hrd = ref.read(userNotifierProvider).user.fin;
     final gm = ref.read(userNotifierProvider).user.gm;
     final coo = ref.read(userNotifierProvider).user.coo;
@@ -63,55 +79,76 @@ class TugasDinasListController extends _$TugasDinasListController {
     final staffStr = staff.replaceAll('"', '').substring(0, staff.length - 1);
 
     if (idDept == 2 || isHrdOrSpv(hrd) || isHrdOrSpv(gm) || isHrdOrSpv(coo)) {
-      return ref
-          .read(tugasDinasListRepositoryProvider)
-          .getTugasDinasList(page: page);
+      return ref.read(tugasDinasListRepositoryProvider).getTugasDinasList(
+            page: page,
+            searchUser: searchUser ?? '',
+            dateRange: dateRange ??
+                DateTimeRange(
+                    start: DateTime.now().subtract(Duration(days: 30)),
+                    end: DateTime.now().add(Duration(days: 1))),
+          );
     } else {
       return ref
           .read(tugasDinasListRepositoryProvider)
-          .getTugasDinasListLimitedAccess(page: page, staff: staffStr);
+          .getTugasDinasListLimitedAccess(
+            page: page,
+            staff: staffStr,
+            searchUser: searchUser ?? '',
+            dateRange: dateRange ??
+                DateTimeRange(
+                    start: DateTime.now().subtract(Duration(days: 30)),
+                    end: DateTime.now().add(Duration(days: 1))),
+          );
     }
   }
 
   bool _isAct() {
     final server = ref.read(userNotifierProvider).user.ptServer;
-    return server == 'gs_12';
+    return server != 'gs_18';
   }
 
   bool isSpvEdit() {
+    bool _isSpvEdit = true;
+
     final spv = ref.read(userNotifierProvider).user.spv;
     final fullAkses = ref.read(userNotifierProvider).user.fullAkses;
 
     if (spv == null) {
-      return false;
+      _isSpvEdit = false;
     }
 
     if (fullAkses! == false) {
-      return false;
+      _isSpvEdit = false;
     }
 
     if (_isAct()) {
-      return spv.contains('10,');
+      _isSpvEdit = spv!.contains('10,');
     } else {
-      return spv.contains('5017,');
+      _isSpvEdit = spv!.contains('5017,');
     }
+
+    return _isSpvEdit;
   }
 
   bool isHrdOrSpv(String? access) {
+    bool _isHrdOrSpv = true;
+
     final fullAkses = ref.read(userNotifierProvider).user.fullAkses;
 
     if (access == null) {
-      return false;
+      _isHrdOrSpv = false;
     }
 
     if (fullAkses! == false) {
-      return false;
+      _isHrdOrSpv = false;
     }
 
     if (_isAct()) {
-      return access.contains('4,');
+      _isHrdOrSpv = access!.contains('4,');
     } else {
-      return access.contains('5108,');
+      _isHrdOrSpv = access!.contains('5108,');
     }
+
+    return _isHrdOrSpv;
   }
 }

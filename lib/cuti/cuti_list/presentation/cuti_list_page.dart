@@ -37,8 +37,9 @@ class CutiListPage extends HookConsumerWidget {
     final crossAuth = ref.watch(crossAuthNotifierProvider);
 
     final _oneMonth = Duration(days: 30);
+    final _oneDay = Duration(days: 1);
     final _initialDateRange = DateTimeRange(
-      end: DateTime.now(),
+      end: DateTime.now().add(_oneDay),
       start: DateTime.now().subtract(_oneMonth),
     );
 
@@ -140,17 +141,11 @@ class CutiListPage extends HookConsumerWidget {
     };
 
     void onScrolledVisibility() {
-      final _isScrolling = scrollController.position.isScrollingNotifier.value;
-
       scrollController.position.isScrollingNotifier.addListener(() {
-        if (_isScrolling) {
-          Future.delayed(
-              Duration(milliseconds: 500), () => _isScrollStopped.value = true);
+        if (scrollController.position.pixels > 0.0) {
+          _isScrollStopped.value = true;
         } else {
-          if (scrollController.position.atEdge) {
-            Future.delayed(Duration(milliseconds: 500),
-                () => _isScrollStopped.value = false);
-          }
+          _isScrollStopped.value = false;
         }
       });
     }
@@ -263,15 +258,17 @@ class CutiListPage extends HookConsumerWidget {
                             value: sendWa,
                             data: (_) => VScaffoldTabLayout(
                               scaffoldTitle: 'List Form Cuti',
-                              scaffoldFAB: FloatingActionButton.small(
-                                  backgroundColor: Palette.primaryColor,
-                                  child: Icon(
-                                    Icons.add,
-                                    color: Colors.white,
-                                  ),
-                                  onPressed: () => context.pushNamed(
-                                        RouteNames.createCutiNameRoute,
-                                      )),
+                              scaffoldFAB: _isCrossed
+                                  ? Container()
+                                  : FloatingActionButton.small(
+                                      backgroundColor: Palette.primaryColor,
+                                      child: Icon(
+                                        Icons.add,
+                                        color: Colors.white,
+                                      ),
+                                      onPressed: () => context.pushNamed(
+                                            RouteNames.createCutiNameRoute,
+                                          )),
                               currPT: _initialDropdown,
                               onPageChanged: onPageChanged,
                               onFieldSubmitted: onFieldSubmitted,

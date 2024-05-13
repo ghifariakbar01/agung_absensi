@@ -3,6 +3,8 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:face_net_authentication/infrastructure/dio_extensions.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../../infrastructure/exceptions.dart';
 import '../application/tugas_dinas_list.dart';
@@ -22,38 +24,69 @@ class TugasDinasListRemoteService {
   static const String dbMstJabatan = 'mst_jabatan';
   static const String dbMstUserHead = 'mst_user_head';
 
-  Future<List<TugasDinasList>> getTugasDinasList({required int page}) async {
+  final _commonQuery1 = "           *, "
+      "           (SELECT CONCAT(spv_nm, ' // ', spv_tgl)) AS app_spv, "
+      "           (SELECT CONCAT(hrd_nm, ' // ', hrd_tgl)) AS app_hrd, "
+      "           (SELECT CONCAT(u_user, ' // ', u_date)) AS u_by, "
+      "           (SELECT CONCAT(c_user, ' // ', c_date)) AS c_by, "
+      "           (SELECT nama FROM $dbMstUser WHERE id_user = id_pemberi) AS pemberi_name, "
+      "           (SELECT fullname FROM $dbMstUser WHERE id_user = id_pemberi) AS pemberi_fullname, "
+      "           (SELECT id_level from $dbMstJabatan where id_jbt = (select id_jbt from $dbMstUser where id_user = hr_trs_dinas.id_user )) as level_user, "
+      "           (SELECT idkary FROM $dbMstUser WHERE id_user = $dbName.id_user) AS idkar, "
+      "           (SELECT id_dept FROM $dbMstUser WHERE id_user = $dbName.id_user) AS id_dept, "
+      "           (SELECT payroll FROM $dbMstUser WHERE id_user = $dbName.id_user) AS payroll, "
+      "           (SELECT no_telp1 FROM $dbMstUser WHERE id_user = $dbName.id_user) AS no_telp1, "
+      "           (SELECT no_telp2 FROM $dbMstUser WHERE id_user = $dbName.id_user) AS no_telp2, "
+      "           (SELECT fullname FROM $dbMstUser WHERE id_user = $dbName.id_user) AS fullname, "
+      "           (SELECT nama FROM mst_dept WHERE id_dept = (SELECT id_dept FROM $dbMstUser WHERE id_user = $dbName.id_user)) AS dept, "
+      "           (SELECT nama FROM mst_comp WHERE id_comp =  (SELECT id_comp FROM $dbMstUser WHERE id_user = $dbName.id_user) ) AS comp ";
+
+  final _commonQuery2 = "           *, "
+      "           (SELECT CONCAT(spv_nm, ' // ', spv_tgl)) AS app_spv, "
+      "           (SELECT CONCAT(hrd_nm, ' // ', hrd_tgl)) AS app_hrd, "
+      "           (SELECT CONCAT(u_user, ' // ', u_date)) AS u_by, "
+      "           (SELECT CONCAT(c_user, ' // ', c_date)) AS c_by, "
+      "           (SELECT nama FROM $dbMstUser WHERE id_user = id_pemberi) AS pemberi_name, "
+      "           (SELECT fullname FROM $dbMstUser WHERE id_user = id_pemberi) AS pemberi_fullname, "
+      "           (SELECT id_level from $dbMstJabatan where id_jbt = (select id_jbt from $dbMstUser where id_user = hr_trs_dinas.id_user )) as level_user, "
+      "           (SELECT idkary FROM $dbMstUser WHERE id_user = $dbName.id_user) AS idkar, "
+      "           (SELECT id_dept FROM $dbMstUser WHERE id_user = $dbName.id_user) AS id_dept, "
+      "           (SELECT payroll FROM $dbMstUser WHERE id_user = $dbName.id_user) AS payroll, "
+      "           (SELECT no_telp1 FROM $dbMstUser WHERE id_user = $dbName.id_user) AS no_telp1, "
+      "           (SELECT no_telp2 FROM $dbMstUser WHERE id_user = $dbName.id_user) AS no_telp2, "
+      "           (SELECT fullname FROM $dbMstUser WHERE id_user = $dbName.id_user) AS fullname, "
+      "           (SELECT nama FROM mst_dept WHERE id_dept = (SELECT id_dept FROM $dbMstUser WHERE id_user = $dbName.id_user)) AS dept, "
+      "           (SELECT nama FROM mst_comp WHERE id_comp =  (SELECT id_comp FROM $dbMstUser WHERE id_user = $dbName.id_user) ) AS comp ";
+
+  Future<List<TugasDinasList>> getTugasDinasList({
+    required int page,
+    required String searchUser,
+    required DateTimeRange dateRange,
+  }) async {
     try {
       // debugger();
       final data = _dioRequest;
 
+      final d1 = DateFormat('yyyy-MM-dd').format(dateRange.start);
+      final d2 = DateFormat('yyyy-MM-dd').format(dateRange.end);
+
       final Map<String, String> select = {
         'command': //
-            " SELECT  "
-                "           *, "
-                "           (SELECT CONCAT(spv_nm, ' // ', spv_tgl)) AS app_spv, "
-                "           (SELECT CONCAT(hrd_nm, ' // ', hrd_tgl)) AS app_hrd, "
-                "           (SELECT CONCAT(u_user, ' // ', u_date)) AS u_by, "
-                "           (SELECT CONCAT(c_user, ' // ', c_date)) AS c_by, "
-                "           (SELECT nama FROM $dbMstUser WHERE id_user = id_pemberi) AS pemberi_name, "
-                "           (SELECT fullname FROM $dbMstUser WHERE id_user = id_pemberi) AS pemberi_fullname, "
-                "           (SELECT id_level from $dbMstJabatan where id_jbt = (select id_jbt from $dbMstUser where id_user = hr_trs_dinas.id_user )) as level_user, "
-                "           (SELECT idkary FROM $dbMstUser WHERE id_user = $dbName.id_user) AS idkar, "
-                "           (SELECT id_dept FROM $dbMstUser WHERE id_user = $dbName.id_user) AS id_dept, "
-                "           (SELECT payroll FROM $dbMstUser WHERE id_user = $dbName.id_user) AS payroll, "
-                "           (SELECT no_telp1 FROM $dbMstUser WHERE id_user = $dbName.id_user) AS no_telp1, "
-                "           (SELECT no_telp2 FROM $dbMstUser WHERE id_user = $dbName.id_user) AS no_telp2, "
-                "           (SELECT fullname FROM $dbMstUser WHERE id_user = $dbName.id_user) AS fullname, "
-                "           (SELECT nama FROM mst_dept WHERE id_dept = (SELECT id_dept FROM $dbMstUser WHERE id_user = $dbName.id_user)) AS dept, "
-                "           (SELECT nama FROM mst_comp WHERE id_comp =  (SELECT id_comp FROM $dbMstUser WHERE id_user = $dbName.id_user) ) AS comp "
+            " SELECT  " +
+                _commonQuery1 +
                 "      FROM "
-                "          $dbName "
-                "      WHERE "
-                "          id_dinas IS NOT NULL "
-                "      ORDER BY "
-                "          c_date DESC "
-                "      OFFSET "
-                "          $page * 20 ROWS FETCH FIRST 20 ROWS ONLY ",
+                    "          $dbName "
+                    "      WHERE "
+                    "  $dbName.c_user    "
+                    "                 LIKE '%$searchUser%'    "
+                    "       AND    "
+                    "           $dbName.c_date    "
+                    "                 BETWEEN '$d1' AND '$d2'   "
+                    "       AND   id_dinas IS NOT NULL "
+                    "      ORDER BY "
+                    "          c_date DESC "
+                    "      OFFSET "
+                    "          $page * 20 ROWS FETCH FIRST 20 ROWS ONLY ",
         'mode': 'SELECT'
       };
 
@@ -107,40 +140,37 @@ class TugasDinasListRemoteService {
     }
   }
 
-  Future<List<TugasDinasList>> getTugasDinasListLimitedAccess(
-      {required int page, required String staff}) async {
+  Future<List<TugasDinasList>> getTugasDinasListLimitedAccess({
+    required int page,
+    required String staff,
+    required String searchUser,
+    required DateTimeRange dateRange,
+  }) async {
     try {
       debugger();
       log('page $page');
       final data = _dioRequest;
 
+      final d1 = DateFormat('yyyy-MM-dd').format(dateRange.start);
+      final d2 = DateFormat('yyyy-MM-dd').format(dateRange.end);
+
       final Map<String, String> select = {
         'command': //
-            " SELECT  "
-                "           *, "
-                "           (SELECT CONCAT(spv_nm, ' // ', spv_tgl)) AS app_spv, "
-                "           (SELECT CONCAT(hrd_nm, ' // ', hrd_tgl)) AS app_hrd, "
-                "           (SELECT CONCAT(u_user, ' // ', u_date)) AS u_by, "
-                "           (SELECT CONCAT(c_user, ' // ', c_date)) AS c_by, "
-                "           (SELECT nama FROM $dbMstUser WHERE id_user = id_pemberi) AS pemberi_name, "
-                "           (SELECT fullname FROM $dbMstUser WHERE id_user = id_pemberi) AS pemberi_fullname, "
-                "           (SELECT id_level from $dbMstJabatan where id_jbt = (select id_jbt from $dbMstUser where id_user = hr_trs_dinas.id_user )) as level_user, "
-                "           (SELECT idkary FROM $dbMstUser WHERE id_user = $dbName.id_user) AS idkar, "
-                "           (SELECT id_dept FROM $dbMstUser WHERE id_user = $dbName.id_user) AS id_dept, "
-                "           (SELECT payroll FROM $dbMstUser WHERE id_user = $dbName.id_user) AS payroll, "
-                "           (SELECT no_telp1 FROM $dbMstUser WHERE id_user = $dbName.id_user) AS no_telp1, "
-                "           (SELECT no_telp2 FROM $dbMstUser WHERE id_user = $dbName.id_user) AS no_telp2, "
-                "           (SELECT fullname FROM $dbMstUser WHERE id_user = $dbName.id_user) AS fullname, "
-                "           (SELECT nama FROM mst_dept WHERE id_dept = (SELECT id_dept FROM $dbMstUser WHERE id_user = $dbName.id_user)) AS dept, "
-                "           (SELECT nama FROM mst_comp WHERE id_comp =  (SELECT id_comp FROM $dbMstUser WHERE id_user = $dbName.id_user) ) AS comp "
+            " SELECT  " +
+                _commonQuery2 +
                 "      FROM "
-                "          $dbName "
-                "      WHERE "
-                "          $dbName.id_user IN ($staff) AND id_dinas IS NOT NULL "
+                    "          $dbName "
+                    "      WHERE "
+                    "          $dbName.id_user IN ($staff) AND id_dinas IS NOT NULL "
+                    "  AND $dbName.c_user    "
+                    "                 LIKE '%$searchUser%'    "
+                    "       AND    "
+                    "           $dbName.c_date    "
+                    "                 BETWEEN '$d1' AND '$d2'    " +
                 "      ORDER BY "
-                "          c_date DESC "
-                "      OFFSET "
-                "          $page * 20 ROWS FETCH FIRST 20 ROWS ONLY ",
+                    "          c_date DESC "
+                    "      OFFSET "
+                    "          $page * 20 ROWS FETCH FIRST 20 ROWS ONLY ",
         'mode': 'SELECT'
       };
 

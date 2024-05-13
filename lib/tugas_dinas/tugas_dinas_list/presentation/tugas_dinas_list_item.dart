@@ -566,7 +566,7 @@ class TugasDinasListItem extends HookConsumerWidget {
                                             context: context,
                                             builder: (context) => VAlertDialog2(
                                                 label:
-                                                    'Dibutuhkan Konfirmasi SPV ${item.spvSta ? '(Unapprove)' : '(Approve)'}',
+                                                    'Dibutuhkan Konfirmasi SPV ${item.spvSta ?? false ? '(Unapprove)' : '(Approve)'}',
                                                 onPressed: () async {
                                                   context.pop();
                                                   await ref
@@ -679,7 +679,7 @@ class TugasDinasListItem extends HookConsumerWidget {
                                             context: context,
                                             builder: (context) => VAlertDialog2(
                                                 label:
-                                                    'Dibutuhkan Konfirmasi HRD ${item.hrdSta ? '(Unapprove)' : '(Approve)'}',
+                                                    'Dibutuhkan Konfirmasi HRD ${item.hrdSta ?? false ? '(Unapprove)' : '(Approve)'}',
                                                 onPressed: () async {
                                                   context.pop();
                                                   await ref
@@ -777,7 +777,7 @@ class TugasDinasListItem extends HookConsumerWidget {
                                             context: context,
                                             builder: (context) => VAlertDialog2(
                                                 label:
-                                                    'Dibutuhkan Konfirmasi GM ${item.gmSta ? '(Unapprove)' : '(Approve)'}',
+                                                    'Dibutuhkan Konfirmasi GM ${item.gmSta ?? false ? '(Unapprove)' : '(Approve)'}',
                                                 onPressed: () async {
                                                   context.pop();
                                                   await ref
@@ -892,7 +892,7 @@ class TugasDinasListItem extends HookConsumerWidget {
                                             context: context,
                                             builder: (context) => VAlertDialog2(
                                                 label:
-                                                    'Dibutuhkan Konfirmasi COO ${item.cooSta ? '(Unapprove)' : '(Approve)'}',
+                                                    'Dibutuhkan Konfirmasi COO ${item.cooSta ?? false ? '(Unapprove)' : '(Approve)'}',
                                                 onPressed: () async {
                                                   context.pop();
                                                   await ref

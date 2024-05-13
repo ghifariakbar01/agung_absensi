@@ -133,24 +133,18 @@ class CreateCutiRemoteService {
             "GETDATE(), " // spv_tgl
             "GETDATE(), " // hrd_tgl
             "GETDATE(), " // c_date
-            "'(select nama from $dbMstUser where id_user = $idUser)', " // c_user
+            "(SELECT nama FROM $dbMstUser WHERE id_user = $idUser), " // c_user
             "GETDATE(), " // u_date
-            "'(select nama from $dbMstUser where id_user = $idUser)')", // u_user
+            "(SELECT nama FROM $dbMstUser WHERE id_user = $idUser))", // u_user
         "mode": "INSERT"
       };
 
       final data = _dioRequest;
       data.addAll(submitCuti);
 
-      debugger();
-
       final response = await _dio.post('',
           data: jsonEncode(data), options: Options(contentType: 'text/plain'));
 
-      debugger();
-
-      log('data ${jsonEncode(data)}');
-      log('response $response');
       final items = response.data?[0];
 
       if (items['status'] == 'Success') {

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../shared/providers.dart';
@@ -30,11 +31,19 @@ class GantiHariListController extends _$GantiHariListController {
     return _determineAndGetGantiHariListOn(page: 0);
   }
 
-  Future<void> load({required int page}) async {
+  Future<void> load({
+    required int page,
+    required String searchUser,
+    required DateTimeRange dateRange,
+  }) async {
     state = const AsyncLoading<List<GantiHariList>>().copyWithPrevious(state);
 
     state = await AsyncValue.guard(() async {
-      final res = await _determineAndGetGantiHariListOn(page: page);
+      final res = await _determineAndGetGantiHariListOn(
+        page: page,
+        dateRange: dateRange,
+        searchUser: searchUser,
+      );
 
       final List<GantiHariList> list = [
         ...state.requireValue.toList(),
@@ -45,16 +54,23 @@ class GantiHariListController extends _$GantiHariListController {
     });
   }
 
-  Future<void> refresh() async {
+  Future<void> refresh({
+    required String searchUser,
+    required DateTimeRange dateRange,
+  }) async {
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(() {
-      return _determineAndGetGantiHariListOn(page: 0);
+      return _determineAndGetGantiHariListOn(
+          page: 0, searchUser: searchUser, dateRange: dateRange);
     });
   }
 
-  Future<List<GantiHariList>> _determineAndGetGantiHariListOn(
-      {required int page}) async {
+  Future<List<GantiHariList>> _determineAndGetGantiHariListOn({
+    required int page,
+    String? searchUser,
+    DateTimeRange? dateRange,
+  }) async {
     final hrd = ref.read(userNotifierProvider).user.fin;
 
     final staff = ref.read(userNotifierProvider).user.staf!;
@@ -63,6 +79,11 @@ class GantiHariListController extends _$GantiHariListController {
     if (isHrdOrSpv(hrd)) {
       return ref.read(gantiHariListRepositoryProvider).getGantiHariList(
             page: page,
+            searchUser: searchUser ?? '',
+            dateRange: dateRange ??
+                DateTimeRange(
+                    start: DateTime.now().subtract(Duration(days: 30)),
+                    end: DateTime.now().add(Duration(days: 1))),
           );
     } else {
       return ref
@@ -70,49 +91,62 @@ class GantiHariListController extends _$GantiHariListController {
           .getGantiHariListLimitedAccess(
             page: page,
             staff: staffStr,
+            searchUser: searchUser ?? '',
+            dateRange: dateRange ??
+                DateTimeRange(
+                    start: DateTime.now().subtract(Duration(days: 30)),
+                    end: DateTime.now().add(Duration(days: 1))),
           );
     }
   }
 
   bool _isAct() {
     final server = ref.read(userNotifierProvider).user.ptServer;
-    return server == 'gs_12';
+    return server != 'gs_18';
   }
 
   bool isSpvEdit() {
+    bool _isSpvEdit = true;
+
     final spv = ref.read(userNotifierProvider).user.spv;
     final fullAkses = ref.read(userNotifierProvider).user.fullAkses;
 
     if (spv == null) {
-      return false;
+      _isSpvEdit = false;
     }
 
     if (fullAkses! == false) {
-      return false;
+      _isSpvEdit = false;
     }
 
     if (_isAct()) {
-      return spv.contains('38,');
+      _isSpvEdit = spv!.contains('38,');
     } else {
-      return spv.contains('5015,');
+      _isSpvEdit = spv!.contains('5015,');
     }
+
+    return _isSpvEdit;
   }
 
   bool isHrdOrSpv(String? access) {
+    bool _isHrdOrSpv = true;
+
     final fullAkses = ref.read(userNotifierProvider).user.fullAkses;
 
     if (access == null) {
-      return false;
+      _isHrdOrSpv = false;
     }
 
     if (fullAkses! == false) {
-      return false;
+      _isHrdOrSpv = false;
     }
 
     if (_isAct()) {
-      return access.contains('17,');
+      _isHrdOrSpv = access!.contains('17,');
     } else {
-      return access.contains('5106,');
+      _isHrdOrSpv = access!.contains('5106,');
     }
+
+    return _isHrdOrSpv;
   }
 }
