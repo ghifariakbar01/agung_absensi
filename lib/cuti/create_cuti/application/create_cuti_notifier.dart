@@ -195,6 +195,22 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
     final DateTime tglAwalInDateTime = DateTime.parse(tglAwal);
     final DateTime tglAkhirInDateTime = DateTime.parse(tglAkhir);
 
+    /*
+
+    1. ambil hari libur dan saldo cuti
+    2. ambil jumlah hari sabtu / minggu
+    3. _validateMasterCuti 
+    4. validasi jika bukan hr
+    5. validasi alasan cuti
+    6. ambil total cuti baru, total cuti tidak baru, openDateJan, createMasukInDateTime
+        , dateMasuk
+    7. _returnTahunCuti (ambil tahun cuti tidak baru / tahun cuti baru)
+    8. _validateSaldoCuti
+    9. pilih sisaCuti
+    10. 
+
+    */
+
     // 1. Calc jumlah harito substract sundays and saturdays
     final int jumlahhari =
         _getJumlahHari(create, tglAwalInDateTime, tglAkhirInDateTime);
@@ -474,6 +490,10 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
 
     final bool tglStartLebihDariTglMasuk =
         tglAwalInDateTime.difference(dateMasuk).isNegative == false;
+
+    /*
+        saldoCuti baru - total hari cuti (datediff) - jumlahlibur - sabtu minggu
+    */
 
     final bool saldoCutiTidakCukup = totalHariCutiBaru < 0;
 

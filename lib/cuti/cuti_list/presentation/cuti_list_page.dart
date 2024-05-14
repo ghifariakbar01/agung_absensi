@@ -106,6 +106,7 @@ class CutiListPage extends HookConsumerWidget {
       'gs_21': ['AJL'],
     };
 
+    final _initialDropdownPlaceholder = ['ACT', 'Transina', 'ALR'];
     final _currPT = ref.watch(userNotifierProvider).user.ptServer;
     final _initialDropdown = _mapPT.entries
         .firstWhereOrNull((element) => element.key == _currPT)
@@ -257,6 +258,7 @@ class CutiListPage extends HookConsumerWidget {
                           data: (_) => VAsyncWidgetScaffold(
                             value: sendWa,
                             data: (_) => VScaffoldTabLayout(
+                              isActionsVisible: false,
                               scaffoldTitle: 'List Form Cuti',
                               scaffoldFAB: _isCrossed
                                   ? Container()
@@ -269,7 +271,8 @@ class CutiListPage extends HookConsumerWidget {
                                       onPressed: () => context.pushNamed(
                                             RouteNames.createCutiNameRoute,
                                           )),
-                              currPT: _initialDropdown,
+                              currPT: _initialDropdown ??
+                                  _initialDropdownPlaceholder,
                               onPageChanged: onPageChanged,
                               onFieldSubmitted: onFieldSubmitted,
                               onFilterSelected: onFilterSelected,

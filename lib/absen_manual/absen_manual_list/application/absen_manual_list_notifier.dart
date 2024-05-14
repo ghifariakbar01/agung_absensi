@@ -154,4 +154,6 @@ class AbsenManualListController extends _$AbsenManualListController {
 
     return _isHrdOrSpv;
   }
+
+
 }

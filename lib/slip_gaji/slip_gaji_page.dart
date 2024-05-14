@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:face_net_authentication/shared/providers.dart';
+import 'package:face_net_authentication/widgets/v_async_widget.dart';
 import 'package:face_net_authentication/widgets/v_button.dart';
 import 'package:face_net_authentication/widgets/v_scaffold_widget.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../cross_auth/application/cross_auth_notifier.dart';
 import '../style/style.dart';
 
 class SlipGajiPage extends HookConsumerWidget {
@@ -22,20 +24,24 @@ class SlipGajiPage extends HookConsumerWidget {
 
     final pinGajiController = useTextEditingController();
 
+    final crossAuth = ref.watch(crossAuthNotifierProvider);
+
     return KeyboardDismissOnTap(
-      child: VScaffoldWidget(
-        scaffoldTitle: 'Slip Gaji',
-        scaffoldFAB: IconButton(
-          icon: Icon(
-            Icons.refresh,
-            color: Colors.blue,
-          ),
-          onPressed: () {
-            pinGaji.value = '';
-            pinGajiController.text = '';
-          },
+        child: VScaffoldWidget(
+      scaffoldTitle: 'Slip Gaji',
+      scaffoldFAB: IconButton(
+        icon: Icon(
+          Icons.refresh,
+          color: Colors.blue,
         ),
-        scaffoldBody: pinGaji.value.isEmpty
+        onPressed: () {
+          pinGaji.value = '';
+          pinGajiController.text = '';
+        },
+      ),
+      scaffoldBody: VAsyncWidgetScaffold(
+        value: crossAuth,
+        data: (_) => pinGaji.value.isEmpty
             ? Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -74,6 +80,6 @@ class SlipGajiPage extends HookConsumerWidget {
                 },
               ),
       ),
-    );
+    ));
   }
 }

@@ -25,7 +25,6 @@ class HomeNotifier extends StateNotifier<HomeState> {
     state = const HomeState.inProgress();
 
     await _processRedirect(ref: ref, route: route, context: context);
-    await context.pushNamed(route);
 
     state = const HomeState.success();
   }
@@ -37,6 +36,8 @@ class HomeNotifier extends StateNotifier<HomeState> {
       required WidgetRef ref,
       required BuildContext context}) async {
     bool isAbsenRoute = route == RouteNames.absenRoute;
+    bool isSlipGajiRoute = route == RouteNames.slipGajiRoute;
+
     bool isGpsOff = await FlLocation.isLocationServicesEnabled == false;
 
     final tester = ref.read(testerNotifierProvider);
@@ -64,12 +65,14 @@ class HomeNotifier extends StateNotifier<HomeState> {
       }
     }
 
+    if (isAbsenRoute || isSlipGajiRoute) {
+      await _uncross(ref);
+    }
+
     /*
       Saat masuk ke Absen, atau Riwayat
     */
     if (isAbsenRoute) {
-      await _uncross(ref);
-
       if (!isTester) {
         if (isGpsOff) {
           return showDialog(
@@ -95,6 +98,7 @@ class HomeNotifier extends StateNotifier<HomeState> {
       }
     }
 
+    await context.pushNamed(route);
     return;
   }
 

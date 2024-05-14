@@ -62,6 +62,7 @@ class MyApp extends ConsumerWidget {
         routeInformationParser: router.routeInformationParser,
         routerDelegate: routerDelegate,
         builder: (_, c) => UpgradeAlert(
+            key: UniqueKey(),
             navigatorKey: routerDelegate.navigatorKey,
             child: c,
             upgrader: Upgrader(

@@ -16,7 +16,7 @@ import '../../absen_manual/absen_manual_list/application/absen_manual_list.dart'
 import '../../absen_manual/create_absen_manual/presentation/create_absen_manual_page.dart';
 import '../../auth/application/auth_notifier.dart';
 import '../../background/presentation/background_page.dart';
-import '../../central_approve/presentation/central_approve_page.dart';
+
 import '../../copyright/presentation/copyright_page.dart';
 import '../../cuti/create_cuti/presentation/create_cuti_page.dart';
 import '../../cuti/create_cuti/presentation/edit_cuti_page.dart';
@@ -370,11 +370,6 @@ class RouterNotifier extends ChangeNotifier {
                 final id = state.extra as int;
                 return TugasDinasViewSuratPage(id);
               },
-            ),
-            GoRoute(
-              name: RouteNames.centralApproveNameRoute,
-              path: RouteNames.centralApproveRoute,
-              builder: (context, state) => CentralApprovePage(),
             ),
           ]),
     ];

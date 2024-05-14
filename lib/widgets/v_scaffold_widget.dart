@@ -90,36 +90,38 @@ class VTab extends StatelessWidget {
 }
 
 class VScaffoldTabLayout extends HookWidget {
-  const VScaffoldTabLayout(
-      {required this.scaffoldTitle,
-      required this.scaffoldBody,
-      required this.onPageChanged,
-      this.onFilterSelected,
-      this.onDropdownChanged,
-      this.onFieldSubmitted,
-      this.currPT,
-      this.length,
-      this.scaffoldFAB,
-      this.appbarColor,
-      this.additionalInfo,
-      this.initialDateRange});
+  const VScaffoldTabLayout({
+    required this.scaffoldTitle,
+    required this.scaffoldBody,
+    required this.onPageChanged,
+    required this.onFilterSelected,
+    required this.onDropdownChanged,
+    required this.onFieldSubmitted,
+    required this.scaffoldFAB,
+    required this.currPT,
+    required this.initialDateRange,
+    required this.isActionsVisible,
+    this.additionalInfo,
+    this.appbarColor,
+    this.length,
+  });
+
   final int? length;
+  final bool isActionsVisible;
   final Color? appbarColor;
   final String scaffoldTitle;
-  final List<String>? currPT;
+  final List<String> currPT;
   final List<Widget> scaffoldBody;
-  final Widget? scaffoldFAB;
+  final Widget scaffoldFAB;
   final Widget? additionalInfo;
-  final DateTimeRange? initialDateRange;
+  final DateTimeRange initialDateRange;
   final Future<void> Function() onPageChanged;
-  final Future<void> Function(String value)? onFieldSubmitted;
-  final Future<void> Function(List<String> value)? onDropdownChanged;
-  final Future<void> Function(DateTimeRange value)? onFilterSelected;
+  final Future<void> Function(String value) onFieldSubmitted;
+  final Future<void> Function(List<String> value) onDropdownChanged;
+  final Future<void> Function(DateTimeRange value) onFilterSelected;
 
   @override
-  Widget build(
-    BuildContext context,
-  ) {
+  Widget build(BuildContext context) {
     final _isSearching = useState(false);
     final _searchFocus = useFocusNode();
     final _searchController = useTextEditingController();
@@ -171,7 +173,7 @@ class VScaffoldTabLayout extends HookWidget {
 
     final _mapPTValues = _mapPT.values;
 
-    final _currPt = useState(currPT ?? ['ACT', 'Transina', 'ALR']);
+    final _currPt = useState(currPT);
 
     return DefaultTabController(
       length: length == null
@@ -212,134 +214,127 @@ class VScaffoldTabLayout extends HookWidget {
                   ),
             toolbarHeight: 45,
             actions: [
-              if (_isSearching.value) ...[
-                Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: SizedBox(
-                    height: 45,
-                    width: MediaQuery.of(context).size.width - 12,
-                    child: TextFormField(
-                      focusNode: _searchFocus,
-                      controller: _searchController,
-                      decoration: Themes.formStyle('Search Here',
-                          textColor: Colors.white),
-                      style: Themes.customColor(14, color: Colors.white),
-                      onTapOutside: (_) {
-                        _isSearching.value = false;
-                        _searchFocus.unfocus();
-                      },
-                      onTap: () {
-                        _isSearching.value = true;
-                        _searchFocus.requestFocus();
-                      },
-                      onFieldSubmitted: (value) {
-                        if (onFieldSubmitted != null) {
-                          onFieldSubmitted!(value);
-                        }
-                      },
+              if (isActionsVisible) ...[
+                if (_isSearching.value) ...[
+                  Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: SizedBox(
+                      height: 45,
+                      width: MediaQuery.of(context).size.width - 12,
+                      child: TextFormField(
+                        focusNode: _searchFocus,
+                        controller: _searchController,
+                        decoration: Themes.formStyle('Search Here',
+                            textColor: Colors.white),
+                        style: Themes.customColor(14, color: Colors.white),
+                        onTapOutside: (_) {
+                          _isSearching.value = false;
+                          _searchFocus.unfocus();
+                        },
+                        onTap: () {
+                          _isSearching.value = true;
+                          _searchFocus.requestFocus();
+                        },
+                        onFieldSubmitted: (value) {
+                          onFieldSubmitted(value);
+                        },
+                      ),
                     ),
-                  ),
-                )
-              ],
-              if (_isSearching.value == false) ...[
-                /*
+                  )
+                ],
+                if (_isSearching.value == false) ...[
+                  /*
                   Dropdown bar
                 */
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SizedBox(
-                    width: 100,
-                    height: 50,
-                    child: DropdownButtonFormField<List<String>>(
-                      elevation: 0,
-                      iconSize: 20,
-                      padding: EdgeInsets.all(0),
-                      icon: Icon(Icons.keyboard_arrow_down_rounded,
-                          color: Palette.primaryTextColor),
-                      validator: (value) {
-                        if (value == null) {
-                          return 'Form tidak boleh kosong';
-                        }
-
-                        return null;
-                      },
-                      decoration: Themes.dropdown(),
-                      style: Themes.customColor(12, color: Colors.white),
-                      value: _mapPTValues.toList().firstWhere(
-                            (element) => _equal(element, _currPt.value),
-                            orElse: () => _mapPTValues.toList().first,
-                          ),
-                      onChanged: (List<String>? value) {
-                        if (value != null) {
-                          _currPt.value = value;
-                          if (onDropdownChanged != null) {
-                            onDropdownChanged!(value);
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      width: 100,
+                      height: 50,
+                      child: DropdownButtonFormField<List<String>>(
+                        elevation: 0,
+                        iconSize: 20,
+                        padding: EdgeInsets.all(0),
+                        icon: Icon(Icons.keyboard_arrow_down_rounded,
+                            color: Palette.primaryTextColor),
+                        validator: (value) {
+                          if (value == null) {
+                            return 'Form tidak boleh kosong';
                           }
-                        }
-                      },
-                      isExpanded: true,
-                      items: _mapPTValues.map<DropdownMenuItem<List<String>>>(
-                          (List<String> value) {
-                        return DropdownMenuItem<List<String>>(
-                          value: value,
-                          child: Container(
-                            child: Text(
-                              "${value.map((e) => e
-                                ..replaceAll('[', '(')
-                                ..replaceAll(']', ')'))..toList()}",
-                              style:
-                                  Themes.customColor(14, color: Palette.orange),
+
+                          return null;
+                        },
+                        decoration: Themes.dropdown(),
+                        style: Themes.customColor(12, color: Colors.white),
+                        value: _mapPTValues.toList().firstWhere(
+                              (element) => _equal(element, _currPt.value),
+                              orElse: () => _mapPTValues.toList().first,
                             ),
-                          ),
-                        );
-                      }).toList(),
+                        onChanged: (List<String>? value) {
+                          if (value != null) {
+                            _currPt.value = value;
+                            onDropdownChanged(value);
+                          }
+                        },
+                        isExpanded: true,
+                        items: _mapPTValues.map<DropdownMenuItem<List<String>>>(
+                            (List<String> value) {
+                          return DropdownMenuItem<List<String>>(
+                            value: value,
+                            child: Container(
+                              child: Text(
+                                "${value.map((e) => e
+                                  ..replaceAll('[', '(')
+                                  ..replaceAll(']', ')'))..toList()}",
+                                style: Themes.customColor(14,
+                                    color: Palette.orange),
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
                     ),
                   ),
-                ),
 
-                /*
+                  /*
                   Filter Icon
                 */
-                IconButton(
-                    onPressed: () async {
-                      final _oneMonth = Duration(days: 30);
+                  IconButton(
+                      onPressed: () async {
+                        final _oneMonth = Duration(days: 30);
 
-                      final picked = await showDateRangePicker(
-                          context: context,
-                          initialDateRange: initialDateRange ??
-                              DateTimeRange(
-                                  start: DateTime.now().subtract(_oneMonth),
-                                  end: DateTime.now().add(_oneMonth)),
-                          firstDate: DateTime.now().subtract(_oneMonth),
-                          lastDate: DateTime.now().add(Duration(days: 1)));
+                        final picked = await showDateRangePicker(
+                            context: context,
+                            initialDateRange: initialDateRange,
+                            firstDate: DateTime.now().subtract(_oneMonth),
+                            lastDate: DateTime.now().add(Duration(days: 1)));
 
-                      if (picked != null) {
-                        print(picked);
+                        if (picked != null) {
+                          print(picked);
 
-                        if (onFilterSelected != null) {
-                          onFilterSelected!(picked);
+                          onFilterSelected(picked);
                         }
-                      }
-                    },
-                    icon: Icon(Icons.sort)),
+                      },
+                      icon: Icon(Icons.sort)),
 
-                /*
+                  /*
                   Search bar
                 */
-                IconButton(
-                    onPressed: () {
-                      _isSearching.value
-                          ? _isSearching.value = false
-                          : _isSearching.value = true;
+                  IconButton(
+                      onPressed: () {
+                        _isSearching.value
+                            ? _isSearching.value = false
+                            : _isSearching.value = true;
 
-                      _searchFocus.requestFocus();
-                    },
-                    color: _searchController.text.isNotEmpty
-                        ? Palette.orange
-                        : null,
-                    icon: Icon(Icons.search)),
-                additionalInfo != null ? additionalInfo! : Container(),
-                NetworkWidget(),
+                        _searchFocus.requestFocus();
+                      },
+                      color: _searchController.text.isNotEmpty
+                          ? Palette.orange
+                          : null,
+                      icon: Icon(Icons.search)),
+                  additionalInfo != null ? additionalInfo! : Container(),
+                  NetworkWidget(),
+                ]
               ]
             ],
           ),

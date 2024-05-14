@@ -1,4 +1,6 @@
 import 'package:collection/collection.dart';
+import 'package:face_net_authentication/absen_manual/absen_manual_list/application/is_hrd_or_spv_absen_manual_list.dart';
+import 'package:face_net_authentication/absen_manual/absen_manual_list/application/is_hrd_or_spv_absen_manual_list_notifier.dart';
 import 'package:face_net_authentication/cross_auth/application/cross_auth_notifier.dart';
 import 'package:face_net_authentication/shared/providers.dart';
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
@@ -95,6 +97,7 @@ class AbsenManualListPage extends HookConsumerWidget {
       'gs_21': ['AJL'],
     };
 
+    final _initialDropdownPlaceholder = ['ACT', 'Transina', 'ALR'];
     final _currPT = ref.watch(userNotifierProvider).user.ptServer;
     final _initialDropdown = _mapPT.entries
         .firstWhereOrNull((element) => element.key == _currPT)
@@ -216,6 +219,7 @@ class AbsenManualListPage extends HookConsumerWidget {
 
     final errLog = ref.watch(errLogControllerProvider);
     final _isUserCrossed = ref.watch(isUserCrossedProvider);
+    final _isHrdOrSpv = ref.watch(isHrdOrSPVAbsenManualListNotifierProvider);
 
     return VAsyncWidgetScaffold<void>(
       value: errLog,
@@ -248,112 +252,124 @@ class AbsenManualListPage extends HookConsumerWidget {
 
                       return true;
                     },
-                    child: VScaffoldTabLayout(
-                      scaffoldTitle: 'Absen Manual',
-                      additionalInfo: VAdditionalInfo(infoMessage: infoMessage),
-                      scaffoldFAB: _isCrossed
-                          ? Container()
-                          : FloatingActionButton.small(
-                              backgroundColor: Palette.primaryColor,
-                              child: Icon(
-                                Icons.add,
-                                color: Colors.white,
-                              ),
-                              onPressed: () => context.pushNamed(
-                                    RouteNames.createAbsenManualNameRoute,
-                                  )),
-                      currPT: _initialDropdown,
-                      onPageChanged: onRefresh,
-                      onFieldSubmitted: onFieldSubmitted,
-                      onFilterSelected: onFilterSelected,
-                      onDropdownChanged: onDropdownChanged,
-                      initialDateRange: _dateTimeRange.value,
-                      scaffoldBody: [
-                        Stack(
-                          children: [
-                            VAsyncValueWidget<List<AbsenManualList>>(
-                                value: absenManualList,
-                                data: (list) {
-                                  final waiting = list
-                                      .where((e) =>
-                                          (e.spvSta == false ||
-                                              e.hrdSta == false) &&
-                                          e.btlSta == false)
-                                      .toList();
-                                  return _list(
-                                    _isCrossed,
-                                    waiting,
-                                    onRefresh,
-                                    scrollController,
-                                  );
-                                }),
-                            Positioned(
-                                bottom: 20,
-                                left: 10,
-                                child: SearchFilterInfoWidget(
-                                  d1: _d1,
-                                  d2: _d2,
-                                  lastSearch: _lastSearch.value,
-                                  isScrolling: _isScrollStopped.value,
-                                ))
+                    child: VAsyncWidgetScaffold<IsHrdOrSPVAbsenManualList>(
+                      value: _isHrdOrSpv,
+                      data: (data) {
+                        final _isActionsVisible = data.when(
+                            isHrdOrSpv: () => true,
+                            isRegularStaff: () => false);
+
+                        return VScaffoldTabLayout(
+                          scaffoldTitle: 'Absen Manual',
+                          additionalInfo:
+                              VAdditionalInfo(infoMessage: infoMessage),
+                          scaffoldFAB: _isCrossed
+                              ? Container()
+                              : FloatingActionButton.small(
+                                  backgroundColor: Palette.primaryColor,
+                                  child: Icon(
+                                    Icons.add,
+                                    color: Colors.white,
+                                  ),
+                                  onPressed: () => context.pushNamed(
+                                        RouteNames.createAbsenManualNameRoute,
+                                      )),
+                          currPT:
+                              _initialDropdown ?? _initialDropdownPlaceholder,
+                          onPageChanged: onRefresh,
+                          isActionsVisible: _isActionsVisible,
+                          onFieldSubmitted: onFieldSubmitted,
+                          onFilterSelected: onFilterSelected,
+                          onDropdownChanged: onDropdownChanged,
+                          initialDateRange: _dateTimeRange.value,
+                          scaffoldBody: [
+                            Stack(
+                              children: [
+                                VAsyncValueWidget<List<AbsenManualList>>(
+                                    value: absenManualList,
+                                    data: (list) {
+                                      final waiting = list
+                                          .where((e) =>
+                                              (e.spvSta == false ||
+                                                  e.hrdSta == false) &&
+                                              e.btlSta == false)
+                                          .toList();
+                                      return _list(
+                                        _isCrossed,
+                                        waiting,
+                                        onRefresh,
+                                        scrollController,
+                                      );
+                                    }),
+                                Positioned(
+                                    bottom: 20,
+                                    left: 10,
+                                    child: SearchFilterInfoWidget(
+                                      d1: _d1,
+                                      d2: _d2,
+                                      lastSearch: _lastSearch.value,
+                                      isScrolling: _isScrollStopped.value,
+                                    ))
+                              ],
+                            ),
+                            Stack(
+                              children: [
+                                VAsyncValueWidget<List<AbsenManualList>>(
+                                    value: absenManualList,
+                                    data: (list) {
+                                      final approved = list
+                                          .where((e) =>
+                                              (e.spvSta == true &&
+                                                  e.hrdSta == true) &&
+                                              e.btlSta == false)
+                                          .toList();
+                                      return _list(
+                                        _isCrossed,
+                                        approved,
+                                        onRefresh,
+                                        scrollController,
+                                      );
+                                    }),
+                                Positioned(
+                                    bottom: 20,
+                                    left: 10,
+                                    child: SearchFilterInfoWidget(
+                                      d1: _d1,
+                                      d2: _d2,
+                                      lastSearch: _lastSearch.value,
+                                      isScrolling: _isScrollStopped.value,
+                                    ))
+                              ],
+                            ),
+                            Stack(
+                              children: [
+                                VAsyncValueWidget<List<AbsenManualList>>(
+                                    value: absenManualList,
+                                    data: (list) {
+                                      final cancelled = list
+                                          .where((e) => e.btlSta == true)
+                                          .toList();
+                                      return _list(
+                                        _isCrossed,
+                                        cancelled,
+                                        onRefresh,
+                                        scrollController,
+                                      );
+                                    }),
+                                Positioned(
+                                    bottom: 20,
+                                    left: 10,
+                                    child: SearchFilterInfoWidget(
+                                      d1: _d1,
+                                      d2: _d2,
+                                      lastSearch: _lastSearch.value,
+                                      isScrolling: _isScrollStopped.value,
+                                    ))
+                              ],
+                            ),
                           ],
-                        ),
-                        Stack(
-                          children: [
-                            VAsyncValueWidget<List<AbsenManualList>>(
-                                value: absenManualList,
-                                data: (list) {
-                                  final approved = list
-                                      .where((e) =>
-                                          (e.spvSta == true &&
-                                              e.hrdSta == true) &&
-                                          e.btlSta == false)
-                                      .toList();
-                                  return _list(
-                                    _isCrossed,
-                                    approved,
-                                    onRefresh,
-                                    scrollController,
-                                  );
-                                }),
-                            Positioned(
-                                bottom: 20,
-                                left: 10,
-                                child: SearchFilterInfoWidget(
-                                  d1: _d1,
-                                  d2: _d2,
-                                  lastSearch: _lastSearch.value,
-                                  isScrolling: _isScrollStopped.value,
-                                ))
-                          ],
-                        ),
-                        Stack(
-                          children: [
-                            VAsyncValueWidget<List<AbsenManualList>>(
-                                value: absenManualList,
-                                data: (list) {
-                                  final cancelled = list
-                                      .where((e) => e.btlSta == true)
-                                      .toList();
-                                  return _list(
-                                    _isCrossed,
-                                    cancelled,
-                                    onRefresh,
-                                    scrollController,
-                                  );
-                                }),
-                            Positioned(
-                                bottom: 20,
-                                left: 10,
-                                child: SearchFilterInfoWidget(
-                                  d1: _d1,
-                                  d2: _d2,
-                                  lastSearch: _lastSearch.value,
-                                  isScrolling: _isScrollStopped.value,
-                                ))
-                          ],
-                        ),
-                      ],
+                        );
+                      },
                     ),
                   );
                 }),

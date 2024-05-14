@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:face_net_authentication/dt_pc/dt_pc_approve/application/dt_pc_approve_notifier.dart';
 import 'package:face_net_authentication/dt_pc/dt_pc_list/application/dt_pc_list_notifier.dart';
+import 'package:face_net_authentication/dt_pc/dt_pc_list/application/is_hrd_or_spv_dt_pc_list_notifier.dart';
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
 import 'package:face_net_authentication/send_wa/application/send_wa_notifier.dart';
 import 'package:face_net_authentication/widgets/v_additional_info.dart';
@@ -21,6 +22,7 @@ import '../../../widgets/v_async_widget.dart';
 import '../../../widgets/v_scaffold_widget.dart';
 import '../../../style/style.dart';
 import '../application/dt_pc_list.dart';
+import '../application/is_hrd_or_spv_dt_pc_list.dart';
 import 'dt_pc_list_item.dart';
 
 class DtPcListPage extends HookConsumerWidget {
@@ -101,6 +103,7 @@ class DtPcListPage extends HookConsumerWidget {
       'gs_21': ['AJL'],
     };
 
+    final _initialDropdownPlaceholder = ['ACT', 'Transina', 'ALR'];
     final _currPT = ref.watch(userNotifierProvider).user.ptServer;
     final _initialDropdown = _mapPT.entries
         .firstWhereOrNull((element) => element.key == _currPT)
@@ -184,7 +187,6 @@ class DtPcListPage extends HookConsumerWidget {
         ref.invalidate(dtPcListControllerProvider);
       }
     });
-    ;
 
     ref.listen<AsyncValue>(dtPcListControllerProvider, (_, state) async {
       if (!state.isLoading &&
@@ -220,6 +222,7 @@ class DtPcListPage extends HookConsumerWidget {
 
     final errLog = ref.watch(errLogControllerProvider);
     final _isUserCrossed = ref.watch(isUserCrossedProvider);
+    final _isHrdOrSpv = ref.watch(isHrdOrSPVDtPcListNotifierProvider);
 
     return VAsyncWidgetScaffold<void>(
       value: errLog,
@@ -250,112 +253,122 @@ class DtPcListPage extends HookConsumerWidget {
                 },
                 child: VAsyncWidgetScaffold(
                   value: sendWa,
-                  data: (_) => VScaffoldTabLayout(
-                    scaffoldTitle: 'List Form DT / PC',
-                    additionalInfo: VAdditionalInfo(infoMessage: infoMessage),
-                    scaffoldFAB: _isCrossed
-                        ? Container()
-                        : FloatingActionButton.small(
-                            backgroundColor: Palette.primaryColor,
-                            child: Icon(
-                              Icons.add,
-                              color: Colors.white,
-                            ),
-                            onPressed: () => context.pushNamed(
-                                  RouteNames.createDtPcNameRoute,
-                                )),
-                    currPT: _initialDropdown,
-                    onPageChanged: onPageChanged,
-                    onFieldSubmitted: onFieldSubmitted,
-                    onFilterSelected: onFilterSelected,
-                    onDropdownChanged: onDropdownChanged,
-                    initialDateRange: _dateTimeRange.value,
-                    scaffoldBody: [
-                      Stack(
-                        children: [
-                          VAsyncValueWidget<List<DtPcList>>(
-                              value: dtPcList,
-                              data: (list) {
-                                final waiting = list
-                                    .where((e) =>
-                                        (e.spvSta == false ||
-                                            e.hrdSta == false) &&
-                                        e.btlSta == false)
-                                    .toList();
-                                return _list(
-                                  _isCrossed,
-                                  waiting,
-                                  onRefresh,
-                                  scrollController,
-                                );
-                              }),
-                          Positioned(
-                              bottom: 20,
-                              left: 10,
-                              child: SearchFilterInfoWidget(
-                                d1: _d1,
-                                d2: _d2,
-                                lastSearch: _lastSearch.value,
-                                isScrolling: _isScrollStopped.value,
-                              ))
+                  data: (_) => VAsyncWidgetScaffold<IsHrdOrSPVIDtPcList>(
+                    value: _isHrdOrSpv,
+                    data: (data) {
+                      final _isActionsVisible = data.when(
+                          isHrdOrSpv: () => true, isRegularStaff: () => false);
+
+                      return VScaffoldTabLayout(
+                        scaffoldTitle: 'List Form DT / PC',
+                        additionalInfo:
+                            VAdditionalInfo(infoMessage: infoMessage),
+                        scaffoldFAB: _isCrossed
+                            ? Container()
+                            : FloatingActionButton.small(
+                                backgroundColor: Palette.primaryColor,
+                                child: Icon(
+                                  Icons.add,
+                                  color: Colors.white,
+                                ),
+                                onPressed: () => context.pushNamed(
+                                      RouteNames.createDtPcNameRoute,
+                                    )),
+                        currPT: _initialDropdown ?? _initialDropdownPlaceholder,
+                        isActionsVisible: _isActionsVisible,
+                        onPageChanged: onPageChanged,
+                        onFieldSubmitted: onFieldSubmitted,
+                        onFilterSelected: onFilterSelected,
+                        onDropdownChanged: onDropdownChanged,
+                        initialDateRange: _dateTimeRange.value,
+                        scaffoldBody: [
+                          Stack(
+                            children: [
+                              VAsyncValueWidget<List<DtPcList>>(
+                                  value: dtPcList,
+                                  data: (list) {
+                                    final waiting = list
+                                        .where((e) =>
+                                            (e.spvSta == false ||
+                                                e.hrdSta == false) &&
+                                            e.btlSta == false)
+                                        .toList();
+                                    return _list(
+                                      _isCrossed,
+                                      waiting,
+                                      onRefresh,
+                                      scrollController,
+                                    );
+                                  }),
+                              Positioned(
+                                  bottom: 20,
+                                  left: 10,
+                                  child: SearchFilterInfoWidget(
+                                    d1: _d1,
+                                    d2: _d2,
+                                    lastSearch: _lastSearch.value,
+                                    isScrolling: _isScrollStopped.value,
+                                  ))
+                            ],
+                          ),
+                          Stack(
+                            children: [
+                              VAsyncValueWidget<List<DtPcList>>(
+                                  value: dtPcList,
+                                  data: (list) {
+                                    final approved = list
+                                        .where((e) =>
+                                            (e.spvSta == true &&
+                                                e.hrdSta == true) &&
+                                            e.btlSta == false)
+                                        .toList();
+                                    return _list(
+                                      _isCrossed,
+                                      approved,
+                                      onRefresh,
+                                      scrollController,
+                                    );
+                                  }),
+                              Positioned(
+                                  bottom: 20,
+                                  left: 10,
+                                  child: SearchFilterInfoWidget(
+                                    d1: _d1,
+                                    d2: _d2,
+                                    lastSearch: _lastSearch.value,
+                                    isScrolling: _isScrollStopped.value,
+                                  ))
+                            ],
+                          ),
+                          Stack(
+                            children: [
+                              VAsyncValueWidget<List<DtPcList>>(
+                                  value: dtPcList,
+                                  data: (list) {
+                                    final cancelled = list
+                                        .where((e) => e.btlSta == true)
+                                        .toList();
+                                    return _list(
+                                      _isCrossed,
+                                      cancelled,
+                                      onRefresh,
+                                      scrollController,
+                                    );
+                                  }),
+                              Positioned(
+                                  bottom: 20,
+                                  left: 10,
+                                  child: SearchFilterInfoWidget(
+                                    d1: _d1,
+                                    d2: _d2,
+                                    lastSearch: _lastSearch.value,
+                                    isScrolling: _isScrollStopped.value,
+                                  ))
+                            ],
+                          ),
                         ],
-                      ),
-                      Stack(
-                        children: [
-                          VAsyncValueWidget<List<DtPcList>>(
-                              value: dtPcList,
-                              data: (list) {
-                                final approved = list
-                                    .where((e) =>
-                                        (e.spvSta == true &&
-                                            e.hrdSta == true) &&
-                                        e.btlSta == false)
-                                    .toList();
-                                return _list(
-                                  _isCrossed,
-                                  approved,
-                                  onRefresh,
-                                  scrollController,
-                                );
-                              }),
-                          Positioned(
-                              bottom: 20,
-                              left: 10,
-                              child: SearchFilterInfoWidget(
-                                d1: _d1,
-                                d2: _d2,
-                                lastSearch: _lastSearch.value,
-                                isScrolling: _isScrollStopped.value,
-                              ))
-                        ],
-                      ),
-                      Stack(
-                        children: [
-                          VAsyncValueWidget<List<DtPcList>>(
-                              value: dtPcList,
-                              data: (list) {
-                                final cancelled = list
-                                    .where((e) => e.btlSta == true)
-                                    .toList();
-                                return _list(
-                                  _isCrossed,
-                                  cancelled,
-                                  onRefresh,
-                                  scrollController,
-                                );
-                              }),
-                          Positioned(
-                              bottom: 20,
-                              left: 10,
-                              child: SearchFilterInfoWidget(
-                                d1: _d1,
-                                d2: _d2,
-                                lastSearch: _lastSearch.value,
-                                isScrolling: _isScrollStopped.value,
-                              ))
-                        ],
-                      ),
-                    ],
+                      );
+                    },
                   ),
                 ),
               );

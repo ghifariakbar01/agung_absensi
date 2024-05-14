@@ -101,6 +101,7 @@ class SakitListPage extends HookConsumerWidget {
       'gs_21': ['AJL'],
     };
 
+    final _initialDropdownPlaceholder = ['ACT', 'Transina', 'ALR'];
     final _currPT = ref.watch(userNotifierProvider).user.ptServer;
     final _initialDropdown = _mapPT.entries
         .firstWhereOrNull((element) => element.key == _currPT)
@@ -251,6 +252,7 @@ class SakitListPage extends HookConsumerWidget {
                   data: (_) => VAsyncWidgetScaffold(
                     value: sendWa,
                     data: (_) => VScaffoldTabLayout(
+                      isActionsVisible: false,
                       scaffoldTitle: 'List Form Sakit',
                       additionalInfo: VAdditionalInfo(infoMessage: infoMessage),
                       scaffoldFAB: _isCrossed
@@ -264,7 +266,7 @@ class SakitListPage extends HookConsumerWidget {
                               onPressed: () => context.pushNamed(
                                     RouteNames.createSakitNameRoute,
                                   )),
-                      currPT: _initialDropdown,
+                      currPT: _initialDropdown ?? _initialDropdownPlaceholder,
                       onPageChanged: onPageChanged,
                       onFieldSubmitted: onFieldSubmitted,
                       onFilterSelected: onFilterSelected,

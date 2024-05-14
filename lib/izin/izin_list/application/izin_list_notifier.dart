@@ -128,20 +128,24 @@ class IzinListController extends _$IzinListController {
   }
 
   bool isHrdOrSpv(String? access) {
+    bool _isHrdOrSpv = true;
+
     final fullAkses = ref.read(userNotifierProvider).user.fullAkses;
 
     if (access == null) {
-      return false;
+      _isHrdOrSpv = false;
     }
 
     if (fullAkses! == false) {
-      return false;
+      _isHrdOrSpv = false;
     }
 
     if (_isAct()) {
-      return access.contains('18,');
+      _isHrdOrSpv = access!.contains('18,');
     } else {
-      return access.contains('5103,');
+      _isHrdOrSpv = access!.contains('5103,');
     }
+
+    return _isHrdOrSpv;
   }
 }
