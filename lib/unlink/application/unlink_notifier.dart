@@ -1,9 +1,9 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../infrastructure/cache_storage/unlink_storage.dart';
-import '../../infrastructure/credentials_storage/credentials_storage.dart';
+import '../../infrastructures/cache_storage/unlink_storage.dart';
+import '../../infrastructures/credentials_storage/credentials_storage.dart';
 import '../../shared/providers.dart';
-import '../infrastructure/unlink_repository.dart';
+import '../infrastructures/unlink_repository.dart';
 
 part 'unlink_notifier.g.dart';
 

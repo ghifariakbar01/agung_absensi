@@ -3,8 +3,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../shared/providers.dart';
 
-import '../infrastructure/cuti_list_remote_service.dart';
-import '../infrastructure/cuti_list_repository.dart';
+import '../infrastructures/cuti_list_remote_service.dart';
+import '../infrastructures/cuti_list_repository.dart';
 import 'cuti_list.dart';
 
 part 'cuti_list_notifier.g.dart';

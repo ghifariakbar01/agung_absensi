@@ -16,11 +16,11 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../shared/providers.dart';
 
 import '../../constants/assets.dart';
-import '../../infrastructure/cache_storage/wa_regist_storage.dart';
-import '../../infrastructure/credentials_storage/credentials_storage.dart';
+import '../../infrastructures/cache_storage/wa_regist_storage.dart';
+import '../../infrastructures/credentials_storage/credentials_storage.dart';
 import '../../send_wa/application/phone_num.dart';
 import '../../style/style.dart';
-import '../infrastructure/wa_register_repository.dart';
+import '../infrastructures/wa_register_repository.dart';
 import 'wa_register.dart';
 
 part 'wa_register_notifier.g.dart';

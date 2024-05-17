@@ -1,7 +1,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../infrastructure/cache_storage/imei_intro_storage.dart';
-import '../../../infrastructure/credentials_storage/credentials_storage.dart';
+import '../../../infrastructures/cache_storage/imei_intro_storage.dart';
+import '../../../infrastructures/credentials_storage/credentials_storage.dart';
 
 import '../../../shared/providers.dart';
 import '../imei_introduction_notifier.dart';

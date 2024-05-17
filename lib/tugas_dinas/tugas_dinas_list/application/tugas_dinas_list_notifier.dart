@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../shared/providers.dart';
-import '../infrastructure/tugas_dinas_list_remote_service.dart';
-import '../infrastructure/tugas_dinas_list_repository.dart';
+import '../infrastructures/tugas_dinas_list_remote_service.dart';
+import '../infrastructures/tugas_dinas_list_repository.dart';
 import 'tugas_dinas_list.dart';
 
 part 'tugas_dinas_list_notifier.g.dart';

@@ -3,8 +3,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../shared/providers.dart';
 
-import '../infrastructure/send_wa_remote_service.dart';
-import '../infrastructure/send_wa_repository.dart';
+import '../infrastructures/send_wa_remote_service.dart';
+import '../infrastructures/send_wa_repository.dart';
 import 'phone_num.dart';
 
 part 'send_wa_notifier.g.dart';

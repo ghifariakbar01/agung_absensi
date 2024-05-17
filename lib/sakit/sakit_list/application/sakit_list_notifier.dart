@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../shared/providers.dart';
-import '../infrastructure/sakit_list_remote_service.dart';
-import '../infrastructure/sakit_list_repository.dart';
+import '../infrastructures/sakit_list_remote_service.dart';
+import '../infrastructures/sakit_list_repository.dart';
 import 'sakit_list.dart';
 
 part 'sakit_list_notifier.g.dart';

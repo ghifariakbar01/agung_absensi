@@ -7,7 +7,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../utils/validator.dart';
-import '../../auth/infrastructure/auth_repository.dart';
+import '../../auth/infrastructures/auth_repository.dart';
 import '../../domain/auth_failure.dart';
 import '../../domain/value_objects_copy.dart';
 import '../../remember_me/application/remember_me_state.dart';

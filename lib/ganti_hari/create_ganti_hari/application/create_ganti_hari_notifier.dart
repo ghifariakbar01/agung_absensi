@@ -5,8 +5,8 @@ import '../../../send_wa/application/send_wa_notifier.dart';
 import '../../../shared/providers.dart';
 import '../../../wa_head_helper/application/wa_head.dart';
 import '../../../wa_head_helper/application/wa_head_helper_notifier.dart';
-import '../infrastructure/create_ganti_hari_remote_service.dart';
-import '../infrastructure/create_ganti_hari_repository.dart';
+import '../infrastructures/create_ganti_hari_remote_service.dart';
+import '../infrastructures/create_ganti_hari_repository.dart';
 import 'absen_ganti_hari.dart';
 
 part 'create_ganti_hari_notifier.g.dart';

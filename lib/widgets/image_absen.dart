@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
-import '../infrastructure/image/infrastructure/image_repository.dart';
+import '../infrastructures/image/infrastructures/image_repository.dart';
 import '../network_state/application/network_state_notifier.dart';
 import '../style/style.dart';
 

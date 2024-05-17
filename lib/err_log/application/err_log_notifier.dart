@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../shared/providers.dart';
-import '../infrastructure/err_log_remote_service.dart';
-import '../infrastructure/err_log_repository.dart';
+import '../infrastructures/err_log_remote_service.dart';
+import '../infrastructures/err_log_repository.dart';
 
 part 'err_log_notifier.g.dart';
 

@@ -2,7 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../domain/auth_failure.dart';
-import '../infrastructure/auth_repository.dart';
+import '../infrastructures/auth_repository.dart';
 
 part 'auth_notifier.freezed.dart';
 part 'auth_state.dart';

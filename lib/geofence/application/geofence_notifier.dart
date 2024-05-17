@@ -11,7 +11,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../background/application/saved_location.dart';
 import '../../domain/geofence_failure.dart';
 
-import '../infrastructure/geofence_repository.dart';
+import '../infrastructures/geofence_repository.dart';
 import 'coordinate_state.dart';
 import 'geofence_coordinate_state.dart';
 import 'geofence_response.dart';

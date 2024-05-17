@@ -12,12 +12,12 @@ import 'package:uuid/uuid.dart';
 import '../../constants/assets.dart';
 import '../../domain/edit_failure.dart';
 import '../../domain/imei_failure.dart';
-import '../../edit_profile/infrastructure/edit_profile_repository.dart';
+import '../../edit_profile/infrastructures/edit_profile_repository.dart';
 import '../../imei_introduction/application/shared/imei_introduction_providers.dart';
 import '../../tc/application/shared/tc_providers.dart';
 import '../../user/application/user_model.dart';
 import '../../utils/dialog_helper.dart';
-import '../infrastructure/imei_repository.dart';
+import '../infrastructures/imei_repository.dart';
 
 import '../../widgets/v_dialogs.dart';
 import '../../shared/providers.dart';

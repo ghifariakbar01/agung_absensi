@@ -1,4 +1,4 @@
-import 'package:face_net_authentication/izin/izin_approve/infrastructure/izin_approve_repository.dart';
+import 'package:face_net_authentication/izin/izin_approve/infrastructures/izin_approve_repository.dart';
 import 'package:face_net_authentication/izin/izin_list/application/izin_list_notifier.dart';
 import 'package:face_net_authentication/send_wa/application/send_wa_notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -8,7 +8,7 @@ import '../../../shared/providers.dart';
 
 import '../../izin_list/application/izin_list.dart';
 
-import '../infrastructure/izin_approve_remote_service.dart.dart';
+import '../infrastructures/izin_approve_remote_service.dart.dart';
 
 part 'izin_approve_notifier.g.dart';
 

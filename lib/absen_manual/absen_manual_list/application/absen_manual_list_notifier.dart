@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../shared/providers.dart';
-import '../infrastructure/absen_manual_list_remote_service.dart';
-import '../infrastructure/absen_manual_list_repository.dart';
+import '../infrastructures/absen_manual_list_remote_service.dart';
+import '../infrastructures/absen_manual_list_repository.dart';
 import 'absen_manual_list.dart';
 
 part 'absen_manual_list_notifier.g.dart';
@@ -154,6 +154,4 @@ class AbsenManualListController extends _$AbsenManualListController {
 
     return _isHrdOrSpv;
   }
-
-
 }

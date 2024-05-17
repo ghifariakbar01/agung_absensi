@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:face_net_authentication/izin/create_izin/infrastructure/create_izin_repository.dart';
+import 'package:face_net_authentication/izin/create_izin/infrastructures/create_izin_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../send_wa/application/send_wa_notifier.dart';
@@ -7,7 +7,7 @@ import '../../../shared/providers.dart';
 import '../../../wa_head_helper/application/wa_head.dart';
 import '../../../wa_head_helper/application/wa_head_helper_notifier.dart';
 
-import '../infrastructure/create_izin_remote_service.dart';
+import '../infrastructures/create_izin_remote_service.dart';
 
 part 'create_izin_notifier.g.dart';
 

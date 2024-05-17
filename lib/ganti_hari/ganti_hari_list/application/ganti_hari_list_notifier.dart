@@ -3,8 +3,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../shared/providers.dart';
 
-import '../infrastructure/ganti_hari_list_remote_service.dart';
-import '../infrastructure/ganti_hari_list_repository.dart';
+import '../infrastructures/ganti_hari_list_remote_service.dart';
+import '../infrastructures/ganti_hari_list_repository.dart';
 import 'ganti_hari_list.dart';
 
 part 'ganti_hari_list_notifier.g.dart';

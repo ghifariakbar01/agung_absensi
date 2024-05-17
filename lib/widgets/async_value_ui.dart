@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:face_net_authentication/err_log/application/err_log_notifier.dart';
-import 'package:face_net_authentication/infrastructure/exceptions.dart';
+import 'package:face_net_authentication/infrastructures/exceptions.dart';
 import 'package:face_net_authentication/widgets/alert_dialogs.dart';
 import 'package:face_net_authentication/utils/string_hardcoded.dart';
 import 'package:flutter/material.dart';

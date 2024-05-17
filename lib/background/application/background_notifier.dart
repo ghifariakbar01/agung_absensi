@@ -6,7 +6,7 @@ import 'package:face_net_authentication/domain/background_failure.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../infrastructure/background_repository.dart';
+import '../infrastructures/background_repository.dart';
 import 'background_state.dart';
 import 'saved_location.dart';
 

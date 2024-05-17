@@ -11,8 +11,8 @@ import '../../../utils/string_utils.dart';
 import '../../../wa_head_helper/application/wa_head.dart';
 import '../../../wa_head_helper/application/wa_head_helper_notifier.dart';
 
-import '../infrastructure/create_dt_pc_remote_service.dart';
-import '../infrastructure/create_dt_pc_repository.dart';
+import '../infrastructures/create_dt_pc_remote_service.dart';
+import '../infrastructures/create_dt_pc_repository.dart';
 
 part 'create_dt_pc_notifier.g.dart';
 

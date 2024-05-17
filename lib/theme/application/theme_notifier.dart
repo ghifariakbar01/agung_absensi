@@ -1,9 +1,9 @@
-import 'package:face_net_authentication/theme/infrastructure/theme_repository.dart';
+import 'package:face_net_authentication/theme/infrastructures/theme_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../infrastructure/credentials_storage/credentials_storage.dart';
+import '../../infrastructures/credentials_storage/credentials_storage.dart';
 import '../../shared/providers.dart';
-import '../infrastructure/theme_storage.dart';
+import '../infrastructures/theme_storage.dart';
 
 part 'theme_notifier.g.dart';
 

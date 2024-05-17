@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../domain/imei_failure.dart';
-import '../infrastructure/imei_repository.dart';
+import '../infrastructures/imei_repository.dart';
 import 'imei_reset_state.dart';
 
 class ImeiResetNotifier extends StateNotifier<ImeiResetState> {

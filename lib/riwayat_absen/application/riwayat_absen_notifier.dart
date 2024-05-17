@@ -4,7 +4,7 @@ import 'package:face_net_authentication/domain/riwayat_absen_failure.dart';
 import 'package:face_net_authentication/shared/providers.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../absen/infrastructure/absen_repository.dart';
+import '../../absen/infrastructures/absen_repository.dart';
 import 'riwayat_absen_model.dart';
 import 'riwayat_absen_state.dart';
 

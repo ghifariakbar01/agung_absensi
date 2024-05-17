@@ -5,8 +5,8 @@ import '../../../send_wa/application/send_wa_notifier.dart';
 import '../../../shared/providers.dart';
 import '../../tugas_dinas_list/application/tugas_dinas_list.dart';
 import '../../tugas_dinas_list/application/tugas_dinas_list_notifier.dart';
-import '../infrastructure/tugas_dinas_approve_remote_service.dart.dart';
-import '../infrastructure/tugas_dinas_approve_repository.dart';
+import '../infrastructures/tugas_dinas_approve_remote_service.dart.dart';
+import '../infrastructures/tugas_dinas_approve_repository.dart';
 
 part 'tugas_dinas_approve_notifier.g.dart';
 

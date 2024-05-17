@@ -10,8 +10,8 @@ import '../../create_sakit/application/create_sakit.dart';
 import '../../create_sakit/application/create_sakit_notifier.dart';
 import '../../sakit_list/application/sakit_list.dart';
 import '../../sakit_list/application/sakit_list_notifier.dart';
-import '../infrastructure/sakit_approve_remote_service.dart.dart';
-import '../infrastructure/sakit_approve_repository.dart';
+import '../infrastructures/sakit_approve_remote_service.dart.dart';
+import '../infrastructures/sakit_approve_repository.dart';
 
 part 'sakit_approve_notifier.g.dart';
 

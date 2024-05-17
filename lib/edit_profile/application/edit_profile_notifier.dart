@@ -5,7 +5,7 @@ import 'package:face_net_authentication/domain/value_objects_copy.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../utils/validator.dart';
-import '../infrastructure/edit_profile_repository.dart';
+import '../infrastructures/edit_profile_repository.dart';
 import 'edit_profile_state.dart';
 
 class EditProfileNotifier extends StateNotifier<EditProfileState> {

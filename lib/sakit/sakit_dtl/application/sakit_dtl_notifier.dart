@@ -1,8 +1,8 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../shared/providers.dart';
-import '../infrastructure/sakit_dtl_remote_service.dart';
-import '../infrastructure/sakit_dtl_repository.dart';
+import '../infrastructures/sakit_dtl_remote_service.dart';
+import '../infrastructures/sakit_dtl_repository.dart';
 import 'sakit_dtl.dart';
 
 part 'sakit_dtl_notifier.g.dart';

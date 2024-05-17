@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../shared/providers.dart';
-import '../infrastructure/izin_list_remote_service.dart';
-import '../infrastructure/izin_list_repository.dart';
+import '../infrastructures/izin_list_remote_service.dart';
+import '../infrastructures/izin_list_repository.dart';
 import 'izin_list.dart';
 import 'jenis_izin.dart';
 

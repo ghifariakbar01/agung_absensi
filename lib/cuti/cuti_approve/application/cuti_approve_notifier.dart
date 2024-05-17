@@ -1,4 +1,4 @@
-import 'package:face_net_authentication/cuti/cuti_approve/infrastructure/cuti_approve_remote_service.dart.dart';
+import 'package:face_net_authentication/cuti/cuti_approve/infrastructures/cuti_approve_remote_service.dart.dart';
 import 'package:face_net_authentication/cuti/cuti_list/application/cuti_list_notifier.dart';
 import 'package:face_net_authentication/sakit/create_sakit/application/create_sakit_notifier.dart';
 import 'package:face_net_authentication/send_wa/application/phone_num.dart';
@@ -13,7 +13,7 @@ import '../../../shared/providers.dart';
 
 import '../../cuti_list/application/cuti_list.dart';
 
-import '../infrastructure/cuti_approve_repository.dart';
+import '../infrastructures/cuti_approve_repository.dart';
 
 part 'cuti_approve_notifier.g.dart';
 

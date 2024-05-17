@@ -5,7 +5,7 @@ import 'package:face_net_authentication/domain/auth_failure.dart';
 import 'package:face_net_authentication/shared/providers.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../auth/infrastructure/auth_repository.dart';
+import '../../auth/infrastructures/auth_repository.dart';
 import '../../domain/user_failure.dart';
 import '../../domain/value_objects_copy.dart';
 

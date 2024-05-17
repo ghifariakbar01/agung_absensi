@@ -7,8 +7,8 @@ import '../../../shared/providers.dart';
 
 import '../../dt_pc_list/application/dt_pc_list.dart';
 
-import '../infrastructure/dt_pc_approve_remote_service.dart.dart';
-import '../infrastructure/dt_pc_approve_repository.dart';
+import '../infrastructures/dt_pc_approve_remote_service.dart.dart';
+import '../infrastructures/dt_pc_approve_repository.dart';
 
 part 'dt_pc_approve_notifier.g.dart';
 

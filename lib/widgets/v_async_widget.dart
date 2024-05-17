@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:face_net_authentication/infrastructure/exceptions.dart';
+import 'package:face_net_authentication/infrastructures/exceptions.dart';
 import 'package:face_net_authentication/widgets/v_scaffold_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

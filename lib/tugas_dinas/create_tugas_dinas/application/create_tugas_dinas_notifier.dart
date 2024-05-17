@@ -11,8 +11,8 @@ import '../../../shared/providers.dart';
 import '../../../wa_head_helper/application/wa_head.dart';
 import '../../../wa_head_helper/application/wa_head_helper_notifier.dart';
 
-import '../infrastructure/create_tugas_dinas_remote_service.dart';
-import '../infrastructure/create_tugas_dinas_repository.dart';
+import '../infrastructures/create_tugas_dinas_remote_service.dart';
+import '../infrastructures/create_tugas_dinas_repository.dart';
 import 'jenis_tugas_dinas.dart';
 import 'user_list.dart';
 

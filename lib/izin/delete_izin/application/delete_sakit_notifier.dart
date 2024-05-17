@@ -1,8 +1,8 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../shared/providers.dart';
-import '../infrastructure/delete_sakit_remote_service.dart';
-import '../infrastructure/delete_sakit_repository.dart';
+import '../infrastructures/delete_sakit_remote_service.dart';
+import '../infrastructures/delete_sakit_repository.dart';
 
 part 'delete_sakit_notifier.g.dart';
 

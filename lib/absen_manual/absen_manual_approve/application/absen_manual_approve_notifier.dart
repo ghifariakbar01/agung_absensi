@@ -7,8 +7,8 @@ import '../../../shared/providers.dart';
 import '../../absen_manual_list/application/absen_manual_list.dart';
 
 import '../../absen_manual_list/application/absen_manual_list_notifier.dart';
-import '../infrastructure/absen_manual_approve_remote_service.dart.dart';
-import '../infrastructure/absen_manual_approve_repository.dart';
+import '../infrastructures/absen_manual_approve_remote_service.dart.dart';
+import '../infrastructures/absen_manual_approve_repository.dart';
 
 part 'absen_manual_approve_notifier.g.dart';
 

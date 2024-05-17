@@ -3,7 +3,7 @@ import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/domain/auto_absen_failure.dart';
-import 'package:face_net_authentication/infrastructure/credentials_storage/credentials_storage.dart';
+import 'package:face_net_authentication/infrastructures/credentials_storage/credentials_storage.dart';
 import 'package:flutter/services.dart';
 
 import '../../background/application/recent_absen_state.dart';

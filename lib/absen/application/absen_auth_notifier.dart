@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../background/application/saved_location.dart';
 import '../../domain/absen_failure.dart';
-import '../infrastructure/absen_repository.dart';
+import '../infrastructures/absen_repository.dart';
 import 'absen_auth_state.dart';
 import 'absen_enum.dart';
 

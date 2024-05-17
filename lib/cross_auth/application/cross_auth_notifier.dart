@@ -1,11 +1,11 @@
 import 'package:face_net_authentication/cross_auth/application/cross_auth_response.dart';
-import 'package:face_net_authentication/cross_auth/infrastructure/cross_auth_remote_service.dart';
-import 'package:face_net_authentication/cross_auth/infrastructure/cross_auth_repository.dart';
+import 'package:face_net_authentication/cross_auth/infrastructures/cross_auth_remote_service.dart';
+import 'package:face_net_authentication/cross_auth/infrastructures/cross_auth_repository.dart';
 import 'package:face_net_authentication/user/application/user_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../infrastructure/cache_storage/cross_auth_storage.dart';
+import '../../infrastructures/cache_storage/cross_auth_storage.dart';
 import '../../shared/providers.dart';
 import 'is_user_crossed.dart';
 

@@ -2,8 +2,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../shared/providers.dart';
 
-import '../infrastructure/wa_head_helper_remote_service.dart';
-import '../infrastructure/wa_head_helper_repository.dart';
+import '../infrastructures/wa_head_helper_remote_service.dart';
+import '../infrastructures/wa_head_helper_repository.dart';
 import 'wa_head.dart';
 
 part 'wa_head_helper_notifier.g.dart';

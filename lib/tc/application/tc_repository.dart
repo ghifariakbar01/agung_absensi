@@ -1,4 +1,4 @@
-import 'package:face_net_authentication/infrastructure/credentials_storage/credentials_storage.dart';
+import 'package:face_net_authentication/infrastructures/credentials_storage/credentials_storage.dart';
 
 class TCRepository {
   TCRepository(this._storage);

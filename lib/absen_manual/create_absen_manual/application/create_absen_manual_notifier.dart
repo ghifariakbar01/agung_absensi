@@ -12,8 +12,8 @@ import '../../../utils/string_utils.dart';
 import '../../../wa_head_helper/application/wa_head.dart';
 import '../../../wa_head_helper/application/wa_head_helper_notifier.dart';
 
-import '../infrastructure/create_absen_manual_remote_service.dart';
-import '../infrastructure/create_absen_manual_repository.dart';
+import '../infrastructures/create_absen_manual_remote_service.dart';
+import '../infrastructures/create_absen_manual_repository.dart';
 import 'jenis_absen.dart';
 
 part 'create_absen_manual_notifier.g.dart';

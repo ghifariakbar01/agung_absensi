@@ -8,8 +8,8 @@ import '../../../send_wa/application/phone_num.dart';
 import '../../../shared/providers.dart';
 
 import '../../ganti_hari_list/application/ganti_hari_list.dart';
-import '../infrastructure/ganti_hari_approve_remote_service.dart.dart';
-import '../infrastructure/ganti_hari_approve_repository.dart';
+import '../infrastructures/ganti_hari_approve_remote_service.dart.dart';
+import '../infrastructures/ganti_hari_approve_repository.dart';
 
 part 'ganti_hari_approve_notifier.g.dart';
 

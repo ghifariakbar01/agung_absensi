@@ -1,6 +1,6 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../infrastructure/absen_repository.dart';
+import '../infrastructures/absen_repository.dart';
 import 'absen_state.dart';
 
 class AbsenNotifier extends StateNotifier<AbsenState> {
