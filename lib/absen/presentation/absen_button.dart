@@ -14,6 +14,7 @@ import '../../constants/assets.dart';
 import '../../domain/absen_failure.dart';
 import '../../domain/background_failure.dart';
 import '../../err_log/application/err_log_notifier.dart';
+import '../../network_state/application/network_state.dart';
 import '../../network_state/application/network_state_notifier.dart';
 import '../../routes/application/route_names.dart';
 import '../../shared/providers.dart';
@@ -21,6 +22,7 @@ import '../../style/style.dart';
 import '../../tester/application/tester_state.dart';
 import '../../utils/geofence_utils.dart';
 import '../../utils/string_utils.dart';
+import '../../widgets/v_async_widget.dart';
 import '../../widgets/v_button.dart';
 import '../../widgets/v_dialogs.dart';
 import '../application/absen_enum.dart';
@@ -117,7 +119,7 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
         .select((value) => value.savedBackgroundItems.isNotEmpty));
 
     // NETWORK
-    final network = ref.watch(networkStateNotifierProvider);
+    final network = ref.watch(networkStateNotifier2Provider);
 
     return Column(
       children: [
@@ -136,66 +138,72 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
 
                 Visibility(
                   visible: !isOfflineMode,
-                  child: VButton(
-                      label: 'ABSEN IN $karyawanShiftStr',
-                      isEnabled: isTesting
-                          ? true
-                          : network.when(
-                              online: () => isTester.maybeWhen(
-                                  tester: () =>
-                                      buttonResetVisibility ||
-                                      isShift ||
-                                      absen == AbsenState.empty() ||
-                                      absen == AbsenState.incomplete(),
-                                  orElse: () =>
-                                      buttonResetVisibility ||
-                                      isShift &&
-                                          nearest < minDistance &&
-                                          nearest != 0 ||
-                                      absen == AbsenState.empty() &&
-                                          nearest < minDistance &&
-                                          nearest != 0 ||
-                                      absen == AbsenState.incomplete() &&
-                                          nearest < 100 &&
-                                          nearest != 0),
-                              offline: () => false),
-                      onPressed: () => _absenIn(
-                          context: context,
-                          isTester: isTester,
-                          currentLocationLatitude: currentLocationLatitude,
-                          currentLocationLongitude: currentLocationLongitude
-                          //
-                          )),
+                  child: VAsyncValueWidget<NetworkState>(
+                    value: network,
+                    data: (netw) => VButton(
+                        label: 'ABSEN IN $karyawanShiftStr',
+                        isEnabled: isTesting
+                            ? true
+                            : netw.when(
+                                online: () => isTester.maybeWhen(
+                                    tester: () =>
+                                        buttonResetVisibility ||
+                                        isShift ||
+                                        absen == AbsenState.empty() ||
+                                        absen == AbsenState.incomplete(),
+                                    orElse: () =>
+                                        buttonResetVisibility ||
+                                        isShift &&
+                                            nearest < minDistance &&
+                                            nearest != 0 ||
+                                        absen == AbsenState.empty() &&
+                                            nearest < minDistance &&
+                                            nearest != 0 ||
+                                        absen == AbsenState.incomplete() &&
+                                            nearest < 100 &&
+                                            nearest != 0),
+                                offline: () => false,
+                              ),
+                        onPressed: () => _absenIn(
+                            context: context,
+                            isTester: isTester,
+                            currentLocationLatitude: currentLocationLatitude,
+                            currentLocationLongitude: currentLocationLongitude
+                            //
+                            )),
+                  ),
                 ),
                 Visibility(
-                  visible: !isOfflineMode,
-                  child: VButton(
-                      label: 'ABSEN OUT $karyawanShiftStr',
-                      isEnabled: isTesting
-                          ? true
-                          : network.when(
-                              online: () => isTester.maybeWhen(
-                                  tester: () =>
-                                      buttonResetVisibility ||
-                                      isShift ||
-                                      absen == AbsenState.absenIn(),
-                                  orElse: () =>
-                                      buttonResetVisibility ||
-                                      isShift &&
-                                          nearest < minDistance &&
-                                          nearest != 0 ||
-                                      absen == AbsenState.absenIn() &&
-                                          nearest < minDistance &&
-                                          nearest != 0),
-                              offline: () => false),
-                      onPressed: () => _absenOut(
-                          context: context,
-                          isTester: isTester,
-                          currentLocationLatitude: currentLocationLatitude,
-                          currentLocationLongitude: currentLocationLongitude
-                          //
-                          )),
-                ),
+                    visible: !isOfflineMode,
+                    child: VAsyncValueWidget<NetworkState>(
+                      value: network,
+                      data: (netw) => VButton(
+                          label: 'ABSEN OUT $karyawanShiftStr',
+                          isEnabled: isTesting
+                              ? true
+                              : netw.when(
+                                  online: () => isTester.maybeWhen(
+                                      tester: () =>
+                                          buttonResetVisibility ||
+                                          isShift ||
+                                          absen == AbsenState.absenIn(),
+                                      orElse: () =>
+                                          buttonResetVisibility ||
+                                          isShift &&
+                                              nearest < minDistance &&
+                                              nearest != 0 ||
+                                          absen == AbsenState.absenIn() &&
+                                              nearest < minDistance &&
+                                              nearest != 0),
+                                  offline: () => false),
+                          onPressed: () => _absenOut(
+                              context: context,
+                              isTester: isTester,
+                              currentLocationLatitude: currentLocationLatitude,
+                              currentLocationLongitude: currentLocationLongitude
+                              //
+                              )),
+                    ))
               ],
             );
           },

@@ -93,6 +93,7 @@ class RouterNotifier extends ChangeNotifier {
     final String current = state.matchedLocation;
     final areWeAtDefaultRoute = current == RouteNames.defaultRoute;
 
+    final defaultRoute = current == RouteNames.defaultRoute;
     final areWeSigningIn = current == RouteNames.signInRoute;
     final areWeReadingTC = current == RouteNames.termsAndConditionRoute;
     final areWeReadingImei = current == RouteNames.imeiInstructionRoute;
@@ -109,7 +110,7 @@ class RouterNotifier extends ChangeNotifier {
 
     return authState.maybeMap(
       authenticated: (_) {
-        if (areWeSigningIn) {
+        if (areWeSigningIn || defaultRoute) {
           if (weVisitedTC && weVisitedImei) {
             return RouteNames.initUserRoute;
           } else {

@@ -42,6 +42,29 @@ class VAsyncWidgetScaffold<T> extends StatelessWidget {
   }
 }
 
+class VAsyncWidgetScaffoldWrappedMaterial<T> extends StatelessWidget {
+  const VAsyncWidgetScaffoldWrappedMaterial({
+    required this.value,
+    required this.data,
+  });
+  final AsyncValue<T> value;
+  final Widget Function(T) data;
+
+  @override
+  Widget build(BuildContext context) {
+    return value.when(
+      data: data,
+      error: (e, st) => MaterialApp(
+        home: Scaffold(
+          appBar: AppBar(),
+          body: Center(child: ErrorMessageWidget(errorMessage: e.toString())),
+        ),
+      ),
+      loading: () => Center(child: CircularProgressIndicator()),
+    );
+  }
+}
+
 class VAsyncValueWidget<T> extends StatelessWidget {
   const VAsyncValueWidget({required this.value, required this.data});
   final AsyncValue<T> value;

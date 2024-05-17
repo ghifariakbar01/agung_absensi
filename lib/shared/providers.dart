@@ -87,12 +87,14 @@ final routerProvider = Provider<GoRouter>((ref) {
   );
 });
 
+AndroidOptions _getAndroidOptions() => const AndroidOptions(
+      encryptedSharedPreferences: true,
+    );
+
 // STORAGE
 final flutterSecureStorageProvider = Provider(
   (ref) => FlutterSecureStorage(
-    aOptions: AndroidOptions(
-      encryptedSharedPreferences: true,
-    ),
+    aOptions: _getAndroidOptions(),
   ),
 );
 
