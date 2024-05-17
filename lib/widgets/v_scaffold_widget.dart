@@ -214,38 +214,38 @@ class VScaffoldTabLayout extends HookWidget {
                   ),
             toolbarHeight: 45,
             actions: [
-              if (isActionsVisible) ...[
-                if (_isSearching.value) ...[
-                  Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: SizedBox(
-                      height: 45,
-                      width: MediaQuery.of(context).size.width - 12,
-                      child: TextFormField(
-                        focusNode: _searchFocus,
-                        controller: _searchController,
-                        decoration: Themes.formStyle('Search Here',
-                            textColor: Colors.white),
-                        style: Themes.customColor(14, color: Colors.white),
-                        onTapOutside: (_) {
-                          _isSearching.value = false;
-                          _searchFocus.unfocus();
-                        },
-                        onTap: () {
-                          _isSearching.value = true;
-                          _searchFocus.requestFocus();
-                        },
-                        onFieldSubmitted: (value) {
-                          onFieldSubmitted(value);
-                        },
-                      ),
+              if (_isSearching.value) ...[
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: SizedBox(
+                    height: 45,
+                    width: MediaQuery.of(context).size.width - 12,
+                    child: TextFormField(
+                      focusNode: _searchFocus,
+                      controller: _searchController,
+                      decoration: Themes.formStyle('Search Here',
+                          textColor: Colors.white),
+                      style: Themes.customColor(14, color: Colors.white),
+                      onTapOutside: (_) {
+                        _isSearching.value = false;
+                        _searchFocus.unfocus();
+                      },
+                      onTap: () {
+                        _isSearching.value = true;
+                        _searchFocus.requestFocus();
+                      },
+                      onFieldSubmitted: (value) {
+                        onFieldSubmitted(value);
+                      },
                     ),
-                  )
-                ],
-                if (_isSearching.value == false) ...[
-                  /*
+                  ),
+                )
+              ],
+              if (_isSearching.value == false) ...[
+                /*
                   Dropdown bar
                 */
+                if (isActionsVisible) ...[
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: SizedBox(
@@ -295,46 +295,46 @@ class VScaffoldTabLayout extends HookWidget {
                       ),
                     ),
                   ),
+                ],
 
-                  /*
+                /*
                   Filter Icon
                 */
-                  IconButton(
-                      onPressed: () async {
-                        final _oneMonth = Duration(days: 30);
+                IconButton(
+                    onPressed: () async {
+                      final _oneMonth = Duration(days: 30);
 
-                        final picked = await showDateRangePicker(
-                            context: context,
-                            initialDateRange: initialDateRange,
-                            firstDate: DateTime.now().subtract(_oneMonth),
-                            lastDate: DateTime.now().add(Duration(days: 1)));
+                      final picked = await showDateRangePicker(
+                          context: context,
+                          initialDateRange: initialDateRange,
+                          firstDate: DateTime.now().subtract(_oneMonth),
+                          lastDate: DateTime.now().add(Duration(days: 1)));
 
-                        if (picked != null) {
-                          print(picked);
+                      if (picked != null) {
+                        print(picked);
 
-                          onFilterSelected(picked);
-                        }
-                      },
-                      icon: Icon(Icons.sort)),
+                        onFilterSelected(picked);
+                      }
+                    },
+                    icon: Icon(Icons.sort)),
 
-                  /*
+                /*
                   Search bar
                 */
-                  IconButton(
-                      onPressed: () {
-                        _isSearching.value
-                            ? _isSearching.value = false
-                            : _isSearching.value = true;
+                IconButton(
+                    onPressed: () {
+                      _isSearching.value
+                          ? _isSearching.value = false
+                          : _isSearching.value = true;
 
-                        _searchFocus.requestFocus();
-                      },
-                      color: _searchController.text.isNotEmpty
-                          ? Palette.orange
-                          : null,
-                      icon: Icon(Icons.search)),
-                  additionalInfo != null ? additionalInfo! : Container(),
-                  NetworkWidget(),
-                ]
+                      _searchFocus.requestFocus();
+                    },
+                    color: _searchController.text.isNotEmpty
+                        ? Palette.orange
+                        : null,
+                    icon: Icon(Icons.search)),
+                additionalInfo != null ? additionalInfo! : Container(),
+                NetworkWidget(),
               ]
             ],
           ),
