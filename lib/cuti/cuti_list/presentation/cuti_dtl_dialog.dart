@@ -1,4 +1,3 @@
-import 'package:face_net_authentication/cuti/cuti_list/application/cuti_list_notifier.dart';
 import 'package:face_net_authentication/widgets/tappable_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -7,9 +6,8 @@ import 'package:intl/intl.dart';
 
 import '../../../constants/assets.dart';
 import '../../../routes/application/route_names.dart';
-import '../../../shared/providers.dart';
 import '../../../style/style.dart';
-import '../../../utils/enums.dart';
+import '../../../utils/dialog_helper.dart';
 import '../../../widgets/v_async_widget.dart';
 import '../../create_cuti/application/alasan_cuti.dart';
 import '../../create_cuti/application/create_cuti_notifier.dart';
@@ -26,122 +24,6 @@ class CutiDtlDialog extends ConsumerWidget {
     final jenisCuti = ref.watch(jenisCutiNotifierProvider);
     final alasanCuti = ref.watch(alasanCutiNotifierProvider);
 
-    final bool isHrdApproved = item.hrdSta!;
-
-    final String? fin = ref.watch(userNotifierProvider).user.fin;
-    final bool isHrd =
-        ref.watch(cutiListControllerProvider.notifier).isHrdOrSpv(fin!);
-
-    final bool isCurrentUser =
-        ref.watch(userNotifierProvider).user.idUser == item.idUser;
-
-    final bool isSpvApproved = item.spvSta!;
-    final bool isSpvEditable =
-        ref.watch(cutiListControllerProvider.notifier).isSpvEdit();
-
-    final bool fullAkses = ref.watch(userNotifierProvider).user.fullAkses!;
-
-    _returnVisibility(ColumnCommandButtonType buttonType) {
-      bool isVisible = false;
-
-      if (isHrd) {
-        if (isCurrentUser == false) {
-          if (isSpvApproved) {
-            switch (buttonType) {
-              case ColumnCommandButtonType.Edit:
-                isVisible = true;
-                break;
-              case ColumnCommandButtonType.Delete:
-                isVisible = false;
-                break;
-            }
-          }
-        } else {
-          switch (buttonType) {
-            case ColumnCommandButtonType.Edit:
-              isVisible = true;
-              break;
-            case ColumnCommandButtonType.Delete:
-              isVisible = true;
-              break;
-          }
-        }
-      } else {
-        if (isCurrentUser) {
-          if (isSpvEditable && isSpvApproved) {
-            switch (buttonType) {
-              case ColumnCommandButtonType.Edit:
-                isVisible = true;
-                break;
-              case ColumnCommandButtonType.Delete:
-                isVisible = true;
-                break;
-            }
-          } else if (isSpvEditable && isSpvApproved == false) {
-            switch (buttonType) {
-              case ColumnCommandButtonType.Edit:
-                isVisible = true;
-                break;
-              case ColumnCommandButtonType.Delete:
-                isVisible = true;
-                break;
-            }
-          } else if (!isSpvEditable && isSpvApproved) {
-            switch (buttonType) {
-              case ColumnCommandButtonType.Edit:
-                isVisible = false;
-                break;
-              case ColumnCommandButtonType.Delete:
-                isVisible = false;
-                break;
-            }
-          } else {
-            switch (buttonType) {
-              case ColumnCommandButtonType.Edit:
-                isVisible = true;
-                break;
-              case ColumnCommandButtonType.Delete:
-                isVisible = false;
-                break;
-            }
-          }
-        } else {
-          switch (buttonType) {
-            case ColumnCommandButtonType.Edit:
-              isVisible = true;
-              break;
-            case ColumnCommandButtonType.Delete:
-              isVisible = false;
-              break;
-          }
-        }
-      }
-
-      if (isHrdApproved) {
-        switch (buttonType) {
-          case ColumnCommandButtonType.Edit:
-            isVisible = false;
-            break;
-          case ColumnCommandButtonType.Delete:
-            isVisible = false;
-            break;
-        }
-      }
-
-      if (fullAkses) {
-        switch (buttonType) {
-          case ColumnCommandButtonType.Edit:
-            isVisible = true;
-            break;
-          case ColumnCommandButtonType.Delete:
-            isVisible = true;
-            break;
-        }
-      }
-
-      return isVisible;
-    }
-
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.0),
@@ -151,7 +33,6 @@ class CutiDtlDialog extends ConsumerWidget {
         padding: EdgeInsets.all(12),
         child: Column(
           children: [
-            // 1.
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -250,51 +131,58 @@ class CutiDtlDialog extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Tanggal Awal',
-                          style: Themes.customColor(7, color: Colors.grey),
-                        ),
-                        SizedBox(
-                          height: 2,
-                        ),
-                        Text(
-                          DateFormat(
-                            'dd MMM yyyy',
-                          ).format(DateTime.parse(item.tglStart!)),
-                          style: Themes.customColor(9,
-                              color: Palette.blue, fontWeight: FontWeight.w500),
-                        ),
-                      ],
-                    ),
+                    item.tglStart == null
+                        ? Container()
+                        : Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Tanggal Awal',
+                                style:
+                                    Themes.customColor(7, color: Colors.grey),
+                              ),
+                              SizedBox(
+                                height: 2,
+                              ),
+                              Text(
+                                DateFormat(
+                                  'dd MMM yyyy',
+                                ).format(item.tglStart!),
+                                style: Themes.customColor(9,
+                                    color: Palette.blue,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
                     SizedBox(
                       height: 8,
                     ),
                     // TGL AKHIR
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Tanggal Akhir',
-                          style: Themes.customColor(7, color: Colors.grey),
-                        ),
-                        SizedBox(
-                          height: 2,
-                        ),
-                        Text(
-                          DateFormat(
-                            'dd MMM yyyy',
-                          ).format(DateTime.parse(item.tglStart!)),
-                          style: Themes.customColor(9,
-                              color: Palette.tertiaryColor,
-                              fontWeight: FontWeight.w500),
-                        ),
-                      ],
-                    ),
+                    item.tglEnd == null
+                        ? Container()
+                        : Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Tanggal Akhir',
+                                style:
+                                    Themes.customColor(7, color: Colors.grey),
+                              ),
+                              SizedBox(
+                                height: 2,
+                              ),
+                              Text(
+                                DateFormat(
+                                  'dd MMM yyyy',
+                                ).format(item.tglEnd!),
+                                style: Themes.customColor(9,
+                                    color: Palette.tertiaryColor,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
                     SizedBox(
                       height: 8,
                     ),
@@ -336,7 +224,11 @@ class CutiDtlDialog extends ConsumerWidget {
                         VAsyncValueWidget<List<JenisCuti>>(
                           value: jenisCuti,
                           data: (list) => Text(
-                            '${list.firstWhere((element) => element.inisial == item.jenisCuti, orElse: () => list.first).nama}',
+                            '${list.firstWhere(
+                                  (element) =>
+                                      element.inisial == item.jenisCuti,
+                                  orElse: () => list.first,
+                                ).nama}',
                             style: Themes.customColor(9,
                                 color: Palette.tertiaryColor,
                                 fontWeight: FontWeight.w500),
@@ -371,7 +263,10 @@ class CutiDtlDialog extends ConsumerWidget {
                       data: (list) => SizedBox(
                         width: 150,
                         child: Text(
-                          '${list.firstWhere((element) => element.kode == item.alasan, orElse: () => list.first).alasan}',
+                          '${list.firstWhere(
+                                (element) => element.kode == item.alasan,
+                                orElse: () => list.first,
+                              ).alasan}',
                           style: Themes.customColor(9,
                               color: Palette.primaryColor,
                               fontWeight: FontWeight.w500),
@@ -414,25 +309,39 @@ class CutiDtlDialog extends ConsumerWidget {
               ],
             ),
             Expanded(child: Container()),
-            if (item.btlSta == false)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  if (_returnVisibility(ColumnCommandButtonType.Edit))
-                    TappableSvg(
-                        assetPath: Assets.iconEdit,
-                        onTap: () {
-                          context.pop();
-                          return context.pushNamed(RouteNames.editCutiRoute,
-                              extra: item);
-                        }),
-                  SizedBox(
-                    width: 8,
-                  ),
-                  if (_returnVisibility(ColumnCommandButtonType.Delete))
-                    TappableSvg(assetPath: Assets.iconDelete, onTap: () {})
-                ],
-              )
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                if (item.isEdit!)
+                  TappableSvg(
+                      assetPath: Assets.iconEdit,
+                      onTap: () {
+                        return context.pushNamed(
+                          RouteNames.editCutiRoute,
+                          extra: item.toJson(),
+                        );
+                      }),
+                SizedBox(
+                  width: 8,
+                ),
+                if (item.isDelete!)
+                  TappableSvg(
+                    assetPath: Assets.iconDelete,
+                    onTap: () async {
+                      context.pop();
+                      await ref
+                          .read(createCutiNotifierProvider.notifier)
+                          .deleteCuti(
+                              idCuti: item.idCuti!,
+                              onError: (msg) => DialogHelper.showCustomDialog(
+                                    msg,
+                                    context,
+                                  ));
+                    },
+                  )
+              ],
+            )
           ],
         ),
       ),

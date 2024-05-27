@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:dartz/dartz.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -11,6 +11,28 @@ import '../user/application/user_notifier.dart';
 import '../widgets/v_dialogs.dart';
 import 'providers.dart';
 
+final Map<String, String> _mapPT = {
+  // 'gs_12': 'http://agungcartrans.co.id:1232/services',
+  'gs_12': 'https://www.agunglogisticsapp.co.id:2002/services',
+  'gs_14': 'https://agungcartrans.co.id:2601/services',
+  'gs_18': 'https://www.agunglogisticsapp.co.id:2002/services',
+  'gs_21': 'https://www.agunglogisticsapp.co.id:3603/services',
+};
+
+_determineBaseUrl(UserModelWithPassword user) {
+  final pt = user.ptServer;
+  if (pt == null) {
+    throw AssertionError('pt null');
+  }
+
+  return _mapPT.entries
+      .firstWhere(
+        (element) => element.key == pt,
+        orElse: () => _mapPT.entries.first,
+      )
+      .value;
+}
+
 // 1. GET AND SET USER
 final getUserFutureProvider = FutureProvider<Unit>((ref) async {
   UserNotifier userNotifier = ref.read(userNotifierProvider.notifier);
@@ -20,6 +42,16 @@ final getUserFutureProvider = FutureProvider<Unit>((ref) async {
   if (userString.isNotEmpty) {
     final json = jsonDecode(userString) as Map<String, Object?>;
     final user = UserModelWithPassword.fromJson(json);
+
+    ref.read(dioProviderCuti)
+      ..options = BaseOptions(
+        connectTimeout: 20000,
+        receiveTimeout: 20000,
+        validateStatus: (status) {
+          return true;
+        },
+        baseUrl: _determineBaseUrl(user),
+      );
 
     if (user.IdKary == null) {
       // IF USER ID KARYAWAN NULL LOGOUT, MAKE USER LOGIN AGAIN
@@ -70,34 +102,30 @@ final getUserFutureProvider = FutureProvider<Unit>((ref) async {
 final imeiInitFutureProvider =
     FutureProvider.family<Unit, BuildContext>((ref, context) async {
   try {
-    log('imeiInitFutureProvider -- 1');
     ref.invalidate(getUserFutureProvider);
     await ref.read(getUserFutureProvider.future);
   } catch (e) {
     throw AssertionError('Error validating user. Error : $e');
   }
 
-  log('imeiInitFutureProvider -- 2');
   final user = ref.read(userNotifierProvider).user;
 
   if (user.IdKary!.isNotEmpty) {
     final String? imeiDb;
 
     try {
-      log('imeiInitFutureProvider -- 3');
       final imeiNotifier = ref.read(imeiNotifierProvider.notifier);
       // 3. GET IMEI DATA
       String imei = await imeiNotifier.getImeiString();
-      log('imeiInitFutureProvider -- 4 -- getImeiString');
+
       imeiNotifier.changeSavedImei(imei);
-      log('imeiInitFutureProvider -- 5 -- getImeiStringDb');
+
       imeiDb =
           await imeiNotifier.getImeiStringDb(idKary: user.IdKary ?? 'null');
-      log('imeiInitFutureProvider -- 6 -- checkAndUpdateImei');
+
       await ref
           .read(imeiAuthNotifierProvider.notifier)
           .checkAndUpdateImei(imeiDb: imeiDb);
-      log('imeiInitFutureProvider -- 7');
     } catch (e) {
       throw AssertionError('Error validating imei. Error : $e');
     }
@@ -110,6 +138,7 @@ final imeiInitFutureProvider =
       await ref
           .read(imeiNotifierProvider.notifier)
           .processImei(imei: imeiDb, ref: ref, context: context);
+
       return unit;
     } else {
       // IF CURRENT APP IS OFFLINE

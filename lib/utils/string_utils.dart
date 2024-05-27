@@ -71,7 +71,7 @@ class StringUtils {
   // Output: 2023-06-21
   static String formatTanggal(String dateTimeString) {
     DateTime dateTime = DateTime.parse(dateTimeString);
-    return dateTime.toIso8601String().split('T')[0];
+    return DateFormat('dd MMM yyyy').format(dateTime);
   }
 
   // Output: 21-06-2023 23:59

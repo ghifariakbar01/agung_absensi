@@ -7,19 +7,16 @@ import 'package:face_net_authentication/widgets/v_scaffold_widget.dart';
 import 'package:face_net_authentication/sakit/create_sakit/application/create_sakit_notifier.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 
-import '../../../constants/assets.dart';
 import '../../../err_log/application/err_log_notifier.dart';
 import '../../../utils/dialog_helper.dart';
-import '../../../utils/os_vibrate.dart';
 import '../../../widgets/alert_helper.dart';
 import '../../../widgets/v_async_widget.dart';
-import '../../../widgets/v_dialogs.dart';
 import '../../../style/style.dart';
 import '../../../user_helper/user_helper_notifier.dart';
 import '../../../utils/string_utils.dart';
@@ -42,16 +39,16 @@ class EditSakitPage extends HookConsumerWidget {
         item.surat!.toLowerCase() == 'ts' ? 'Tanpa Surat' : 'Dengan Surat');
 
     final tglPlaceholderTextController = useTextEditingController(
-        text:
-            'Dari ${StringUtils.formatTanggal(item.tglStart!)} Sampai ${StringUtils.formatTanggal(item.tglEnd!)}');
+      text: _returnPlaceHolderText(
+        DateTimeRange(
+          start: item.tglStart!,
+          end: item.tglEnd!,
+        ),
+      ),
+    );
 
-    final tglAwalTextController = useState(
-        StringUtils.midnightDate(DateTime.parse(item.tglStart!))
-            .replaceAll('.000', ''));
-
-    final tglAkhirTextController = useState(
-        StringUtils.midnightDate(DateTime.parse(item.tglEnd!))
-            .replaceAll('.000', ''));
+    final tglStart = useState(item.tglStart);
+    final tglEnd = useState(item.tglEnd);
 
     final spvTextController = useTextEditingController();
     final hrdTextController = useTextEditingController();
@@ -182,31 +179,24 @@ class EditSakitPage extends HookConsumerWidget {
                     // TGL
                     InkWell(
                       onTap: () async {
+                        final _oneMonth = Duration(days: 30);
+                        final _threeDays = Duration(days: 3);
+
                         final picked = await showDateRangePicker(
                           context: context,
-                          lastDate: DateTime.now(),
-                          firstDate: new DateTime(2021),
+                          lastDate: DateTime.now().add(_threeDays),
+                          firstDate: DateTime.now().subtract(_oneMonth),
                         );
+
                         if (picked != null) {
                           print(picked);
-
-                          final start = StringUtils.midnightDate(picked.start)
-                              .replaceAll('.000', '');
-                          final end = StringUtils.midnightDate(picked.end)
-                              .replaceAll('.000', '');
-
-                          tglAwalTextController.value = start;
-                          tglAkhirTextController.value = end;
-
-                          final startPlaceHolder = StringUtils.formatTanggal(
-                              picked.start.toString());
-                          final endPlaceHolder =
-                              StringUtils.formatTanggal(picked.end.toString());
-
-                          tglPlaceholderTextController.text =
-                              'Dari $startPlaceHolder Sampai $endPlaceHolder';
-
-                          log('START $start END $end');
+                          tglStart.value = picked.start;
+                          tglEnd.value = picked.end;
+                          final _start =
+                              DateFormat('dd MMM yyyy').format(tglStart.value!);
+                          final _end =
+                              DateFormat('dd MMMM yyyy').format(tglEnd.value!);
+                          tglPlaceholderTextController.text = '$_start - $_end';
                         }
                       },
                       child: Ink(
@@ -281,21 +271,22 @@ class EditSakitPage extends HookConsumerWidget {
                           log(' Payroll: ${ptTextController.value.text} \n ');
                           log(' Diagnosa: ${diagnosaTextController.value.text} \n ');
                           log(' Surat Dokter: $suratDokterText \n ');
-                          log(' Tgl Awal: ${tglAwalTextController.value} Tgl Akhir: ${tglAkhirTextController.value} \n ');
+                          log(' Tgl Awal: ${tglStart.value} Tgl Akhir: ${tglEnd.value} \n ');
                           log(' SPV Note : ${spvTextController.value.text} HRD Note : ${hrdTextController.value.text} \n  ');
 
                           await ref
                               .read(createSakitNotifierProvider.notifier)
                               .updateSakit(
-                                  id: item.idSakit!,
-                                  idUser: item.idUser!,
-                                  suratDokter: suratDokterText,
-                                  tglAwal: tglAwalTextController.value,
-                                  tglAkhir: tglAkhirTextController.value,
+                                  idSakit: item.idSakit!,
                                   keterangan: diagnosaTextController.text,
+                                  surat: suratDokterText,
+                                  tglEnd: tglEnd.value!,
+                                  tglStart: tglStart.value!,
                                   onError: (msg) =>
                                       DialogHelper.showCustomDialog(
-                                          msg, context));
+                                        msg,
+                                        context,
+                                      ));
                         })
                   ],
                 )),
@@ -303,5 +294,14 @@ class EditSakitPage extends HookConsumerWidget {
         ),
       ),
     );
+  }
+
+  String _returnPlaceHolderText(
+    DateTimeRange picked,
+  ) {
+    final startPlaceHolder = StringUtils.formatTanggal(picked.start.toString());
+    final endPlaceHolder = StringUtils.formatTanggal(picked.end.toString());
+
+    return 'Dari $startPlaceHolder Sampai $endPlaceHolder';
   }
 }

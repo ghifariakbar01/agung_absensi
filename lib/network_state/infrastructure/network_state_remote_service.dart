@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:face_net_authentication/infrastructures/dio_extensions.dart';
@@ -28,10 +27,11 @@ class NetworkStateRemoteService {
             "SELECT * FROM mst_user WHERE nama LIKE '%${_userModelWithPassword.nama}%'",
       });
 
-      final response = await _dio.post('',
-          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
-
-      log('response $response ${jsonEncode(data)}');
+      final response = await _dio.post(
+        '',
+        data: jsonEncode(data),
+        options: Options(contentType: 'text/plain'),
+      );
 
       final items = response.data?[0];
 

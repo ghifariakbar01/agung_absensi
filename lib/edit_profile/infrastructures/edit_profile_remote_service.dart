@@ -24,10 +24,6 @@ class EditProfileRemoteService {
 
   Future<String?> getImei({required String idKary}) async {
     try {
-      /*
-        FOR TESTING,
-          use gs_12 on login, absen, riwayat
-      */
       final Map<String, dynamic> data = {};
       data.addAll(_dioRequest);
 

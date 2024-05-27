@@ -37,8 +37,12 @@ class SakitDtlNotifier extends _$SakitDtlNotifier {
     });
   }
 
-  Map<String, String> _imagePtServerMap() =>
-      {'gs_12': '1232', 'gs_14': '1261', 'gs_18': '1026', 'gs_21': '1063'};
+  Map<String, String> _imagePtServerMap() => {
+        'gs_12': '1232',
+        'gs_14': '1261',
+        'gs_18': '1026',
+        'gs_21': '1063',
+      };
 
   String urlImageFormSakit(String namaFile) {
     final ptServer =

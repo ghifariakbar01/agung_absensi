@@ -8,6 +8,8 @@ class CreateIzinRepository {
   final CreateIzinRemoteService _remoteService;
 
   Future<Unit> submitIzin({
+    required String username,
+    required String pass,
     required int idUser,
     required int idMstIzin,
     required int totalHari,
@@ -15,8 +17,11 @@ class CreateIzinRepository {
     required String cUser,
     required String tglEnd,
     required String tglStart,
+    String? server = 'testing',
   }) async {
     return _remoteService.submitIzin(
+      username: username,
+      pass: pass,
       idUser: idUser,
       idMstIzin: idMstIzin,
       totalHari: totalHari,
@@ -28,24 +33,41 @@ class CreateIzinRepository {
   }
 
   Future<Unit> updateIzin({
-    required int id,
-    required int idMstIzin,
-    required int totalHari,
+    required int idIzin,
+    required String username,
+    required String pass,
     required int idUser,
+    required int idMstIzin,
     required String ket,
-    required String uUser,
     required String tglEnd,
     required String tglStart,
+    required String noteSpv,
+    required String noteHrd,
+    String? server = 'testing',
   }) async {
     return _remoteService.updateIzin(
-      id: id,
+      idIzin: idIzin,
+      username: username,
+      pass: pass,
       idMstIzin: idMstIzin,
-      totalHari: totalHari,
       idUser: idUser,
       ket: ket,
-      uUser: uUser,
       tglEnd: tglEnd,
       tglStart: tglStart,
+      noteSpv: noteSpv,
+      noteHrd: noteHrd,
+    );
+  }
+
+  Future<Unit> deleteIzin({
+    required String username,
+    required String pass,
+    required int idIzin,
+  }) async {
+    return _remoteService.deleteIzin(
+      username: username,
+      pass: pass,
+      idIzin: idIzin,
     );
   }
 }

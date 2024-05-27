@@ -1,5 +1,4 @@
-import 'package:face_net_authentication/sakit/sakit_list/application/sakit_list_notifier.dart';
-import 'package:face_net_authentication/utils/enums.dart';
+import 'package:face_net_authentication/sakit/create_sakit/application/create_sakit_notifier.dart';
 import 'package:face_net_authentication/widgets/tappable_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -8,8 +7,9 @@ import 'package:intl/intl.dart';
 
 import '../../../constants/assets.dart';
 import '../../../routes/application/route_names.dart';
-import '../../../shared/providers.dart';
 import '../../../style/style.dart';
+import '../../../utils/dialog_helper.dart';
+import '../../../widgets/v_dialogs.dart';
 import '../application/sakit_list.dart';
 
 class SakitDtlDialog extends ConsumerWidget {
@@ -19,122 +19,6 @@ class SakitDtlDialog extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bool isHrdApproved = item.hrdSta ?? false;
-
-    final String? fin = ref.watch(userNotifierProvider).user.fin;
-    final bool isHrd =
-        ref.watch(sakitListControllerProvider.notifier).isHrdOrSpv(fin);
-
-    final bool isCurrentUser =
-        ref.watch(userNotifierProvider).user.idUser == item.idUser;
-
-    final bool isSpvApproved = item.spvSta ?? false;
-    final bool isSpvEditable =
-        ref.watch(sakitListControllerProvider.notifier).isSpvEdit();
-
-    final bool fullAkses = ref.watch(userNotifierProvider).user.fullAkses!;
-
-    _returnVisibility(ColumnCommandButtonType buttonType) {
-      bool isVisible = false;
-
-      if (isHrd) {
-        if (isCurrentUser == false) {
-          if (isSpvApproved) {
-            switch (buttonType) {
-              case ColumnCommandButtonType.Edit:
-                isVisible = true;
-                break;
-              case ColumnCommandButtonType.Delete:
-                isVisible = false;
-                break;
-            }
-          }
-        } else {
-          switch (buttonType) {
-            case ColumnCommandButtonType.Edit:
-              isVisible = true;
-              break;
-            case ColumnCommandButtonType.Delete:
-              isVisible = true;
-              break;
-          }
-        }
-      } else {
-        if (isCurrentUser) {
-          if (isSpvEditable && isSpvApproved) {
-            switch (buttonType) {
-              case ColumnCommandButtonType.Edit:
-                isVisible = true;
-                break;
-              case ColumnCommandButtonType.Delete:
-                isVisible = true;
-                break;
-            }
-          } else if (isSpvEditable && isSpvApproved == false) {
-            switch (buttonType) {
-              case ColumnCommandButtonType.Edit:
-                isVisible = true;
-                break;
-              case ColumnCommandButtonType.Delete:
-                isVisible = true;
-                break;
-            }
-          } else if (!isSpvEditable && isSpvApproved) {
-            switch (buttonType) {
-              case ColumnCommandButtonType.Edit:
-                isVisible = false;
-                break;
-              case ColumnCommandButtonType.Delete:
-                isVisible = false;
-                break;
-            }
-          } else {
-            switch (buttonType) {
-              case ColumnCommandButtonType.Edit:
-                isVisible = true;
-                break;
-              case ColumnCommandButtonType.Delete:
-                isVisible = false;
-                break;
-            }
-          }
-        } else {
-          switch (buttonType) {
-            case ColumnCommandButtonType.Edit:
-              isVisible = true;
-              break;
-            case ColumnCommandButtonType.Delete:
-              isVisible = false;
-              break;
-          }
-        }
-      }
-
-      if (isHrdApproved) {
-        switch (buttonType) {
-          case ColumnCommandButtonType.Edit:
-            isVisible = false;
-            break;
-          case ColumnCommandButtonType.Delete:
-            isVisible = false;
-            break;
-        }
-      }
-
-      if (fullAkses) {
-        switch (buttonType) {
-          case ColumnCommandButtonType.Edit:
-            isVisible = true;
-            break;
-          case ColumnCommandButtonType.Delete:
-            isVisible = true;
-            break;
-        }
-      }
-
-      return isVisible;
-    }
-
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.0),
@@ -182,7 +66,7 @@ class SakitDtlDialog extends ConsumerWidget {
                           height: 2,
                         ),
                         Text(
-                          item.fullname!,
+                          item.fullname ?? '-',
                           style: Themes.customColor(9,
                               color: Palette.primaryColor,
                               fontWeight: FontWeight.w500),
@@ -205,7 +89,7 @@ class SakitDtlDialog extends ConsumerWidget {
                           height: 2,
                         ),
                         Text(
-                          item.comp ?? "-",
+                          item.comp ?? '-',
                           style: Themes.customColor(9,
                               color: Palette.primaryColor,
                               fontWeight: FontWeight.w500),
@@ -228,7 +112,7 @@ class SakitDtlDialog extends ConsumerWidget {
                           height: 2,
                         ),
                         Text(
-                          item.dept!,
+                          item.dept ?? '-',
                           style: Themes.customColor(9,
                               color: Palette.primaryColor,
                               fontWeight: FontWeight.w500),
@@ -257,7 +141,7 @@ class SakitDtlDialog extends ConsumerWidget {
                         Text(
                           DateFormat(
                             'dd MMM yyyy',
-                          ).format(DateTime.parse(item.tglStart!)),
+                          ).format(item.tglStart!),
                           style: Themes.customColor(9,
                               color: Palette.blue, fontWeight: FontWeight.w500),
                         ),
@@ -281,7 +165,7 @@ class SakitDtlDialog extends ConsumerWidget {
                         Text(
                           DateFormat(
                             'dd MMM yyyy',
-                          ).format(DateTime.parse(item.tglStart!)),
+                          ).format(item.tglEnd!),
                           style: Themes.customColor(9,
                               color: Palette.tertiaryColor,
                               fontWeight: FontWeight.w500),
@@ -304,7 +188,7 @@ class SakitDtlDialog extends ConsumerWidget {
                           height: 2,
                         ),
                         Text(
-                          item.totHari!.toString() + " Hari",
+                          item.totHari.toString() + " Hari",
                           style: Themes.customColor(9,
                               color: Palette.primaryColor,
                               fontWeight: FontWeight.w500),
@@ -326,12 +210,13 @@ class SakitDtlDialog extends ConsumerWidget {
                         SizedBox(
                           height: 2,
                         ),
-                        Text(
-                          '${item.surat!.toLowerCase() == 'ds' ? 'Dengan Surat' : 'Tanpa Surat'}',
-                          style: Themes.customColor(9,
-                              color: Palette.tertiaryColor,
-                              fontWeight: FontWeight.w500),
-                        ),
+                        if (item.surat != null)
+                          Text(
+                            '${item.surat!.toLowerCase() == 'ds' ? 'Dengan Surat' : 'Tanpa Surat'}',
+                            style: Themes.customColor(9,
+                                color: Palette.tertiaryColor,
+                                fontWeight: FontWeight.w500),
+                          ),
                       ],
                     ),
                   ],
@@ -386,16 +271,16 @@ class SakitDtlDialog extends ConsumerWidget {
                     Material(
                       color: Colors.transparent,
                       child: InkWell(
-                        onTap: () => item.qtyFoto! == 0
+                        onTap: () => item.qtyfoto == 0
                             ? context.pushNamed(RouteNames.sakitUploadRoute,
                                 extra: item.idSakit)
                             : context.pushNamed(RouteNames.sakitDtlRoute,
                                 extra: item.idSakit),
                         child: Ink(
                           child: Text(
-                              item.qtyFoto == 0
+                              item.qtyfoto == 0
                                   ? '-'
-                                  : 'Upload : ${item.qtyFoto} Images',
+                                  : 'Upload : ${item.qtyfoto} Images',
                               style: Themes.customColor(
                                 9,
                                 color: Palette.blueLink,
@@ -408,23 +293,46 @@ class SakitDtlDialog extends ConsumerWidget {
               ],
             ),
             Expanded(child: Container()),
-            if (item.batalStatus == false)
+            if (item.btlSta == false)
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  if (_returnVisibility(ColumnCommandButtonType.Edit))
+                  if (true)
                     TappableSvg(
                         assetPath: Assets.iconEdit,
                         onTap: () {
                           context.pop();
-                          return context.pushNamed(RouteNames.editSakitRoute,
-                              extra: item);
+                          return context.pushNamed(
+                            RouteNames.editSakitRoute,
+                            extra: item.toJson(),
+                          );
                         }),
                   SizedBox(
                     width: 8,
                   ),
-                  if (_returnVisibility(ColumnCommandButtonType.Delete))
-                    TappableSvg(assetPath: Assets.iconDelete, onTap: () {})
+                  if (true)
+                    TappableSvg(
+                        assetPath: Assets.iconDelete,
+                        onTap: () async {
+                          return showDialog(
+                              context: context,
+                              builder: (context) => VAlertDialog2(
+                                  label: 'Delete Form Sakit ? ',
+                                  onPressed: () async {
+                                    context.pop();
+                                    await ref
+                                        .read(createSakitNotifierProvider
+                                            .notifier)
+                                        .deleteSakit(
+                                          idSakit: item.idSakit!,
+                                          onError: (msg) =>
+                                              DialogHelper.showCustomDialog(
+                                            msg,
+                                            context,
+                                          ),
+                                        );
+                                  }));
+                        })
                 ],
               )
           ],

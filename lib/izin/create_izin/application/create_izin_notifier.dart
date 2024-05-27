@@ -1,13 +1,9 @@
-import 'package:dartz/dartz.dart';
-import 'package:face_net_authentication/izin/create_izin/infrastructures/create_izin_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../send_wa/application/send_wa_notifier.dart';
 import '../../../shared/providers.dart';
-import '../../../wa_head_helper/application/wa_head.dart';
-import '../../../wa_head_helper/application/wa_head_helper_notifier.dart';
 
 import '../infrastructures/create_izin_remote_service.dart';
+import '../infrastructures/create_izin_repository.dart';
 
 part 'create_izin_notifier.g.dart';
 
@@ -15,7 +11,8 @@ part 'create_izin_notifier.g.dart';
 CreateIzinRemoteService createIzinRemoteService(
     CreateIzinRemoteServiceRef ref) {
   return CreateIzinRemoteService(
-      ref.watch(dioProviderHosting), ref.watch(dioRequestProvider));
+    ref.watch(dioProviderCuti),
+  );
 }
 
 @Riverpod(keepAlive: true)
@@ -30,106 +27,98 @@ class CreateIzinNotifier extends _$CreateIzinNotifier {
   @override
   FutureOr<void> build() async {}
 
-  Future<void> _sendWaToHead(
-      {required int idUser, required String messageContent}) async {
-    final List<WaHead> waHeads = await ref
-        .read(waHeadHelperNotifierProvider.notifier)
-        .getWaHeads(idUser: idUser);
-
-    if (waHeads.isNotEmpty) {
-      for (int i = 0; i < waHeads.length; i++) {
-        if (waHeads[i].telp1 != null) {
-          if (waHeads[i].telp1!.isNotEmpty)
-            await ref.read(sendWaNotifierProvider.notifier).sendWaDirect(
-                phone: int.parse(waHeads[i].telp1!),
-                idUser: waHeads[i].idUserHead!,
-                idDept: waHeads[i].idDept!,
-                notifTitle: 'Notifikasi HRMS',
-                notifContent: '$messageContent');
-        } else if (waHeads[i].telp2 != null) {
-          if (waHeads[i].telp2!.isNotEmpty)
-            await ref.read(sendWaNotifierProvider.notifier).sendWaDirect(
-                phone: int.parse(waHeads[i].telp2!),
-                idUser: waHeads[i].idUserHead!,
-                idDept: waHeads[i].idDept!,
-                notifTitle: 'Notifikasi HRMS',
-                notifContent: '$messageContent');
-        } else {
-          throw AssertionError(
-              'Atasan bernama ${waHeads[i].nama} tidak memiliki data nomor Hp...');
-        }
-      }
-    } else {
-      //
-      throw AssertionError('User tidak memiliki data atasan...');
-    }
-  }
-
-  Future<void> submitIzin(
-      {required int idUser,
-      required int idMstIzin,
-      required int totalHari,
-      required String ket,
-      required String cUser,
-      required String tglAwal,
-      required String tglAkhir,
-      required String keterangan,
-      required Future<void> Function(String errMessage) onError}) async {
+  Future<void> submitIzin({
+    required int idUser,
+    required int idMstIzin,
+    required int totalHari,
+    required String ket,
+    required String cUser,
+    required String tglAwal,
+    required String tglAkhir,
+    required String keterangan,
+    required Future<void> Function(String errMessage) onError,
+  }) async {
     state = const AsyncLoading();
 
+    final user = ref.read(userNotifierProvider).user;
+    final username = user.nama!;
+    final pass = user.password!;
+
     try {
-      state = await AsyncValue.guard(() async {
-        await ref.read(createIzinRepositoryProvider).submitIzin(
-            idUser: idUser,
-            idMstIzin: idMstIzin,
-            totalHari: totalHari,
-            ket: ket,
-            cUser: cUser,
-            tglEnd: tglAkhir,
-            tglStart: tglAwal);
+      await ref.read(createIzinRepositoryProvider).submitIzin(
+          username: username,
+          pass: pass,
+          idUser: idUser,
+          idMstIzin: idMstIzin,
+          totalHari: totalHari,
+          ket: ket,
+          cUser: cUser,
+          tglEnd: tglAkhir,
+          tglStart: tglAwal);
 
-        final String messageContent =
-            " ( Testing Apps ) Terdapat Waiting Approve Pengajuan Izin Umum Baru Telah Diinput Oleh : $cUser ";
-        await _sendWaToHead(idUser: idUser, messageContent: messageContent);
-
-        return Future.value(unit);
-      });
+      state = const AsyncValue.data('Sukses Submit');
     } catch (e) {
       state = const AsyncValue.data('');
       await onError('Error $e');
     }
   }
 
-  Future<void> updateIzin(
-      {
-      //
-      required int idIzin,
-      required int idUser,
-      required int idMstIzin,
-      required int totalHari,
-      required String ket,
-      required String uUser,
-      required String tglAwal,
-      required String tglAkhir,
-      required Future<void> Function(String errMessage) onError
-      //
-      }) async {
+  Future<void> updateIzin({
+    required int idIzin,
+    required int idUser,
+    required int idMstIzin,
+    required String ket,
+    required String uUser,
+    required String tglAwal,
+    required String tglAkhir,
+    required String noteSpv,
+    required String noteHrd,
+    required Future<void> Function(String errMessage) onError,
+  }) async {
     state = const AsyncLoading();
 
     try {
-      final uUser = ref.read(userNotifierProvider).user.nama!;
+      final user = ref.read(userNotifierProvider).user;
+      final username = user.nama!;
+      final pass = user.password!;
 
-      state = await AsyncValue.guard(() => ref
-          .read(createIzinRepositoryProvider)
-          .updateIzin(
-              id: idIzin,
-              idUser: idUser,
-              idMstIzin: idMstIzin,
-              totalHari: totalHari,
-              ket: ket,
-              uUser: uUser,
-              tglEnd: tglAkhir,
-              tglStart: tglAwal));
+      await ref.read(createIzinRepositoryProvider).updateIzin(
+          idIzin: idIzin,
+          username: username,
+          pass: pass,
+          idUser: idUser,
+          idMstIzin: idMstIzin,
+          ket: ket,
+          tglEnd: tglAkhir,
+          tglStart: tglAwal,
+          noteSpv: noteSpv,
+          noteHrd: noteHrd);
+
+      state = const AsyncValue.data('Sukses Update');
+    } catch (e) {
+      state = const AsyncValue.data('');
+      await onError('Error $e');
+    }
+  }
+
+  Future<void> deleteIzin({
+    required int idIzin,
+    required Future<void> Function(String errMessage) onError,
+  }) async {
+    state = const AsyncLoading();
+
+    final user = ref.read(userNotifierProvider).user;
+    final username = user.nama!;
+    final pass = user.password!;
+
+    try {
+      await ref.read(createIzinRepositoryProvider).deleteIzin(
+            idIzin: idIzin,
+            username: username,
+            pass: pass,
+          );
+
+      state = const AsyncValue.data('Sukses Delete');
     } catch (e) {
       state = const AsyncValue.data('');
       await onError('Error $e');

@@ -104,7 +104,7 @@ class GantiHariApproveController extends _$GantiHariApproveController {
           );
 
       final String messageContent =
-          'Izin Sakit Anda Sudah Diapprove Oleh HRD $nama';
+          '(Testing Apps) Izin Ganti Hari Anda Sudah Diapprove Oleh HRD $nama';
       await _sendWa(
           itemGantiHari: itemGantiHari, messageContent: messageContent);
 

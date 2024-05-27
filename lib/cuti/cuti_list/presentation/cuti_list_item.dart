@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../shared/providers.dart';
 import '../../../style/style.dart';
 
 import '../../../utils/dialog_helper.dart';
@@ -32,20 +31,6 @@ class CutiListItem extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-
-    // final _isSpvApprove = item.spvTgl != item.cDate && item.spvSta == true;
-    // final spvAging = _isSpvApprove
-    //     ? DateTime.parse(item.spvTgl!)
-    //         .difference(DateTime.parse(item.cDate!))
-    //         .inDays
-    //     : DateTime.now().difference(DateTime.parse(item.cDate!)).inDays;
-
-    // final _isHrdApprove = item.hrdTgl != item.cDate && item.hrdSta == true;
-    // final hrdAging = _isHrdApprove
-    //     ? DateTime.parse(item.hrdTgl!)
-    //         .difference(DateTime.parse(item.cDate!))
-    //         .inDays
-    //     : DateTime.now().difference(DateTime.parse(item.cDate!)).inDays;
 
     final jenisCuti = ref.watch(jenisCutiNotifierProvider);
     final alasanCuti = ref.watch(alasanCutiNotifierProvider);
@@ -82,7 +67,7 @@ class CutiListItem extends HookConsumerWidget {
                       Text(
                         DateFormat(
                           'EEEE, dd MMMM yyyy',
-                        ).format(DateTime.parse(item.cDate!)),
+                        ).format(item.cDate!),
                         style: Themes.customColor(10,
                             fontWeight: FontWeight.w500,
                             color: item.btlSta == true
@@ -109,28 +94,31 @@ class CutiListItem extends HookConsumerWidget {
                       SizedBox(
                         width: 4,
                       ),
-                      if (item.btlSta == false)
+                      if (item.isBtl!)
                         TappableSvg(
                             assetPath: Assets.iconBatal,
-                            onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) => VBatalDialog(
-                                  onTap: () async {
-                                    context.pop();
-                                    await ref
-                                        .read(cutiApproveControllerProvider
-                                            .notifier)
-                                        .batal(
-                                          itemCuti: item,
-                                          nama: ref
-                                              .read(userNotifierProvider)
-                                              .user
-                                              .nama!,
-                                        );
-                                  },
-                                ),
-                              );
+                            onTap: () async {
+                              if (item.btlSta!) {
+                                return showDialog(
+                                  context: context,
+                                  builder: (context) => VFailedDialog(
+                                    message: item.btlMsg,
+                                  ),
+                                );
+                              } else {
+                                return showDialog(
+                                  context: context,
+                                  builder: (context) => VBatalDialog(
+                                    onTap: () async {
+                                      context.pop();
+                                      await ref
+                                          .read(cutiApproveControllerProvider
+                                              .notifier)
+                                          .batal(idCuti: item.idCuti!);
+                                    },
+                                  ),
+                                );
+                              }
                             }),
                     ],
                   ),
@@ -208,7 +196,7 @@ class CutiListItem extends HookConsumerWidget {
                                   Text(
                                     DateFormat(
                                       'dd MMM yyyy',
-                                    ).format(DateTime.parse(item.tglStart!)),
+                                    ).format(item.tglStart!),
                                     style: Themes.customColor(9,
                                         color: item.btlSta == true
                                             ? Colors.white
@@ -239,7 +227,7 @@ class CutiListItem extends HookConsumerWidget {
                                   Text(
                                     DateFormat(
                                       'dd MMM yyyy',
-                                    ).format(DateTime.parse(item.tglEnd!)),
+                                    ).format(item.tglEnd!),
                                     style: Themes.customColor(9,
                                         color: item.btlSta == true
                                             ? Colors.white
@@ -472,12 +460,10 @@ class CutiListItem extends HookConsumerWidget {
                               Container(
                                 decoration: BoxDecoration(boxShadow: [
                                   BoxShadow(
-                                    color: Colors.grey
-                                        .withOpacity(0.5), // Shadow color
+                                    color: Colors.grey.withOpacity(0.5),
                                     spreadRadius: 1,
                                     blurRadius: 3,
-                                    offset: Offset(0,
-                                        1), // Controls the position of the shadow
+                                    offset: Offset(0, 1),
                                   ),
                                 ]),
                                 child: Material(
@@ -485,62 +471,58 @@ class CutiListItem extends HookConsumerWidget {
                                   child: InkWell(
                                     splashColor: Palette.primaryColor,
                                     onTap: () async {
-                                      if (await ref
-                                              .read(
-                                                  cutiApproveControllerProvider
-                                                      .notifier)
-                                              .canSpvApprove(item) ==
-                                          false) {
+                                      if (item.isSpv == false) {
                                         showDialog(
                                           context: context,
-                                          builder: (context) => VFailedDialog(),
+                                          builder: (context) => VFailedDialog(
+                                            message: item.spvMsg,
+                                          ),
                                         );
                                       } else {
                                         if (item.spvSta == false) {
                                           await showDialog(
                                               context: context,
-                                              builder: (context) =>
-                                                  VAlertDialog2(
-                                                      label:
-                                                          'Dibutuhkan Konfirmasi SPV (Approve)',
-                                                      onPressed: () async {
-                                                        context.pop();
-                                                        await ref
-                                                            .read(
-                                                                cutiApproveControllerProvider
-                                                                    .notifier)
-                                                            .approveSpv(
+                                              builder: (context) {
+                                                return VAlertDialog2(
+                                                    label:
+                                                        'Dibutuhkan Konfirmasi SPV (Approve)',
+                                                    onPressed: () async {
+                                                      context.pop();
+                                                      await ref
+                                                          .read(
+                                                              cutiApproveControllerProvider
+                                                                  .notifier)
+                                                          .approve(
+                                                              idCuti:
+                                                                  item.idCuti!,
                                                               note: '',
-                                                              itemCuti: item,
-                                                              nama: ref
-                                                                  .read(
-                                                                      userNotifierProvider)
-                                                                  .user
-                                                                  .nama!,
-                                                            );
-                                                      }));
+                                                              jenisApp: 'spv',
+                                                              tahun: item
+                                                                  .cDate!.year);
+                                                    });
+                                              });
                                         } else {
                                           await showDialog(
                                               context: context,
-                                              builder: (context) =>
-                                                  VAlertDialog2(
-                                                      label:
-                                                          'Dibutuhkan Konfirmasi SPV (Unapprove)',
-                                                      onPressed: () async {
-                                                        context.pop();
-                                                        await ref
-                                                            .read(
-                                                                cutiApproveControllerProvider
-                                                                    .notifier)
-                                                            .unapproveSpv(
-                                                              itemCuti: item,
-                                                              nama: ref
-                                                                  .read(
-                                                                      userNotifierProvider)
-                                                                  .user
-                                                                  .nama!,
-                                                            );
-                                                      }));
+                                              builder: (context) {
+                                                return VAlertDialog2(
+                                                    label:
+                                                        'Dibutuhkan Konfirmasi SPV (Unapprove)',
+                                                    onPressed: () async {
+                                                      context.pop();
+                                                      await ref
+                                                          .read(
+                                                              cutiApproveControllerProvider
+                                                                  .notifier)
+                                                          .approve(
+                                                              idCuti:
+                                                                  item.idCuti!,
+                                                              note: '',
+                                                              jenisApp: 'spv',
+                                                              tahun: item
+                                                                  .cDate!.year);
+                                                    });
+                                              });
                                         }
                                       }
                                     },
@@ -579,7 +561,7 @@ class CutiListItem extends HookConsumerWidget {
                                   ),
                                 ),
                               ),
-                              if (item.spvSta! == true)
+                              if (item.spvSta == true)
                                 Positioned(
                                   right: 5,
                                   bottom: 0,
@@ -588,7 +570,7 @@ class CutiListItem extends HookConsumerWidget {
                                     Assets.iconThumbUp,
                                   ),
                                 ),
-                              if (item.spvSta! == false)
+                              if (item.spvSta == false)
                                 Positioned(
                                   right: 5,
                                   bottom: 0,
@@ -621,40 +603,42 @@ class CutiListItem extends HookConsumerWidget {
                                   child: InkWell(
                                     splashColor: Palette.primaryColor,
                                     onTap: () async {
-                                      if (await ref
-                                              .read(
-                                                  cutiApproveControllerProvider
-                                                      .notifier)
-                                              .canHrdApprove(item) ==
-                                          false) {
+                                      if (item.isHr == false) {
                                         showDialog(
                                           context: context,
-                                          builder: (context) => VFailedDialog(),
+                                          builder: (context) => VFailedDialog(
+                                            message: item.hrMsg,
+                                          ),
                                         );
                                       } else {
-                                        if (item.hrdSta == false) {
-                                          final String? text =
-                                              await DialogHelper<void>()
-                                                  .showFormDialog(
-                                            context: context,
-                                          );
+                                        final String? text =
+                                            await DialogHelper<void>()
+                                                .showFormDialog(
+                                                    context: context);
 
-                                          if (text != null) {
-                                            await ref
-                                                .read(
-                                                    cutiApproveControllerProvider
-                                                        .notifier)
-                                                .approveHrd(
-                                                  note: text,
-                                                  itemCuti: item,
-                                                  nama: ref
-                                                      .read(
-                                                          userNotifierProvider)
-                                                      .user
-                                                      .nama!,
-                                                );
-                                            //
-                                          }
+                                        if (item.hrdSta == false) {
+                                          await showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  VAlertDialog2(
+                                                      label:
+                                                          'Dibutuhkan Konfirmasi HRD (Approve)',
+                                                      onPressed: () async {
+                                                        context.pop();
+                                                        await ref
+                                                            .read(
+                                                                cutiApproveControllerProvider
+                                                                    .notifier)
+                                                            .approve(
+                                                                idCuti: item
+                                                                    .idCuti!,
+                                                                note:
+                                                                    text ?? '',
+                                                                jenisApp: 'hr',
+                                                                tahun: item
+                                                                    .cDate!
+                                                                    .year);
+                                                      }));
                                         } else {
                                           await showDialog(
                                               context: context,
@@ -668,14 +652,15 @@ class CutiListItem extends HookConsumerWidget {
                                                             .read(
                                                                 cutiApproveControllerProvider
                                                                     .notifier)
-                                                            .unapproveHrd(
-                                                              itemCuti: item,
-                                                              nama: ref
-                                                                  .read(
-                                                                      userNotifierProvider)
-                                                                  .user
-                                                                  .nama!,
-                                                            );
+                                                            .approve(
+                                                                idCuti: item
+                                                                    .idCuti!,
+                                                                note:
+                                                                    text ?? '',
+                                                                jenisApp: 'hr',
+                                                                tahun: item
+                                                                    .cDate!
+                                                                    .year);
                                                       }));
                                         }
                                       }
@@ -706,7 +691,7 @@ class CutiListItem extends HookConsumerWidget {
                                   ),
                                 ),
                               ),
-                              if (item.hrdSta! == true)
+                              if (item.hrdSta == true)
                                 Positioned(
                                   left: 5,
                                   bottom: 0,
@@ -718,7 +703,7 @@ class CutiListItem extends HookConsumerWidget {
                                     ),
                                   ),
                                 ),
-                              if (item.hrdSta! == false)
+                              if (item.hrdSta == false)
                                 Positioned(
                                   left: 5,
                                   bottom: 0,

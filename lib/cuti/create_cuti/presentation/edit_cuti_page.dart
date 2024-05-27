@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:face_net_authentication/cuti/create_cuti/application/jenis_cuti.dart';
 import 'package:face_net_authentication/cuti/cuti_list/application/cuti_list_notifier.dart';
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
 import 'package:face_net_authentication/widgets/v_button.dart';
@@ -13,6 +12,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 
 import '../../../err_log/application/err_log_notifier.dart';
 import '../../../utils/dialog_helper.dart';
@@ -23,6 +23,7 @@ import '../../../utils/string_utils.dart';
 import '../../cuti_list/application/cuti_list.dart';
 import '../application/alasan_cuti.dart';
 import '../application/create_cuti_notifier.dart';
+import '../application/jenis_cuti.dart';
 
 class EditCutiPage extends HookConsumerWidget {
   const EditCutiPage(this.item);
@@ -40,12 +41,12 @@ class EditCutiPage extends HookConsumerWidget {
         useTextEditingController(text: item.ket);
 
     final tglPlaceholderTextController = useTextEditingController(
-        text: _returnPlaceHolderText(DateTimeRange(
-            start: DateTime.parse(item.tglStart!),
-            end: DateTime.parse(item.tglEnd!))));
+      text: _returnPlaceHolderText(
+          DateTimeRange(start: item.tglStart!, end: item.tglEnd!)),
+    );
 
-    final tglAwalTextController = useState(item.tglStart!);
-    final tglAkhirTextController = useState(item.tglEnd!);
+    final tglStart = useState(item.tglStart!);
+    final tglEnd = useState(item.tglEnd!);
 
     final createCuti = ref.watch(createCutiNotifierProvider);
     final jenisCuti = ref.watch(jenisCutiNotifierProvider);
@@ -111,6 +112,10 @@ class EditCutiPage extends HookConsumerWidget {
                             return null;
                           }),
 
+                      SizedBox(
+                        height: 16,
+                      ),
+
                       // Jenis Cuti
                       VAsyncValueWidget<List<JenisCuti>>(
                         value: jenisCuti,
@@ -156,7 +161,7 @@ class EditCutiPage extends HookConsumerWidget {
                       ),
 
                       SizedBox(
-                        height: 8,
+                        height: 16,
                       ),
 
                       // Alasan Cuti
@@ -197,7 +202,7 @@ class EditCutiPage extends HookConsumerWidget {
                       ),
 
                       SizedBox(
-                        height: 8,
+                        height: 16,
                       ),
 
                       TextFormField(
@@ -223,9 +228,8 @@ class EditCutiPage extends HookConsumerWidget {
 
                             return null;
                           }),
-
                       SizedBox(
-                        height: 8,
+                        height: 16,
                       ),
 
                       // TGL AWAL
@@ -234,25 +238,19 @@ class EditCutiPage extends HookConsumerWidget {
                           onTap: () async {
                             final picked = await showDateRangePicker(
                               context: context,
-                              lastDate: DateTime.now(),
                               firstDate: new DateTime(2021),
+                              lastDate: DateTime.now().add(Duration(days: 365)),
                             );
                             if (picked != null) {
                               print(picked);
-
-                              final start =
-                                  StringUtils.midnightDate(picked.start)
-                                      .replaceAll('.000', '');
-                              final end = StringUtils.midnightDate(picked.end)
-                                  .replaceAll('.000', '');
-
-                              tglAwalTextController.value = start;
-                              tglAkhirTextController.value = end;
-
+                              tglStart.value = picked.start;
+                              tglEnd.value = picked.end;
+                              final _start = DateFormat('dd MMM yyyy')
+                                  .format(tglStart.value);
+                              final _end = DateFormat('dd MMMM yyyy')
+                                  .format(tglEnd.value);
                               tglPlaceholderTextController.text =
-                                  _returnPlaceHolderText(picked);
-
-                              log('START $start END $end');
+                                  '$_start - $_end';
                             }
                           },
                           child: IgnorePointer(
@@ -282,7 +280,7 @@ class EditCutiPage extends HookConsumerWidget {
                       ),
 
                       SizedBox(
-                        height: 8,
+                        height: 16,
                       ),
 
                       Container(
@@ -298,27 +296,29 @@ class EditCutiPage extends HookConsumerWidget {
                               log(' Jenis Cuti: ${jenisCutiTextController.value} \n ');
                               log(' Alasan: ${alasanCutiTextController.value} \n ');
                               log(' Keterangan: ${keteranganCutiTextController.text} \n ');
-                              log(' Tgl Awal: ${tglAwalTextController.value} Tgl Akhir: ${tglAkhirTextController.value} \n ');
-                              // log(' SPV Note : ${spvTextController.value.text} HRD Note : ${hrdTextController.value.text} \n  ');
+                              log(' Tgl PlaceHolder: ${tglPlaceholderTextController.text} \n ');
+                              log(' Tgl Start: ${tglStart.value} \n ');
+                              log(' Tgl End: ${tglEnd.value} \n ');
 
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();
                                 await ref
                                     .read(createCutiNotifierProvider.notifier)
                                     .updateCuti(
-                                        idUser: item.idUser!,
-                                        idCuti: item.idCuti!,
-                                        tglAwal: tglAwalTextController.value,
-                                        tglAkhir: tglAkhirTextController.value,
-                                        keterangan:
-                                            keteranganCutiTextController.text,
-                                        jenisCuti:
-                                            jenisCutiTextController.value,
-                                        alasanCuti:
-                                            alasanCutiTextController.value,
-                                        onError: (msg) =>
-                                            DialogHelper.showCustomDialog(
-                                                msg, context));
+                                      idCuti: item.idCuti!,
+                                      tglStart: tglStart.value,
+                                      tglEnd: tglEnd.value,
+                                      keterangan:
+                                          keteranganCutiTextController.text,
+                                      jenisCuti: jenisCutiTextController.value,
+                                      alasanCuti:
+                                          alasanCutiTextController.value,
+                                      onError: (msg) =>
+                                          DialogHelper.showCustomDialog(
+                                        msg,
+                                        context,
+                                      ),
+                                    );
                               }
                             }),
                       )

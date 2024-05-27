@@ -39,8 +39,8 @@ final List<Item> attendance = [
 ];
 
 final List<Item> leaveRequest = [
-  // Item('Cuti', Assets.iconCuti, RouteNames.cutiListNameRoute),
-  // Item('Sakit', Assets.iconSakit, RouteNames.sakitListNameRoute),
+  Item('Cuti', Assets.iconCuti, RouteNames.cutiListNameRoute),
+  Item('Sakit', Assets.iconSakit, RouteNames.sakitListNameRoute),
   Item('Izin', Assets.iconIzin, RouteNames.izinListNameRoute),
   Item('DT / PC', Assets.iconDtPc, RouteNames.dtPcListNameRoute),
 ];
@@ -111,6 +111,8 @@ class HomeScaffold extends ConsumerWidget {
 
     final crossAuth = ref.watch(crossAuthNotifierProvider);
 
+    final isOffline = ref.watch(absenOfflineModeProvider);
+
     return Scaffold(
       appBar: HomeAppBar(),
       body: VAsyncValueWidget(
@@ -164,17 +166,33 @@ class HomeScaffold extends ConsumerWidget {
 
                         //
                         ),
-                    HomeWa(onRefresh),
+                    isOffline ? Container() : HomeWa(onRefresh),
                     // ...categories(title: 'Admin', width: width, item: admin),
                     ...categories(
-                        title: 'Attendance', width: width, item: attendance),
-                    ...categories(
+                      title: 'Attendance',
+                      width: width,
+                      item: isOffline
+                          ? attendance.sublist(0, 2).toList()
+                          : attendance,
+                    ),
+                    if (!isOffline) ...[
+                      ...categories(
                         title: 'Leave Request',
                         width: width,
-                        item: leaveRequest),
-                    ...categories(
-                        title: 'Activity', width: width, item: activity),
-                    ...categories(title: 'Others', width: width, item: others),
+                        item: leaveRequest,
+                      ),
+                      ...categories(
+                        title: 'Activity',
+                        width: width,
+                        item: activity,
+                      ),
+                      ...categories(
+                        title: 'Others',
+                        width: width,
+                        item: others,
+                      ),
+                    ],
+
                     const SizedBox(height: 15),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
@@ -209,10 +227,11 @@ class HomeScaffold extends ConsumerWidget {
     );
   }
 
-  List<Widget> categories(
-          {required String title,
-          required double width,
-          required List<Item> item}) =>
+  List<Widget> categories({
+    required String title,
+    required double width,
+    required List<Item> item,
+  }) =>
       [
         SizedBox(
           height: 24,

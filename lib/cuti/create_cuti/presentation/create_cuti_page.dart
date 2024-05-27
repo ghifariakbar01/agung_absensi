@@ -20,7 +20,6 @@ import '../../../utils/dialog_helper.dart';
 import '../../../widgets/alert_helper.dart';
 import '../../../widgets/v_async_widget.dart';
 import '../../../style/style.dart';
-import '../../../utils/string_utils.dart';
 import '../application/alasan_cuti.dart';
 import '../application/create_cuti_notifier.dart';
 
@@ -37,8 +36,8 @@ class CreateCutiPage extends HookConsumerWidget {
     final keteranganCutiTextController = useTextEditingController();
 
     final tglPlaceholderTextController = useTextEditingController();
-    final tglAwalTextController = useState('');
-    final tglAkhirTextController = useState('');
+    final tglStart = useState(DateTime.now());
+    final tglEnd = useState(DateTime.now().add(Duration(days: 1)));
 
     final createCuti = ref.watch(createCutiNotifierProvider);
     final jenisCuti = ref.watch(jenisCutiNotifierProvider);
@@ -188,28 +187,32 @@ class CreateCutiPage extends HookConsumerWidget {
                         height: 16,
                       ),
 
-                      TextFormField(
-                          controller: keteranganCutiTextController,
-                          cursorColor: Palette.primaryColor,
-                          keyboardType: TextInputType.name,
-                          decoration: Themes.formStyleBordered(
-                            'Masukkan keterangan',
-                          ),
-                          style: Themes.customColor(
-                            14,
-                            fontWeight: FontWeight.normal,
-                          ),
-                          validator: (item) {
-                            if (item == null) {
-                              return 'Form tidak boleh kosong';
-                            } else if (item.length < 10) {
-                              return 'Keterangan Harus Diisi Minimal 10 Karakter!';
-                            } else if (item.isEmpty) {
-                              return 'Form tidak boleh kosong';
-                            }
+                      SizedBox(
+                        height: 50,
+                        width: double.infinity,
+                        child: TextFormField(
+                            controller: keteranganCutiTextController,
+                            cursorColor: Palette.primaryColor,
+                            keyboardType: TextInputType.name,
+                            decoration: Themes.formStyleBordered(
+                              'Masukkan keterangan',
+                            ),
+                            style: Themes.customColor(
+                              14,
+                              fontWeight: FontWeight.normal,
+                            ),
+                            validator: (item) {
+                              if (item == null) {
+                                return 'Form tidak boleh kosong';
+                              } else if (item.length < 10) {
+                                return 'Keterangan Harus Diisi Minimal 10 Karakter!';
+                              } else if (item.isEmpty) {
+                                return 'Form tidak boleh kosong';
+                              }
 
-                            return null;
-                          }),
+                              return null;
+                            }),
+                      ),
 
                       SizedBox(
                         height: 16,
@@ -226,25 +229,14 @@ class CreateCutiPage extends HookConsumerWidget {
                             );
                             if (picked != null) {
                               print(picked);
-
-                              final start =
-                                  StringUtils.midnightDate(picked.start)
-                                      .replaceAll('.000', '');
-                              final end = StringUtils.midnightDate(picked.end)
-                                  .replaceAll('.000', '');
-
-                              tglAwalTextController.value = start;
-                              tglAkhirTextController.value = end;
-
-                              final startPlaceHolder = DateFormat(
-                                'dd MMM yyyy',
-                              ).format(picked.start);
-                              final endPlaceHolder = DateFormat(
-                                'dd MMM yyyy',
-                              ).format(picked.end);
-
+                              tglStart.value = picked.start;
+                              tglEnd.value = picked.end;
+                              final _start = DateFormat('dd MMM yyyy')
+                                  .format(tglStart.value);
+                              final _end = DateFormat('dd MMMM yyyy')
+                                  .format(tglEnd.value);
                               tglPlaceholderTextController.text =
-                                  '$startPlaceHolder - $endPlaceHolder';
+                                  '$_start - $_end';
                             }
                           },
                           child: IgnorePointer(
@@ -287,30 +279,24 @@ class CreateCutiPage extends HookConsumerWidget {
                               log(' Alasan: ${alasanCutiTextController.value} \n ');
                               log(' Keterangan: ${keteranganCutiTextController.text} \n ');
                               log(' Tgl PlaceHolder: ${tglPlaceholderTextController.text} \n ');
-                              log(' Tgl Awal: ${tglAwalTextController.value} Tgl Akhir: ${tglAkhirTextController.value} \n ');
-                              // log(' SPV Note : ${spvTextController.value.text} HRD Note : ${hrdTextController.value.text} \n  ');
+                              log(' Tgl Start: ${tglStart.value} \n ');
+                              log(' Tgl End: ${tglEnd.value} \n ');
 
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();
                                 await ref
                                     .read(createCutiNotifierProvider.notifier)
                                     .submitCuti(
-                                        idUser: ref
-                                            .read(userNotifierProvider)
-                                            .user
-                                            .idUser!,
-                                        // CHANGE ID USER
-                                        tglAwal: tglAwalTextController.value,
-                                        tglAkhir: tglAkhirTextController.value,
-                                        keterangan:
-                                            keteranganCutiTextController.text,
-                                        jenisCuti:
-                                            jenisCutiTextController.value,
-                                        alasanCuti:
-                                            alasanCutiTextController.value,
-                                        onError: (msg) =>
-                                            DialogHelper.showCustomDialog(
-                                                msg, context));
+                                      tglStart: tglStart.value,
+                                      tglEnd: tglEnd.value,
+                                      keterangan:
+                                          keteranganCutiTextController.text,
+                                      jenisCuti: 'CB',
+                                      alasanCuti: 'A0',
+                                      onError: (msg) =>
+                                          DialogHelper.showCustomDialog(
+                                              msg, context),
+                                    );
                               }
                             }),
                       )

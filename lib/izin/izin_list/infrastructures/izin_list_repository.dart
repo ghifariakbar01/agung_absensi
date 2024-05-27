@@ -10,22 +10,15 @@ class IzinListRepository {
   final IzinListRemoteService _remoteService;
 
   Future<List<IzinList>> getIzinList({
-    required int page,
-    required String searchUser,
+    required String username,
+    required String pass,
     required DateTimeRange dateRange,
   }) async {
     return _remoteService.getIzinList(
-        page: page, dateRange: dateRange, searchUser: searchUser);
-  }
-
-  Future<List<IzinList>> getIzinListLimitedAccess({
-    required int page,
-    required String staff,
-    required String searchUser,
-    required DateTimeRange dateRange,
-  }) async {
-    return _remoteService.getIzinListLimitedAccess(
-        page: page, staff: staff, searchUser: searchUser, dateRange: dateRange);
+      username: username,
+      pass: pass,
+      dateRange: dateRange,
+    );
   }
 
   Future<List<JenisIzin>> getJenisIzin() async {

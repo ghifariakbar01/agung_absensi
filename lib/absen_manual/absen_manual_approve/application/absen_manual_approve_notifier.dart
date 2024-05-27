@@ -57,7 +57,7 @@ class AbsenManualApproveController extends _$AbsenManualApproveController {
           .read(absenManualApproveRepositoryProvider)
           .approveSpv(nama: nama, idAbsenMnl: item.idAbsenmnl);
       final String messageContent =
-          'Izin Absen Manual Anda Sudah Diapprove Oleh Atasan $nama';
+          '(Testing Apps) Izin Absen Manual Anda Sudah Diapprove Oleh Atasan $nama';
       await _sendWa(item: item, messageContent: messageContent);
 
       state = AsyncData<void>('Sukses Melakukan Approve Form Absen Manual');
@@ -95,7 +95,7 @@ class AbsenManualApproveController extends _$AbsenManualApproveController {
           namaHrd: namaHrd, note: note, idAbsenMnl: item.idAbsenmnl);
 
       final String messageContent =
-          'Izin Absen Manual Anda Sudah Diapprove Oleh HRD $namaHrd';
+          '(Testing Apps) Izin Absen Manual Anda Sudah Diapprove Oleh HRD $namaHrd';
       await _sendWa(item: item, messageContent: messageContent);
 
       state = AsyncData<void>('Sukses Melakukan Approve Form Absen Manual');
@@ -133,7 +133,8 @@ class AbsenManualApproveController extends _$AbsenManualApproveController {
             nama: nama,
             idAbsenMnl: item.idAbsenmnl,
           );
-      final String messageContent = 'Izin Anda Telah Di Batalkan Oleh : $nama';
+      final String messageContent =
+          ' (Testing Apps) Izin Anda Telah Di Batalkan Oleh : $nama';
 
       await _sendWa(item: item, messageContent: messageContent);
       state = AsyncData<void>('Sukses Membatalkan Form Absen Manual');

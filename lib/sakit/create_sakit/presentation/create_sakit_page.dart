@@ -16,13 +16,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../err_log/application/err_log_notifier.dart';
-import '../../../routes/application/route_names.dart';
 import '../../../utils/dialog_helper.dart';
 import '../../../widgets/alert_helper.dart';
 import '../../../widgets/v_async_widget.dart';
 import '../../../style/style.dart';
 import '../../../user_helper/user_helper_notifier.dart';
-import '../../../utils/string_utils.dart';
 
 class CreateSakitPage extends HookConsumerWidget {
   const CreateSakitPage();
@@ -37,8 +35,8 @@ class CreateSakitPage extends HookConsumerWidget {
     final suratDokterTextController = useState('');
 
     final tglPlaceholderTextController = useTextEditingController();
-    final tglAwalTextController = useState('');
-    final tglAkhirTextController = useState('');
+    final tglStart = useState(DateTime.now());
+    final tglEnd = useState(DateTime.now().add(Duration(days: 1)));
 
     final spvTextController = useTextEditingController();
     final hrdTextController = useTextEditingController();
@@ -57,18 +55,19 @@ class CreateSakitPage extends HookConsumerWidget {
           context,
           onDone: () async {
             ref.invalidate(sakitListControllerProvider);
-            log('suratDokterTextController.value ${suratDokterTextController.value}');
 
-            // debugger();
-
-            if (suratDokterTextController.value == 'DS') {
-              final id = await ref
-                  .read(createSakitNotifierProvider.notifier)
-                  .getLastSubmitSakit();
-              context.replaceNamed(RouteNames.sakitUploadRoute, extra: id);
-            } else {
-              context.pop();
-            }
+            // if (suratDokterTextController.value == 'DS') {
+            //   // final id = await ref
+            //   //     .read(createSakitNotifierProvider.notifier)
+            //   //     .getLastSubmitSakit();
+            //   // context.replaceNamed(
+            //   //   RouteNames.sakitUploadRoute,
+            //   //   extra: id,
+            //   // );
+            // } else {
+            //   context.pop();
+            // }
+            context.pop();
           },
           color: Palette.primaryColor,
           message: 'Sukses Menginput Form Sakit ',
@@ -213,26 +212,14 @@ class CreateSakitPage extends HookConsumerWidget {
                                 firstDate: DateTime.now().subtract(_oneMonth),
                               );
                               if (picked != null) {
-                                print(picked);
-
-                                final start =
-                                    StringUtils.midnightDate(picked.start)
-                                        .replaceAll('.000', '');
-                                final end = StringUtils.midnightDate(picked.end)
-                                    .replaceAll('.000', '');
-
-                                tglAwalTextController.value = start;
-                                tglAkhirTextController.value = end;
-
-                                final startPlaceHolder = DateFormat(
-                                  'dd MMM yyyy',
-                                ).format(picked.start);
-                                final endPlaceHolder = DateFormat(
-                                  'dd MMM yyyy',
-                                ).format(picked.end);
-
+                                tglStart.value = picked.start;
+                                tglEnd.value = picked.end;
+                                final _start = DateFormat('dd MMM yyyy')
+                                    .format(tglStart.value);
+                                final _end = DateFormat('dd MMMM yyyy')
+                                    .format(tglEnd.value);
                                 tglPlaceholderTextController.text =
-                                    '$startPlaceHolder - $endPlaceHolder';
+                                    '$_start - $_end';
                               }
                             },
                             child: IgnorePointer(
@@ -302,7 +289,7 @@ class CreateSakitPage extends HookConsumerWidget {
                                 log(' Payroll: ${ptTextController.value.text} \n ');
                                 log(' Diagnosa: ${diagnosaTextController.value.text} \n ');
                                 log(' Surat Dokter: ${suratDokterTextController.value} \n ');
-                                log(' Tgl Awal: ${tglAwalTextController.value} Tgl Akhir: ${tglAkhirTextController.value} \n ');
+                                log(' Tgl Awal: ${tglStart.value} Tgl Akhir: ${tglEnd.value} \n ');
                                 log(' SPV Note : ${spvTextController.value.text} HRD Note : ${hrdTextController.value.text} \n  ');
 
                                 if (_formKey.currentState!.validate()) {
@@ -311,17 +298,11 @@ class CreateSakitPage extends HookConsumerWidget {
                                       .read(
                                           createSakitNotifierProvider.notifier)
                                       .submitSakit(
-                                          idUser: ref
-                                              .read(userNotifierProvider)
-                                              .user
-                                              .idUser!,
-                                          // CHANGE ID USER
-                                          tglAwal: tglAwalTextController.value,
-                                          tglAkhir:
-                                              tglAkhirTextController.value,
+                                          tglStart: tglStart.value,
+                                          tglEnd: tglEnd.value,
                                           keterangan:
                                               diagnosaTextController.text,
-                                          suratDokter:
+                                          surat:
                                               suratDokterTextController.value,
                                           onError: (msg) =>
                                               DialogHelper.showCustomDialog(

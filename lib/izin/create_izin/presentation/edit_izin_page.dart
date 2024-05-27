@@ -11,6 +11,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 
 import '../../../err_log/application/err_log_notifier.dart';
 import '../../../shared/providers.dart';
@@ -39,15 +40,12 @@ class EditIzinPage extends HookConsumerWidget {
     final jenisIzinTextController = useState(item.idMstIzin);
 
     final tglPlaceholderTextController = useTextEditingController(
-        text:
-            'Dari ${StringUtils.formatTanggal(item.tglStart!)} Sampai ${StringUtils.formatTanggal(item.tglEnd!)}');
+      text: _returnPlaceHolderText(
+          DateTimeRange(start: item.tglStart!, end: item.tglEnd!)),
+    );
 
-    final tglAwalTextController = useState(
-        StringUtils.midnightDate(DateTime.parse(item.tglStart!))
-            .replaceAll('.000', ''));
-    final tglAkhirTextController = useState(
-        StringUtils.midnightDate(DateTime.parse(item.tglEnd!))
-            .replaceAll('.000', ''));
+    final tglStart = useState(item.tglStart!);
+    final tglEnd = useState(item.tglEnd!);
 
     final spvTextController = useTextEditingController();
     final hrdTextController = useTextEditingController();
@@ -208,31 +206,19 @@ class EditIzinPage extends HookConsumerWidget {
                           onTap: () async {
                             final picked = await showDateRangePicker(
                               context: context,
-                              lastDate: DateTime.now(),
                               firstDate: new DateTime(2021),
+                              lastDate: DateTime.now().add(Duration(days: 365)),
                             );
                             if (picked != null) {
                               print(picked);
-
-                              final start =
-                                  StringUtils.midnightDate(picked.start)
-                                      .replaceAll('.000', '');
-                              final end = StringUtils.midnightDate(picked.end)
-                                  .replaceAll('.000', '');
-
-                              tglAwalTextController.value = start;
-                              tglAkhirTextController.value = end;
-
-                              final startPlaceHolder =
-                                  StringUtils.formatTanggal(
-                                      picked.start.toString());
-                              final endPlaceHolder = StringUtils.formatTanggal(
-                                  picked.end.toString());
-
+                              tglStart.value = picked.start;
+                              tglEnd.value = picked.end;
+                              final _start = DateFormat('dd MMM yyyy')
+                                  .format(tglStart.value);
+                              final _end = DateFormat('dd MMMM yyyy')
+                                  .format(tglEnd.value);
                               tglPlaceholderTextController.text =
-                                  'Dari $startPlaceHolder Sampai $endPlaceHolder';
-
-                              log('START $start END $end');
+                                  '$_start - $_end';
                             }
                           },
                           child: Ink(
@@ -297,30 +283,24 @@ class EditIzinPage extends HookConsumerWidget {
                               log(' Payroll: ${ptTextController.value.text} \n ');
                               log(' Diagnosa: ${keteranganTextController.value.text} \n ');
                               log(' Surat Dokter: ${jenisIzinTextController.value}  \n ');
-                              log(' Tgl Awal: ${tglAwalTextController.value} Tgl Akhir: ${tglAkhirTextController.value} \n ');
+                              // log(' Tgl Awal: ${tglAwalTextController.value} Tgl Akhir: ${tglAkhirTextController.value} \n ');/
                               log(' SPV Note : ${spvTextController.value.text} HRD Note : ${hrdTextController.value.text} \n  ');
-
-                              final totalHari =
-                                  DateTime.parse(tglAkhirTextController.value)
-                                      .difference(DateTime.parse(
-                                          tglAwalTextController.value))
-                                      .inDays;
-                              log(' Date Diff: $totalHari');
 
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();
                                 await ref
                                     .read(createIzinNotifierProvider.notifier)
                                     .updateIzin(
+                                        tglAkhir: '',
+                                        tglAwal: '',
+                                        noteHrd: '',
+                                        noteSpv: '',
                                         idIzin: item.idIzin!,
                                         idUser: item.idUser!,
                                         uUser: user.nama!,
-                                        totalHari: totalHari,
                                         ket: keteranganTextController.text,
                                         idMstIzin:
                                             jenisIzinTextController.value!,
-                                        tglAwal: tglAwalTextController.value,
-                                        tglAkhir: tglAkhirTextController.value,
                                         onError: (msg) =>
                                             DialogHelper.showCustomDialog(
                                                 msg, context));
@@ -334,5 +314,14 @@ class EditIzinPage extends HookConsumerWidget {
         ),
       ),
     );
+  }
+
+  String _returnPlaceHolderText(
+    DateTimeRange picked,
+  ) {
+    final startPlaceHolder = StringUtils.formatTanggal(picked.start.toString());
+    final endPlaceHolder = StringUtils.formatTanggal(picked.end.toString());
+
+    return 'Dari $startPlaceHolder Sampai $endPlaceHolder';
   }
 }

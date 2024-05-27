@@ -6,8 +6,14 @@ import '../style/style.dart';
 import '../widgets/v_dialogs.dart';
 
 class DialogHelper<T> {
-  static Future<void> showCustomDialog(String msg, BuildContext context,
-      {Color? color, String? label, String? assets, bool? isLarge}) async {
+  static Future<void> showCustomDialog(
+    String msg,
+    BuildContext context, {
+    Color? color,
+    String? label,
+    String? assets,
+    bool? isLarge,
+  }) async {
     return OSVibrate.vibrate().then((value) => showDialog(
         context: context,
         barrierDismissible: true,

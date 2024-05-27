@@ -49,6 +49,17 @@ class UserNotifier extends StateNotifier<UserState> {
         isGetting: false, failureOrSuccessOption: optionOf(failureOrSuccess));
   }
 
+  Future<void> getUserState() async {
+    Either<UserFailure, String?> failureOrSuccess;
+
+    state = state.copyWith(isGetting: true, failureOrSuccessOption: none());
+
+    failureOrSuccess = await _repository.getSignedInCredentials();
+
+    state = state.copyWith(
+        isGetting: false, failureOrSuccessOption: optionOf(failureOrSuccess));
+  }
+
   Future<void> saveUserAfterUpdate(
       {required UserModelWithPassword user}) async {
     Either<AuthFailure, Unit?> failureOrSuccess;

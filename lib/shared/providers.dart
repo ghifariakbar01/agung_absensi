@@ -71,6 +71,7 @@ import '../user/application/user_state.dart';
 
 // NETWORKING & ROUTER
 final dioProvider = Provider((ref) => Dio());
+final dioProviderCuti = Provider((ref) => Dio());
 final dioProviderHosting = Provider((ref) => Dio());
 
 final dioRequestProvider = Provider<Map<String, String>>(

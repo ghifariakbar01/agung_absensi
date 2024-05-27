@@ -5,7 +5,6 @@ import 'dart:developer';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../sakit/create_sakit/application/create_sakit.dart';
-import '../../../sakit/create_sakit/application/create_sakit_notifier.dart';
 import '../../../send_wa/application/send_wa_notifier.dart';
 import '../../../shared/providers.dart';
 import '../../../wa_head_helper/application/wa_head.dart';
@@ -115,9 +114,7 @@ class CreateTugasDinasNotifier extends _$CreateTugasDinasNotifier {
 
     try {
       // debugger();
-      final CreateSakit create = await ref
-          .read(createSakitNotifierProvider.notifier)
-          .getCreateSakit(idUser, tglAwal, tglAkhir);
+      final CreateSakit create = CreateSakit();
       _verifyDate(create, tglAwal, tglAkhir, kategori, khusus);
 
       await ref.read(createTugasDinasRepositoryProvider).submitTugasDinas(
@@ -164,9 +161,7 @@ class CreateTugasDinasNotifier extends _$CreateTugasDinasNotifier {
 
     try {
       debugger();
-      final CreateSakit create = await ref
-          .read(createSakitNotifierProvider.notifier)
-          .getCreateSakit(idUser, tglAwal, tglAkhir);
+      final CreateSakit create = CreateSakit();
       _verifyDate(create, tglAwal, tglAkhir, kategori, khusus);
 
       await ref.read(createTugasDinasRepositoryProvider).updateTugasDinas(

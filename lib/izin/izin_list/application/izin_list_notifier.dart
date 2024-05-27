@@ -12,7 +12,8 @@ part 'izin_list_notifier.g.dart';
 @Riverpod(keepAlive: true)
 IzinListRemoteService izinListRemoteService(IzinListRemoteServiceRef ref) {
   return IzinListRemoteService(
-      ref.watch(dioProviderHosting), ref.watch(dioRequestProvider));
+    ref.watch(dioProviderHosting),
+  );
 }
 
 @Riverpod(keepAlive: true)
@@ -76,76 +77,27 @@ class IzinListController extends _$IzinListController {
     String? searchUser,
     DateTimeRange? dateRange,
   }) async {
-    final hrd = ref.read(userNotifierProvider).user.fin;
+    final username = ref.read(userNotifierProvider).user.nama!;
+    final pass = ref.read(userNotifierProvider).user.password!;
 
-    final staff = ref.read(userNotifierProvider).user.staf!;
-    final staffStr = staff.replaceAll('"', '').substring(0, staff.length - 1);
-
-    if (isHrdOrSpv(hrd)) {
-      return ref.read(izinListRepositoryProvider).getIzinList(
-            page: page,
-            searchUser: searchUser ?? '',
-            dateRange: dateRange ??
-                DateTimeRange(
+    final List<IzinList> _list =
+        await ref.read(izinListRepositoryProvider).getIzinList(
+              username: username,
+              pass: pass,
+              dateRange: dateRange ??
+                  DateTimeRange(
                     start: DateTime.now().subtract(Duration(days: 30)),
-                    end: DateTime.now().add(Duration(days: 1))),
-          );
+                    end: DateTime.now().add(Duration(days: 1)),
+                  ),
+            );
+
+    if (searchUser == null) {
+      return _list;
     } else {
-      return ref.read(izinListRepositoryProvider).getIzinListLimitedAccess(
-            page: page,
-            staff: staffStr,
-            searchUser: searchUser ?? '',
-            dateRange: dateRange ??
-                DateTimeRange(
-                    start: DateTime.now().subtract(Duration(days: 30)),
-                    end: DateTime.now().add(Duration(days: 1))),
-          );
+      return _list
+          .where(
+              (element) => element.fullname!.toLowerCase().contains(searchUser))
+          .toList();
     }
-  }
-
-  bool _isAct() {
-    final server = ref.read(userNotifierProvider).user.ptServer;
-    return server != 'gs_18';
-  }
-
-  bool isSpvEdit() {
-    final spv = ref.read(userNotifierProvider).user.spv;
-    final fullAkses = ref.read(userNotifierProvider).user.fullAkses;
-
-    if (spv == null) {
-      return false;
-    }
-
-    if (fullAkses! == false) {
-      return false;
-    }
-
-    if (_isAct()) {
-      return spv.contains('10,');
-    } else {
-      return spv.contains('5012,');
-    }
-  }
-
-  bool isHrdOrSpv(String? access) {
-    bool _isHrdOrSpv = true;
-
-    final fullAkses = ref.read(userNotifierProvider).user.fullAkses;
-
-    if (access == null) {
-      _isHrdOrSpv = false;
-    }
-
-    if (fullAkses! == false) {
-      _isHrdOrSpv = false;
-    }
-
-    if (_isAct()) {
-      _isHrdOrSpv = access!.contains('18,');
-    } else {
-      _isHrdOrSpv = access!.contains('5103,');
-    }
-
-    return _isHrdOrSpv;
   }
 }

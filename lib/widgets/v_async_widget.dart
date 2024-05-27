@@ -29,7 +29,7 @@ class VAsyncWidgetScaffold<T> extends StatelessWidget {
           errMessage = e.toString();
         }
 
-        log('errMessage is $errMessage');
+        log('errMessage is $errMessage ${e.runtimeType}');
 
         return Center(child: ErrorMessageWidget(errorMessage: errMessage));
       },

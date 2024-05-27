@@ -1,15 +1,7 @@
-import 'package:face_net_authentication/send_wa/application/send_wa_notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../mst_karyawan_cuti/application/mst_karyawan_cuti.dart';
-import '../../../mst_karyawan_cuti/application/mst_karyawan_cuti_notifier.dart';
-import '../../../send_wa/application/phone_num.dart';
 import '../../../shared/providers.dart';
-import '../../create_sakit/application/create_sakit.dart';
 
-import '../../create_sakit/application/create_sakit_notifier.dart';
-import '../../sakit_list/application/sakit_list.dart';
-import '../../sakit_list/application/sakit_list_notifier.dart';
 import '../infrastructures/sakit_approve_remote_service.dart.dart';
 import '../infrastructures/sakit_approve_repository.dart';
 
@@ -19,7 +11,8 @@ part 'sakit_approve_notifier.g.dart';
 SakitApproveRemoteService sakitApproveRemoteService(
     SakitApproveRemoteServiceRef ref) {
   return SakitApproveRemoteService(
-      ref.watch(dioProviderHosting), ref.watch(dioRequestProvider));
+    ref.watch(dioProviderCuti),
+  );
 }
 
 @Riverpod(keepAlive: true)
@@ -34,255 +27,53 @@ class SakitApproveController extends _$SakitApproveController {
   @override
   FutureOr<void> build() {}
 
-  Future<void> _sendWa(
-      {required SakitList itemSakit, required String messageContent}) async {
-    final PhoneNum phoneNum = PhoneNum(
-      noTelp1: itemSakit.noTelp1,
-      noTelp2: itemSakit.noTelp2,
-    );
-
-    return ref.read(sendWaNotifierProvider.notifier).processAndSendWa(
-        idUser: itemSakit.idUser!,
-        idDept: itemSakit.idDept!,
-        phoneNum: phoneNum,
-        messageContent: messageContent);
-  }
-
-  Future<void> approveSpv(
-      {required String nama,
-      required String note,
-      required SakitList itemSakit}) async {
-    state = const AsyncLoading();
-
-    try {
-      await ref
-          .read(sakitApproveRepositoryProvider)
-          .approveSpv(nama: nama, note: note, idSakit: itemSakit.idSakit!);
-      final String messageContent =
-          'Izin Sakit Anda Sudah Diapprove Oleh Atasan $nama';
-      await _sendWa(itemSakit: itemSakit, messageContent: messageContent);
-
-      state = AsyncData<void>('Sukses Melakukan Approve Form Sakit');
-    } catch (e) {
-      state = AsyncError(e, StackTrace.current);
-    }
-  }
-
-  Future<void> unapproveSpv({
-    required String nama,
-    required SakitList itemSakit,
-  }) async {
-    state = const AsyncLoading();
-
-    try {
-      await ref
-          .read(sakitApproveRepositoryProvider)
-          .unapproveSpv(nama: nama, itemSakit: itemSakit);
-      final String messageContent =
-          'Izin Sakit Anda Sudah Diapprove Oleh Atasan $nama';
-      await _sendWa(itemSakit: itemSakit, messageContent: messageContent);
-
-      state = AsyncData<void>('Sukses Unapprove Form Sakit');
-    } catch (e) {
-      state = AsyncError(e, StackTrace.current);
-    }
-  }
-
-  Future<void> approveHrdTanpaSurat({
-    required String namaHrd,
+  Future<void> approve({
+    required int idSakit,
+    required String jenisApp,
     required String note,
-    required SakitList itemSakit,
+    required int tahun,
+    String? server = 'testing',
   }) async {
     state = const AsyncLoading();
 
-    try {
-      final CreateSakit createSakit = await ref
-          .read(createSakitNotifierProvider.notifier)
-          .getCreateSakit(
-              itemSakit.idUser!, itemSakit.tglStart!, itemSakit.tglEnd!);
-      final MstKaryawanCuti mstCutiUser = await ref
-          .read(mstKaryawanCutiNotifierProvider.notifier)
-          .getSaldoMasterCutiById(itemSakit.idUser!);
-
-      await ref.read(sakitApproveRepositoryProvider).approveHrdTanpaSurat(
-          namaHrd: namaHrd,
-          note: note,
-          itemSakit: itemSakit,
-          createSakit: createSakit,
-          mstCutiUser: mstCutiUser);
-
-      final String messageContent =
-          'Izin Sakit Anda Sudah Diapprove Oleh HRD $namaHrd';
-
-      await _sendWa(itemSakit: itemSakit, messageContent: messageContent);
-
-      state = AsyncData<void>('Sukses Melakukan Approve Form Sakit');
-    } catch (e) {
-      state = AsyncError(e, StackTrace.current);
-    }
-  }
-
-  Future<void> approveHrdDenganSurat({
-    required String namaHrd,
-    required String note,
-    required SakitList itemSakit,
-  }) async {
-    state = const AsyncLoading();
+    final username = ref.read(userNotifierProvider).user.nama!;
+    final pass = ref.read(userNotifierProvider).user.password!;
 
     try {
-      await ref.read(sakitApproveRepositoryProvider).approveHrdDenganSurat(
-            nama: namaHrd,
+      await ref.read(sakitApproveRepositoryProvider).approve(
+            idSakit: idSakit,
+            username: username,
+            pass: pass,
+            jenisApp: jenisApp,
             note: note,
-            itemSakit: itemSakit,
+            tahun: tahun,
+            server: server,
           );
 
-      final String messageContent =
-          'Izin Sakit Anda Sudah Diapprove Oleh HRD $namaHrd';
-
-      await _sendWa(itemSakit: itemSakit, messageContent: messageContent);
-
-      state = AsyncData<void>('Sukses Melakukan Approve Form Sakit');
-    } catch (e) {
-      state = AsyncError(e, StackTrace.current);
-    }
-  }
-
-  Future<void> unApproveHrdDenganSurat({
-    required String nama,
-    required SakitList itemSakit,
-  }) async {
-    state = const AsyncLoading();
-
-    try {
-      await ref.read(sakitApproveRepositoryProvider).unApproveHrdDenganSurat(
-            nama: nama,
-            itemSakit: itemSakit,
-          );
-
-      state = AsyncData<void>('Sukses Unapprove Form Sakit');
-    } catch (e) {
-      state = AsyncError(e, StackTrace.current);
-    }
-  }
-
-  Future<void> unApproveHrdTanpaSurat({
-    required String nama,
-    required SakitList itemSakit,
-  }) async {
-    state = const AsyncLoading();
-
-    try {
-      final CreateSakit createSakit = await ref
-          .read(createSakitNotifierProvider.notifier)
-          .getCreateSakit(
-              itemSakit.idUser!, itemSakit.tglStart!, itemSakit.tglEnd!);
-      final MstKaryawanCuti mstCutiUser = await ref
-          .read(mstKaryawanCutiNotifierProvider.notifier)
-          .getSaldoMasterCutiById(itemSakit.idUser!);
-
-      await ref.read(sakitApproveRepositoryProvider).unApproveHrdTanpaSurat(
-          nama: nama,
-          itemSakit: itemSakit,
-          createSakit: createSakit,
-          mstCuti: mstCutiUser);
-
-      state = AsyncData<void>('Sukses Unapprove Form Sakit');
+      state = AsyncData<void>('Sukses');
     } catch (e) {
       state = AsyncError(e, StackTrace.current);
     }
   }
 
   Future<void> batal({
-    required String nama,
-    required SakitList itemSakit,
+    required int idSakit,
   }) async {
     state = const AsyncLoading();
 
+    final username = ref.read(userNotifierProvider).user.nama!;
+    final pass = ref.read(userNotifierProvider).user.password!;
+
     try {
       await ref.read(sakitApproveRepositoryProvider).batal(
-            nama: nama,
-            itemSakit: itemSakit,
+            idSakit: idSakit,
+            username: username,
+            pass: pass,
           );
-      final String messageContent =
-          'Izin Sakit Anda Telah Di Batalkan Oleh : $nama';
 
-      await _sendWa(itemSakit: itemSakit, messageContent: messageContent);
       state = AsyncData<void>('Sukses Membatalkan Form Sakit');
     } catch (e) {
       state = AsyncError(e, StackTrace.current);
     }
-  }
-
-  bool canSpvApprove(SakitList item) {
-    bool approveSpv = false;
-
-    if (item.hrdSta == true) {
-      approveSpv = false;
-    }
-
-    final spv = ref.read(userNotifierProvider).user.spv;
-
-    if (ref.read(sakitListControllerProvider.notifier).isHrdOrSpv(spv) ==
-        false) {
-      approveSpv = false;
-    }
-
-    final staff = ref.read(userNotifierProvider).user.staf!;
-    if (staff.contains(item.idUser.toString()) == false) {
-      approveSpv = false;
-    }
-
-    if (ref.read(userNotifierProvider).user.idUser == item.idUser) {
-      approveSpv = false;
-    }
-
-    if (calcDiffSaturdaySunday(DateTime.parse(item.cDate!), DateTime.now()) >=
-        3) {
-      approveSpv = false;
-    }
-
-    if (ref.read(userNotifierProvider).user.fullAkses == true) {
-      approveSpv = true;
-    }
-
-    return approveSpv;
-  }
-
-  bool canHrdApprove(SakitList item) {
-    bool approveHrd = false;
-
-    if (item.spvSta == false) {
-      approveHrd = false;
-    }
-
-    if (item.hrdSta == true) {
-      approveHrd = false;
-    }
-
-    final hrd = ref.read(userNotifierProvider).user.fin;
-
-    if (ref.read(sakitListControllerProvider.notifier).isHrdOrSpv(hrd) ==
-        false) {
-      approveHrd = false;
-    }
-
-    if (ref.read(userNotifierProvider).user.idUser == item.idUser) {
-      approveHrd = false;
-    }
-
-    final jumlahHari =
-        DateTime.now().difference(DateTime.parse(item.cDate!)).inDays;
-    final jumlahHariLibur =
-        calcDiffSaturdaySunday(DateTime.parse(item.cDate!), DateTime.now());
-
-    if (jumlahHari - jumlahHariLibur >= 1) {
-      approveHrd = false;
-    }
-
-    if (ref.read(userNotifierProvider).user.fullAkses == true) {
-      approveHrd = true;
-    }
-
-    return approveHrd;
   }
 }

@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:face_net_authentication/cross_auth/application/cross_auth_response.dart';
 import 'package:face_net_authentication/cross_auth/infrastructures/cross_auth_remote_service.dart';
 import 'package:face_net_authentication/cross_auth/infrastructures/cross_auth_repository.dart';
@@ -170,6 +171,8 @@ class CrossAuthNotifier extends _$CrossAuthNotifier {
         return;
       }
 
+      await _resetCutiDioProvider(serv);
+
       if (serv == 'gs_18') {
         await _crossToARV(server: 'gs_18', userId: userId, password: password);
         return;
@@ -178,6 +181,35 @@ class CrossAuthNotifier extends _$CrossAuthNotifier {
         return;
       }
     });
+  }
+
+  final Map<String, String> _mapPTCuti = {
+    // 'gs_12': 'http://agungcartrans.co.id:1232/services',
+    'gs_12': 'https://www.agunglogisticsapp.co.id:2002/services',
+    'gs_14': 'https://agungcartrans.co.id:2601/services',
+    'gs_18': 'https://www.agunglogisticsapp.co.id:2002/services',
+    'gs_21': 'https://www.agunglogisticsapp.co.id:3603/services',
+  };
+
+  String _determineBaseUrl(String serv) {
+    return _mapPTCuti.entries
+        .firstWhere(
+          (element) => element.key == serv,
+          orElse: () => _mapPTCuti.entries.first,
+        )
+        .value;
+  }
+
+  _resetCutiDioProvider(String serv) {
+    return ref.read(dioProviderCuti)
+      ..options = BaseOptions(
+        connectTimeout: 20000,
+        receiveTimeout: 20000,
+        validateStatus: (status) {
+          return true;
+        },
+        baseUrl: _determineBaseUrl(serv),
+      );
   }
 
   Future<void> cross({
@@ -192,6 +224,8 @@ class CrossAuthNotifier extends _$CrossAuthNotifier {
     if (serv == null) {
       return;
     }
+
+    await _resetCutiDioProvider(serv);
 
     if (serv == 'gs_18') {
       await _crossToARV(server: 'gs_18', userId: userId, password: password);

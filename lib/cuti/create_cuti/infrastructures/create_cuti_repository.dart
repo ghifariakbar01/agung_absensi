@@ -14,57 +14,59 @@ class CreateCutiRepository {
   final CreateCutiRemoteService _remoteService;
 
   Future<Unit> updateCuti({
+    required String username,
+    required String pass,
+    required int idCuti,
     required String jenisCuti,
     required String alasan,
     required String ket,
-    required String tahunCuti,
-    required String nama,
-    required int idCuti,
-    required int idUser,
-    required int sisaCuti,
-    required int jumlahHari,
-    required int hitungLibur,
-    required DateTime tglAwalInDateTime,
-    required DateTime tglAkhirInDateTime,
+    required String tglStart,
+    required String tglEnd,
   }) async {
     return _remoteService.updateCuti(
-        jenisCuti: jenisCuti,
-        alasan: alasan,
-        ket: ket,
-        tahunCuti: tahunCuti,
-        nama: nama,
-        idCuti: idCuti,
-        idUser: idUser,
-        sisaCuti: sisaCuti,
-        jumlahHari: jumlahHari,
-        hitungLibur: hitungLibur,
-        tglAwalInDateTime: tglAwalInDateTime,
-        tglAkhirInDateTime: tglAkhirInDateTime);
+      idCuti: idCuti,
+      username: username,
+      pass: pass,
+      jenisCuti: jenisCuti,
+      ket: ket,
+      alasan: alasan,
+      tglStart: tglStart,
+      tglEnd: tglEnd,
+    );
   }
 
   Future<Unit> submitCuti({
+    required String username,
+    required String pass,
+    required int idUser,
     required String jenisCuti,
     required String alasan,
     required String ket,
-    required String tahunCuti,
-    required int idUser,
-    required int sisaCuti,
-    required int jumlahHari,
-    required int hitungLibur,
-    required DateTime tglAwalInDateTime,
-    required DateTime tglAkhirInDateTime,
+    required String tglStart,
+    required String tglEnd,
   }) async {
     return _remoteService.submitCuti(
-        jenisCuti: jenisCuti,
-        alasan: alasan,
-        ket: ket,
-        tahunCuti: tahunCuti,
-        idUser: idUser,
-        sisaCuti: sisaCuti,
-        jumlahHari: jumlahHari,
-        hitungLibur: hitungLibur,
-        tglAwalInDateTime: tglAwalInDateTime,
-        tglAkhirInDateTime: tglAkhirInDateTime);
+      idUser: idUser,
+      username: username,
+      pass: pass,
+      jenisCuti: jenisCuti,
+      ket: ket,
+      alasan: alasan,
+      tglStart: tglStart,
+      tglEnd: tglEnd,
+    );
+  }
+
+  Future<Unit> deleteCuti({
+    required String username,
+    required String pass,
+    required int idCuti,
+  }) async {
+    return _remoteService.deleteCuti(
+      username: username,
+      pass: pass,
+      idCuti: idCuti,
+    );
   }
 
   Future<List<AlasanCuti>> getAlasanEmergency() {
@@ -73,32 +75,5 @@ class CreateCutiRepository {
 
   Future<List<JenisCuti>> getJenisCuti() {
     return _remoteService.getJenisCuti();
-  }
-
-  Future<Unit> resetCutiTahunMasuk({
-    required int idUser,
-    required String nama,
-    required String masuk,
-  }) {
-    return _remoteService.resetCutiTahunMasuk(
-        idUser: idUser, nama: nama, masuk: masuk);
-  }
-
-  Future<Unit> resetCutiSatuTahunLebih({
-    required int idUser,
-    required String nama,
-    required String masuk,
-  }) {
-    return _remoteService.resetCutiSatuTahunLebih(
-        idUser: idUser, nama: nama, masuk: masuk);
-  }
-
-  Future<Unit> resetCutiDuaTahunLebih({
-    required int idUser,
-    required String nama,
-    required String masuk,
-  }) {
-    return _remoteService.resetCutiDuaTahunLebih(
-        idUser: idUser, nama: nama, masuk: masuk);
   }
 }

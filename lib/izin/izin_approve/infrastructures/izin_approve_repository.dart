@@ -7,41 +7,35 @@ class IzinApproveRepository {
 
   final IzinApproveRemoteService _remoteService;
 
-  Future<Unit> approveSpv({required int idIzin, required String nama}) {
-    return _remoteService.approveSpv(
-      idIzin: idIzin,
-      nama: nama,
-    );
-  }
-
-  Future<Unit> unApproveSpv({required int idIzin, required String nama}) {
-    return _remoteService.unApproveSpv(
-      idIzin: idIzin,
-      nama: nama,
-    );
-  }
-
-  Future<Unit> approveHrd({
+  Future<Unit> approve({
     required int idIzin,
-    required String namaHrd,
+    required String username,
+    required String pass,
+    required String jenisApp,
     required String note,
-  }) {
-    return _remoteService.approveHrd(
-        namaHrd: namaHrd, note: note, idIzin: idIzin);
-  }
-
-  Future<Unit> unApproveHrd({
-    required int idIzin,
-    required String nama,
-    required String note,
-  }) {
-    return _remoteService.unApproveHrd(nama: nama, idIzin: idIzin, note: note);
+    required int tahun,
+    String? server = 'testing',
+  }) async {
+    return _remoteService.approve(
+      idIzin: idIzin,
+      username: username,
+      pass: pass,
+      jenisApp: jenisApp,
+      note: note,
+      tahun: tahun,
+      server: server,
+    );
   }
 
   Future<Unit> batal({
     required int idIzin,
-    required String nama,
-  }) {
-    return _remoteService.batal(nama: nama, idIzin: idIzin);
+    required String username,
+    required String pass,
+  }) async {
+    return _remoteService.batal(
+      idIzin: idIzin,
+      username: username,
+      pass: pass,
+    );
   }
 }

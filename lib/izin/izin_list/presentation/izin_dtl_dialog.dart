@@ -1,4 +1,4 @@
-import 'package:face_net_authentication/izin/izin_list/application/izin_list_notifier.dart';
+import 'package:face_net_authentication/izin/create_izin/application/create_izin_notifier.dart';
 import 'package:face_net_authentication/widgets/tappable_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -7,9 +7,8 @@ import 'package:intl/intl.dart';
 
 import '../../../constants/assets.dart';
 import '../../../routes/application/route_names.dart';
-import '../../../shared/providers.dart';
 import '../../../style/style.dart';
-import '../../../utils/enums.dart';
+import '../../../utils/dialog_helper.dart';
 import '../application/izin_list.dart';
 
 class IzinDtlDialog extends ConsumerWidget {
@@ -19,122 +18,6 @@ class IzinDtlDialog extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bool isHrdApproved = item.hrdSta ?? false;
-
-    final String? fin = ref.watch(userNotifierProvider).user.fin;
-    final bool isHrd =
-        ref.watch(izinListControllerProvider.notifier).isHrdOrSpv(fin!);
-
-    final bool isCurrentUser =
-        ref.watch(userNotifierProvider).user.idUser == item.idUser;
-
-    final bool isSpvApproved = item.spvSta ?? false;
-    final bool isSpvEditable =
-        ref.watch(izinListControllerProvider.notifier).isSpvEdit();
-
-    final bool fullAkses = ref.watch(userNotifierProvider).user.fullAkses!;
-
-    _returnVisibility(ColumnCommandButtonType buttonType) {
-      bool isVisible = false;
-
-      if (isHrd) {
-        if (isCurrentUser == false) {
-          if (isSpvApproved) {
-            switch (buttonType) {
-              case ColumnCommandButtonType.Edit:
-                isVisible = true;
-                break;
-              case ColumnCommandButtonType.Delete:
-                isVisible = false;
-                break;
-            }
-          }
-        } else {
-          switch (buttonType) {
-            case ColumnCommandButtonType.Edit:
-              isVisible = true;
-              break;
-            case ColumnCommandButtonType.Delete:
-              isVisible = true;
-              break;
-          }
-        }
-      } else {
-        if (isCurrentUser) {
-          if (isSpvEditable && isSpvApproved) {
-            switch (buttonType) {
-              case ColumnCommandButtonType.Edit:
-                isVisible = true;
-                break;
-              case ColumnCommandButtonType.Delete:
-                isVisible = true;
-                break;
-            }
-          } else if (isSpvEditable && isSpvApproved == false) {
-            switch (buttonType) {
-              case ColumnCommandButtonType.Edit:
-                isVisible = true;
-                break;
-              case ColumnCommandButtonType.Delete:
-                isVisible = true;
-                break;
-            }
-          } else if (!isSpvEditable && isSpvApproved) {
-            switch (buttonType) {
-              case ColumnCommandButtonType.Edit:
-                isVisible = false;
-                break;
-              case ColumnCommandButtonType.Delete:
-                isVisible = false;
-                break;
-            }
-          } else {
-            switch (buttonType) {
-              case ColumnCommandButtonType.Edit:
-                isVisible = true;
-                break;
-              case ColumnCommandButtonType.Delete:
-                isVisible = false;
-                break;
-            }
-          }
-        } else {
-          switch (buttonType) {
-            case ColumnCommandButtonType.Edit:
-              isVisible = true;
-              break;
-            case ColumnCommandButtonType.Delete:
-              isVisible = false;
-              break;
-          }
-        }
-      }
-
-      if (isHrdApproved) {
-        switch (buttonType) {
-          case ColumnCommandButtonType.Edit:
-            isVisible = false;
-            break;
-          case ColumnCommandButtonType.Delete:
-            isVisible = false;
-            break;
-        }
-      }
-
-      if (fullAkses) {
-        switch (buttonType) {
-          case ColumnCommandButtonType.Edit:
-            isVisible = true;
-            break;
-          case ColumnCommandButtonType.Delete:
-            isVisible = true;
-            break;
-        }
-      }
-
-      return isVisible;
-    }
-
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.0),
@@ -260,7 +143,7 @@ class IzinDtlDialog extends ConsumerWidget {
                         Text(
                           DateFormat(
                             'dd MMM yyyy',
-                          ).format(DateTime.parse(item.tglStart!)),
+                          ).format(item.tglStart!),
                           style: Themes.customColor(9,
                               color: Palette.blue, fontWeight: FontWeight.w500),
                         ),
@@ -284,7 +167,7 @@ class IzinDtlDialog extends ConsumerWidget {
                         Text(
                           DateFormat(
                             'dd MMM yyyy',
-                          ).format(DateTime.parse(item.tglStart!)),
+                          ).format(item.tglStart!),
                           style: Themes.customColor(9,
                               color: Palette.tertiaryColor,
                               fontWeight: FontWeight.w500),
@@ -332,7 +215,7 @@ class IzinDtlDialog extends ConsumerWidget {
                         SizedBox(
                           width: 90,
                           child: Text(
-                            '${item.namaIzin}',
+                            '${item.fullname}',
                             style: Themes.customColor(9,
                                 color: Palette.tertiaryColor,
                                 fontWeight: FontWeight.w500),
@@ -421,7 +304,7 @@ class IzinDtlDialog extends ConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  if (_returnVisibility(ColumnCommandButtonType.Edit))
+                  if (item.isEdit!)
                     TappableSvg(
                         assetPath: Assets.iconEdit,
                         onTap: () {
@@ -432,8 +315,21 @@ class IzinDtlDialog extends ConsumerWidget {
                   SizedBox(
                     width: 8,
                   ),
-                  if (_returnVisibility(ColumnCommandButtonType.Delete))
-                    TappableSvg(assetPath: Assets.iconDelete, onTap: () {})
+                  if (item.isDelete!)
+                    TappableSvg(
+                      assetPath: Assets.iconDelete,
+                      onTap: () async {
+                        context.pop();
+                        await ref
+                            .read(createIzinNotifierProvider.notifier)
+                            .deleteIzin(
+                                idIzin: item.idIzin!,
+                                onError: (msg) => DialogHelper.showCustomDialog(
+                                      msg,
+                                      context,
+                                    ));
+                      },
+                    )
                 ],
               )
           ],

@@ -15,6 +15,8 @@ class MstKaryawanCuti with _$MstKaryawanCuti {
     @JsonKey(name: 'tahun_cuti_baru') String? tahunCutiBaru,
     @JsonKey(name: 'cuti_tidak_baru') int? cutiTidakBaru,
     @JsonKey(name: 'cuti_baru') int? cutiBaru,
+    @JsonKey(name: 'date_open') int? dateOpen,
+    @JsonKey(name: 'cuti_aktif') int? cutiAktif,
   }) = _MstKaryawanCuti;
 
   factory MstKaryawanCuti.fromJson(Map<String, dynamic> json) =>
@@ -30,5 +32,7 @@ class MstKaryawanCuti with _$MstKaryawanCuti {
         closeDate: DateTime.now(),
         tahunCutiBaru: DateTime.now().year.toString(),
         tahunCutiTidakBaru: DateTime.now().year.toString(),
+        dateOpen: 0,
+        cutiAktif: 0,
       );
 }

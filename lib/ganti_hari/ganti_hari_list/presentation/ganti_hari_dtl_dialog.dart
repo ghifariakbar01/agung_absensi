@@ -28,15 +28,13 @@ class GantiHariDtlDialog extends ConsumerWidget {
     final bool isHrdApproved = item.hrdSta!;
 
     final String? fin = ref.watch(userNotifierProvider).user.fin;
-    final bool isHrd =
-        ref.watch(cutiListControllerProvider.notifier).isHrdOrSpv(fin!);
+    final bool isHrd = false;
 
     final bool isCurrentUser =
         ref.watch(userNotifierProvider).user.idUser == item.idUser;
 
     final bool isSpvApproved = item.spvSta!;
-    final bool isSpvEditable =
-        ref.watch(cutiListControllerProvider.notifier).isSpvEdit();
+    final bool isSpvEditable = false;
 
     final bool fullAkses = ref.watch(userNotifierProvider).user.fullAkses!;
 

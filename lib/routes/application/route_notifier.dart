@@ -221,8 +221,9 @@ class RouterNotifier extends ChangeNotifier {
               name: RouteNames.editSakitNameRoute,
               path: RouteNames.editSakitRoute,
               builder: (context, state) {
-                final sakit = state.extra as SakitList;
-                return EditSakitPage(sakit);
+                final cuti = state.extra as Map<String, dynamic>;
+                final _data = SakitList.fromJson(cuti);
+                return EditSakitPage(_data);
               },
             ),
             GoRoute(
@@ -260,8 +261,9 @@ class RouterNotifier extends ChangeNotifier {
               name: RouteNames.editCutiNameRoute,
               path: RouteNames.editCutiRoute,
               builder: (context, state) {
-                final cuti = state.extra as CutiList;
-                return EditCutiPage(cuti);
+                final cuti = state.extra as Map<String, dynamic>;
+                final _data = CutiList.fromJson(cuti);
+                return EditCutiPage(_data);
               },
             ),
             GoRoute(

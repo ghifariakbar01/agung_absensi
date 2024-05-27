@@ -1,7 +1,5 @@
 import 'package:dartz/dartz.dart';
 
-import '../application/create_sakit.dart';
-
 import 'create_sakit_remote_service.dart';
 
 class CreateSakitRepository {
@@ -10,61 +8,62 @@ class CreateSakitRepository {
   final CreateSakitRemoteService _remoteService;
 
   Future<Unit> submitSakit({
+    required String username,
+    required String pass,
     required int idUser,
+    required String tglStart,
+    required String tglEnd,
     required String ket,
     required String surat,
-    required String cUser,
-    required String tglEnd,
-    required String tglStart,
-    required int jumlahHari,
-    required int hitungLibur,
+    String? server = 'testing',
   }) async {
     return _remoteService.submitSakit(
-        idUser: idUser,
-        ket: ket,
-        surat: surat,
-        cUser: cUser,
-        tglEnd: tglEnd,
-        tglStart: tglStart,
-        jumlahHari: jumlahHari,
-        hitungLibur: hitungLibur);
+      username: username,
+      pass: pass,
+      idUser: idUser,
+      tglStart: tglStart,
+      tglEnd: tglEnd,
+      ket: ket,
+      surat: surat,
+      server: server,
+    );
   }
 
   Future<Unit> updateSakit({
-    required int id,
+    required int idSakit,
+    required String username,
+    required String pass,
     required int idUser,
+    required String tglStart,
+    required String tglEnd,
     required String ket,
     required String surat,
-    required String uUser,
-    required String tglEnd,
-    required String tglStart,
-    required int jumlahHari,
-    required int hitungLibur,
-  }) {
+    String? server = 'testing',
+  }) async {
     return _remoteService.updateSakit(
-        id: id,
-        idUser: idUser,
-        ket: ket,
-        surat: surat,
-        uUser: uUser,
-        tglEnd: tglEnd,
-        tglStart: tglStart,
-        jumlahHari: jumlahHari,
-        hitungLibur: hitungLibur);
-  }
-
-  Future<int> getLastSubmitSakit({required int idUser}) {
-    return _remoteService.getLastSubmitSakit(idUser: idUser);
-  }
-
-  Future<CreateSakit> getCreateSakit(
-      {required int idUser,
-      required String tglAwal,
-      required String tglAkhir}) async {
-    return _remoteService.getCreateSakit(
+      idSakit: idSakit,
+      username: username,
+      pass: pass,
       idUser: idUser,
-      tglAwal: tglAwal,
-      tglAkhir: tglAkhir,
+      tglStart: tglStart,
+      tglEnd: tglEnd,
+      ket: ket,
+      surat: surat,
+      server: server,
+    );
+  }
+
+  Future<Unit> deleteSakit({
+    required int idSakit,
+    required String username,
+    required String pass,
+    String? server = 'testing',
+  }) async {
+    return _remoteService.deleteSakit(
+      idSakit: idSakit,
+      username: username,
+      pass: pass,
+      server: server,
     );
   }
 }

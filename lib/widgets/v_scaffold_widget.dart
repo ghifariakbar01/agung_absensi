@@ -101,6 +101,9 @@ class VScaffoldTabLayout extends HookWidget {
     required this.currPT,
     required this.initialDateRange,
     required this.isActionsVisible,
+    this.bottomLeftWidget,
+    this.isSearching,
+    this.searchFocus,
     this.additionalInfo,
     this.appbarColor,
     this.length,
@@ -114,6 +117,9 @@ class VScaffoldTabLayout extends HookWidget {
   final List<Widget> scaffoldBody;
   final Widget scaffoldFAB;
   final Widget? additionalInfo;
+  final Widget? bottomLeftWidget;
+  final ValueNotifier<bool>? isSearching;
+  final FocusNode? searchFocus;
   final DateTimeRange initialDateRange;
   final Future<void> Function() onPageChanged;
   final Future<void> Function(String value) onFieldSubmitted;
@@ -122,8 +128,9 @@ class VScaffoldTabLayout extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _isSearching = useState(false);
-    final _searchFocus = useFocusNode();
+    final _isSearching = isSearching ?? useState(false);
+    final _searchFocus = searchFocus ?? useFocusNode();
+
     final _searchController = useTextEditingController();
 
     final controller = useTabController(
@@ -311,8 +318,6 @@ class VScaffoldTabLayout extends HookWidget {
                           lastDate: DateTime.now().add(Duration(days: 1)));
 
                       if (picked != null) {
-                        print(picked);
-
                         onFilterSelected(picked);
                       }
                     },
@@ -340,8 +345,19 @@ class VScaffoldTabLayout extends HookWidget {
           ),
           resizeToAvoidBottomInset: false,
           floatingActionButton: scaffoldFAB,
-          body:
-              TabBarView(controller: controller, children: [...scaffoldBody])),
+          body: Stack(
+            children: [
+              TabBarView(
+                controller: controller,
+                children: [...scaffoldBody],
+              ),
+              Positioned(
+                bottom: 20,
+                left: 10,
+                child: bottomLeftWidget ?? Container(),
+              )
+            ],
+          )),
     );
   }
 

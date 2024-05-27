@@ -9,21 +9,14 @@ class SakitListRepository {
   final SakitListRemoteService _remoteService;
 
   Future<List<SakitList>> getSakitList({
-    required int page,
-    required String searchUser,
+    required String username,
+    required String pass,
     required DateTimeRange dateRange,
   }) async {
     return _remoteService.getSakitList(
-        page: page, searchUser: searchUser, dateRange: dateRange);
-  }
-
-  Future<List<SakitList>> getSakitListLimitedAccess({
-    required int page,
-    required String staff,
-    required String searchUser,
-    required DateTimeRange dateRange,
-  }) async {
-    return _remoteService.getSakitListLimitedAccess(
-        page: page, staff: staff, searchUser: searchUser, dateRange: dateRange);
+      username: username,
+      pass: pass,
+      dateRange: dateRange,
+    );
   }
 }

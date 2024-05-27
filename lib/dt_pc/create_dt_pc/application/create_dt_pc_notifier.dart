@@ -4,10 +4,8 @@ import 'package:dartz/dartz.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../sakit/create_sakit/application/create_sakit.dart';
-import '../../../sakit/create_sakit/application/create_sakit_notifier.dart';
 import '../../../send_wa/application/send_wa_notifier.dart';
 import '../../../shared/providers.dart';
-import '../../../utils/string_utils.dart';
 import '../../../wa_head_helper/application/wa_head.dart';
 import '../../../wa_head_helper/application/wa_head_helper_notifier.dart';
 
@@ -81,15 +79,7 @@ class CreateDtPcNotifier extends _$CreateDtPcNotifier {
     state = const AsyncLoading();
 
     try {
-      final CreateSakit create = await ref
-          .read(createSakitNotifierProvider.notifier)
-          .getCreateSakit(
-              idUser,
-              StringUtils.midnightDate(DateTime.parse(dtTgl))
-                  .replaceAll('.000', ''),
-              StringUtils.midnightDate(DateTime.now())
-                  .toString()
-                  .replaceAll('.000', ''));
+      final CreateSakit create = CreateSakit();
 
       // 1. Calc jumlah harito substract sundays and saturdays
       final int jumlahhari =
@@ -140,15 +130,7 @@ class CreateDtPcNotifier extends _$CreateDtPcNotifier {
     state = const AsyncLoading();
 
     try {
-      final CreateSakit create = await ref
-          .read(createSakitNotifierProvider.notifier)
-          .getCreateSakit(
-              idUser,
-              StringUtils.midnightDate(DateTime.parse(dtTgl))
-                  .replaceAll('.000', ''),
-              StringUtils.midnightDate(DateTime.now())
-                  .toString()
-                  .replaceAll('.000', ''));
+      final CreateSakit create = CreateSakit();
 
       // 1. Calc jumlah harito substract sundays and saturdays
       final int jumlahhari =

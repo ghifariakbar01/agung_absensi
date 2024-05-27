@@ -1,5 +1,4 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:face_net_authentication/shared/providers.dart';
 import 'package:face_net_authentication/widgets/tappable_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -29,20 +28,6 @@ class SakitListItem extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
 
-    // final _isSpvApprove = item.spvTgl != item.cDate && item.spvSta == true;
-    // final spvAging = _isSpvApprove
-    //     ? DateTime.parse(item.spvTgl!)
-    //         .difference(DateTime.parse(item.cDate!))
-    //         .inDays
-    //     : DateTime.now().difference(DateTime.parse(item.cDate!)).inDays;
-
-    // final _isHrdApprove = item.hrdTgl != item.cDate && item.hrdSta == true;
-    // final hrdAging = _isHrdApprove
-    //     ? DateTime.parse(item.hrdTgl!)
-    //         .difference(DateTime.parse(item.cDate!))
-    //         .inDays
-    //     : DateTime.now().difference(DateTime.parse(item.cDate!)).inDays;
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: SizedBox(
@@ -53,45 +38,40 @@ class SakitListItem extends HookConsumerWidget {
               padding: EdgeInsets.all(8),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
-                  color: item.batalStatus == true
-                      ? Palette.red
-                      : theme.primaryColor,
+                  color: item.btlSta == true ? Palette.red : theme.primaryColor,
                   boxShadow: [
                     BoxShadow(
-                      color: item.batalStatus == true
+                      color: item.btlSta == true
                           ? Colors.white
-                          : Colors.grey.withOpacity(0.5), // Shadow color
+                          : Colors.grey.withOpacity(0.5),
                       spreadRadius: 1,
                       blurRadius: 3,
-                      offset:
-                          Offset(0, 1), // Controls the position of the shadow
+                      offset: Offset(0, 1),
                     ),
                   ]),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Upper Part
                   Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // LEFT
-                      Text(
-                        DateFormat(
-                          'EEEE, dd MMMM yyyy',
-                        ).format(DateTime.parse(item.cDate!)),
-                        style: Themes.customColor(10,
-                            fontWeight: FontWeight.w500,
-                            color:
-                                item.batalStatus == true ? Colors.white : null),
-                      ),
+                      if (item.cDate != null)
+                        Text(
+                          DateFormat(
+                            'EEEE, dd MMMM yyyy',
+                          ).format(item.cDate!),
+                          style: Themes.customColor(10,
+                              fontWeight: FontWeight.w500,
+                              color: item.btlSta == true ? Colors.white : null),
+                        ),
 
                       Spacer(),
 
                       // tappable svg
                       TappableSvg(
                           assetPath: Assets.iconDetail,
-                          color: item.batalStatus == true ? Colors.white : null,
+                          color: item.btlSta == true ? Colors.white : null,
                           onTap: () {
                             showDialog(
                               context: context,
@@ -103,7 +83,7 @@ class SakitListItem extends HookConsumerWidget {
                       SizedBox(
                         width: 4,
                       ),
-                      if (item.batalStatus == false)
+                      if (item.btlSta == false)
                         TappableSvg(
                             assetPath: Assets.iconBatal,
                             onTap: () {
@@ -111,16 +91,20 @@ class SakitListItem extends HookConsumerWidget {
                                 context: context,
                                 builder: (context) => VBatalDialog(
                                   onTap: () async {
+                                    if (!item.isBtl!) {
+                                      return showDialog(
+                                        context: context,
+                                        builder: (context) => VFailedDialog(
+                                          message: '',
+                                        ),
+                                      );
+                                    }
                                     context.pop();
                                     await ref
                                         .read(sakitApproveControllerProvider
                                             .notifier)
                                         .batal(
-                                          itemSakit: item,
-                                          nama: ref
-                                              .read(userNotifierProvider)
-                                              .user
-                                              .nama!,
+                                          idSakit: item.idSakit!,
                                         );
                                   },
                                 ),
@@ -156,7 +140,7 @@ class SakitListItem extends HookConsumerWidget {
                             Text(
                               'Nama',
                               style: Themes.customColor(7,
-                                  color: item.batalStatus == true
+                                  color: item.btlSta == true
                                       ? Colors.white
                                       : Colors.grey),
                             ),
@@ -164,9 +148,9 @@ class SakitListItem extends HookConsumerWidget {
                               height: 2,
                             ),
                             Text(
-                              item.fullname!,
+                              item.fullname ?? '-',
                               style: Themes.customColor(9,
-                                  color: item.batalStatus == true
+                                  color: item.btlSta == true
                                       ? Colors.white
                                       : Palette.primaryColor,
                                   fontWeight: FontWeight.w500),
@@ -185,61 +169,63 @@ class SakitListItem extends HookConsumerWidget {
                         children: [
                           Row(
                             children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Tanggal Awal',
-                                    style: Themes.customColor(7,
-                                        color: item.batalStatus == true
-                                            ? Colors.white
-                                            : Colors.grey),
-                                  ),
-                                  SizedBox(
-                                    height: 2,
-                                  ),
-                                  Text(
-                                    DateFormat(
-                                      'dd MMM yyyy',
-                                    ).format(DateTime.parse(item.tglStart!)),
-                                    style: Themes.customColor(9,
-                                        color: item.batalStatus == true
-                                            ? Colors.white
-                                            : Palette.blue,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ],
-                              ),
+                              if (item.tglStart != null)
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Tanggal Awal',
+                                      style: Themes.customColor(7,
+                                          color: item.btlSta == true
+                                              ? Colors.white
+                                              : Colors.grey),
+                                    ),
+                                    SizedBox(
+                                      height: 2,
+                                    ),
+                                    Text(
+                                      DateFormat(
+                                        'dd MMM yyyy',
+                                      ).format(item.tglStart!),
+                                      style: Themes.customColor(9,
+                                          color: item.btlSta == true
+                                              ? Colors.white
+                                              : Palette.blue,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ],
+                                ),
                               SizedBox(
                                 width: 16,
                               ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Tanggal Akhir',
-                                    style: Themes.customColor(7,
-                                        color: item.batalStatus == true
-                                            ? Colors.white
-                                            : Colors.grey),
-                                  ),
-                                  SizedBox(
-                                    height: 2,
-                                  ),
-                                  Text(
-                                    DateFormat(
-                                      'dd MMM yyyy',
-                                    ).format(DateTime.parse(item.tglEnd!)),
-                                    style: Themes.customColor(9,
-                                        color: item.batalStatus == true
-                                            ? Colors.white
-                                            : Palette.tertiaryColor,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ],
-                              )
+                              if (item.tglEnd != null)
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Tanggal Akhir',
+                                      style: Themes.customColor(7,
+                                          color: item.btlSta == true
+                                              ? Colors.white
+                                              : Colors.grey),
+                                    ),
+                                    SizedBox(
+                                      height: 2,
+                                    ),
+                                    Text(
+                                      DateFormat(
+                                        'dd MMM yyyy',
+                                      ).format(item.tglEnd!),
+                                      style: Themes.customColor(9,
+                                          color: item.btlSta == true
+                                              ? Colors.white
+                                              : Palette.tertiaryColor,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ],
+                                )
                             ],
                           ),
                           SizedBox(
@@ -254,50 +240,51 @@ class SakitListItem extends HookConsumerWidget {
                                   Text(
                                     'Jumlah Sakit',
                                     style: Themes.customColor(7,
-                                        color: item.batalStatus == true
+                                        color: item.btlSta == true
                                             ? Colors.white
                                             : Colors.grey),
                                   ),
                                   SizedBox(
                                     height: 2,
                                   ),
-                                  Text(
-                                    item.totHari!.toString() + " Hari",
-                                    style: Themes.customColor(9,
-                                        color: item.batalStatus == true
-                                            ? Colors.white
-                                            : Palette.primaryColor,
-                                        fontWeight: FontWeight.w500),
-                                  ),
+                                  // Text(
+                                  //   item.totHari.toString() + " Hari",
+                                  //   style: Themes.customColor(9,
+                                  //       color: item.btlSta == true
+                                  //           ? Colors.white
+                                  //           : Palette.primaryColor,
+                                  //       fontWeight: FontWeight.w500),
+                                  // ),
                                 ],
                               ),
                               SizedBox(
                                 width: 25,
                               ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Surat',
-                                    style: Themes.customColor(7,
-                                        color: item.batalStatus == true
-                                            ? Colors.white
-                                            : Colors.grey),
-                                  ),
-                                  SizedBox(
-                                    height: 2,
-                                  ),
-                                  Text(
-                                    '${item.surat!.toLowerCase() == 'ds' ? 'Dengan Surat' : 'Tanpa Surat'}',
-                                    style: Themes.customColor(9,
-                                        color: item.batalStatus == true
-                                            ? Colors.white
-                                            : Palette.tertiaryColor,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ],
-                              )
+                              // Column(
+                              //   mainAxisAlignment: MainAxisAlignment.start,
+                              //   crossAxisAlignment: CrossAxisAlignment.start,
+                              //   children: [
+                              //     Text(
+                              //       'Surat',
+                              //       style: Themes.customColor(7,
+                              //           color: item.btlSta == true
+                              //               ? Colors.white
+                              //               : Colors.grey),
+                              //     ),
+                              //     SizedBox(
+                              //       height: 2,
+                              //     ),
+                              //     if (item.surat != null)
+                              //       Text(
+                              //         '${item.surat!.toLowerCase() == 'ds' ? 'Dengan Surat' : 'Tanpa Surat'}',
+                              //         style: Themes.customColor(9,
+                              //             color: item.btlSta == true
+                              //                 ? Colors.white
+                              //                 : Palette.tertiaryColor,
+                              //             fontWeight: FontWeight.w500),
+                              //       ),
+                              //   ],
+                              // )
                             ],
                           ),
                         ],
@@ -318,7 +305,7 @@ class SakitListItem extends HookConsumerWidget {
                       Text(
                         'Diagnosa',
                         style: Themes.customColor(7,
-                            color: item.batalStatus == true
+                            color: item.btlSta == true
                                 ? Colors.white
                                 : Colors.grey),
                       ),
@@ -340,7 +327,7 @@ class SakitListItem extends HookConsumerWidget {
                                           Padding(
                                             padding: const EdgeInsets.all(16.0),
                                             child: Text(
-                                              item.ket!,
+                                              item.ket ?? '',
                                               style: Themes.customColor(10),
                                             ),
                                           ),
@@ -353,7 +340,7 @@ class SakitListItem extends HookConsumerWidget {
                                 maxFontSize: 9,
                                 minFontSize: 5,
                                 style: Themes.customColor(9,
-                                    color: item.batalStatus == true
+                                    color: item.btlSta == true
                                         ? Colors.white
                                         : Palette.primaryColor,
                                     fontWeight: FontWeight.w500),
@@ -372,7 +359,7 @@ class SakitListItem extends HookConsumerWidget {
                       Text(
                         'Document',
                         style: Themes.customColor(7,
-                            color: item.batalStatus == true
+                            color: item.btlSta == true
                                 ? Colors.white
                                 : Colors.grey),
                       ),
@@ -382,19 +369,23 @@ class SakitListItem extends HookConsumerWidget {
                       Material(
                         color: Colors.transparent,
                         child: InkWell(
-                          onTap: () => item.qtyFoto! == 0
-                              ? context.pushNamed(RouteNames.sakitUploadRoute,
-                                  extra: item.idSakit)
-                              : context.pushNamed(RouteNames.sakitDtlRoute,
-                                  extra: item.idSakit),
+                          onTap: () => item.qtyfoto == 0
+                              ? context.pushNamed(
+                                  RouteNames.sakitUploadRoute,
+                                  extra: item.idSakit,
+                                )
+                              : context.pushNamed(
+                                  RouteNames.sakitDtlRoute,
+                                  extra: item.idSakit,
+                                ),
                           child: Ink(
                             child: Text(
-                                item.qtyFoto == 0
+                                item.qtyfoto == 0
                                     ? '-'
-                                    : 'Upload : ${item.qtyFoto} Images',
+                                    : 'Upload : ${item.qtyfoto} Images',
                                 style: Themes.customColor(
                                   9,
-                                  color: item.batalStatus == true
+                                  color: item.btlSta == true
                                       ? Colors.white
                                       : Palette.blueLink,
                                 )),
@@ -425,7 +416,7 @@ class SakitListItem extends HookConsumerWidget {
                   ),
                   child: Row(
                     children: [
-                      if (item.batalStatus == true) ...[
+                      if (item.btlSta == true) ...[
                         Expanded(
                           child: Container(
                             height: 25,
@@ -447,7 +438,7 @@ class SakitListItem extends HookConsumerWidget {
                                 ]),
                             child: Center(
                               child: Text(
-                                'Canceled by ${item.batalNama}',
+                                'Canceled by ${item.btlNm ?? '-'}',
                                 style: Themes.customColor(7,
                                     color: Colors.white,
                                     fontWeight: FontWeight.w500),
@@ -463,7 +454,7 @@ class SakitListItem extends HookConsumerWidget {
                               Container(
                                 decoration: BoxDecoration(boxShadow: [
                                   BoxShadow(
-                                    color: item.batalStatus == true
+                                    color: item.btlSta == true
                                         ? Colors.white
                                         : Colors.grey
                                             .withOpacity(0.5), // Shadow color
@@ -478,13 +469,12 @@ class SakitListItem extends HookConsumerWidget {
                                   child: InkWell(
                                     splashColor: Palette.primaryColor,
                                     onTap: () async {
-                                      if (!ref
-                                          .read(sakitApproveControllerProvider
-                                              .notifier)
-                                          .canSpvApprove(item)) {
+                                      if (!item.isSpv!) {
                                         showDialog(
                                           context: context,
-                                          builder: (context) => VFailedDialog(),
+                                          builder: (context) => VFailedDialog(
+                                            message: item.spvMsg,
+                                          ),
                                         );
                                       } else {
                                         // jika belum diapprove maka approve
@@ -503,14 +493,14 @@ class SakitListItem extends HookConsumerWidget {
                                                             .read(
                                                                 sakitApproveControllerProvider
                                                                     .notifier)
-                                                            .approveSpv(
-                                                                itemSakit: item,
-                                                                note: '',
-                                                                nama: ref
-                                                                    .read(
-                                                                        userNotifierProvider)
-                                                                    .user
-                                                                    .nama!);
+                                                            .approve(
+                                                              idSakit:
+                                                                  item.idSakit!,
+                                                              jenisApp: 'spv',
+                                                              note: '',
+                                                              tahun: item
+                                                                  .cDate!.year,
+                                                            );
                                                       }));
                                         } else {
                                           await showDialog(
@@ -526,13 +516,14 @@ class SakitListItem extends HookConsumerWidget {
                                                             .read(
                                                                 sakitApproveControllerProvider
                                                                     .notifier)
-                                                            .unapproveSpv(
-                                                                itemSakit: item,
-                                                                nama: ref
-                                                                    .read(
-                                                                        userNotifierProvider)
-                                                                    .user
-                                                                    .nama!);
+                                                            .approve(
+                                                              idSakit:
+                                                                  item.idSakit!,
+                                                              jenisApp: 'spv',
+                                                              note: '',
+                                                              tahun: item
+                                                                  .cDate!.year,
+                                                            );
                                                       }));
                                         }
                                       }
@@ -543,12 +534,12 @@ class SakitListItem extends HookConsumerWidget {
                                           borderRadius: BorderRadius.only(
                                             bottomLeft: Radius.circular(8),
                                           ),
-                                          color: item.spvSta! == true
+                                          color: item.spvSta == true
                                               ? Palette.green
                                               : Palette.red2,
                                           boxShadow: [
                                             BoxShadow(
-                                              color: item.batalStatus == true
+                                              color: item.btlSta == true
                                                   ? Colors.white
                                                   : Colors.grey.withOpacity(
                                                       0.5), // Shadow color
@@ -574,7 +565,7 @@ class SakitListItem extends HookConsumerWidget {
                                   ),
                                 ),
                               ),
-                              if (item.spvSta! == true)
+                              if (item.spvSta == true)
                                 Positioned(
                                   right: 5,
                                   bottom: 0,
@@ -583,7 +574,7 @@ class SakitListItem extends HookConsumerWidget {
                                     Assets.iconThumbUp,
                                   ),
                                 ),
-                              if (item.spvSta! == false)
+                              if (item.spvSta == false)
                                 Positioned(
                                   right: 5,
                                   bottom: 0,
@@ -603,7 +594,7 @@ class SakitListItem extends HookConsumerWidget {
                               Container(
                                 decoration: BoxDecoration(boxShadow: [
                                   BoxShadow(
-                                    color: item.batalStatus == true
+                                    color: item.btlSta == true
                                         ? Colors.white
                                         : Colors.grey
                                             .withOpacity(0.5), // Shadow color
@@ -618,105 +609,46 @@ class SakitListItem extends HookConsumerWidget {
                                   child: InkWell(
                                     splashColor: Palette.primaryColor,
                                     onTap: () async {
-                                      if (!ref
-                                          .read(sakitApproveControllerProvider
-                                              .notifier)
-                                          .canHrdApprove(item)) {
+                                      if (!item.isHr!) {
                                         showDialog(
                                           context: context,
-                                          builder: (context) => VFailedDialog(),
+                                          builder: (context) => VFailedDialog(
+                                            message: item.hrMsg,
+                                          ),
                                         );
                                       } else {
-                                        if (item.hrdSta == false) {
-                                          final String? text =
-                                              await DialogHelper<void>()
-                                                  .showFormDialog(
-                                            label: 'Note HRD',
-                                            context: context,
-                                          );
+                                        final String? text =
+                                            await DialogHelper<void>()
+                                                .showFormDialog(
+                                          label: 'Note HRD',
+                                          context: context,
+                                        );
 
-                                          if (text != null) {
-                                            if (item.surat!.toLowerCase() ==
-                                                'ds') {
-                                              await ref
-                                                  .read(
-                                                      sakitApproveControllerProvider
-                                                          .notifier)
-                                                  .approveHrdDenganSurat(
-                                                    note: text,
-                                                    itemSakit: item,
-                                                    namaHrd: ref
-                                                        .read(
-                                                            userNotifierProvider)
-                                                        .user
-                                                        .nama!,
-                                                  );
-                                              //
-                                            } else {
-                                              await ref
-                                                  .read(
-                                                      sakitApproveControllerProvider
-                                                          .notifier)
-                                                  .approveHrdTanpaSurat(
-                                                    note: text,
-                                                    itemSakit: item,
-                                                    namaHrd: ref
-                                                        .read(
-                                                            userNotifierProvider)
-                                                        .user
-                                                        .nama!,
-                                                  );
-                                              //
-                                            }
-                                          }
+                                        if (item.hrdSta == false) {
+                                          await ref
+                                              .read(
+                                                  sakitApproveControllerProvider
+                                                      .notifier)
+                                              .approve(
+                                                idSakit: item.idSakit!,
+                                                jenisApp: 'hr',
+                                                note: text ?? '',
+                                                tahun: item.cDate!.year,
+                                              );
                                         } else {
-                                          if (item.surat!.toLowerCase() ==
-                                              'ds') {
-                                            await showDialog(
-                                                context: context,
-                                                builder: (context) =>
-                                                    VAlertDialog2(
-                                                        label:
-                                                            'Dibutuhkan Konfirmasi HRD (Unapprove)',
-                                                        onPressed: () async {
-                                                          context.pop();
-                                                          await ref
-                                                              .read(
-                                                                  sakitApproveControllerProvider
-                                                                      .notifier)
-                                                              .unApproveHrdDenganSurat(
-                                                                  itemSakit:
-                                                                      item,
-                                                                  nama: ref
-                                                                      .read(
-                                                                          userNotifierProvider)
-                                                                      .user
-                                                                      .nama!);
-                                                        }));
-                                          } else {
-                                            await showDialog(
-                                                context: context,
-                                                builder: (context) =>
-                                                    VAlertDialog2(
-                                                        label:
-                                                            'Dibutuhkan Konfirmasi HRD (Unapprove)',
-                                                        onPressed: () async {
-                                                          context.pop();
-                                                          await ref
-                                                              .read(
-                                                                  sakitApproveControllerProvider
-                                                                      .notifier)
-                                                              .unApproveHrdTanpaSurat(
-                                                                  itemSakit:
-                                                                      item,
-                                                                  nama: ref
-                                                                      .read(
-                                                                          userNotifierProvider)
-                                                                      .user
-                                                                      .nama!);
-                                                        }));
-                                          }
+                                          await ref
+                                              .read(
+                                                  sakitApproveControllerProvider
+                                                      .notifier)
+                                              .approve(
+                                                idSakit: item.idSakit!,
+                                                jenisApp: 'hr',
+                                                note: text ?? '',
+                                                tahun: item.cDate!.year,
+                                              );
                                         }
+
+                                        context.pop();
                                       }
                                     },
                                     child: Ink(
@@ -725,7 +657,7 @@ class SakitListItem extends HookConsumerWidget {
                                         borderRadius: BorderRadius.only(
                                           bottomRight: Radius.circular(8),
                                         ),
-                                        color: item.hrdSta! == true
+                                        color: item.hrdSta == true
                                             ? Palette.green
                                             : Palette.red2,
                                       ),
@@ -745,7 +677,7 @@ class SakitListItem extends HookConsumerWidget {
                                   ),
                                 ),
                               ),
-                              if (item.hrdSta! == true)
+                              if (item.hrdSta == true)
                                 Positioned(
                                   left: 5,
                                   bottom: 0,
@@ -757,7 +689,7 @@ class SakitListItem extends HookConsumerWidget {
                                     ),
                                   ),
                                 ),
-                              if (item.hrdSta! == false)
+                              if (item.hrdSta == false)
                                 Positioned(
                                   left: 5,
                                   bottom: 0,
