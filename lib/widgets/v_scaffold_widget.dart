@@ -107,6 +107,7 @@ class VScaffoldTabLayout extends HookWidget {
     this.additionalInfo,
     this.appbarColor,
     this.length,
+    this.mapPT,
   });
 
   final int? length;
@@ -114,10 +115,13 @@ class VScaffoldTabLayout extends HookWidget {
   final Color? appbarColor;
   final String scaffoldTitle;
   final List<String> currPT;
+  final Map<String, List<String>>? mapPT;
+  //
   final List<Widget> scaffoldBody;
   final Widget scaffoldFAB;
   final Widget? additionalInfo;
   final Widget? bottomLeftWidget;
+  //
   final ValueNotifier<bool>? isSearching;
   final FocusNode? searchFocus;
   final DateTimeRange initialDateRange;
@@ -171,14 +175,14 @@ class VScaffoldTabLayout extends HookWidget {
           ),
         ];
 
-    final Map<String, List<String>> _mapPT = {
-      'gs_12': ['ACT', 'Transina', 'ALR'],
-      'gs_14': ['Tama Raya'],
-      'gs_18': ['ARV'],
-      'gs_21': ['AJL'],
-    };
-
-    final _mapPTValues = _mapPT.values;
+    final _mapPTValues = mapPT == null
+        ? {
+            'gs_12': ['ACT', 'Transina', 'ALR'],
+            'gs_14': ['Tama Raya'],
+            'gs_18': ['ARV'],
+            'gs_21': ['AJL'],
+          }.values
+        : mapPT!.values;
 
     final _currPt = useState(currPT);
 

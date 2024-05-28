@@ -53,6 +53,16 @@ final getUserFutureProvider = FutureProvider<Unit>((ref) async {
         baseUrl: _determineBaseUrl(user),
       );
 
+    ref.read(dioProviderCutiServer)
+      ..options = BaseOptions(
+        connectTimeout: 20000,
+        receiveTimeout: 20000,
+        validateStatus: (status) {
+          return true;
+        },
+        baseUrl: _determineBaseUrl(user),
+      );
+
     if (user.IdKary == null) {
       // IF USER ID KARYAWAN NULL LOGOUT, MAKE USER LOGIN AGAIN
       await ref.read(userNotifierProvider.notifier).logout();

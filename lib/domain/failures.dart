@@ -33,3 +33,8 @@ class ValueFailure<T> with _$ValueFailure<T> {
     required T failedValue,
   }) = ShortPassword<T>;
 }
+
+@freezed
+class UserNotFound with _$UserNotFound {
+  const factory UserNotFound() = _UserNotFound;
+}

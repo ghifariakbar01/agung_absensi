@@ -71,8 +71,10 @@ import '../user/application/user_state.dart';
 
 // NETWORKING & ROUTER
 final dioProvider = Provider((ref) => Dio());
-final dioProviderCuti = Provider((ref) => Dio());
 final dioProviderHosting = Provider((ref) => Dio());
+
+final dioProviderCuti = Provider((ref) => Dio());
+final dioProviderCutiServer = Provider((ref) => Dio());
 
 final dioRequestProvider = Provider<Map<String, String>>(
   (ref) => {"kode": "110011"},
@@ -270,4 +272,5 @@ final passwordVisibleProvider = StateProvider.autoDispose<bool>((ref) => false);
 
 final testerNotifierProvider =
     StateNotifierProvider<TesterhNotifier, TesterState>(
-        (ref) => TesterhNotifier(ref));
+  (ref) => TesterhNotifier(ref),
+);
