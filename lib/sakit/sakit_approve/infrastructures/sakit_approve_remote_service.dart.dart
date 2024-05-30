@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:face_net_authentication/infrastructures/dio_extensions.dart';
 
+import '../../../constants/constants.dart';
 import '../../../infrastructures/exceptions.dart';
 
 class SakitApproveRemoteService {
@@ -18,7 +18,7 @@ class SakitApproveRemoteService {
     required String jenisApp,
     required String note,
     required int tahun,
-    String? server = 'testing',
+    String? server = Constants.isDev ? 'testing' : 'live',
   }) async {
     try {
       final response = await _dio.post(
@@ -46,8 +46,9 @@ class SakitApproveRemoteService {
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);
-    } on DioError catch (e) {
-      if (e.isNoConnectionError || e.isConnectionTimeout) {
+    } on DioException catch (e) {
+      if ((e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout)) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);
@@ -84,8 +85,9 @@ class SakitApproveRemoteService {
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);
-    } on DioError catch (e) {
-      if (e.isNoConnectionError || e.isConnectionTimeout) {
+    } on DioException catch (e) {
+      if ((e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout)) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);

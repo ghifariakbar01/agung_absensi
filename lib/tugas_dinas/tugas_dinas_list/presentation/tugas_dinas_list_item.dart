@@ -1,7 +1,9 @@
+import 'dart:developer';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:collection/collection.dart';
-import 'package:face_net_authentication/tugas_dinas/create_tugas_dinas/application/create_tugas_dinas_notifier.dart';
-import 'package:face_net_authentication/widgets/v_async_widget.dart';
+import 'package:face_net_authentication/tugas_dinas/tugas_dinas_list/application/tugas_dinas_list_notifier.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
@@ -10,14 +12,21 @@ import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../constants/assets.dart';
+import '../../../constants/constants.dart';
 import '../../../shared/providers.dart';
 import '../../../style/style.dart';
 
+import '../../../user/application/user_model.dart';
+import '../../../utils/dialog_helper.dart';
 import '../../../widgets/tappable_widget.dart';
+import '../../../widgets/v_async_widget.dart';
 import '../../../widgets/v_dialogs.dart';
 
+// import '../../create_tugas_dinas/application/create_tugas_dinas_notifier.dart';
+import '../../create_tugas_dinas/application/create_tugas_dinas_notifier.dart';
 import '../../create_tugas_dinas/application/jenis_tugas_dinas.dart';
 import '../../tugas_dinas_approve/application/tugas_dinas_approve_notifier.dart';
+import '../application/mst_user_list.dart';
 import '../application/tugas_dinas_list.dart';
 import 'tugas_dinas_dtl_dialog.dart';
 
@@ -28,26 +37,31 @@ class TugasDinasListItem extends HookConsumerWidget {
 
   final TugasDinasList item;
 
+  _determineBaseUrl(UserModelWithPassword user) {
+    final pt = user.ptServer;
+    if (pt == null) {
+      throw AssertionError('pt null');
+    }
+
+    return Constants.ptMap.entries
+        .firstWhere(
+          (element) => element.key == pt,
+          orElse: () => Constants.ptMap.entries.first,
+        )
+        .value
+        .replaceAll('/services', '');
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
 
-    // final _isSpvApprove = item.spvTgl != item.cDate && item.spvSta == true;
-    // final spvAging = _isSpvApprove
-    //     ? DateTime.parse(item.spvTgl!)
-    //         .difference(DateTime.parse(item.cDate!))
-    //         .inDays
-    //     : DateTime.now().difference(DateTime.parse(item.cDate!)).inDays;
-
-    // final _isHrdApprove = item.hrdTgl != item.cDate && item.hrdSta == true;
-    // final hrdAging = _isHrdApprove
-    //     ? DateTime.parse(item.hrdTgl!)
-    //         .difference(DateTime.parse(item.cDate!))
-    //         .inDays
-    //     : DateTime.now().difference(DateTime.parse(item.cDate!)).inDays;
-
     final user = ref.watch(userNotifierProvider).user;
+    final _url = _determineBaseUrl(user);
+    log('_url $_url');
+
     final jenisTugasDinas = ref.watch(jenisTugasDinasNotifierProvider);
+    final masterUser = ref.watch(mstUserListNotifierProvider);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -83,7 +97,7 @@ class TugasDinasListItem extends HookConsumerWidget {
                       Text(
                         DateFormat(
                           'EEEE, dd MMMM yyyy',
-                        ).format(DateTime.parse(item.cDate!)),
+                        ).format(item.cDate!),
                         style: Themes.customColor(10,
                             fontWeight: FontWeight.w500,
                             color: item.btlSta == true
@@ -117,27 +131,29 @@ class TugasDinasListItem extends HookConsumerWidget {
                               : Palette.primaryColor,
                           onTap: () {
                             final Uri url = Uri.parse(
-                                'http://agunglogisticsapp.co.id:1232/page_print_mob.aspx?userid=${user.idUser}&userpass=${user.password}&mode=dinas&noid=${item.idDinas}');
-                            return launchUrl(url,
-                                mode: LaunchMode.externalApplication);
+                              '$_url/page_print_mob.aspx?userid=${user.idUser}&userpass=${user.password}&mode=dinas&noid=${item.idDinas}',
+                            );
+                            return launchUrl(
+                              url,
+                              mode: LaunchMode.externalApplication,
+                            );
                           }),
                       SizedBox(
                         width: 4,
                       ),
-                      if (item.btlSta == false)
+                      if (false)
                         TappableSvg(
                             assetPath: Assets.iconBatal,
-                            onTap: () {
-                              if (!ref
-                                  .read(tugasDinasApproveControllerProvider
-                                      .notifier)
-                                  .canBatal(item)) {
-                                showDialog(
+                            onTap: () async {
+                              if (item.btlSta!) {
+                                return showDialog(
                                   context: context,
-                                  builder: (context) => VFailedDialog(),
+                                  builder: (context) => VFailedDialog(
+                                    message: item.btlMsg,
+                                  ),
                                 );
                               } else {
-                                showDialog(
+                                return showDialog(
                                   context: context,
                                   builder: (context) => VBatalDialog(
                                     onTap: () async {
@@ -146,13 +162,7 @@ class TugasDinasListItem extends HookConsumerWidget {
                                           .read(
                                               tugasDinasApproveControllerProvider
                                                   .notifier)
-                                          .batal(
-                                            item: item,
-                                            nama: ref
-                                                .read(userNotifierProvider)
-                                                .user
-                                                .nama!,
-                                          );
+                                          .batal(idDinas: item.idDinas!);
                                     },
                                   ),
                                 );
@@ -196,7 +206,7 @@ class TugasDinasListItem extends HookConsumerWidget {
                               height: 2,
                             ),
                             Text(
-                              item.fullname!,
+                              item.fullname == null ? '-' : item.fullname!,
                               style: Themes.customColor(9,
                                   color: item.btlSta == true
                                       ? Colors.white
@@ -208,30 +218,44 @@ class TugasDinasListItem extends HookConsumerWidget {
                       ),
                       Spacer(),
                       Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Pemberi Tugas',
-                                style: Themes.customColor(7,
-                                    color: item.btlSta == true
-                                        ? Colors.white
-                                        : Colors.grey),
-                              ),
-                              SizedBox(
-                                height: 2,
-                              ),
-                              Text(
-                                item.pemberiName!,
-                                style: Themes.customColor(9,
-                                    color: item.btlSta == true
-                                        ? Colors.white
-                                        : Palette.primaryColor,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ],
+                          VAsyncValueWidget<List<MstUserList>>(
+                            value: masterUser,
+                            data: (mst) => Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Pemberi Tugas',
+                                  style: Themes.customColor(7,
+                                      color: item.btlSta == true
+                                          ? Colors.white
+                                          : Colors.grey),
+                                ),
+                                SizedBox(
+                                  height: 2,
+                                ),
+                                SizedBox(
+                                  width: 100,
+                                  child: Text(
+                                    item.idPemberi == null
+                                        ? ''
+                                        : mst
+                                                .firstWhereOrNull((element) =>
+                                                    element.idUser ==
+                                                    item.idPemberi!)
+                                                ?.fullname ??
+                                            '',
+                                    style: Themes.customColor(9,
+                                        color: item.btlSta == true
+                                            ? Colors.white
+                                            : Palette.primaryColor,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                           SizedBox(
                             height: 4,
@@ -253,7 +277,7 @@ class TugasDinasListItem extends HookConsumerWidget {
                               Text(
                                 DateFormat(
                                   'dd MMM yyyy',
-                                ).format(DateTime.parse(item.tglStart!)),
+                                ).format(item.tglStart!),
                                 style: Themes.customColor(9,
                                     color: item.btlSta == true
                                         ? Colors.white
@@ -283,7 +307,7 @@ class TugasDinasListItem extends HookConsumerWidget {
                                 height: 2,
                               ),
                               Text(
-                                item.dept!,
+                                item.dept == null ? '-' : item.dept!,
                                 style: Themes.customColor(8,
                                     color: item.btlSta == true
                                         ? Colors.white
@@ -312,7 +336,7 @@ class TugasDinasListItem extends HookConsumerWidget {
                               Text(
                                 DateFormat(
                                   'dd MMM yyyy',
-                                ).format(DateTime.parse(item.tglEnd!)),
+                                ).format(item.tglEnd!),
                                 style: Themes.customColor(9,
                                     color: item.btlSta == true
                                         ? Colors.white
@@ -385,7 +409,7 @@ class TugasDinasListItem extends HookConsumerWidget {
                         height: 2,
                       ),
                       Text(
-                        item.perusahaan!,
+                        item.perusahaan == null ? '-' : item.perusahaan!,
                         style: Themes.customColor(9,
                             color: item.btlSta == true
                                 ? Colors.white
@@ -414,7 +438,7 @@ class TugasDinasListItem extends HookConsumerWidget {
                         height: 2,
                       ),
                       Text(
-                        item.lokasi!,
+                        item.lokasi == null ? '-' : item.lokasi!,
                         style: Themes.customColor(9,
                             color: item.btlSta == true
                                 ? Colors.white
@@ -552,36 +576,59 @@ class TugasDinasListItem extends HookConsumerWidget {
                                   child: InkWell(
                                     splashColor: Palette.primaryColor,
                                     onTap: () async {
-                                      if (!ref
-                                          .read(
-                                              tugasDinasApproveControllerProvider
-                                                  .notifier)
-                                          .canSpvApprove(item)) {
+                                      if (item.isSpv == false) {
                                         showDialog(
                                           context: context,
-                                          builder: (context) => VFailedDialog(),
+                                          builder: (context) => VFailedDialog(
+                                            message: item.spvMsg,
+                                          ),
                                         );
                                       } else {
-                                        await showDialog(
-                                            context: context,
-                                            builder: (context) => VAlertDialog2(
-                                                label:
-                                                    'Dibutuhkan Konfirmasi SPV ${item.spvSta ?? false ? '(Unapprove)' : '(Approve)'}',
-                                                onPressed: () async {
-                                                  context.pop();
-                                                  await ref
-                                                      .read(
-                                                          tugasDinasApproveControllerProvider
-                                                              .notifier)
-                                                      .processSpv(
-                                                        item: item,
-                                                        nama: ref
-                                                            .read(
-                                                                userNotifierProvider)
-                                                            .user
-                                                            .nama!,
-                                                      );
-                                                }));
+                                        if (item.spvSta == false) {
+                                          await showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return VAlertDialog2(
+                                                    label:
+                                                        'Dibutuhkan Konfirmasi SPV (Approve)',
+                                                    onPressed: () async {
+                                                      context.pop();
+                                                      await ref
+                                                          .read(
+                                                              tugasDinasApproveControllerProvider
+                                                                  .notifier)
+                                                          .approve(
+                                                              idDinas:
+                                                                  item.idDinas!,
+                                                              note: '',
+                                                              jenisApp: 'spv',
+                                                              tahun: item
+                                                                  .cDate!.year);
+                                                    });
+                                              });
+                                        } else {
+                                          await showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return VAlertDialog2(
+                                                    label:
+                                                        'Dibutuhkan Konfirmasi SPV (Unapprove)',
+                                                    onPressed: () async {
+                                                      context.pop();
+                                                      await ref
+                                                          .read(
+                                                              tugasDinasApproveControllerProvider
+                                                                  .notifier)
+                                                          .approve(
+                                                              idDinas:
+                                                                  item.idDinas!,
+                                                              note: '',
+                                                              jenisApp: 'spv',
+                                                              tahun: item
+                                                                  .cDate!.year);
+                                                    });
+                                              });
+                                        }
                                       }
                                     },
                                     child: Ink(
@@ -665,36 +712,66 @@ class TugasDinasListItem extends HookConsumerWidget {
                                   child: InkWell(
                                     splashColor: Palette.primaryColor,
                                     onTap: () async {
-                                      if (!ref
-                                          .read(
-                                              tugasDinasApproveControllerProvider
-                                                  .notifier)
-                                          .canHrdApprove(item)) {
+                                      if (item.isHr == false) {
                                         showDialog(
                                           context: context,
-                                          builder: (context) => VFailedDialog(),
+                                          builder: (context) => VFailedDialog(
+                                            message: item.hrMsg,
+                                          ),
                                         );
                                       } else {
-                                        return showDialog(
-                                            context: context,
-                                            builder: (context) => VAlertDialog2(
-                                                label:
-                                                    'Dibutuhkan Konfirmasi HRD ${item.hrdSta ?? false ? '(Unapprove)' : '(Approve)'}',
-                                                onPressed: () async {
-                                                  context.pop();
-                                                  await ref
-                                                      .read(
-                                                          tugasDinasApproveControllerProvider
-                                                              .notifier)
-                                                      .processHrd(
-                                                        item: item,
-                                                        namaHrd: ref
+                                        final String? text =
+                                            await DialogHelper<void>()
+                                                .showFormDialog(
+                                                    context: context);
+
+                                        if (item.hrdSta == false) {
+                                          await showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  VAlertDialog2(
+                                                      label:
+                                                          'Dibutuhkan Konfirmasi HRD (Approve)',
+                                                      onPressed: () async {
+                                                        context.pop();
+                                                        await ref
                                                             .read(
-                                                                userNotifierProvider)
-                                                            .user
-                                                            .nama!,
-                                                      );
-                                                }));
+                                                                tugasDinasApproveControllerProvider
+                                                                    .notifier)
+                                                            .approve(
+                                                                idDinas: item
+                                                                    .idDinas!,
+                                                                note:
+                                                                    text ?? '',
+                                                                jenisApp: 'hr',
+                                                                tahun: item
+                                                                    .cDate!
+                                                                    .year);
+                                                      }));
+                                        } else {
+                                          await showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  VAlertDialog2(
+                                                      label:
+                                                          'Dibutuhkan Konfirmasi HRD (Unapprove)',
+                                                      onPressed: () async {
+                                                        context.pop();
+                                                        await ref
+                                                            .read(
+                                                                tugasDinasApproveControllerProvider
+                                                                    .notifier)
+                                                            .approve(
+                                                                idDinas: item
+                                                                    .idDinas!,
+                                                                note:
+                                                                    text ?? '',
+                                                                jenisApp: 'hr',
+                                                                tahun: item
+                                                                    .cDate!
+                                                                    .year);
+                                                      }));
+                                        }
                                       }
                                     },
                                     child: Ink(
@@ -763,41 +840,59 @@ class TugasDinasListItem extends HookConsumerWidget {
                                   child: InkWell(
                                     splashColor: Palette.primaryColor,
                                     onTap: () async {
-                                      if (!ref
-                                          .read(
-                                              tugasDinasApproveControllerProvider
-                                                  .notifier)
-                                          .canGmApprove(item)) {
+                                      if (item.isGm == false) {
                                         showDialog(
                                           context: context,
-                                          builder: (context) => VFailedDialog(),
+                                          builder: (context) => VFailedDialog(
+                                            message: item.spvMsg,
+                                          ),
                                         );
                                       } else {
-                                        return showDialog(
-                                            context: context,
-                                            builder: (context) => VAlertDialog2(
-                                                label:
-                                                    'Dibutuhkan Konfirmasi GM ${item.gmSta ?? false ? '(Unapprove)' : '(Approve)'}',
-                                                onPressed: () async {
-                                                  context.pop();
-                                                  await ref
-                                                      .read(
-                                                          tugasDinasApproveControllerProvider
-                                                              .notifier)
-                                                      .processGm(
-                                                        item: item,
-                                                        namaGm: ref
-                                                            .read(
-                                                                userNotifierProvider)
-                                                            .user
-                                                            .nama!,
-                                                        ptServer: ref
-                                                            .read(
-                                                                userNotifierProvider)
-                                                            .user
-                                                            .ptServer!,
-                                                      );
-                                                }));
+                                        if (item.spvSta == false) {
+                                          await showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return VAlertDialog2(
+                                                    label:
+                                                        'Dibutuhkan Konfirmasi GM (Approve)',
+                                                    onPressed: () async {
+                                                      context.pop();
+                                                      await ref
+                                                          .read(
+                                                              tugasDinasApproveControllerProvider
+                                                                  .notifier)
+                                                          .approve(
+                                                              idDinas:
+                                                                  item.idDinas!,
+                                                              note: '',
+                                                              jenisApp: 'spv',
+                                                              tahun: item
+                                                                  .cDate!.year);
+                                                    });
+                                              });
+                                        } else {
+                                          await showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return VAlertDialog2(
+                                                    label:
+                                                        'Dibutuhkan Konfirmasi GM (Unapprove)',
+                                                    onPressed: () async {
+                                                      context.pop();
+                                                      await ref
+                                                          .read(
+                                                              tugasDinasApproveControllerProvider
+                                                                  .notifier)
+                                                          .approve(
+                                                              idDinas:
+                                                                  item.idDinas!,
+                                                              note: '',
+                                                              jenisApp: 'spv',
+                                                              tahun: item
+                                                                  .cDate!.year);
+                                                    });
+                                              });
+                                        }
                                       }
                                     },
                                     child: Ink(
@@ -878,36 +973,59 @@ class TugasDinasListItem extends HookConsumerWidget {
                                   child: InkWell(
                                     splashColor: Palette.primaryColor,
                                     onTap: () async {
-                                      if (!ref
-                                          .read(
-                                              tugasDinasApproveControllerProvider
-                                                  .notifier)
-                                          .canCooApprove(item)) {
+                                      if (item.isCoo == false) {
                                         showDialog(
                                           context: context,
-                                          builder: (context) => VFailedDialog(),
+                                          builder: (context) => VFailedDialog(
+                                            message: item.spvMsg,
+                                          ),
                                         );
                                       } else {
-                                        return showDialog(
-                                            context: context,
-                                            builder: (context) => VAlertDialog2(
-                                                label:
-                                                    'Dibutuhkan Konfirmasi COO ${item.cooSta ?? false ? '(Unapprove)' : '(Approve)'}',
-                                                onPressed: () async {
-                                                  context.pop();
-                                                  await ref
-                                                      .read(
-                                                          tugasDinasApproveControllerProvider
-                                                              .notifier)
-                                                      .processCOO(
-                                                        item: item,
-                                                        namaCoo: ref
-                                                            .read(
-                                                                userNotifierProvider)
-                                                            .user
-                                                            .nama!,
-                                                      );
-                                                }));
+                                        if (item.spvSta == false) {
+                                          await showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return VAlertDialog2(
+                                                    label:
+                                                        'Dibutuhkan Konfirmasi COO (Approve)',
+                                                    onPressed: () async {
+                                                      context.pop();
+                                                      await ref
+                                                          .read(
+                                                              tugasDinasApproveControllerProvider
+                                                                  .notifier)
+                                                          .approve(
+                                                              idDinas:
+                                                                  item.idDinas!,
+                                                              note: '',
+                                                              jenisApp: 'spv',
+                                                              tahun: item
+                                                                  .cDate!.year);
+                                                    });
+                                              });
+                                        } else {
+                                          await showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return VAlertDialog2(
+                                                    label:
+                                                        'Dibutuhkan Konfirmasi COO (Unapprove)',
+                                                    onPressed: () async {
+                                                      context.pop();
+                                                      await ref
+                                                          .read(
+                                                              tugasDinasApproveControllerProvider
+                                                                  .notifier)
+                                                          .approve(
+                                                              idDinas:
+                                                                  item.idDinas!,
+                                                              note: '',
+                                                              jenisApp: 'spv',
+                                                              tahun: item
+                                                                  .cDate!.year);
+                                                    });
+                                              });
+                                        }
                                       }
                                     },
                                     child: Ink(

@@ -3,7 +3,6 @@ import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:face_net_authentication/infrastructures/dio_extensions.dart';
 
 import '../../../infrastructures/exceptions.dart';
 import '../application/phone_num.dart';
@@ -97,8 +96,9 @@ class SendWaRemoteService {
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);
-    } on DioError catch (e) {
-      if (e.isNoConnectionError || e.isConnectionTimeout) {
+    } on DioException catch (e) {
+      if ((e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout)) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);
@@ -158,8 +158,9 @@ class SendWaRemoteService {
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);
-    } on DioError catch (e) {
-      if (e.isNoConnectionError || e.isConnectionTimeout) {
+    } on DioException catch (e) {
+      if ((e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout)) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);

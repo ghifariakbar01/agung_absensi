@@ -2,8 +2,6 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 
-import 'package:face_net_authentication/infrastructures/dio_extensions.dart';
-
 import '../../infrastructures/exceptions.dart';
 import '../../user/application/user_model.dart';
 import 'auth_response.dart';
@@ -17,8 +15,9 @@ class AuthRemoteService {
   Future<void> signOut() async {
     try {
       await _dio.get<dynamic>('logout');
-    } on DioError catch (e) {
-      if (e.isNoConnectionError || e.isConnectionTimeout) {
+    } on DioException catch (e) {
+      if ((e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout)) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);
@@ -118,8 +117,9 @@ class AuthRemoteService {
           message: message,
         );
       }
-    } on DioError catch (e) {
-      if (e.isNoConnectionError || e.isConnectionTimeout) {
+    } on DioException catch (e) {
+      if ((e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout)) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);
@@ -215,8 +215,9 @@ class AuthRemoteService {
           message: message,
         );
       }
-    } on DioError catch (e) {
-      if (e.isNoConnectionError || e.isConnectionTimeout) {
+    } on DioException catch (e) {
+      if ((e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout)) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);

@@ -52,10 +52,9 @@ class FirebaseRemoteConfigNotifier extends _$FirebaseRemoteConfigNotifier {
       return await _onOffline(remoteConfig);
     }
 
-    final baseUrl = await remoteConfig.getString(Constants.keyBaseUrl);
-    final baseUrlHosting =
-        await remoteConfig.getString(Constants.keyBaseUrlHosting);
-    final minApp = await remoteConfig.getString(
+    final baseUrl = remoteConfig.getString(Constants.keyBaseUrl);
+    final baseUrlHosting = remoteConfig.getString(Constants.keyBaseUrlHosting);
+    final minApp = remoteConfig.getString(
         Platform.isAndroid ? Constants.keyMinApp : Constants.keyMinAppiOS);
 
     debugPrint(
@@ -89,10 +88,9 @@ class FirebaseRemoteConfigNotifier extends _$FirebaseRemoteConfigNotifier {
       return cfg!;
     }
 
-    final baseUrl = await remoteConfig.getString(Constants.keyBaseUrl);
-    final baseUrlHosting =
-        await remoteConfig.getString(Constants.keyBaseUrlHosting);
-    final minApp = await remoteConfig.getString(
+    final baseUrl = remoteConfig.getString(Constants.keyBaseUrl);
+    final baseUrlHosting = remoteConfig.getString(Constants.keyBaseUrlHosting);
+    final minApp = remoteConfig.getString(
         Platform.isAndroid ? Constants.keyMinApp : Constants.keyMinAppiOS);
 
     return FirebaseRemoteCfg(

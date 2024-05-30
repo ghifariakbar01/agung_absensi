@@ -32,9 +32,6 @@ class SearchPemberiTugas extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final searchFocus = useFocusNode();
-    // final isSearching = useState(false);
-
     final timerTick = useState(1);
     final justSearched = useState(false);
     final searchController = useTextEditingController(text: '');

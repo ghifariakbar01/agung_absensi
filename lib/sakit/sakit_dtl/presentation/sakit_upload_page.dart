@@ -38,7 +38,8 @@ class SakitUploadPage extends ConsumerWidget {
               children: [
                 InAppWebView(
                   onWebViewCreated: (_) {},
-                  initialUrlRequest: URLRequest(url: Uri.parse(formUploadUrl)),
+                  initialUrlRequest:
+                      URLRequest(url: WebUri.uri(Uri.parse(formUploadUrl))),
                   onLoadStop: (controller, url) async {
                     String html = await controller.evaluateJavascript(
                         source:

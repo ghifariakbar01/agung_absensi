@@ -12,7 +12,7 @@ part 'izin_list_notifier.g.dart';
 @Riverpod(keepAlive: true)
 IzinListRemoteService izinListRemoteService(IzinListRemoteServiceRef ref) {
   return IzinListRemoteService(
-    ref.watch(dioProviderHosting),
+    ref.watch(dioProviderCuti),
   );
 }
 
@@ -94,10 +94,13 @@ class IzinListController extends _$IzinListController {
     if (searchUser == null) {
       return _list;
     } else {
-      return _list
-          .where(
-              (element) => element.fullname!.toLowerCase().contains(searchUser))
-          .toList();
+      return _list.where((element) {
+        if (element.fullname == null) {
+          return element.cUser!.toLowerCase().contains(searchUser);
+        } else {
+          return element.fullname!.toLowerCase().contains(searchUser);
+        }
+      }).toList();
     }
   }
 }

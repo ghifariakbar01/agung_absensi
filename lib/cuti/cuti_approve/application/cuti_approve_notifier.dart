@@ -1,6 +1,7 @@
 import 'package:face_net_authentication/cuti/cuti_approve/infrastructures/cuti_approve_remote_service.dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../constants/constants.dart';
 import '../../../shared/providers.dart';
 
 import '../infrastructures/cuti_approve_repository.dart';
@@ -32,7 +33,7 @@ class CutiApproveController extends _$CutiApproveController {
     required String jenisApp,
     required String note,
     required int tahun,
-    String? server = 'testing',
+    String? server = Constants.isDev ? 'testing' : 'live',
   }) async {
     state = const AsyncLoading();
 

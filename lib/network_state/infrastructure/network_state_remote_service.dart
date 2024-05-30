@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:face_net_authentication/infrastructures/dio_extensions.dart';
 
 import '../../infrastructures/exceptions.dart';
 import '../../user/application/user_model.dart';
@@ -67,8 +66,9 @@ class NetworkStateRemoteService {
           message: message,
         );
       }
-    } on DioError catch (e) {
-      if (e.isNoConnectionError || e.isConnectionTimeout) {
+    } on DioException catch (e) {
+      if ((e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout)) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);

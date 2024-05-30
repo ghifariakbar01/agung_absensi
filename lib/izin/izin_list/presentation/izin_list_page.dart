@@ -4,8 +4,10 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../cross_auth/application/cross_auth_notifier.dart';
+import '../../../cross_auth_server/cross_auth_server_notifier.dart';
 import '../../../style/style.dart';
 import '../../../widgets/alert_helper.dart';
+import '../../../widgets/v_async_widget.dart';
 import '../../izin_approve/application/izin_approve_notifier.dart';
 import '../application/izin_list_notifier.dart';
 import 'izin_list_scaffold.dart';
@@ -66,10 +68,16 @@ class IzinListPage extends ConsumerWidget {
       }
     });
 
+    final crossAuthServer = ref.watch(crossAuthServerNotifierProvider);
+
     return Stack(
       children: [
         Container(),
-        IzinListScaffold(),
+        VAsyncWidgetScaffold<Map<String, List<String>>>(
+            value: crossAuthServer,
+            data: (_mapPT) {
+              return IzinListScaffold(_mapPT);
+            }),
       ],
     );
   }

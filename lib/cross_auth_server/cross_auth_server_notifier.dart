@@ -2,19 +2,12 @@ import 'package:dio/dio.dart';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../constants/constants.dart';
 import '../shared/providers.dart';
 import 'infrastructure/cross_auth_server_remote_service.dart';
 import 'infrastructure/cross_auth_server_repository.dart';
 
 part 'cross_auth_server_notifier.g.dart';
-
-final Map<String, String> _mapPTCuti = {
-  // 'gs_12': 'http://agungcartrans.co.id:1232/services',
-  'gs_12': 'https://www.agunglogisticsapp.co.id:2002/services',
-  'gs_14': 'https://agungcartrans.co.id:2601/services',
-  'gs_18': 'https://www.agunglogisticsapp.co.id:2002/services',
-  'gs_21': 'https://www.agunglogisticsapp.co.id:3603/services',
-};
 
 @Riverpod(keepAlive: true)
 CrossAuthServerRemoteService crossAuthServerRemoteService(
@@ -36,7 +29,7 @@ CrossAuthServerRepository crossAuthServerRepository(
 class CrossAuthServerNotifier extends _$CrossAuthServerNotifier {
   @override
   FutureOr<Map<String, List<String>>> build() async {
-    final _map = _mapPTCuti.entries.toList();
+    final _map = Constants.ptMap.entries.toList();
 
     final username = ref.read(userNotifierProvider).user.nama!;
     final pass = ref.read(userNotifierProvider).user.password!;
@@ -103,7 +96,7 @@ class CrossAuthServerNotifier extends _$CrossAuthServerNotifier {
   }
 
   Future<void> checkServer() async {
-    final _map = _mapPTCuti.entries.toList();
+    final _map = Constants.ptMap.entries.toList();
 
     final username = ref.read(userNotifierProvider).user.nama!;
     final pass = ref.read(userNotifierProvider).user.password!;
@@ -124,12 +117,13 @@ class CrossAuthServerNotifier extends _$CrossAuthServerNotifier {
   _resetCutiDioProvider(String baseUrl) {
     return ref.read(dioProviderCutiServer)
       ..options = BaseOptions(
-        connectTimeout: 20000,
-        receiveTimeout: 20000,
+        connectTimeout: Duration(seconds: 20),
+        receiveTimeout: Duration(seconds: 20),
         validateStatus: (status) {
           return true;
         },
         baseUrl: baseUrl,
-      );
+      )
+      ..interceptors.add(ref.read(authInterceptorTwoProvider));
   }
 }

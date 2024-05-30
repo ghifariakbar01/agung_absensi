@@ -7,7 +7,6 @@ import 'package:intl/intl.dart';
 
 import '../../../constants/assets.dart';
 
-import '../../../shared/providers.dart';
 import '../../../style/style.dart';
 
 import '../../../utils/dialog_helper.dart';
@@ -29,20 +28,6 @@ class AbsenManualListItem extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-
-    // final _isSpvApprove = item.spvTgl != item.cDate && item.spvSta == true;
-    // final spvAging = _isSpvApprove
-    //     ? DateTime.parse(item.spvTgl!)
-    //         .difference(DateTime.parse(item.cDate!))
-    //         .inDays
-    //     : DateTime.now().difference(DateTime.parse(item.cDate!)).inDays;
-
-    // final _isHrdApprove = item.hrdTgl != item.cDate && item.hrdSta == true;
-    // final hrdAging = _isHrdApprove
-    //     ? DateTime.parse(item.hrdTgl!)
-    //         .difference(DateTime.parse(item.cDate!))
-    //         .inDays
-    //     : DateTime.now().difference(DateTime.parse(item.cDate!)).inDays;
 
     final jenisAbsen = ref.watch(jenisAbsenManualNotifierProvider);
 
@@ -80,7 +65,7 @@ class AbsenManualListItem extends HookConsumerWidget {
                       Text(
                         DateFormat(
                           'EEEE, dd MMMM yyyy',
-                        ).format(DateTime.parse(item.cDate!)),
+                        ).format((item.cDate!)),
                         style: Themes.customColor(10,
                             fontWeight: FontWeight.w500,
                             color: item.btlSta == true
@@ -107,20 +92,19 @@ class AbsenManualListItem extends HookConsumerWidget {
                       SizedBox(
                         width: 4,
                       ),
-                      if (item.btlSta == false)
+                      if (false)
                         TappableSvg(
                             assetPath: Assets.iconBatal,
-                            onTap: () {
-                              if (!ref
-                                  .read(absenManualApproveControllerProvider
-                                      .notifier)
-                                  .canBatal(item)) {
-                                showDialog(
+                            onTap: () async {
+                              if (item.btlSta!) {
+                                return showDialog(
                                   context: context,
-                                  builder: (context) => VFailedDialog(),
+                                  builder: (context) => VFailedDialog(
+                                    message: item.btlMsg,
+                                  ),
                                 );
                               } else {
-                                showDialog(
+                                return showDialog(
                                   context: context,
                                   builder: (context) => VBatalDialog(
                                     onTap: () async {
@@ -129,13 +113,7 @@ class AbsenManualListItem extends HookConsumerWidget {
                                           .read(
                                               absenManualApproveControllerProvider
                                                   .notifier)
-                                          .batal(
-                                            item: item,
-                                            nama: ref
-                                                .read(userNotifierProvider)
-                                                .user
-                                                .nama!,
-                                          );
+                                          .batal(idAbsenMnl: item.idAbsenmnl!);
                                     },
                                   ),
                                 );
@@ -209,7 +187,7 @@ class AbsenManualListItem extends HookConsumerWidget {
                                 ? '-'
                                 : DateFormat(
                                     'hh:mm a',
-                                  ).format(DateTime.parse(item.jamAwal!)),
+                                  ).format(item.jamAwal!),
                             style: Themes.customColor(9,
                                 color: item.btlSta == true
                                     ? Colors.white
@@ -237,7 +215,7 @@ class AbsenManualListItem extends HookConsumerWidget {
                                 ? '-'
                                 : DateFormat(
                                     'hh:mm a',
-                                  ).format(DateTime.parse(item.jamAkhir!)),
+                                  ).format(item.jamAkhir!),
                             style: Themes.customColor(9,
                                 color: item.btlSta == true
                                     ? Colors.white
@@ -380,61 +358,56 @@ class AbsenManualListItem extends HookConsumerWidget {
                                   child: InkWell(
                                     splashColor: Palette.primaryColor,
                                     onTap: () async {
-                                      if (!ref
-                                          .read(
-                                              absenManualApproveControllerProvider
-                                                  .notifier)
-                                          .canSpvApprove(item)) {
+                                      if (item.isSpv == false) {
                                         showDialog(
                                           context: context,
-                                          builder: (context) => VFailedDialog(),
+                                          builder: (context) => VFailedDialog(
+                                            message: item.spvMsg,
+                                          ),
                                         );
                                       } else {
-                                        // jika belum diapprove maka approve
-                                        // kl udah di unapprove
                                         if (item.spvSta == false) {
                                           await showDialog(
                                               context: context,
-                                              builder: (context) =>
-                                                  VAlertDialog2(
-                                                      label:
-                                                          'Dibutuhkan Konfirmasi SPV (Approve)',
-                                                      onPressed: () async {
-                                                        context.pop();
-
-                                                        await ref
-                                                            .read(
-                                                                absenManualApproveControllerProvider
-                                                                    .notifier)
-                                                            .approveSpv(
-                                                                item: item,
-                                                                nama: ref
-                                                                    .read(
-                                                                        userNotifierProvider)
-                                                                    .user
-                                                                    .nama!);
-                                                      }));
+                                              builder: (context) {
+                                                return VAlertDialog2(
+                                                    label:
+                                                        'Dibutuhkan Konfirmasi SPV (Approve)',
+                                                    onPressed: () async {
+                                                      context.pop();
+                                                      await ref
+                                                          .read(
+                                                              absenManualApproveControllerProvider
+                                                                  .notifier)
+                                                          .approve(
+                                                            idAbsenMnl: item
+                                                                .idAbsenmnl!,
+                                                            note: '',
+                                                            jenisApp: 'spv',
+                                                          );
+                                                    });
+                                              });
                                         } else {
                                           await showDialog(
                                               context: context,
-                                              builder: (context) =>
-                                                  VAlertDialog2(
-                                                      label:
-                                                          'Dibutuhkan Konfirmasi SPV (Unapprove)',
-                                                      onPressed: () async {
-                                                        context.pop();
-                                                        await ref
-                                                            .read(
-                                                                absenManualApproveControllerProvider
-                                                                    .notifier)
-                                                            .unApproveSpv(
-                                                                item: item,
-                                                                nama: ref
-                                                                    .read(
-                                                                        userNotifierProvider)
-                                                                    .user
-                                                                    .nama!);
-                                                      }));
+                                              builder: (context) {
+                                                return VAlertDialog2(
+                                                    label:
+                                                        'Dibutuhkan Konfirmasi SPV (Unapprove)',
+                                                    onPressed: () async {
+                                                      context.pop();
+                                                      await ref
+                                                          .read(
+                                                              absenManualApproveControllerProvider
+                                                                  .notifier)
+                                                          .approve(
+                                                            idAbsenMnl: item
+                                                                .idAbsenmnl!,
+                                                            note: '',
+                                                            jenisApp: 'spv',
+                                                          );
+                                                    });
+                                              });
                                         }
                                       }
                                     },
@@ -519,52 +492,59 @@ class AbsenManualListItem extends HookConsumerWidget {
                                   child: InkWell(
                                     splashColor: Palette.primaryColor,
                                     onTap: () async {
-                                      if (!ref
-                                          .read(
-                                              absenManualApproveControllerProvider
-                                                  .notifier)
-                                          .canHrdApprove(item)) {
+                                      if (item.isHr == false) {
                                         showDialog(
                                           context: context,
-                                          builder: (context) => VFailedDialog(),
+                                          builder: (context) => VFailedDialog(
+                                            message: item.hrMsg,
+                                          ),
                                         );
                                       } else {
                                         final String? text =
                                             await DialogHelper<void>()
                                                 .showFormDialog(
-                                          label: 'Note HRD',
-                                          context: context,
-                                        );
+                                                    context: context);
 
-                                        if (text != null) {
-                                          if (item.hrdSta == false)
-                                            await ref
-                                                .read(
-                                                    absenManualApproveControllerProvider
-                                                        .notifier)
-                                                .approveHrd(
-                                                  note: text,
-                                                  item: item,
-                                                  namaHrd: ref
-                                                      .read(
-                                                          userNotifierProvider)
-                                                      .user
-                                                      .nama!,
-                                                );
-                                          else
-                                            await ref
-                                                .read(
-                                                    absenManualApproveControllerProvider
-                                                        .notifier)
-                                                .unApproveHrd(
-                                                  idAbsenMnl: item.idAbsenmnl,
-                                                  note: text,
-                                                  namaHrd: ref
-                                                      .read(
-                                                          userNotifierProvider)
-                                                      .user
-                                                      .nama!,
-                                                );
+                                        if (item.hrdSta == false) {
+                                          await showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  VAlertDialog2(
+                                                      label:
+                                                          'Dibutuhkan Konfirmasi HRD (Approve)',
+                                                      onPressed: () async {
+                                                        context.pop();
+                                                        await ref
+                                                            .read(
+                                                                absenManualApproveControllerProvider
+                                                                    .notifier)
+                                                            .approve(
+                                                              idAbsenMnl: item
+                                                                  .idAbsenmnl!,
+                                                              note: text ?? '',
+                                                              jenisApp: 'hr',
+                                                            );
+                                                      }));
+                                        } else {
+                                          await showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  VAlertDialog2(
+                                                      label:
+                                                          'Dibutuhkan Konfirmasi HRD (Unapprove)',
+                                                      onPressed: () async {
+                                                        context.pop();
+                                                        await ref
+                                                            .read(
+                                                                absenManualApproveControllerProvider
+                                                                    .notifier)
+                                                            .approve(
+                                                              idAbsenMnl: item
+                                                                  .idAbsenmnl!,
+                                                              note: text ?? '',
+                                                              jenisApp: 'hr',
+                                                            );
+                                                      }));
                                         }
                                       }
                                     },

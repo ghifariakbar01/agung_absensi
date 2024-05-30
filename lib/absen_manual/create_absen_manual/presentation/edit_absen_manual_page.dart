@@ -15,7 +15,6 @@ import '../../../widgets/alert_helper.dart';
 import '../../../widgets/v_async_widget.dart';
 import '../../../style/style.dart';
 import '../../../user_helper/user_helper_notifier.dart';
-import '../../../utils/string_utils.dart';
 import '../../../widgets/v_button.dart';
 import '../../../widgets/v_scaffold_widget.dart';
 
@@ -23,17 +22,6 @@ import '../../absen_manual_list/application/absen_manual_list.dart';
 import '../../absen_manual_list/application/absen_manual_list_notifier.dart';
 import '../application/create_absen_manual_notifier.dart';
 import '../application/jenis_absen.dart';
-
-String _returnPlaceHolderText(
-  String hour,
-) {
-  final DateTime jam = DateTime.parse(hour);
-  final startPlaceHolder = DateFormat(
-    'dd MMM yyyy',
-  ).format(jam);
-
-  return "$startPlaceHolder";
-}
 
 class EditAbsenManualPage extends HookConsumerWidget {
   const EditAbsenManualPage(this.item);
@@ -47,23 +35,28 @@ class EditAbsenManualPage extends HookConsumerWidget {
     final ptTextController = useTextEditingController(text: nama.user.payroll);
 
     final keteranganTextController = useTextEditingController(text: item.ket);
-    final jenisTextController = useState(item.jenisAbsen);
 
-    final tglPlaceholderTextController =
-        useTextEditingController(text: _returnPlaceHolderText(item.tgl!));
+    final noteSpvTextController = useTextEditingController(text: item.spvNote);
+    final noteHrdTextController = useTextEditingController(text: item.hrdNote);
 
-    final tglTextController = useState(item.tgl);
-    final jamAwalTextController = useState(item.jamAwal);
+    final tglPlaceholderTextController = useTextEditingController(
+        text: DateFormat(
+      'dd MMM yyyy',
+    ).format(item.tgl!).toString());
+
     final jamAwalPlaceholderTextController = useTextEditingController(
-        text: DateFormat('HH:mm')
-            .format(DateTime.parse(item.jamAwal!))
-            .toString());
+      text: DateFormat('HH:mm').format(item.jamAwal!).toString(),
+    );
 
-    final jamAkhirTextController = useState(item.jamAkhir);
     final jamAkhirPlaceholderTextController = useTextEditingController(
-        text: DateFormat('HH:mm')
-            .format(DateTime.parse(item.jamAkhir!))
-            .toString());
+      text: DateFormat('HH:mm').format(item.jamAkhir!).toString(),
+    );
+
+    final jenis = useState(item.jenisAbsen);
+
+    final _tgl = useState(item.tgl!);
+    final jamAwal = useState((item.jamAwal!));
+    final jamAkhir = useState(item.jamAkhir!);
 
     ref.listen<AsyncValue>(userHelperNotifierProvider, (_, state) async {
       return state.showAlertDialogOnError(context, ref);
@@ -183,13 +176,12 @@ class EditAbsenManualPage extends HookConsumerWidget {
                             return null;
                           },
                           value: list.firstWhere(
-                            (element) =>
-                                element.Kode == jenisTextController.value,
+                            (element) => element.Kode == jenis.value,
                             orElse: () => list.first,
                           ),
                           onChanged: (JenisAbsen? value) {
                             if (value != null) {
-                              jenisTextController.value = value.Kode;
+                              jenis.value = value.Kode;
                             }
                           },
                           isExpanded: true,
@@ -226,10 +218,7 @@ class EditAbsenManualPage extends HookConsumerWidget {
                             if (picked != null) {
                               print(picked);
 
-                              final tgl = StringUtils.midnightDate(picked)
-                                  .replaceAll('.000', '');
-
-                              tglTextController.value = tgl;
+                              _tgl.value = picked;
 
                               final startPlaceHolder = DateFormat(
                                 'dd MMM yyyy',
@@ -272,65 +261,54 @@ class EditAbsenManualPage extends HookConsumerWidget {
                       ),
 
                       // JAM AWAL
-                      IgnorePointer(
-                        ignoring: tglTextController.value!.isEmpty,
-                        child: Ink(
-                          child: InkWell(
-                            onTap: () async {
-                              final hour = await showTimePicker(
-                                context: context,
-                                initialEntryMode: TimePickerEntryMode.input,
-                                initialTime: TimeOfDay.now(),
-                                builder: (context, child) {
-                                  return MediaQuery(
-                                    data: MediaQuery.of(context)
-                                        .copyWith(alwaysUse24HourFormat: true),
-                                    child: child!,
-                                  );
-                                },
-                              );
+                      Ink(
+                        child: InkWell(
+                          onTap: () async {
+                            final hour = await showTimePicker(
+                              context: context,
+                              initialEntryMode: TimePickerEntryMode.input,
+                              initialTime: TimeOfDay.now(),
+                              builder: (context, child) {
+                                return MediaQuery(
+                                  data: MediaQuery.of(context)
+                                      .copyWith(alwaysUse24HourFormat: true),
+                                  child: child!,
+                                );
+                              },
+                            );
 
-                              final tgl = tglTextController.value;
-                              final tglDateTime =
-                                  DateTime.parse(tglTextController.value!);
+                            final jam = DateTime(
+                                _tgl.value.year,
+                                _tgl.value.month,
+                                _tgl.value.day,
+                                hour!.hour,
+                                hour.minute);
 
-                              final jam = DateTime(
-                                  tglDateTime.year,
-                                  tglDateTime.month,
-                                  tglDateTime.day,
-                                  hour!.hour,
-                                  hour.minute);
+                            jamAwal.value = jam;
+                            jamAwalPlaceholderTextController.text =
+                                DateFormat('HH:mm').format(jam).toString();
+                          },
+                          child: IgnorePointer(
+                            ignoring: true,
+                            child: TextFormField(
+                                maxLines: 1,
+                                cursorColor: Palette.primaryColor,
+                                controller: jamAwalPlaceholderTextController,
+                                decoration: Themes.formStyleBordered('Jam Awal',
+                                    icon: Icon(Icons.access_time_sharp)),
+                                style: Themes.customColor(
+                                  14,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                                validator: (item) {
+                                  if (item == null) {
+                                    return 'Form tidak boleh kosong';
+                                  } else if (item.isEmpty) {
+                                    return 'Form tidak boleh kosong';
+                                  }
 
-                              log('tgl $tgl ');
-
-                              jamAwalTextController.value =
-                                  jam.toString().replaceAll('.000', '');
-                              jamAwalPlaceholderTextController.text =
-                                  DateFormat('HH:mm').format(jam).toString();
-                            },
-                            child: IgnorePointer(
-                              ignoring: true,
-                              child: TextFormField(
-                                  maxLines: 1,
-                                  cursorColor: Palette.primaryColor,
-                                  controller: jamAwalPlaceholderTextController,
-                                  decoration: Themes.formStyleBordered(
-                                      'Jam Awal',
-                                      icon: Icon(Icons.access_time_sharp)),
-                                  style: Themes.customColor(
-                                    14,
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                                  validator: (item) {
-                                    if (item == null) {
-                                      return 'Form tidak boleh kosong';
-                                    } else if (item.isEmpty) {
-                                      return 'Form tidak boleh kosong';
-                                    }
-
-                                    return null;
-                                  }),
-                            ),
+                                  return null;
+                                }),
                           ),
                         ),
                       ),
@@ -339,81 +317,61 @@ class EditAbsenManualPage extends HookConsumerWidget {
                         height: 16,
                       ),
 
-                      // JAM AKHIR
-                      IgnorePointer(
-                        ignoring: //
-                            tglTextController.value!.isEmpty &&
-                                jamAkhirTextController.value!.isEmpty,
-                        child: Ink(
-                          child: InkWell(
-                            onTap: () async {
-                              final jamAwalAddOneHour = TimeOfDay.fromDateTime(
-                                  DateTime.parse(jamAwalTextController.value!)
-                                      .add(Duration(hours: 1)));
+                      Ink(
+                        child: InkWell(
+                          onTap: () async {
+                            final _oneHour = TimeOfDay.fromDateTime(
+                              jamAwal.value.add(Duration(hours: 1)),
+                            );
 
-                              final hour = await showTimePicker(
-                                context: context,
-                                initialEntryMode: TimePickerEntryMode.input,
-                                initialTime: jamAwalAddOneHour,
-                                builder: (context, child) {
-                                  return MediaQuery(
-                                    data: MediaQuery.of(context)
-                                        .copyWith(alwaysUse24HourFormat: true),
-                                    child: child!,
-                                  );
-                                },
-                              );
+                            final hour = await showTimePicker(
+                              context: context,
+                              initialTime: _oneHour,
+                              initialEntryMode: TimePickerEntryMode.input,
+                            );
 
-                              final tgl = tglTextController.value;
-                              final tglDateTime =
-                                  DateTime.parse(tglTextController.value!);
+                            final tglDateTime = _tgl.value;
 
-                              final jam = DateTime(
-                                  tglDateTime.year,
-                                  tglDateTime.month,
-                                  tglDateTime.day,
-                                  hour!.hour,
-                                  hour.minute);
+                            final jam = DateTime(
+                                tglDateTime.year,
+                                tglDateTime.month,
+                                tglDateTime.day,
+                                hour!.hour,
+                                hour.minute);
 
-                              log('tgl $tgl ');
+                            jamAkhir.value = jam;
+                            jamAkhirPlaceholderTextController.text =
+                                DateFormat('HH:mm').format(jam).toString();
+                          },
+                          child: IgnorePointer(
+                            ignoring: true,
+                            child: TextFormField(
+                                maxLines: 1,
+                                cursorColor: Palette.primaryColor,
+                                controller: jamAkhirPlaceholderTextController,
+                                decoration: Themes.formStyleBordered(
+                                    'Jam Akhir',
+                                    icon: Icon(Icons.access_time_sharp)),
+                                style: Themes.customColor(
+                                  14,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                                validator: (item) {
+                                  if (item == null) {
+                                    return 'Form tidak boleh kosong';
+                                  } else if (item.isEmpty) {
+                                    return 'Form tidak boleh kosong';
+                                  }
 
-                              jamAkhirTextController.value =
-                                  jam.toString().replaceAll('.000', '');
-                              jamAkhirPlaceholderTextController.text =
-                                  DateFormat('HH:mm').format(jam).toString();
-                            },
-                            child: IgnorePointer(
-                              ignoring: true,
-                              child: TextFormField(
-                                  maxLines: 1,
-                                  cursorColor: Palette.primaryColor,
-                                  controller: jamAkhirPlaceholderTextController,
-                                  decoration: Themes.formStyleBordered(
-                                      'Jam Akhir',
-                                      icon: Icon(Icons.access_time_sharp)),
-                                  style: Themes.customColor(
-                                    14,
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                                  validator: (item) {
-                                    if (item == null) {
-                                      return 'Form tidak boleh kosong';
-                                    } else if (item.isEmpty) {
-                                      return 'Form tidak boleh kosong';
-                                    }
+                                  final akhir = jamAkhir.value;
+                                  final awal = jamAwal.value;
 
-                                    final akhir = DateTime.parse(
-                                        jamAkhirTextController.value!);
-                                    final awal = DateTime.parse(
-                                        jamAwalTextController.value!);
+                                  if (akhir.difference(awal).inMinutes < 0) {
+                                    return 'Jam akhir tidak boleh melewati jam awal';
+                                  }
 
-                                    if (akhir.difference(awal).inMinutes < 0) {
-                                      return 'Jam akhir tidak boleh melewati jam awal';
-                                    }
-
-                                    return null;
-                                  }),
-                            ),
+                                  return null;
+                                }),
                           ),
                         ),
                       ),
@@ -422,9 +380,8 @@ class EditAbsenManualPage extends HookConsumerWidget {
                         height: 16,
                       ),
 
-                      //
                       TextFormField(
-                          maxLines: 5,
+                          maxLines: 2,
                           controller: keteranganTextController,
                           cursorColor: Palette.primaryColor,
                           decoration: Themes.formStyleBordered(
@@ -435,8 +392,7 @@ class EditAbsenManualPage extends HookConsumerWidget {
                             fontWeight: FontWeight.normal,
                           ),
                           validator: (item) {
-                            if (jenisTextController.value!.toLowerCase() ==
-                                'lln') {
+                            if (jenis.value!.toLowerCase() == 'lln') {
                               if (item == null) {
                                 return 'Bila Pilih Absen Lainnya / Kasus -> Wajib Mengisi Kolom Keterangan';
                               } else if (item.isEmpty) {
@@ -448,6 +404,36 @@ class EditAbsenManualPage extends HookConsumerWidget {
                           }),
 
                       SizedBox(
+                        height: 16,
+                      ),
+                      TextFormField(
+                        controller: noteSpvTextController,
+                        cursorColor: Palette.primaryColor,
+                        decoration: Themes.formStyleBordered(
+                          'Note SPV',
+                        ),
+                        style: Themes.customColor(
+                          14,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+
+                      SizedBox(
+                        height: 16,
+                      ),
+                      TextFormField(
+                        controller: noteHrdTextController,
+                        cursorColor: Palette.primaryColor,
+                        decoration: Themes.formStyleBordered(
+                          'Note HRD',
+                        ),
+                        style: Themes.customColor(
+                          14,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+
+                      SizedBox(
                         height: 54,
                       ),
 
@@ -456,15 +442,25 @@ class EditAbsenManualPage extends HookConsumerWidget {
                         child: VButton(
                             label: 'Edit Absen Manual',
                             onPressed: () async {
+                              final tgl = (DateFormat(
+                                'dd MMM yyyy',
+                              ).format(_tgl.value));
+
+                              final _jamAwal = (DateFormat(
+                                'dd MMM yyyy HH:mm',
+                              ).format(jamAwal.value));
+
+                              final _jamAkhir = (DateFormat(
+                                'dd MMM yyyy HH:mm',
+                              ).format(jamAkhir.value));
+
                               log(' VARIABLES : \n  Nama : ${namaTextController.value.text} ');
                               log(' Payroll: ${ptTextController.value.text} \n ');
                               log(' Keterangan: ${keteranganTextController.value.text} \n ');
-                              log(' Jenis Absen: ${jenisTextController.value} \n ');
-                              log(' Tanggal: ${tglTextController.value} \n ');
-                              log(' Jam Awal: ${jamAwalTextController.value} \n ');
-                              log(' Jam Akhir: ${jamAkhirTextController.value} \n ');
-
-                              final user = ref.read(userNotifierProvider).user;
+                              log(' Jenis Absen: ${jenis.value} \n ');
+                              log(' Tanggal: ${_tgl.value} \n ');
+                              log(' Jam Awal: $_jamAwal \n ');
+                              log(' Jam Akhir: $_jamAkhir \n ');
 
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();
@@ -472,14 +468,14 @@ class EditAbsenManualPage extends HookConsumerWidget {
                                     .read(createAbsenManualNotifierProvider
                                         .notifier)
                                     .updateAbsenManual(
-                                        id: item.idAbsenmnl,
-                                        idUser: user.idUser!,
-                                        uUser: user.nama!,
-                                        tgl: tglTextController.value!,
-                                        jamAwal: jamAwalTextController.value!,
-                                        jenisAbsen: jenisTextController.value!,
-                                        jamAkhir: jamAkhirTextController.value!,
+                                        idAbsenmnl: item.idAbsenmnl!,
+                                        tgl: tgl,
+                                        jamAwal: _jamAwal,
+                                        jamAkhir: _jamAkhir,
+                                        jenisAbsen: jenis.value!,
                                         ket: keteranganTextController.text,
+                                        noteSpv: noteSpvTextController.text,
+                                        noteHrd: noteHrdTextController.text,
                                         onError: (msg) =>
                                             DialogHelper.showCustomDialog(
                                                 msg, context));

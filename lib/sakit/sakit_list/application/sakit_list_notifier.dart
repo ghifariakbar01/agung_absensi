@@ -89,10 +89,13 @@ class SakitListController extends _$SakitListController {
     if (searchUser == null) {
       return _list;
     } else {
-      return _list
-          .where(
-              (element) => element.fullname!.toLowerCase().contains(searchUser))
-          .toList();
+      return _list.where((element) {
+        if (element.fullname == null) {
+          return element.cUser!.toLowerCase().contains(searchUser);
+        } else {
+          return element.fullname!.toLowerCase().contains(searchUser);
+        }
+      }).toList();
     }
   }
 }

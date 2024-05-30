@@ -39,16 +39,18 @@ class EditIzinPage extends HookConsumerWidget {
     final keteranganTextController = useTextEditingController(text: item.ket);
     final jenisIzinTextController = useState(item.idMstIzin);
 
+    final spvTextController = useTextEditingController(text: item.spvNote);
+    final hrdTextController = useTextEditingController(text: item.hrdNote);
+
     final tglPlaceholderTextController = useTextEditingController(
-      text: _returnPlaceHolderText(
-          DateTimeRange(start: item.tglStart!, end: item.tglEnd!)),
+      text: _returnPlaceHolderText(DateTimeRange(
+        start: item.tglStart!,
+        end: item.tglEnd!,
+      )),
     );
 
     final tglStart = useState(item.tglStart!);
     final tglEnd = useState(item.tglEnd!);
-
-    final spvTextController = useTextEditingController();
-    final hrdTextController = useTextEditingController();
 
     ref.listen<AsyncValue>(userHelperNotifierProvider, (_, state) async {
       return state.showAlertDialogOnError(context, ref);
@@ -250,10 +252,8 @@ class EditIzinPage extends HookConsumerWidget {
                         SizedBox(
                           height: 16,
                         ),
-
-                        // DIAGNOSA
                         TextFormField(
-                            maxLines: 5,
+                            maxLines: 2,
                             controller: keteranganTextController,
                             cursorColor: Palette.primaryColor,
                             decoration: Themes.formStyleBordered(
@@ -275,6 +275,36 @@ class EditIzinPage extends HookConsumerWidget {
                         SizedBox(
                           height: 16,
                         ),
+                        TextFormField(
+                          controller: spvTextController,
+                          cursorColor: Palette.primaryColor,
+                          decoration: Themes.formStyleBordered(
+                            'Note SPV',
+                          ),
+                          style: Themes.customColor(
+                            14,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+
+                        SizedBox(
+                          height: 16,
+                        ),
+                        TextFormField(
+                          controller: hrdTextController,
+                          cursorColor: Palette.primaryColor,
+                          decoration: Themes.formStyleBordered(
+                            'Note HRD',
+                          ),
+                          style: Themes.customColor(
+                            14,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+
+                        SizedBox(
+                          height: 16,
+                        ),
 
                         VButton(
                             label: 'Update Form Izin',
@@ -283,27 +313,32 @@ class EditIzinPage extends HookConsumerWidget {
                               log(' Payroll: ${ptTextController.value.text} \n ');
                               log(' Diagnosa: ${keteranganTextController.value.text} \n ');
                               log(' Surat Dokter: ${jenisIzinTextController.value}  \n ');
-                              // log(' Tgl Awal: ${tglAwalTextController.value} Tgl Akhir: ${tglAkhirTextController.value} \n ');/
                               log(' SPV Note : ${spvTextController.value.text} HRD Note : ${hrdTextController.value.text} \n  ');
+
+                              final _tglAkhir =
+                                  DateFormat('yyyy-MM-dd').format(tglEnd.value);
+                              final _tglAwal = DateFormat('yyyy-MM-dd')
+                                  .format(tglStart.value);
 
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();
                                 await ref
                                     .read(createIzinNotifierProvider.notifier)
                                     .updateIzin(
-                                        tglAkhir: '',
-                                        tglAwal: '',
-                                        noteHrd: '',
-                                        noteSpv: '',
+                                        tglAkhir: _tglAkhir,
+                                        tglAwal: _tglAwal,
                                         idIzin: item.idIzin!,
                                         idUser: item.idUser!,
-                                        uUser: user.nama!,
+                                        noteHrd: hrdTextController.text,
+                                        noteSpv: spvTextController.text,
                                         ket: keteranganTextController.text,
                                         idMstIzin:
                                             jenisIzinTextController.value!,
                                         onError: (msg) =>
                                             DialogHelper.showCustomDialog(
-                                                msg, context));
+                                              msg,
+                                              context,
+                                            ));
                               }
                             })
                       ],

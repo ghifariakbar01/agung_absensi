@@ -6,7 +6,7 @@ import 'tester_state.dart';
 class TesterhNotifier extends StateNotifier<TesterState> {
   TesterhNotifier(
     this._ref,
-  ) : super(TesterState.initial());
+  ) : super(TesterState.forcedRegularUser());
 
   final Ref _ref;
 

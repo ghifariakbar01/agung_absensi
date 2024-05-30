@@ -1,5 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../constants/constants.dart';
 import '../../../shared/providers.dart';
 
 import '../infrastructures/izin_approve_remote_service.dart.dart';
@@ -11,7 +12,7 @@ part 'izin_approve_notifier.g.dart';
 IzinApproveRemoteService izinApproveRemoteService(
     IzinApproveRemoteServiceRef ref) {
   return IzinApproveRemoteService(
-    ref.watch(dioProviderHosting),
+    ref.watch(dioProviderCuti),
   );
 }
 
@@ -32,7 +33,7 @@ class IzinApproveController extends _$IzinApproveController {
     required String jenisApp,
     required String note,
     required int tahun,
-    String? server = 'testing',
+    String? server = Constants.isDev ? 'testing' : 'live',
   }) async {
     state = const AsyncLoading();
 

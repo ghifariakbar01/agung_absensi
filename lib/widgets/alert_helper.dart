@@ -1,6 +1,5 @@
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../utils/os_vibrate.dart';
 

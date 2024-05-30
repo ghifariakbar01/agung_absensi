@@ -309,8 +309,10 @@ class IzinDtlDialog extends ConsumerWidget {
                         assetPath: Assets.iconEdit,
                         onTap: () {
                           context.pop();
-                          return context.pushNamed(RouteNames.editIzinRoute,
-                              extra: item);
+                          return context.pushNamed(
+                            RouteNames.editIzinRoute,
+                            extra: item.toJson(),
+                          );
                         }),
                   SizedBox(
                     width: 8,

@@ -4,8 +4,6 @@ import 'dart:developer';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 
-import 'package:face_net_authentication/infrastructures/dio_extensions.dart';
-
 import '../../infrastructures/exceptions.dart';
 import '../../riwayat_absen/application/riwayat_absen_model.dart';
 import '../../user/application/user_model.dart';
@@ -115,8 +113,9 @@ class AbsenRemoteService {
 
         throw RestApiExceptionWithMessage(errorCode, message);
       }
-    } on DioError catch (e) {
-      if (e.isNoConnectionError || e.isConnectionTimeout) {
+    } on DioException catch (e) {
+      if ((e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout)) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);
@@ -187,8 +186,9 @@ class AbsenRemoteService {
       final errorCode = items['errornum'] as int;
 
       throw RestApiExceptionWithMessage(errorCode, message);
-    } on DioError catch (e) {
-      if (e.isNoConnectionError || e.isConnectionTimeout) {
+    } on DioException catch (e) {
+      if ((e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout)) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);
@@ -198,10 +198,11 @@ class AbsenRemoteService {
     }
   }
 
-  Future<List<RiwayatAbsenModel>> getRiwayatAbsen(
-      {required int page,
-      required String? dateFirst,
-      required String? dateSecond}) async {
+  Future<List<RiwayatAbsenModel>> getRiwayatAbsen({
+    required int page,
+    required String? dateFirst,
+    required String? dateSecond,
+  }) async {
     try {
       final Map<String, dynamic> data = {};
       data.addAll(_dioRequest);
@@ -212,8 +213,11 @@ class AbsenRemoteService {
             "with contoh as (select format(tgljam,'yyyy-MM-dd') as tgl, id_user from $dbNameProd where id_user = ${_userModelWithPassword.idUser} and tgljam >= '$dateSecond' and tgljam < '$dateFirst' group by format(tgljam,'yyyy-MM-dd'), id_user) select *, (select max(lokasi_masuk) from $dbNameProd where id_user = contoh.id_user and mode = 'MASUK' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as lokasi_masuk, (select max(latitude_masuk) from $dbNameProd where id_user = contoh.id_user and mode = 'MASUK' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as latitude_masuk, (select max(longitude_masuk) from $dbNameProd where id_user = contoh.id_user and mode = 'MASUK' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as longitude_masuk, (select min(tgljam) from $dbNameProd where id_user = contoh.id_user and mode = 'MASUK' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as masuk, (select max(lokasi_keluar) from $dbNameProd where id_user = contoh.id_user and mode = 'PULANG' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as lokasi_keluar, (select max(latitude_keluar) from $dbNameProd where id_user = contoh.id_user and mode = 'PULANG' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as latitude_keluar, (select max(longitude_keluar) from $dbNameProd where id_user = contoh.id_user and mode = 'PULANG' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as longitude_keluar, (select max(tgljam) from $dbNameProd where id_user = contoh.id_user and mode = 'PULANG' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as pulang from contoh",
       });
 
-      final response = await _dio.post('',
-          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
+      final response = await _dio.post(
+        '',
+        data: jsonEncode(data),
+        options: Options(contentType: 'text/plain'),
+      );
 
       final items = response.data?[0];
 
@@ -246,8 +250,9 @@ class AbsenRemoteService {
       }
     } on FormatException {
       throw FormatException();
-    } on DioError catch (e) {
-      if (e.isNoConnectionError || e.isConnectionTimeout) {
+    } on DioException catch (e) {
+      if ((e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout)) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);

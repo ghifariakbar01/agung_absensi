@@ -48,14 +48,19 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
         (_, foso) => foso.fold(
             () {},
             (either) => either.fold(
-                (l) => AlertHelper.showSnackBar(context,
-                    message: l.map(
-                      unknown: (value) => 'Error Unknown',
-                      errorParsing: (value) => 'Error Parsing $value',
-                      storage: (value) => 'There is a problem with storage',
-                      empty: (value) => 'There is a problem with connection',
-                    )),
-                (_) => ref.read(userNotifierProvider.notifier).logout())));
+                    (l) => AlertHelper.showSnackBar(context,
+                        message: l.map(
+                          unknown: (value) => 'Error Unknown',
+                          errorParsing: (value) => 'Error Parsing $value',
+                          storage: (value) => 'There is a problem with storage',
+                          empty: (value) =>
+                              'There is a problem with connection',
+                        )), (_) async {
+                  await ref.read(userNotifierProvider.notifier).logout();
+                  await ref
+                      .read(authNotifierProvider.notifier)
+                      .checkAndUpdateAuthStatus();
+                })));
 
     final ip = ref.watch(ipNotifierProvider);
     final errLog = ref.watch(errLogControllerProvider);

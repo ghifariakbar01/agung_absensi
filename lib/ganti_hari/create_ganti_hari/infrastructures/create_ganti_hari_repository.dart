@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 
+import '../../../constants/constants.dart';
 import '../application/absen_ganti_hari.dart';
 import 'create_ganti_hari_remote_service.dart';
 
@@ -9,38 +10,63 @@ class CreateGantiHariRepository {
   final CreateGantiHariRemoteService _remoteService;
 
   Future<Unit> updateGantiHari({
-    required int id,
+    required int idDayOff,
+    required int idUser,
     required int idAbsen,
+    required String username,
+    required String pass,
     required String ket,
     required String tglOff,
     required String tglGanti,
-    required String uUser,
+    required String noteSpv,
+    required String noteHrd,
+    String? server = Constants.isDev ? 'testing' : 'live',
   }) async {
     return _remoteService.updateGantiHari(
-      id: id,
+      idDayOff: idDayOff,
+      idUser: idUser,
       idAbsen: idAbsen,
+      username: username,
+      pass: pass,
       ket: ket,
       tglOff: tglOff,
       tglGanti: tglGanti,
-      uUser: uUser,
+      noteSpv: noteSpv,
+      noteHrd: noteHrd,
+      server: Constants.isDev ? 'testing' : 'live',
     );
   }
 
   Future<Unit> submitGantiHari({
     required int idUser,
     required int idAbsen,
+    required String username,
+    required String pass,
     required String ket,
     required String tglOff,
     required String tglGanti,
-    required String cUser,
+    String? server = Constants.isDev ? 'testing' : 'live',
   }) async {
     return _remoteService.submitGantiHari(
       idUser: idUser,
       idAbsen: idAbsen,
+      username: username,
+      pass: pass,
       ket: ket,
       tglOff: tglOff,
       tglGanti: tglGanti,
-      cUser: cUser,
+      server: Constants.isDev ? 'testing' : 'live',
+    );
+  }
+
+  Future<Unit> deleteGantiHari(
+      {required String username,
+      required String pass,
+      required int idDayOff}) async {
+    return _remoteService.deleteGantiHari(
+      username: username,
+      pass: pass,
+      idDayOff: idDayOff,
     );
   }
 

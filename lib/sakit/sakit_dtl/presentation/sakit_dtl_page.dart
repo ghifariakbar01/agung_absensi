@@ -152,7 +152,8 @@ class SakitDtlWidget extends HookConsumerWidget {
                 ignoring: true,
                 child: InAppWebView(
                   onWebViewCreated: (_) {},
-                  initialUrlRequest: URLRequest(url: Uri.parse(imageUrl)),
+                  initialUrlRequest:
+                      URLRequest(url: WebUri.uri(Uri.parse(imageUrl))),
                   onLoadStop: (controller, url) async {
                     String html = await controller.evaluateJavascript(
                         source:

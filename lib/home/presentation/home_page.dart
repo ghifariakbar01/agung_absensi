@@ -34,9 +34,6 @@ class _HomePageState extends ConsumerState<HomePage> {
         upgrader: Upgrader(
             minAppVersion: cfg.minApp,
             durationUntilAlertAgain: Duration(hours: 3),
-            dialogStyle: UpgradeDialogStyle.cupertino,
-            showLater: true,
-            showIgnore: false,
             messages: MyUpgraderMessages()),
       ),
     );

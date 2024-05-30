@@ -9,7 +9,7 @@ abstract class JenisIzin with _$JenisIzin {
     // ignore: invalid_annotation_target
     @JsonKey(name: 'id_mst_izin') int? idMstIzin,
     String? nama,
-    int? qty,
+    double? qty,
     String? tipe,
   }) = _JenisIzin;
 

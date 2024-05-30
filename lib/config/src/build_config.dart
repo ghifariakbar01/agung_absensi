@@ -11,30 +11,30 @@ class BuildConfig {
     required this.flavor,
   });
 
-  const BuildConfig._development()
+  BuildConfig._development()
       : this._(
           baseUrl: '',
           socketUrl: '',
-          connectTimeout: 9000,
-          receiveTimeout: 9000,
+          connectTimeout: Duration(seconds: 10),
+          receiveTimeout: Duration(seconds: 10),
           flavor: Flavor.development,
         );
 
-  const BuildConfig._staging()
+  BuildConfig._staging()
       : this._(
           baseUrl: '',
           socketUrl: '',
-          connectTimeout: 9000,
-          receiveTimeout: 9000,
+          connectTimeout: Duration(seconds: 10),
+          receiveTimeout: Duration(seconds: 10),
           flavor: Flavor.staging,
         );
 
-  const BuildConfig._release()
+  BuildConfig._release()
       : this._(
           baseUrl: '',
           socketUrl: '',
-          connectTimeout: 9000,
-          receiveTimeout: 9000,
+          connectTimeout: Duration(seconds: 10),
+          receiveTimeout: Duration(seconds: 10),
           flavor: Flavor.release,
         );
 
@@ -49,13 +49,13 @@ class BuildConfig {
         '╚══════════════════════════════════════════════════════════════╝');
     switch (flavor) {
       case 'development':
-        _instance = const BuildConfig._development();
+        _instance = BuildConfig._development();
         break;
       case 'staging':
-        _instance = const BuildConfig._staging();
+        _instance = BuildConfig._staging();
         break;
       default:
-        _instance = const BuildConfig._release();
+        _instance = BuildConfig._release();
         break;
     }
     _initLog();
@@ -80,8 +80,8 @@ class BuildConfig {
 
   final String baseUrl;
   final String socketUrl;
-  final int connectTimeout;
-  final int receiveTimeout;
+  final Duration connectTimeout;
+  final Duration receiveTimeout;
   final Flavor flavor;
 
   static String get flavorName => _instance.flavor.name;

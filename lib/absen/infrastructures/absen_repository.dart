@@ -73,7 +73,10 @@ class AbsenRepository {
       required String? dateSecond}) async {
     try {
       return right(await _remoteService.getRiwayatAbsen(
-          page: page, dateFirst: dateFirst, dateSecond: dateSecond));
+        page: page,
+        dateFirst: dateFirst,
+        dateSecond: dateSecond,
+      ));
     } on NoConnectionException {
       return left(RiwayatAbsenFailure.noConnection());
     } on FormatException catch (e) {

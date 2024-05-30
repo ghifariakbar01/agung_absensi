@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 
-import '../../ganti_hari_list/application/ganti_hari_list.dart';
+import '../../../constants/constants.dart';
 import 'ganti_hari_approve_remote_service.dart.dart';
 
 class GantiHariApproveRepository {
@@ -8,55 +8,34 @@ class GantiHariApproveRepository {
 
   final GantiHariApproveRemoteService _remoteService;
 
-  Future<Unit> approveSpv({
+  Future<Unit> approve({
     required int idDayOff,
-    required String nama,
-  }) async {
-    return _remoteService.approveSpv(
-      idDayOff: idDayOff,
-      nama: nama,
-    );
-  }
-
-  Future<Unit> unapproveSpv({
-    required int idDayOff,
-    required String nama,
-  }) async {
-    return _remoteService.unapproveSpv(
-      idDayOff: idDayOff,
-      nama: nama,
-    );
-  }
-
-  Future<Unit> approveHrd({
-    required String nama,
+    required String username,
+    required String pass,
+    required String jenisApp,
     required String note,
-    required GantiHariList itemGantiHari,
+    String? server = Constants.isDev ? 'testing' : 'live',
   }) async {
-    return _remoteService.approveHrd(
-      nama: nama,
+    return _remoteService.approve(
+      idDayOff: idDayOff,
+      username: username,
+      pass: pass,
+      jenisApp: jenisApp,
       note: note,
-      itemGantiHari: itemGantiHari,
-    );
-  }
-
-  Future<Unit> unapproveHrd({
-    required String nama,
-    required GantiHariList itemGantiHari,
-  }) async {
-    return _remoteService.unapproveHrd(
-      nama: nama,
-      itemGantiHari: itemGantiHari,
+      server: Constants.isDev ? 'testing' : 'live',
     );
   }
 
   Future<Unit> batal({
-    required String nama,
-    required GantiHariList itemGantiHari,
+    required int idDayOff,
+    required String username,
+    required String pass,
+    String? server = Constants.isDev ? 'testing' : 'live',
   }) async {
     return _remoteService.batal(
-      nama: nama,
-      itemGantiHari: itemGantiHari,
+      idDayOff: idDayOff,
+      username: username,
+      pass: pass,
     );
   }
 }

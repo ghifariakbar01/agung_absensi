@@ -1,7 +1,5 @@
-import 'package:face_net_authentication/absen_manual/absen_manual_list/presentation/absen_manual_list_page.dart';
 import 'package:face_net_authentication/absen_manual/create_absen_manual/presentation/edit_absen_manual_page.dart';
 import 'package:face_net_authentication/dt_pc/create_dt_pc/presentation/edit_dt_pc_page.dart';
-import 'package:face_net_authentication/ganti_hari/ganti_hari_list/presentation/ganti_hari_list_page.dart';
 import 'package:face_net_authentication/sakit/create_sakit/presentation/edit_sakit_page.dart';
 import 'package:face_net_authentication/sakit/sakit_dtl/presentation/sakit_dtl_page.dart';
 import 'package:face_net_authentication/sakit/sakit_dtl/presentation/sakit_dtl_photo_page.dart';
@@ -13,6 +11,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../absen/presentation/absen_page.dart';
 
 import '../../absen_manual/absen_manual_list/application/absen_manual_list.dart';
+import '../../absen_manual/absen_manual_list/presentation/absen_manual_list_page.dart';
 import '../../absen_manual/create_absen_manual/presentation/create_absen_manual_page.dart';
 import '../../auth/application/auth_notifier.dart';
 import '../../background/presentation/background_page.dart';
@@ -29,6 +28,7 @@ import '../../edit_profile/presentation/edit_profile_page.dart';
 import '../../ganti_hari/create_ganti_hari/presentation/create_ganti_hari_page.dart';
 import '../../ganti_hari/create_ganti_hari/presentation/edit_ganti_hari_page.dart';
 import '../../ganti_hari/ganti_hari_list/application/ganti_hari_list.dart';
+import '../../ganti_hari/ganti_hari_list/presentation/ganti_hari_list_page.dart';
 import '../../home/presentation/home_page.dart';
 import '../../imei_introduction/application/imei_state.dart';
 import '../../imei_introduction/application/shared/imei_introduction_providers.dart';
@@ -280,8 +280,9 @@ class RouterNotifier extends ChangeNotifier {
               name: RouteNames.editIzinNameRoute,
               path: RouteNames.editIzinRoute,
               builder: (context, state) {
-                final izin = state.extra as IzinList;
-                return EditIzinPage(izin);
+                final absen = state.extra as Map<String, dynamic>;
+                final _data = IzinList.fromJson(absen);
+                return EditIzinPage(_data);
               },
             ),
             GoRoute(
@@ -298,8 +299,9 @@ class RouterNotifier extends ChangeNotifier {
               name: RouteNames.editDtPcNameRoute,
               path: RouteNames.editDtPcRoute,
               builder: (context, state) {
-                final dtPc = state.extra as DtPcList;
-                return EditDtPcPage(dtPc);
+                final absen = state.extra as Map<String, dynamic>;
+                final _data = DtPcList.fromJson(absen);
+                return EditDtPcPage(_data);
               },
             ),
             GoRoute(
@@ -316,8 +318,9 @@ class RouterNotifier extends ChangeNotifier {
               name: RouteNames.editAbsenManualNameRoute,
               path: RouteNames.editAbsenManualRoute,
               builder: (context, state) {
-                final absen = state.extra as AbsenManualList;
-                return EditAbsenManualPage(absen);
+                final absen = state.extra as Map<String, dynamic>;
+                final _data = AbsenManualList.fromJson(absen);
+                return EditAbsenManualPage(_data);
               },
             ),
             GoRoute(
@@ -334,8 +337,9 @@ class RouterNotifier extends ChangeNotifier {
               name: RouteNames.editTugasDinasNameRoute,
               path: RouteNames.editTugasDinasRoute,
               builder: (context, state) {
-                final tugas = state.extra as TugasDinasList;
-                return EditTugasDinasPage(tugas);
+                final tugas = state.extra as Map<String, dynamic>;
+                final _data = TugasDinasList.fromJson(tugas);
+                return EditTugasDinasPage(_data);
               },
             ),
             GoRoute(
@@ -357,8 +361,9 @@ class RouterNotifier extends ChangeNotifier {
               name: RouteNames.editGantiHariNameRoute,
               path: RouteNames.editGantiHariRoute,
               builder: (context, state) {
-                final dayoff = state.extra as GantiHariList;
-                return EditGantiHariPage(dayoff);
+                final dayoff = state.extra as Map<String, dynamic>;
+                final _data = GantiHariList.fromJson(dayoff);
+                return EditGantiHariPage(_data);
               },
             ),
             GoRoute(

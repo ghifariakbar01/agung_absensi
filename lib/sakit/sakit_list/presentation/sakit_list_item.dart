@@ -83,7 +83,7 @@ class SakitListItem extends HookConsumerWidget {
                       SizedBox(
                         width: 4,
                       ),
-                      if (item.btlSta == false)
+                      if (false)
                         TappableSvg(
                             assetPath: Assets.iconBatal,
                             onTap: () {
@@ -91,7 +91,7 @@ class SakitListItem extends HookConsumerWidget {
                                 context: context,
                                 builder: (context) => VBatalDialog(
                                   onTap: () async {
-                                    if (!item.isBtl!) {
+                                    if (!false) {
                                       return showDialog(
                                         context: context,
                                         builder: (context) => VFailedDialog(

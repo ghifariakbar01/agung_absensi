@@ -1,86 +1,57 @@
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:face_net_authentication/infrastructures/dio_extensions.dart';
 
+import '../../../constants/constants.dart';
 import '../../../infrastructures/exceptions.dart';
 import '../application/jenis_absen.dart';
 
 class CreateAbsenManualRemoteService {
   CreateAbsenManualRemoteService(
     this._dio,
-    this._dioRequest,
   );
 
   final Dio _dio;
-  final Map<String, String> _dioRequest;
-
-  static const String dbName = 'hr_trs_absenmnl';
-  static const String dbHrMstJenisAbsen = 'Master_Jenis_Absen';
 
   Future<Unit> submitAbsenManual({
+    required String username,
+    required String pass,
     required int idUser,
     required String ket,
     required String tgl,
     required String jamAwal,
     required String jamAkhir,
     required String jenisAbsen,
-    required String cUser,
+    String? server = Constants.isDev ? 'testing' : 'live',
   }) async {
     try {
-      final Map<String, String> submitSakit = {
-        "command": "INSERT INTO $dbName ("
-            "id_absenmnl, id_user, ket, tgl, jam_awal, jam_akhir, jenis_absen, periode, "
-            "spv_sta, spv_nm, spv_tgl, hrd_sta, hrd_nm, hrd_tgl, hrd_note, spv_note, "
-            "c_date, c_user, u_date, u_user) VALUES ("
-            "(select isnull(max(id_absenmnl),0) + 1 from $dbName), "
-            "$idUser, "
-            "'$ket', "
-            "'$tgl', "
-            "'$jamAwal', "
-            "'$jamAkhir', "
-            "'$jenisAbsen', "
-            "(DATENAME (MONTH,'$tgl')), "
-            "'0', "
-            "'', "
-            "GETDATE(), "
-            "'0', "
-            "'', "
-            "GETDATE(), "
-            "'', "
-            "'', "
-            "GETDATE(), "
-            "'$cUser', "
-            "GETDATE(), "
-            "'$cUser') ",
-        "mode": "INSERT"
-      };
+      final response = await _dio.post('/service_absenmnl.asmx/insertAbsenmnl',
+          options: Options(contentType: 'text/plain', headers: {
+            'username': username,
+            'pass': pass,
+            'id_user': idUser,
+            'server': server,
+            'tgl': tgl,
+            'jam_awal': jamAwal,
+            'jam_akhir': jamAkhir,
+            'ket': ket,
+            'jenis_absen': 'MNL',
+          }));
 
-      final data = _dioRequest;
-      data.addAll(submitSakit);
+      final items = response.data;
 
-      final response = await _dio.post('',
-          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
-
-      log('data $jsonEncode(data)');
-      log('response $response');
-
-      final items = response.data?[0];
-
-      if (items['status'] == 'Success') {
+      if (items['status_code'] == 200) {
         return unit;
       } else {
-        final message = items['error'] as String?;
-        final errorCode = items['errornum'] as int;
+        final message = items['message'] as String?;
+        final errorCode = items['status_code'] as int;
 
         throw RestApiExceptionWithMessage(errorCode, message);
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);
-    } on DioError catch (e) {
-      if (e.isNoConnectionError || e.isConnectionTimeout) {
+    } on DioException catch (e) {
+      if ((e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout)) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);
@@ -91,56 +62,90 @@ class CreateAbsenManualRemoteService {
   }
 
   Future<Unit> updateAbsenManual({
-    required int id,
+    required String username,
+    required String pass,
     required int idUser,
+    required int idAbsenmnl,
     required String ket,
     required String tgl,
     required String jamAwal,
     required String jamAkhir,
     required String jenisAbsen,
-    required String uUser,
+    required String noteSpv,
+    required String noteHrd,
+    String? server = Constants.isDev ? 'testing' : 'live',
   }) async {
     try {
-      // add spv / hrd note
-      final Map<String, String> submitSakit = {
-        "command": "UPDATE $dbName SET "
-            " id_user = $idUser,  "
-            " ket = '$ket',  "
-            " tgl = '$tgl',  "
-            " jam_awal = '$jamAwal',  "
-            " jam_akhir = '$jamAkhir',  "
-            " jenis_absen = '$jenisAbsen',  "
-            " periode = (DATENAME (MONTH,'$tgl')),  "
-            " spv_note = '',  "
-            " hrd_note = '',  "
-            " u_date = getdate(), "
-            " u_user = '$uUser' "
-            " WHERE id_absenmnl = $id ",
-        "mode": "UPDATE"
-      };
+      final response = await _dio.post('/service_absenmnl.asmx/updateAbsenmnl',
+          options: Options(contentType: 'text/plain', headers: {
+            'username': username,
+            'pass': pass,
+            'id_user': idUser,
+            'server': server,
+            'id_absenmnl': idAbsenmnl,
+            'tgl': tgl,
+            'jam_awal': jamAwal,
+            'jam_akhir': jamAkhir,
+            'ket': ket,
+            'spv_note': noteSpv,
+            'hrd_note': noteHrd,
+            'jenis_absen': 'MNL',
+          }));
 
-      final data = _dioRequest;
-      data.addAll(submitSakit);
+      final items = response.data;
 
-      final response = await _dio.post('',
-          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
-
-      log('data ${jsonEncode(data)}');
-      log('response $response');
-      final items = response.data?[0];
-
-      if (items['status'] == 'Success') {
+      if (items['status_code'] == 200) {
         return unit;
       } else {
-        final message = items['error'] as String?;
-        final errorCode = items['errornum'] as int;
+        final message = items['message'] as String?;
+        final errorCode = items['status_code'] as int;
 
         throw RestApiExceptionWithMessage(errorCode, message);
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);
-    } on DioError catch (e) {
-      if (e.isNoConnectionError || e.isConnectionTimeout) {
+    } on DioException catch (e) {
+      if ((e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout)) {
+        throw NoConnectionException();
+      } else if (e.response != null) {
+        throw RestApiException(e.response?.statusCode);
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  Future<Unit> deleteAbsenmnl({
+    required String username,
+    required String pass,
+    required int idAbsenmnl,
+    String? server = Constants.isDev ? 'testing' : 'live',
+  }) async {
+    try {
+      final response = await _dio.post('/service_absenmnl.asmx/deleteAbsenmnl',
+          options: Options(contentType: 'text/plain', headers: {
+            'username': username,
+            'pass': pass,
+            'id_absenmnl': idAbsenmnl,
+            'server': server,
+          }));
+
+      final items = response.data;
+
+      if (items['status_code'] == 200) {
+        return unit;
+      } else {
+        final message = items['message'] as String?;
+        final errorCode = items['status_code'] as int;
+
+        throw RestApiExceptionWithMessage(errorCode, message);
+      }
+    } on FormatException catch (e) {
+      throw FormatException(e.message);
+    } on DioException catch (e) {
+      if ((e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout)) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);
@@ -152,23 +157,15 @@ class CreateAbsenManualRemoteService {
 
   Future<List<JenisAbsen>> getJenisAbsen() async {
     try {
-      final Map<String, String> submitSakit = {
-        "command": "SELECT * FROM $dbHrMstJenisAbsen ",
-        "mode": "SELECT"
-      };
+      final response = await _dio.post('/service_master.asmx/getJenisAbsen',
+          options: Options(contentType: 'text/plain', headers: {
+            'server': Constants.isDev ? 'testing' : 'live',
+          }));
 
-      final data = _dioRequest;
-      data.addAll(submitSakit);
+      final items = response.data;
 
-      final response = await _dio.post('',
-          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
-
-      log('data ${jsonEncode(data)}');
-      log('response $response');
-      final items = response.data?[0];
-
-      if (items['status'] == 'Success') {
-        final list = items['items'] as List;
+      if (items['status_code'] == 200) {
+        final list = items['data'] as List;
 
         if (list.isNotEmpty) {
           return list
@@ -181,15 +178,16 @@ class CreateAbsenManualRemoteService {
           throw RestApiExceptionWithMessage(errorCode, message);
         }
       } else {
-        final message = items['error'] as String?;
-        final errorCode = items['errornum'] as int;
+        final message = items['message'] as String?;
+        final errorCode = items['status_code'] as int;
 
         throw RestApiExceptionWithMessage(errorCode, message);
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);
-    } on DioError catch (e) {
-      if (e.isNoConnectionError || e.isConnectionTimeout) {
+    } on DioException catch (e) {
+      if ((e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout)) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);

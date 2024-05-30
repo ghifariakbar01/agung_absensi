@@ -23,7 +23,10 @@ import '../application/sakit_list_notifier.dart';
 import 'sakit_list_item.dart';
 
 class SakitListScaffold extends HookConsumerWidget {
-  const SakitListScaffold();
+  const SakitListScaffold(this.mapPT);
+
+  final Map<String, List<String>> mapPT;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final sendWa = ref.watch(sendWaNotifierProvider);
@@ -94,16 +97,9 @@ class SakitListScaffold extends HookConsumerWidget {
       return Future.value();
     };
 
-    final Map<String, List<String>> _mapPT = {
-      'gs_12': ['ACT', 'Transina', 'ALR'],
-      'gs_14': ['Tama Raya'],
-      'gs_18': ['ARV'],
-      'gs_21': ['AJL'],
-    };
-
     final _initialDropdownPlaceholder = ['ACT', 'Transina', 'ALR'];
     final _currPT = ref.watch(userNotifierProvider).user.ptServer;
-    final _initialDropdown = _mapPT.entries
+    final _initialDropdown = mapPT.entries
         .firstWhereOrNull(
           (element) => element.key == _currPT,
         )
@@ -209,8 +205,8 @@ class SakitListScaffold extends HookConsumerWidget {
                   data: (_) => VAsyncWidgetScaffold(
                     value: sendWa,
                     data: (_) => VScaffoldTabLayout(
-                      isActionsVisible: true,
                       scaffoldTitle: 'List Form Sakit',
+                      mapPT: mapPT,
                       additionalInfo: VAdditionalInfo(infoMessage: infoMessage),
                       currPT: _initialDropdown ?? _initialDropdownPlaceholder,
                       searchFocus: _searchFocus,

@@ -2,8 +2,8 @@ import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:face_net_authentication/infrastructures/dio_extensions.dart';
 
+import '../../../constants/constants.dart';
 import '../../../infrastructures/exceptions.dart';
 import '../application/alasan_cuti.dart';
 import '../application/jenis_cuti.dart';
@@ -24,7 +24,9 @@ class CreateCutiRemoteService {
     required String tglEnd,
     required String ket,
     required String alasan,
-    String? server = 'testing',
+    required String spvNote,
+    required String hrdNote,
+    String? server = Constants.isDev ? 'testing' : 'live',
   }) async {
     try {
       final response = await _dio.post('/service_cuti.asmx/updateCuti',
@@ -39,6 +41,8 @@ class CreateCutiRemoteService {
               'tgl_end': tglEnd,
               'ket': ket,
               'alasan': alasan,
+              'spv_note': spvNote,
+              'hrd_note': hrdNote,
               'server': server,
             },
           ));
@@ -58,8 +62,9 @@ class CreateCutiRemoteService {
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);
-    } on DioError catch (e) {
-      if (e.isNoConnectionError || e.isConnectionTimeout) {
+    } on DioException catch (e) {
+      if ((e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout)) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);
@@ -78,7 +83,7 @@ class CreateCutiRemoteService {
     required String tglEnd,
     required String ket,
     required String alasan,
-    String? server = 'testing',
+    String? server = Constants.isDev ? 'testing' : 'live',
   }) async {
     try {
       final response = await _dio.post('/service_cuti.asmx/insertCuti',
@@ -106,8 +111,9 @@ class CreateCutiRemoteService {
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);
-    } on DioError catch (e) {
-      if (e.isNoConnectionError || e.isConnectionTimeout) {
+    } on DioException catch (e) {
+      if ((e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout)) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);
@@ -121,7 +127,7 @@ class CreateCutiRemoteService {
     required String username,
     required String pass,
     required int idCuti,
-    String? server = 'testing',
+    String? server = Constants.isDev ? 'testing' : 'live',
   }) async {
     try {
       final response = await _dio.post('/service_cuti.asmx/deleteCuti',
@@ -144,8 +150,9 @@ class CreateCutiRemoteService {
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);
-    } on DioError catch (e) {
-      if (e.isNoConnectionError || e.isConnectionTimeout) {
+    } on DioException catch (e) {
+      if ((e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout)) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);
@@ -159,7 +166,7 @@ class CreateCutiRemoteService {
     try {
       final response = await _dio.post('/service_master.asmx/getJenisCuti',
           options: Options(contentType: 'text/plain', headers: {
-            'server': 'testing',
+            'server': Constants.isDev ? 'testing' : 'live',
           }));
 
       final items = response.data;
@@ -185,8 +192,9 @@ class CreateCutiRemoteService {
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);
-    } on DioError catch (e) {
-      if (e.isNoConnectionError || e.isConnectionTimeout) {
+    } on DioException catch (e) {
+      if ((e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout)) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);
@@ -200,7 +208,7 @@ class CreateCutiRemoteService {
     try {
       final response = await _dio.post('/service_master.asmx/getEmergency',
           options: Options(contentType: 'text/plain', headers: {
-            'server': 'testing',
+            'server': Constants.isDev ? 'testing' : 'live',
           }));
 
       final items = response.data;
@@ -226,8 +234,9 @@ class CreateCutiRemoteService {
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);
-    } on DioError catch (e) {
-      if (e.isNoConnectionError || e.isConnectionTimeout) {
+    } on DioException catch (e) {
+      if ((e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout)) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);

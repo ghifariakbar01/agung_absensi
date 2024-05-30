@@ -16,11 +16,11 @@ import '../../../widgets/alert_helper.dart';
 import '../../../widgets/v_async_widget.dart';
 import '../../../style/style.dart';
 import '../../../user_helper/user_helper_notifier.dart';
-import '../../../utils/string_utils.dart';
 import '../../../widgets/v_button.dart';
 import '../../../widgets/v_scaffold_widget.dart';
 import '../../tugas_dinas_list/application/tugas_dinas_list_notifier.dart';
 import '../application/create_tugas_dinas_notifier.dart';
+// import '../application/jenis_tugas_dinas.dart';
 import '../application/jenis_tugas_dinas.dart';
 import '../application/user_list.dart';
 
@@ -304,17 +304,20 @@ class CreateTugasDinasPage extends HookConsumerWidget {
                               );
 
                               final String tgl =
-                                  StringUtils.midnightDate(picked)
-                                      .replaceAll('.000', '');
+                                  DateFormat('yyyy-MM-dd').format(picked);
                               tglAwalTextController.value = tgl;
+
+                              log('tglAwalTextController.value ${tglAwalTextController.value}');
 
                               final jam = DateTime(picked.year, picked.month,
                                   picked.day, hour!.hour, hour.minute);
-                              jamAwalTextController.value =
-                                  jam.toString().replaceAll('.000', '');
 
                               final String startPlaceHolder = DateFormat(
                                 'dd MMM yyyy HH:mm',
+                              ).format(jam);
+
+                              jamAwalTextController.value = DateFormat(
+                                'yyyy-MM-dd HH:mm',
                               ).format(jam);
 
                               jamTglAwalPlaceholderTextController.text =
@@ -380,17 +383,23 @@ class CreateTugasDinasPage extends HookConsumerWidget {
                               );
 
                               final String tgl =
-                                  StringUtils.midnightDate(picked)
-                                      .replaceAll('.000', '');
+                                  DateFormat('yyyy-MM-dd').format(picked);
                               tglAkhirTextController.value = tgl;
 
-                              final jam = DateTime(picked.year, picked.month,
-                                  picked.day, hour!.hour, hour.minute);
-                              jamAkhirTextController.value =
-                                  jam.toString().replaceAll('.000', '');
+                              final jam = DateTime(
+                                picked.year,
+                                picked.month,
+                                picked.day,
+                                hour!.hour,
+                                hour.minute,
+                              );
 
                               final String placeholder = DateFormat(
                                 'dd MMM yyyy HH:mm',
+                              ).format(jam);
+
+                              jamAkhirTextController.value = DateFormat(
+                                'yyyy-MM-dd HH:mm',
                               ).format(jam);
 
                               jamTglAkhirPlaceholderTextController.text =
@@ -432,7 +441,7 @@ class CreateTugasDinasPage extends HookConsumerWidget {
 
                       //
                       TextFormField(
-                        maxLines: 5,
+                        maxLines: 2,
                         controller: keteranganTextController,
                         cursorColor: Palette.primaryColor,
                         decoration: Themes.formStyleBordered(
@@ -486,27 +495,14 @@ class CreateTugasDinasPage extends HookConsumerWidget {
                         child: VButton(
                             label: 'Submit Form Tugas Dinas',
                             onPressed: () async {
-                              log(' VARIABLES : \n  Nama : ${namaTextController.value.text} ');
-                              log(' Jenis Tugas Dinas: ${jenisTugasDinasTextController.value.text} \n ');
-                              log(' Keterangan: ${keteranganTextController.value.text} \n ');
-                              log(' Tanggal: ${tglAwalTextController.value} \n ');
-                              log(' Tgl Awal: ${tglAwalTextController.value} \n ');
-                              log(' Jam Awal: ${jamAwalTextController.value} \n ');
-                              log(' Tgl Akhir: ${tglAkhirTextController.value} \n ');
-                              log(' Jam Akhir: ${jamAkhirTextController.value} \n ');
-
-                              final user = ref.read(userNotifierProvider).user;
-
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();
                                 await ref
                                     .read(createTugasDinasNotifierProvider
                                         .notifier)
                                     .submitTugasDinas(
-                                      idUser: user.idUser!,
                                       idPemberi:
                                           pemberiTugasController.value.idUser!,
-                                      cUser: user.nama!,
                                       tglAwal: tglAwalTextController.value,
                                       tglAkhir: tglAkhirTextController.value,
                                       jamAwal: jamAwalTextController.value,
@@ -514,7 +510,7 @@ class CreateTugasDinasPage extends HookConsumerWidget {
                                           jenisTugasDinasTextController.text,
                                       perusahaan: perusahaanTextController.text,
                                       lokasi: alamatTextController.text,
-                                      khusus: khusus.value,
+                                      jenis: khusus.value,
                                       jamAkhir: jamAkhirTextController.value,
                                       ket: keteranganTextController.text,
                                       onError: (msg) =>

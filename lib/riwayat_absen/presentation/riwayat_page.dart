@@ -74,7 +74,10 @@ class RiwayatAbsenPage extends ConsumerWidget {
         .watch(riwayatAbsenNotifierProvider.select((value) => value.isGetting));
 
     return Stack(
-      children: [RiwayatAbsenScaffold(), LoadingOverlay(isLoading: isLoading)],
+      children: [
+        RiwayatAbsenScaffold(),
+        LoadingOverlay(isLoading: isLoading),
+      ],
     );
   }
 }

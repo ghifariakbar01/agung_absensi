@@ -9,21 +9,14 @@ class GantiHariListRepository {
   final GantiHariListRemoteService _remoteService;
 
   Future<List<GantiHariList>> getGantiHariList({
-    required int page,
-    required String searchUser,
+    required String username,
+    required String pass,
     required DateTimeRange dateRange,
   }) async {
     return _remoteService.getGantiHariList(
-        page: page, searchUser: searchUser, dateRange: dateRange);
-  }
-
-  Future<List<GantiHariList>> getGantiHariListLimitedAccess({
-    required int page,
-    required String staff,
-    required String searchUser,
-    required DateTimeRange dateRange,
-  }) async {
-    return _remoteService.getGantiHariListLimitedAccess(
-        page: page, staff: staff, searchUser: searchUser, dateRange: dateRange);
+      username: username,
+      pass: pass,
+      dateRange: dateRange,
+    );
   }
 }

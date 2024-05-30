@@ -43,6 +43,7 @@ class IpNotifier extends _$IpNotifier {
         baseUrl: cfg.baseUrl,
       )
       ..interceptors.add(ref.read(authInterceptorProvider));
+    // ..interceptors.add(ref.read(aliceProvider).getDioInterceptor());
 
     ref.read(dioProviderHosting)
       ..options = BaseOptions(

@@ -20,6 +20,8 @@ class CrossAuthServerRepository {
       );
 
       return right(resp);
+    } on NoConnectionException {
+      return left(UserNotFound());
     } on RestApiExceptionWithMessage catch (e) {
       if (e.errorCode == 404) {
         return left(UserNotFound());

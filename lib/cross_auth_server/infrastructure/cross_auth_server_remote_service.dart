@@ -1,8 +1,9 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:face_net_authentication/infrastructures/dio_extensions.dart';
+
 import 'package:intl/intl.dart';
 
+import '../../constants/constants.dart';
 import '../../infrastructures/exceptions.dart';
 
 class CrossAuthServerRemoteService {
@@ -17,7 +18,7 @@ class CrossAuthServerRemoteService {
     try {
       final d1 = DateFormat('yyyy-MM-dd').format(DateTime.now());
       final d2 = DateFormat('yyyy-MM-dd')
-          .format(DateTime.now().subtract(Duration(days: 30)));
+          .format(DateTime.now().subtract(Duration(days: 1)));
 
       final response = await _dio.get('/service_cuti.asmx/getCuti',
           options: Options(
@@ -26,7 +27,7 @@ class CrossAuthServerRemoteService {
               'pass': pass,
               'date_awal': d1,
               'date_akhir': d2,
-              'server': 'testing'
+              'server': Constants.isDev ? 'testing' : 'live',
             },
           ));
 
@@ -45,7 +46,6 @@ class CrossAuthServerRemoteService {
 
           throw RestApiExceptionWithMessage(errorCode, message);
         }
-        //
       } else {
         final message = items['message'] as String?;
         final errorCode = items['status_code'] as int;
@@ -54,8 +54,9 @@ class CrossAuthServerRemoteService {
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);
-    } on DioError catch (e) {
-      if (e.isNoConnectionError || e.isConnectionTimeout) {
+    } on DioException catch (e) {
+      if ((e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout)) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);

@@ -6,18 +6,11 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../constants/assets.dart';
 
+import '../constants/constants.dart';
 import '../user/application/user_model.dart';
 import '../user/application/user_notifier.dart';
 import '../widgets/v_dialogs.dart';
 import 'providers.dart';
-
-final Map<String, String> _mapPT = {
-  // 'gs_12': 'http://agungcartrans.co.id:1232/services',
-  'gs_12': 'https://www.agunglogisticsapp.co.id:2002/services',
-  'gs_14': 'https://agungcartrans.co.id:2601/services',
-  'gs_18': 'https://www.agunglogisticsapp.co.id:2002/services',
-  'gs_21': 'https://www.agunglogisticsapp.co.id:3603/services',
-};
 
 _determineBaseUrl(UserModelWithPassword user) {
   final pt = user.ptServer;
@@ -25,10 +18,10 @@ _determineBaseUrl(UserModelWithPassword user) {
     throw AssertionError('pt null');
   }
 
-  return _mapPT.entries
+  return Constants.ptMap.entries
       .firstWhere(
         (element) => element.key == pt,
-        orElse: () => _mapPT.entries.first,
+        orElse: () => Constants.ptMap.entries.first,
       )
       .value;
 }
@@ -45,18 +38,19 @@ final getUserFutureProvider = FutureProvider<Unit>((ref) async {
 
     ref.read(dioProviderCuti)
       ..options = BaseOptions(
-        connectTimeout: 20000,
-        receiveTimeout: 20000,
+        connectTimeout: Duration(seconds: 10),
+        receiveTimeout: Duration(seconds: 10),
         validateStatus: (status) {
           return true;
         },
         baseUrl: _determineBaseUrl(user),
-      );
+      )
+      ..interceptors.add(ref.read(authInterceptorTwoProvider));
 
     ref.read(dioProviderCutiServer)
       ..options = BaseOptions(
-        connectTimeout: 20000,
-        receiveTimeout: 20000,
+        connectTimeout: Duration(seconds: 10),
+        receiveTimeout: Duration(seconds: 10),
         validateStatus: (status) {
           return true;
         },

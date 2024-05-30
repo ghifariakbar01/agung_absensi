@@ -1,12 +1,8 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../send_wa/application/phone_num.dart';
-import '../../../send_wa/application/send_wa_notifier.dart';
+import '../../../constants/constants.dart';
 import '../../../shared/providers.dart';
 
-import '../../absen_manual_list/application/absen_manual_list.dart';
-
-import '../../absen_manual_list/application/absen_manual_list_notifier.dart';
 import '../infrastructures/absen_manual_approve_remote_service.dart.dart';
 import '../infrastructures/absen_manual_approve_repository.dart';
 
@@ -16,7 +12,8 @@ part 'absen_manual_approve_notifier.g.dart';
 AbsenManualApproveRemoteService absenManualApproveRemoteService(
     AbsenManualApproveRemoteServiceRef ref) {
   return AbsenManualApproveRemoteService(
-      ref.watch(dioProviderHosting), ref.watch(dioRequestProvider));
+    ref.watch(dioProviderCuti),
+  );
 }
 
 @Riverpod(keepAlive: true)
@@ -32,206 +29,51 @@ class AbsenManualApproveController extends _$AbsenManualApproveController {
   @override
   FutureOr<void> build() {}
 
-  Future<void> _sendWa(
-      {required AbsenManualList item, required String messageContent}) async {
-    final PhoneNum registeredWa = PhoneNum(
-      noTelp1: item.noTelp1,
-      noTelp2: item.noTelp2,
-    );
-
-    return ref.read(sendWaNotifierProvider.notifier).processAndSendWa(
-        idUser: item.idUser,
-        idDept: item.idDept,
-        phoneNum: registeredWa,
-        messageContent: messageContent);
-  }
-
-  Future<void> approveSpv({
-    required String nama,
-    required AbsenManualList item,
-  }) async {
-    state = const AsyncLoading();
-
-    try {
-      await ref
-          .read(absenManualApproveRepositoryProvider)
-          .approveSpv(nama: nama, idAbsenMnl: item.idAbsenmnl);
-      final String messageContent =
-          '(Testing Apps) Izin Absen Manual Anda Sudah Diapprove Oleh Atasan $nama';
-      await _sendWa(item: item, messageContent: messageContent);
-
-      state = AsyncData<void>('Sukses Melakukan Approve Form Absen Manual');
-    } catch (e) {
-      state = AsyncError(e, StackTrace.current);
-    }
-  }
-
-  Future<void> unApproveSpv({
-    required String nama,
-    required AbsenManualList item,
-  }) async {
-    state = const AsyncLoading();
-
-    try {
-      await ref
-          .read(absenManualApproveRepositoryProvider)
-          .unApproveSpv(nama: nama, idAbsenMnl: item.idAbsenmnl);
-
-      state = AsyncData<void>('Sukses Unapprove Form Absen Manual');
-    } catch (e) {
-      state = AsyncError(e, StackTrace.current);
-    }
-  }
-
-  Future<void> approveHrd({
-    required String namaHrd,
-    required String note,
-    required AbsenManualList item,
-  }) async {
-    state = const AsyncLoading();
-
-    try {
-      await ref.read(absenManualApproveRepositoryProvider).approveHrd(
-          namaHrd: namaHrd, note: note, idAbsenMnl: item.idAbsenmnl);
-
-      final String messageContent =
-          '(Testing Apps) Izin Absen Manual Anda Sudah Diapprove Oleh HRD $namaHrd';
-      await _sendWa(item: item, messageContent: messageContent);
-
-      state = AsyncData<void>('Sukses Melakukan Approve Form Absen Manual');
-    } catch (e) {
-      state = AsyncError(e, StackTrace.current);
-    }
-  }
-
-  Future<void> unApproveHrd({
-    required String namaHrd,
-    required String note,
+  Future<void> approve({
     required int idAbsenMnl,
+    required String jenisApp,
+    required String note,
+    String? server = Constants.isDev ? 'testing' : 'live',
   }) async {
     state = const AsyncLoading();
 
-    try {
-      await ref
-          .read(absenManualApproveRepositoryProvider)
-          .unApproveHrd(nama: namaHrd, note: note, idAbsenMnl: idAbsenMnl);
+    final username = ref.read(userNotifierProvider).user.nama!;
+    final pass = ref.read(userNotifierProvider).user.password!;
 
-      state = AsyncData<void>('Sukses Melakukan Unapprove Form Absen Manual');
+    try {
+      await ref.read(absenManualApproveRepositoryProvider).approve(
+            idAbsenMnl: idAbsenMnl,
+            username: username,
+            pass: pass,
+            jenisApp: jenisApp,
+            note: note,
+            server: server,
+          );
+
+      state = AsyncData<void>('Sukses');
     } catch (e) {
       state = AsyncError(e, StackTrace.current);
     }
   }
 
   Future<void> batal({
-    required String nama,
-    required AbsenManualList item,
+    required int idAbsenMnl,
   }) async {
     state = const AsyncLoading();
 
+    final username = ref.read(userNotifierProvider).user.nama!;
+    final pass = ref.read(userNotifierProvider).user.password!;
+
     try {
       await ref.read(absenManualApproveRepositoryProvider).batal(
-            nama: nama,
-            idAbsenMnl: item.idAbsenmnl,
+            idAbsenMnl: idAbsenMnl,
+            username: username,
+            pass: pass,
           );
-      final String messageContent =
-          ' (Testing Apps) Izin Anda Telah Di Batalkan Oleh : $nama';
 
-      await _sendWa(item: item, messageContent: messageContent);
       state = AsyncData<void>('Sukses Membatalkan Form Absen Manual');
     } catch (e) {
       state = AsyncError(e, StackTrace.current);
     }
-  }
-
-  int _calcDiffSaturdaySunday(DateTime startDate, DateTime endDate) {
-    int nbDays = 0;
-    DateTime currentDay = startDate;
-
-    while (currentDay.isBefore(endDate)) {
-      currentDay = currentDay.add(Duration(days: 1));
-
-      if (currentDay.weekday == DateTime.saturday &&
-          currentDay.weekday == DateTime.sunday) {
-        nbDays += 1;
-      }
-    }
-
-    return nbDays;
-  }
-
-  bool canSpvApprove(AbsenManualList item) {
-    bool spvApprove = false;
-
-    if (item.hrdSta == true) {
-      spvApprove = false;
-    }
-
-    final spv = ref.read(userNotifierProvider).user.spv;
-    if (ref.read(absenManualListControllerProvider.notifier).isHrdOrSpv(spv) ==
-        false) {
-      spvApprove = false;
-    }
-
-    final staff = ref.read(userNotifierProvider).user.staf;
-    if (staff!.contains(item.idUser.toString()) == false) {
-      spvApprove = false;
-    }
-
-    final jumlahHari =
-        _calcDiffSaturdaySunday(DateTime.parse(item.cDate!), DateTime.now());
-
-    if (DateTime.now().difference(DateTime.parse(item.cDate!)).inDays -
-            jumlahHari >=
-        3) {
-      spvApprove = false;
-    }
-
-    if (ref.read(userNotifierProvider).user.idUser != item.idUser) {
-      spvApprove = false;
-    }
-
-    if (ref.read(userNotifierProvider).user.fullAkses == true) {
-      spvApprove = true;
-    }
-
-    return spvApprove;
-  }
-
-  bool canHrdApprove(AbsenManualList item) {
-    bool hrdApprove = false;
-
-    if (item.spvSta == false) {
-      hrdApprove = false;
-    }
-
-    final hrd = ref.read(userNotifierProvider).user.fin;
-
-    if (ref.read(absenManualListControllerProvider.notifier).isHrdOrSpv(hrd) ==
-        false) {
-      hrdApprove = false;
-    }
-
-    final jumlahHari =
-        _calcDiffSaturdaySunday(DateTime.parse(item.spvTgl!), DateTime.now());
-
-    if (DateTime.now().difference(DateTime.parse(item.cDate!)).inDays -
-            jumlahHari >=
-        1) {
-      hrdApprove = false;
-    }
-
-    if (ref.read(userNotifierProvider).user.fullAkses == true) {
-      hrdApprove = true;
-    }
-
-    return hrdApprove;
-  }
-
-  bool canBatal(AbsenManualList item) {
-    if (item.btlSta == true && item.hrdSta == true) {
-      return false;
-    }
-
-    return true;
   }
 }

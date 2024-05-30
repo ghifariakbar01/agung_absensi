@@ -1,4 +1,5 @@
 class Constants {
+  static const bool isDev = true;
   static const String keyBaseUrl = 'base_url';
   static const String keyBaseUrlHosting = 'base_url_hosting';
   static const String keyMinApp = 'min_app';
@@ -17,4 +18,11 @@ class Constants {
   static const int passWrongCode = 3;
   static const String passWrong = 'Password Wrong';
   static const String passExpString = 'Password Expired';
+  static const Map<String, String> ptMap = {
+    'gs_12': 'http://agungcartrans.co.id:1232/services',
+    // 'gs_12': 'https://www.agunglogisticsapp.co.id:2002/services',
+    'gs_14': 'https://agungcartrans.co.id:2601/services',
+    'gs_18': 'https://www.agunglogisticsapp.co.id:2002/services',
+    'gs_21': 'https://www.agunglogisticsapp.co.id:3603/services',
+  };
 }

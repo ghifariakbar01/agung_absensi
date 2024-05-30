@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:collection/collection.dart';
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -10,18 +11,18 @@ import 'package:intl/intl.dart';
 
 import '../../../err_log/application/err_log_notifier.dart';
 import '../../../routes/application/route_names.dart';
-import '../../../shared/providers.dart';
 import '../../../utils/dialog_helper.dart';
 import '../../../widgets/alert_helper.dart';
 import '../../../widgets/v_async_widget.dart';
 import '../../../style/style.dart';
 import '../../../user_helper/user_helper_notifier.dart';
-import '../../../utils/string_utils.dart';
 import '../../../widgets/v_button.dart';
 import '../../../widgets/v_scaffold_widget.dart';
+import '../../tugas_dinas_list/application/mst_user_list.dart';
 import '../../tugas_dinas_list/application/tugas_dinas_list.dart';
 import '../../tugas_dinas_list/application/tugas_dinas_list_notifier.dart';
 import '../application/create_tugas_dinas_notifier.dart';
+import '../application/jenis_tugas_dinas.dart';
 import '../application/user_list.dart';
 
 class EditTugasDinasPage extends HookConsumerWidget {
@@ -31,35 +32,50 @@ class EditTugasDinasPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final jenisTugasDinasTextController =
-        useTextEditingController(text: item.kategori);
+    final pemberiTugasController = useState(
+      // UserList(
+      //     idUser: item.idPemberi,
+      //     nama: item.pemberiName,
+      //     fullname: item.pemberiFullname),
+      UserList(
+        idUser: item.idPemberi,
+        nama: '',
+        fullname: '',
+      ),
+    );
 
-    // final nama = ref.watch(userNotifierProvider);
     final namaTextController = useTextEditingController(text: item.cUser);
 
-    final pemberiTugasController = useState(UserList(
-        idUser: item.idPemberi,
-        nama: item.pemberiName,
-        fullname: item.pemberiFullname));
-    final pemberiTugasPlaceHolderTextController =
-        useTextEditingController(text: item.pemberiFullname);
+    final jenisTugasDinasTextController = useTextEditingController(
+      text: item.kategori,
+    );
 
-    final perusahaanTextController =
-        useTextEditingController(text: item.perusahaan);
+    final pemberiTugasPlaceHolderTextController = useTextEditingController(
+      text: item.idPemberi.toString(),
+    );
+
+    final perusahaanTextController = useTextEditingController(
+      text: item.perusahaan,
+    );
 
     final alamatTextController = useTextEditingController(text: item.lokasi);
-
     final keteranganTextController = useTextEditingController(text: item.ket);
 
-    final jamTglAwalPlaceholderTextController =
-        useTextEditingController(text: item.jamStart);
-    final tglAwalTextController = useState(item.tglStart);
-    final jamAwalTextController = useState(item.jamStart);
+    final jamTglAwalPlaceholderTextController = useTextEditingController(
+        text: DateFormat(
+      'dd MMM yyyy HH:mm',
+    ).format(item.jamStart!));
 
-    final jamTglAkhirPlaceholderTextController =
-        useTextEditingController(text: item.jamEnd);
-    final tglAkhirTextController = useState(item.tglEnd);
-    final jamAkhirTextController = useState(item.jamEnd);
+    final tglAwal = useState(item.tglStart);
+    final jamAwal = useState(item.jamStart);
+
+    final jamTglAkhirPlaceholderTextController = useTextEditingController(
+        text: DateFormat(
+      'dd MMM yyyy HH:mm',
+    ).format(item.jamEnd!));
+
+    final tglAkhir = useState(item.tglEnd);
+    final jamAkhir = useState(item.jamEnd);
 
     final khusus = useState(item.jenis);
 
@@ -76,7 +92,7 @@ class EditTugasDinasPage extends HookConsumerWidget {
         return AlertHelper.showSnackBar(
           context,
           color: Palette.primaryColor,
-          message: 'Sukses Menginput Form Tugas Dinas',
+          message: '${state.value}',
           onDone: () {
             ref.invalidate(tugasDinasListControllerProvider);
             context.pop();
@@ -91,9 +107,10 @@ class EditTugasDinasPage extends HookConsumerWidget {
 
     final _formKey = useMemoized(GlobalKey<FormState>.new, const []);
 
-    final listTugasDinas = ['', 'DK', 'LK'];
+    final jenisTugasDinas = ref.watch(jenisTugasDinasNotifierProvider);
 
     final errLog = ref.watch(errLogControllerProvider);
+    final masterUser = ref.watch(mstUserListNotifierProvider);
 
     return KeyboardDismissOnTap(
       child: VAsyncWidgetScaffold<void>(
@@ -102,7 +119,7 @@ class EditTugasDinasPage extends HookConsumerWidget {
           value: createIzin,
           data: (_) => VScaffoldWidget(
               appbarColor: Palette.primaryColor,
-              scaffoldTitle: 'Create Form Tugas Dinas',
+              scaffoldTitle: 'Edit Form Tugas Dinas',
               scaffoldBody: Padding(
                 padding: EdgeInsets.only(
                     bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -113,45 +130,50 @@ class EditTugasDinasPage extends HookConsumerWidget {
                       SizedBox(
                         height: 8,
                       ),
-                      DropdownButtonFormField<String>(
-                        isExpanded: true,
-                        elevation: 0,
-                        iconSize: 20,
-                        padding: EdgeInsets.all(0),
-                        icon: Icon(Icons.keyboard_arrow_down_rounded,
-                            color: Palette.primaryColor),
-                        decoration: Themes.formStyleBordered(
-                          'Jenis Tugas Dinas',
-                        ),
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Form tidak boleh kosong';
-                          }
+                      VAsyncValueWidget<List<JenisTugasDinas>>(
+                        value: jenisTugasDinas,
+                        data: (jenis) =>
+                            DropdownButtonFormField<JenisTugasDinas>(
+                          isExpanded: true,
+                          elevation: 0,
+                          iconSize: 20,
+                          padding: EdgeInsets.all(0),
+                          icon: Icon(Icons.keyboard_arrow_down_rounded,
+                              color: Palette.primaryColor),
+                          decoration: Themes.formStyleBordered(
+                            'Jenis Tugas Dinas',
+                          ),
+                          validator: (value) {
+                            if (value == null) {
+                              return 'Form tidak boleh kosong';
+                            }
 
-                          return null;
-                        },
-                        value: listTugasDinas.firstWhere(
-                          (element) =>
-                              element == jenisTugasDinasTextController.text,
-                          orElse: () => listTugasDinas.first,
-                        ),
-                        onChanged: (String? value) {
-                          if (value != null) {
-                            jenisTugasDinasTextController.text = value;
-                          }
-                        },
-                        items: listTugasDinas
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(
-                              value,
-                              style: Themes.customColor(
-                                14,
+                            return null;
+                          },
+                          value: jenis.firstWhere(
+                            (element) =>
+                                element.kode ==
+                                jenisTugasDinasTextController.text,
+                            orElse: () => jenis.first,
+                          ),
+                          onChanged: (JenisTugasDinas? value) {
+                            if (value != null) {
+                              jenisTugasDinasTextController.text = value.kode;
+                            }
+                          },
+                          items: jenis.map<DropdownMenuItem<JenisTugasDinas>>(
+                              (JenisTugasDinas value) {
+                            return DropdownMenuItem<JenisTugasDinas>(
+                              value: value,
+                              child: Text(
+                                value.kategori,
+                                style: Themes.customColor(
+                                  14,
+                                ),
                               ),
-                            ),
-                          );
-                        }).toList(),
+                            );
+                          }).toList(),
+                        ),
                       ),
                       SizedBox(
                         height: 16,
@@ -183,47 +205,58 @@ class EditTugasDinasPage extends HookConsumerWidget {
                         height: 16,
                       ),
                       // PEMBERI TUGAS
-                      Ink(
-                        child: InkWell(
-                          onTap: () async {
-                            final UserList? pemberiTugas =
-                                await context.pushNamed(
-                                    RouteNames.searchPemberiTugasDinasRoute);
+                      VAsyncValueWidget<List<MstUserList>>(
+                        value: masterUser,
+                        data: (mst) {
+                          pemberiTugasPlaceHolderTextController.text = mst
+                                  .firstWhereOrNull((element) =>
+                                      element.idUser == item.idPemberi)
+                                  ?.fullname ??
+                              '';
 
-                            if (pemberiTugas != null) {
-                              log('pemberiTugas ${pemberiTugas.toJson()}');
-                              pemberiTugasController.value = pemberiTugas;
-                              pemberiTugasPlaceHolderTextController.text =
-                                  pemberiTugas.fullname!;
-                            }
-                          },
-                          child: IgnorePointer(
-                            ignoring: true,
-                            child: TextFormField(
-                                maxLines: 1,
-                                controller:
-                                    pemberiTugasPlaceHolderTextController,
-                                cursorColor: Palette.primaryColor,
-                                decoration: Themes.formStyleBordered(
-                                  'Pemberi Tugas',
-                                  icon: Icon(Icons.keyboard_arrow_down_rounded,
-                                      color: Palette.primaryColor),
-                                ),
-                                style: Themes.customColor(
-                                  14,
-                                  fontWeight: FontWeight.normal,
-                                ),
-                                validator: (item) {
-                                  if (item == null) {
-                                    return 'Form tidak boleh kosong';
-                                  } else if (item.isEmpty) {
-                                    return 'Form tidak boleh kosong';
-                                  }
+                          return Ink(
+                            child: InkWell(
+                              onTap: () async {
+                                final UserList? pemberiTugas =
+                                    await context.pushNamed(RouteNames
+                                        .searchPemberiTugasDinasRoute);
 
-                                  return null;
-                                }),
-                          ),
-                        ),
+                                if (pemberiTugas != null) {
+                                  pemberiTugasController.value = pemberiTugas;
+                                  pemberiTugasPlaceHolderTextController.text =
+                                      pemberiTugas.fullname!;
+                                }
+                              },
+                              child: IgnorePointer(
+                                ignoring: true,
+                                child: TextFormField(
+                                    maxLines: 1,
+                                    controller:
+                                        pemberiTugasPlaceHolderTextController,
+                                    cursorColor: Palette.primaryColor,
+                                    decoration: Themes.formStyleBordered(
+                                      'Pemberi Tugas',
+                                      icon: Icon(
+                                          Icons.keyboard_arrow_down_rounded,
+                                          color: Palette.primaryColor),
+                                    ),
+                                    style: Themes.customColor(
+                                      14,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                    validator: (item) {
+                                      if (item == null) {
+                                        return 'Form tidak boleh kosong';
+                                      } else if (item.isEmpty) {
+                                        return 'Form tidak boleh kosong';
+                                      }
+
+                                      return null;
+                                    }),
+                              ),
+                            ),
+                          );
+                        },
                       ),
 
                       SizedBox(
@@ -294,7 +327,6 @@ class EditTugasDinasPage extends HookConsumerWidget {
                                   DateTime.now().subtract(Duration(days: 90)),
                             );
                             if (picked != null) {
-                              print(picked);
                               final hour = await showTimePicker(
                                 context: context,
                                 initialEntryMode: TimePickerEntryMode.input,
@@ -308,22 +340,24 @@ class EditTugasDinasPage extends HookConsumerWidget {
                                 },
                               );
 
-                              final String tgl =
-                                  StringUtils.midnightDate(picked)
-                                      .replaceAll('.000', '');
-                              tglAwalTextController.value = tgl;
+                              tglAwal.value = picked;
 
-                              final jam = DateTime(picked.year, picked.month,
-                                  picked.day, hour!.hour, hour.minute);
-                              jamAwalTextController.value =
-                                  jam.toString().replaceAll('.000', '');
+                              final jam = DateTime(
+                                picked.year,
+                                picked.month,
+                                picked.day,
+                                hour!.hour,
+                                hour.minute,
+                              );
+
+                              jamAwal.value = jam;
 
                               final String startPlaceHolder = DateFormat(
                                 'dd MMM yyyy HH:mm',
                               ).format(jam);
 
                               jamTglAwalPlaceholderTextController.text =
-                                  "$startPlaceHolder";
+                                  startPlaceHolder;
                             }
                           },
                           child: IgnorePointer(
@@ -384,15 +418,17 @@ class EditTugasDinasPage extends HookConsumerWidget {
                                 },
                               );
 
-                              final String tgl =
-                                  StringUtils.midnightDate(picked)
-                                      .replaceAll('.000', '');
-                              tglAkhirTextController.value = tgl;
+                              tglAkhir.value = picked;
 
-                              final jam = DateTime(picked.year, picked.month,
-                                  picked.day, hour!.hour, hour.minute);
-                              jamAkhirTextController.value =
-                                  jam.toString().replaceAll('.000', '');
+                              final jam = DateTime(
+                                picked.year,
+                                picked.month,
+                                picked.day,
+                                hour!.hour,
+                                hour.minute,
+                              );
+
+                              jamAkhir.value = jam;
 
                               final String placeholder = DateFormat(
                                 'dd MMM yyyy HH:mm',
@@ -437,7 +473,7 @@ class EditTugasDinasPage extends HookConsumerWidget {
 
                       //
                       TextFormField(
-                        maxLines: 5,
+                        maxLines: 2,
                         controller: keteranganTextController,
                         cursorColor: Palette.primaryColor,
                         decoration: Themes.formStyleBordered(
@@ -494,13 +530,27 @@ class EditTugasDinasPage extends HookConsumerWidget {
                               log(' VARIABLES : \n  Nama : ${namaTextController.value.text} ');
                               log(' Jenis Tugas Dinas: ${jenisTugasDinasTextController.value.text} \n ');
                               log(' Keterangan: ${keteranganTextController.value.text} \n ');
-                              log(' Tanggal: ${tglAwalTextController.value} \n ');
-                              log(' Tgl Awal: ${tglAwalTextController.value} \n ');
-                              log(' Jam Awal: ${jamAwalTextController.value} \n ');
-                              log(' Tgl Akhir: ${tglAkhirTextController.value} \n ');
-                              log(' Jam Akhir: ${jamAkhirTextController.value} \n ');
+                              log(' Tanggal: ${tglAwal.value} \n ');
+                              log(' Tgl Awal: ${tglAwal.value} \n ');
+                              log(' Jam Awal: ${jamAwal.value} \n ');
+                              log(' Tgl Akhir: ${tglAkhir.value} \n ');
+                              log(' Jam Akhir: ${jamAkhir.value} \n ');
 
-                              final user = ref.read(userNotifierProvider).user;
+                              final _tglAwal = DateFormat(
+                                'yyyy-MM-dd',
+                              ).format(tglAwal.value!);
+
+                              final _tglAkhir = DateFormat(
+                                'yyyy-MM-dd',
+                              ).format(tglAkhir.value!);
+
+                              final _jamAwal = DateFormat(
+                                'yyyy-MM-dd HH:mm',
+                              ).format(jamAwal.value!);
+
+                              final _jamAkhir = DateFormat(
+                                'yyyy-MM-dd HH:mm',
+                              ).format(jamAkhir.value!);
 
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();
@@ -508,24 +558,24 @@ class EditTugasDinasPage extends HookConsumerWidget {
                                     .read(createTugasDinasNotifierProvider
                                         .notifier)
                                     .updateTugasDinas(
-                                      id: item.idDinas,
-                                      idUser: user.idUser!,
-                                      idPemberi:
-                                          pemberiTugasController.value.idUser!,
-                                      uUser: user.nama!,
-                                      tglAwal: tglAwalTextController.value!,
-                                      tglAkhir: tglAkhirTextController.value!,
-                                      jamAwal: jamAwalTextController.value!,
+                                      idDinas: item.idDinas!,
+                                      tglAwal: _tglAwal,
+                                      tglAkhir: _tglAkhir,
+                                      jamAwal: _jamAwal,
+                                      jamAkhir: _jamAkhir,
                                       kategori:
                                           jenisTugasDinasTextController.text,
                                       perusahaan: perusahaanTextController.text,
                                       lokasi: alamatTextController.text,
-                                      khusus: khusus.value ?? false,
-                                      jamAkhir: jamAkhirTextController.value!,
+                                      jenis: khusus.value ?? false,
                                       ket: keteranganTextController.text,
+                                      idPemberi:
+                                          pemberiTugasController.value.idUser!,
                                       onError: (msg) =>
                                           DialogHelper.showCustomDialog(
-                                              msg, context),
+                                        msg,
+                                        context,
+                                      ),
                                     );
                               }
                             }),

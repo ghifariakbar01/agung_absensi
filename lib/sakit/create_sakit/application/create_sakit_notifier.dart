@@ -1,3 +1,4 @@
+import 'package:face_net_authentication/infrastructures/exceptions.dart';
 import 'package:intl/intl.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -68,6 +69,8 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
     required DateTime tglEnd,
     required String keterangan,
     required String surat,
+    required String noteSpv,
+    required String noteHrd,
     required Future<void> Function(String errMessage) onError,
   }) async {
     state = const AsyncLoading();
@@ -90,12 +93,19 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
             surat: surat,
             tglEnd: _tglEnd,
             tglStart: _tglStart,
+            noteSpv: noteSpv,
+            noteHrd: noteHrd,
           );
 
       state = const AsyncValue.data('Sukses Update');
     } catch (e) {
       state = const AsyncValue.data('');
-      await onError('Error $e');
+
+      if (e is RestApiExceptionWithMessage) {
+        await onError('Error ${e.message}');
+      } else {
+        await onError('Error $e');
+      }
     }
   }
 

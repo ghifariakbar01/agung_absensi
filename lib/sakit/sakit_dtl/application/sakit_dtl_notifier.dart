@@ -1,6 +1,8 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../constants/constants.dart';
 import '../../../shared/providers.dart';
+import '../../../user/application/user_model.dart';
 import '../infrastructures/sakit_dtl_remote_service.dart';
 import '../infrastructures/sakit_dtl_repository.dart';
 import 'sakit_dtl.dart';
@@ -37,39 +39,42 @@ class SakitDtlNotifier extends _$SakitDtlNotifier {
     });
   }
 
-  Map<String, String> _imagePtServerMap() => {
-        'gs_12': '1232',
-        'gs_14': '1261',
-        'gs_18': '1026',
-        'gs_21': '1063',
-      };
+  // Map<String, String> _imagePtServerMap() => {
+  //       'gs_12': '1232',
+  //       'gs_14': '1261',
+  //       'gs_18': '1026',
+  //       'gs_21': '1063',
+  //     };
 
   String urlImageFormSakit(String namaFile) {
-    final ptServer =
-        ref.read(userNotifierProvider.select((value) => value.user.ptServer));
+    final user = ref.read(userNotifierProvider).user;
+    final _url = _determineBaseUrl(user);
 
-    final port = _imagePtServerMap()
-        .entries
-        .toList()
-        .firstWhere((element) => element.key == ptServer)
-        .value;
-
-    return 'http://agunglogisticsapp.co.id:$port/imgsakit/$namaFile';
+    return '$_url/imgsakit/$namaFile';
   }
 
   String formUploadImageFormSakit(int id) {
     final user = ref.read(userNotifierProvider).user;
+    final _url = _determineBaseUrl(user);
 
-    final ptServer = user.ptServer;
     final userId = user.idUser;
     final pass = user.password;
 
-    final port = _imagePtServerMap()
-        .entries
-        .toList()
-        .firstWhere((element) => element.key == ptServer)
-        .value;
+    return '$_url/mob_upload.aspx?mode=sakit&noid=$id&userid=$userId&userpass=$pass';
+  }
 
-    return 'http://agunglogisticsapp.co.id:$port/mob_upload.aspx?mode=sakit&noid=$id&userid=$userId&userpass=$pass';
+  _determineBaseUrl(UserModelWithPassword user) {
+    final pt = user.ptServer;
+    if (pt == null) {
+      throw AssertionError('pt null');
+    }
+
+    return Constants.ptMap.entries
+        .firstWhere(
+          (element) => element.key == pt,
+          orElse: () => Constants.ptMap.entries.first,
+        )
+        .value
+        .replaceAll('/services', '');
   }
 }

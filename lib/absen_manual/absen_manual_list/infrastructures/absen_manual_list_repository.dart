@@ -9,22 +9,14 @@ class AbsenManualListRepository {
   final AbsenManualListRemoteService _remoteService;
 
   Future<List<AbsenManualList>> getAbsenManualList({
-    required int page,
-    required String staff,
-    required String searchUser,
+    required String username,
+    required String pass,
     required DateTimeRange dateRange,
   }) async {
     return _remoteService.getAbsenManualList(
-        page: page, staff: staff, searchUser: searchUser, dateRange: dateRange);
-  }
-
-  Future<List<AbsenManualList>> getAbsenManualListLimitedAccess({
-    required int page,
-    required String staff,
-    required String searchUser,
-    required DateTimeRange dateRange,
-  }) async {
-    return _remoteService.getAbsenManualListLimitedAccess(
-        page: page, staff: staff, searchUser: searchUser, dateRange: dateRange);
+      username: username,
+      pass: pass,
+      dateRange: dateRange,
+    );
   }
 }

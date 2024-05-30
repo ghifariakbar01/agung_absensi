@@ -1,3 +1,4 @@
+import 'package:face_net_authentication/infrastructures/exceptions.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../shared/providers.dart';
@@ -30,7 +31,6 @@ class CreateIzinNotifier extends _$CreateIzinNotifier {
   Future<void> submitIzin({
     required int idUser,
     required int idMstIzin,
-    required int totalHari,
     required String ket,
     required String cUser,
     required String tglAwal,
@@ -50,7 +50,6 @@ class CreateIzinNotifier extends _$CreateIzinNotifier {
           pass: pass,
           idUser: idUser,
           idMstIzin: idMstIzin,
-          totalHari: totalHari,
           ket: ket,
           cUser: cUser,
           tglEnd: tglAkhir,
@@ -68,7 +67,6 @@ class CreateIzinNotifier extends _$CreateIzinNotifier {
     required int idUser,
     required int idMstIzin,
     required String ket,
-    required String uUser,
     required String tglAwal,
     required String tglAkhir,
     required String noteSpv,
@@ -97,7 +95,7 @@ class CreateIzinNotifier extends _$CreateIzinNotifier {
       state = const AsyncValue.data('Sukses Update');
     } catch (e) {
       state = const AsyncValue.data('');
-      await onError('Error $e');
+      if (e is RestApiExceptionWithMessage) await onError('Error ${e.message}');
     }
   }
 

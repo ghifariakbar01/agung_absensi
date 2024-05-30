@@ -50,8 +50,8 @@ class EditSakitPage extends HookConsumerWidget {
     final tglStart = useState(item.tglStart);
     final tglEnd = useState(item.tglEnd);
 
-    final spvTextController = useTextEditingController();
-    final hrdTextController = useTextEditingController();
+    final spvTextController = useTextEditingController(text: item.spvNote);
+    final hrdTextController = useTextEditingController(text: item.hrdNote);
 
     ref.listen<AsyncValue>(userHelperNotifierProvider, (_, state) async {
       return state.showAlertDialogOnError(context, ref);
@@ -228,14 +228,54 @@ class EditSakitPage extends HookConsumerWidget {
                     SizedBox(
                       height: 16,
                     ),
-
-                    // DIAGNOSA
                     TextFormField(
-                        maxLines: 5,
+                        maxLines: 2,
                         controller: diagnosaTextController,
                         cursorColor: Palette.primaryColor,
                         decoration: Themes.formStyleBordered(
                           'Diagnosa',
+                        ),
+                        style: Themes.customColor(
+                          14,
+                        ),
+                        validator: (item) {
+                          if (item == null) {
+                            return 'Form tidak boleh kosong';
+                          } else if (item.isEmpty) {
+                            return 'Form tidak boleh kosong';
+                          }
+
+                          return null;
+                        }),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    TextFormField(
+                        controller: spvTextController,
+                        cursorColor: Palette.primaryColor,
+                        decoration: Themes.formStyleBordered(
+                          'Note SPV',
+                        ),
+                        style: Themes.customColor(
+                          14,
+                        ),
+                        validator: (item) {
+                          if (item == null) {
+                            return 'Form tidak boleh kosong';
+                          } else if (item.isEmpty) {
+                            return 'Form tidak boleh kosong';
+                          }
+
+                          return null;
+                        }),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    TextFormField(
+                        controller: hrdTextController,
+                        cursorColor: Palette.primaryColor,
+                        decoration: Themes.formStyleBordered(
+                          'Note HRD',
                         ),
                         style: Themes.customColor(
                           14,
@@ -262,8 +302,9 @@ class EditSakitPage extends HookConsumerWidget {
                             : 'Update Form Sakit',
                         onPressed: () async {
                           final String suratDokterText =
-                              suratDokterTextController.value.toLowerCase() ==
-                                      'dengan surat dokter'
+                              suratDokterTextController.value
+                                      .toLowerCase()
+                                      .contains('dengan surat')
                                   ? 'DS'
                                   : 'TS';
 
@@ -282,6 +323,8 @@ class EditSakitPage extends HookConsumerWidget {
                                   surat: suratDokterText,
                                   tglEnd: tglEnd.value!,
                                   tglStart: tglStart.value!,
+                                  noteHrd: hrdTextController.text,
+                                  noteSpv: spvTextController.text,
                                   onError: (msg) =>
                                       DialogHelper.showCustomDialog(
                                         msg,

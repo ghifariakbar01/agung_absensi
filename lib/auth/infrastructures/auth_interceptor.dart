@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:face_net_authentication/infrastructures/dio_extensions.dart';
+
 import 'package:face_net_authentication/shared/providers.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -30,10 +30,11 @@ class AuthInterceptor extends Interceptor {
   }
 
   @override
-  void onError(DioError err, ErrorInterceptorHandler handler) {
-    super.onError(err, handler);
+  void onError(DioException e, ErrorInterceptorHandler handler) {
+    super.onError(e, handler);
 
-    if (err.isNoConnectionError || err.isConnectionTimeout) {
+    if (e.type == DioExceptionType.connectionError ||
+        e.type == DioExceptionType.connectionTimeout) {
       _ref.read(absenOfflineModeProvider.notifier).state = true;
     }
   }

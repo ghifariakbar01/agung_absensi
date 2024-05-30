@@ -254,7 +254,7 @@ class CreateDtPcPage extends HookConsumerWidget {
 
                       // DIAGNOSA
                       TextFormField(
-                          maxLines: 5,
+                          maxLines: 2,
                           controller: keteranganTextController,
                           cursorColor: Palette.primaryColor,
                           decoration: Themes.formStyleBordered(
@@ -286,18 +286,23 @@ class CreateDtPcPage extends HookConsumerWidget {
                                     ? 'Apply Datang Telat'
                                     : 'Apply Pulang Cepat',
                             onPressed: () async {
-                              log(' VARIABLES : \n  Nama : ${namaTextController.value.text} ');
-                              log(' Payroll: ${ptTextController.value.text} \n ');
-                              log(' Keterangan: ${keteranganTextController.value.text} \n ');
-                              log(' Kategori DT / PC: ${kategoriTextController.value} \n ');
-                              log(' DT Tanggal: ${dtTglTextController.value} \n ');
-                              log(' Jam: ${jamTextController.value} \n ');
-
                               final user = ref.read(userNotifierProvider).user;
                               final kategori =
                                   kategoriTextController.value == 'Datang Telat'
                                       ? 'DT'
                                       : 'PC';
+
+                              final _dtTgl = dtTglTextController.value
+                                  .replaceAll('00:00:00', '');
+                              final _jam = jamTextController.value.substring(
+                                  0, jamTextController.value.length - 3);
+
+                              log(' VARIABLES : \n  Nama : ${namaTextController.value.text} ');
+                              log(' Payroll: ${ptTextController.value.text} \n ');
+                              log(' Keterangan: ${keteranganTextController.value.text} \n ');
+                              log(' Kategori DT / PC: ${kategoriTextController.value} \n ');
+                              log(' DT Tanggal: ${_dtTgl} \n ');
+                              log(' Jam: ${_jam} \n ');
 
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();
@@ -305,14 +310,15 @@ class CreateDtPcPage extends HookConsumerWidget {
                                     .read(createDtPcNotifierProvider.notifier)
                                     .submitDtPc(
                                         idUser: user.idUser!,
-                                        cUser: user.nama!,
-                                        dtTgl: dtTglTextController.value,
-                                        jam: jamTextController.value,
+                                        dtTgl: _dtTgl,
+                                        jam: _jam,
                                         kategori: kategori,
                                         ket: keteranganTextController.text,
                                         onError: (msg) =>
                                             DialogHelper.showCustomDialog(
-                                                msg, context));
+                                              msg,
+                                              context,
+                                            ));
                               }
                             }),
                       )

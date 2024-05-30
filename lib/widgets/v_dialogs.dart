@@ -357,7 +357,7 @@ class VFailedDialog extends StatelessWidget {
                 color: Colors.white,
               ),
               SizedBox(
-                height: 2,
+                height: 16,
               ),
               Text(
                 message ?? 'Anda tidak memiliki akses untuk Approval',

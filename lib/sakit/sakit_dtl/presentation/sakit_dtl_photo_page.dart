@@ -12,7 +12,7 @@ class SakitDtlPhotoPage extends StatelessWidget {
       appBar: AppBar(),
       body: InAppWebView(
         onWebViewCreated: (_) {},
-        initialUrlRequest: URLRequest(url: Uri.parse(imageUrl)),
+        initialUrlRequest: URLRequest(url: WebUri.uri(Uri.parse(imageUrl))),
         onLoadStop: (controller, url) async {
           String html = await controller.evaluateJavascript(
               source:

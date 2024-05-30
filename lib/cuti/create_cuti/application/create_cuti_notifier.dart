@@ -96,6 +96,8 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
     required String keterangan,
     required String jenisCuti,
     required String alasanCuti,
+    required String hrdNote,
+    required String spvNote,
     required Future<void> Function(String errMessage) onError,
   }) async {
     state = const AsyncLoading();
@@ -116,6 +118,8 @@ class CreateCutiNotifier extends _$CreateCutiNotifier {
             alasan: alasanCuti,
             jenisCuti: jenisCuti,
             tglEnd: _tglEnd,
+            spvNote: spvNote,
+            hrdNote: hrdNote,
             tglStart: _tglStart,
           );
 

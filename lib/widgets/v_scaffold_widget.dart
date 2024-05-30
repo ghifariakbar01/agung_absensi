@@ -100,7 +100,6 @@ class VScaffoldTabLayout extends HookWidget {
     required this.scaffoldFAB,
     required this.currPT,
     required this.initialDateRange,
-    required this.isActionsVisible,
     this.bottomLeftWidget,
     this.isSearching,
     this.searchFocus,
@@ -111,7 +110,7 @@ class VScaffoldTabLayout extends HookWidget {
   });
 
   final int? length;
-  final bool isActionsVisible;
+
   final Color? appbarColor;
   final String scaffoldTitle;
   final List<String> currPT;
@@ -256,57 +255,56 @@ class VScaffoldTabLayout extends HookWidget {
                 /*
                   Dropdown bar
                 */
-                if (isActionsVisible) ...[
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SizedBox(
-                      width: 100,
-                      height: 50,
-                      child: DropdownButtonFormField<List<String>>(
-                        elevation: 0,
-                        iconSize: 20,
-                        padding: EdgeInsets.all(0),
-                        icon: Icon(Icons.keyboard_arrow_down_rounded,
-                            color: Palette.primaryTextColor),
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Form tidak boleh kosong';
-                          }
 
-                          return null;
-                        },
-                        decoration: Themes.dropdown(),
-                        style: Themes.customColor(12, color: Colors.white),
-                        value: _mapPTValues.toList().firstWhere(
-                              (element) => _equal(element, _currPt.value),
-                              orElse: () => _mapPTValues.toList().first,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SizedBox(
+                    width: 100,
+                    height: 50,
+                    child: DropdownButtonFormField<List<String>>(
+                      elevation: 0,
+                      iconSize: 20,
+                      padding: EdgeInsets.all(0),
+                      icon: Icon(Icons.keyboard_arrow_down_rounded,
+                          color: Palette.primaryTextColor),
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Form tidak boleh kosong';
+                        }
+
+                        return null;
+                      },
+                      decoration: Themes.dropdown(),
+                      style: Themes.customColor(12, color: Colors.white),
+                      value: _mapPTValues.toList().firstWhere(
+                            (element) => _equal(element, _currPt.value),
+                            orElse: () => _mapPTValues.toList().first,
+                          ),
+                      onChanged: (List<String>? value) {
+                        if (value != null) {
+                          _currPt.value = value;
+                          onDropdownChanged(value);
+                        }
+                      },
+                      isExpanded: true,
+                      items: _mapPTValues.map<DropdownMenuItem<List<String>>>(
+                          (List<String> value) {
+                        return DropdownMenuItem<List<String>>(
+                          value: value,
+                          child: Container(
+                            child: Text(
+                              "${value.map((e) => e
+                                ..replaceAll('[', '(')
+                                ..replaceAll(']', ')'))..toList()}",
+                              style:
+                                  Themes.customColor(14, color: Palette.orange),
                             ),
-                        onChanged: (List<String>? value) {
-                          if (value != null) {
-                            _currPt.value = value;
-                            onDropdownChanged(value);
-                          }
-                        },
-                        isExpanded: true,
-                        items: _mapPTValues.map<DropdownMenuItem<List<String>>>(
-                            (List<String> value) {
-                          return DropdownMenuItem<List<String>>(
-                            value: value,
-                            child: Container(
-                              child: Text(
-                                "${value.map((e) => e
-                                  ..replaceAll('[', '(')
-                                  ..replaceAll(']', ')'))..toList()}",
-                                style: Themes.customColor(14,
-                                    color: Palette.orange),
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                      ),
+                          ),
+                        );
+                      }).toList(),
                     ),
                   ),
-                ],
+                ),
 
                 /*
                   Filter Icon

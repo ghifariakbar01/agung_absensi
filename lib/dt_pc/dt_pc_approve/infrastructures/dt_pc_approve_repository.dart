@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 
+import '../../../constants/constants.dart';
 import 'dt_pc_approve_remote_service.dart.dart';
 
 class DtPcApproveRepository {
@@ -7,40 +8,35 @@ class DtPcApproveRepository {
 
   final DtPcApproveRemoteService _remoteService;
 
-  Future<Unit> approveSpv({required int idDt, required String nama}) {
-    return _remoteService.approveSpv(
-      idDt: idDt,
-      nama: nama,
-    );
-  }
-
-  Future<Unit> unApproveSpv({required int idDt, required String nama}) {
-    return _remoteService.unApproveSpv(
-      idDt: idDt,
-      nama: nama,
-    );
-  }
-
-  Future<Unit> approveHrd({
+  Future<Unit> approve({
     required int idDt,
-    required String namaHrd,
+    required String username,
+    required String pass,
+    required String jenisApp,
     required String note,
-  }) {
-    return _remoteService.approveHrd(namaHrd: namaHrd, note: note, idDt: idDt);
-  }
-
-  Future<Unit> unApproveHrd({
-    required int idDt,
-    required String nama,
-    required String note,
-  }) {
-    return _remoteService.unApproveHrd(nama: nama, idDt: idDt, note: note);
+    required int tahun,
+    String? server = Constants.isDev ? 'testing' : 'live',
+  }) async {
+    return _remoteService.approve(
+      idDt: idDt,
+      username: username,
+      pass: pass,
+      jenisApp: jenisApp,
+      note: note,
+      tahun: tahun,
+      server: server,
+    );
   }
 
   Future<Unit> batal({
     required int idDt,
-    required String nama,
-  }) {
-    return _remoteService.batal(nama: nama, idDt: idDt);
+    required String username,
+    required String pass,
+  }) async {
+    return _remoteService.batal(
+      idDt: idDt,
+      username: username,
+      pass: pass,
+    );
   }
 }

@@ -30,9 +30,9 @@ class CreateIzinPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final nama = ref.watch(userNotifierProvider);
-    final namaTextController = useTextEditingController(text: nama.user.nama);
-    final ptTextController = useTextEditingController(text: nama.user.payroll);
+    final user = ref.watch(userNotifierProvider).user;
+    final namaTextController = useTextEditingController(text: user.nama);
+    final ptTextController = useTextEditingController(text: user.payroll);
 
     final keteranganTextController = useTextEditingController();
     final jenisIzinTextController = useState(1);
@@ -147,43 +147,47 @@ class CreateIzinPage extends HookConsumerWidget {
                       // JENIS IZIN
                       VAsyncValueWidget<List<JenisIzin>>(
                         value: jenisIzin,
-                        data: (item) => DropdownButtonFormField<JenisIzin>(
-                          elevation: 0,
-                          iconSize: 20,
-                          padding: EdgeInsets.all(0),
-                          icon: Icon(Icons.keyboard_arrow_down_rounded,
-                              color: Palette.primaryColor),
-                          decoration: Themes.formStyleBordered(
-                            'Jenis Izin',
-                          ),
-                          validator: (value) {
-                            if (value == null) {
-                              return 'Form tidak boleh kosong';
-                            }
+                        data: (item) => SizedBox(
+                          height: 50,
+                          child: DropdownButtonFormField<JenisIzin>(
+                            elevation: 0,
+                            iconSize: 20,
+                            padding: EdgeInsets.all(0),
+                            icon: Icon(Icons.keyboard_arrow_down_rounded,
+                                color: Palette.primaryColor),
+                            decoration: Themes.formStyleBordered(
+                              'Jenis Izin',
+                            ),
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Form tidak boleh kosong';
+                              }
 
-                            if (value.nama!.isEmpty) {
-                              return 'Form tidak boleh kosong';
-                            }
-                            return null;
-                          },
-                          onChanged: (JenisIzin? value) {
-                            if (value != null) {
-                              jenisIzinTextController.value = value.idMstIzin!;
-                            }
-                          },
-                          isExpanded: true,
-                          items: item.map<DropdownMenuItem<JenisIzin>>(
-                              (JenisIzin value) {
-                            return DropdownMenuItem<JenisIzin>(
-                              value: value,
-                              child: Text(
-                                value.nama ?? "",
-                                style: Themes.customColor(
-                                  14,
+                              if (value.nama!.isEmpty) {
+                                return 'Form tidak boleh kosong';
+                              }
+                              return null;
+                            },
+                            onChanged: (JenisIzin? value) {
+                              if (value != null) {
+                                jenisIzinTextController.value =
+                                    value.idMstIzin!;
+                              }
+                            },
+                            isExpanded: true,
+                            items: item.map<DropdownMenuItem<JenisIzin>>(
+                                (JenisIzin value) {
+                              return DropdownMenuItem<JenisIzin>(
+                                value: value,
+                                child: Text(
+                                  value.nama ?? "",
+                                  style: Themes.customColor(
+                                    14,
+                                  ),
                                 ),
-                              ),
-                            );
-                          }).toList(),
+                              );
+                            }).toList(),
+                          ),
                         ),
                       ),
 
@@ -196,7 +200,6 @@ class CreateIzinPage extends HookConsumerWidget {
                         child: InkWell(
                           onTap: () async {
                             final _threeMonth = Duration(days: 120);
-                            final _threeDays = Duration(days: 3);
 
                             final picked = await showDateRangePicker(
                               context: context,
@@ -258,7 +261,7 @@ class CreateIzinPage extends HookConsumerWidget {
 
                       // DIAGNOSA
                       TextFormField(
-                          maxLines: 5,
+                          maxLines: 2,
                           controller: keteranganTextController,
                           cursorColor: Palette.primaryColor,
                           decoration: Themes.formStyleBordered(
@@ -294,12 +297,6 @@ class CreateIzinPage extends HookConsumerWidget {
                               log(' Tgl Awal: ${tglAwalTextController.value} Tgl Akhir: ${tglAkhirTextController.value} \n ');
                               log(' SPV Note : ${spvTextController.value.text} HRD Note : ${hrdTextController.value.text} \n  ');
 
-                              final totalHari =
-                                  DateTime.parse(tglAkhirTextController.value)
-                                      .difference(DateTime.parse(
-                                          tglAwalTextController.value))
-                                      .inDays;
-                              log(' Date Diff: $totalHari');
                               final user = ref.read(userNotifierProvider).user;
 
                               if (_formKey.currentState!.validate()) {
@@ -309,12 +306,10 @@ class CreateIzinPage extends HookConsumerWidget {
                                     .submitIzin(
                                         idUser: user.idUser!,
                                         cUser: user.nama!,
-                                        // CHANGE ID USER
                                         tglAwal: tglAwalTextController.value,
                                         tglAkhir: tglAkhirTextController.value,
                                         keterangan:
                                             keteranganTextController.text,
-                                        totalHari: totalHari,
                                         ket: keteranganTextController.text,
                                         idMstIzin:
                                             jenisIzinTextController.value,

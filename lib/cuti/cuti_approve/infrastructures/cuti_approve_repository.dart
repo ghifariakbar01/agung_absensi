@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 
+import '../../../constants/constants.dart';
 import 'cuti_approve_remote_service.dart.dart';
 
 class CutiApproveRepository {
@@ -14,7 +15,7 @@ class CutiApproveRepository {
     required String jenisApp,
     required String note,
     required int tahun,
-    String? server = 'testing',
+    String? server = Constants.isDev ? 'testing' : 'live',
   }) async {
     return _remoteService.approve(
       idCuti: idCuti,

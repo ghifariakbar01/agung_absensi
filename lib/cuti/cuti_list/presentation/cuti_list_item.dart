@@ -94,7 +94,7 @@ class CutiListItem extends HookConsumerWidget {
                       SizedBox(
                         width: 4,
                       ),
-                      if (item.isBtl!)
+                      if (false)
                         TappableSvg(
                             assetPath: Assets.iconBatal,
                             onTap: () async {

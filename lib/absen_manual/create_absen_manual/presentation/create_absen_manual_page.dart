@@ -402,7 +402,7 @@ class CreateAbsenManualPage extends HookConsumerWidget {
 
                       //
                       TextFormField(
-                          maxLines: 5,
+                          maxLines: 2,
                           controller: keteranganTextController,
                           cursorColor: Palette.primaryColor,
                           decoration: Themes.formStyleBordered(

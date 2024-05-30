@@ -277,7 +277,7 @@ class CreateGantiHariPage extends HookConsumerWidget {
 
                       //
                       TextFormField(
-                        maxLines: 5,
+                        maxLines: 2,
                         controller: keteranganTextController,
                         cursorColor: Palette.primaryColor,
                         decoration: Themes.formStyleBordered(
@@ -315,15 +315,11 @@ class CreateGantiHariPage extends HookConsumerWidget {
                               log(' Tgl Off: $tglOffClean \n ');
                               log(' Tgl Ganti: $tglGantiClean \n ');
 
-                              final user = ref.read(userNotifierProvider).user;
-
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();
                                 await ref
                                     .read(createGantiHariProvider.notifier)
                                     .submitGantiHari(
-                                      idUser: user.idUser!,
-                                      cUser: user.nama!,
                                       tglOff: tglOffClean,
                                       tglGanti: tglGantiClean,
                                       ket: keteranganTextController.text,
@@ -331,7 +327,9 @@ class CreateGantiHariPage extends HookConsumerWidget {
                                           idAbsenGantiHariTextController.text),
                                       onError: (msg) =>
                                           DialogHelper.showCustomDialog(
-                                              msg, context),
+                                        msg,
+                                        context,
+                                      ),
                                     );
                               }
                             }),

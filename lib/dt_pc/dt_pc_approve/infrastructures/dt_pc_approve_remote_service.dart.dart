@@ -1,199 +1,53 @@
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:face_net_authentication/infrastructures/dio_extensions.dart';
 
+import '../../../constants/constants.dart';
 import '../../../infrastructures/exceptions.dart';
 
 class DtPcApproveRemoteService {
   DtPcApproveRemoteService(
     this._dio,
-    this._dioRequest,
   );
 
   final Dio _dio;
-  final Map<String, String> _dioRequest;
 
-  static const String dbName = 'hr_trs_dt';
-
-  //
-
-  Future<Unit> approveSpv({required int idDt, required String nama}) async {
-    try {
-      final Map<String, String> updateSakit = {
-        "command": "UPDATE $dbName SET "
-                " spv_nm = '$nama', " +
-            " spv_sta = 1, " +
-            " spv_tgl = getdate() " +
-            " WHERE id_dt = $idDt ",
-        "mode": "UPDATE"
-      };
-
-      final data = _dioRequest;
-      data.addAll(updateSakit);
-
-      final response = await _dio.post('',
-          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
-
-      log('data ${jsonEncode(data)}');
-      log('response $response');
-      final items = response.data?[0];
-
-      if (items['status'] == 'Success') {
-        return unit;
-      } else {
-        final message = items['error'] as String?;
-        final errorCode = items['errornum'] as int;
-
-        throw RestApiExceptionWithMessage(errorCode, message);
-      }
-    } on FormatException catch (e) {
-      throw FormatException(e.message);
-    } on DioError catch (e) {
-      if (e.isNoConnectionError || e.isConnectionTimeout) {
-        throw NoConnectionException();
-      } else if (e.response != null) {
-        throw RestApiException(e.response?.statusCode);
-      } else {
-        rethrow;
-      }
-    }
-  }
-
-  Future<Unit> approveHrd({
+  Future<Unit> approve({
     required int idDt,
+    required String username,
+    required String pass,
+    required String jenisApp,
     required String note,
-    required String namaHrd,
+    required int tahun,
+    String? server = Constants.isDev ? 'testing' : 'live',
   }) async {
     try {
-      final Map<String, String> updateSakit = {
-        "command": "UPDATE $dbName SET "
-                " hrd_nm = '$namaHrd', " +
-            " hrd_sta = 1, " +
-            " hrd_tgl = getdate(), " +
-            " hrd_note = '$note' " +
-            " WHERE id_dt = $idDt ",
-        "mode": "UPDATE"
-      };
+      final response = await _dio.post(
+        '/service_dt.asmx/approveDt',
+        options: Options(contentType: 'text/plain', headers: {
+          'id_dt': idDt,
+          'username': username,
+          'pass': pass,
+          'server': server,
+          'jenis_app': jenisApp,
+          'note': note,
+        }),
+      );
 
-      final data = _dioRequest;
-      data.addAll(updateSakit);
+      final items = response.data;
 
-      final response = await _dio.post('',
-          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
-
-      log('data ${jsonEncode(data)}');
-      log('response $response');
-      final items = response.data?[0];
-
-      if (items['status'] == 'Success') {
+      if (items['status_code'] == 200) {
         return unit;
       } else {
-        final message = items['error'] as String?;
-        final errorCode = items['errornum'] as int;
+        final message = items['message'] as String?;
+        final errorCode = items['status_code'] as int;
 
         throw RestApiExceptionWithMessage(errorCode, message);
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);
-    } on DioError catch (e) {
-      if (e.isNoConnectionError || e.isConnectionTimeout) {
-        throw NoConnectionException();
-      } else if (e.response != null) {
-        throw RestApiException(e.response?.statusCode);
-      } else {
-        rethrow;
-      }
-    }
-  }
-
-  Future<Unit> unApproveSpv({
-    required int idDt,
-    required String nama,
-  }) async {
-    // 1. UPDATE SAKIT
-    try {
-      final Map<String, String> updateSakit = {
-        "command": "UPDATE $dbName SET "
-                " spv_nm = '$nama', " +
-            " spv_sta = 0, " +
-            " spv_tgl = getdate() " +
-            " WHERE id_dt = $idDt ",
-        "mode": "UPDATE"
-      };
-
-      final data = _dioRequest;
-      data.addAll(updateSakit);
-
-      final response = await _dio.post('',
-          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
-
-      log('data ${jsonEncode(data)}');
-      log('response $response');
-      final items = response.data?[0];
-
-      if (items['status'] == 'Success') {
-        return unit;
-      } else {
-        final message = items['error'] as String?;
-        final errorCode = items['errornum'] as int;
-
-        throw RestApiExceptionWithMessage(errorCode, message);
-      }
-    } on FormatException catch (e) {
-      throw FormatException(e.message);
-    } on DioError catch (e) {
-      if (e.isNoConnectionError || e.isConnectionTimeout) {
-        throw NoConnectionException();
-      } else if (e.response != null) {
-        throw RestApiException(e.response?.statusCode);
-      } else {
-        rethrow;
-      }
-    }
-  }
-
-  Future<Unit> unApproveHrd({
-    required int idDt,
-    required String nama,
-    required String note,
-  }) async {
-    // 1. UPDATE SAKIT
-    try {
-      final Map<String, String> updateSakit = {
-        "command": "UPDATE $dbName SET "
-                " hrd_nm = '$nama', " +
-            " hrd_sta = 0, " +
-            " hrd_note = '$note', " +
-            " hrd_tgl = getdate() " +
-            " WHERE id_dt = $idDt ",
-        "mode": "UPDATE"
-      };
-
-      final data = _dioRequest;
-      data.addAll(updateSakit);
-
-      final response = await _dio.post('',
-          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
-
-      log('data ${jsonEncode(data)}');
-      log('response $response');
-      final items = response.data?[0];
-
-      if (items['status'] == 'Success') {
-        return unit;
-      } else {
-        final message = items['error'] as String?;
-        final errorCode = items['errornum'] as int;
-
-        throw RestApiExceptionWithMessage(errorCode, message);
-      }
-    } on FormatException catch (e) {
-      throw FormatException(e.message);
-    } on DioError catch (e) {
-      if (e.isNoConnectionError || e.isConnectionTimeout) {
+    } on DioException catch (e) {
+      if ((e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout)) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);
@@ -205,41 +59,34 @@ class DtPcApproveRemoteService {
 
   Future<Unit> batal({
     required int idDt,
-    required String nama,
+    required String username,
+    required String pass,
   }) async {
-    // 1. UPDATE SAKIT
     try {
-      final Map<String, String> updateSakit = {
-        "command": "UPDATE $dbName SET "
-                " btl_nm = '$nama', " +
-            " btl_sta = 1, " +
-            " btl_tgl = getdate() " +
-            " WHERE id_dt = $idDt ",
-        "mode": "UPDATE"
-      };
+      final response = await _dio.post(
+        '/service_dt.asmx/batalDt',
+        options: Options(contentType: 'text/plain', headers: {
+          'id_dt': idDt,
+          'username': username,
+          'pass': pass,
+        }),
+      );
 
-      final data = _dioRequest;
-      data.addAll(updateSakit);
+      final items = response.data;
 
-      final response = await _dio.post('',
-          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
-
-      log('data ${jsonEncode(data)}');
-      log('response $response');
-      final items = response.data?[0];
-
-      if (items['status'] == 'Success') {
+      if (items['status_code'] == 200) {
         return unit;
       } else {
-        final message = items['error'] as String?;
-        final errorCode = items['errornum'] as int;
+        final message = items['message'] as String?;
+        final errorCode = items['status_code'] as int;
 
         throw RestApiExceptionWithMessage(errorCode, message);
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);
-    } on DioError catch (e) {
-      if (e.isNoConnectionError || e.isConnectionTimeout) {
+    } on DioException catch (e) {
+      if ((e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout)) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);

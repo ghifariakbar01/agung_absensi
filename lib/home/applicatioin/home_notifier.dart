@@ -51,19 +51,19 @@ class HomeNotifier extends StateNotifier<HomeState> {
     final nama = ref.read(userNotifierProvider).user.nama;
     final isMe = nama == 'Ghifar';
 
-    if (!isAbsenRoute) {
-      if (!isMe && waRegister == WaRegister.initial()) {
-        return showDialog(
-          context: context,
-          builder: (context) => VSimpleDialog(
-            asset: Assets.iconWa,
-            label: 'Nomor Wa Belum Terdaftar',
-            labelDescription:
-                'Mohon lakukan registrasi nomor Wa terlebih dahulu, agar bisa menerima notifikasi pesan Wa. Terimakasih 🙏',
-          ),
-        );
-      }
-    }
+    // if (!isAbsenRoute) {
+    //   if (!isMe && waRegister == WaRegister.initial()) {
+    //     return showDialog(
+    //       context: context,
+    //       builder: (context) => VSimpleDialog(
+    //         asset: Assets.iconWa,
+    //         label: 'Nomor Wa Belum Terdaftar',
+    //         labelDescription:
+    //             'Mohon lakukan registrasi nomor Wa terlebih dahulu, agar bisa menerima notifikasi pesan Wa. Terimakasih 🙏',
+    //       ),
+    //     );
+    //   }
+    // }
 
     if (isAbsenRoute || isSlipGajiRoute) {
       await _uncross(ref);

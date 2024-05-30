@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 
+import '../../../constants/constants.dart';
 import 'create_izin_remote_service.dart';
 
 class CreateIzinRepository {
@@ -12,19 +13,17 @@ class CreateIzinRepository {
     required String pass,
     required int idUser,
     required int idMstIzin,
-    required int totalHari,
     required String ket,
     required String cUser,
     required String tglEnd,
     required String tglStart,
-    String? server = 'testing',
+    String? server = Constants.isDev ? 'testing' : 'live',
   }) async {
     return _remoteService.submitIzin(
       username: username,
       pass: pass,
       idUser: idUser,
       idMstIzin: idMstIzin,
-      totalHari: totalHari,
       ket: ket,
       cUser: cUser,
       tglEnd: tglEnd,
@@ -43,7 +42,7 @@ class CreateIzinRepository {
     required String tglStart,
     required String noteSpv,
     required String noteHrd,
-    String? server = 'testing',
+    String? server = Constants.isDev ? 'testing' : 'live',
   }) async {
     return _remoteService.updateIzin(
       idIzin: idIzin,

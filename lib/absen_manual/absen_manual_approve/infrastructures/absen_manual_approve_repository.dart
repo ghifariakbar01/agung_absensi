@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 
+import '../../../constants/constants.dart';
 import 'absen_manual_approve_remote_service.dart.dart';
 
 class AbsenManualApproveRepository {
@@ -7,42 +8,33 @@ class AbsenManualApproveRepository {
 
   final AbsenManualApproveRemoteService _remoteService;
 
-  Future<Unit> approveSpv({required int idAbsenMnl, required String nama}) {
-    return _remoteService.approveSpv(
-      idAbsenMnl: idAbsenMnl,
-      nama: nama,
-    );
-  }
-
-  Future<Unit> unApproveSpv({required int idAbsenMnl, required String nama}) {
-    return _remoteService.unApproveSpv(
-      idAbsenMnl: idAbsenMnl,
-      nama: nama,
-    );
-  }
-
-  Future<Unit> approveHrd({
+  Future<Unit> approve({
     required int idAbsenMnl,
-    required String namaHrd,
+    required String username,
+    required String pass,
+    required String jenisApp,
     required String note,
-  }) {
-    return _remoteService.approveHrd(
-        namaHrd: namaHrd, note: note, idAbsenMnl: idAbsenMnl);
-  }
-
-  Future<Unit> unApproveHrd({
-    required int idAbsenMnl,
-    required String nama,
-    required String note,
-  }) {
-    return _remoteService.unApproveHrd(
-        nama: nama, idAbsenMnl: idAbsenMnl, note: note);
+    String? server = Constants.isDev ? 'testing' : 'live',
+  }) async {
+    return _remoteService.approve(
+      idAbsenMnl: idAbsenMnl,
+      username: username,
+      pass: pass,
+      jenisApp: jenisApp,
+      note: note,
+      server: server,
+    );
   }
 
   Future<Unit> batal({
     required int idAbsenMnl,
-    required String nama,
-  }) {
-    return _remoteService.batal(nama: nama, idAbsenMnl: idAbsenMnl);
+    required String username,
+    required String pass,
+  }) async {
+    return _remoteService.batal(
+      idAbsenMnl: idAbsenMnl,
+      username: username,
+      pass: pass,
+    );
   }
 }

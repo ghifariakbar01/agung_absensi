@@ -52,6 +52,9 @@ class EditCutiPage extends HookConsumerWidget {
     final jenisCuti = ref.watch(jenisCutiNotifierProvider);
     final alasanCuti = ref.watch(alasanCutiNotifierProvider);
 
+    final spvTextController = useTextEditingController(text: item.spvNote);
+    final hrdTextController = useTextEditingController(text: item.hrdNote);
+
     final _formKey = useMemoized(GlobalKey<FormState>.new, const []);
 
     ref.listen<AsyncValue>(createCutiNotifierProvider, (_, state) async {
@@ -282,6 +285,36 @@ class EditCutiPage extends HookConsumerWidget {
                       SizedBox(
                         height: 16,
                       ),
+                      TextFormField(
+                        controller: spvTextController,
+                        cursorColor: Palette.primaryColor,
+                        decoration: Themes.formStyleBordered(
+                          'Note SPV',
+                        ),
+                        style: Themes.customColor(
+                          14,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+
+                      SizedBox(
+                        height: 16,
+                      ),
+                      TextFormField(
+                        controller: hrdTextController,
+                        cursorColor: Palette.primaryColor,
+                        decoration: Themes.formStyleBordered(
+                          'Note HRD',
+                        ),
+                        style: Themes.customColor(
+                          14,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+
+                      SizedBox(
+                        height: 16,
+                      ),
 
                       Container(
                         height: 58,
@@ -308,6 +341,8 @@ class EditCutiPage extends HookConsumerWidget {
                                       idCuti: item.idCuti!,
                                       tglStart: tglStart.value,
                                       tglEnd: tglEnd.value,
+                                      spvNote: spvTextController.text,
+                                      hrdNote: hrdTextController.text,
                                       keterangan:
                                           keteranganCutiTextController.text,
                                       jenisCuti: jenisCutiTextController.value,

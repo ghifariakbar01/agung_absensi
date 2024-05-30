@@ -3,8 +3,8 @@ import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:face_net_authentication/infrastructures/dio_extensions.dart';
 
+import '../../../constants/constants.dart';
 import '../../../infrastructures/exceptions.dart';
 import '../application/jenis_tugas_dinas.dart';
 import '../application/user_list.dart';
@@ -12,10 +12,12 @@ import '../application/user_list.dart';
 class CreateTugasDinasRemoteService {
   CreateTugasDinasRemoteService(
     this._dio,
+    this._dioHosting,
     this._dioRequest,
   );
 
   final Dio _dio;
+  final Dio _dioHosting;
   final Map<String, String> _dioRequest;
 
   static const String dbName = 'hr_trs_dinas';
@@ -33,72 +35,59 @@ class CreateTugasDinasRemoteService {
     required String kategori,
     required String perusahaan,
     required String lokasi,
-    required String cUser,
-    required bool khusus,
+    required String username,
+    required String pass,
+    required bool jenis,
+    String? server = Constants.isDev ? 'testing' : 'live',
   }) async {
     try {
-      final Map<String, String> submitTugasDinas = {
-        "command": "INSERT INTO $dbName ("
-            "id_user, ket, tgl_start, tgl_end, jam_start, jam_end, "
-            "kategori, perusahaan, lokasi, id_comp, id_dept, id_pemberi, "
-            "spv_sta, spv_nm, spv_tgl, hrd_sta, hrd_nm, hrd_tgl, "
-            "coo_sta, coo_nm, coo_tgl, gm_sta, gm_nm, gm_tgl, jenis, "
-            "c_date, c_user, u_date, u_user) VALUES ("
-            "$idUser, "
-            "'$ket', "
-            "'$tglAwal', "
-            "'$tglAkhir', "
-            "'$jamAwal', "
-            "'$jamAkhir', "
-            "'$kategori', "
-            "'$perusahaan', "
-            "'$lokasi', "
-            "(SELECT id_comp FROM $dbMstUser WHERE id_user = $idUser), "
-            "(SELECT id_dept FROM $dbMstUser WHERE id_user = $idUser), "
-            "$idPemberi, "
-            "'0', "
-            "'', "
-            "GETDATE(), "
-            "'0', "
-            "'', "
-            "GETDATE(), "
-            "'0', "
-            "'', "
-            "GETDATE(), "
-            "'0', "
-            "'', "
-            "GETDATE(), "
-            "${khusus ? "'1'" : "'0'"}, "
-            "GETDATE(), "
-            "'$cUser', "
-            "GETDATE(), "
-            "'$cUser') ",
-        "mode": "INSERT"
-      };
+      final response = await _dio.post('/service_dinas.asmx/insertDinas',
+          options: Options(contentType: 'text/plain', headers: {
+            'username': username,
+            'pass': pass,
+            'id_user': idUser,
+            'server': server,
+            'tgl_start': tglAwal,
+            'tgl_end': tglAkhir,
+            'jam_start': jamAwal,
+            'jam_end': jamAkhir,
+            'ket': ket,
+            'kategori': kategori,
+            'perusahaan': perusahaan,
+            'lokasi': lokasi,
+            'id_pemberi': idPemberi,
+            'jenis': jenis ? 1 : 0,
+          }));
 
-      final data = _dioRequest;
-      data.addAll(submitTugasDinas);
-      log('query $submitTugasDinas');
-      // debugger();
+      log('username : ' + username);
+      log('pass : ' + pass);
+      log('id_user : ' + idUser.toString());
+      log('server : ' + server!);
+      log('tgl_start : ' + tglAwal);
+      log('tgl_end : ' + tglAkhir);
+      log('jam_start : ' + jamAwal);
+      log('jam_end : ' + jamAkhir);
+      log('ket : ' + ket);
+      log('perusahaan : ' + perusahaan);
+      log('lokasi : ' + lokasi);
+      log('id_pemberi : ' + idPemberi.toString());
+      log('jenis : ${jenis == true ? '1' : '0'}');
 
-      final response = await _dio.post('',
-          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
+      final items = response.data;
 
-      log('response $response');
-      final items = response.data?[0];
-
-      if (items['status'] == 'Success') {
+      if (items['status_code'] == 200) {
         return unit;
       } else {
-        final message = items['error'] as String?;
-        final errorCode = items['errornum'] as int;
+        final message = items['message'] as String?;
+        final errorCode = items['status_code'] as int;
 
         throw RestApiExceptionWithMessage(errorCode, message);
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);
-    } on DioError catch (e) {
-      if (e.isNoConnectionError || e.isConnectionTimeout) {
+    } on DioException catch (e) {
+      if ((e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout)) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);
@@ -109,7 +98,7 @@ class CreateTugasDinasRemoteService {
   }
 
   Future<Unit> updateTugasDinas({
-    required int id,
+    required int idDinas,
     required int idUser,
     required int idPemberi,
     required String ket,
@@ -120,54 +109,53 @@ class CreateTugasDinasRemoteService {
     required String kategori,
     required String perusahaan,
     required String lokasi,
-    required bool khusus,
-    required String uUser,
+    required String username,
+    required String pass,
+    required bool jenis,
+    String? server = Constants.isDev ? 'testing' : 'live',
   }) async {
     try {
-      // add spv / hrd note
-      final Map<String, String> submitTugasDinas = {
-        "command": " UPDATE $dbName SET "
-            "  id_user = $idUser, "
-            "  id_pemberi = $idPemberi, "
-            "  ket = '$ket', "
-            "  tgl_start = '$tglAwal', "
-            "  tgl_end = '$tglAkhir', "
-            "  jam_start = '$jamAwal', "
-            "  jam_end = '$jamAkhir', "
-            "  kategori = '$kategori', "
-            "  perusahaan = '$perusahaan', "
-            "  lokasi = '$lokasi', "
-            "  id_comp = (SELECT id_comp FROM $dbMstUser WHERE id_user = $idUser), "
-            "  id_dept = (SELECT id_dept FROM $dbMstUser WHERE id_user = $idUser), "
-            "  u_date = GETDATE(), "
-            "  jenis = ${khusus ? '1' : '0'}, "
-            "  u_user = '$uUser' "
-            "  WHERE id_dinas = $id ",
-        "mode": "UPDATE"
+      final _headers = {
+        'id_dinas': idDinas,
+        'username': username,
+        'pass': pass,
+        'id_user': idUser,
+        'server': server,
+        'tgl_start': tglAwal,
+        'tgl_end': tglAkhir,
+        'jam_start': jamAwal,
+        'jam_end': jamAkhir,
+        'ket': ket,
+        'kategori': kategori,
+        'perusahaan': perusahaan,
+        'lokasi': lokasi,
+        'id_pemberi': idPemberi,
+        'jenis': jenis ? 1 : 0,
       };
 
-      final data = _dioRequest;
-      data.addAll(submitTugasDinas);
+      final response = await _dio.post('/service_dinas.asmx/updateDinas',
+          options: Options(
+            contentType: 'text/plain',
+            headers: _headers,
+          ));
 
-      final response = await _dio.post('',
-          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
+      log('_headers $_headers');
 
-      log('data ${jsonEncode(data)}');
-      log('response $response');
-      final items = response.data?[0];
+      final items = response.data;
 
-      if (items['status'] == 'Success') {
+      if (items['status_code'] == 200) {
         return unit;
       } else {
-        final message = items['error'] as String?;
-        final errorCode = items['errornum'] as int;
+        final message = items['message'] as String?;
+        final errorCode = items['status_code'] as int;
 
         throw RestApiExceptionWithMessage(errorCode, message);
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);
-    } on DioError catch (e) {
-      if (e.isNoConnectionError || e.isConnectionTimeout) {
+    } on DioException catch (e) {
+      if ((e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout)) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);
@@ -179,23 +167,15 @@ class CreateTugasDinasRemoteService {
 
   Future<List<JenisTugasDinas>> getJenisTugasDinas() async {
     try {
-      final Map<String, String> submitTugasDinas = {
-        "command": "SELECT * FROM $dbHrMstJenisTugasDinas ",
-        "mode": "SELECT"
-      };
+      final response = await _dio.post('/service_master.asmx/getJenisDinas',
+          options: Options(contentType: 'text/plain', headers: {
+            'server': Constants.isDev ? 'testing' : 'live',
+          }));
 
-      final data = _dioRequest;
-      data.addAll(submitTugasDinas);
+      final items = response.data;
 
-      final response = await _dio.post('',
-          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
-
-      log('data ${jsonEncode(data)}');
-      log('response $response');
-      final items = response.data?[0];
-
-      if (items['status'] == 'Success') {
-        final list = items['items'] as List;
+      if (items['status_code'] == 200) {
+        final list = items['data'] as List;
 
         if (list.isNotEmpty) {
           return list
@@ -208,15 +188,16 @@ class CreateTugasDinasRemoteService {
           throw RestApiExceptionWithMessage(errorCode, message);
         }
       } else {
-        final message = items['error'] as String?;
-        final errorCode = items['errornum'] as int;
+        final message = items['message'] as String?;
+        final errorCode = items['status_code'] as int;
 
         throw RestApiExceptionWithMessage(errorCode, message);
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);
-    } on DioError catch (e) {
-      if (e.isNoConnectionError || e.isConnectionTimeout) {
+    } on DioException catch (e) {
+      if ((e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout)) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);
@@ -243,8 +224,11 @@ class CreateTugasDinasRemoteService {
       final data = _dioRequest;
       data.addAll(submitTugasDinas);
 
-      final response = await _dio.post('',
-          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
+      final response = await _dioHosting.post(
+        '',
+        data: jsonEncode(data),
+        options: Options(contentType: 'text/plain'),
+      );
 
       log('data ${jsonEncode(data)}');
       log('response $response');
@@ -268,8 +252,48 @@ class CreateTugasDinasRemoteService {
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);
-    } on DioError catch (e) {
-      if (e.isNoConnectionError || e.isConnectionTimeout) {
+    } on DioException catch (e) {
+      if ((e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout)) {
+        throw NoConnectionException();
+      } else if (e.response != null) {
+        throw RestApiException(e.response?.statusCode);
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  Future<Unit> deleteTugasDinas({
+    required int idDinas,
+    required String username,
+    required String pass,
+    String? server = Constants.isDev ? 'testing' : 'live',
+  }) async {
+    try {
+      final response = await _dio.post('/service_dinas.asmx/deleteDinas',
+          options: Options(contentType: 'text/plain', headers: {
+            'id_dinas': idDinas,
+            'username': username,
+            'pass': pass,
+            'server': server,
+          }));
+
+      final items = response.data;
+
+      if (items['status_code'] == 200) {
+        return unit;
+      } else {
+        final message = items['message'] as String?;
+        final errorCode = items['status_code'] as int;
+
+        throw RestApiExceptionWithMessage(errorCode, message);
+      }
+    } on FormatException catch (e) {
+      throw FormatException(e.message);
+    } on DioException catch (e) {
+      if ((e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout)) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);

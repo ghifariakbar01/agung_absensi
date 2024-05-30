@@ -64,8 +64,10 @@ class NetworkCallback extends _$NetworkCallback {
           ref.read(firstTimeTimerProvider.notifier).state = false;
         }
 
-        await _fetchCurrentUrlEvery(Duration(minutes: 1),
-            fetchUrl: _startFetch);
+        await _fetchCurrentUrlEvery(
+          Duration(minutes: 30),
+          fetchUrl: _startFetch,
+        );
       }
     });
   }

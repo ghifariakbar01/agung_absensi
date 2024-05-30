@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 
+import '../../../constants/constants.dart';
 import 'create_sakit_remote_service.dart';
 
 class CreateSakitRepository {
@@ -15,7 +16,7 @@ class CreateSakitRepository {
     required String tglEnd,
     required String ket,
     required String surat,
-    String? server = 'testing',
+    String? server = Constants.isDev ? 'testing' : 'live',
   }) async {
     return _remoteService.submitSakit(
       username: username,
@@ -38,7 +39,9 @@ class CreateSakitRepository {
     required String tglEnd,
     required String ket,
     required String surat,
-    String? server = 'testing',
+    required String noteSpv,
+    required String noteHrd,
+    String? server = Constants.isDev ? 'testing' : 'live',
   }) async {
     return _remoteService.updateSakit(
       idSakit: idSakit,
@@ -49,6 +52,8 @@ class CreateSakitRepository {
       tglEnd: tglEnd,
       ket: ket,
       surat: surat,
+      noteSpv: noteSpv,
+      noteHrd: noteHrd,
       server: server,
     );
   }
@@ -57,7 +62,7 @@ class CreateSakitRepository {
     required int idSakit,
     required String username,
     required String pass,
-    String? server = 'testing',
+    String? server = Constants.isDev ? 'testing' : 'live',
   }) async {
     return _remoteService.deleteSakit(
       idSakit: idSakit,

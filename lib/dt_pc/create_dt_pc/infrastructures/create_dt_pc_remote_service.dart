@@ -1,79 +1,54 @@
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:face_net_authentication/infrastructures/dio_extensions.dart';
 
+import '../../../constants/constants.dart';
 import '../../../infrastructures/exceptions.dart';
 
 class CreateDtPcRemoteService {
   CreateDtPcRemoteService(
     this._dio,
-    this._dioRequest,
   );
 
   final Dio _dio;
-  final Map<String, String> _dioRequest;
-
-  static const String dbName = 'hr_trs_dt';
 
   Future<Unit> submitDtPc({
     required int idUser,
+    required String username,
+    required String pass,
     required String ket,
     required String dtTgl,
     required String jam,
     required String kategori,
-    required String cUser,
+    String? server = Constants.isDev ? 'testing' : 'live',
   }) async {
     try {
-      final Map<String, String> submitSakit = {
-        "command": "INSERT INTO $dbName ("
-            "id_user, ket, dt_tgl, jam, periode, kategori, "
-            "spv_sta, spv_nm, spv_tgl, hrd_sta, hrd_nm, hrd_tgl, hrd_note, spv_note,  "
-            "c_date, c_user, u_date, u_user) VALUES ("
-            "$idUser, "
-            "'$ket', "
-            "'$dtTgl', "
-            "'$jam', "
-            "(DATENAME (MONTH,'$dtTgl')), "
-            "'$kategori', "
-            "'0', "
-            "'', "
-            "GETDATE(), "
-            "'0', "
-            "'', "
-            "GETDATE(), "
-            "'', "
-            "'', "
-            "GETDATE(), "
-            "'$cUser', "
-            "GETDATE(), "
-            "'$cUser') ",
-        "mode": "INSERT"
-      };
+      final response = await _dio.post('/service_dt.asmx/insertDt',
+          options: Options(contentType: 'text/plain', headers: {
+            'username': username,
+            'pass': pass,
+            'id_user': idUser,
+            'dt_tgl': dtTgl,
+            'jam': jam,
+            'ket': ket,
+            'kategori': kategori,
+            'server': Constants.isDev ? 'testing' : 'live',
+          }));
 
-      final data = _dioRequest;
-      data.addAll(submitSakit);
+      final items = response.data;
 
-      final response = await _dio.post('',
-          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
-
-      log('response $response');
-      final items = response.data?[0];
-
-      if (items['status'] == 'Success') {
+      if (items['status_code'] == 200) {
         return unit;
       } else {
-        final message = items['error'] as String?;
-        final errorCode = items['errornum'] as int;
+        final message = items['message'] as String?;
+        final errorCode = items['status_code'] as int;
 
         throw RestApiExceptionWithMessage(errorCode, message);
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);
-    } on DioError catch (e) {
-      if (e.isNoConnectionError || e.isConnectionTimeout) {
+    } on DioException catch (e) {
+      if ((e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout)) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);
@@ -86,52 +61,86 @@ class CreateDtPcRemoteService {
   Future<Unit> updateDtPc({
     required int id,
     required int idUser,
+    required String username,
+    required String pass,
     required String ket,
     required String dtTgl,
     required String jam,
     required String kategori,
-    required String uUser,
+    required String noteSpv,
+    required String noteHrd,
+    String? server = Constants.isDev ? 'testing' : 'live',
   }) async {
     try {
-      // add spv / hrd note
-      final Map<String, String> submitSakit = {
-        "command": "UPDATE $dbName SET "
-            " id_user = $idUser,  "
-            " ket = '$ket',  "
-            " dt_tgl = '$dtTgl',  "
-            " jam = '$jam',  "
-            " kategori = '$kategori',  "
-            " periode = (DATENAME (MONTH,'$dtTgl')),  "
-            " spv_note = '',  "
-            " hrd_note = '',  "
-            " u_date = getdate(), "
-            " u_user = '$uUser' "
-            " WHERE id_dt = $id ",
-        "mode": "UPDATE"
-      };
+      final response = await _dio.post('/service_dt.asmx/updateDt',
+          options: Options(contentType: 'text/plain', headers: {
+            'username': username,
+            'pass': pass,
+            'id_dt': id,
+            'id_user': idUser,
+            'dt_tgl': dtTgl,
+            'jam': jam,
+            'ket': ket,
+            'kategori': kategori,
+            'spv_note': noteSpv,
+            'hrd_note': noteHrd,
+            'server': Constants.isDev ? 'testing' : 'live',
+          }));
 
-      final data = _dioRequest;
-      data.addAll(submitSakit);
+      final items = response.data;
 
-      final response = await _dio.post('',
-          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
-
-      log('data ${jsonEncode(data)}');
-      log('response $response');
-      final items = response.data?[0];
-
-      if (items['status'] == 'Success') {
+      if (items['status_code'] == 200) {
         return unit;
       } else {
-        final message = items['error'] as String?;
-        final errorCode = items['errornum'] as int;
+        final message = items['message'] as String?;
+        final errorCode = items['status_code'] as int;
 
         throw RestApiExceptionWithMessage(errorCode, message);
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);
-    } on DioError catch (e) {
-      if (e.isNoConnectionError || e.isConnectionTimeout) {
+    } on DioException catch (e) {
+      if ((e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout)) {
+        throw NoConnectionException();
+      } else if (e.response != null) {
+        throw RestApiException(e.response?.statusCode);
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  Future<Unit> deleteDtPc({
+    required int idDt,
+    required String username,
+    required String pass,
+    String? server = Constants.isDev ? 'testing' : 'live',
+  }) async {
+    try {
+      final response = await _dio.post('/service_dt.asmx/deleteDt',
+          options: Options(contentType: 'text/plain', headers: {
+            'username': username,
+            'pass': pass,
+            'id_dt': idDt,
+            'server': Constants.isDev ? 'testing' : 'live',
+          }));
+
+      final items = response.data;
+
+      if (items['status_code'] == 200) {
+        return unit;
+      } else {
+        final message = items['message'] as String?;
+        final errorCode = items['status_code'] as int;
+
+        throw RestApiExceptionWithMessage(errorCode, message);
+      }
+    } on FormatException catch (e) {
+      throw FormatException(e.message);
+    } on DioException catch (e) {
+      if ((e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout)) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);

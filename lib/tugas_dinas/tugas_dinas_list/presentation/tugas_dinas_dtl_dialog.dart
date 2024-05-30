@@ -1,4 +1,4 @@
-import 'package:face_net_authentication/tugas_dinas/tugas_dinas_list/application/tugas_dinas_list_notifier.dart';
+import 'package:face_net_authentication/tugas_dinas/create_tugas_dinas/application/create_tugas_dinas_notifier.dart';
 import 'package:face_net_authentication/widgets/tappable_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -7,9 +7,8 @@ import 'package:intl/intl.dart';
 
 import '../../../constants/assets.dart';
 import '../../../routes/application/route_names.dart';
-import '../../../shared/providers.dart';
 import '../../../style/style.dart';
-import '../../../utils/enums.dart';
+import '../../../utils/dialog_helper.dart';
 import '../application/tugas_dinas_list.dart';
 
 class TugasDinasDtlDialog extends ConsumerWidget {
@@ -19,104 +18,6 @@ class TugasDinasDtlDialog extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // tambah coo
-    final bool isHrdApproved = item.hrdSta ?? false;
-
-    final String? fin = ref.watch(userNotifierProvider).user.fin;
-    final bool isHrd =
-        ref.watch(tugasDinasListControllerProvider.notifier).isHrdOrSpv(fin!);
-
-    final String? coo = ref.watch(userNotifierProvider).user.coo;
-    final bool isCoo =
-        ref.watch(tugasDinasListControllerProvider.notifier).isHrdOrSpv(coo!);
-
-    final bool isCurrentUser =
-        ref.watch(userNotifierProvider).user.idUser == item.idUser;
-
-    final bool isSpvApproved = item.spvSta ?? false;
-    final bool isSpvEditable =
-        ref.watch(tugasDinasListControllerProvider.notifier).isSpvEdit();
-
-    final bool fullAkses = ref.watch(userNotifierProvider).user.fullAkses!;
-
-    _returnVisibility(ColumnCommandButtonType buttonType) {
-      bool isVisible = false;
-
-      if (isHrd) {
-        if (isCurrentUser == false) {
-          if (isSpvApproved) {
-            switch (buttonType) {
-              case ColumnCommandButtonType.Edit:
-                isVisible = true;
-                break;
-              case ColumnCommandButtonType.Delete:
-                isVisible = false;
-                break;
-            }
-          }
-        } else {
-          isVisible = true;
-        }
-      } else if (isCoo) {
-        if (isCurrentUser) {
-          isVisible = true;
-        } else {
-          switch (buttonType) {
-            case ColumnCommandButtonType.Edit:
-              isVisible = true;
-              break;
-            case ColumnCommandButtonType.Delete:
-              isVisible = false;
-              break;
-          }
-        }
-      } else if (!isCoo) {
-        if (isCurrentUser) {
-          isVisible = true;
-        }
-      }
-      //
-      else {
-        if (isCurrentUser) {
-          if (isSpvEditable && isSpvApproved) {
-            isVisible = true;
-          } else if (isSpvEditable && isSpvApproved == false) {
-            isVisible = true;
-          } else if (!isSpvEditable && isSpvApproved) {
-            isVisible = false;
-          } else {
-            switch (buttonType) {
-              case ColumnCommandButtonType.Edit:
-                isVisible = true;
-                break;
-              case ColumnCommandButtonType.Delete:
-                isVisible = false;
-                break;
-            }
-          }
-        } else {
-          switch (buttonType) {
-            case ColumnCommandButtonType.Edit:
-              isVisible = true;
-              break;
-            case ColumnCommandButtonType.Delete:
-              isVisible = false;
-              break;
-          }
-        }
-      }
-
-      if (isHrdApproved) {
-        isVisible = false;
-      }
-
-      if (fullAkses) {
-        isVisible = true;
-      }
-
-      return isVisible;
-    }
-
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.0),
@@ -126,7 +27,6 @@ class TugasDinasDtlDialog extends ConsumerWidget {
         padding: EdgeInsets.all(12),
         child: ListView(
           children: [
-            // 1.
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -241,7 +141,7 @@ class TugasDinasDtlDialog extends ConsumerWidget {
                         SizedBox(
                           width: 90,
                           child: Text(
-                            item.pemberiFullname ?? "-",
+                            item.idPemberi.toString(),
                             style: Themes.customColor(9,
                                 color: Palette.primaryColor,
                                 fontWeight: FontWeight.w500),
@@ -367,7 +267,7 @@ class TugasDinasDtlDialog extends ConsumerWidget {
                         Text(
                           DateFormat(
                             'dd MMM yyyy',
-                          ).format(DateTime.parse(item.tglStart!)),
+                          ).format(item.tglStart!),
                           style: Themes.customColor(9,
                               color: Palette.blue, fontWeight: FontWeight.w500),
                         ),
@@ -390,7 +290,7 @@ class TugasDinasDtlDialog extends ConsumerWidget {
                         Text(
                           DateFormat(
                             'dd MMM yyyy',
-                          ).format(DateTime.parse(item.tglEnd!)),
+                          ).format(item.tglEnd!),
                           style: Themes.customColor(9,
                               color: Palette.tertiaryColor,
                               fontWeight: FontWeight.w500),
@@ -415,7 +315,7 @@ class TugasDinasDtlDialog extends ConsumerWidget {
                           Text(
                             DateFormat(
                               'hh:mm a',
-                            ).format(DateTime.parse(item.jamStart!)),
+                            ).format(item.jamStart!),
                             style: Themes.customColor(9,
                                 color: Palette.primaryColor,
                                 fontWeight: FontWeight.w500),
@@ -441,7 +341,7 @@ class TugasDinasDtlDialog extends ConsumerWidget {
                           Text(
                             DateFormat(
                               'hh:mm a',
-                            ).format(DateTime.parse(item.jamEnd!)),
+                            ).format(item.jamEnd!),
                             style: Themes.customColor(9,
                                 color: Palette.tertiaryColor,
                                 fontWeight: FontWeight.w500),
@@ -489,11 +389,9 @@ class TugasDinasDtlDialog extends ConsumerWidget {
                 )
               ],
             ),
-
             SizedBox(
               height: 8,
             ),
-            // 5
             Row(
               children: [
                 Column(
@@ -520,25 +418,36 @@ class TugasDinasDtlDialog extends ConsumerWidget {
                 ),
               ],
             ),
-
             if (item.btlSta == false)
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  if (_returnVisibility(ColumnCommandButtonType.Edit))
+                  if (true)
                     TappableSvg(
                         assetPath: Assets.iconEdit,
                         onTap: () {
                           context.pop();
                           return context.pushNamed(
                               RouteNames.editTugasDinasRoute,
-                              extra: item);
+                              extra: item.toJson());
                         }),
                   SizedBox(
                     width: 8,
                   ),
-                  if (_returnVisibility(ColumnCommandButtonType.Delete))
-                    TappableSvg(assetPath: Assets.iconDelete, onTap: () {})
+                  if (true)
+                    TappableSvg(
+                        assetPath: Assets.iconDelete,
+                        onTap: () {
+                          ref
+                              .read(createTugasDinasNotifierProvider.notifier)
+                              .deleteTugasDinas(
+                                  idDinas: item.idDinas!,
+                                  onError: (msg) =>
+                                      DialogHelper.showCustomDialog(
+                                        msg,
+                                        context,
+                                      ));
+                        })
                 ],
               )
           ],

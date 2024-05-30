@@ -22,6 +22,8 @@ class CreateCutiRepository {
     required String ket,
     required String tglStart,
     required String tglEnd,
+    required String spvNote,
+    required String hrdNote,
   }) async {
     return _remoteService.updateCuti(
       idCuti: idCuti,
@@ -32,6 +34,8 @@ class CreateCutiRepository {
       alasan: alasan,
       tglStart: tglStart,
       tglEnd: tglEnd,
+      spvNote: spvNote,
+      hrdNote: hrdNote,
     );
   }
 

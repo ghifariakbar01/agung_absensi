@@ -3,8 +3,10 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../cross_auth/application/cross_auth_notifier.dart';
+import '../../../cross_auth_server/cross_auth_server_notifier.dart';
 import '../../../style/style.dart';
 import '../../../widgets/alert_helper.dart';
+import '../../../widgets/v_async_widget.dart';
 import '../../create_sakit/application/create_sakit_notifier.dart';
 import '../../sakit_approve/application/sakit_approve_notifier.dart';
 import '../application/sakit_list_notifier.dart';
@@ -66,10 +68,16 @@ class SakitListPage extends ConsumerWidget {
       }
     });
 
+    final crossAuthServer = ref.watch(crossAuthServerNotifierProvider);
+
     return Stack(
       children: [
         Container(),
-        SakitListScaffold(),
+        VAsyncWidgetScaffold<Map<String, List<String>>>(
+            value: crossAuthServer,
+            data: (_mapPT) {
+              return SakitListScaffold(_mapPT);
+            })
       ],
     );
   }

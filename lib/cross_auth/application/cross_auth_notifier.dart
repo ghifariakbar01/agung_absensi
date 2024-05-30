@@ -6,6 +6,7 @@ import 'package:face_net_authentication/user/application/user_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../constants/constants.dart';
 import '../../infrastructures/cache_storage/cross_auth_storage.dart';
 import '../../shared/providers.dart';
 import 'is_user_crossed.dart';
@@ -183,19 +184,11 @@ class CrossAuthNotifier extends _$CrossAuthNotifier {
     });
   }
 
-  final Map<String, String> _mapPTCuti = {
-    // 'gs_12': 'http://agungcartrans.co.id:1232/services',
-    'gs_12': 'https://www.agunglogisticsapp.co.id:2002/services',
-    'gs_14': 'https://agungcartrans.co.id:2601/services',
-    'gs_18': 'https://www.agunglogisticsapp.co.id:2002/services',
-    'gs_21': 'https://www.agunglogisticsapp.co.id:3603/services',
-  };
-
   String _determineBaseUrl(String serv) {
-    return _mapPTCuti.entries
+    return Constants.ptMap.entries
         .firstWhere(
           (element) => element.key == serv,
-          orElse: () => _mapPTCuti.entries.first,
+          orElse: () => Constants.ptMap.entries.first,
         )
         .value;
   }
@@ -203,13 +196,14 @@ class CrossAuthNotifier extends _$CrossAuthNotifier {
   _resetCutiDioProvider(String serv) {
     return ref.read(dioProviderCuti)
       ..options = BaseOptions(
-        connectTimeout: 20000,
-        receiveTimeout: 20000,
+        connectTimeout: Duration(seconds: 20),
+        receiveTimeout: Duration(seconds: 20),
         validateStatus: (status) {
           return true;
         },
         baseUrl: _determineBaseUrl(serv),
-      );
+      )
+      ..interceptors.add(ref.read(authInterceptorTwoProvider));
   }
 
   Future<void> cross({

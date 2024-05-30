@@ -8,17 +8,15 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../shared/providers.dart';
 import '../../../style/style.dart';
-
-import '../../../utils/dialog_helper.dart';
-import '../../../widgets/v_dialogs.dart';
 
 import 'package:face_net_authentication/widgets/tappable_widget.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 
 import '../../../constants/assets.dart';
+import '../../../utils/dialog_helper.dart';
+import '../../../widgets/v_dialogs.dart';
 import '../../create_ganti_hari/application/absen_ganti_hari.dart';
 import '../application/ganti_hari_list.dart';
 import 'ganti_hari_dtl_dialog.dart';
@@ -34,21 +32,6 @@ class GantiHariListItem extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
 
-    // final _isSpvApprove = item.spvTgl != item.cDate && item.spvSta == true;
-    // final spvAging = _isSpvApprove
-    //     ? DateTime.parse(item.spvTgl!)
-    //         .difference(DateTime.parse(item.cDate!))
-    //         .inDays
-    //     : DateTime.now().difference(DateTime.parse(item.cDate!)).inDays;
-
-    // final _isHrdApprove = item.hrdTgl != item.cDate && item.hrdSta == true;
-    // final hrdAging = _isHrdApprove
-    //     ? DateTime.parse(item.hrdTgl!)
-    //         .difference(DateTime.parse(item.cDate!))
-    //         .inDays
-    //     : DateTime.now().difference(DateTime.parse(item.cDate!)).inDays;
-
-    // final jenisCuti = ref.watch(jenisCutiNotifierProvider);
     final absenGantiHari = ref.watch(absenGantiHariNotifierProvider);
 
     return Padding(
@@ -83,7 +66,7 @@ class GantiHariListItem extends HookConsumerWidget {
                       Text(
                         DateFormat(
                           'EEEE, dd MMMM yyyy',
-                        ).format(DateTime.parse(item.cDate!)),
+                        ).format(item.cDate!),
                         style: Themes.customColor(10,
                             fontWeight: FontWeight.w500,
                             color: item.btlSta == true
@@ -110,28 +93,32 @@ class GantiHariListItem extends HookConsumerWidget {
                       SizedBox(
                         width: 4,
                       ),
-                      if (item.btlSta == false)
+                      if (false)
                         TappableSvg(
                             assetPath: Assets.iconBatal,
-                            onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) => VBatalDialog(
-                                  onTap: () async {
-                                    context.pop();
-                                    await ref
-                                        .read(gantiHariApproveControllerProvider
-                                            .notifier)
-                                        .batal(
-                                          itemGantiHari: item,
-                                          nama: ref
-                                              .read(userNotifierProvider)
-                                              .user
-                                              .nama!,
-                                        );
-                                  },
-                                ),
-                              );
+                            onTap: () async {
+                              if (item.btlSta!) {
+                                return showDialog(
+                                  context: context,
+                                  builder: (context) => VFailedDialog(
+                                    message: item.btlMsg,
+                                  ),
+                                );
+                              } else {
+                                return showDialog(
+                                  context: context,
+                                  builder: (context) => VBatalDialog(
+                                    onTap: () async {
+                                      context.pop();
+                                      await ref
+                                          .read(
+                                              gantiHariApproveControllerProvider
+                                                  .notifier)
+                                          .batal(idDayOff: item.idDayOff!);
+                                    },
+                                  ),
+                                );
+                              }
                             }),
                     ],
                   ),
@@ -256,7 +243,7 @@ class GantiHariListItem extends HookConsumerWidget {
                               Text(
                                 DateFormat(
                                   'E, dd MMM yyyy HH:MM:ss',
-                                ).format(DateTime.parse(item.tglStart!)),
+                                ).format(item.tglStart!),
                                 style: Themes.customColor(9,
                                     color: item.btlSta == true
                                         ? Colors.white
@@ -287,7 +274,7 @@ class GantiHariListItem extends HookConsumerWidget {
                               Text(
                                 DateFormat(
                                   'E, dd MMM yyyy HH:MM:ss',
-                                ).format(DateTime.parse(item.tglEnd!)),
+                                ).format(item.tglEnd!),
                                 style: Themes.customColor(9,
                                     color: item.btlSta == true
                                         ? Colors.white
@@ -432,64 +419,54 @@ class GantiHariListItem extends HookConsumerWidget {
                                   child: InkWell(
                                     splashColor: Palette.primaryColor,
                                     onTap: () async {
-                                      if (await ref
-                                              .read(
-                                                  gantiHariApproveControllerProvider
-                                                      .notifier)
-                                              .canSpvApprove(item) ==
-                                          false) {
+                                      if (item.isSpv == false) {
                                         showDialog(
                                           context: context,
-                                          builder: (context) => VFailedDialog(),
+                                          builder: (context) => VFailedDialog(
+                                            message: item.spvMsg,
+                                          ),
                                         );
                                       } else {
                                         if (item.spvSta == false) {
                                           await showDialog(
                                               context: context,
-                                              builder: (context) =>
-                                                  VAlertDialog2(
-                                                      label:
-                                                          'Dibutuhkan Konfirmasi SPV (Approve)',
-                                                      onPressed: () async {
-                                                        context.pop();
-                                                        await ref
-                                                            .read(
-                                                                gantiHariApproveControllerProvider
-                                                                    .notifier)
-                                                            .approveSpv(
+                                              builder: (context) {
+                                                return VAlertDialog2(
+                                                    label:
+                                                        'Dibutuhkan Konfirmasi SPV (Approve)',
+                                                    onPressed: () async {
+                                                      context.pop();
+                                                      await ref
+                                                          .read(
+                                                              gantiHariApproveControllerProvider
+                                                                  .notifier)
+                                                          .approve(
+                                                              idDayOff: item
+                                                                  .idDayOff!,
                                                               note: '',
-                                                              itemGantiHari:
-                                                                  item,
-                                                              nama: ref
-                                                                  .read(
-                                                                      userNotifierProvider)
-                                                                  .user
-                                                                  .nama!,
-                                                            );
-                                                      }));
+                                                              jenisApp: 'spv');
+                                                    });
+                                              });
                                         } else {
                                           await showDialog(
                                               context: context,
-                                              builder: (context) =>
-                                                  VAlertDialog2(
-                                                      label:
-                                                          'Dibutuhkan Konfirmasi SPV (Unapprove)',
-                                                      onPressed: () async {
-                                                        context.pop();
-                                                        await ref
-                                                            .read(
-                                                                gantiHariApproveControllerProvider
-                                                                    .notifier)
-                                                            .unapproveSpv(
-                                                              itemGantiHari:
-                                                                  item,
-                                                              nama: ref
-                                                                  .read(
-                                                                      userNotifierProvider)
-                                                                  .user
-                                                                  .nama!,
-                                                            );
-                                                      }));
+                                              builder: (context) {
+                                                return VAlertDialog2(
+                                                    label:
+                                                        'Dibutuhkan Konfirmasi SPV (Unapprove)',
+                                                    onPressed: () async {
+                                                      context.pop();
+                                                      await ref
+                                                          .read(
+                                                              gantiHariApproveControllerProvider
+                                                                  .notifier)
+                                                          .approve(
+                                                              idDayOff: item
+                                                                  .idDayOff!,
+                                                              note: '',
+                                                              jenisApp: 'spv');
+                                                    });
+                                              });
                                         }
                                       }
                                     },
@@ -570,40 +547,39 @@ class GantiHariListItem extends HookConsumerWidget {
                                   child: InkWell(
                                     splashColor: Palette.primaryColor,
                                     onTap: () async {
-                                      if (await ref
-                                              .read(
-                                                  gantiHariApproveControllerProvider
-                                                      .notifier)
-                                              .canHrdApprove(item) ==
-                                          false) {
+                                      if (item.isHr == false) {
                                         showDialog(
                                           context: context,
-                                          builder: (context) => VFailedDialog(),
+                                          builder: (context) => VFailedDialog(
+                                            message: item.hrMsg,
+                                          ),
                                         );
                                       } else {
-                                        if (item.hrdSta == false) {
-                                          final String? text =
-                                              await DialogHelper<void>()
-                                                  .showFormDialog(
-                                            context: context,
-                                          );
+                                        final String? text =
+                                            await DialogHelper<void>()
+                                                .showFormDialog(
+                                                    context: context);
 
-                                          if (text != null) {
-                                            await ref
-                                                .read(
-                                                    gantiHariApproveControllerProvider
-                                                        .notifier)
-                                                .approveHrd(
-                                                  note: text,
-                                                  itemGantiHari: item,
-                                                  nama: ref
-                                                      .read(
-                                                          userNotifierProvider)
-                                                      .user
-                                                      .nama!,
-                                                );
-                                            //
-                                          }
+                                        if (item.hrdSta == false) {
+                                          await showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  VAlertDialog2(
+                                                      label:
+                                                          'Dibutuhkan Konfirmasi HRD (Approve)',
+                                                      onPressed: () async {
+                                                        context.pop();
+                                                        await ref
+                                                            .read(
+                                                                gantiHariApproveControllerProvider
+                                                                    .notifier)
+                                                            .approve(
+                                                                idDayOff: item
+                                                                    .idDayOff!,
+                                                                note:
+                                                                    text ?? '',
+                                                                jenisApp: 'hr');
+                                                      }));
                                         } else {
                                           await showDialog(
                                               context: context,
@@ -617,15 +593,12 @@ class GantiHariListItem extends HookConsumerWidget {
                                                             .read(
                                                                 gantiHariApproveControllerProvider
                                                                     .notifier)
-                                                            .unapproveHrd(
-                                                              itemGantiHari:
-                                                                  item,
-                                                              nama: ref
-                                                                  .read(
-                                                                      userNotifierProvider)
-                                                                  .user
-                                                                  .nama!,
-                                                            );
+                                                            .approve(
+                                                                idDayOff: item
+                                                                    .idDayOff!,
+                                                                note:
+                                                                    text ?? '',
+                                                                jenisApp: 'hr');
                                                       }));
                                         }
                                       }

@@ -1,10 +1,11 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:face_net_authentication/infrastructures/dio_extensions.dart';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../../constants/constants.dart';
 import '../../../infrastructures/exceptions.dart';
 import '../application/izin_list.dart';
 import '../application/jenis_izin.dart';
@@ -32,7 +33,7 @@ class IzinListRemoteService {
               'pass': pass,
               'date_awal': d1,
               'date_akhir': d2,
-              'server': 'testing'
+              'server': Constants.isDev ? 'testing' : 'live',
             },
           ));
 
@@ -68,8 +69,9 @@ class IzinListRemoteService {
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);
-    } on DioError catch (e) {
-      if (e.isNoConnectionError || e.isConnectionTimeout) {
+    } on DioException catch (e) {
+      if ((e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout)) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);
@@ -81,9 +83,9 @@ class IzinListRemoteService {
 
   Future<List<JenisIzin>> getJenisIzin() async {
     try {
-      final response = await _dio.post('/service_master.asmx/getJenisIzin',
+      final response = await _dio.post('/service_master.asmx/getMasterIzin',
           options: Options(contentType: 'text/plain', headers: {
-            'server': 'testing',
+            'server': Constants.isDev ? 'testing' : 'live',
           }));
 
       final items = response.data;
@@ -92,9 +94,17 @@ class IzinListRemoteService {
         final list = items['data'] as List;
 
         if (list.isNotEmpty) {
-          return list
-              .map((e) => JenisIzin.fromJson(e as Map<String, dynamic>))
-              .toList();
+          try {
+            final _map = list
+                .map(
+                  (e) => JenisIzin.fromJson(e as Map<String, dynamic>),
+                )
+                .toList();
+
+            return _map;
+          } on FormatException catch (e) {
+            throw FormatException(e.message);
+          }
         } else {
           final message = 'List jenis cuti empty';
           final errorCode = 404;
@@ -109,8 +119,9 @@ class IzinListRemoteService {
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);
-    } on DioError catch (e) {
-      if (e.isNoConnectionError || e.isConnectionTimeout) {
+    } on DioException catch (e) {
+      if ((e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout)) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);

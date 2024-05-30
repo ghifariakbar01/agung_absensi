@@ -10,17 +10,18 @@ part 'riwayat_absen_state.freezed.dart';
 
 @freezed
 class RiwayatAbsenState with _$RiwayatAbsenState {
-  const factory RiwayatAbsenState(
-      {required List<RiwayatAbsenModel> riwayatAbsen,
-      required int page,
-      required String? dateFirst,
-      required String? dateSecond,
-      required bool isMore,
-      required bool isGetting,
-      required Option<Either<RiwayatAbsenFailure, List<RiwayatAbsenModel>>>
-          failureOrSuccessOption,
-      required Option<Either<RiwayatAbsenFailure, RiwayatAbsenModel>>
-          failureOrSuccessOptionByID}) = _RiwayatAbsenState;
+  const factory RiwayatAbsenState({
+    required List<RiwayatAbsenModel> riwayatAbsen,
+    required int page,
+    required String? dateFirst,
+    required String? dateSecond,
+    required bool isMore,
+    required bool isGetting,
+    required Option<Either<RiwayatAbsenFailure, List<RiwayatAbsenModel>>>
+        failureOrSuccessOption,
+    required Option<Either<RiwayatAbsenFailure, RiwayatAbsenModel>>
+        failureOrSuccessOptionByID,
+  }) = _RiwayatAbsenState;
 
   factory RiwayatAbsenState.initial() => RiwayatAbsenState(
       riwayatAbsen: [],

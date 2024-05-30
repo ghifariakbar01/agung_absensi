@@ -1,10 +1,8 @@
-import 'package:dartz/dartz.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../send_wa/application/send_wa_notifier.dart';
+import '../../../constants/constants.dart';
+import '../../../infrastructures/exceptions.dart';
 import '../../../shared/providers.dart';
-import '../../../wa_head_helper/application/wa_head.dart';
-import '../../../wa_head_helper/application/wa_head_helper_notifier.dart';
 import '../infrastructures/create_ganti_hari_remote_service.dart';
 import '../infrastructures/create_ganti_hari_repository.dart';
 import 'absen_ganti_hari.dart';
@@ -15,7 +13,8 @@ part 'create_ganti_hari_notifier.g.dart';
 CreateGantiHariRemoteService createGantiHariRemoteService(
     CreateGantiHariRemoteServiceRef ref) {
   return CreateGantiHariRemoteService(
-      ref.watch(dioProviderHosting), ref.watch(dioRequestProvider));
+    ref.watch(dioProviderCuti),
+  );
 }
 
 @Riverpod(keepAlive: true)
@@ -39,97 +38,107 @@ class CreateGantiHari extends _$CreateGantiHari {
   @override
   FutureOr<void> build() async {}
 
-  Future<void> _sendWaToHead(
-      {required int idUser, required String messageContent}) async {
-    final List<WaHead> waHeads = await ref
-        .read(waHeadHelperNotifierProvider.notifier)
-        .getWaHeads(idUser: idUser);
+  Future<void> submitGantiHari({
+    required int idAbsen,
+    required String ket,
+    required String tglOff,
+    required String tglGanti,
+    String? server = Constants.isDev ? 'testing' : 'live',
+    required Future<void> Function(String errMessage) onError,
+  }) async {
+    state = const AsyncLoading();
 
-    if (waHeads.isNotEmpty) {
-      for (int i = 0; i < waHeads.length; i++) {
-        if (waHeads[i].telp1 != null) {
-          if (waHeads[i].telp1!.isNotEmpty)
-            await ref.read(sendWaNotifierProvider.notifier).sendWaDirect(
-                phone: int.parse(waHeads[i].telp1!),
-                idUser: waHeads[i].idUserHead!,
-                idDept: waHeads[i].idDept!,
-                notifTitle: 'Notifikasi HRMS',
-                notifContent: '$messageContent');
-        } else if (waHeads[i].telp2 != null) {
-          if (waHeads[i].telp2!.isNotEmpty)
-            await ref.read(sendWaNotifierProvider.notifier).sendWaDirect(
-                phone: int.parse(waHeads[i].telp2!),
-                idUser: waHeads[i].idUserHead!,
-                idDept: waHeads[i].idDept!,
-                notifTitle: 'Notifikasi HRMS',
-                notifContent: '$messageContent');
-        } else {
-          throw AssertionError(
-              'Atasan bernama ${waHeads[i].nama} tidak memiliki data nomor Hp...');
-        }
+    final user = ref.read(userNotifierProvider).user;
+    final username = user.nama!;
+    final pass = user.password!;
+    final idUser = user.idUser!;
+
+    try {
+      await ref.read(createGantiHariRepositoryProvider).submitGantiHari(
+            idUser: idUser,
+            idAbsen: idAbsen,
+            username: username,
+            pass: pass,
+            ket: ket,
+            tglOff: tglOff,
+            tglGanti: tglGanti,
+            server: Constants.isDev ? 'testing' : 'live',
+          );
+
+      state = const AsyncValue.data('Sukses Input');
+    } catch (e) {
+      state = const AsyncValue.data('');
+      await onError('Error $e');
+    }
+  }
+
+  Future<void> updateGantiHari({
+    required int idDayOff,
+    required int idAbsen,
+    required String ket,
+    required String tglOff,
+    required String tglGanti,
+    required String noteSpv,
+    required String noteHrd,
+    String? server = Constants.isDev ? 'testing' : 'live',
+    required Future<void> Function(String errMessage) onError,
+  }) async {
+    final user = ref.read(userNotifierProvider).user;
+    final username = user.nama!;
+    final pass = user.password!;
+    final idUser = user.idUser!;
+
+    state = const AsyncLoading();
+
+    try {
+      await ref.read(createGantiHariRepositoryProvider).updateGantiHari(
+            idDayOff: idDayOff,
+            idUser: idUser,
+            idAbsen: idAbsen,
+            username: username,
+            pass: pass,
+            ket: ket,
+            tglOff: tglOff,
+            tglGanti: tglGanti,
+            noteSpv: noteSpv,
+            noteHrd: noteHrd,
+            server: Constants.isDev ? 'testing' : 'live',
+          );
+
+      state = const AsyncValue.data('Sukses Update');
+    } catch (e) {
+      state = const AsyncValue.data('');
+      await onError('Error $e');
+    }
+  }
+
+  Future<void> deleteGantiHari({
+    required int idDayOff,
+    required Future<void> Function(String errMessage) onError,
+  }) async {
+    state = const AsyncLoading();
+
+    final user = ref.read(userNotifierProvider).user;
+    final username = user.nama!;
+    final pass = user.password!;
+
+    try {
+      await ref.read(createGantiHariRepositoryProvider).deleteGantiHari(
+            idDayOff: idDayOff,
+            username: username,
+            pass: pass,
+          );
+
+      state = const AsyncValue.data('Sukses Delete');
+    } catch (e) {
+      state = const AsyncValue.data('');
+      String _msg = e.toString();
+
+      if (e is RestApiExceptionWithMessage) {
+        _msg = e.errorCode.toString() + ' ' + e.message!;
       }
-    } else {
-      //
-      throw AssertionError('User tidak memiliki data atasan...');
-    }
-  }
 
-  Future<void> submitGantiHari(
-      {required int idUser,
-      required int idAbsen,
-      required String ket,
-      required String tglOff,
-      required String tglGanti,
-      required String cUser,
-      required Future<void> Function(String errMessage) onError}) async {
-    state = const AsyncLoading();
-
-    try {
-      state = await AsyncValue.guard(() async {
-        await ref.read(createGantiHariRepositoryProvider).submitGantiHari(
-              idUser: idUser,
-              idAbsen: idAbsen,
-              ket: ket,
-              tglOff: tglOff,
-              tglGanti: tglGanti,
-              cUser: cUser,
-            );
-
-        final String messageContent =
-            " ( Testing Apps ) Terdapat Waiting Approve Pengajuan Ganti Hari Umum Baru Telah Diinput Oleh : $cUser ";
-        await _sendWaToHead(idUser: idUser, messageContent: messageContent);
-
-        return Future.value(unit);
-      });
-    } catch (e) {
-      state = const AsyncValue.data('');
-      await onError('Error $e');
-    }
-  }
-
-  Future<void> updateGantiHari(
-      {required int id,
-      required int idAbsen,
-      required String ket,
-      required String tglOff,
-      required String tglGanti,
-      required String uUser,
-      required Future<void> Function(String errMessage) onError}) async {
-    state = const AsyncLoading();
-
-    try {
-      state = await AsyncValue.guard(
-          () => ref.read(createGantiHariRepositoryProvider).updateGantiHari(
-                id: id,
-                idAbsen: idAbsen,
-                ket: ket,
-                tglOff: tglOff,
-                tglGanti: tglGanti,
-                uUser: uUser,
-              ));
-    } catch (e) {
-      state = const AsyncValue.data('');
-      await onError('Error $e');
+      await onError('Error $_msg');
     }
   }
 }

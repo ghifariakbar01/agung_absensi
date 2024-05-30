@@ -1,3 +1,4 @@
+import 'package:face_net_authentication/cross_auth_server/cross_auth_server_notifier.dart';
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
 import 'package:face_net_authentication/widgets/v_async_widget.dart';
 import 'package:flutter/material.dart';
@@ -55,9 +56,9 @@ final List<Item> activity = [
       'Tugas Dinas', Assets.iconTugasDinas, RouteNames.tugasDinasListNameRoute),
 ];
 
-final List<Item> others = [
-  Item('Slip Gaji', Assets.iconSlipGaji, RouteNames.slipGajiNameRoute),
-];
+// final List<Item> others = [
+//   Item('Slip Gaji', Assets.iconSlipGaji, RouteNames.slipGajiNameRoute),
+// ];
 
 class HomeScaffold extends ConsumerWidget {
   const HomeScaffold();
@@ -81,23 +82,23 @@ class HomeScaffold extends ConsumerWidget {
       ),
     );
 
-    ref.listen<AsyncValue<WaRegister>>(waRegisterNotifierProvider,
-        (_, state) async {
-      if (!state.isLoading && state.hasValue && state.value != null) {
-        final val = state.value;
-        if (val!.phone == null || val.isRegistered == null) {
-          final nama = ref.read(userNotifierProvider).user.nama;
-          if (nama != 'Ghifar')
-            return ref
-                .read(waRegisterNotifierProvider.notifier)
-                .confirmRegisterWa(context: context);
-        }
+    // ref.listen<AsyncValue<WaRegister>>(waRegisterNotifierProvider,
+    //     (_, state) async {
+    //   if (!state.isLoading && state.hasValue && state.value != null) {
+    //     final val = state.value;
+    //     if (val!.phone == null || val.isRegistered == null) {
+    //       final nama = ref.read(userNotifierProvider).user.nama;
+    //       if (nama != 'Ghifar')
+    //         return ref
+    //             .read(waRegisterNotifierProvider.notifier)
+    //             .confirmRegisterWa(context: context);
+    //     }
 
-        //
-      } else {
-        return state.showAlertDialogOnError(context, ref);
-      }
-    });
+    //     //
+    //   } else {
+    //     return state.showAlertDialogOnError(context, ref);
+    //   }
+    // });
 
     final onRefresh = () async {
       await ref.read(waRegisterNotifierProvider.notifier).refresh();
@@ -110,6 +111,7 @@ class HomeScaffold extends ConsumerWidget {
     final height = MediaQuery.of(context).size.height;
 
     final crossAuth = ref.watch(crossAuthNotifierProvider);
+    final crossAuthServer = ref.watch(crossAuthServerNotifierProvider);
 
     final isOffline = ref.watch(absenOfflineModeProvider);
 
@@ -117,107 +119,110 @@ class HomeScaffold extends ConsumerWidget {
       appBar: HomeAppBar(),
       body: VAsyncValueWidget(
         value: crossAuth,
-        data: (_) => SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: SizedBox(
-              height: height,
-              width: width,
-              child: RefreshIndicator(
-                onRefresh: onRefresh,
-                child: ListView(
-                  children: [
-                    const AppLogo(),
-                    const SizedBox(height: 24),
-                    Testing(),
+        data: (_) => VAsyncValueWidget(
+          value: crossAuthServer,
+          data: (_) => SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SizedBox(
+                height: height,
+                width: width,
+                child: RefreshIndicator(
+                  onRefresh: onRefresh,
+                  child: ListView(
+                    children: [
+                      const AppLogo(),
+                      const SizedBox(height: 24),
+                      Testing(),
 
-                    const SizedBox(height: 24),
-                    ...isTester.maybeWhen(
-                        tester: () {
-                          return [
-                            Text(
-                              'Toggle Location',
-                              style: Themes.customColor(10,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            HomeTesterOn(),
-                          ];
-                        },
-                        orElse: user.user.nama == 'Ghifar'
-                            ? () {
-                                return [
-                                  Text(
-                                    'Toggle Location',
-                                    style: Themes.customColor(10,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  SizedBox(
-                                    height: 8,
-                                  ),
-                                  HomeTesterOff(),
-                                ];
-                              }
-                            : () {
-                                return [Container()];
-                              }
+                      const SizedBox(height: 24),
+                      ...isTester.maybeWhen(
+                          tester: () {
+                            return [
+                              Text(
+                                'Toggle Location',
+                                style: Themes.customColor(10,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              HomeTesterOn(),
+                            ];
+                          },
+                          orElse: user.user.nama == 'Ghifar'
+                              ? () {
+                                  return [
+                                    Text(
+                                      'Toggle Location',
+                                      style: Themes.customColor(10,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                    HomeTesterOff(),
+                                  ];
+                                }
+                              : () {
+                                  return [Container()];
+                                }
 
-                        //
+                          //
+                          ),
+                      // isOffline ? Container() : HomeWa(onRefresh),
+                      // ...categories(title: 'Admin', width: width, item: admin),
+                      ...categories(
+                        title: 'Attendance',
+                        width: width,
+                        item: isOffline
+                            ? attendance.sublist(0, 2).toList()
+                            : attendance,
+                      ),
+                      if (!isOffline) ...[
+                        ...categories(
+                          title: 'Leave Request',
+                          width: width,
+                          item: leaveRequest,
                         ),
-                    isOffline ? Container() : HomeWa(onRefresh),
-                    // ...categories(title: 'Admin', width: width, item: admin),
-                    ...categories(
-                      title: 'Attendance',
-                      width: width,
-                      item: isOffline
-                          ? attendance.sublist(0, 2).toList()
-                          : attendance,
-                    ),
-                    if (!isOffline) ...[
-                      ...categories(
-                        title: 'Leave Request',
-                        width: width,
-                        item: leaveRequest,
-                      ),
-                      ...categories(
-                        title: 'Activity',
-                        width: width,
-                        item: activity,
-                      ),
-                      ...categories(
-                        title: 'Others',
-                        width: width,
-                        item: others,
-                      ),
-                    ],
+                        ...categories(
+                          title: 'Activity',
+                          width: width,
+                          item: activity,
+                        ),
+                        // ...categories(
+                        //   title: 'Others',
+                        //   width: width,
+                        //   item: others,
+                        // ),
+                      ],
 
-                    const SizedBox(height: 15),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Center(child: CopyrightAgung()),
-                        Center(
-                          child: SelectableText(
-                            'APP VERSION: ${packageInfo.when(
-                              loading: () => '',
-                              data: (packageInfo) => packageInfo,
-                              error: (error, stackTrace) =>
-                                  'Error: $error StackTrace: $stackTrace',
-                            )}',
-                            textAlign: TextAlign.center,
-                            maxLines: 2,
-                            style: Themes.customColor(
-                              8,
-                              fontWeight: FontWeight.bold,
+                      const SizedBox(height: 48),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Center(child: CopyrightAgung()),
+                          Center(
+                            child: SelectableText(
+                              'APP VERSION: ${packageInfo.when(
+                                loading: () => '',
+                                data: (packageInfo) => packageInfo,
+                                error: (error, stackTrace) =>
+                                    'Error: $error StackTrace: $stackTrace',
+                              )}',
+                              textAlign: TextAlign.center,
+                              maxLines: 2,
+                              style: Themes.customColor(
+                                8,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

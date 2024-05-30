@@ -67,6 +67,8 @@ class MyApp extends ConsumerWidget {
     final firebaseRemoteCfg = ref.watch(firebaseRemoteConfigNotifierProvider);
     final ipNotifier = ref.watch(ipNotifierProvider);
 
+    // final alice = ref.watch(aliceProvider);
+
     return VAsyncWidgetScaffoldWrappedMaterial<FirebaseRemoteCfg>(
       value: firebaseRemoteCfg,
       data: (cfg) => VAsyncWidgetScaffoldWrappedMaterial<void>(
@@ -86,9 +88,6 @@ class MyApp extends ConsumerWidget {
                     upgrader: Upgrader(
                         minAppVersion: cfg.minApp,
                         durationUntilAlertAgain: Duration(hours: 3),
-                        dialogStyle: UpgradeDialogStyle.cupertino,
-                        showLater: true,
-                        showIgnore: false,
                         messages: MyUpgraderMessages()),
                   ))),
     );

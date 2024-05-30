@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:face_net_authentication/dt_pc/dt_pc_list/application/dt_pc_list_notifier.dart';
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:go_router/go_router.dart';
@@ -17,19 +16,17 @@ import '../../../widgets/alert_helper.dart';
 import '../../../widgets/v_async_widget.dart';
 import '../../../style/style.dart';
 import '../../../user_helper/user_helper_notifier.dart';
-import '../../../utils/string_utils.dart';
 import '../../../widgets/v_button.dart';
 import '../../../widgets/v_scaffold_widget.dart';
 import '../../dt_pc_list/application/dt_pc_list.dart';
 import '../application/create_dt_pc_notifier.dart';
 
 String _returnPlaceHolderText(
-  String hour,
+  DateTime hour,
 ) {
-  final DateTime jam = DateTime.parse(hour);
   final startPlaceHolder = DateFormat(
     'dd MMM yyyy HH:mm',
-  ).format(jam);
+  ).format(hour);
 
   return "$startPlaceHolder";
 }
@@ -47,13 +44,17 @@ class EditDtPcPage extends HookConsumerWidget {
 
     final keteranganTextController = useTextEditingController(text: item.ket);
     final kategoriTextController = useState(
-        item.kategori!.toLowerCase() == 'dt' ? 'Datang Telat' : 'Pulang Cepat');
+      item.kategori!.toLowerCase() == 'dt' ? 'Datang Telat' : 'Pulang Cepat',
+    );
 
     final tglPlaceholderTextController =
         useTextEditingController(text: _returnPlaceHolderText(item.jam!));
 
-    final dtTglTextController = useState(item.dtTgl!);
-    final jamTextController = useState(item.jam!);
+    final dtTgl = useState(item.dtTgl!);
+    final jamText = useState(item.jam!);
+
+    final noteSpvTextController = useTextEditingController(text: item.spvNote);
+    final noteHrdTextController = useTextEditingController(text: item.hrdNote);
 
     ref.listen<AsyncValue>(userHelperNotifierProvider, (_, state) async {
       return state.showAlertDialogOnError(context, ref);
@@ -68,7 +69,7 @@ class EditDtPcPage extends HookConsumerWidget {
         return AlertHelper.showSnackBar(
           context,
           color: Palette.primaryColor,
-          message: 'Sukses Menginput Form DT/PC',
+          message: 'Sukses Edit Form Dt / Pc',
           onDone: () {
             ref.invalidate(dtPcListControllerProvider);
             context.pop();
@@ -93,7 +94,7 @@ class EditDtPcPage extends HookConsumerWidget {
           value: createIzin,
           data: (_) => VScaffoldWidget(
               appbarColor: Palette.primaryColor,
-              scaffoldTitle: 'Create Form DT / PC',
+              scaffoldTitle: 'Edit Form DT / PC',
               scaffoldBody: Padding(
                 padding: EdgeInsets.only(
                     bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -208,32 +209,33 @@ class EditDtPcPage extends HookConsumerWidget {
                               initialDate: DateTime.now(),
                               firstDate:
                                   DateTime.now().subtract(Duration(days: 3)),
-                              lastDate: DateTime.now().add(Duration(days: 365)),
+                              lastDate: DateTime.now().add(Duration(days: 60)),
                             );
                             if (picked != null) {
                               print(picked);
 
-                              final dtTgl = StringUtils.midnightDate(picked)
-                                  .replaceAll('.000', '');
-
-                              dtTglTextController.value = dtTgl;
+                              dtTgl.value = picked;
 
                               final hour = await showTimePicker(
                                 context: context,
                                 initialTime: TimeOfDay.now(),
                               );
 
-                              final jam = DateTime(picked.year, picked.month,
-                                  picked.day, hour!.hour, hour.minute);
+                              final jam = DateTime(
+                                picked.year,
+                                picked.month,
+                                picked.day,
+                                hour!.hour,
+                                hour.minute,
+                              );
 
                               final startPlaceHolder = DateFormat(
                                 'dd MMM yyyy HH:mm',
                               ).format(jam);
 
-                              log('jam $jam dtTgl $dtTgl ');
+                              log('jam $jam dtTgl $picked ');
 
-                              jamTextController.value =
-                                  jam.toString().replaceAll('.000', '');
+                              jamText.value = jam;
 
                               tglPlaceholderTextController.text =
                                   "$startPlaceHolder";
@@ -268,14 +270,58 @@ class EditDtPcPage extends HookConsumerWidget {
                       SizedBox(
                         height: 16,
                       ),
-
-                      // DIAGNOSA
                       TextFormField(
-                          maxLines: 5,
+                          maxLines: 2,
                           controller: keteranganTextController,
                           cursorColor: Palette.primaryColor,
                           decoration: Themes.formStyleBordered(
                             'Keterangan',
+                          ),
+                          style: Themes.customColor(
+                            14,
+                            fontWeight: FontWeight.normal,
+                          ),
+                          validator: (item) {
+                            if (item == null) {
+                              return 'Form tidak boleh kosong';
+                            } else if (item.isEmpty) {
+                              return 'Form tidak boleh kosong';
+                            }
+
+                            return null;
+                          }),
+
+                      SizedBox(
+                        height: 16,
+                      ),
+                      TextFormField(
+                          controller: noteSpvTextController,
+                          cursorColor: Palette.primaryColor,
+                          decoration: Themes.formStyleBordered(
+                            'Note SPV',
+                          ),
+                          style: Themes.customColor(
+                            14,
+                            fontWeight: FontWeight.normal,
+                          ),
+                          validator: (item) {
+                            if (item == null) {
+                              return 'Form tidak boleh kosong';
+                            } else if (item.isEmpty) {
+                              return 'Form tidak boleh kosong';
+                            }
+
+                            return null;
+                          }),
+
+                      SizedBox(
+                        height: 16,
+                      ),
+                      TextFormField(
+                          controller: noteHrdTextController,
+                          cursorColor: Palette.primaryColor,
+                          decoration: Themes.formStyleBordered(
+                            'Note HRD',
                           ),
                           style: Themes.customColor(
                             14,
@@ -307,11 +353,19 @@ class EditDtPcPage extends HookConsumerWidget {
                                   kategoriTextController.value == 'Datang Telat'
                                       ? 'DT'
                                       : 'PC';
+                              final _dtTgl =
+                                  DateFormat('yyyy-MM-dd').format(dtTgl.value);
+                              final _jamText = DateFormat('yyyy-MM-dd HH:mm')
+                                  .format(jamText.value);
 
                               log(' VARIABLES : \n  Nama : ${namaTextController.value.text} ');
                               log(' Payroll: ${ptTextController.value.text} \n ');
                               log(' Keterangan: ${keteranganTextController.value.text} \n ');
                               log(' Jenis DT/PC: $kategori \n ');
+                              log(' Dt Tgl: $_dtTgl \n ');
+                              log(' Jam Text: $_jamText \n ');
+                              log(' Note Spv: ${noteSpvTextController.text} \n ');
+                              log(' Note Hrd: ${noteHrdTextController.text} \n ');
 
                               final user = ref.read(userNotifierProvider).user;
 
@@ -321,12 +375,13 @@ class EditDtPcPage extends HookConsumerWidget {
                                     .read(createDtPcNotifierProvider.notifier)
                                     .updateDtPc(
                                         id: item.idDt!,
-                                        uUser: user.nama!,
                                         idUser: user.idUser!,
-                                        dtTgl: dtTglTextController.value,
-                                        jam: jamTextController.value,
+                                        dtTgl: _dtTgl,
+                                        jam: _jamText,
                                         kategori: kategori,
                                         ket: keteranganTextController.text,
+                                        noteSpv: noteSpvTextController.text,
+                                        noteHrd: noteHrdTextController.text,
                                         onError: (msg) =>
                                             DialogHelper.showCustomDialog(
                                                 msg, context));

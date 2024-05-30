@@ -118,7 +118,7 @@ class RiwayatItem extends ConsumerWidget {
                                 color: Theme.of(context).unselectedWidgetColor),
                             minFontSize: 5,
                             maxFontSize: 9,
-                            maxLines: 5,
+                            maxLines: 2,
                           ),
                         ),
                       ],

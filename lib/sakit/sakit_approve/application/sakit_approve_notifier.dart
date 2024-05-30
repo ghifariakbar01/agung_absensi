@@ -1,5 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../constants/constants.dart';
 import '../../../shared/providers.dart';
 
 import '../infrastructures/sakit_approve_remote_service.dart.dart';
@@ -32,7 +33,7 @@ class SakitApproveController extends _$SakitApproveController {
     required String jenisApp,
     required String note,
     required int tahun,
-    String? server = 'testing',
+    String? server = Constants.isDev ? 'testing' : 'live',
   }) async {
     state = const AsyncLoading();
 

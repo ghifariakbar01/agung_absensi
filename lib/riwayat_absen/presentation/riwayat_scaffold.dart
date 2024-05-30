@@ -59,47 +59,39 @@ class _RiwayatAbsenScaffoldState extends ConsumerState<RiwayatAbsenScaffold> {
     _scrollController.addListener(() async {
       final nextPageTrigger = 0.9 * _scrollController.position.maxScrollExtent;
 
-      final dateFirst = ref.watch(
-          riwayatAbsenNotifierProvider.select((value) => value.dateFirst));
-
-      final dateSecond = ref.watch(
-          riwayatAbsenNotifierProvider.select((value) => value.dateSecond));
-
       final riwayatAbsen = ref.watch(riwayatAbsenNotifierProvider);
 
+      final dateFirst = riwayatAbsen.dateFirst;
+
+      final dateSecond = riwayatAbsen.dateSecond;
+
       final isMore = riwayatAbsen.isMore;
-
       final isGetting = riwayatAbsen.isGetting;
-
       final page = riwayatAbsen.page;
 
       if (_scrollController.hasClients &&
           _scrollController.position.pixels > nextPageTrigger &&
           isMore &&
           !isGetting) {
-        log('isGetting $isGetting');
-
+        final startDate = DateTime.parse(dateFirst ?? '');
         final endDate = DateTime.parse(dateSecond ?? '');
 
-        final startDate = DateTime.parse(dateFirst ?? '');
-
-        final start = StringUtils.formatTanggal(
-            '${startDate.subtract(Duration(days: 7))}');
-
-        final end =
-            StringUtils.formatTanggal('${endDate.subtract(Duration(days: 6))}');
+        final _start2 = StringUtils.yyyyMMddWithStripe(startDate);
+        final _end2 =
+            StringUtils.yyyyMMddWithStripe(endDate.subtract(Duration(days: 6)));
 
         await ref.read(riwayatAbsenNotifierProvider.notifier).startFilter(
             changePage: () => ref
                 .read(riwayatAbsenNotifierProvider.notifier)
                 .changePage(page + 1),
-            changeFilter: () => ref
-                .read(riwayatAbsenNotifierProvider.notifier)
-                .changeFilter(start, end),
+            changeFilter: () {},
             onAllChanged: () async => await ref
                 .read(riwayatAbsenNotifierProvider.notifier)
                 .getAbsenRiwayat(
-                    page: page, dateFirst: start, dateSecond: end));
+                  page: page,
+                  dateFirst: _end2,
+                  dateSecond: _start2,
+                ));
       }
     });
 

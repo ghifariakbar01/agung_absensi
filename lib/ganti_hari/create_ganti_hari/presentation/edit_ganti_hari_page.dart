@@ -10,7 +10,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../err_log/application/err_log_notifier.dart';
-import '../../../shared/providers.dart';
 import '../../../utils/dialog_helper.dart';
 import '../../../widgets/alert_helper.dart';
 import '../../../widgets/v_async_widget.dart';
@@ -34,14 +33,15 @@ class EditGantiHariPage extends HookConsumerWidget {
     final idAbsenGantiHariTextController =
         useTextEditingController(text: item.idAbsen.toString());
 
-    final dtOff = DateTime.parse(item.tglStart!);
+    final dtOff = item.tglStart!;
     final tglOff = useState(dtOff);
+
     final tglOffPlaceHolder = useTextEditingController(
         text: DateFormat(
       'dd MMM yyyy',
     ).format(dtOff));
 
-    final dtGanti = DateTime.parse(item.tglEnd!);
+    final dtGanti = item.tglEnd!;
     final tglGanti = useState(dtGanti);
     final tglGantiPlaceHolder = useTextEditingController(
         text: DateFormat(
@@ -49,6 +49,14 @@ class EditGantiHariPage extends HookConsumerWidget {
     ).format(dtGanti));
 
     final keteranganTextController = useTextEditingController(
+      text: item.ket,
+    );
+
+    final noteSpvTextController = useTextEditingController(
+      text: item.ket,
+    );
+
+    final noteHrdTextController = useTextEditingController(
       text: item.ket,
     );
 
@@ -287,14 +295,42 @@ class EditGantiHariPage extends HookConsumerWidget {
                       SizedBox(
                         height: 16,
                       ),
-
-                      //
                       TextFormField(
-                        maxLines: 5,
+                        maxLines: 2,
                         controller: keteranganTextController,
                         cursorColor: Palette.primaryColor,
                         decoration: Themes.formStyleBordered(
                           'Keterangan',
+                        ),
+                        style: Themes.customColor(
+                          14,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+
+                      SizedBox(
+                        height: 16,
+                      ),
+                      TextFormField(
+                        controller: noteSpvTextController,
+                        cursorColor: Palette.primaryColor,
+                        decoration: Themes.formStyleBordered(
+                          'Note SPV',
+                        ),
+                        style: Themes.customColor(
+                          14,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+
+                      SizedBox(
+                        height: 16,
+                      ),
+                      TextFormField(
+                        controller: noteHrdTextController,
+                        cursorColor: Palette.primaryColor,
+                        decoration: Themes.formStyleBordered(
+                          'Note HRD',
                         ),
                         style: Themes.customColor(
                           14,
@@ -327,24 +363,27 @@ class EditGantiHariPage extends HookConsumerWidget {
                               log(' Keterangan: ${keteranganTextController.value.text} \n ');
                               log(' Tgl Off: $tglOffClean \n ');
                               log(' Tgl Ganti: $tglGantiClean \n ');
-
-                              final user = ref.read(userNotifierProvider).user;
+                              log(' Note Spv: ${noteSpvTextController.text} \n ');
+                              log(' Note Hrd: ${noteHrdTextController.text} \n ');
 
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();
                                 await ref
                                     .read(createGantiHariProvider.notifier)
                                     .updateGantiHari(
-                                      id: item.idDayOff!,
-                                      uUser: user.nama!,
+                                      idDayOff: item.idDayOff!,
                                       tglOff: tglOffClean,
                                       tglGanti: tglGantiClean,
                                       ket: keteranganTextController.text,
                                       idAbsen: int.parse(
                                           idAbsenGantiHariTextController.text),
+                                      noteHrd: noteHrdTextController.text,
+                                      noteSpv: noteSpvTextController.text,
                                       onError: (msg) =>
                                           DialogHelper.showCustomDialog(
-                                              msg, context),
+                                        msg,
+                                        context,
+                                      ),
                                     );
                               }
                             }),

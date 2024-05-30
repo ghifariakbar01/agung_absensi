@@ -9,7 +9,24 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../constants/constants.dart';
 import '../../../style/style.dart';
+import '../../../user/application/user_model.dart';
+
+_determineBaseUrl(UserModelWithPassword user) {
+  final pt = user.ptServer;
+  if (pt == null) {
+    throw AssertionError('pt null');
+  }
+
+  return Constants.ptMap.entries
+      .firstWhere(
+        (element) => element.key == pt,
+        orElse: () => Constants.ptMap.entries.first,
+      )
+      .value
+      .replaceAll('/services', '');
+}
 
 class TugasDinasViewSuratPage extends HookConsumerWidget {
   const TugasDinasViewSuratPage(this.id);
@@ -19,8 +36,9 @@ class TugasDinasViewSuratPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userNotifierProvider).user;
+    final _url = _determineBaseUrl(user);
     final url = useState(
-        'http://agunglogisticsapp.co.id:1232/page_print_mob.aspx?userid=${user.idUser}&userpass=${user.password}&mode=dinas&noid=$id');
+        '$_url/page_print_mob.aspx?userid=${user.idUser}&userpass=${user.password}&mode=dinas&noid=$id');
 
     return KeyboardDismissOnTap(
       child: VScaffoldWidget(
@@ -34,7 +52,7 @@ class TugasDinasViewSuratPage extends HookConsumerWidget {
             )),
         scaffoldBody: InAppWebView(
           onWebViewCreated: (_) {},
-          initialUrlRequest: URLRequest(url: Uri.parse(url.value)),
+          initialUrlRequest: URLRequest(url: WebUri.uri(Uri.parse(url.value))),
           onZoomScaleChanged: (controller, oldScale, newScale) {
             log('oldScale $oldScale');
             log('newScale $newScale');

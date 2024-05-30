@@ -1,90 +1,55 @@
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:face_net_authentication/infrastructures/dio_extensions.dart';
 
+import '../../../constants/constants.dart';
 import '../../../infrastructures/exceptions.dart';
 import '../application/absen_ganti_hari.dart';
 
 class CreateGantiHariRemoteService {
   CreateGantiHariRemoteService(
     this._dio,
-    this._dioRequest,
   );
 
   final Dio _dio;
-  final Map<String, String> _dioRequest;
-
-  static const String dbName = 'hr_trs_dayoff';
-  static const String dbMstUser = 'mst_user';
-  static const String dbHrMstJenisAbsen = 'mst_absen';
 
   Future<Unit> submitGantiHari({
     required int idUser,
     required int idAbsen,
+    required String username,
+    required String pass,
     required String ket,
     required String tglOff,
     required String tglGanti,
-    required String cUser,
+    String? server = Constants.isDev ? 'testing' : 'live',
   }) async {
     try {
-      final Map<String, String> submitTugasDinas = {
-        "command": "INSERT INTO $dbName ("
-            "id_user, ket, tgl_start, tgl_end, id_comp, id_dept, id_absen, "
-            "spv_sta, spv_nm, spv_tgl, hrd_sta, hrd_nm, hrd_tgl, "
-            "coo_sta, coo_nm, coo_tgl, gm_sta, gm_nm, gm_tgl, "
-            "c_date, c_user, u_date, u_user) VALUES ("
-            "$idUser, "
-            "'$ket', "
-            "'$tglOff', "
-            "'$tglGanti', "
-            "(SELECT id_comp FROM $dbMstUser WHERE id_user = $idUser), "
-            "(SELECT id_dept FROM $dbMstUser WHERE id_user = $idUser), "
-            "$idAbsen, "
-            "'0', "
-            "'', "
-            "GETDATE(), "
-            "'0', "
-            "'', "
-            "GETDATE(), "
-            "'0', "
-            "'', "
-            "GETDATE(), "
-            "'0', "
-            "'', "
-            "GETDATE(), "
-            "GETDATE(), "
-            "'$cUser', "
-            "GETDATE(), "
-            "'$cUser') ",
-        "mode": "INSERT"
-      };
+      final response = await _dio.post('/service_dayoff.asmx/insertDayoff',
+          options: Options(contentType: 'text/plain', headers: {
+            'username': username,
+            'pass': pass,
+            'id_user': idUser,
+            'server': server,
+            'tgl_start': tglOff,
+            'tgl_end': tglGanti,
+            'ket': ket,
+            'id_absen': idAbsen,
+          }));
 
-      final data = _dioRequest;
-      data.addAll(submitTugasDinas);
-      log('query $submitTugasDinas');
-      // debugger();
+      final items = response.data;
 
-      final response = await _dio.post('',
-          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
-
-      log('response $response');
-      final items = response.data?[0];
-
-      if (items['status'] == 'Success') {
+      if (items['status_code'] == 200) {
         return unit;
       } else {
-        final message = items['error'] as String?;
-        final errorCode = items['errornum'] as int;
+        final message = items['message'] as String?;
+        final errorCode = items['status_code'] as int;
 
         throw RestApiExceptionWithMessage(errorCode, message);
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);
-    } on DioError catch (e) {
-      if (e.isNoConnectionError || e.isConnectionTimeout) {
+    } on DioException catch (e) {
+      if ((e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout)) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);
@@ -95,48 +60,49 @@ class CreateGantiHariRemoteService {
   }
 
   Future<Unit> updateGantiHari({
-    required int id,
+    required int idDayOff,
+    required int idUser,
     required int idAbsen,
+    required String username,
+    required String pass,
     required String ket,
     required String tglOff,
     required String tglGanti,
-    required String uUser,
+    required String noteSpv,
+    required String noteHrd,
+    String? server = Constants.isDev ? 'testing' : 'live',
   }) async {
     try {
-      // add spv / hrd note
-      final Map<String, String> submitTugasDinas = {
-        "command": " UPDATE $dbName SET "
-            "  ket = '$ket', "
-            "  tgl_start = '$tglOff', "
-            "  tgl_end = '$tglGanti', "
-            "  u_date = GETDATE(), "
-            "  u_user = '$uUser' "
-            "  WHERE id_dayoff = $id ",
-        "mode": "UPDATE"
-      };
+      final response = await _dio.post('/service_dayoff.asmx/updateDayoff',
+          options: Options(contentType: 'text/plain', headers: {
+            'id_dayoff': idDayOff,
+            'username': username,
+            'pass': pass,
+            'id_user': idUser,
+            'server': server,
+            'tgl_start': tglOff,
+            'tgl_end': tglGanti,
+            'ket': ket,
+            'id_absen': idAbsen,
+            'spv_note': noteSpv,
+            'hrd_note': noteHrd,
+          }));
 
-      final data = _dioRequest;
-      data.addAll(submitTugasDinas);
+      final items = response.data;
 
-      final response = await _dio.post('',
-          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
-
-      log('data ${jsonEncode(data)}');
-      log('response $response');
-      final items = response.data?[0];
-
-      if (items['status'] == 'Success') {
+      if (items['status_code'] == 200) {
         return unit;
       } else {
-        final message = items['error'] as String?;
-        final errorCode = items['errornum'] as int;
+        final message = items['message'] as String?;
+        final errorCode = items['status_code'] as int;
 
         throw RestApiExceptionWithMessage(errorCode, message);
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);
-    } on DioError catch (e) {
-      if (e.isNoConnectionError || e.isConnectionTimeout) {
+    } on DioException catch (e) {
+      if ((e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout)) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);
@@ -148,23 +114,15 @@ class CreateGantiHariRemoteService {
 
   Future<List<AbsenGantiHari>> getAbsenGantiHari() async {
     try {
-      final Map<String, String> getAbsenGantiHari = {
-        "command": "SELECT * FROM $dbHrMstJenisAbsen order by nama asc",
-        "mode": "SELECT"
-      };
+      final response = await _dio.post('/service_master.asmx/getJadwalAbsen',
+          options: Options(contentType: 'text/plain', headers: {
+            'server': Constants.isDev ? 'testing' : 'live',
+          }));
 
-      final data = _dioRequest;
-      data.addAll(getAbsenGantiHari);
+      final items = response.data;
 
-      final response = await _dio.post('',
-          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
-
-      log('data ${jsonEncode(data)}');
-      log('response $response');
-      final items = response.data?[0];
-
-      if (items['status'] == 'Success') {
-        final list = items['items'] as List;
+      if (items['status_code'] == 200) {
+        final list = items['data'] as List;
 
         if (list.isNotEmpty) {
           return list
@@ -177,15 +135,55 @@ class CreateGantiHariRemoteService {
           throw RestApiExceptionWithMessage(errorCode, message);
         }
       } else {
-        final message = items['error'] as String?;
-        final errorCode = items['errornum'] as int;
+        final message = items['message'] as String?;
+        final errorCode = items['status_code'] as int;
 
         throw RestApiExceptionWithMessage(errorCode, message);
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);
-    } on DioError catch (e) {
-      if (e.isNoConnectionError || e.isConnectionTimeout) {
+    } on DioException catch (e) {
+      if ((e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout)) {
+        throw NoConnectionException();
+      } else if (e.response != null) {
+        throw RestApiException(e.response?.statusCode);
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  Future<Unit> deleteGantiHari({
+    required String username,
+    required String pass,
+    required int idDayOff,
+    String? server = Constants.isDev ? 'testing' : 'live',
+  }) async {
+    try {
+      final response = await _dio.post('/service_dayoff.asmx/deleteDayoff',
+          options: Options(contentType: 'text/plain', headers: {
+            'username': username,
+            'pass': pass,
+            'id_dayoff': idDayOff,
+            'server': server,
+          }));
+
+      final items = response.data;
+
+      if (items['status_code'] == 200) {
+        return unit;
+      } else {
+        final message = items['message'] as String?;
+        final errorCode = items['status_code'] as int;
+
+        throw RestApiExceptionWithMessage(errorCode, message);
+      }
+    } on FormatException catch (e) {
+      throw FormatException(e.message);
+    } on DioException catch (e) {
+      if ((e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout)) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);

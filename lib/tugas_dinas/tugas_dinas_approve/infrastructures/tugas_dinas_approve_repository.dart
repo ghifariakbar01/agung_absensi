@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 
+import '../../../constants/constants.dart';
 import 'tugas_dinas_approve_remote_service.dart.dart';
 
 class TugasDinasApproveRepository {
@@ -7,87 +8,35 @@ class TugasDinasApproveRepository {
 
   final TugasDinasApproveRemoteService _remoteService;
 
-  Future<Unit> approveSpv({required int idDinas, required String nama}) async {
-    return _remoteService.approveSpv(
-      idDinas: idDinas,
-      nama: nama,
-    );
-  }
-
-  Future<Unit> unApproveSpv(
-      {required int idDinas, required String nama}) async {
-    return _remoteService.unApproveSpv(
-      idDinas: idDinas,
-      nama: nama,
-    );
-  }
-
-  Future<Unit> approveGm({required int idDinas, required String namaGm}) async {
-    return _remoteService.approveGm(
-      idDinas: idDinas,
-      namaGm: namaGm,
-    );
-  }
-
-  Future<Unit> unapproveGm(
-      {required int idDinas, required String namaGm}) async {
-    return _remoteService.unApproveGm(
-      idDinas: idDinas,
-      namaGm: namaGm,
-    );
-  }
-
-  Future<Unit> approveCOO(
-      {required int idDinas, required String namaCoo}) async {
-    return _remoteService.approveCOO(
-      idDinas: idDinas,
-      namaCoo: namaCoo,
-    );
-  }
-
-  Future<Unit> unApproveCOO(
-      {required int idDinas, required String namaCoo}) async {
-    return _remoteService.unApproveCOO(
-      idDinas: idDinas,
-      namaCoo: namaCoo,
-    );
-  }
-
-  Future<Unit> approveHrdLK({
+  Future<Unit> approve({
     required int idDinas,
-    required String namaHrd,
+    required String username,
+    required String pass,
+    required String jenisApp,
+    required String note,
+    required int tahun,
+    String? server = Constants.isDev ? 'testing' : 'live',
   }) async {
-    return _remoteService.approveHrdLK(namaHrd: namaHrd, idDinas: idDinas);
-  }
-
-  Future<Unit> unapproveHrdLK({
-    required int idDinas,
-    required String nama,
-  }) async {
-    return _remoteService.unApproveHrdLk(
-      nama: nama,
+    return _remoteService.approve(
       idDinas: idDinas,
+      username: username,
+      pass: pass,
+      jenisApp: jenisApp,
+      note: note,
+      tahun: tahun,
+      server: server,
     );
-  }
-
-  Future<Unit> approveHrd({
-    required int idDinas,
-    required String namaHrd,
-  }) async {
-    return _remoteService.approveHrd(namaHrd: namaHrd, idDinas: idDinas);
-  }
-
-  Future<Unit> unapproveHrd({
-    required int idDinas,
-    required String namaHrd,
-  }) async {
-    return _remoteService.unapproveHrd(namaHrd: namaHrd, idDinas: idDinas);
   }
 
   Future<Unit> batal({
     required int idDinas,
-    required String nama,
+    required String username,
+    required String pass,
   }) async {
-    return _remoteService.batal(nama: nama, idDinas: idDinas);
+    return _remoteService.batal(
+      idDinas: idDinas,
+      username: username,
+      pass: pass,
+    );
   }
 }

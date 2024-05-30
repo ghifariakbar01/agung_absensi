@@ -10,8 +10,25 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../constants/constants.dart';
 import '../cross_auth/application/cross_auth_notifier.dart';
 import '../style/style.dart';
+import '../user/application/user_model.dart';
+
+_determineBaseUrl(UserModelWithPassword user) {
+  final pt = user.ptServer;
+  if (pt == null) {
+    throw AssertionError('pt null');
+  }
+
+  return Constants.ptMap.entries
+      .firstWhere(
+        (element) => element.key == pt,
+        orElse: () => Constants.ptMap.entries.first,
+      )
+      .value
+      .replaceAll('/services', '');
+}
 
 class SlipGajiPage extends HookConsumerWidget {
   const SlipGajiPage();
@@ -19,8 +36,9 @@ class SlipGajiPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userNotifierProvider).user;
     final pinGaji = useState('');
+    final _url = _determineBaseUrl(user);
     final url = useState(
-        'http://agunglogisticsapp.co.id:1232/page_print_mob.aspx?userid=${user.idUser}&userpass=${user.password}&mode=slip_gaji&noid=${pinGaji.value}');
+        '$_url/page_print_mob.aspx?userid=${user.idUser}&userpass=${user.password}&mode=slip_gaji&noid=${pinGaji.value}');
 
     final pinGajiController = useTextEditingController();
 
@@ -59,7 +77,7 @@ class SlipGajiPage extends HookConsumerWidget {
                       onPressed: () {
                         pinGaji.value = pinGajiController.text;
                         url.value =
-                            'http://agunglogisticsapp.co.id:1232/page_print_mob.aspx?userid=${user.idUser}&userpass=${user.password}&mode=slip_gaji&noid=${pinGajiController.text}';
+                            '$_url/page_print_mob.aspx?userid=${user.idUser}&userpass=${user.password}&mode=slip_gaji&noid=${pinGajiController.text}';
                       })
                 ],
               )
@@ -67,7 +85,8 @@ class SlipGajiPage extends HookConsumerWidget {
                 onLoadStart: (controller, url) {
                   log('url start $url');
                 },
-                initialUrlRequest: URLRequest(url: Uri.parse(url.value)),
+                initialUrlRequest:
+                    URLRequest(url: WebUri.uri(Uri.parse(url.value))),
                 onLoadStop: (controller, url) async {
                   String html = await controller.evaluateJavascript(
                       source:

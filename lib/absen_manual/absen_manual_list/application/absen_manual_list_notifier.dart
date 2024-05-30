@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -12,7 +14,8 @@ part 'absen_manual_list_notifier.g.dart';
 AbsenManualListRemoteService absenManualListRemoteService(
     AbsenManualListRemoteServiceRef ref) {
   return AbsenManualListRemoteService(
-      ref.watch(dioProviderHosting), ref.watch(dioRequestProvider));
+    ref.watch(dioProviderCuti),
+  );
 }
 
 @Riverpod(keepAlive: true)
@@ -75,83 +78,33 @@ class AbsenManualListController extends _$AbsenManualListController {
     String? searchUser,
     DateTimeRange? dateRange,
   }) async {
-    final hrd = ref.read(userNotifierProvider).user.fin;
+    final username = ref.read(userNotifierProvider).user.nama!;
+    final pass = ref.read(userNotifierProvider).user.password!;
 
-    final staff = ref.read(userNotifierProvider).user.staf!;
-    final staffStr = staff.replaceAll('"', '').substring(0, staff.length - 1);
+    log('username : $username');
+    log('pass : $pass');
 
-    if (isHrdOrSpv(hrd)) {
-      return ref.read(absenManualListRepositoryProvider).getAbsenManualList(
-            page: page,
-            staff: staffStr,
-            searchUser: searchUser ?? '',
-            dateRange: dateRange ??
-                DateTimeRange(
+    final List<AbsenManualList> _list =
+        await ref.read(absenManualListRepositoryProvider).getAbsenManualList(
+              username: username,
+              pass: pass,
+              dateRange: dateRange ??
+                  DateTimeRange(
                     start: DateTime.now().subtract(Duration(days: 30)),
-                    end: DateTime.now().add(Duration(days: 1))),
-          );
+                    end: DateTime.now().add(Duration(days: 1)),
+                  ),
+            );
+
+    if (searchUser == null) {
+      return _list;
     } else {
-      return ref
-          .read(absenManualListRepositoryProvider)
-          .getAbsenManualListLimitedAccess(
-            page: page,
-            staff: staffStr,
-            searchUser: searchUser ?? '',
-            dateRange: dateRange ??
-                DateTimeRange(
-                    start: DateTime.now().subtract(Duration(days: 30)),
-                    end: DateTime.now().add(Duration(days: 1))),
-          );
+      return _list.where((element) {
+        if (element.fullname == null) {
+          return element.cUser!.toLowerCase().contains(searchUser);
+        } else {
+          return element.fullname!.toLowerCase().contains(searchUser);
+        }
+      }).toList();
     }
-  }
-
-  bool _isAct() {
-    final server = ref.read(userNotifierProvider).user.ptServer;
-    return server != 'gs_18';
-  }
-
-  bool isSpvEdit() {
-    bool _isSpvEdit = true;
-
-    final spv = ref.read(userNotifierProvider).user.spv;
-    final fullAkses = ref.read(userNotifierProvider).user.fullAkses;
-
-    if (spv == null) {
-      _isSpvEdit = false;
-    }
-
-    if (fullAkses! == false) {
-      _isSpvEdit = false;
-    }
-
-    if (_isAct()) {
-      _isSpvEdit = spv!.contains(',10,');
-    } else {
-      _isSpvEdit = spv!.contains(',5014,');
-    }
-
-    return _isSpvEdit;
-  }
-
-  bool isHrdOrSpv(String? access) {
-    bool _isHrdOrSpv = true;
-
-    final fullAkses = ref.read(userNotifierProvider).user.fullAkses;
-
-    if (access == null) {
-      _isHrdOrSpv = false;
-    }
-
-    if (fullAkses! == false) {
-      _isHrdOrSpv = false;
-    }
-
-    if (_isAct()) {
-      _isHrdOrSpv = access!.contains('16,');
-    } else {
-      _isHrdOrSpv = access!.contains('5105,');
-    }
-
-    return _isHrdOrSpv;
   }
 }

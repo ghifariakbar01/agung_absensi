@@ -254,7 +254,7 @@ class CreateSakitPage extends HookConsumerWidget {
 
                         // DIAGNOSA
                         TextFormField(
-                            maxLines: 5,
+                            maxLines: 2,
                             controller: diagnosaTextController,
                             cursorColor: Palette.primaryColor,
                             decoration: Themes.formStyleBordered(

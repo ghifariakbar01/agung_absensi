@@ -9,28 +9,14 @@ class DtPcListRepository {
   final DtPcListRemoteService _remoteService;
 
   Future<List<DtPcList>> getDtPcList({
-    required int page,
-    required String searchUser,
+    required String username,
+    required String pass,
     required DateTimeRange dateRange,
   }) async {
     return _remoteService.getDtPcList(
-      page: page,
+      username: username,
+      pass: pass,
       dateRange: dateRange,
-      searchUser: searchUser,
-    );
-  }
-
-  Future<List<DtPcList>> getDtPcListLimitedAccess({
-    required int page,
-    required String staff,
-    required String searchUser,
-    required DateTimeRange dateRange,
-  }) async {
-    return _remoteService.getDtPcListLimitedAccess(
-      page: page,
-      staff: staff,
-      dateRange: dateRange,
-      searchUser: searchUser,
     );
   }
 }

@@ -1,8 +1,9 @@
 import 'package:dio/dio.dart';
-import 'package:face_net_authentication/infrastructures/dio_extensions.dart';
+
 import 'package:face_net_authentication/mst_karyawan_cuti/application/mst_karyawan_cuti.dart';
 
 import '../../../infrastructures/exceptions.dart';
+import '../../constants/constants.dart';
 
 class MstKaryawanCutiRemoteService {
   MstKaryawanCutiRemoteService(
@@ -18,7 +19,7 @@ class MstKaryawanCutiRemoteService {
       final response = await _dio.post('/service_master.asmx/getCutiUser',
           options: Options(contentType: 'text/plain', headers: {
             'id_user': idUser,
-            'server': 'testing',
+            'server': Constants.isDev ? 'testing' : 'live',
           }));
 
       final items = response.data;
@@ -40,8 +41,9 @@ class MstKaryawanCutiRemoteService {
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);
-    } on DioError catch (e) {
-      if (e.isNoConnectionError || e.isConnectionTimeout) {
+    } on DioException catch (e) {
+      if ((e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout)) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);

@@ -11,7 +11,9 @@ part 'mst_karyawan_cuti_notifier.g.dart';
 @Riverpod(keepAlive: true)
 MstKaryawanCutiRemoteService mstKaryawanCutiRemoteService(
     MstKaryawanCutiRemoteServiceRef ref) {
-  return MstKaryawanCutiRemoteService(ref.watch(dioProviderCuti));
+  return MstKaryawanCutiRemoteService(
+    ref.watch(dioProviderCuti),
+  );
 }
 
 @Riverpod(keepAlive: true)
@@ -38,12 +40,6 @@ class MstKaryawanCutiNotifier extends _$MstKaryawanCutiNotifier {
       },
       crossed: MstKaryawanCuti.crossed,
     );
-  }
-
-  Future<MstKaryawanCuti> getSaldoMasterCutiById(int idUser) {
-    return ref
-        .read(mstKaryawanCutiRepositoryProvider)
-        .getSaldoMasterCuti(idUser: idUser);
   }
 
   Future<void> refresh() async {

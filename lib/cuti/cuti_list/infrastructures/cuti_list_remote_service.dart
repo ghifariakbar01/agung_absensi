@@ -1,10 +1,11 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:face_net_authentication/infrastructures/dio_extensions.dart';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../../constants/constants.dart';
 import '../../../infrastructures/exceptions.dart';
 import '../application/cuti_list.dart';
 
@@ -31,7 +32,7 @@ class CutiListRemoteService {
               'pass': pass,
               'date_awal': d1,
               'date_akhir': d2,
-              'server': 'testing'
+              'server': Constants.isDev ? 'testing' : 'live',
             },
           ));
 
@@ -58,7 +59,6 @@ class CutiListRemoteService {
 
           throw RestApiExceptionWithMessage(errorCode, message);
         }
-        //
       } else {
         final message = items['message'] as String?;
         final errorCode = items['status_code'] as int;
@@ -67,8 +67,9 @@ class CutiListRemoteService {
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);
-    } on DioError catch (e) {
-      if (e.isNoConnectionError || e.isConnectionTimeout) {
+    } on DioException catch (e) {
+      if ((e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout)) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dartz/dartz.dart';
 
 import 'package:face_net_authentication/domain/riwayat_absen_failure.dart';
@@ -21,13 +23,21 @@ class RiwayatAbsenNotifier extends StateNotifier<RiwayatAbsenState> {
   }) async {
     Either<RiwayatAbsenFailure, List<RiwayatAbsenModel>> failureOrSuccess;
 
-    state = state.copyWith(isGetting: true, failureOrSuccessOption: none());
+    state = state.copyWith(
+      isGetting: true,
+      failureOrSuccessOption: none(),
+    );
 
     failureOrSuccess = await _absenRepository.getRiwayatAbsen(
-        page: page, dateFirst: dateFirst, dateSecond: dateSecond);
+      page: page,
+      dateFirst: dateFirst,
+      dateSecond: dateSecond,
+    );
 
     state = state.copyWith(
-        isGetting: false, failureOrSuccessOption: optionOf(failureOrSuccess));
+      isGetting: false,
+      failureOrSuccessOption: optionOf(failureOrSuccess),
+    );
   }
 
   void changeAbsenRiwayat(
@@ -47,8 +57,14 @@ class RiwayatAbsenNotifier extends StateNotifier<RiwayatAbsenState> {
     state = state.copyWith(page: page);
   }
 
-  void changeFilter(String? dateFirst, String? dateSecond) {
-    state = state.copyWith(dateFirst: dateFirst, dateSecond: dateSecond);
+  void changeFilter(
+    String dateFirst,
+    String dateSecond,
+  ) {
+    state = state.copyWith(
+      dateFirst: dateFirst,
+      dateSecond: dateSecond,
+    );
   }
 
   void changeIsMore(bool isMore) {
@@ -59,10 +75,11 @@ class RiwayatAbsenNotifier extends StateNotifier<RiwayatAbsenState> {
     state = state.copyWith(isGetting: isGetting);
   }
 
-  Future<void> startFilter(
-      {required Function changePage,
-      required Function changeFilter,
-      required Function onAllChanged}) async {
+  Future<void> startFilter({
+    required Function changePage,
+    required Function changeFilter,
+    required Function onAllChanged,
+  }) async {
     changePage();
     changeFilter();
     await onAllChanged();

@@ -10,7 +10,6 @@ import 'package:intl/intl.dart';
 
 import '../../../constants/assets.dart';
 
-import '../../../shared/providers.dart';
 import '../../../style/style.dart';
 
 import '../../../utils/dialog_helper.dart';
@@ -27,20 +26,6 @@ class DtPcListItem extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-
-    // final _isSpvApprove = item.spvTgl != item.cDate && item.spvSta == true;
-    // final spvAging = _isSpvApprove
-    //     ? DateTime.parse(item.spvTgl!)
-    //         .difference(DateTime.parse(item.cDate!))
-    //         .inDays
-    //     : DateTime.now().difference(DateTime.parse(item.cDate!)).inDays;
-
-    // final _isHrdApprove = item.hrdTgl != item.cDate && item.hrdSta == true;
-    // final hrdAging = _isHrdApprove
-    //     ? DateTime.parse(item.hrdTgl!)
-    //         .difference(DateTime.parse(item.cDate!))
-    //         .inDays
-    //     : DateTime.now().difference(DateTime.parse(item.cDate!)).inDays;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -76,7 +61,7 @@ class DtPcListItem extends HookConsumerWidget {
                       Text(
                         DateFormat(
                           'EEEE, dd MMMM yyyy',
-                        ).format(DateTime.parse(item.cDate!)),
+                        ).format(item.cDate!),
                         style: Themes.customColor(10,
                             fontWeight: FontWeight.w500,
                             color: item.btlSta == true
@@ -103,19 +88,19 @@ class DtPcListItem extends HookConsumerWidget {
                       SizedBox(
                         width: 4,
                       ),
-                      if (item.btlSta == false)
+                      if (false)
                         TappableSvg(
                             assetPath: Assets.iconBatal,
-                            onTap: () {
-                              if ((!ref
-                                  .read(dtPcApproveControllerProvider.notifier)
-                                  .canBatal(item))) {
-                                showDialog(
+                            onTap: () async {
+                              if (item.btlSta!) {
+                                return showDialog(
                                   context: context,
-                                  builder: (context) => VFailedDialog(),
+                                  builder: (context) => VFailedDialog(
+                                    message: item.btlMsg,
+                                  ),
                                 );
                               } else {
-                                showDialog(
+                                return showDialog(
                                   context: context,
                                   builder: (context) => VBatalDialog(
                                     onTap: () async {
@@ -123,13 +108,7 @@ class DtPcListItem extends HookConsumerWidget {
                                       await ref
                                           .read(dtPcApproveControllerProvider
                                               .notifier)
-                                          .batal(
-                                            itemDt: item,
-                                            nama: ref
-                                                .read(userNotifierProvider)
-                                                .user
-                                                .nama!,
-                                          );
+                                          .batal(idDt: item.idDt!);
                                     },
                                   ),
                                 );
@@ -203,7 +182,7 @@ class DtPcListItem extends HookConsumerWidget {
                           Text(
                             DateFormat(
                               'dd MMM yyyy',
-                            ).format(DateTime.parse(item.dtTgl!)),
+                            ).format(item.dtTgl!),
                             style: Themes.customColor(9,
                                 color: item.btlSta == true
                                     ? Colors.white
@@ -229,7 +208,7 @@ class DtPcListItem extends HookConsumerWidget {
                           Text(
                             DateFormat(
                               'hh:mm a',
-                            ).format(DateTime.parse(item.jam!)),
+                            ).format(item.jam!),
                             style: Themes.customColor(9,
                                 color: item.btlSta == true
                                     ? Colors.white
@@ -394,60 +373,56 @@ class DtPcListItem extends HookConsumerWidget {
                                   child: InkWell(
                                     splashColor: Palette.primaryColor,
                                     onTap: () async {
-                                      if (!ref
-                                          .read(dtPcApproveControllerProvider
-                                              .notifier)
-                                          .canSpvApprove(item)) {
+                                      if (item.isSpv == false) {
                                         showDialog(
                                           context: context,
-                                          builder: (context) => VFailedDialog(),
+                                          builder: (context) => VFailedDialog(
+                                            message: item.spvMsg,
+                                          ),
                                         );
                                       } else {
-                                        // jika belum diapprove maka approve
-                                        // kl udah di unapprove
                                         if (item.spvSta == false) {
                                           await showDialog(
                                               context: context,
-                                              builder: (context) =>
-                                                  VAlertDialog2(
-                                                      label:
-                                                          'Dibutuhkan Konfirmasi SPV (Approve)',
-                                                      onPressed: () async {
-                                                        context.pop();
-
-                                                        await ref
-                                                            .read(
-                                                                dtPcApproveControllerProvider
-                                                                    .notifier)
-                                                            .approveSpv(
-                                                                itemDt: item,
-                                                                nama: ref
-                                                                    .read(
-                                                                        userNotifierProvider)
-                                                                    .user
-                                                                    .nama!);
-                                                      }));
+                                              builder: (context) {
+                                                return VAlertDialog2(
+                                                    label:
+                                                        'Dibutuhkan Konfirmasi SPV (Approve)',
+                                                    onPressed: () async {
+                                                      context.pop();
+                                                      await ref
+                                                          .read(
+                                                              dtPcApproveControllerProvider
+                                                                  .notifier)
+                                                          .approve(
+                                                              idDt: item.idDt!,
+                                                              note: '',
+                                                              jenisApp: 'spv',
+                                                              tahun: item
+                                                                  .cDate!.year);
+                                                    });
+                                              });
                                         } else {
                                           await showDialog(
                                               context: context,
-                                              builder: (context) =>
-                                                  VAlertDialog2(
-                                                      label:
-                                                          'Dibutuhkan Konfirmasi SPV (Unapprove)',
-                                                      onPressed: () async {
-                                                        context.pop();
-                                                        await ref
-                                                            .read(
-                                                                dtPcApproveControllerProvider
-                                                                    .notifier)
-                                                            .unApproveSpv(
-                                                                itemDt: item,
-                                                                nama: ref
-                                                                    .read(
-                                                                        userNotifierProvider)
-                                                                    .user
-                                                                    .nama!);
-                                                      }));
+                                              builder: (context) {
+                                                return VAlertDialog2(
+                                                    label:
+                                                        'Dibutuhkan Konfirmasi SPV (Unapprove)',
+                                                    onPressed: () async {
+                                                      context.pop();
+                                                      await ref
+                                                          .read(
+                                                              dtPcApproveControllerProvider
+                                                                  .notifier)
+                                                          .approve(
+                                                              idDt: item.idDt!,
+                                                              note: '',
+                                                              jenisApp: 'spv',
+                                                              tahun: item
+                                                                  .cDate!.year);
+                                                    });
+                                              });
                                         }
                                       }
                                     },
@@ -532,51 +507,65 @@ class DtPcListItem extends HookConsumerWidget {
                                   child: InkWell(
                                     splashColor: Palette.primaryColor,
                                     onTap: () async {
-                                      if (!ref
-                                          .read(dtPcApproveControllerProvider
-                                              .notifier)
-                                          .canHrdApprove(item)) {
+                                      if (item.isHr == false) {
                                         showDialog(
                                           context: context,
-                                          builder: (context) => VFailedDialog(),
+                                          builder: (context) => VFailedDialog(
+                                            message: item.hrMsg,
+                                          ),
                                         );
                                       } else {
                                         final String? text =
                                             await DialogHelper<void>()
                                                 .showFormDialog(
-                                          label: 'Note HRD',
-                                          context: context,
-                                        );
+                                                    context: context);
 
-                                        if (text != null) {
-                                          if (item.hrdSta == false)
-                                            await ref
-                                                .read(
-                                                    dtPcApproveControllerProvider
-                                                        .notifier)
-                                                .approveHrd(
-                                                  note: text,
-                                                  itemDt: item,
-                                                  namaHrd: ref
-                                                      .read(
-                                                          userNotifierProvider)
-                                                      .user
-                                                      .nama!,
-                                                );
-                                          else
-                                            await ref
-                                                .read(
-                                                    dtPcApproveControllerProvider
-                                                        .notifier)
-                                                .unApproveHrd(
-                                                  idDt: item.idDt!,
-                                                  note: text,
-                                                  namaHrd: ref
-                                                      .read(
-                                                          userNotifierProvider)
-                                                      .user
-                                                      .nama!,
-                                                );
+                                        if (item.hrdSta == false) {
+                                          await showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  VAlertDialog2(
+                                                      label:
+                                                          'Dibutuhkan Konfirmasi HRD (Approve)',
+                                                      onPressed: () async {
+                                                        context.pop();
+                                                        await ref
+                                                            .read(
+                                                                dtPcApproveControllerProvider
+                                                                    .notifier)
+                                                            .approve(
+                                                                idDt:
+                                                                    item.idDt!,
+                                                                note:
+                                                                    text ?? '',
+                                                                jenisApp: 'hr',
+                                                                tahun: item
+                                                                    .cDate!
+                                                                    .year);
+                                                      }));
+                                        } else {
+                                          await showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  VAlertDialog2(
+                                                      label:
+                                                          'Dibutuhkan Konfirmasi HRD (Unapprove)',
+                                                      onPressed: () async {
+                                                        context.pop();
+                                                        await ref
+                                                            .read(
+                                                                dtPcApproveControllerProvider
+                                                                    .notifier)
+                                                            .approve(
+                                                                idDt:
+                                                                    item.idDt!,
+                                                                note:
+                                                                    text ?? '',
+                                                                jenisApp: 'hr',
+                                                                tahun: item
+                                                                    .cDate!
+                                                                    .year);
+                                                      }));
                                         }
                                       }
                                     },

@@ -16,6 +16,7 @@ import '../absen/infrastructures/absen_repository.dart';
 
 import '../auth/application/auth_notifier.dart';
 import '../auth/infrastructures/auth_interceptor.dart';
+import '../auth/infrastructures/auth_interceptor_two.dart';
 import '../auth/infrastructures/auth_remote_service.dart';
 import '../auth/infrastructures/auth_repository.dart';
 import '../auto_absen/application/auto_absen_notifier.dart';
@@ -125,6 +126,10 @@ final authRepositoryProvider = Provider((ref) => AuthRepository(
 
 final authInterceptorProvider = Provider(
   (ref) => AuthInterceptor(ref),
+);
+
+final authInterceptorTwoProvider = Provider(
+  (ref) => AuthInterceptorTwo(ref),
 );
 
 final authNotifierProvider = StateNotifierProvider<AuthNotifier, AuthState>(

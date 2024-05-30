@@ -13,7 +13,6 @@ import '../../../err_log/application/err_log_notifier.dart';
 import '../../../mst_karyawan_cuti/application/mst_karyawan_cuti.dart';
 import '../../../mst_karyawan_cuti/application/mst_karyawan_cuti_notifier.dart';
 import '../../../routes/application/route_names.dart';
-import '../../../send_wa/application/send_wa_notifier.dart';
 import '../../../shared/providers.dart';
 import '../../../style/style.dart';
 import '../../../widgets/v_async_widget.dart';
@@ -30,7 +29,6 @@ class CutiListScaffold extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final sendWa = ref.watch(sendWaNotifierProvider);
     final mstCuti = ref.watch(mstKaryawanCutiNotifierProvider);
     final cutiApprove = ref.watch(cutiApproveControllerProvider);
     final cutiList = ref.watch(cutiListControllerProvider);
@@ -184,139 +182,136 @@ class CutiListScaffold extends HookConsumerWidget {
               );
 
               return WillPopScope(
-                onWillPop: () async {
-                  final user = ref.read(userNotifierProvider).user;
+                  onWillPop: () async {
+                    final user = ref.read(userNotifierProvider).user;
 
-                  if (_isCrossed) {
-                    await ref.read(crossAuthNotifierProvider.notifier).uncross(
-                          userId: user.nama!,
-                          password: user.password!,
-                        );
-                  }
+                    if (_isCrossed) {
+                      await ref
+                          .read(crossAuthNotifierProvider.notifier)
+                          .uncross(
+                            userId: user.nama!,
+                            password: user.password!,
+                          );
+                    }
 
-                  return true;
-                },
-                child: VAsyncWidgetScaffold<MstKaryawanCuti>(
+                    return true;
+                  },
+                  child: VAsyncWidgetScaffold<MstKaryawanCuti>(
                     value: mstCuti,
                     data: (mst) => VAsyncValueWidget(
-                          value: cutiApprove,
-                          data: (_) => VAsyncWidgetScaffold(
-                            value: sendWa,
-                            data: (_) {
-                              final _oneMonth = Duration(days: 30);
-                              final _oneDay = Duration(days: 1);
-                              final _initialDateRange = DateTimeRange(
-                                end: DateTime.now().add(_oneDay),
-                                start: DateTime.now().subtract(_oneMonth),
-                              );
+                        value: cutiApprove,
+                        data: (_) {
+                          final _oneMonth = Duration(days: 30);
+                          final _oneDay = Duration(days: 1);
+                          final _initialDateRange = DateTimeRange(
+                            end: DateTime.now().add(_oneDay),
+                            start: DateTime.now().subtract(_oneMonth),
+                          );
 
-                              return VScaffoldTabLayout(
-                                isActionsVisible: true,
-                                scaffoldTitle: 'List Form Cuti',
-                                mapPT: mapPT,
-                                currPT: _initialDropdown ??
-                                    _initialDropdownPlaceholder,
-                                searchFocus: _searchFocus,
-                                isSearching: _isSearching,
-                                onPageChanged: onPageChanged,
-                                onFieldSubmitted: onFieldSubmitted,
-                                onFilterSelected: onFilterSelected,
-                                onDropdownChanged: onDropdownChanged,
-                                initialDateRange: _dateTimeRange.value,
-                                scaffoldFAB: _isCrossed
-                                    ? Container()
-                                    : FloatingActionButton.small(
-                                        backgroundColor: Palette.primaryColor,
-                                        child: Icon(
-                                          Icons.add,
-                                          color: Colors.white,
-                                        ),
-                                        onPressed: () => context.pushNamed(
-                                              RouteNames.createCutiNameRoute,
-                                            )),
-                                bottomLeftWidget: SearchFilterInfoWidget(
-                                  d1: _d1,
-                                  d2: _d2,
-                                  lastSearch: _lastSearch.value,
-                                  isScrolling: _isScrollStopped.value,
-                                  onTapName: () {
-                                    _isSearching.value = true;
-                                    _searchFocus.requestFocus();
-                                  },
-                                  onTapDate: () async {
-                                    final _oneMonth = Duration(days: 30);
+                          return VScaffoldTabLayout(
+                            scaffoldTitle: 'List Form Cuti',
+                            mapPT: mapPT,
+                            currPT:
+                                _initialDropdown ?? _initialDropdownPlaceholder,
+                            searchFocus: _searchFocus,
+                            isSearching: _isSearching,
+                            onPageChanged: onPageChanged,
+                            onFieldSubmitted: onFieldSubmitted,
+                            onFilterSelected: onFilterSelected,
+                            onDropdownChanged: onDropdownChanged,
+                            initialDateRange: _dateTimeRange.value,
+                            scaffoldFAB: _isCrossed
+                                ? Container()
+                                : FloatingActionButton.small(
+                                    backgroundColor: Palette.primaryColor,
+                                    child: Icon(
+                                      Icons.add,
+                                      color: Colors.white,
+                                    ),
+                                    onPressed: () => context.pushNamed(
+                                          RouteNames.createCutiNameRoute,
+                                        )),
+                            bottomLeftWidget: SearchFilterInfoWidget(
+                              d1: _d1,
+                              d2: _d2,
+                              lastSearch: _lastSearch.value,
+                              isScrolling: _isScrollStopped.value,
+                              onTapName: () {
+                                _isSearching.value = true;
+                                _searchFocus.requestFocus();
+                              },
+                              onTapDate: () async {
+                                final _oneMonth = Duration(days: 30);
 
-                                    final picked = await showDateRangePicker(
-                                        context: context,
-                                        initialDateRange: _initialDateRange,
-                                        firstDate:
-                                            DateTime.now().subtract(_oneMonth),
-                                        lastDate: DateTime.now()
-                                            .add(Duration(days: 1)));
+                                final picked = await showDateRangePicker(
+                                    context: context,
+                                    initialDateRange: _initialDateRange,
+                                    firstDate:
+                                        DateTime.now().subtract(_oneMonth),
+                                    lastDate:
+                                        DateTime.now().add(Duration(days: 1)));
 
-                                    if (picked != null) {
-                                      print(picked);
+                                if (picked != null) {
+                                  print(picked);
 
-                                      onFilterSelected(picked);
-                                    }
-                                  },
-                                ),
-                                scaffoldBody: [
-                                  VAsyncValueWidget<List<CutiList>>(
-                                      value: cutiList,
-                                      data: (list) {
-                                        final waiting = list
-                                            .where((e) =>
-                                                (e.spvSta == false ||
-                                                    e.hrdSta == false) &&
-                                                e.btlSta == false)
-                                            .toList();
+                                  onFilterSelected(picked);
+                                }
+                              },
+                            ),
+                            scaffoldBody: [
+                              VAsyncValueWidget<List<CutiList>>(
+                                  value: cutiList,
+                                  data: (list) {
+                                    final waiting = list
+                                        .where((e) =>
+                                            (e.spvSta == false ||
+                                                e.hrdSta == false) &&
+                                            e.btlSta == false)
+                                        .toList();
 
-                                        return CutiListWidget(
-                                          _isCrossed,
-                                          mst,
-                                          waiting,
-                                          onRefresh,
-                                          scrollController,
-                                        );
-                                      }),
-                                  VAsyncValueWidget<List<CutiList>>(
-                                      value: cutiList,
-                                      data: (list) {
-                                        final approved = list
-                                            .where((e) =>
-                                                (e.spvSta == true &&
-                                                    e.hrdSta == true) &&
-                                                e.btlSta == false)
-                                            .toList();
-                                        return CutiListWidget(
-                                          _isCrossed,
-                                          mst,
-                                          approved,
-                                          onRefresh,
-                                          scrollController,
-                                        );
-                                      }),
-                                  VAsyncValueWidget<List<CutiList>>(
-                                      value: cutiList,
-                                      data: (list) {
-                                        final cancelled = list
-                                            .where((e) => e.btlSta == true)
-                                            .toList();
-                                        return CutiListWidget(
-                                          _isCrossed,
-                                          mst,
-                                          cancelled,
-                                          onRefresh,
-                                          scrollController,
-                                        );
-                                      }),
-                                ],
-                              );
-                            },
-                          ),
-                        )),
-              );
+                                    return CutiListWidget(
+                                      _isCrossed,
+                                      mst,
+                                      waiting,
+                                      onRefresh,
+                                      scrollController,
+                                    );
+                                  }),
+                              VAsyncValueWidget<List<CutiList>>(
+                                  value: cutiList,
+                                  data: (list) {
+                                    final approved = list
+                                        .where((e) =>
+                                            (e.spvSta == true &&
+                                                e.hrdSta == true) &&
+                                            e.btlSta == false)
+                                        .toList();
+                                    return CutiListWidget(
+                                      _isCrossed,
+                                      mst,
+                                      approved,
+                                      onRefresh,
+                                      scrollController,
+                                    );
+                                  }),
+                              VAsyncValueWidget<List<CutiList>>(
+                                  value: cutiList,
+                                  data: (list) {
+                                    final cancelled = list
+                                        .where((e) => e.btlSta == true)
+                                        .toList();
+                                    return CutiListWidget(
+                                      _isCrossed,
+                                      mst,
+                                      cancelled,
+                                      onRefresh,
+                                      scrollController,
+                                    );
+                                  }),
+                            ],
+                          );
+                        }),
+                  ));
             }),
       ),
     );

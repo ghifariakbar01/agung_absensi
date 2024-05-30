@@ -15,7 +15,10 @@ class ImeiResetNotifier extends StateNotifier<ImeiResetState> {
   clearImeiFromStorage() async {
     Either<ImeiFailure, Unit?> failureOrSuccessOption;
 
-    state = state.copyWith(isClearing: true, failureOrSuccessOption: none());
+    state = state.copyWith(
+      isClearing: true,
+      failureOrSuccessOption: none(),
+    );
 
     failureOrSuccessOption = await _imeiRepository.clearImeiCredentials();
 
