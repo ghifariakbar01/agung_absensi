@@ -34,7 +34,7 @@ class CreateAbsenManualRemoteService {
             'jam_awal': jamAwal,
             'jam_akhir': jamAkhir,
             'ket': ket,
-            'jenis_absen': 'MNL',
+            'jenis_absen': jenisAbsen,
           }));
 
       final items = response.data;
@@ -43,9 +43,11 @@ class CreateAbsenManualRemoteService {
         return unit;
       } else {
         final message = items['message'] as String?;
+        final errmessage = items['error_msg'] as String?;
         final errorCode = items['status_code'] as int;
 
-        throw RestApiExceptionWithMessage(errorCode, message);
+        throw RestApiExceptionWithMessage(
+            errorCode, "$errorCode : $message $errmessage ");
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);
@@ -89,7 +91,7 @@ class CreateAbsenManualRemoteService {
             'ket': ket,
             'spv_note': noteSpv,
             'hrd_note': noteHrd,
-            'jenis_absen': 'MNL',
+            'jenis_absen': jenisAbsen,
           }));
 
       final items = response.data;
@@ -98,9 +100,11 @@ class CreateAbsenManualRemoteService {
         return unit;
       } else {
         final message = items['message'] as String?;
+        final errmessage = items['error_msg'] as String?;
         final errorCode = items['status_code'] as int;
 
-        throw RestApiExceptionWithMessage(errorCode, message);
+        throw RestApiExceptionWithMessage(
+            errorCode, "$errorCode : $message $errmessage ");
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);
@@ -137,9 +141,11 @@ class CreateAbsenManualRemoteService {
         return unit;
       } else {
         final message = items['message'] as String?;
+        final errmessage = items['error_msg'] as String?;
         final errorCode = items['status_code'] as int;
 
-        throw RestApiExceptionWithMessage(errorCode, message);
+        throw RestApiExceptionWithMessage(
+            errorCode, "$errorCode : $message $errmessage ");
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);
@@ -179,9 +185,11 @@ class CreateAbsenManualRemoteService {
         }
       } else {
         final message = items['message'] as String?;
+        final errmessage = items['error_msg'] as String?;
         final errorCode = items['status_code'] as int;
 
-        throw RestApiExceptionWithMessage(errorCode, message);
+        throw RestApiExceptionWithMessage(
+            errorCode, "$errorCode : $message $errmessage ");
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);

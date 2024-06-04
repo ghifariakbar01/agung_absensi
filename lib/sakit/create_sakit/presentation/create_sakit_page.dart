@@ -203,13 +203,12 @@ class CreateSakitPage extends HookConsumerWidget {
                         Ink(
                           child: InkWell(
                             onTap: () async {
-                              final _oneMonth = Duration(days: 30);
-                              final _threeDays = Duration(days: 3);
+                              final _oneYear = Duration(days: 365);
 
                               final picked = await showDateRangePicker(
                                 context: context,
-                                lastDate: DateTime.now().add(_threeDays),
-                                firstDate: DateTime.now().subtract(_oneMonth),
+                                lastDate: DateTime.now().add(_oneYear),
+                                firstDate: DateTime.now().subtract(_oneYear),
                               );
                               if (picked != null) {
                                 tglStart.value = picked.start;
@@ -304,9 +303,16 @@ class CreateSakitPage extends HookConsumerWidget {
                                               diagnosaTextController.text,
                                           surat:
                                               suratDokterTextController.value,
-                                          onError: (msg) =>
-                                              DialogHelper.showCustomDialog(
-                                                  msg, context));
+                                          onError: (msg) {
+                                            return DialogHelper
+                                                .showCustomDialog(
+                                              msg,
+                                              context,
+                                            ).then((_) => ref
+                                                .read(errLogControllerProvider
+                                                    .notifier)
+                                                .sendLog(errMessage: msg));
+                                          });
                                 }
                               }),
                         )

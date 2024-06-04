@@ -11,7 +11,9 @@ part 'err_log_notifier.g.dart';
 @Riverpod(keepAlive: true)
 ErrLogRemoteService errLogRemoteService(ErrLogRemoteServiceRef ref) {
   return ErrLogRemoteService(
-      ref.watch(dioProviderHosting), ref.watch(dioRequestProvider));
+    ref.watch(dioProviderHosting),
+    ref.watch(dioRequestProvider),
+  );
 }
 
 @Riverpod(keepAlive: true)
@@ -26,13 +28,19 @@ class ErrLogController extends _$ErrLogController {
   @override
   FutureOr<void> build() async {}
 
-  Future<void> sendLog(
-      {required String imeiDb,
-      required String imeiSaved,
-      required String errMessage}) async {
+  Future<void> sendLog({
+    String? imeiDb,
+    String? imeiSaved,
+    required String errMessage,
+  }) async {
     state = const AsyncLoading();
 
     final user = ref.read(userNotifierProvider).user;
+
+    final _imei = ref.read(imeiNotifierProvider.notifier);
+    final _db =
+        imeiDb ?? await _imei.getImeiStringDb(idKary: user.IdKary ?? '-');
+    final _saved = imeiSaved ?? await _imei.getImeiString();
 
     final platform = Platform.isIOS ? 'iOS' : 'Android';
 
@@ -42,8 +50,8 @@ class ErrLogController extends _$ErrLogController {
             idUser: user.idUser ?? 0,
             nama: user.nama ?? '',
             platform: platform,
-            imeiDb: imeiDb,
-            imeiSaved: imeiSaved,
+            imeiDb: _db,
+            imeiSaved: _saved,
             errMessage: errMessage));
   }
 }

@@ -38,20 +38,42 @@ class CrossAuthRepository {
   //  ],
   //  'gs_14': ['PT Agung Tama Raya'],
   //  'gs_21': ['PT Agung Jasa Logistik'],
-  Future<CrossAuthResponse> crossToACT(
-      {required String userId,
-      required String password,
-      required String server}) async {
-    return _remoteService.crossToACT(
-        userId: userId, password: password, server: server);
+  Future<CrossAuthResponse> crossToACT({
+    required String userId,
+    required String password,
+    required String server,
+    bool? isStl,
+  }) async {
+    return isStl == null
+        ? _remoteService.crossToACT(
+            userId: userId,
+            password: password,
+            server: server,
+          )
+        : _remoteService.crossToACTStl(
+            userId: userId,
+            password: password,
+            server: server,
+          );
   }
 
   //  'gs_18': ['PT Agung Raya'],
-  Future<CrossAuthResponse> crossToARV(
-      {required String userId,
-      required String password,
-      required String server}) async {
-    return _remoteService.crossToARV(
-        userId: userId, password: password, server: server);
+  Future<CrossAuthResponse> crossToARV({
+    required String userId,
+    required String password,
+    required String server,
+    bool? isStl,
+  }) async {
+    return isStl == null
+        ? _remoteService.crossToARV(
+            userId: userId,
+            password: password,
+            server: server,
+          )
+        : _remoteService.crossToARVStl(
+            userId: userId,
+            password: password,
+            server: server,
+          );
   }
 }

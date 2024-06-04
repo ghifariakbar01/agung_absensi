@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
@@ -10,10 +11,13 @@ import '../../../style/style.dart';
 
 import '../../../utils/dialog_helper.dart';
 import '../../../widgets/tappable_widget.dart';
+import '../../../widgets/v_async_widget.dart';
 import '../../../widgets/v_dialogs.dart';
 
+import '../../create_izin/application/jenis_izin_notifier.dart';
 import '../../izin_approve/application/izin_approve_notifier.dart';
 import '../application/izin_list.dart';
+import '../application/jenis_izin.dart';
 import 'izin_dtl_dialog.dart';
 
 class IzinListItem extends HookConsumerWidget {
@@ -26,6 +30,8 @@ class IzinListItem extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+
+    final jenisIzin = ref.watch(jenisIzinNotifierProvider);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -59,9 +65,9 @@ class IzinListItem extends HookConsumerWidget {
                     children: [
                       // LEFT
                       Text(
-                        DateFormat(
+                        "${item.idIzin} - ${DateFormat(
                           'EEEE, dd MMMM yyyy',
-                        ).format(item.cDate!),
+                        ).format((item.cDate!))}",
                         style: Themes.customColor(10,
                             fontWeight: FontWeight.w500,
                             color: item.btlSta == true
@@ -266,32 +272,37 @@ class IzinListItem extends HookConsumerWidget {
                               SizedBox(
                                 width: 25,
                               ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Jenis Izin',
-                                    style: Themes.customColor(7,
-                                        color: item.btlSta == true
-                                            ? Colors.white
-                                            : Colors.grey),
-                                  ),
-                                  SizedBox(
-                                    height: 2,
-                                  ),
-                                  SizedBox(
-                                    width: 75,
-                                    child: Text(
-                                      '${item.fullname}',
-                                      style: Themes.customColor(9,
+                              VAsyncValueWidget<List<JenisIzin>>(
+                                value: jenisIzin,
+                                data: (jenis) => Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Jenis Izin',
+                                      style: Themes.customColor(7,
                                           color: item.btlSta == true
                                               ? Colors.white
-                                              : Palette.tertiaryColor,
-                                          fontWeight: FontWeight.w500),
+                                              : Colors.grey),
                                     ),
-                                  ),
-                                ],
+                                    SizedBox(
+                                      height: 2,
+                                    ),
+                                    SizedBox(
+                                      width: 75,
+                                      child: Text(
+                                        item.idMstIzin == null
+                                            ? '-'
+                                            : '${jenis.firstWhereOrNull((element) => element.idMstIzin == item.idMstIzin)!.nama}',
+                                        style: Themes.customColor(9,
+                                            color: item.btlSta == true
+                                                ? Colors.white
+                                                : Palette.tertiaryColor,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               )
                             ],
                           ),

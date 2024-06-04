@@ -7,6 +7,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../constants/assets.dart';
 
 import '../constants/constants.dart';
+import '../cross_auth/application/cross_auth_notifier.dart';
 import '../user/application/user_model.dart';
 import '../user/application/user_notifier.dart';
 import '../widgets/v_dialogs.dart';
@@ -106,6 +107,37 @@ final getUserFutureProvider = FutureProvider<Unit>((ref) async {
 final imeiInitFutureProvider =
     FutureProvider.family<Unit, BuildContext>((ref, context) async {
   try {
+    UserNotifier userNotifier = ref.read(userNotifierProvider.notifier);
+    String userString = await userNotifier.getUserString();
+
+    final json = jsonDecode(userString) as Map<String, Object?>;
+    final user = UserModelWithPassword.fromJson(json);
+
+    final _data = await ref.read(isUserCrossedProvider.future);
+
+    if (user.IdKary!.isEmpty) {
+      // uncross
+      final _isCrossed = _data.when(
+        crossed: () => true,
+        notCrossed: () => false,
+      );
+
+      if (_isCrossed) {
+        await ref.read(crossAuthNotifierProvider.notifier).uncrossStl(
+              userId: user.nama!,
+              password: user.password!,
+            );
+      }
+
+      //
+    } else {
+      //
+    }
+  } catch (e) {
+    throw AssertionError('Error validating cross server. Error : $e');
+  }
+
+  try {
     ref.invalidate(getUserFutureProvider);
     await ref.read(getUserFutureProvider.future);
   } catch (e) {
@@ -124,8 +156,9 @@ final imeiInitFutureProvider =
 
       imeiNotifier.changeSavedImei(imei);
 
-      imeiDb =
-          await imeiNotifier.getImeiStringDb(idKary: user.IdKary ?? 'null');
+      imeiDb = await imeiNotifier.getImeiStringDb(
+        idKary: user.IdKary ?? 'null',
+      );
 
       await ref
           .read(imeiAuthNotifierProvider.notifier)

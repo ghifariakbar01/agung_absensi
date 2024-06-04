@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../constants/assets.dart';
+import '../../../err_log/application/err_log_notifier.dart';
 import '../../../routes/application/route_names.dart';
 import '../../../style/style.dart';
 import '../../../utils/dialog_helper.dart';
@@ -25,7 +26,7 @@ class IzinDtlDialog extends ConsumerWidget {
       child: Container(
         height: 280,
         padding: EdgeInsets.all(12),
-        child: Column(
+        child: ListView(
           children: [
             // 1.
             Row(
@@ -64,11 +65,14 @@ class IzinDtlDialog extends ConsumerWidget {
                         SizedBox(
                           height: 2,
                         ),
-                        Text(
-                          item.fullname!,
-                          style: Themes.customColor(9,
-                              color: Palette.primaryColor,
-                              fontWeight: FontWeight.w500),
+                        SizedBox(
+                          width: 90,
+                          child: Text(
+                            item.fullname!,
+                            style: Themes.customColor(9,
+                                color: Palette.primaryColor,
+                                fontWeight: FontWeight.w500),
+                          ),
                         ),
                       ],
                     ),
@@ -299,7 +303,7 @@ class IzinDtlDialog extends ConsumerWidget {
                 ),
               ],
             ),
-            Expanded(child: Container()),
+            Spacer(),
             if (item.btlSta == false)
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -326,10 +330,14 @@ class IzinDtlDialog extends ConsumerWidget {
                             .read(createIzinNotifierProvider.notifier)
                             .deleteIzin(
                                 idIzin: item.idIzin!,
-                                onError: (msg) => DialogHelper.showCustomDialog(
-                                      msg,
-                                      context,
-                                    ));
+                                onError: (msg) {
+                                  return DialogHelper.showCustomDialog(
+                                    msg,
+                                    context,
+                                  ).then((_) => ref
+                                      .read(errLogControllerProvider.notifier)
+                                      .sendLog(errMessage: msg));
+                                });
                       },
                     )
                 ],

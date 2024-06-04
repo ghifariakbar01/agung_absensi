@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:collection/collection.dart';
 import 'package:face_net_authentication/tugas_dinas/tugas_dinas_list/application/tugas_dinas_list_notifier.dart';
@@ -58,10 +56,11 @@ class TugasDinasListItem extends HookConsumerWidget {
 
     final user = ref.watch(userNotifierProvider).user;
     final _url = _determineBaseUrl(user);
-    log('_url $_url');
 
     final jenisTugasDinas = ref.watch(jenisTugasDinasNotifierProvider);
     final masterUser = ref.watch(mstUserListNotifierProvider);
+
+    final isCooGmVisible = item.isCooGmVisible!;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -95,9 +94,9 @@ class TugasDinasListItem extends HookConsumerWidget {
                     children: [
                       // LEFT
                       Text(
-                        DateFormat(
+                        "${item.idDinas} - ${DateFormat(
                           'EEEE, dd MMMM yyyy',
-                        ).format(item.cDate!),
+                        ).format((item.cDate!))}",
                         style: Themes.customColor(10,
                             fontWeight: FontWeight.w500,
                             color: item.btlSta == true
@@ -306,13 +305,16 @@ class TugasDinasListItem extends HookConsumerWidget {
                               SizedBox(
                                 height: 2,
                               ),
-                              Text(
-                                item.dept == null ? '-' : item.dept!,
-                                style: Themes.customColor(8,
-                                    color: item.btlSta == true
-                                        ? Colors.white
-                                        : Palette.primaryColor,
-                                    fontWeight: FontWeight.w500),
+                              SizedBox(
+                                width: 90,
+                                child: Text(
+                                  item.dept == null ? '-' : item.dept!,
+                                  style: Themes.customColor(8,
+                                      color: item.btlSta == true
+                                          ? Colors.white
+                                          : Palette.primaryColor,
+                                      fontWeight: FontWeight.w500),
+                                ),
                               ),
                             ],
                           ),
@@ -521,304 +523,175 @@ class TugasDinasListItem extends HookConsumerWidget {
                     ),
                     color: Colors.transparent,
                   ),
-                  child: Row(
-                    children: [
-                      if (item.btlSta == true) ...[
-                        Expanded(
-                          child: Container(
-                            height: 25,
-                            decoration: BoxDecoration(
-                                color: Palette.primaryColor,
-                                borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(8),
-                                  bottomRight: Radius.circular(8),
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey
-                                        .withOpacity(0.5), // Shadow color
-                                    spreadRadius: 1,
-                                    blurRadius: 3,
-                                    offset: Offset(0,
-                                        1), // Controls the position of the shadow
-                                  ),
-                                ]),
-                            child: Center(
-                              child: Text(
-                                'Canceled by ${item.btlNm}',
-                                style: Themes.customColor(7,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w500),
+                  child: Row(children: [
+                    if (item.btlSta == true) ...[
+                      Expanded(
+                        child: Container(
+                          height: 25,
+                          decoration: BoxDecoration(
+                              color: Palette.primaryColor,
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(8),
+                                bottomRight: Radius.circular(8),
                               ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey
+                                      .withOpacity(0.5), // Shadow color
+                                  spreadRadius: 1,
+                                  blurRadius: 3,
+                                  offset: Offset(0,
+                                      1), // Controls the position of the shadow
+                                ),
+                              ]),
+                          child: Center(
+                            child: Text(
+                              'Canceled by ${item.btlNm}',
+                              style: Themes.customColor(7,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500),
                             ),
                           ),
                         ),
-                      ] else ...[
-                        // ok
-                        Expanded(
-                          child: Stack(
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(boxShadow: [
-                                  BoxShadow(
-                                    color: item.btlSta == true
-                                        ? Colors.white
-                                        : Colors.grey
-                                            .withOpacity(0.5), // Shadow color
-                                    spreadRadius: 1,
-                                    blurRadius: 3,
-                                    offset: Offset(0,
-                                        1), // Controls the position of the shadow
-                                  ),
-                                ]),
-                                child: Material(
-                                  color: Colors.transparent,
-                                  child: InkWell(
-                                    splashColor: Palette.primaryColor,
-                                    onTap: () async {
-                                      if (item.isSpv == false) {
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) => VFailedDialog(
-                                            message: item.spvMsg,
-                                          ),
-                                        );
+                      ),
+                    ] else ...[
+                      // ok
+                      Expanded(
+                        child: Stack(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(boxShadow: [
+                                BoxShadow(
+                                  color: item.btlSta == true
+                                      ? Colors.white
+                                      : Colors.grey
+                                          .withOpacity(0.5), // Shadow color
+                                  spreadRadius: 1,
+                                  blurRadius: 3,
+                                  offset: Offset(0,
+                                      1), // Controls the position of the shadow
+                                ),
+                              ]),
+                              child: Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  splashColor: Palette.primaryColor,
+                                  onTap: () async {
+                                    if (item.isSpv == false) {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => VFailedDialog(
+                                          message: item.spvMsg,
+                                        ),
+                                      );
+                                    } else {
+                                      if (item.spvSta == false) {
+                                        await showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return VAlertDialog2(
+                                                  label:
+                                                      'Dibutuhkan Konfirmasi SPV (Approve)',
+                                                  onPressed: () async {
+                                                    context.pop();
+                                                    await ref
+                                                        .read(
+                                                            tugasDinasApproveControllerProvider
+                                                                .notifier)
+                                                        .approve(
+                                                            idDinas:
+                                                                item.idDinas!,
+                                                            note: '',
+                                                            jenisApp: 'spv',
+                                                            tahun: item
+                                                                .cDate!.year);
+                                                  });
+                                            });
                                       } else {
-                                        if (item.spvSta == false) {
-                                          await showDialog(
-                                              context: context,
-                                              builder: (context) {
-                                                return VAlertDialog2(
-                                                    label:
-                                                        'Dibutuhkan Konfirmasi SPV (Approve)',
-                                                    onPressed: () async {
-                                                      context.pop();
-                                                      await ref
-                                                          .read(
-                                                              tugasDinasApproveControllerProvider
-                                                                  .notifier)
-                                                          .approve(
-                                                              idDinas:
-                                                                  item.idDinas!,
-                                                              note: '',
-                                                              jenisApp: 'spv',
-                                                              tahun: item
-                                                                  .cDate!.year);
-                                                    });
-                                              });
-                                        } else {
-                                          await showDialog(
-                                              context: context,
-                                              builder: (context) {
-                                                return VAlertDialog2(
-                                                    label:
-                                                        'Dibutuhkan Konfirmasi SPV (Unapprove)',
-                                                    onPressed: () async {
-                                                      context.pop();
-                                                      await ref
-                                                          .read(
-                                                              tugasDinasApproveControllerProvider
-                                                                  .notifier)
-                                                          .approve(
-                                                              idDinas:
-                                                                  item.idDinas!,
-                                                              note: '',
-                                                              jenisApp: 'spv',
-                                                              tahun: item
-                                                                  .cDate!.year);
-                                                    });
-                                              });
-                                        }
+                                        await showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return VAlertDialog2(
+                                                  label:
+                                                      'Dibutuhkan Konfirmasi SPV (Unapprove)',
+                                                  onPressed: () async {
+                                                    context.pop();
+                                                    await ref
+                                                        .read(
+                                                            tugasDinasApproveControllerProvider
+                                                                .notifier)
+                                                        .approve(
+                                                            idDinas:
+                                                                item.idDinas!,
+                                                            note: '',
+                                                            jenisApp: 'spv',
+                                                            tahun: item
+                                                                .cDate!.year);
+                                                  });
+                                            });
                                       }
-                                    },
-                                    child: Ink(
-                                      height: 25,
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.only(
-                                            bottomLeft: Radius.circular(8),
-                                          ),
-                                          color: item.spvSta == true
-                                              ? Palette.green
-                                              : Palette.red2,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: item.btlSta == true
-                                                  ? Colors.white
-                                                  : Colors.grey.withOpacity(
-                                                      0.5), // Shadow color
-                                              spreadRadius: 1,
-                                              blurRadius: 3,
-                                              offset: Offset(0,
-                                                  1), // Controls the position of the shadow
-                                            ),
-                                          ]),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            'Approve SPV   ',
-                                            style: Themes.customColor(7,
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w500),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              if (item.spvSta == true)
-                                Positioned(
-                                  right: 5,
-                                  bottom: 0,
-                                  top: 0,
-                                  child: SvgPicture.asset(
-                                    Assets.iconThumbUp,
-                                  ),
-                                ),
-                              if (item.spvSta == false)
-                                Positioned(
-                                  right: 5,
-                                  bottom: 0,
-                                  top: 0,
-                                  child: SvgPicture.asset(
-                                    Assets.iconThumbDown,
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ),
-
-                        // not ok
-                        Expanded(
-                          child: Stack(
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(boxShadow: [
-                                  BoxShadow(
-                                    color: item.btlSta == true
-                                        ? Colors.white
-                                        : Colors.grey
-                                            .withOpacity(0.5), // Shadow color
-                                    spreadRadius: 1,
-                                    blurRadius: 3,
-                                    offset: Offset(0,
-                                        1), // Controls the position of the shadow
-                                  ),
-                                ]),
-                                child: Material(
-                                  color: Colors.transparent,
-                                  child: InkWell(
-                                    splashColor: Palette.primaryColor,
-                                    onTap: () async {
-                                      if (item.isHr == false) {
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) => VFailedDialog(
-                                            message: item.hrMsg,
-                                          ),
-                                        );
-                                      } else {
-                                        final String? text =
-                                            await DialogHelper<void>()
-                                                .showFormDialog(
-                                                    context: context);
-
-                                        if (item.hrdSta == false) {
-                                          await showDialog(
-                                              context: context,
-                                              builder: (context) =>
-                                                  VAlertDialog2(
-                                                      label:
-                                                          'Dibutuhkan Konfirmasi HRD (Approve)',
-                                                      onPressed: () async {
-                                                        context.pop();
-                                                        await ref
-                                                            .read(
-                                                                tugasDinasApproveControllerProvider
-                                                                    .notifier)
-                                                            .approve(
-                                                                idDinas: item
-                                                                    .idDinas!,
-                                                                note:
-                                                                    text ?? '',
-                                                                jenisApp: 'hr',
-                                                                tahun: item
-                                                                    .cDate!
-                                                                    .year);
-                                                      }));
-                                        } else {
-                                          await showDialog(
-                                              context: context,
-                                              builder: (context) =>
-                                                  VAlertDialog2(
-                                                      label:
-                                                          'Dibutuhkan Konfirmasi HRD (Unapprove)',
-                                                      onPressed: () async {
-                                                        context.pop();
-                                                        await ref
-                                                            .read(
-                                                                tugasDinasApproveControllerProvider
-                                                                    .notifier)
-                                                            .approve(
-                                                                idDinas: item
-                                                                    .idDinas!,
-                                                                note:
-                                                                    text ?? '',
-                                                                jenisApp: 'hr',
-                                                                tahun: item
-                                                                    .cDate!
-                                                                    .year);
-                                                      }));
-                                        }
-                                      }
-                                    },
-                                    child: Ink(
-                                      height: 25,
-                                      decoration: BoxDecoration(
-                                        color: item.hrdSta == true
+                                    }
+                                  },
+                                  child: Ink(
+                                    height: 25,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.only(
+                                          bottomLeft: Radius.circular(8),
+                                        ),
+                                        color: item.spvSta == true
                                             ? Palette.green
                                             : Palette.red2,
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            'Approve HRD    ',
-                                            style: Themes.customColor(7,
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w500),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: item.btlSta == true
+                                                ? Colors.white
+                                                : Colors.grey.withOpacity(
+                                                    0.5), // Shadow color
+                                            spreadRadius: 1,
+                                            blurRadius: 3,
+                                            offset: Offset(0,
+                                                1), // Controls the position of the shadow
                                           ),
-                                        ],
-                                      ),
+                                        ]),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          'Approve SPV   ',
+                                          style: Themes.customColor(7,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
                               ),
-                              if (item.hrdSta == true)
-                                Positioned(
-                                  right: 5,
-                                  bottom: 0,
-                                  top: 0,
-                                  child: SvgPicture.asset(
-                                    Assets.iconThumbUp,
-                                  ),
+                            ),
+                            if (item.spvSta == true)
+                              Positioned(
+                                right: 5,
+                                bottom: 0,
+                                top: 0,
+                                child: SvgPicture.asset(
+                                  Assets.iconThumbUp,
                                 ),
-                              if (item.hrdSta == false)
-                                Positioned(
-                                  right: 5,
-                                  bottom: 0,
-                                  top: 0,
-                                  child: SvgPicture.asset(
-                                    Assets.iconThumbDown,
-                                  ),
+                              ),
+                            if (item.spvSta == false)
+                              Positioned(
+                                right: 5,
+                                bottom: 0,
+                                top: 0,
+                                child: SvgPicture.asset(
+                                  Assets.iconThumbDown,
                                 ),
-                            ],
-                          ),
+                              ),
+                          ],
                         ),
+                      ),
 
+                      if (isCooGmVisible) ...[
                         Expanded(
                           child: Stack(
                             children: [
@@ -865,7 +738,7 @@ class TugasDinasListItem extends HookConsumerWidget {
                                                               idDinas:
                                                                   item.idDinas!,
                                                               note: '',
-                                                              jenisApp: 'spv',
+                                                              jenisApp: 'gm',
                                                               tahun: item
                                                                   .cDate!.year);
                                                     });
@@ -887,7 +760,7 @@ class TugasDinasListItem extends HookConsumerWidget {
                                                               idDinas:
                                                                   item.idDinas!,
                                                               note: '',
-                                                              jenisApp: 'spv',
+                                                              jenisApp: 'gm',
                                                               tahun: item
                                                                   .cDate!.year);
                                                     });
@@ -950,7 +823,157 @@ class TugasDinasListItem extends HookConsumerWidget {
                             ],
                           ),
                         ),
+                      ],
 
+                      Expanded(
+                        child: Stack(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(boxShadow: [
+                                BoxShadow(
+                                  color: item.btlSta == true
+                                      ? Colors.white
+                                      : Colors.grey
+                                          .withOpacity(0.5), // Shadow color
+                                  spreadRadius: 1,
+                                  blurRadius: 3,
+                                  offset: Offset(0,
+                                      1), // Controls the position of the shadow
+                                ),
+                              ]),
+                              child: Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  splashColor: Palette.primaryColor,
+                                  onTap: () async {
+                                    if (item.isHr == false) {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => VFailedDialog(
+                                          message: item.hrMsg,
+                                        ),
+                                      );
+                                    } else {
+                                      final String? text =
+                                          await DialogHelper<void>()
+                                              .showFormDialog(context: context);
+
+                                      if (item.hrdSta == false) {
+                                        await showDialog(
+                                            context: context,
+                                            builder: (context) => VAlertDialog2(
+                                                label:
+                                                    'Dibutuhkan Konfirmasi HRD (Approve)',
+                                                onPressed: () async {
+                                                  context.pop();
+                                                  await ref
+                                                      .read(
+                                                          tugasDinasApproveControllerProvider
+                                                              .notifier)
+                                                      .approve(
+                                                          idDinas:
+                                                              item.idDinas!,
+                                                          note: text ?? '',
+                                                          jenisApp: 'hr',
+                                                          tahun:
+                                                              item.cDate!.year);
+                                                }));
+                                      } else {
+                                        await showDialog(
+                                            context: context,
+                                            builder: (context) => VAlertDialog2(
+                                                label:
+                                                    'Dibutuhkan Konfirmasi HRD (Unapprove)',
+                                                onPressed: () async {
+                                                  context.pop();
+                                                  await ref
+                                                      .read(
+                                                          tugasDinasApproveControllerProvider
+                                                              .notifier)
+                                                      .approve(
+                                                          idDinas:
+                                                              item.idDinas!,
+                                                          note: text ?? '',
+                                                          jenisApp: 'hr',
+                                                          tahun:
+                                                              item.cDate!.year);
+                                                }));
+                                      }
+                                    }
+                                  },
+                                  child: Ink(
+                                    height: 25,
+                                    decoration: BoxDecoration(
+                                      color: item.hrdSta == true
+                                          ? Palette.green
+                                          : Palette.red2,
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          'Approve HRD    ',
+                                          style: Themes.customColor(7,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            if (item.hrdSta == true) ...[
+                              if (!isCooGmVisible) ...[
+                                Positioned(
+                                  left: 5,
+                                  bottom: 0,
+                                  top: 0,
+                                  child: SvgPicture.asset(
+                                    Assets.iconThumbUp,
+                                  ),
+                                )
+                              ] else if (isCooGmVisible) ...[
+                                Positioned(
+                                  right: 5,
+                                  bottom: 0,
+                                  top: 0,
+                                  child: SvgPicture.asset(
+                                    Assets.iconThumbUp,
+                                  ),
+                                )
+                              ]
+                            ],
+                            if (item.hrdSta == false) ...[
+                              if (!isCooGmVisible) ...[
+                                Positioned(
+                                  left: 5,
+                                  bottom: 0,
+                                  top: 0,
+                                  child: Transform.scale(
+                                    scaleX: -1,
+                                    child: SvgPicture.asset(
+                                      Assets.iconThumbDown,
+                                    ),
+                                  ),
+                                )
+                              ] else if (isCooGmVisible) ...[
+                                Positioned(
+                                  right: 5,
+                                  bottom: 0,
+                                  top: 0,
+                                  child: SvgPicture.asset(
+                                    Assets.iconThumbDown,
+                                  ),
+                                )
+                              ]
+                            ]
+                          ],
+                        ),
+                      ),
+
+                      if (isCooGmVisible) ...[
                         // not ok
                         Expanded(
                           child: Stack(
@@ -998,7 +1021,7 @@ class TugasDinasListItem extends HookConsumerWidget {
                                                               idDinas:
                                                                   item.idDinas!,
                                                               note: '',
-                                                              jenisApp: 'spv',
+                                                              jenisApp: 'coo',
                                                               tahun: item
                                                                   .cDate!.year);
                                                     });
@@ -1020,7 +1043,7 @@ class TugasDinasListItem extends HookConsumerWidget {
                                                               idDinas:
                                                                   item.idDinas!,
                                                               note: '',
-                                                              jenisApp: 'spv',
+                                                              jenisApp: 'coo',
                                                               tahun: item
                                                                   .cDate!.year);
                                                     });
@@ -1074,10 +1097,10 @@ class TugasDinasListItem extends HookConsumerWidget {
                                 ),
                             ],
                           ),
-                        ),
-                      ]
+                        )
+                      ],
                     ],
-                  ),
+                  ]),
                 ))
           ],
         ),

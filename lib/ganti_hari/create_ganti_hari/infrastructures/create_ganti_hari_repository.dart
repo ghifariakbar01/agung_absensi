@@ -18,8 +18,6 @@ class CreateGantiHariRepository {
     required String ket,
     required String tglOff,
     required String tglGanti,
-    required String noteSpv,
-    required String noteHrd,
     String? server = Constants.isDev ? 'testing' : 'live',
   }) async {
     return _remoteService.updateGantiHari(
@@ -31,8 +29,6 @@ class CreateGantiHariRepository {
       ket: ket,
       tglOff: tglOff,
       tglGanti: tglGanti,
-      noteSpv: noteSpv,
-      noteHrd: noteHrd,
       server: Constants.isDev ? 'testing' : 'live',
     );
   }

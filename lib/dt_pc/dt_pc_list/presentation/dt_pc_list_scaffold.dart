@@ -14,15 +14,18 @@ import '../../../common/search_filter_info_widget.dart';
 import '../../../cross_auth/application/cross_auth_notifier.dart';
 import '../../../cross_auth/application/is_user_crossed.dart';
 import '../../../err_log/application/err_log_notifier.dart';
+import '../../../helper.dart';
 import '../../../routes/application/route_names.dart';
 import '../../../shared/providers.dart';
+import '../../../utils/dialog_helper.dart';
 import '../../../widgets/v_async_widget.dart';
 import '../../../widgets/v_scaffold_widget.dart';
 import '../../../style/style.dart';
 import '../application/dt_pc_list.dart';
 import 'dt_pc_list_item.dart';
 
-class DtPcListScaffold extends HookConsumerWidget {
+class DtPcListScaffold extends HookConsumerWidget
+    with DialogHelper, CalendarHelper {
   const DtPcListScaffold(this.mapPT);
 
   final Map<String, List<String>> mapPT;
@@ -208,7 +211,7 @@ class DtPcListScaffold extends HookConsumerWidget {
                 child: VAsyncWidgetScaffold(
                   value: sendWa,
                   data: (_) => VScaffoldTabLayout(
-                    scaffoldTitle: 'List Form DT / PC',
+                    scaffoldTitle: 'DT / PC',
                     mapPT: mapPT,
                     additionalInfo: VAdditionalInfo(infoMessage: infoMessage),
                     scaffoldFAB: _isCrossed
@@ -239,21 +242,8 @@ class DtPcListScaffold extends HookConsumerWidget {
                         _isSearching.value = true;
                         _searchFocus.requestFocus();
                       },
-                      onTapDate: () async {
-                        final _oneMonth = Duration(days: 30);
-
-                        final picked = await showDateRangePicker(
-                            context: context,
-                            initialDateRange: _initialDateRange,
-                            firstDate: DateTime.now().subtract(_oneMonth),
-                            lastDate: DateTime.now().add(Duration(days: 1)));
-
-                        if (picked != null) {
-                          print(picked);
-
-                          onFilterSelected(picked);
-                        }
-                      },
+                      onTapDate: () => CalendarHelper.callCalendar(
+                          context, onFilterSelected),
                     ),
                     scaffoldBody: [
                       VAsyncValueWidget<List<DtPcList>>(

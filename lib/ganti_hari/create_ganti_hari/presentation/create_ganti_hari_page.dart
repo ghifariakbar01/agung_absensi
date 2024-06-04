@@ -167,15 +167,14 @@ class CreateGantiHariPage extends HookConsumerWidget {
                       Ink(
                         child: InkWell(
                           onTap: () async {
+                            final _oneYear = Duration(days: 365);
+
                             final picked = await showDatePicker(
                               context: context,
                               initialDate: DateTime.now(),
-                              lastDate: DateTime.now().add(Duration(days: 90)),
-                              firstDate:
-                                  DateTime.now().subtract(Duration(days: 90)),
+                              lastDate: DateTime.now().add(_oneYear),
+                              firstDate: DateTime.now().subtract(_oneYear),
                             );
-
-                            print(picked);
 
                             if (picked == null) {
                               return;
@@ -223,12 +222,13 @@ class CreateGantiHariPage extends HookConsumerWidget {
                       Ink(
                         child: InkWell(
                           onTap: () async {
+                            final _oneYear = Duration(days: 365);
+
                             final picked = await showDatePicker(
                               context: context,
                               initialDate: DateTime.now(),
-                              lastDate: DateTime.now().add(Duration(days: 90)),
-                              firstDate:
-                                  DateTime.now().subtract(Duration(days: 90)),
+                              lastDate: DateTime.now().add(_oneYear),
+                              firstDate: DateTime.now().subtract(_oneYear),
                             );
 
                             print(picked);
@@ -325,11 +325,15 @@ class CreateGantiHariPage extends HookConsumerWidget {
                                       ket: keteranganTextController.text,
                                       idAbsen: int.parse(
                                           idAbsenGantiHariTextController.text),
-                                      onError: (msg) =>
-                                          DialogHelper.showCustomDialog(
-                                        msg,
-                                        context,
-                                      ),
+                                      onError: (msg) {
+                                        return DialogHelper.showCustomDialog(
+                                          msg,
+                                          context,
+                                        ).then((_) => ref
+                                            .read(errLogControllerProvider
+                                                .notifier)
+                                            .sendLog(errMessage: msg));
+                                      },
                                     );
                               }
                             }),

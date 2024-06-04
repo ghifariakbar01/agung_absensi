@@ -16,9 +16,9 @@ class CreateCutiRemoteService {
   final Dio _dio;
 
   Future<Unit> updateCuti({
+    required int idCuti,
     required String username,
     required String pass,
-    required int idCuti,
     required String jenisCuti,
     required String tglStart,
     required String tglEnd,
@@ -29,36 +29,39 @@ class CreateCutiRemoteService {
     String? server = Constants.isDev ? 'testing' : 'live',
   }) async {
     try {
+      final _headers = {
+        'username': username,
+        'pass': pass,
+        'id_cuti': idCuti,
+        'jenis_cuti': jenisCuti,
+        'tgl_start': tglStart,
+        'tgl_end': tglEnd,
+        'ket': ket,
+        'alasan': alasan,
+        'spv_note': spvNote,
+        'hrd_note': hrdNote,
+        'server': server,
+      };
+
       final response = await _dio.post('/service_cuti.asmx/updateCuti',
           options: Options(
             contentType: 'text/plain',
-            headers: {
-              'username': username,
-              'pass': pass,
-              'id_cuti': idCuti,
-              'jenis_cuti': jenisCuti,
-              'tgl_start': tglStart,
-              'tgl_end': tglEnd,
-              'ket': ket,
-              'alasan': alasan,
-              'spv_note': spvNote,
-              'hrd_note': hrdNote,
-              'server': server,
-            },
+            headers: _headers,
           ));
 
       final items = response.data;
 
-      log('baseUrl : ${_dio.options.baseUrl}');
-      log('headers : ${_dio.options.headers}');
+      log('_headers ${_headers}');
 
       if (items['status_code'] == 200) {
         return unit;
       } else {
         final message = items['message'] as String?;
+        final errmessage = items['error_msg'] as String?;
         final errorCode = items['status_code'] as int;
 
-        throw RestApiExceptionWithMessage(errorCode, message);
+        throw RestApiExceptionWithMessage(
+            errorCode, "$errorCode : $message $errmessage ");
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);
@@ -105,9 +108,11 @@ class CreateCutiRemoteService {
         return unit;
       } else {
         final message = items['message'] as String?;
+        final errmessage = items['error_msg'] as String?;
         final errorCode = items['status_code'] as int;
 
-        throw RestApiExceptionWithMessage(errorCode, message);
+        throw RestApiExceptionWithMessage(
+            errorCode, "$errorCode : $message $errmessage ");
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);
@@ -144,9 +149,11 @@ class CreateCutiRemoteService {
         return unit;
       } else {
         final message = items['message'] as String?;
+        final errmessage = items['error_msg'] as String?;
         final errorCode = items['status_code'] as int;
 
-        throw RestApiExceptionWithMessage(errorCode, message);
+        throw RestApiExceptionWithMessage(
+            errorCode, "$errorCode : $message $errmessage ");
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);
@@ -186,9 +193,11 @@ class CreateCutiRemoteService {
         }
       } else {
         final message = items['message'] as String?;
+        final errmessage = items['error_msg'] as String?;
         final errorCode = items['status_code'] as int;
 
-        throw RestApiExceptionWithMessage(errorCode, message);
+        throw RestApiExceptionWithMessage(
+            errorCode, "$errorCode : $message $errmessage ");
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);
@@ -228,9 +237,11 @@ class CreateCutiRemoteService {
         }
       } else {
         final message = items['message'] as String?;
+        final errmessage = items['error_msg'] as String?;
         final errorCode = items['status_code'] as int;
 
-        throw RestApiExceptionWithMessage(errorCode, message);
+        throw RestApiExceptionWithMessage(
+            errorCode, "$errorCode : $message $errmessage ");
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);

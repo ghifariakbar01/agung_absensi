@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../constants/assets.dart';
+import '../../../err_log/application/err_log_notifier.dart';
 import '../../../routes/application/route_names.dart';
 import '../../../style/style.dart';
 import '../../../utils/dialog_helper.dart';
@@ -324,13 +325,17 @@ class SakitDtlDialog extends ConsumerWidget {
                                         .read(createSakitNotifierProvider
                                             .notifier)
                                         .deleteSakit(
-                                          idSakit: item.idSakit!,
-                                          onError: (msg) =>
-                                              DialogHelper.showCustomDialog(
-                                            msg,
-                                            context,
-                                          ),
-                                        );
+                                            idSakit: item.idSakit!,
+                                            onError: (msg) {
+                                              return DialogHelper
+                                                  .showCustomDialog(
+                                                msg,
+                                                context,
+                                              ).then((_) => ref
+                                                  .read(errLogControllerProvider
+                                                      .notifier)
+                                                  .sendLog(errMessage: msg));
+                                            });
                                   }));
                         })
                 ],

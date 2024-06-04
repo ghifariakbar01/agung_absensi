@@ -20,7 +20,7 @@ class RiwayatItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final width = MediaQuery.of(context).size.width;
-    final coancenate = jenisAbsen == JenisAbsen.absenIn ? 'In' : 'Out';
+    final coancenate = jenisAbsen == JenisAbsen.absenIn ? 'Masuk' : 'Keluar';
 
     return Column(
       children: [
@@ -41,7 +41,7 @@ class RiwayatItem extends ConsumerWidget {
                         //
                         Icons.alarm,
                         size: 15,
-                        color: Theme.of(context).unselectedWidgetColor),
+                        color: Palette.primaryColor),
                     SizedBox(
                       width: 8,
                     ),
@@ -50,16 +50,16 @@ class RiwayatItem extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Jam $coancenate',
-                          style: Themes.customColor(10,
+                          '$coancenate',
+                          style: Themes.customColor(11,
                               fontWeight: FontWeight.bold,
-                              color: Theme.of(context).unselectedWidgetColor),
+                              color: Palette.primaryColor),
                         ),
                         Text(
                           jam,
-                          style: Themes.customColor(9,
+                          style: Themes.customColor(11,
                               fontWeight: FontWeight.normal,
-                              color: Theme.of(context).unselectedWidgetColor),
+                              color: Palette.primaryColor),
                         ),
                       ],
                     )
@@ -90,7 +90,7 @@ class RiwayatItem extends ConsumerWidget {
                         //
                         Icons.pin_drop_rounded,
                         size: 15,
-                        color: Theme.of(context).unselectedWidgetColor),
+                        color: Palette.primaryColor),
                   ),
                   SizedBox(
                     width: 8,
@@ -105,19 +105,19 @@ class RiwayatItem extends ConsumerWidget {
                           flex: 1,
                           child: Text(
                             'Lokasi $coancenate',
-                            style: Themes.customColor(10,
+                            style: Themes.customColor(11,
                                 fontWeight: FontWeight.bold,
-                                color: Theme.of(context).unselectedWidgetColor),
+                                color: Palette.primaryColor),
                           ),
                         ),
                         Expanded(
                           child: AutoSizeText(
                             alamat,
-                            style: Themes.customColor(9,
+                            style: Themes.customColor(11,
                                 fontWeight: FontWeight.normal,
-                                color: Theme.of(context).unselectedWidgetColor),
-                            minFontSize: 5,
-                            maxFontSize: 9,
+                                color: Palette.primaryColor),
+                            minFontSize: 9,
+                            maxFontSize: 10,
                             maxLines: 2,
                           ),
                         ),

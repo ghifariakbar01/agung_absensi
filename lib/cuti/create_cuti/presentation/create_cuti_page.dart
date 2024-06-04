@@ -222,19 +222,23 @@ class CreateCutiPage extends HookConsumerWidget {
                       Ink(
                         child: InkWell(
                           onTap: () async {
+                            final _oneYear = Duration(days: 365);
+
                             final picked = await showDateRangePicker(
                               context: context,
-                              firstDate: new DateTime(2021),
-                              lastDate: DateTime.now().add(Duration(days: 365)),
+                              firstDate: DateTime.now().subtract(_oneYear),
+                              lastDate: DateTime.now().add(_oneYear),
                             );
+
                             if (picked != null) {
-                              print(picked);
                               tglStart.value = picked.start;
                               tglEnd.value = picked.end;
+
                               final _start = DateFormat('dd MMM yyyy')
                                   .format(tglStart.value);
                               final _end = DateFormat('dd MMMM yyyy')
                                   .format(tglEnd.value);
+
                               tglPlaceholderTextController.text =
                                   '$_start - $_end';
                             }
@@ -291,11 +295,18 @@ class CreateCutiPage extends HookConsumerWidget {
                                       tglEnd: tglEnd.value,
                                       keterangan:
                                           keteranganCutiTextController.text,
-                                      jenisCuti: 'CB',
-                                      alasanCuti: 'A0',
-                                      onError: (msg) =>
-                                          DialogHelper.showCustomDialog(
-                                              msg, context),
+                                      jenisCuti: jenisCutiTextController.value,
+                                      alasanCuti:
+                                          alasanCutiTextController.value,
+                                      onError: (msg) {
+                                        return DialogHelper.showCustomDialog(
+                                          msg,
+                                          context,
+                                        ).then((_) => ref
+                                            .read(errLogControllerProvider
+                                                .notifier)
+                                            .sendLog(errMessage: msg));
+                                      },
                                     );
                               }
                             }),

@@ -147,15 +147,18 @@ class SignInFormNotifier extends StateNotifier<SignInFormState> {
   Future<Either<AuthFailure, Unit>> rememberInfo() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
+    final _remember = RememberMeModel(
+      isKaryawan: state.isKaryawan,
+      ptName: state.ptDropdownSelected,
+      nama: state.userId.getOrLeave(''),
+      nik: state.idKaryawan.getOrLeave(''),
+      password: state.password.getOrLeave(''),
+    );
+
     final save = await prefs.setString(
-        '$saveStr',
-        jsonEncode(RememberMeModel(
-          isKaryawan: state.isKaryawan,
-          ptName: state.ptDropdownSelected,
-          nama: state.userId.getOrLeave(''),
-          nik: state.idKaryawan.getOrLeave(''),
-          password: state.password.getOrLeave(''),
-        )));
+      '$saveStr',
+      jsonEncode(_remember),
+    );
 
     if (save == true) {
       return right(unit);

@@ -63,9 +63,9 @@ class AbsenManualListItem extends HookConsumerWidget {
                     children: [
                       // LEFT
                       Text(
-                        DateFormat(
+                        "${item.idAbsenmnl} - ${DateFormat(
                           'EEEE, dd MMMM yyyy',
-                        ).format((item.cDate!)),
+                        ).format((item.cDate!))}",
                         style: Themes.customColor(10,
                             fontWeight: FontWeight.w500,
                             color: item.btlSta == true

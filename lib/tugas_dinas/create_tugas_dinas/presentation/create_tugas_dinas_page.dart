@@ -281,13 +281,15 @@ class CreateTugasDinasPage extends HookConsumerWidget {
                       Ink(
                         child: InkWell(
                           onTap: () async {
+                            final _oneYear = Duration(days: 365);
+
                             final picked = await showDatePicker(
                               context: context,
                               initialDate: DateTime.now(),
-                              lastDate: DateTime.now().add(Duration(days: 90)),
-                              firstDate:
-                                  DateTime.now().subtract(Duration(days: 90)),
+                              lastDate: DateTime.now().add(_oneYear),
+                              firstDate: DateTime.now().subtract(_oneYear),
                             );
+
                             if (picked != null) {
                               print(picked);
                               final hour = await showTimePicker(
@@ -360,13 +362,15 @@ class CreateTugasDinasPage extends HookConsumerWidget {
                       Ink(
                         child: InkWell(
                           onTap: () async {
+                            final _oneYear = Duration(days: 365);
+
                             final picked = await showDatePicker(
                               context: context,
                               initialDate: DateTime.now(),
-                              lastDate: DateTime.now().add(Duration(days: 90)),
-                              firstDate:
-                                  DateTime.now().subtract(Duration(days: 90)),
+                              lastDate: DateTime.now().add(_oneYear),
+                              firstDate: DateTime.now().subtract(_oneYear),
                             );
+
                             if (picked != null) {
                               print(picked);
                               final hour = await showTimePicker(
@@ -501,22 +505,28 @@ class CreateTugasDinasPage extends HookConsumerWidget {
                                     .read(createTugasDinasNotifierProvider
                                         .notifier)
                                     .submitTugasDinas(
-                                      idPemberi:
-                                          pemberiTugasController.value.idUser!,
-                                      tglAwal: tglAwalTextController.value,
-                                      tglAkhir: tglAkhirTextController.value,
-                                      jamAwal: jamAwalTextController.value,
-                                      kategori:
-                                          jenisTugasDinasTextController.text,
-                                      perusahaan: perusahaanTextController.text,
-                                      lokasi: alamatTextController.text,
-                                      jenis: khusus.value,
-                                      jamAkhir: jamAkhirTextController.value,
-                                      ket: keteranganTextController.text,
-                                      onError: (msg) =>
-                                          DialogHelper.showCustomDialog(
-                                              msg, context),
-                                    );
+                                        idPemberi: pemberiTugasController
+                                            .value.idUser!,
+                                        tglAwal: tglAwalTextController.value,
+                                        tglAkhir: tglAkhirTextController.value,
+                                        jamAwal: jamAwalTextController.value,
+                                        kategori:
+                                            jenisTugasDinasTextController.text,
+                                        perusahaan:
+                                            perusahaanTextController.text,
+                                        lokasi: alamatTextController.text,
+                                        jenis: khusus.value,
+                                        jamAkhir: jamAkhirTextController.value,
+                                        ket: keteranganTextController.text,
+                                        onError: (msg) {
+                                          return DialogHelper.showCustomDialog(
+                                            msg,
+                                            context,
+                                          ).then((_) => ref
+                                              .read(errLogControllerProvider
+                                                  .notifier)
+                                              .sendLog(errMessage: msg));
+                                        });
                               }
                             }),
                       )

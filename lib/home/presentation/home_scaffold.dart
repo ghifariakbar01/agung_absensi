@@ -1,5 +1,4 @@
 import 'package:face_net_authentication/cross_auth_server/cross_auth_server_notifier.dart';
-import 'package:face_net_authentication/widgets/async_value_ui.dart';
 import 'package:face_net_authentication/widgets/v_async_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -10,7 +9,6 @@ import '../../cross_auth/application/cross_auth_notifier.dart';
 import '../../routes/application/route_names.dart';
 import '../../shared/providers.dart';
 import '../../style/style.dart';
-import '../../wa_register/application/wa_register.dart';
 
 import '../../wa_register/application/wa_register_notifier.dart';
 import '../../widgets/alert_helper.dart';
@@ -20,7 +18,6 @@ import '../../widgets/testing.dart';
 import '../applicatioin/home_state.dart';
 import 'home_appbar.dart';
 import 'home_item.dart';
-import 'home_register_wa.dart';
 import 'home_tester_off.dart';
 import 'home_tester_on.dart';
 

@@ -41,7 +41,7 @@ class IzinListRemoteService {
 
       final _data = items['data'];
 
-      if (items['message'] == 'SUCCESS') {
+      if (items['status_code'] == 200) {
         log('_data is ${_data != null} ${_data.runtimeType}');
 
         final listExist = _data != null && _data is List;
@@ -56,16 +56,20 @@ class IzinListRemoteService {
           }
         } else {
           final message = items['message'] as String?;
+          final errmessage = items['error_msg'] as String?;
           final errorCode = items['status_code'] as int;
 
-          throw RestApiExceptionWithMessage(errorCode, message);
+          throw RestApiExceptionWithMessage(
+              errorCode, "$errorCode : $message $errmessage ");
         }
         //
       } else {
         final message = items['message'] as String?;
+        final errmessage = items['error_msg'] as String?;
         final errorCode = items['status_code'] as int;
 
-        throw RestApiExceptionWithMessage(errorCode, message);
+        throw RestApiExceptionWithMessage(
+            errorCode, "$errorCode : $message $errmessage ");
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);
@@ -113,9 +117,11 @@ class IzinListRemoteService {
         }
       } else {
         final message = items['message'] as String?;
+        final errmessage = items['error_msg'] as String?;
         final errorCode = items['status_code'] as int;
 
-        throw RestApiExceptionWithMessage(errorCode, message);
+        throw RestApiExceptionWithMessage(
+            errorCode, "$errorCode : $message $errmessage ");
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);

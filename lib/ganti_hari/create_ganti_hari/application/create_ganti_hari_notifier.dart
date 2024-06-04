@@ -78,8 +78,6 @@ class CreateGantiHari extends _$CreateGantiHari {
     required String ket,
     required String tglOff,
     required String tglGanti,
-    required String noteSpv,
-    required String noteHrd,
     String? server = Constants.isDev ? 'testing' : 'live',
     required Future<void> Function(String errMessage) onError,
   }) async {
@@ -100,15 +98,19 @@ class CreateGantiHari extends _$CreateGantiHari {
             ket: ket,
             tglOff: tglOff,
             tglGanti: tglGanti,
-            noteSpv: noteSpv,
-            noteHrd: noteHrd,
             server: Constants.isDev ? 'testing' : 'live',
           );
 
       state = const AsyncValue.data('Sukses Update');
     } catch (e) {
       state = const AsyncValue.data('');
-      await onError('Error $e');
+      String _msg = e.toString();
+
+      if (e is RestApiExceptionWithMessage) {
+        _msg = e.errorCode.toString() + ' ' + e.message!;
+      }
+
+      await onError('Error $_msg');
     }
   }
 

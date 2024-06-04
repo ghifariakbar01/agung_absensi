@@ -52,14 +52,6 @@ class EditGantiHariPage extends HookConsumerWidget {
       text: item.ket,
     );
 
-    final noteSpvTextController = useTextEditingController(
-      text: item.ket,
-    );
-
-    final noteHrdTextController = useTextEditingController(
-      text: item.ket,
-    );
-
     ref.listen<AsyncValue>(createGantiHariProvider, (_, state) async {
       if (!state.isLoading &&
           state.hasValue &&
@@ -188,15 +180,14 @@ class EditGantiHariPage extends HookConsumerWidget {
                       Ink(
                         child: InkWell(
                           onTap: () async {
+                            final _oneYear = Duration(days: 365);
+
                             final picked = await showDatePicker(
                               context: context,
                               initialDate: DateTime.now(),
-                              lastDate: DateTime.now().add(Duration(days: 90)),
-                              firstDate:
-                                  DateTime.now().subtract(Duration(days: 90)),
+                              lastDate: DateTime.now().add(_oneYear),
+                              firstDate: DateTime.now().subtract(_oneYear),
                             );
-
-                            print(picked);
 
                             if (picked == null) {
                               return;
@@ -244,12 +235,13 @@ class EditGantiHariPage extends HookConsumerWidget {
                       Ink(
                         child: InkWell(
                           onTap: () async {
+                            final _oneYear = Duration(days: 365);
+
                             final picked = await showDatePicker(
                               context: context,
                               initialDate: DateTime.now(),
-                              lastDate: DateTime.now().add(Duration(days: 90)),
-                              firstDate:
-                                  DateTime.now().subtract(Duration(days: 90)),
+                              lastDate: DateTime.now().add(_oneYear),
+                              firstDate: DateTime.now().subtract(_oneYear),
                             );
 
                             print(picked);
@@ -309,36 +301,6 @@ class EditGantiHariPage extends HookConsumerWidget {
                       ),
 
                       SizedBox(
-                        height: 16,
-                      ),
-                      TextFormField(
-                        controller: noteSpvTextController,
-                        cursorColor: Palette.primaryColor,
-                        decoration: Themes.formStyleBordered(
-                          'Note SPV',
-                        ),
-                        style: Themes.customColor(
-                          14,
-                          fontWeight: FontWeight.normal,
-                        ),
-                      ),
-
-                      SizedBox(
-                        height: 16,
-                      ),
-                      TextFormField(
-                        controller: noteHrdTextController,
-                        cursorColor: Palette.primaryColor,
-                        decoration: Themes.formStyleBordered(
-                          'Note HRD',
-                        ),
-                        style: Themes.customColor(
-                          14,
-                          fontWeight: FontWeight.normal,
-                        ),
-                      ),
-
-                      SizedBox(
                         height: 10,
                       ),
 
@@ -363,28 +325,28 @@ class EditGantiHariPage extends HookConsumerWidget {
                               log(' Keterangan: ${keteranganTextController.value.text} \n ');
                               log(' Tgl Off: $tglOffClean \n ');
                               log(' Tgl Ganti: $tglGantiClean \n ');
-                              log(' Note Spv: ${noteSpvTextController.text} \n ');
-                              log(' Note Hrd: ${noteHrdTextController.text} \n ');
 
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();
                                 await ref
                                     .read(createGantiHariProvider.notifier)
                                     .updateGantiHari(
-                                      idDayOff: item.idDayOff!,
-                                      tglOff: tglOffClean,
-                                      tglGanti: tglGantiClean,
-                                      ket: keteranganTextController.text,
-                                      idAbsen: int.parse(
-                                          idAbsenGantiHariTextController.text),
-                                      noteHrd: noteHrdTextController.text,
-                                      noteSpv: noteSpvTextController.text,
-                                      onError: (msg) =>
-                                          DialogHelper.showCustomDialog(
-                                        msg,
-                                        context,
-                                      ),
-                                    );
+                                        idDayOff: item.idDayOff!,
+                                        tglOff: tglOffClean,
+                                        tglGanti: tglGantiClean,
+                                        ket: keteranganTextController.text,
+                                        idAbsen: int.parse(
+                                            idAbsenGantiHariTextController
+                                                .text),
+                                        onError: (msg) {
+                                          return DialogHelper.showCustomDialog(
+                                            msg,
+                                            context,
+                                          ).then((_) => ref
+                                              .read(errLogControllerProvider
+                                                  .notifier)
+                                              .sendLog(errMessage: msg));
+                                        });
                               }
                             }),
                       )

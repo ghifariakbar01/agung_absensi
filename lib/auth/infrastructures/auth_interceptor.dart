@@ -20,7 +20,6 @@ class AuthInterceptor extends Interceptor {
       _ref.read(absenOfflineModeProvider.notifier).state = false;
     }
 
-    // final message = items['error'] as String?;
     final errorNum = items['errornum'] as int?;
 
     if (errorNum == Constants.passWrongCode ||

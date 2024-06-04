@@ -34,95 +34,94 @@ class RiwayatList extends ConsumerWidget {
                 ? 208
                 : 115),
         padding: EdgeInsets.all(4),
-        decoration: BoxDecoration(
-            color: Theme.of(context).cardColor,
-            borderRadius: BorderRadius.circular(10)),
-        child:
-            Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-          if (masuk.isNotEmpty) ...[
-            Flexible(
-                flex: 0,
-                child: RiwayatTanggal(
-                  tanggal: masuk.split(" ")[0],
-                )),
-            SizedBox(
-              width: 4,
-            ),
-          ],
-          if (pulang.isNotEmpty && masuk.isEmpty) ...[
-            Flexible(
-                flex: 0,
-                child: RiwayatTanggal(
-                  tanggal: pulang.split(" ")[0],
-                )),
-            SizedBox(
-              width: 4,
-            ),
-          ],
-          SizedBox(
-            height: 4,
-          ),
-          Flexible(
-              flex: 1,
-              child: isTester.maybeWhen(
-                // Jam Masuk & Jam Pulang
-                tester: () => Row(
-                  children: [
-                    if (masuk.isNotEmpty) ...[
-                      Flexible(
-                          flex: 1,
-                          child: RiwayatItem(
-                            jenisAbsen: JenisAbsen.absenIn,
-                            alamat: '',
-                            jam: masuk.split(" ")[1],
-                          )),
-                      SizedBox(
-                        width: 4,
-                      ),
-                    ],
-                    if (pulang.isNotEmpty) ...[
-                      Flexible(
-                          flex: 1,
-                          child: RiwayatItem(
-                            jenisAbsen: JenisAbsen.absenOut,
-                            alamat: '',
-                            jam: pulang.split(" ")[1],
-                          )),
-                      SizedBox(
-                        width: 4,
-                      ),
-                    ]
-                  ],
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              if (masuk.isNotEmpty) ...[
+                Flexible(
+                    flex: 0,
+                    child: RiwayatTanggal(
+                      tanggal: masuk.split(" ")[0],
+                    )),
+                SizedBox(
+                  width: 4,
                 ),
-                orElse: () => Row(
-                  children: [
-                    if (masuk.isNotEmpty && lokasiMasuk.isNotEmpty) ...[
-                      Flexible(
-                          flex: 1,
-                          child: RiwayatItem(
-                            jenisAbsen: JenisAbsen.absenIn,
-                            alamat: lokasiMasuk,
-                            jam: masuk.split(" ")[1],
-                          )),
-                      SizedBox(
-                        width: 4,
-                      ),
-                    ],
-                    if (pulang.isNotEmpty && lokasiPulang.isNotEmpty) ...[
-                      Flexible(
-                          flex: 1,
-                          child: RiwayatItem(
-                            jenisAbsen: JenisAbsen.absenOut,
-                            alamat: lokasiPulang,
-                            jam: pulang.split(" ")[1],
-                          )),
-                      SizedBox(
-                        width: 4,
-                      ),
-                    ]
-                  ],
+              ],
+              if (pulang.isNotEmpty && masuk.isEmpty) ...[
+                Flexible(
+                    flex: 0,
+                    child: RiwayatTanggal(
+                      tanggal: pulang.split(" ")[0],
+                    )),
+                SizedBox(
+                  width: 4,
                 ),
-              ))
-        ]));
+              ],
+              SizedBox(
+                height: 4,
+              ),
+              Flexible(
+                  flex: 1,
+                  child: isTester.maybeWhen(
+                    // Jam Masuk & Jam Pulang
+                    tester: () => Row(
+                      children: [
+                        if (masuk.isNotEmpty) ...[
+                          Flexible(
+                              flex: 1,
+                              child: RiwayatItem(
+                                jenisAbsen: JenisAbsen.absenIn,
+                                alamat: '',
+                                jam: masuk.split(" ")[1],
+                              )),
+                          SizedBox(
+                            width: 4,
+                          ),
+                        ],
+                        if (pulang.isNotEmpty) ...[
+                          Flexible(
+                              flex: 1,
+                              child: RiwayatItem(
+                                jenisAbsen: JenisAbsen.absenOut,
+                                alamat: '',
+                                jam: pulang.split(" ")[1],
+                              )),
+                          SizedBox(
+                            width: 4,
+                          ),
+                        ]
+                      ],
+                    ),
+                    orElse: () => Row(
+                      children: [
+                        if (masuk.isNotEmpty && lokasiMasuk.isNotEmpty) ...[
+                          Flexible(
+                              flex: 1,
+                              child: RiwayatItem(
+                                jenisAbsen: JenisAbsen.absenIn,
+                                alamat: lokasiMasuk,
+                                jam: masuk.split(" ")[1],
+                              )),
+                          SizedBox(
+                            width: 4,
+                          ),
+                        ],
+                        if (pulang.isNotEmpty && lokasiPulang.isNotEmpty) ...[
+                          Flexible(
+                              flex: 1,
+                              child: RiwayatItem(
+                                jenisAbsen: JenisAbsen.absenOut,
+                                alamat: lokasiPulang,
+                                jam: pulang.split(" ")[1],
+                              )),
+                          SizedBox(
+                            width: 4,
+                          ),
+                        ]
+                      ],
+                    ),
+                  ))
+            ]));
   }
 }

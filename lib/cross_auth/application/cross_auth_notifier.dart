@@ -184,6 +184,30 @@ class CrossAuthNotifier extends _$CrossAuthNotifier {
     });
   }
 
+  Future<void> uncrossStl({
+    required String userId,
+    required String password,
+  }) async {
+    final _crossRepo = ref.read(crossAuthRepositoryProvider);
+    final _savedCrossUser = await _crossRepo.loadSavedCrossed();
+
+    final String? serv = _savedCrossUser.ptServer;
+
+    if (serv == null) {
+      return;
+    }
+
+    await _resetCutiDioProvider(serv);
+
+    if (serv == 'gs_18') {
+      await _crossToARVStl(server: 'gs_18', userId: userId, password: password);
+      return;
+    } else {
+      await _crossToACTStl(server: serv, userId: userId, password: password);
+      return;
+    }
+  }
+
   String _determineBaseUrl(String serv) {
     return Constants.ptMap.entries
         .firstWhere(
@@ -265,6 +289,40 @@ class CrossAuthNotifier extends _$CrossAuthNotifier {
     }
   }
 
+  Future<void> _crossToACTStl({
+    required String server,
+    required String userId,
+    required String password,
+  }) async {
+    try {
+      final _response = await ref.read(crossAuthRepositoryProvider).crossToACT(
+            isStl: true,
+            server: server,
+            userId: userId,
+            password: password,
+          );
+
+      await _response.when(
+        withUser: (user) async {
+          await _saveUser(user);
+          await ref
+              .read(authNotifierProvider.notifier)
+              .checkAndUpdateAuthStatus();
+
+          await ref
+              .read(userNotifierProvider.notifier)
+              .onUserParsedRaw(ref: ref, user: user);
+        },
+        failure: (errorCode, message) {
+          throw CrossAuthResponse.failure(
+              errorCode: errorCode, message: message);
+        },
+      );
+    } catch (e) {
+      throw e;
+    }
+  }
+
   //  'gs_18': ['PT Agung Raya'],
   Future<void> _crossToARV({
     required String server,
@@ -287,9 +345,10 @@ class CrossAuthNotifier extends _$CrossAuthNotifier {
               .read(authNotifierProvider.notifier)
               .checkAndUpdateAuthStatus();
 
-          await ref
-              .read(userNotifierProvider.notifier)
-              .onUserParsedRaw(ref: ref, user: user);
+          await ref.read(userNotifierProvider.notifier).onUserParsedRaw(
+                ref: ref,
+                user: user,
+              );
         },
         failure: (errorCode, message) {
           throw CrossAuthResponse.failure(
@@ -300,6 +359,43 @@ class CrossAuthNotifier extends _$CrossAuthNotifier {
       state = AsyncData<void>('Sukses Cross ARV');
     } catch (e) {
       state = AsyncError(e, StackTrace.current);
+    }
+  }
+
+  Future<void> _crossToARVStl({
+    required String server,
+    required String userId,
+    required String password,
+  }) async {
+    try {
+      final _response = await ref.read(crossAuthRepositoryProvider).crossToARV(
+            isStl: true,
+            server: server,
+            userId: userId,
+            password: password,
+          );
+
+      await _response.when(
+        withUser: (user) async {
+          await _saveUser(user);
+          await ref
+              .read(authNotifierProvider.notifier)
+              .checkAndUpdateAuthStatus();
+
+          await ref.read(userNotifierProvider.notifier).onUserParsedRaw(
+                ref: ref,
+                user: user,
+              );
+        },
+        failure: (errorCode, message) {
+          throw CrossAuthResponse.failure(
+            errorCode: errorCode,
+            message: message,
+          );
+        },
+      );
+    } catch (e) {
+      throw e;
     }
   }
 

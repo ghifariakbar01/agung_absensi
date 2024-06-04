@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
+import '../helper.dart';
 import '../style/style.dart';
+import '../utils/dialog_helper.dart';
 import 'network_widget.dart';
 
 class VScaffoldWidget extends StatelessWidget {
@@ -89,7 +91,7 @@ class VTab extends StatelessWidget {
   // }
 }
 
-class VScaffoldTabLayout extends HookWidget {
+class VScaffoldTabLayout extends HookWidget with DialogHelper, CalendarHelper {
   const VScaffoldTabLayout({
     required this.scaffoldTitle,
     required this.scaffoldBody,
@@ -213,15 +215,19 @@ class VScaffoldTabLayout extends HookWidget {
                           i++) ...[tabs()[i]]
                     ],
                   ),
-            leadingWidth: 20,
+            leadingWidth: 65,
             leading: _isSearching.value ? Container() : null,
             title: _isSearching.value
                 ? Container()
                 : Text(
                     scaffoldTitle,
-                    style: Themes.customColor(15,
-                        fontWeight: FontWeight.bold, color: Colors.white),
+                    style: Themes.customColor(
+                      15,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
+            titleSpacing: 0,
             toolbarHeight: 45,
             actions: [
               if (_isSearching.value) ...[
@@ -310,19 +316,10 @@ class VScaffoldTabLayout extends HookWidget {
                   Filter Icon
                 */
                 IconButton(
-                    onPressed: () async {
-                      final _oneMonth = Duration(days: 30);
-
-                      final picked = await showDateRangePicker(
-                          context: context,
-                          initialDateRange: initialDateRange,
-                          firstDate: DateTime.now().subtract(_oneMonth),
-                          lastDate: DateTime.now().add(Duration(days: 1)));
-
-                      if (picked != null) {
-                        onFilterSelected(picked);
-                      }
-                    },
+                    onPressed: () => CalendarHelper.callCalendar(
+                          context,
+                          onFilterSelected,
+                        ),
                     icon: Icon(Icons.sort)),
 
                 /*

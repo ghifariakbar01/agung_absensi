@@ -35,9 +35,11 @@ class MstKaryawanCutiRemoteService {
         }
       } else {
         final message = items['message'] as String?;
+        final errmessage = items['error_msg'] as String?;
         final errorCode = items['status_code'] as int;
 
-        throw RestApiExceptionWithMessage(errorCode, message);
+        throw RestApiExceptionWithMessage(
+            errorCode, "$errorCode : $message $errmessage ");
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);

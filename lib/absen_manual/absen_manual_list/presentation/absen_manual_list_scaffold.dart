@@ -11,8 +11,10 @@ import 'package:intl/intl.dart';
 import '../../../common/search_filter_info_widget.dart';
 import '../../../cross_auth/application/is_user_crossed.dart';
 import '../../../err_log/application/err_log_notifier.dart';
+import '../../../helper.dart';
 import '../../../routes/application/route_names.dart';
 import '../../../send_wa/application/send_wa_notifier.dart';
+import '../../../utils/dialog_helper.dart';
 import '../../../widgets/v_additional_info.dart';
 import '../../../widgets/v_async_widget.dart';
 import '../../../widgets/v_scaffold_widget.dart';
@@ -22,7 +24,8 @@ import '../application/absen_manual_list.dart';
 import '../application/absen_manual_list_notifier.dart';
 import 'absen_manual_list_item.dart';
 
-class AbsenManualListScaffold extends HookConsumerWidget {
+class AbsenManualListScaffold extends HookConsumerWidget
+    with DialogHelper, CalendarHelper {
   const AbsenManualListScaffold(this.mapPT);
 
   final Map<String, List<String>> mapPT;
@@ -230,107 +233,53 @@ class AbsenManualListScaffold extends HookConsumerWidget {
                           _isSearching.value = true;
                           _searchFocus.requestFocus();
                         },
-                        onTapDate: () async {
-                          final _oneMonth = Duration(days: 30);
-
-                          final picked = await showDateRangePicker(
-                              context: context,
-                              initialDateRange: _initialDateRange,
-                              firstDate: DateTime.now().subtract(_oneMonth),
-                              lastDate: DateTime.now().add(Duration(days: 1)));
-
-                          if (picked != null) {
-                            print(picked);
-
-                            onFilterSelected(picked);
-                          }
-                        },
+                        onTapDate: () => CalendarHelper.callCalendar(
+                            context, onFilterSelected),
                       ),
                       scaffoldBody: [
-                        Stack(
-                          children: [
-                            VAsyncValueWidget<List<AbsenManualList>>(
-                                value: absenManualList,
-                                data: (list) {
-                                  final waiting = list
-                                      .where((e) =>
-                                          (e.spvSta == false ||
-                                              e.hrdSta == false) &&
-                                          e.btlSta == false)
-                                      .toList();
-                                  return _list(
-                                    _isCrossed,
-                                    waiting,
-                                    onRefresh,
-                                    scrollController,
-                                  );
-                                }),
-                            Positioned(
-                                bottom: 20,
-                                left: 10,
-                                child: SearchFilterInfoWidget(
-                                  d1: _d1,
-                                  d2: _d2,
-                                  lastSearch: _lastSearch.value,
-                                  isScrolling: _isScrollStopped.value,
-                                ))
-                          ],
-                        ),
-                        Stack(
-                          children: [
-                            VAsyncValueWidget<List<AbsenManualList>>(
-                                value: absenManualList,
-                                data: (list) {
-                                  final approved = list
-                                      .where((e) =>
-                                          (e.spvSta == true &&
-                                              e.hrdSta == true) &&
-                                          e.btlSta == false)
-                                      .toList();
-                                  return _list(
-                                    _isCrossed,
-                                    approved,
-                                    onRefresh,
-                                    scrollController,
-                                  );
-                                }),
-                            Positioned(
-                                bottom: 20,
-                                left: 10,
-                                child: SearchFilterInfoWidget(
-                                  d1: _d1,
-                                  d2: _d2,
-                                  lastSearch: _lastSearch.value,
-                                  isScrolling: _isScrollStopped.value,
-                                ))
-                          ],
-                        ),
-                        Stack(
-                          children: [
-                            VAsyncValueWidget<List<AbsenManualList>>(
-                                value: absenManualList,
-                                data: (list) {
-                                  final cancelled = list
-                                      .where((e) => e.btlSta == true)
-                                      .toList();
-                                  return _list(
-                                    _isCrossed,
-                                    cancelled,
-                                    onRefresh,
-                                    scrollController,
-                                  );
-                                }),
-                            Positioned(
-                                bottom: 20,
-                                left: 10,
-                                child: SearchFilterInfoWidget(
-                                  d1: _d1,
-                                  d2: _d2,
-                                  lastSearch: _lastSearch.value,
-                                  isScrolling: _isScrollStopped.value,
-                                ))
-                          ],
-                        ),
+                        VAsyncValueWidget<List<AbsenManualList>>(
+                            value: absenManualList,
+                            data: (list) {
+                              final waiting = list
+                                  .where((e) =>
+                                      (e.spvSta == false ||
+                                          e.hrdSta == false) &&
+                                      e.btlSta == false)
+                                  .toList();
+                              return _list(
+                                _isCrossed,
+                                waiting,
+                                onRefresh,
+                                scrollController,
+                              );
+                            }),
+                        VAsyncValueWidget<List<AbsenManualList>>(
+                            value: absenManualList,
+                            data: (list) {
+                              final approved = list
+                                  .where((e) =>
+                                      (e.spvSta == true && e.hrdSta == true) &&
+                                      e.btlSta == false)
+                                  .toList();
+                              return _list(
+                                _isCrossed,
+                                approved,
+                                onRefresh,
+                                scrollController,
+                              );
+                            }),
+                        VAsyncValueWidget<List<AbsenManualList>>(
+                            value: absenManualList,
+                            data: (list) {
+                              final cancelled =
+                                  list.where((e) => e.btlSta == true).toList();
+                              return _list(
+                                _isCrossed,
+                                cancelled,
+                                onRefresh,
+                                scrollController,
+                              );
+                            }),
                       ],
                     ),
                   );

@@ -59,7 +59,13 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
       state = const AsyncValue.data('Sukses Input');
     } catch (e) {
       state = const AsyncValue.data('');
-      await onError('Error $e');
+      String _msg = e.toString();
+
+      if (e is RestApiExceptionWithMessage) {
+        _msg = e.errorCode.toString() + ' ' + e.message!;
+      }
+
+      await onError('Error $_msg');
     }
   }
 
@@ -100,12 +106,13 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
       state = const AsyncValue.data('Sukses Update');
     } catch (e) {
       state = const AsyncValue.data('');
+      String _msg = e.toString();
 
       if (e is RestApiExceptionWithMessage) {
-        await onError('Error ${e.message}');
-      } else {
-        await onError('Error $e');
+        _msg = e.errorCode.toString() + ' ' + e.message!;
       }
+
+      await onError('Error $_msg');
     }
   }
 
@@ -129,7 +136,13 @@ class CreateSakitNotifier extends _$CreateSakitNotifier {
       state = const AsyncValue.data('Sukses Delete');
     } catch (e) {
       state = const AsyncValue.data('');
-      await onError('Error $e');
+      String _msg = e.toString();
+
+      if (e is RestApiExceptionWithMessage) {
+        _msg = e.errorCode.toString() + ' ' + e.message!;
+      }
+
+      await onError('Error $_msg');
     }
   }
 }

@@ -1,7 +1,6 @@
 import 'package:face_net_authentication/utils/string_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
 
 import '../../style/style.dart';
 import '../application/riwayat_absen_notifier.dart';
@@ -26,11 +25,14 @@ class RiwayatHeader extends ConsumerWidget {
             ),
             child: InkWell(
               onTap: () async {
+                final _oneYear = Duration(days: 365);
+
                 final picked = await showDateRangePicker(
                   context: context,
-                  lastDate: DateTime.now(),
-                  firstDate: new DateTime(2021),
+                  lastDate: DateTime.now().add(_oneYear),
+                  firstDate: DateTime.now().subtract(_oneYear),
                 );
+
                 if (picked != null) {
                   final _start = picked.start;
                   final _end = picked.end.add(Duration(days: 1));
@@ -83,11 +85,14 @@ class RiwayatHeader extends ConsumerWidget {
                 color: Palette.primaryColor),
             child: InkWell(
               onTap: () async {
+                final _oneYear = Duration(days: 365);
+
                 final picked = await showDateRangePicker(
                   context: context,
-                  lastDate: DateTime.now(),
-                  firstDate: new DateTime(2021),
+                  lastDate: DateTime.now().add(_oneYear),
+                  firstDate: DateTime.now().subtract(_oneYear),
                 );
+
                 if (picked != null) {
                   print(picked);
 
@@ -121,7 +126,7 @@ class RiwayatHeader extends ConsumerWidget {
               },
               child: Icon(
                 Icons.filter_alt_rounded,
-                color: Palette.tertiaryColor,
+                color: Colors.white,
               ),
             ),
           ),

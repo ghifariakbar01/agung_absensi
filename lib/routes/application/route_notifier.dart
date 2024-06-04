@@ -79,7 +79,9 @@ class RouterNotifier extends ChangeNotifier {
     );
 
     _ref.listen<InitUserStatus>(
-        initUserStatusNotifierProvider, (_, __) => notifyListeners());
+      initUserStatusNotifierProvider,
+      (_, __) => notifyListeners(),
+    );
   }
 
   final Ref _ref;

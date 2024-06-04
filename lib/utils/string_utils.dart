@@ -55,7 +55,7 @@ class StringUtils {
     DateFormat inputFormat = DateFormat('yyyy-MM-dd');
     DateFormat outputFormat = DateFormat('dd MMMM');
 
-    DateTime date1 = inputFormat.parse(date1String);
+    DateTime date1 = inputFormat.parse(date1String).subtract(Duration(days: 1));
     DateTime date2 = inputFormat.parse(date2String);
 
     String formattedDate1 = outputFormat.format(date2);

@@ -31,17 +31,7 @@ extension AsyncValueUI on AsyncValue {
       }
 
       if (error is NoConnectionException == false) {
-        // send err log
-        final imeiNotifier = ref.read(imeiNotifierProvider.notifier);
-        final user = ref.read(userNotifierProvider).user;
-
-        final String imeiDb = await imeiNotifier.getImeiStringDb(
-            idKary: user.IdKary ?? 'null or no internet');
-        final String imei = await imeiNotifier.getImeiString();
-
-        await ref
-            .read(errLogControllerProvider.notifier)
-            .sendLog(imeiDb: imeiDb, imeiSaved: imei, errMessage: message);
+        await _sendLog(ref, message);
       }
 
       return showExceptionAlertDialog(
@@ -51,4 +41,20 @@ extension AsyncValueUI on AsyncValue {
       );
     }
   }
+}
+
+Future<void> _sendLog(WidgetRef ref, String message) async {
+  final imeiNotifier = ref.read(imeiNotifierProvider.notifier);
+  final user = ref.read(userNotifierProvider).user;
+
+  final String imeiDb = await imeiNotifier.getImeiStringDb(
+    idKary: user.IdKary ?? 'IdKary null or no internet',
+  );
+  final String imei = await imeiNotifier.getImeiString();
+
+  await ref.read(errLogControllerProvider.notifier).sendLog(
+        imeiDb: imeiDb,
+        imeiSaved: imei,
+        errMessage: message,
+      );
 }

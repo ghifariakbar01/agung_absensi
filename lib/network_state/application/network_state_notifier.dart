@@ -17,8 +17,11 @@ part 'network_state_notifier.g.dart';
 @Riverpod(keepAlive: true)
 NetworkStateRemoteService networkStateRemoteService(
     NetworkStateRemoteServiceRef ref) {
-  return NetworkStateRemoteService(ref.watch(dioProvider),
-      ref.watch(dioRequestProvider), ref.watch(userNotifierProvider).user);
+  return NetworkStateRemoteService(
+    ref.watch(dioProvider),
+    ref.watch(dioRequestProvider),
+    ref.watch(userNotifierProvider).user,
+  );
 }
 
 @Riverpod(keepAlive: true)
@@ -61,6 +64,7 @@ class NetworkCallback extends _$NetworkCallback {
 
         if (firstTime) {
           await _startFetch();
+
           ref.read(firstTimeTimerProvider.notifier).state = false;
         }
 

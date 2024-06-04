@@ -41,9 +41,11 @@ class CreateGantiHariRemoteService {
         return unit;
       } else {
         final message = items['message'] as String?;
+        final errmessage = items['error_msg'] as String?;
         final errorCode = items['status_code'] as int;
 
-        throw RestApiExceptionWithMessage(errorCode, message);
+        throw RestApiExceptionWithMessage(
+            errorCode, "$errorCode : $message $errmessage ");
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);
@@ -68,8 +70,6 @@ class CreateGantiHariRemoteService {
     required String ket,
     required String tglOff,
     required String tglGanti,
-    required String noteSpv,
-    required String noteHrd,
     String? server = Constants.isDev ? 'testing' : 'live',
   }) async {
     try {
@@ -84,8 +84,6 @@ class CreateGantiHariRemoteService {
             'tgl_end': tglGanti,
             'ket': ket,
             'id_absen': idAbsen,
-            'spv_note': noteSpv,
-            'hrd_note': noteHrd,
           }));
 
       final items = response.data;
@@ -94,9 +92,11 @@ class CreateGantiHariRemoteService {
         return unit;
       } else {
         final message = items['message'] as String?;
+        final errmessage = items['error_msg'] as String?;
         final errorCode = items['status_code'] as int;
 
-        throw RestApiExceptionWithMessage(errorCode, message);
+        throw RestApiExceptionWithMessage(
+            errorCode, "$errorCode : $message $errmessage ");
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);
@@ -136,9 +136,11 @@ class CreateGantiHariRemoteService {
         }
       } else {
         final message = items['message'] as String?;
+        final errmessage = items['error_msg'] as String?;
         final errorCode = items['status_code'] as int;
 
-        throw RestApiExceptionWithMessage(errorCode, message);
+        throw RestApiExceptionWithMessage(
+            errorCode, "$errorCode : $message $errmessage ");
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);
@@ -175,9 +177,11 @@ class CreateGantiHariRemoteService {
         return unit;
       } else {
         final message = items['message'] as String?;
+        final errmessage = items['error_msg'] as String?;
         final errorCode = items['status_code'] as int;
 
-        throw RestApiExceptionWithMessage(errorCode, message);
+        throw RestApiExceptionWithMessage(
+            errorCode, "$errorCode : $message $errmessage ");
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);

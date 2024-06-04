@@ -14,15 +14,18 @@ import '../../../common/search_filter_info_widget.dart';
 import '../../../cross_auth/application/cross_auth_notifier.dart';
 import '../../../cross_auth/application/is_user_crossed.dart';
 import '../../../err_log/application/err_log_notifier.dart';
+import '../../../helper.dart';
 import '../../../routes/application/route_names.dart';
 import '../../../shared/providers.dart';
+import '../../../utils/dialog_helper.dart';
 import '../../../widgets/v_async_widget.dart';
 import '../../../widgets/v_scaffold_widget.dart';
 import '../../../style/style.dart';
 import '../application/ganti_hari_list.dart';
 import 'ganti_hari_list_item.dart';
 
-class GantiHariListScaffold extends HookConsumerWidget {
+class GantiHariListScaffold extends HookConsumerWidget
+    with DialogHelper, CalendarHelper {
   const GantiHariListScaffold(this.mapPT);
 
   final Map<String, List<String>> mapPT;
@@ -199,7 +202,7 @@ class GantiHariListScaffold extends HookConsumerWidget {
                   data: (_) => VAsyncWidgetScaffold(
                     value: sendWa,
                     data: (_) => VScaffoldTabLayout(
-                      scaffoldTitle: 'List Form Ganti Hari',
+                      scaffoldTitle: 'Ganti Hari',
                       mapPT: mapPT,
                       additionalInfo: VAdditionalInfo(infoMessage: infoMessage),
                       scaffoldFAB: _isCrossed
@@ -230,21 +233,8 @@ class GantiHariListScaffold extends HookConsumerWidget {
                           _isSearching.value = true;
                           _searchFocus.requestFocus();
                         },
-                        onTapDate: () async {
-                          final _oneMonth = Duration(days: 30);
-
-                          final picked = await showDateRangePicker(
-                              context: context,
-                              initialDateRange: _initialDateRange,
-                              firstDate: DateTime.now().subtract(_oneMonth),
-                              lastDate: DateTime.now().add(Duration(days: 1)));
-
-                          if (picked != null) {
-                            print(picked);
-
-                            onFilterSelected(picked);
-                          }
-                        },
+                        onTapDate: () => CalendarHelper.callCalendar(
+                            context, onFilterSelected),
                       ),
                       scaffoldBody: [
                         VAsyncValueWidget<List<GantiHariList>>(

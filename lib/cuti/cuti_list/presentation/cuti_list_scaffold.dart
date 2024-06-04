@@ -10,6 +10,7 @@ import '../../../common/search_filter_info_widget.dart';
 import '../../../cross_auth/application/cross_auth_notifier.dart';
 import '../../../cross_auth/application/is_user_crossed.dart';
 import '../../../err_log/application/err_log_notifier.dart';
+import '../../../helper.dart';
 import '../../../mst_karyawan_cuti/application/mst_karyawan_cuti.dart';
 import '../../../mst_karyawan_cuti/application/mst_karyawan_cuti_notifier.dart';
 import '../../../routes/application/route_names.dart';
@@ -201,15 +202,8 @@ class CutiListScaffold extends HookConsumerWidget {
                     data: (mst) => VAsyncValueWidget(
                         value: cutiApprove,
                         data: (_) {
-                          final _oneMonth = Duration(days: 30);
-                          final _oneDay = Duration(days: 1);
-                          final _initialDateRange = DateTimeRange(
-                            end: DateTime.now().add(_oneDay),
-                            start: DateTime.now().subtract(_oneMonth),
-                          );
-
                           return VScaffoldTabLayout(
-                            scaffoldTitle: 'List Form Cuti',
+                            scaffoldTitle: 'Cuti',
                             mapPT: mapPT,
                             currPT:
                                 _initialDropdown ?? _initialDropdownPlaceholder,
@@ -240,23 +234,8 @@ class CutiListScaffold extends HookConsumerWidget {
                                 _isSearching.value = true;
                                 _searchFocus.requestFocus();
                               },
-                              onTapDate: () async {
-                                final _oneMonth = Duration(days: 30);
-
-                                final picked = await showDateRangePicker(
-                                    context: context,
-                                    initialDateRange: _initialDateRange,
-                                    firstDate:
-                                        DateTime.now().subtract(_oneMonth),
-                                    lastDate:
-                                        DateTime.now().add(Duration(days: 1)));
-
-                                if (picked != null) {
-                                  print(picked);
-
-                                  onFilterSelected(picked);
-                                }
-                              },
+                              onTapDate: () => CalendarHelper.callCalendar(
+                                  context, onFilterSelected),
                             ),
                             scaffoldBody: [
                               VAsyncValueWidget<List<CutiList>>(

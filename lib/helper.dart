@@ -1,7 +1,10 @@
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/shared/providers.dart';
+import 'package:flutter/material.dart';
 import 'package:riverpod/riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'utils/dialog_helper.dart';
 
 abstract class Helper {
   Future<void> storageDebugMode(Ref<Object?> ref,
@@ -39,7 +42,7 @@ class HelperImpl implements Helper {
       await _deleteAll();
       await _saveCurrentImei(_imei);
 
-      prefs.setBool(name, false);
+      await prefs.setBool(name, false);
     }
   }
 
@@ -60,6 +63,43 @@ class HelperImpl implements Helper {
     if (isDebug) {
       await _deleteAll();
       await _deleteAllSharedPrefs();
+    }
+  }
+}
+
+class CalendarHelper {
+  static Future<void> callCalendar(
+    BuildContext context,
+    Future<dynamic> onFilterSelected(DateTimeRange value),
+  ) async {
+    final _oneYear = Duration(days: 365);
+
+    final _oneMonth = Duration(days: 30);
+    final _oneDay = Duration(days: 1);
+
+    final _initialDateRange = DateTimeRange(
+      start: DateTime.now().subtract(_oneMonth),
+      end: DateTime.now().add(_oneDay),
+    );
+
+    final picked = await showDateRangePicker(
+        context: context,
+        initialDateRange: _initialDateRange,
+        firstDate: DateTime.now().subtract(_oneYear),
+        lastDate: DateTime.now().add(_oneYear));
+
+    if (picked != null) {
+      if (picked.duration.inDays < 32) {
+        onFilterSelected(picked);
+      } else {
+        DialogHelper.showCustomDialog(
+          'Filter melebihi 30 hari',
+          context,
+        ).then((_) => callCalendar(
+              context,
+              onFilterSelected,
+            ));
+      }
     }
   }
 }

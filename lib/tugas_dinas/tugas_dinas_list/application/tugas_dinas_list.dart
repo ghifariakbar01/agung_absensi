@@ -83,6 +83,7 @@ class TugasDinasList with _$TugasDinasList {
     @JsonKey(name: 'coo_msg') String? cooMsg,
     @JsonKey(name: 'is_btl') bool? isBtl,
     @JsonKey(name: 'btl_msg') String? btlMsg,
+    @JsonKey(name: 'is_vis_coogm') bool? isCooGmVisible,
   }) = _TugasDinasList;
 
   factory TugasDinasList.fromJson(Map<String, dynamic> json) =>

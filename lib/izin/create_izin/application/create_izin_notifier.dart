@@ -58,7 +58,13 @@ class CreateIzinNotifier extends _$CreateIzinNotifier {
       state = const AsyncValue.data('Sukses Submit');
     } catch (e) {
       state = const AsyncValue.data('');
-      await onError('Error $e');
+      String _msg = e.toString();
+
+      if (e is RestApiExceptionWithMessage) {
+        _msg = e.errorCode.toString() + ' ' + e.message!;
+      }
+
+      await onError('Error $_msg');
     }
   }
 
@@ -95,7 +101,13 @@ class CreateIzinNotifier extends _$CreateIzinNotifier {
       state = const AsyncValue.data('Sukses Update');
     } catch (e) {
       state = const AsyncValue.data('');
-      if (e is RestApiExceptionWithMessage) await onError('Error ${e.message}');
+      String _msg = e.toString();
+
+      if (e is RestApiExceptionWithMessage) {
+        _msg = e.errorCode.toString() + ' ' + e.message!;
+      }
+
+      await onError('Error $_msg');
     }
   }
 
@@ -119,7 +131,13 @@ class CreateIzinNotifier extends _$CreateIzinNotifier {
       state = const AsyncValue.data('Sukses Delete');
     } catch (e) {
       state = const AsyncValue.data('');
-      await onError('Error $e');
+      String _msg = e.toString();
+
+      if (e is RestApiExceptionWithMessage) {
+        _msg = e.errorCode.toString() + ' ' + e.message!;
+      }
+
+      await onError('Error $_msg');
     }
   }
 }

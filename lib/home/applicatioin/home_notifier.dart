@@ -1,4 +1,3 @@
-import 'package:face_net_authentication/wa_register/application/wa_register_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:geofence_service/geofence_service.dart';
 import 'package:go_router/go_router.dart';
@@ -9,7 +8,6 @@ import '../../cross_auth/application/cross_auth_notifier.dart';
 import '../../permission/application/shared/permission_introduction_providers.dart';
 import '../../routes/application/route_names.dart';
 import '../../tester/application/tester_state.dart';
-import '../../wa_register/application/wa_register.dart';
 import '../../widgets/v_dialogs.dart';
 import '../../shared/providers.dart';
 
@@ -36,6 +34,7 @@ class HomeNotifier extends StateNotifier<HomeState> {
       required WidgetRef ref,
       required BuildContext context}) async {
     bool isAbsenRoute = route == RouteNames.absenRoute;
+    bool isRiwayatRoute = route == RouteNames.riwayatRoute;
     bool isSlipGajiRoute = route == RouteNames.slipGajiRoute;
 
     bool isGpsOff = await FlLocation.isLocationServicesEnabled == false;
@@ -45,11 +44,6 @@ class HomeNotifier extends StateNotifier<HomeState> {
 
     final permissionNotifier = ref.read(permissionNotifierProvider.notifier);
     bool isLocationDenied = await permissionNotifier.isLocationDenied();
-
-    final waRegister = await ref.read(waRegisterNotifierProvider.future);
-
-    final nama = ref.read(userNotifierProvider).user.nama;
-    final isMe = nama == 'Ghifar';
 
     // if (!isAbsenRoute) {
     //   if (!isMe && waRegister == WaRegister.initial()) {
@@ -65,7 +59,7 @@ class HomeNotifier extends StateNotifier<HomeState> {
     //   }
     // }
 
-    if (isAbsenRoute || isSlipGajiRoute) {
+    if (isAbsenRoute || isRiwayatRoute || isSlipGajiRoute) {
       await _uncross(ref);
     }
 

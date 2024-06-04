@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:face_net_authentication/style/style.dart';
 import 'package:face_net_authentication/utils/string_utils.dart';
 import 'package:flutter/material.dart';
@@ -20,8 +18,6 @@ class RiwayatAbsenScaffold extends ConsumerStatefulWidget {
 }
 
 class _RiwayatAbsenScaffoldState extends ConsumerState<RiwayatAbsenScaffold> {
-  final ScrollController _scrollController = ScrollController();
-
   @override
   void initState() {
     super.initState();
@@ -44,56 +40,14 @@ class _RiwayatAbsenScaffoldState extends ConsumerState<RiwayatAbsenScaffold> {
 
   @override
   Widget build(BuildContext context) {
+    final dateFirst = ref
+        .watch(riwayatAbsenNotifierProvider.select((value) => value.dateFirst));
+
     final dateSecond = ref.watch(
         riwayatAbsenNotifierProvider.select((value) => value.dateSecond));
 
     final list = ref.watch(
         riwayatAbsenNotifierProvider.select((value) => value.riwayatAbsen));
-
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) {
-        _scrollController.position.notifyListeners();
-      },
-    );
-
-    _scrollController.addListener(() async {
-      final nextPageTrigger = 0.9 * _scrollController.position.maxScrollExtent;
-
-      final riwayatAbsen = ref.watch(riwayatAbsenNotifierProvider);
-
-      final dateFirst = riwayatAbsen.dateFirst;
-
-      final dateSecond = riwayatAbsen.dateSecond;
-
-      final isMore = riwayatAbsen.isMore;
-      final isGetting = riwayatAbsen.isGetting;
-      final page = riwayatAbsen.page;
-
-      if (_scrollController.hasClients &&
-          _scrollController.position.pixels > nextPageTrigger &&
-          isMore &&
-          !isGetting) {
-        final startDate = DateTime.parse(dateFirst ?? '');
-        final endDate = DateTime.parse(dateSecond ?? '');
-
-        final _start2 = StringUtils.yyyyMMddWithStripe(startDate);
-        final _end2 =
-            StringUtils.yyyyMMddWithStripe(endDate.subtract(Duration(days: 6)));
-
-        await ref.read(riwayatAbsenNotifierProvider.notifier).startFilter(
-            changePage: () => ref
-                .read(riwayatAbsenNotifierProvider.notifier)
-                .changePage(page + 1),
-            changeFilter: () {},
-            onAllChanged: () async => await ref
-                .read(riwayatAbsenNotifierProvider.notifier)
-                .getAbsenRiwayat(
-                  page: page,
-                  dateFirst: _end2,
-                  dateSecond: _start2,
-                ));
-      }
-    });
 
     return Scaffold(
         appBar: AppBar(
@@ -117,30 +71,41 @@ class _RiwayatAbsenScaffoldState extends ConsumerState<RiwayatAbsenScaffold> {
                 borderRadius: BorderRadius.circular(10),
                 color: Palette.containerBackgroundColor.withOpacity(0.1)),
             padding: EdgeInsets.all(8),
-            child: ListView(
-                controller: _scrollController,
-                physics: const BouncingScrollPhysics(),
-                children: [
-                  RiwayatHeader(
-                    date: StringUtils.formattedRange(
-                        '${DateTime.now()}', dateSecond ?? ''),
-                  ),
-                  SizedBox(
-                    height: 8,
-                  ),
-                  for (var riwayat in list) ...[
-                    RiwayatList(
-                      lokasiMasuk: riwayat.lokasiMasuk ?? '',
-                      lokasiPulang: riwayat.lokasiKeluar ?? '',
-                      masuk: riwayat.masuk ?? '',
-                      pulang: riwayat.pulang ?? '',
-                      tanggal: riwayat.tgl ?? '',
+            child: ListView.separated(
+              separatorBuilder: (context, index) => SizedBox(
+                height: 4,
+              ),
+              physics: const BouncingScrollPhysics(),
+              itemCount: list.length,
+              itemBuilder: (context, index) => index == 0
+                  ? Column(
+                      children: [
+                        RiwayatHeader(
+                          date: StringUtils.formattedRange(
+                            dateFirst ?? '',
+                            dateSecond ?? '',
+                          ),
+                        ),
+                        SizedBox(
+                          height: 12,
+                        ),
+                        RiwayatList(
+                          lokasiMasuk: list[index].lokasiMasuk ?? '',
+                          lokasiPulang: list[index].lokasiKeluar ?? '',
+                          masuk: list[index].masuk ?? '',
+                          pulang: list[index].pulang ?? '',
+                          tanggal: list[index].tgl ?? '',
+                        ),
+                      ],
+                    )
+                  : RiwayatList(
+                      lokasiMasuk: list[index].lokasiMasuk ?? '',
+                      lokasiPulang: list[index].lokasiKeluar ?? '',
+                      masuk: list[index].masuk ?? '',
+                      pulang: list[index].pulang ?? '',
+                      tanggal: list[index].tgl ?? '',
                     ),
-                    SizedBox(
-                      height: 4,
-                    ),
-                  ]
-                ]),
+            ),
           ),
         ));
   }

@@ -1,17 +1,17 @@
 import 'package:dartz/dartz.dart';
 
-// import 'package:face_net_authentication/locator.dart';
-
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:upgrader/upgrader.dart';
 
 import 'config/configuration.dart';
+
 import 'firebase/remote_config/application/firebase_remote_cfg.dart';
 import 'firebase/remote_config/application/firebase_remote_config_notifier.dart';
 import 'firebase/remote_config/helper/firebase_remote_config_initializer.dart';
 import 'helper.dart';
+
 import 'imei_introduction/application/shared/imei_introduction_providers.dart';
 import 'ip/application/ip_notifier.dart';
 import 'shared/providers.dart';
@@ -67,8 +67,6 @@ class MyApp extends ConsumerWidget {
     final firebaseRemoteCfg = ref.watch(firebaseRemoteConfigNotifierProvider);
     final ipNotifier = ref.watch(ipNotifierProvider);
 
-    // final alice = ref.watch(aliceProvider);
-
     return VAsyncWidgetScaffoldWrappedMaterial<FirebaseRemoteCfg>(
       value: firebaseRemoteCfg,
       data: (cfg) => VAsyncWidgetScaffoldWrappedMaterial<void>(
@@ -86,9 +84,10 @@ class MyApp extends ConsumerWidget {
                     navigatorKey: routerDelegate.navigatorKey,
                     child: c,
                     upgrader: Upgrader(
-                        minAppVersion: cfg.minApp,
-                        durationUntilAlertAgain: Duration(hours: 3),
-                        messages: MyUpgraderMessages()),
+                      messages: MyUpgraderMessages(),
+                      minAppVersion: cfg.minApp,
+                      durationUntilAlertAgain: Duration(hours: 3),
+                    ),
                   ))),
     );
   }

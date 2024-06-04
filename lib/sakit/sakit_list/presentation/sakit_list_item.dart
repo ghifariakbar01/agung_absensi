@@ -58,12 +58,14 @@ class SakitListItem extends HookConsumerWidget {
                       // LEFT
                       if (item.cDate != null)
                         Text(
-                          DateFormat(
+                          "${item.idSakit} - ${DateFormat(
                             'EEEE, dd MMMM yyyy',
-                          ).format(item.cDate!),
+                          ).format((item.cDate!))}",
                           style: Themes.customColor(10,
                               fontWeight: FontWeight.w500,
-                              color: item.btlSta == true ? Colors.white : null),
+                              color: item.btlSta == true
+                                  ? Colors.white
+                                  : Palette.primaryColor),
                         ),
 
                       Spacer(),
@@ -247,14 +249,14 @@ class SakitListItem extends HookConsumerWidget {
                                   SizedBox(
                                     height: 2,
                                   ),
-                                  // Text(
-                                  //   item.totHari.toString() + " Hari",
-                                  //   style: Themes.customColor(9,
-                                  //       color: item.btlSta == true
-                                  //           ? Colors.white
-                                  //           : Palette.primaryColor,
-                                  //       fontWeight: FontWeight.w500),
-                                  // ),
+                                  Text(
+                                    item.totHari.toString() + " Hari",
+                                    style: Themes.customColor(9,
+                                        color: item.btlSta == true
+                                            ? Colors.white
+                                            : Palette.primaryColor,
+                                        fontWeight: FontWeight.w500),
+                                  ),
                                 ],
                               ),
                               SizedBox(

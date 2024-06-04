@@ -14,9 +14,9 @@ class CreateCutiRepository {
   final CreateCutiRemoteService _remoteService;
 
   Future<Unit> updateCuti({
+    required int idCuti,
     required String username,
     required String pass,
-    required int idCuti,
     required String jenisCuti,
     required String alasan,
     required String ket,

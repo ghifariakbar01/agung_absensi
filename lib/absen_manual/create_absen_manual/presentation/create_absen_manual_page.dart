@@ -194,13 +194,15 @@ class CreateAbsenManualPage extends HookConsumerWidget {
                       Ink(
                         child: InkWell(
                           onTap: () async {
+                            final _oneYear = Duration(days: 365);
+
                             final picked = await showDatePicker(
                               context: context,
                               initialDate: DateTime.now(),
-                              lastDate: DateTime.now().add(Duration(days: 90)),
-                              firstDate:
-                                  DateTime.now().subtract(Duration(days: 90)),
+                              lastDate: DateTime.now().add(_oneYear),
+                              firstDate: DateTime.now().subtract(_oneYear),
                             );
+
                             if (picked != null) {
                               print(picked);
 
@@ -457,9 +459,15 @@ class CreateAbsenManualPage extends HookConsumerWidget {
                                         jenisAbsen: jenisTextController.value,
                                         jamAkhir: jamAkhirTextController.value,
                                         ket: keteranganTextController.text,
-                                        onError: (msg) =>
-                                            DialogHelper.showCustomDialog(
-                                                msg, context));
+                                        onError: (msg) {
+                                          return DialogHelper.showCustomDialog(
+                                            msg,
+                                            context,
+                                          ).then((_) => ref
+                                              .read(errLogControllerProvider
+                                                  .notifier)
+                                              .sendLog(errMessage: msg));
+                                        });
                               }
                             }),
                       )

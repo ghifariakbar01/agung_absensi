@@ -239,11 +239,14 @@ class EditCutiPage extends HookConsumerWidget {
                       Ink(
                         child: InkWell(
                           onTap: () async {
+                            final _oneYear = Duration(days: 365);
+
                             final picked = await showDateRangePicker(
                               context: context,
-                              firstDate: new DateTime(2021),
-                              lastDate: DateTime.now().add(Duration(days: 365)),
+                              firstDate: DateTime.now().subtract(_oneYear),
+                              lastDate: DateTime.now().add(_oneYear),
                             );
+
                             if (picked != null) {
                               print(picked);
                               tglStart.value = picked.start;
@@ -338,22 +341,26 @@ class EditCutiPage extends HookConsumerWidget {
                                 await ref
                                     .read(createCutiNotifierProvider.notifier)
                                     .updateCuti(
-                                      idCuti: item.idCuti!,
-                                      tglStart: tglStart.value,
-                                      tglEnd: tglEnd.value,
-                                      spvNote: spvTextController.text,
-                                      hrdNote: hrdTextController.text,
-                                      keterangan:
-                                          keteranganCutiTextController.text,
-                                      jenisCuti: jenisCutiTextController.value,
-                                      alasanCuti:
-                                          alasanCutiTextController.value,
-                                      onError: (msg) =>
-                                          DialogHelper.showCustomDialog(
-                                        msg,
-                                        context,
-                                      ),
-                                    );
+                                        idCuti: item.idCuti!,
+                                        tglStart: tglStart.value,
+                                        tglEnd: tglEnd.value,
+                                        spvNote: spvTextController.text,
+                                        hrdNote: hrdTextController.text,
+                                        keterangan:
+                                            keteranganCutiTextController.text,
+                                        jenisCuti:
+                                            jenisCutiTextController.value,
+                                        alasanCuti:
+                                            alasanCutiTextController.value,
+                                        onError: (msg) {
+                                          return DialogHelper.showCustomDialog(
+                                            msg,
+                                            context,
+                                          ).then((_) => ref
+                                              .read(errLogControllerProvider
+                                                  .notifier)
+                                              .sendLog(errMessage: msg));
+                                        });
                               }
                             }),
                       )

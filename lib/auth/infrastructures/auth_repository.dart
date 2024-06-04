@@ -24,8 +24,11 @@ class AuthRepository {
   Future<bool> isSignedIn() => getSignedInCredentials()
       .then((credentials) => credentials.fold((_) => false, (_) => true));
 
-  Future<String> getUserString() => getSignedInCredentials()
-      .then((value) => value.fold((_) => '', (userString) => userString ?? ''));
+  Future<String> getUserString() =>
+      getSignedInCredentials().then((value) => value.fold(
+            (_) => '',
+            (userString) => userString ?? '',
+          ));
 
   Future<Either<AuthFailure, Unit>> signOut() async {
     return clearCredentialsStorage();

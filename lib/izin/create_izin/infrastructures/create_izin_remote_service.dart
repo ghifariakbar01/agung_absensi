@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
@@ -43,9 +42,11 @@ class CreateIzinRemoteService {
         return unit;
       } else {
         final message = items['message'] as String?;
+        final errmessage = items['error_msg'] as String?;
         final errorCode = items['status_code'] as int;
 
-        throw RestApiExceptionWithMessage(errorCode, message);
+        throw RestApiExceptionWithMessage(
+            errorCode, "$errorCode : $message $errmessage ");
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);
@@ -89,41 +90,12 @@ class CreateIzinRemoteService {
             'hrd_note': noteHrd,
           }));
 
-      log(
-        'username' + username,
-      );
-      log(
-        'pass' + pass,
-      );
-      log('server' + server!);
-      log(
-        'id_izin' + idIzin.toString(),
-      );
-      log(
-        'tgl_start' + tglStart,
-      );
-      log(
-        'tgl_end' + tglEnd,
-      );
-      log(
-        'id_mst_izin' + idMstIzin.toString(),
-      );
-      log(
-        'ket' + ket,
-      );
-      log(
-        'spv_note' + noteSpv,
-      );
-      log(
-        'hrd_note' + noteHrd,
-      );
-
       final items = response.data;
 
       if (items['status_code'] == 200) {
         return unit;
       } else {
-        final message = items['error_message'] as String?;
+        final message = items['error_msg'] as String?;
         final errorCode = items['status_code'] as int;
 
         throw RestApiExceptionWithMessage(errorCode, message);
@@ -163,9 +135,11 @@ class CreateIzinRemoteService {
         return unit;
       } else {
         final message = items['message'] as String?;
+        final errmessage = items['error_msg'] as String?;
         final errorCode = items['status_code'] as int;
 
-        throw RestApiExceptionWithMessage(errorCode, message);
+        throw RestApiExceptionWithMessage(
+            errorCode, "$errorCode : $message $errmessage ");
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);

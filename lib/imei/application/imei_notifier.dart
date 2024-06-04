@@ -401,7 +401,10 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
     return ref
         .read(imeiNotifierProvider.notifier)
         .onImeiAlreadyRegistered(
-          showDialog: () => DialogHelper.showCustomDialog(msg, context),
+          showDialog: () => DialogHelper.showCustomDialog(
+            msg,
+            context,
+          ),
           logout: () => ref.read(userNotifierProvider.notifier).logout(),
           sendLog: () => ref
               .read(errLogControllerProvider.notifier)

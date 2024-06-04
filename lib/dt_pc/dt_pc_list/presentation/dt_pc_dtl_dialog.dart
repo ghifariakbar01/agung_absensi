@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../constants/assets.dart';
+import '../../../err_log/application/err_log_notifier.dart';
 import '../../../routes/application/route_names.dart';
 import '../../../style/style.dart';
 import '../../../utils/dialog_helper.dart';
@@ -262,10 +263,14 @@ class DtPcDtlDialog extends ConsumerWidget {
                             .read(createDtPcNotifierProvider.notifier)
                             .deleteDtPc(
                                 idDt: item.idDt!,
-                                onError: (msg) => DialogHelper.showCustomDialog(
-                                      msg,
-                                      context,
-                                    ));
+                                onError: (msg) {
+                                  return DialogHelper.showCustomDialog(
+                                    msg,
+                                    context,
+                                  ).then((_) => ref
+                                      .read(errLogControllerProvider.notifier)
+                                      .sendLog(errMessage: msg));
+                                });
                       },
                     )
                 ],

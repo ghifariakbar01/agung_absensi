@@ -199,16 +199,15 @@ class CreateIzinPage extends HookConsumerWidget {
                       Ink(
                         child: InkWell(
                           onTap: () async {
-                            final _threeMonth = Duration(days: 120);
+                            final _oneYear = Duration(days: 365);
 
                             final picked = await showDateRangePicker(
                               context: context,
-                              lastDate: DateTime.now().add(_threeMonth),
-                              firstDate: DateTime.now().subtract(_threeMonth),
+                              lastDate: DateTime.now().add(_oneYear),
+                              firstDate: DateTime.now().subtract(_oneYear),
                             );
-                            if (picked != null) {
-                              print(picked);
 
+                            if (picked != null) {
                               final start =
                                   StringUtils.midnightDate(picked.start)
                                       .replaceAll('.000', '');
@@ -313,9 +312,15 @@ class CreateIzinPage extends HookConsumerWidget {
                                         ket: keteranganTextController.text,
                                         idMstIzin:
                                             jenisIzinTextController.value,
-                                        onError: (msg) =>
-                                            DialogHelper.showCustomDialog(
-                                                msg, context));
+                                        onError: (msg) {
+                                          return DialogHelper.showCustomDialog(
+                                            msg,
+                                            context,
+                                          ).then((_) => ref
+                                              .read(errLogControllerProvider
+                                                  .notifier)
+                                              .sendLog(errMessage: msg));
+                                        });
                               }
                             }),
                       )

@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:face_net_authentication/tugas_dinas/create_tugas_dinas/application/create_tugas_dinas_notifier.dart';
 import 'package:face_net_authentication/widgets/tappable_widget.dart';
 import 'package:flutter/material.dart';
@@ -6,10 +7,14 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../constants/assets.dart';
+import '../../../err_log/application/err_log_notifier.dart';
 import '../../../routes/application/route_names.dart';
 import '../../../style/style.dart';
 import '../../../utils/dialog_helper.dart';
+import '../../../widgets/v_async_widget.dart';
+import '../application/mst_user_list.dart';
 import '../application/tugas_dinas_list.dart';
+import '../application/tugas_dinas_list_notifier.dart';
 
 class TugasDinasDtlDialog extends ConsumerWidget {
   const TugasDinasDtlDialog({Key? key, required this.item}) : super(key: key);
@@ -18,6 +23,8 @@ class TugasDinasDtlDialog extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final masterUser = ref.watch(mstUserListNotifierProvider);
+
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.0),
@@ -127,27 +134,36 @@ class TugasDinasDtlDialog extends ConsumerWidget {
                       height: 8,
                     ),
                     // PEMBERI
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Pemberi',
-                          style: Themes.customColor(7, color: Colors.grey),
-                        ),
-                        SizedBox(
-                          height: 2,
-                        ),
-                        SizedBox(
-                          width: 90,
-                          child: Text(
-                            item.idPemberi.toString(),
-                            style: Themes.customColor(9,
-                                color: Palette.primaryColor,
-                                fontWeight: FontWeight.w500),
+                    VAsyncValueWidget<List<MstUserList>>(
+                      value: masterUser,
+                      data: (mst) => Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Pemberi',
+                            style: Themes.customColor(7, color: Colors.grey),
                           ),
-                        ),
-                      ],
+                          SizedBox(
+                            height: 2,
+                          ),
+                          SizedBox(
+                            width: 90,
+                            child: Text(
+                              item.idPemberi == null
+                                  ? ''
+                                  : mst
+                                          .firstWhereOrNull((element) =>
+                                              element.idUser == item.idPemberi!)
+                                          ?.fullname ??
+                                      '',
+                              style: Themes.customColor(9,
+                                  color: Palette.primaryColor,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                     SizedBox(
                       height: 8,
@@ -442,11 +458,14 @@ class TugasDinasDtlDialog extends ConsumerWidget {
                               .read(createTugasDinasNotifierProvider.notifier)
                               .deleteTugasDinas(
                                   idDinas: item.idDinas!,
-                                  onError: (msg) =>
-                                      DialogHelper.showCustomDialog(
-                                        msg,
-                                        context,
-                                      ));
+                                  onError: (msg) {
+                                    return DialogHelper.showCustomDialog(
+                                      msg,
+                                      context,
+                                    ).then((_) => ref
+                                        .read(errLogControllerProvider.notifier)
+                                        .sendLog(errMessage: msg));
+                                  });
                         })
                 ],
               )

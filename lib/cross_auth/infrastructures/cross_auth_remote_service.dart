@@ -55,9 +55,12 @@ class CrossAuthRemoteService {
             try {
               final listSelected = list[0];
 
-              final UserModelWithPassword user = UserModelWithPassword.fromJson(
-                      listSelected as Map<String, dynamic>)
-                  .copyWith(ptServer: server, password: password);
+              final user = UserModelWithPassword.fromJson(
+                listSelected as Map<String, dynamic>,
+              ).copyWith(
+                ptServer: server,
+                password: password,
+              );
 
               return CrossAuthResponse.withUser(user);
             } catch (e) {
@@ -94,6 +97,97 @@ class CrossAuthRemoteService {
       if ((e.type == DioExceptionType.connectionError ||
           e.type == DioExceptionType.connectionTimeout)) {
         throw NoConnectionException();
+      } else if (e.response != null) {
+        throw RestApiException(e.response?.statusCode);
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  Future<CrossAuthResponse> crossToACTStl({
+    required String server,
+    required String userId,
+    required String password,
+  }) async {
+    try {
+      final Map<String, dynamic> data = {
+        "username": userId,
+        "password": password,
+        "server": server,
+        "mode": "SELECT",
+        "command": "SELECT  " +
+            _commonQueryACT +
+            "  FROM  "
+                "    mst_user A JOIN hr_user B ON A.id_user = B.id_user "
+                " WHERE  "
+                "    nama = '$userId'  "
+      };
+
+      final response = await _dio.post('',
+          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
+
+      log('data $data');
+      log('response $response');
+
+      final items = response.data?[0];
+
+      if (items['status'] == 'Success') {
+        final userExist = items['items'] != null && items['items'] is List;
+
+        if (userExist) {
+          final list = items['items'] as List;
+
+          if (list.isNotEmpty) {
+            try {
+              final listSelected = list[0];
+
+              final user = UserModelWithPassword.fromJson(
+                listSelected as Map<String, dynamic>,
+              ).copyWith(
+                ptServer: server,
+                password: password,
+              );
+
+              return CrossAuthResponse.withUser(user);
+            } catch (e) {
+              return CrossAuthResponse.failure(
+                errorCode: 00,
+                message: 'Error parsing $e',
+              );
+            }
+          } else {
+            return CrossAuthResponse.failure(
+              errorCode: 00,
+              message: 'User not found',
+            );
+          }
+        } else {
+          final message = items['error'] as String?;
+          final errorCode = items['errornum'] as int;
+
+          return CrossAuthResponse.failure(
+            errorCode: errorCode,
+            message: message,
+          );
+        }
+      } else {
+        final message = items['error'] as String?;
+        final errorCode = items['errornum'] as int;
+
+        return CrossAuthResponse.failure(
+          errorCode: errorCode,
+          message: message,
+        );
+      }
+    } on DioException catch (e) {
+      if ((e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout)) {
+        return CrossAuthResponse.failure(
+          errorCode: 404,
+          message:
+              'User setelah lintas server menutup aplikasi. Harap menyalakan internet dahulu.',
+        );
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);
       } else {
@@ -140,9 +234,12 @@ class CrossAuthRemoteService {
             try {
               final listSelected = list[0];
 
-              final UserModelWithPassword user = UserModelWithPassword.fromJson(
-                      listSelected as Map<String, dynamic>)
-                  .copyWith(ptServer: server, password: password);
+              final user = UserModelWithPassword.fromJson(
+                listSelected as Map<String, dynamic>,
+              ).copyWith(
+                ptServer: server,
+                password: password,
+              );
 
               return CrossAuthResponse.withUser(user);
             } catch (e) {
@@ -179,6 +276,94 @@ class CrossAuthRemoteService {
       if ((e.type == DioExceptionType.connectionError ||
           e.type == DioExceptionType.connectionTimeout)) {
         throw NoConnectionException();
+      } else if (e.response != null) {
+        throw RestApiException(e.response?.statusCode);
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  Future<CrossAuthResponse> crossToARVStl({
+    required String server,
+    required String userId,
+    required String password,
+  }) async {
+    try {
+      final Map<String, dynamic> data = {
+        "username": userId,
+        "password": password,
+        "server": server,
+        "mode": "SELECT",
+        "command": "SELECT *, " +
+            _commonQueryARV +
+            " FROM mst_user A WHERE nama = '$userId' ",
+      };
+
+      final response = await _dio.post('',
+          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
+
+      log('data $data');
+      log('response $response');
+
+      final items = response.data?[0];
+
+      if (items['status'] == 'Success') {
+        final userExist = items['items'] != null && items['items'] is List;
+
+        if (userExist) {
+          final list = items['items'] as List;
+
+          if (list.isNotEmpty) {
+            try {
+              final listSelected = list[0];
+
+              final user = UserModelWithPassword.fromJson(
+                listSelected as Map<String, dynamic>,
+              ).copyWith(
+                ptServer: server,
+                password: password,
+              );
+
+              return CrossAuthResponse.withUser(user);
+            } catch (e) {
+              return CrossAuthResponse.failure(
+                errorCode: 00,
+                message: 'Error parsing $e',
+              );
+            }
+          } else {
+            return CrossAuthResponse.failure(
+              errorCode: 00,
+              message: 'User not found',
+            );
+          }
+        } else {
+          final message = items['error'] as String?;
+          final errorCode = items['errornum'] as int;
+
+          return CrossAuthResponse.failure(
+            errorCode: errorCode,
+            message: message,
+          );
+        }
+      } else {
+        final message = items['error'] as String?;
+        final errorCode = items['errornum'] as int;
+
+        return CrossAuthResponse.failure(
+          errorCode: errorCode,
+          message: message,
+        );
+      }
+    } on DioException catch (e) {
+      if ((e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout)) {
+        return CrossAuthResponse.failure(
+          errorCode: 404,
+          message:
+              'User setelah lintas server menutup aplikasi.\nHarap menggunakan internet dahulu.',
+        );
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);
       } else {

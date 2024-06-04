@@ -16,8 +16,8 @@ class TappableSvg extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 11,
-      width: 12,
+      height: 15,
+      width: 16,
       child: Stack(
         children: <Widget>[
           new Positioned.fill(

@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../constants/assets.dart';
+import '../../../err_log/application/err_log_notifier.dart';
 import '../../../routes/application/route_names.dart';
 import '../../../style/style.dart';
 import '../../../utils/dialog_helper.dart';
@@ -317,6 +318,7 @@ class CutiDtlDialog extends ConsumerWidget {
                   TappableSvg(
                       assetPath: Assets.iconEdit,
                       onTap: () {
+                        context.pop();
                         return context.pushNamed(
                           RouteNames.editCutiRoute,
                           extra: item.toJson(),
@@ -334,10 +336,14 @@ class CutiDtlDialog extends ConsumerWidget {
                           .read(createCutiNotifierProvider.notifier)
                           .deleteCuti(
                               idCuti: item.idCuti!,
-                              onError: (msg) => DialogHelper.showCustomDialog(
-                                    msg,
-                                    context,
-                                  ));
+                              onError: (msg) {
+                                return DialogHelper.showCustomDialog(
+                                  msg,
+                                  context,
+                                ).then((_) => ref
+                                    .read(errLogControllerProvider.notifier)
+                                    .sendLog(errMessage: msg));
+                              });
                     },
                   )
               ],
