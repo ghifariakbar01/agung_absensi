@@ -55,7 +55,6 @@ class RiwayatHeader extends ConsumerWidget {
                         onAllChanged: () => ref
                             .read(riwayatAbsenNotifierProvider.notifier)
                             .getAbsenRiwayat(
-                              page: 1,
                               dateFirst: _end2,
                               dateSecond: _start2,
                             ),
@@ -117,7 +116,6 @@ class RiwayatHeader extends ConsumerWidget {
                         onAllChanged: () => ref
                             .read(riwayatAbsenNotifierProvider.notifier)
                             .getAbsenRiwayat(
-                              page: 1,
                               dateFirst: _end2,
                               dateSecond: _start2,
                             ),

@@ -66,7 +66,10 @@ class EditProfileRepostiroy {
   }) async {
     try {
       final response = await _profileRemoteService.logClearImei(
-          imei: imei, nama: nama, idUser: idUser);
+        imei: imei,
+        nama: nama,
+        idUser: idUser,
+      );
 
       return right(response);
     } on RestApiExceptionWithMessage catch (restApi) {
@@ -81,25 +84,28 @@ class EditProfileRepostiroy {
     }
   }
 
-  Future<Either<EditFailure, Unit>> registerImei(
-      {required String imei, required String idKary}) async {
+  Future<Either<EditFailure, Unit>> registerImei({
+    required String imei,
+    required String idKary,
+  }) async {
     try {
-      final response =
-          await _profileRemoteService.registerImei(imei: imei, idKary: idKary);
+      final response = await _profileRemoteService.registerImei(
+        imei: imei,
+        idKary: idKary,
+      );
 
-      return response.when(
-          withImei: (imei) async {
-            await _credentialsStorage.save(imei);
+      return response.when(withImei: (imei) async {
+        await _credentialsStorage.save(imei);
 
-            return right(unit);
-          },
-          failure: ((errorCode, message) =>
-              left(EditFailure.server(errorCode, message))));
-    } on RestApiException catch (restApi) {
-      return left(EditFailure.server(
-          restApi.errorCode, 'RestApi exception register imei'));
-    } on FormatException {
-      return left(EditFailure.server(1, 'Error parse register imei'));
+        return right(unit);
+      }, failure: ((errorCode, message) {
+        return left(EditFailure.server(errorCode, message));
+      }));
+    } on RestApiException catch (e) {
+      return left(
+          EditFailure.server(e.errorCode, 'RestApi exception register imei'));
+    } on FormatException catch (e) {
+      return left(EditFailure.server(1, e.message));
     } on NoConnectionException {
       return left(EditFailure.noConnection());
     }

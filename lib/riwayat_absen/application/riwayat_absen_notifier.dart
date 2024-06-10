@@ -15,7 +15,6 @@ class RiwayatAbsenNotifier extends StateNotifier<RiwayatAbsenState> {
   final AbsenRepository _absenRepository;
 
   Future<void> getAbsenRiwayat({
-    required int page,
     required String? dateFirst,
     required String? dateSecond,
   }) async {
@@ -27,7 +26,6 @@ class RiwayatAbsenNotifier extends StateNotifier<RiwayatAbsenState> {
     );
 
     failureOrSuccess = await _absenRepository.getRiwayatAbsen(
-      page: page,
       dateFirst: dateFirst,
       dateSecond: dateSecond,
     );

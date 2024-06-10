@@ -454,18 +454,27 @@ class TugasDinasDtlDialog extends ConsumerWidget {
                     TappableSvg(
                         assetPath: Assets.iconDelete,
                         onTap: () {
-                          ref
-                              .read(createTugasDinasNotifierProvider.notifier)
-                              .deleteTugasDinas(
-                                  idDinas: item.idDinas!,
-                                  onError: (msg) {
-                                    return DialogHelper.showCustomDialog(
-                                      msg,
-                                      context,
-                                    ).then((_) => ref
-                                        .read(errLogControllerProvider.notifier)
-                                        .sendLog(errMessage: msg));
-                                  });
+                          context.pop();
+                          return DialogHelper.showConfirmationDialog(
+                              context: context,
+                              label: 'Hapus form ? ',
+                              onPressed: () async {
+                                context.pop();
+                                await ref
+                                    .read(createTugasDinasNotifierProvider
+                                        .notifier)
+                                    .deleteTugasDinas(
+                                        idDinas: item.idDinas!,
+                                        onError: (msg) {
+                                          return DialogHelper.showCustomDialog(
+                                            msg,
+                                            context,
+                                          ).then((_) => ref
+                                              .read(errLogControllerProvider
+                                                  .notifier)
+                                              .sendLog(errMessage: msg));
+                                        });
+                              });
                         })
                 ],
               )

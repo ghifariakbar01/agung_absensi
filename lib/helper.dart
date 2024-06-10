@@ -1,3 +1,5 @@
+// ignore_for_file: sdk_version_since
+
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/shared/providers.dart';
 import 'package:flutter/material.dart';
@@ -68,23 +70,27 @@ class HelperImpl implements Helper {
 }
 
 class CalendarHelper {
+  static DateTimeRange initialDateRange() {
+    final _end = DateTime.now().copyWith(day: 15);
+
+    final _monthBefore = DateTime.now().month - 1;
+    final _start = DateTime.now().copyWith(month: _monthBefore, day: 15);
+
+    return DateTimeRange(
+      start: _start,
+      end: _end,
+    );
+  }
+
   static Future<void> callCalendar(
     BuildContext context,
     Future<dynamic> onFilterSelected(DateTimeRange value),
   ) async {
     final _oneYear = Duration(days: 365);
 
-    final _oneMonth = Duration(days: 30);
-    final _oneDay = Duration(days: 1);
-
-    final _initialDateRange = DateTimeRange(
-      start: DateTime.now().subtract(_oneMonth),
-      end: DateTime.now().add(_oneDay),
-    );
-
     final picked = await showDateRangePicker(
         context: context,
-        initialDateRange: _initialDateRange,
+        initialDateRange: initialDateRange(),
         firstDate: DateTime.now().subtract(_oneYear),
         lastDate: DateTime.now().add(_oneYear));
 

@@ -128,6 +128,10 @@ class RouterNotifier extends ChangeNotifier {
           return RouteNames.initUserNameRoute;
         }
 
+        if (!weVisitedImei) {
+          return RouteNames.imeiInstructionNameRoute;
+        }
+
         if (areWeInitializingUser || areWeAtDefaultRoute) {
           if (weAlreadyDidAllProcedures) {
             return RouteNames.homeNameRoute;

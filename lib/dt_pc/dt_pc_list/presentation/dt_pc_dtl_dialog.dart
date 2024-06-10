@@ -259,18 +259,25 @@ class DtPcDtlDialog extends ConsumerWidget {
                       assetPath: Assets.iconDelete,
                       onTap: () async {
                         context.pop();
-                        await ref
-                            .read(createDtPcNotifierProvider.notifier)
-                            .deleteDtPc(
-                                idDt: item.idDt!,
-                                onError: (msg) {
-                                  return DialogHelper.showCustomDialog(
-                                    msg,
-                                    context,
-                                  ).then((_) => ref
-                                      .read(errLogControllerProvider.notifier)
-                                      .sendLog(errMessage: msg));
-                                });
+                        return DialogHelper.showConfirmationDialog(
+                            context: context,
+                            label: 'Hapus form ? ',
+                            onPressed: () async {
+                              context.pop();
+                              await ref
+                                  .read(createDtPcNotifierProvider.notifier)
+                                  .deleteDtPc(
+                                      idDt: item.idDt!,
+                                      onError: (msg) {
+                                        return DialogHelper.showCustomDialog(
+                                          msg,
+                                          context,
+                                        ).then((_) => ref
+                                            .read(errLogControllerProvider
+                                                .notifier)
+                                            .sendLog(errMessage: msg));
+                                      });
+                            });
                       },
                     )
                 ],

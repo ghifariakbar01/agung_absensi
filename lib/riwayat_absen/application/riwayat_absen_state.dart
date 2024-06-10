@@ -31,7 +31,9 @@ class RiwayatAbsenState with _$RiwayatAbsenState {
       failureOrSuccessOptionByID: none(),
       dateFirst:
           StringUtils.yyyyMMddWithStripe(DateTime.now().add(Duration(days: 1))),
-      dateSecond: StringUtils.yyyyMMddWithStripe(
-          DateTime.now().subtract(Duration(days: 7))),
+      dateSecond: StringUtils.yyyyMMddWithStripe(DateTime.now().copyWith(
+        month: DateTime.now().month - 1,
+        day: 15,
+      )),
       page: 1);
 }

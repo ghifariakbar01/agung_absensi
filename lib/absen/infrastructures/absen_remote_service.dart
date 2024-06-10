@@ -199,7 +199,6 @@ class AbsenRemoteService {
   }
 
   Future<List<RiwayatAbsenModel>> getRiwayatAbsen({
-    required int page,
     required String? dateFirst,
     required String? dateSecond,
   }) async {

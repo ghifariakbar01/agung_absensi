@@ -37,19 +37,12 @@ class SakitListScaffold extends HookConsumerWidget
     final sakitApprove = ref.watch(sakitApproveControllerProvider);
     final crossAuth = ref.watch(crossAuthNotifierProvider);
 
-    final _oneMonth = Duration(days: 30);
-    final _oneDay = Duration(days: 1);
-    final _initialDateRange = DateTimeRange(
-      end: DateTime.now().add(_oneDay),
-      start: DateTime.now().subtract(_oneMonth),
-    );
-
     /* 
       Search and Filter Date
       values
     */
     final _lastSearch = useState('');
-    final _dateTimeRange = useState(_initialDateRange);
+    final _dateTimeRange = useState(CalendarHelper.initialDateRange());
 
     final _d1 = DateFormat('dd MMMM y').format(_dateTimeRange.value.start);
     final _d2 = DateFormat('dd MMMM y').format(_dateTimeRange.value.end);

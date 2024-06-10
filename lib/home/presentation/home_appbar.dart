@@ -56,10 +56,10 @@ class HomeAppBar extends ConsumerWidget implements PreferredSizeWidget {
             await ref
                 .read(imeiIntroNotifierProvider.notifier)
                 .clearVisitedIMEIIntroduction();
+
             await ref
                 .read(imeiIntroNotifierProvider.notifier)
                 .checkAndUpdateImeiIntro();
-            await context.pushNamed(RouteNames.imeiInstructionNameRoute);
           },
           child: Ink(
             child: Icon(

@@ -40,19 +40,12 @@ class AbsenManualListScaffold extends HookConsumerWidget
     final scrollController = useScrollController();
     final page = useState(0);
 
-    final _oneMonth = Duration(days: 30);
-    final _oneDay = Duration(days: 1);
-    final _initialDateRange = DateTimeRange(
-      end: DateTime.now().add(_oneDay),
-      start: DateTime.now().subtract(_oneMonth),
-    );
-
     /* 
       Search and Filter Date
       values
     */
     final _lastSearch = useState('');
-    final _dateTimeRange = useState(_initialDateRange);
+    final _dateTimeRange = useState(CalendarHelper.initialDateRange());
 
     /* 
       _

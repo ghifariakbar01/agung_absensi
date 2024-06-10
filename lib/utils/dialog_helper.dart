@@ -26,26 +26,6 @@ class DialogHelper<T> {
             )));
   }
 
-  Future<void> showCustomDialogMixin(
-    String msg,
-    BuildContext context, {
-    Color? color,
-    String? label,
-    String? assets,
-    bool? isLarge,
-  }) async {
-    return OSVibrate.vibrate().then((value) => showDialog(
-        context: context,
-        barrierDismissible: true,
-        builder: (_) => VSimpleDialog(
-              label: label ?? 'Oops',
-              fontSize: isLarge == null ? 11 : 13,
-              labelDescription: msg,
-              color: color ?? Palette.red,
-              asset: assets ?? Assets.iconCrossed,
-            )));
-  }
-
   Future<String?> showFormDialog({
     String? label,
     required BuildContext context,
@@ -69,5 +49,19 @@ class DialogHelper<T> {
     }
 
     return null;
+  }
+
+  static Future<void> showConfirmationDialog({
+    String? label,
+    required BuildContext context,
+    required Function() onPressed,
+  }) async {
+    return OSVibrate.vibrate().then((value) => showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (_) => VAlertDialog2(
+              label: label ?? 'Oops',
+              onPressed: onPressed,
+            )));
   }
 }

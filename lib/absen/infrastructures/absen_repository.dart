@@ -67,13 +67,12 @@ class AbsenRepository {
     }
   }
 
-  Future<Either<RiwayatAbsenFailure, List<RiwayatAbsenModel>>> getRiwayatAbsen(
-      {required int page,
-      required String? dateFirst,
-      required String? dateSecond}) async {
+  Future<Either<RiwayatAbsenFailure, List<RiwayatAbsenModel>>> getRiwayatAbsen({
+    required String? dateFirst,
+    required String? dateSecond,
+  }) async {
     try {
       return right(await _remoteService.getRiwayatAbsen(
-        page: page,
         dateFirst: dateFirst,
         dateSecond: dateSecond,
       ));

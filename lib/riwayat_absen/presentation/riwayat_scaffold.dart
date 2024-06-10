@@ -30,24 +30,18 @@ class _RiwayatAbsenScaffoldState extends ConsumerState<RiwayatAbsenScaffold> {
               .checkAndUpdateTesterState());
 
       await ref.read(riwayatAbsenNotifierProvider.notifier).getAbsenRiwayat(
-          page: 1,
-          dateFirst: StringUtils.yyyyMMddWithStripe(
-              DateTime.now().add(Duration(days: 1))),
-          dateSecond: StringUtils.yyyyMMddWithStripe(
-              DateTime.now().subtract(Duration(days: 7))));
+          dateFirst: ref.read(riwayatAbsenNotifierProvider).dateFirst,
+          dateSecond: ref.read(riwayatAbsenNotifierProvider).dateSecond);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final dateFirst = ref
-        .watch(riwayatAbsenNotifierProvider.select((value) => value.dateFirst));
+    final _riwayat = ref.watch(riwayatAbsenNotifierProvider);
 
-    final dateSecond = ref.watch(
-        riwayatAbsenNotifierProvider.select((value) => value.dateSecond));
-
-    final list = ref.watch(
-        riwayatAbsenNotifierProvider.select((value) => value.riwayatAbsen));
+    final list = _riwayat.riwayatAbsen;
+    final dateFirst = _riwayat.dateFirst;
+    final dateSecond = _riwayat.dateSecond;
 
     return Scaffold(
         appBar: AppBar(

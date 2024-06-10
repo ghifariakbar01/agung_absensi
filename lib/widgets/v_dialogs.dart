@@ -164,10 +164,8 @@ class VAlertDialog2 extends StatelessWidget {
     required this.label,
     required this.onPressed,
     this.pressedLabel,
-    this.color,
   }) : super(key: key);
 
-  final Color? color;
   final String label;
   final String? pressedLabel;
   final Function() onPressed;
@@ -175,8 +173,6 @@ class VAlertDialog2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      // backgroundColor: Theme.of(context).primaryColor,
-      // alignment: Alignment.center,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: SizedBox(
         height: 124,

@@ -10,7 +10,6 @@ import '../../../err_log/application/err_log_notifier.dart';
 import '../../../routes/application/route_names.dart';
 import '../../../style/style.dart';
 import '../../../utils/dialog_helper.dart';
-import '../../../widgets/v_dialogs.dart';
 import '../application/sakit_list.dart';
 
 class SakitDtlDialog extends ConsumerWidget {
@@ -315,28 +314,26 @@ class SakitDtlDialog extends ConsumerWidget {
                     TappableSvg(
                         assetPath: Assets.iconDelete,
                         onTap: () async {
-                          return showDialog(
+                          context.pop();
+                          return DialogHelper.showConfirmationDialog(
                               context: context,
-                              builder: (context) => VAlertDialog2(
-                                  label: 'Delete Form Sakit ? ',
-                                  onPressed: () async {
-                                    context.pop();
-                                    await ref
-                                        .read(createSakitNotifierProvider
-                                            .notifier)
-                                        .deleteSakit(
-                                            idSakit: item.idSakit!,
-                                            onError: (msg) {
-                                              return DialogHelper
-                                                  .showCustomDialog(
-                                                msg,
-                                                context,
-                                              ).then((_) => ref
-                                                  .read(errLogControllerProvider
-                                                      .notifier)
-                                                  .sendLog(errMessage: msg));
-                                            });
-                                  }));
+                              label: 'Hapus form ? ',
+                              onPressed: () async {
+                                context.pop();
+                                await ref
+                                    .read(createSakitNotifierProvider.notifier)
+                                    .deleteSakit(
+                                        idSakit: item.idSakit!,
+                                        onError: (msg) {
+                                          return DialogHelper.showCustomDialog(
+                                            msg,
+                                            context,
+                                          ).then((_) => ref
+                                              .read(errLogControllerProvider
+                                                  .notifier)
+                                              .sendLog(errMessage: msg));
+                                        });
+                              });
                         })
                 ],
               )
