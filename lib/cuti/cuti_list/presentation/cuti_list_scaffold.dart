@@ -128,6 +128,8 @@ class CutiListScaffold extends HookConsumerWidget {
       return Future.value();
     };
 
+    final _isAtBottom = useState(false);
+
     void onScrolledVisibility() {
       scrollController.position.isScrollingNotifier.addListener(() {
         if (scrollController.position.pixels > 0.0) {
@@ -135,10 +137,15 @@ class CutiListScaffold extends HookConsumerWidget {
         } else {
           _isScrollStopped.value = false;
         }
+
+        if (scrollController.position.pixels ==
+            scrollController.position.maxScrollExtent) {
+          _isAtBottom.value = true;
+        } else {
+          _isAtBottom.value = false;
+        }
       });
     }
-
-    final _isAtBottom = useState(false);
 
     ref.listen<AsyncValue>(cutiListControllerProvider, (_, state) async {
       if (!state.isLoading &&
@@ -223,6 +230,7 @@ class CutiListScaffold extends HookConsumerWidget {
                               d2: _d2,
                               lastSearch: _lastSearch.value,
                               isScrolling: _isScrollStopped.value,
+                              isBottom: _isAtBottom.value,
                               onTapName: () {
                                 _isSearching.value = true;
                                 _searchFocus.requestFocus();

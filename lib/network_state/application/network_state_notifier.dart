@@ -63,20 +63,20 @@ class NetworkCallback extends _$NetworkCallback {
         final firstTime = ref.read(firstTimeTimerProvider);
 
         if (firstTime) {
-          await _startFetch();
+          await startFetch();
 
           ref.read(firstTimeTimerProvider.notifier).state = false;
         }
 
         await _fetchCurrentUrlEvery(
           Duration(minutes: 30),
-          fetchUrl: _startFetch,
+          fetchUrl: startFetch,
         );
       }
     });
   }
 
-  Future<void> _startFetch() async {
+  Future<void> startFetch() async {
     ref.read(networkStateNotifier2Provider.notifier).state =
         AsyncValue.loading();
 

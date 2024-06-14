@@ -134,6 +134,8 @@ class DtPcListScaffold extends HookConsumerWidget
       return Future.value();
     };
 
+    final _isAtBottom = useState(false);
+
     void onScrolledVisibility() {
       scrollController.position.isScrollingNotifier.addListener(() {
         if (scrollController.position.pixels > 0.0) {
@@ -141,10 +143,15 @@ class DtPcListScaffold extends HookConsumerWidget
         } else {
           _isScrollStopped.value = false;
         }
+
+        if (scrollController.position.pixels ==
+            scrollController.position.maxScrollExtent) {
+          _isAtBottom.value = true;
+        } else {
+          _isAtBottom.value = false;
+        }
       });
     }
-
-    final _isAtBottom = useState(false);
 
     useEffect(() {
       scrollController.addListener(onScrolledVisibility);
@@ -231,6 +238,7 @@ class DtPcListScaffold extends HookConsumerWidget
                       d2: _d2,
                       lastSearch: _lastSearch.value,
                       isScrolling: _isScrollStopped.value,
+                      isBottom: _isAtBottom.value,
                       onTapName: () {
                         _isSearching.value = true;
                         _searchFocus.requestFocus();

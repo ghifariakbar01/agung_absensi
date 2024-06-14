@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -91,8 +89,6 @@ class LemburListController extends _$LemburListController {
                     end: DateTime.now().add(Duration(days: 1)),
                   ),
             );
-
-    log('_list $_list');
 
     if (searchUser == null) {
       return _list;

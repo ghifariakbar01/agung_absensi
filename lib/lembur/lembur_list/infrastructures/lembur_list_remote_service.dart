@@ -22,8 +22,8 @@ class LemburListRemoteService {
     required DateTimeRange dateRange,
   }) async {
     try {
-      final d1 = DateFormat('2024-05-01').format(dateRange.start);
-      final d2 = DateFormat('2024-06-17').format(dateRange.end);
+      final d1 = DateFormat('yyyy-MM-dd').format(dateRange.start);
+      final d2 = DateFormat('yyyy-MM-dd').format(dateRange.end);
 
       final response = await _dio.get('/service_lmbr.asmx/getLmbr',
           options: Options(

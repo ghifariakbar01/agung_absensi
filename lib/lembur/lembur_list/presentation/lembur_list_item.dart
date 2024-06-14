@@ -38,7 +38,7 @@ class LemburListItem extends HookConsumerWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: SizedBox(
-        height: 200,
+        height: 195,
         child: Stack(
           children: [
             Container(
@@ -178,6 +178,117 @@ class LemburListItem extends HookConsumerWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
+                                'Jenis Lembur',
+                                style: Themes.customColor(
+                                  7,
+                                  color: item.btlSta == true
+                                      ? Colors.white
+                                      : Colors.grey,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 2,
+                              ),
+                              VAsyncValueWidget<List<JenisLembur>>(
+                                value: jenis,
+                                data: (jns) => Builder(builder: (context) {
+                                  final selected = jns.firstWhereOrNull(
+                                    (element) => element.Kode == item.kategori,
+                                  );
+
+                                  return Text(
+                                    selected == null ? '-' : selected.Nama!,
+                                    style: Themes.customColor(9,
+                                        color: item.btlSta == true
+                                            ? Colors.white
+                                            : Palette.orange,
+                                        fontWeight: FontWeight.w500),
+                                  );
+                                }),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        width: 25,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'In',
+                                style: Themes.customColor(7,
+                                    color: item.btlSta == true
+                                        ? Colors.white
+                                        : Colors.grey),
+                              ),
+                              SizedBox(
+                                height: 2,
+                              ),
+                              Text(
+                                item.masuk == null
+                                    ? '-'
+                                    : DateFormat(
+                                        'yyyy-MM-dd HH:mm',
+                                      ).format(DateTime.parse(item.masuk!)),
+                                style: Themes.customColor(9,
+                                    color: item.btlSta == true
+                                        ? Colors.white
+                                        : Palette.primaryColor,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Out',
+                                style: Themes.customColor(7,
+                                    color: item.btlSta == true
+                                        ? Colors.white
+                                        : Colors.grey),
+                              ),
+                              SizedBox(
+                                height: 2,
+                              ),
+                              Text(
+                                item.pulang == null
+                                    ? '-'
+                                    : DateFormat(
+                                        'yyyy-MM-dd HH:mm',
+                                      ).format(DateTime.parse(item.pulang!)),
+                                style: Themes.customColor(9,
+                                    color: item.btlSta == true
+                                        ? Colors.white
+                                        : Palette.primaryColor,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        width: 25,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
                                 'Tanggal Lembur Awal',
                                 style: Themes.customColor(
                                   7,
@@ -191,7 +302,7 @@ class LemburListItem extends HookConsumerWidget {
                               ),
                               Text(
                                 DateFormat(
-                                  'E, dd MMM yyyy HH:MM:ss',
+                                  'yyyy-MM-dd HH:mm',
                                 ).format(DateTime.parse(item.jamAwal!)),
                                 style: Themes.customColor(9,
                                     color: item.btlSta == true
@@ -201,15 +312,40 @@ class LemburListItem extends HookConsumerWidget {
                               )
                             ],
                           ),
-                        ],
-                      ),
-                      SizedBox(
-                        width: 25,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Tanggal Lembur Akhir',
+                                style: Themes.customColor(
+                                  7,
+                                  color: item.btlSta == true
+                                      ? Colors.white
+                                      : Colors.grey,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 2,
+                              ),
+                              Text(
+                                DateFormat(
+                                  'yyyy-MM-dd HH:mm',
+                                ).format(DateTime.parse(item.jamAkhir!)),
+                                style: Themes.customColor(9,
+                                    color: item.btlSta == true
+                                        ? Colors.white
+                                        : Palette.tertiaryColor,
+                                    fontWeight: FontWeight.w500),
+                              )
+                            ],
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
                           Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -238,146 +374,6 @@ class LemburListItem extends HookConsumerWidget {
                                       fontWeight: FontWeight.w500),
                                 );
                               }),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Masuk',
-                                style: Themes.customColor(7,
-                                    color: item.btlSta == true
-                                        ? Colors.white
-                                        : Colors.grey),
-                              ),
-                              SizedBox(
-                                height: 2,
-                              ),
-                              Text(
-                                item.masuk == null
-                                    ? '-'
-                                    : DateFormat(
-                                        'dd MMM HH:MM:ss',
-                                      ).format(DateTime.parse(item.masuk!)),
-                                style: Themes.customColor(9,
-                                    color: item.btlSta == true
-                                        ? Colors.white
-                                        : Palette.primaryColor,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Keluar',
-                                style: Themes.customColor(7,
-                                    color: item.btlSta == true
-                                        ? Colors.white
-                                        : Colors.grey),
-                              ),
-                              SizedBox(
-                                height: 2,
-                              ),
-                              Text(
-                                item.pulang == null
-                                    ? '-'
-                                    : DateFormat(
-                                        'dd MMM HH:MM:ss',
-                                      ).format(DateTime.parse(item.pulang!)),
-                                style: Themes.customColor(9,
-                                    color: item.btlSta == true
-                                        ? Colors.white
-                                        : Palette.primaryColor,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        width: 25,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Jenis Lembur',
-                                style: Themes.customColor(
-                                  7,
-                                  color: item.btlSta == true
-                                      ? Colors.white
-                                      : Colors.grey,
-                                ),
-                              ),
-                              SizedBox(
-                                height: 2,
-                              ),
-                              SizedBox(
-                                width: 100,
-                                child: VAsyncValueWidget<List<JenisLembur>>(
-                                  value: jenis,
-                                  data: (jns) => Builder(builder: (context) {
-                                    final selected = jns.firstWhereOrNull(
-                                      (element) =>
-                                          element.Kode == item.kategori,
-                                    );
-
-                                    return Text(
-                                      selected == null ? '-' : selected.Nama!,
-                                      style: Themes.customColor(9,
-                                          color: item.btlSta == true
-                                              ? Colors.white
-                                              : Palette.orange,
-                                          fontWeight: FontWeight.w500),
-                                    );
-                                  }),
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Tanggal Lembur Akhir',
-                                style: Themes.customColor(
-                                  7,
-                                  color: item.btlSta == true
-                                      ? Colors.white
-                                      : Colors.grey,
-                                ),
-                              ),
-                              SizedBox(
-                                height: 2,
-                              ),
-                              Text(
-                                DateFormat(
-                                  'E, dd MMM yyyy HH:MM:ss',
-                                ).format(DateTime.parse(item.jamAkhir!)),
-                                style: Themes.customColor(9,
-                                    color: item.btlSta == true
-                                        ? Colors.white
-                                        : Palette.tertiaryColor,
-                                    fontWeight: FontWeight.w500),
-                              )
                             ],
                           )
                         ],

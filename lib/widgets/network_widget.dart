@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../network_state/application/network_state.dart';
 import '../network_state/application/network_state_notifier.dart';
+import '../utils/dialog_helper.dart';
 import 'v_async_widget.dart';
 
 class NetworkWidget extends ConsumerWidget {
@@ -16,7 +18,7 @@ class NetworkWidget extends ConsumerWidget {
       padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 18),
       child: VAsyncValueWidget<NetworkState>(
         value: network,
-        data: (netw) => Container(
+        data: (netw) => Ink(
           height: 25,
           width: 8,
           decoration: BoxDecoration(
@@ -34,7 +36,18 @@ class NetworkWidget extends ConsumerWidget {
               ),
             ],
           ),
-          child: Container(),
+          child: InkWell(
+            onTap: () => DialogHelper.showConfirmationDialog(
+                context: context,
+                label: 'Cek status server ? ',
+                onPressed: () async {
+                  context.pop();
+                  return ref
+                      .read(networkCallbackProvider.notifier)
+                      .startFetch();
+                }),
+            child: Container(),
+          ),
         ),
       ),
     );
