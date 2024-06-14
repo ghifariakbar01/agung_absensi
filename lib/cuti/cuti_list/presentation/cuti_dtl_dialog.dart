@@ -331,11 +331,11 @@ class CutiDtlDialog extends ConsumerWidget {
                   TappableSvg(
                     assetPath: Assets.iconDelete,
                     onTap: () async {
-                      context.pop();
                       return DialogHelper.showConfirmationDialog(
                           context: context,
                           label: 'Hapus form ? ',
                           onPressed: () async {
+                            context.pop();
                             context.pop();
                             await ref
                                 .read(createCutiNotifierProvider.notifier)

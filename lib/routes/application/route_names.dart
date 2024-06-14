@@ -128,6 +128,15 @@ class RouteNames {
   static const editGantiHariNameRoute = 'editGantiHari';
   static const editGantiHariRoute = 'editGantiHari';
 
+  static const lemburListNameRoute = 'lemburList';
+  static const lemburListRoute = 'lemburList';
+
+  static const createLemburNameRoute = 'createLembur';
+  static const createLemburRoute = 'createLembur';
+
+  static const editLemburNameRoute = 'editLembur';
+  static const editLemburRoute = 'editLembur';
+
   static const slipGajiNameRoute = 'slipGaji';
   static const slipGajiRoute = 'slipGaji';
 

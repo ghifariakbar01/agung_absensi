@@ -314,11 +314,11 @@ class SakitDtlDialog extends ConsumerWidget {
                     TappableSvg(
                         assetPath: Assets.iconDelete,
                         onTap: () async {
-                          context.pop();
                           return DialogHelper.showConfirmationDialog(
                               context: context,
                               label: 'Hapus form ? ',
                               onPressed: () async {
+                                context.pop();
                                 context.pop();
                                 await ref
                                     .read(createSakitNotifierProvider.notifier)

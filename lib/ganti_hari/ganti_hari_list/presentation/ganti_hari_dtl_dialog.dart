@@ -324,11 +324,11 @@ class GantiHariDtlDialog extends ConsumerWidget {
                     TappableSvg(
                         assetPath: Assets.iconDelete,
                         onTap: () {
-                          context.pop();
                           return DialogHelper.showConfirmationDialog(
                               context: context,
                               label: 'Hapus form ? ',
                               onPressed: () async {
+                                context.pop();
                                 context.pop();
                                 await ref
                                     .read(createGantiHariProvider.notifier)

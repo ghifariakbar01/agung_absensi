@@ -39,6 +39,10 @@ import '../../izin/create_izin/presentation/create_izin_page.dart';
 import '../../izin/create_izin/presentation/edit_izin_page.dart';
 import '../../izin/izin_list/application/izin_list.dart';
 import '../../izin/izin_list/presentation/izin_list_page.dart';
+import '../../lembur/create_lembur/presentation/create_lembur_page.dart';
+import '../../lembur/create_lembur/presentation/edit_lembur_page.dart';
+import '../../lembur/lembur_list/application/lembur_list.dart';
+import '../../lembur/lembur_list/presentation/lembur_list_page.dart';
 import '../../permission/presentation/permission_page.dart';
 import '../../profile/presentation/profile_page.dart';
 import '../../riwayat_absen/presentation/riwayat_page.dart';
@@ -370,6 +374,25 @@ class RouterNotifier extends ChangeNotifier {
                 final dayoff = state.extra as Map<String, dynamic>;
                 final _data = GantiHariList.fromJson(dayoff);
                 return EditGantiHariPage(_data);
+              },
+            ),
+            GoRoute(
+              name: RouteNames.lemburListNameRoute,
+              path: RouteNames.lemburListRoute,
+              builder: (context, state) => LemburListPage(),
+            ),
+            GoRoute(
+              name: RouteNames.createLemburNameRoute,
+              path: RouteNames.createLemburRoute,
+              builder: (context, state) => CreateLemburPage(),
+            ),
+            GoRoute(
+              name: RouteNames.editLemburNameRoute,
+              path: RouteNames.editLemburRoute,
+              builder: (context, state) {
+                final dayoff = state.extra as Map<String, dynamic>;
+                final _data = LemburList.fromJson(dayoff);
+                return EditLemburPage(_data);
               },
             ),
             GoRoute(

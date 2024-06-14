@@ -10,7 +10,6 @@ import '../../routes/application/route_names.dart';
 import '../../shared/providers.dart';
 import '../../style/style.dart';
 
-import '../../wa_register/application/wa_register_notifier.dart';
 import '../../widgets/alert_helper.dart';
 import '../../widgets/app_logo.dart';
 import '../../widgets/copyright_text.dart';
@@ -49,6 +48,7 @@ final List<Item> admin = [
 
 final List<Item> activity = [
   Item('Ganti Hari', Assets.iconGantiHari, RouteNames.gantiHariListNameRoute),
+  Item('Lembur', Assets.iconLembur, RouteNames.lemburListNameRoute),
   Item(
       'Tugas Dinas', Assets.iconTugasDinas, RouteNames.tugasDinasListNameRoute),
 ];
@@ -97,13 +97,6 @@ class HomeScaffold extends ConsumerWidget {
     //   }
     // });
 
-    final onRefresh = () async {
-      await ref.read(waRegisterNotifierProvider.notifier).refresh();
-      await ref
-          .read(currentlySavedPhoneNumberNotifierProvider.notifier)
-          .refresh();
-    };
-
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
 
@@ -124,102 +117,99 @@ class HomeScaffold extends ConsumerWidget {
               child: SizedBox(
                 height: height,
                 width: width,
-                child: RefreshIndicator(
-                  onRefresh: onRefresh,
-                  child: ListView(
-                    children: [
-                      const AppLogo(),
-                      const SizedBox(height: 24),
-                      Testing(),
+                child: ListView(
+                  children: [
+                    const AppLogo(),
+                    const SizedBox(height: 24),
+                    Testing(),
 
-                      const SizedBox(height: 24),
-                      ...isTester.maybeWhen(
-                          tester: () {
-                            return [
-                              Text(
-                                'Toggle Location',
-                                style: Themes.customColor(10,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(
-                                height: 8,
-                              ),
-                              HomeTesterOn(),
-                            ];
-                          },
-                          orElse: user.user.nama == 'Ghifar'
-                              ? () {
-                                  return [
-                                    Text(
-                                      'Toggle Location',
-                                      style: Themes.customColor(10,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    SizedBox(
-                                      height: 8,
-                                    ),
-                                    HomeTesterOff(),
-                                  ];
-                                }
-                              : () {
-                                  return [Container()];
-                                }
+                    const SizedBox(height: 24),
+                    ...isTester.maybeWhen(
+                        tester: () {
+                          return [
+                            Text(
+                              'Toggle Location',
+                              style: Themes.customColor(10,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(
+                              height: 8,
+                            ),
+                            HomeTesterOn(),
+                          ];
+                        },
+                        orElse: user.user.nama == 'Ghifar'
+                            ? () {
+                                return [
+                                  Text(
+                                    'Toggle Location',
+                                    style: Themes.customColor(10,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  SizedBox(
+                                    height: 8,
+                                  ),
+                                  HomeTesterOff(),
+                                ];
+                              }
+                            : () {
+                                return [Container()];
+                              }
 
-                          //
-                          ),
-                      // isOffline ? Container() : HomeWa(onRefresh),
-                      // ...categories(title: 'Admin', width: width, item: admin),
+                        //
+                        ),
+                    // isOffline ? Container() : HomeWa(onRefresh),
+                    // ...categories(title: 'Admin', width: width, item: admin),
+                    ...categories(
+                      title: 'Attendance',
+                      width: width,
+                      item: isOffline
+                          ? attendance.sublist(0, 2).toList()
+                          : attendance,
+                    ),
+                    if (!isOffline) ...[
                       ...categories(
-                        title: 'Attendance',
+                        title: 'Leave Request',
                         width: width,
-                        item: isOffline
-                            ? attendance.sublist(0, 2).toList()
-                            : attendance,
+                        item: leaveRequest,
                       ),
-                      if (!isOffline) ...[
-                        ...categories(
-                          title: 'Leave Request',
-                          width: width,
-                          item: leaveRequest,
-                        ),
-                        ...categories(
-                          title: 'Activity',
-                          width: width,
-                          item: activity,
-                        ),
-                        // ...categories(
-                        //   title: 'Others',
-                        //   width: width,
-                        //   item: others,
-                        // ),
-                      ],
+                      ...categories(
+                        title: 'Activity',
+                        width: width,
+                        item: activity,
+                      ),
+                      // ...categories(
+                      //   title: 'Others',
+                      //   width: width,
+                      //   item: others,
+                      // ),
+                    ],
 
-                      const SizedBox(height: 48),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Center(child: CopyrightAgung()),
-                          Center(
-                            child: SelectableText(
-                              'APP VERSION: ${packageInfo.when(
-                                loading: () => '',
-                                data: (packageInfo) => packageInfo,
-                                error: (error, stackTrace) =>
-                                    'Error: $error StackTrace: $stackTrace',
-                              )}',
-                              textAlign: TextAlign.center,
-                              maxLines: 2,
-                              style: Themes.customColor(
-                                8,
-                                fontWeight: FontWeight.bold,
-                              ),
+                    const SizedBox(height: 48),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Center(child: CopyrightAgung()),
+                        Center(
+                          child: SelectableText(
+                            'APP VERSION: ${packageInfo.when(
+                              loading: () => '',
+                              data: (packageInfo) => packageInfo,
+                              error: (error, stackTrace) =>
+                                  'Error: $error StackTrace: $stackTrace',
+                            )}',
+                            textAlign: TextAlign.center,
+                            maxLines: 2,
+                            style: Themes.customColor(
+                              8,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                        ],
-                      ),
-                    ],
-                  ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ),
