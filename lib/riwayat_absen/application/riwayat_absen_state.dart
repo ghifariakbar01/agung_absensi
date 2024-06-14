@@ -1,3 +1,5 @@
+// ignore_for_file: sdk_version_since
+
 import 'package:dartz/dartz.dart';
 
 import 'package:face_net_authentication/domain/riwayat_absen_failure.dart';

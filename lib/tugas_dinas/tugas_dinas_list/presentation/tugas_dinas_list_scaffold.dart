@@ -14,6 +14,7 @@ import '../../../common/search_filter_info_widget.dart';
 import '../../../cross_auth/application/cross_auth_notifier.dart';
 import '../../../cross_auth/application/is_user_crossed.dart';
 import '../../../err_log/application/err_log_notifier.dart';
+import '../../../firebase/remote_config/application/firebase_remote_config_notifier.dart';
 import '../../../helper.dart';
 import '../../../routes/application/route_names.dart';
 import '../../../shared/providers.dart';
@@ -109,11 +110,17 @@ class TugasDinasListScaffold extends HookConsumerWidget
       _dropdownValue.value = value;
       final user = ref.read(userNotifierProvider).user;
 
+      final _ptMap = await ref
+          .read(firebaseRemoteConfigNotifierProvider.notifier)
+          .getPtMap();
+
       await ref.read(crossAuthNotifierProvider.notifier).cross(
             userId: user.nama!,
             password: user.password!,
             pt: _dropdownValue.value ?? ['ACT', 'Transina', 'ALR'],
+            url: _ptMap,
           );
+
       return Future.value();
     };
 
@@ -197,10 +204,15 @@ class TugasDinasListScaffold extends HookConsumerWidget
                 onWillPop: () async {
                   final user = ref.read(userNotifierProvider).user;
 
+                  final _ptMap = await ref
+                      .read(firebaseRemoteConfigNotifierProvider.notifier)
+                      .getPtMap();
+
                   if (_isCrossed) {
                     await ref.read(crossAuthNotifierProvider.notifier).uncross(
                           userId: user.nama!,
                           password: user.password!,
+                          url: _ptMap,
                         );
                   }
 

@@ -18,8 +18,7 @@ class IpNotifier extends _$IpNotifier {
     /*
       get from RemoteConfig
     */
-    final FirebaseRemoteCfg cfg =
-        await ref.refresh(firebaseRemoteConfigNotifierProvider.future);
+    final cfg = await ref.refresh(firebaseRemoteConfigNotifierProvider.future);
 
     await _initUrlFromRemoteConfig(cfg: cfg);
   }
@@ -57,11 +56,12 @@ class IpNotifier extends _$IpNotifier {
       ..interceptors.add(ref.read(authInterceptorProvider));
   }
 }
-// const domain =
-//     'http://agunglogisticsapp.co.id:1225/service_mobile.asmx/Perintah';
 
 const ipCut = Constants.baseUrl;
 const ipHosting = Constants.baseUrlHosting;
+
+// const domain =
+//     'http://agunglogisticsapp.co.id:1225/service_mobile.asmx/Perintah';
 
 // API Mobile Cutmutiah:
 // http://agunglogisticsapp.co.id:1225/service_mobile.asmx/Perintah

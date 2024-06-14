@@ -6,7 +6,6 @@ import 'package:face_net_authentication/user/application/user_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../constants/constants.dart';
 import '../../infrastructures/cache_storage/cross_auth_storage.dart';
 import '../../shared/providers.dart';
 import 'is_user_crossed.dart';
@@ -159,6 +158,7 @@ class CrossAuthNotifier extends _$CrossAuthNotifier {
   Future<void> uncross({
     required String userId,
     required String password,
+    required Map<String, String> url,
   }) async {
     state = const AsyncLoading();
 
@@ -172,7 +172,10 @@ class CrossAuthNotifier extends _$CrossAuthNotifier {
         return;
       }
 
-      await _resetCutiDioProvider(serv);
+      await _resetCutiDioProvider(
+        serv: serv,
+        url: url,
+      );
 
       if (serv == 'gs_18') {
         await _crossToARV(server: 'gs_18', userId: userId, password: password);
@@ -187,6 +190,7 @@ class CrossAuthNotifier extends _$CrossAuthNotifier {
   Future<void> uncrossStl({
     required String userId,
     required String password,
+    required Map<String, String> url,
   }) async {
     final _crossRepo = ref.read(crossAuthRepositoryProvider);
     final _savedCrossUser = await _crossRepo.loadSavedCrossed();
@@ -197,7 +201,10 @@ class CrossAuthNotifier extends _$CrossAuthNotifier {
       return;
     }
 
-    await _resetCutiDioProvider(serv);
+    await _resetCutiDioProvider(
+      serv: serv,
+      url: url,
+    );
 
     if (serv == 'gs_18') {
       await _crossToARVStl(server: 'gs_18', userId: userId, password: password);
@@ -208,16 +215,24 @@ class CrossAuthNotifier extends _$CrossAuthNotifier {
     }
   }
 
-  String _determineBaseUrl(String serv) {
-    return Constants.ptMap.entries
-        .firstWhere(
-          (element) => element.key == serv,
-          orElse: () => Constants.ptMap.entries.first,
-        )
-        .value;
+  String _determineBaseUrl({
+    required String serv,
+    required Map<String, String>? url,
+  }) {
+    return url == null
+        ? ''
+        : url.entries
+            .firstWhere(
+              (element) => element.key == serv,
+              orElse: () => url.entries.first,
+            )
+            .value;
   }
 
-  _resetCutiDioProvider(String serv) {
+  _resetCutiDioProvider({
+    required String serv,
+    required Map<String, String> url,
+  }) {
     return ref.read(dioProviderCuti)
       ..options = BaseOptions(
         connectTimeout: Duration(seconds: 20),
@@ -225,7 +240,10 @@ class CrossAuthNotifier extends _$CrossAuthNotifier {
         validateStatus: (status) {
           return true;
         },
-        baseUrl: _determineBaseUrl(serv),
+        baseUrl: _determineBaseUrl(
+          serv: serv,
+          url: url,
+        ),
       )
       ..interceptors.add(ref.read(authInterceptorTwoProvider));
   }
@@ -234,6 +252,7 @@ class CrossAuthNotifier extends _$CrossAuthNotifier {
     required String userId,
     required String password,
     required List<String> pt,
+    required Map<String, String> url,
   }) async {
     await _firstTime();
 
@@ -243,7 +262,10 @@ class CrossAuthNotifier extends _$CrossAuthNotifier {
       return;
     }
 
-    await _resetCutiDioProvider(serv);
+    await _resetCutiDioProvider(
+      serv: serv,
+      url: url,
+    );
 
     if (serv == 'gs_18') {
       await _crossToARV(server: 'gs_18', userId: userId, password: password);

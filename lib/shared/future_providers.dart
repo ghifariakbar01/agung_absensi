@@ -8,6 +8,7 @@ import '../constants/assets.dart';
 
 import '../constants/constants.dart';
 import '../cross_auth/application/cross_auth_notifier.dart';
+import '../firebase/remote_config/application/firebase_remote_config_notifier.dart';
 import '../user/application/user_model.dart';
 import '../user/application/user_notifier.dart';
 import '../widgets/v_dialogs.dart';
@@ -122,8 +123,13 @@ final imeiInitFutureProvider =
         notCrossed: () => false,
       );
 
+      final _ptMap = await ref
+          .read(firebaseRemoteConfigNotifierProvider.notifier)
+          .getPtMap();
+
       if (_isCrossed) {
         await ref.read(crossAuthNotifierProvider.notifier).uncrossStl(
+              url: _ptMap,
               userId: user.nama!,
               password: user.password!,
             );

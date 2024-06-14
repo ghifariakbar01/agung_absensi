@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:face_net_authentication/cross_auth/application/cross_auth_notifier.dart';
+import 'package:face_net_authentication/firebase/remote_config/application/firebase_remote_config_notifier.dart';
 import 'package:face_net_authentication/shared/providers.dart';
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
 import 'package:flutter/material.dart';
@@ -100,11 +101,17 @@ class AbsenManualListScaffold extends HookConsumerWidget
       _dropdownValue.value = value;
       final user = ref.read(userNotifierProvider).user;
 
+      final _ptMap = await ref
+          .read(firebaseRemoteConfigNotifierProvider.notifier)
+          .getPtMap();
+
       await ref.read(crossAuthNotifierProvider.notifier).cross(
             userId: user.nama!,
             password: user.password!,
             pt: _dropdownValue.value ?? ['ACT', 'Transina', 'ALR'],
+            url: _ptMap,
           );
+
       return Future.value();
     };
 
@@ -189,6 +196,9 @@ class AbsenManualListScaffold extends HookConsumerWidget
                   return WillPopScope(
                     onWillPop: () async {
                       final user = ref.read(userNotifierProvider).user;
+                      final _ptMap = await ref
+                          .read(firebaseRemoteConfigNotifierProvider.notifier)
+                          .getPtMap();
 
                       if (_isCrossed) {
                         await ref
@@ -196,6 +206,7 @@ class AbsenManualListScaffold extends HookConsumerWidget
                             .uncross(
                               userId: user.nama!,
                               password: user.password!,
+                              url: _ptMap,
                             );
                       }
 

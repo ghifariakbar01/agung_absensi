@@ -8,6 +8,7 @@ import '../../cross_auth/application/cross_auth_notifier.dart';
 import '../../cross_auth/application/is_user_crossed.dart';
 import '../../domain/imei_failure.dart';
 import '../../err_log/application/err_log_notifier.dart';
+import '../../firebase/remote_config/application/firebase_remote_config_notifier.dart';
 import '../../ip/application/ip_notifier.dart';
 import '../../shared/future_providers.dart';
 import '../../shared/providers.dart';
@@ -136,8 +137,13 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
       notCrossed: () => false,
     );
 
+    final _ptMap = await ref
+        .read(firebaseRemoteConfigNotifierProvider.notifier)
+        .getPtMap();
+
     if (_isCrossed) {
       await ref.read(crossAuthNotifierProvider.notifier).uncross(
+            url: _ptMap,
             userId: user.nama!,
             password: user.password!,
           );

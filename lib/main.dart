@@ -40,8 +40,6 @@ final initializationProvider = FutureProvider<Unit>((ref) async {
   // await helper.storageDebugMode(ref, isDebug: true);
   await helper.fixStorageOnAndroidDevices(ref);
 
-  await ref.read(ipNotifierProvider.future);
-
   if (!BuildConfig.isProduction) {
     ref.read(dioProvider).interceptors.add(PrettyDioLogger(
           requestHeader: true,

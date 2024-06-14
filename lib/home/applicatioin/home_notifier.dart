@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../constants/assets.dart';
 import '../../cross_auth/application/cross_auth_notifier.dart';
+import '../../firebase/remote_config/application/firebase_remote_config_notifier.dart';
 import '../../permission/application/shared/permission_introduction_providers.dart';
 import '../../routes/application/route_names.dart';
 import '../../tester/application/tester_state.dart';
@@ -105,10 +106,15 @@ class HomeNotifier extends StateNotifier<HomeState> {
       notCrossed: () => false,
     );
 
+    final _ptMap = await ref
+        .read(firebaseRemoteConfigNotifierProvider.notifier)
+        .getPtMap();
+
     if (_isCrossed) {
       await ref.read(crossAuthNotifierProvider.notifier).uncross(
             userId: user.nama!,
             password: user.password!,
+            url: _ptMap,
           );
     }
   }

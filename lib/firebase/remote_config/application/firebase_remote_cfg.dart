@@ -9,10 +9,15 @@ class FirebaseRemoteCfg with _$FirebaseRemoteCfg {
     required String baseUrl,
     required String baseUrlHosting,
     required String minApp,
+    required Map<String, String> ptMap,
   }) = _FirebaseRemoteConfig;
 
-  factory FirebaseRemoteCfg.initial() =>
-      FirebaseRemoteCfg(baseUrl: '', baseUrlHosting: '', minApp: '');
+  factory FirebaseRemoteCfg.initial() => FirebaseRemoteCfg(
+        baseUrl: '',
+        baseUrlHosting: '',
+        minApp: '',
+        ptMap: {},
+      );
 
   factory FirebaseRemoteCfg.fromJson(Map<String, dynamic> json) =>
       _$FirebaseRemoteCfgFromJson(json);
