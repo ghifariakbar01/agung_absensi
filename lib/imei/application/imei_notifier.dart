@@ -1,6 +1,8 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:dartz/dartz.dart';
+import 'package:face_net_authentication/domain/auth_failure.dart';
 import 'package:face_net_authentication/err_log/application/err_log_notifier.dart';
 import 'package:face_net_authentication/unlink/application/unlink_notifier.dart';
 import 'package:flutter/material.dart';
@@ -70,7 +72,12 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
   }
 
   Future<void> _saveUnlink(WidgetRef ref) async {
+    if (Platform.isIOS) {
+      return;
+    }
+
     final curr = ref.read(userNotifierProvider).user.nama;
+
     if (curr == 'Ghifar') {
     } else {
       await ref.read(unlinkNotifierProvider.notifier).saveUnlink();
@@ -275,13 +282,14 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
             ),
           ));
 
-  Future<void> processImei(
-      {required Ref ref,
-      required String imei,
-      required BuildContext context}) async {
-    final UserModelWithPassword user = ref.read(userNotifierProvider).user;
-    final ImeiAuthState imeiAuthState = ref.read(imeiAuthNotifierProvider);
-    final String savedImei = ref.read(imeiNotifierProvider).imei;
+  Future<void> processImei({
+    required Ref ref,
+    required String imei,
+    required BuildContext context,
+  }) async {
+    final user = ref.read(userNotifierProvider).user;
+    final imeiAuthState = ref.read(imeiAuthNotifierProvider);
+    final savedImei = ref.read(imeiNotifierProvider).imei;
 
     final imeiNotifier = ref.read(imeiNotifierProvider.notifier);
     String generatedImeiString = imeiNotifier.generateImei();
@@ -294,7 +302,11 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
         onImeiOK: () =>
             ref.read(initUserStatusNotifierProvider.notifier).letYouThrough(),
         onImeiAlreadyRegistered: () => _onImeiAlreadyRegistered(
-            ref: ref, context: context, imeiDb: imei, imeiSaved: savedImei),
+              ref: ref,
+              context: context,
+              imeiDb: imei,
+              imeiSaved: savedImei,
+            ),
         onImeiNotRegistered: () => _onImeiNotRegistered(
               ref: ref,
               context: context,
@@ -315,17 +327,19 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
   }) async {
     return ref.read(editProfileNotifierProvider.notifier).registerAndShowDialog(
         signUp: () => ref.read(imeiNotifierProvider.notifier).registerImei(
-            imei: generatedImeiString, idKary: user.IdKary ?? 'null'),
+              imei: generatedImeiString,
+              idKary: user.IdKary ?? 'null',
+            ),
         getImei: () =>
             ref.read(imeiNotifierProvider.notifier).getImeiCredentials(),
         onImeiComplete: () => ref
             .read(editProfileNotifierProvider.notifier)
             .onEditProfile(
-                saveUser: () => ref
-                    .read(userNotifierProvider.notifier)
-                    .saveUserAfterUpdate(user: user),
-                onUser: () =>
-                    ref.read(userNotifierProvider.notifier).getUser()),
+              saveUser: () => ref
+                  .read(userNotifierProvider.notifier)
+                  .saveUserAfterUpdate(user: user),
+              onUser: () => ref.read(userNotifierProvider.notifier).getUser(),
+            ),
         areYouSuccessOrNot: () async {
           await ref
               .read(userNotifierProvider.notifier)
@@ -336,57 +350,53 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
               .failureOrSuccessOptionUpdate
               .fold(
                   () {},
-                  (either) => either.fold((failure) async {
-                        return failure.maybeWhen(
-                            noConnection: ref
-                                .read(initUserStatusNotifierProvider.notifier)
-                                .letYouThrough,
-                            orElse: () async {
-                              final String errMessage = failure.maybeWhen(
-                                orElse: () => '',
-                                server: (errorCode, message) =>
-                                    'Error Kode $errorCode : $message',
-                                passwordWrong: () =>
-                                    'Password yang anda masukkan salah',
-                                storage: () =>
-                                    'Mohon maaf storage anda penuh. Mohon luangkan storage anda agar bisa menyimpan Installation ID. Terimakasih',
-                              );
-
-                              await ref
-                                  .read(errLogControllerProvider.notifier)
-                                  .sendLog(
-                                      imeiDb: imei,
-                                      imeiSaved: savedImei,
-                                      errMessage: errMessage);
-
-                              return showDialog(
-                                context: context,
-                                barrierDismissible: true,
-                                builder: (_) => VSimpleDialog(
-                                  label: 'Error',
-                                  labelDescription: errMessage,
-                                  asset: Assets.iconCrossed,
-                                ),
-                              ).then((_) async {
-                                ref
-                                    .read(
-                                        initUserStatusNotifierProvider.notifier)
-                                    .hold();
-                                await ref
-                                    .read(userNotifierProvider.notifier)
-                                    .logout();
-                              });
-                            });
-                      },
-                          (_) => ref
-                              .read(userNotifierProvider.notifier)
-                              .getUser()
-                              .then((_) => showSuccessDialog(context).then(
-                                  (_) => ref
-                                      .read(initUserStatusNotifierProvider
-                                          .notifier)
-                                      .letYouThrough()))));
+                  (either) => either.fold(
+                      (failure) => _onErr(
+                            failure,
+                            ref,
+                            imei,
+                            savedImei,
+                            context,
+                          ),
+                      (_) => showSuccessDialog(context).then((_) => ref
+                          .read(initUserStatusNotifierProvider.notifier)
+                          .letYouThrough())));
         });
+  }
+
+  Future<void> _onErr(AuthFailure failure, Ref<Object?> ref, String imei,
+      String savedImei, BuildContext context) {
+    {
+      return failure.maybeWhen(
+          noConnection:
+              ref.read(initUserStatusNotifierProvider.notifier).letYouThrough,
+          orElse: () async {
+            final String errMessage = failure.maybeWhen(
+              orElse: () => '',
+              server: (errorCode, message) =>
+                  'Error Kode $errorCode : $message',
+              passwordWrong: () => 'Password yang anda masukkan salah',
+              storage: () =>
+                  'Mohon maaf storage anda penuh. Mohon luangkan storage anda agar bisa menyimpan Installation ID. Terimakasih',
+            );
+
+            await ref.read(errLogControllerProvider.notifier).sendLog(
+                imeiDb: imei, imeiSaved: savedImei, errMessage: errMessage);
+
+            return showDialog(
+              context: context,
+              barrierDismissible: true,
+              builder: (_) => VSimpleDialog(
+                label: 'Error',
+                labelDescription: errMessage,
+                asset: Assets.iconCrossed,
+              ),
+            ).then((_) async {
+              ref.read(initUserStatusNotifierProvider.notifier).hold();
+              await ref.read(userNotifierProvider.notifier).logout();
+            });
+          });
+    }
   }
 
   Future<void> _onImeiAlreadyRegistered({

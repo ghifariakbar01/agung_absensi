@@ -1,5 +1,7 @@
 import 'package:dartz/dartz.dart';
+import 'package:face_net_authentication/imei_introduction/application/shared/imei_introduction_providers.dart';
 import 'package:face_net_authentication/ip/application/ip_notifier.dart';
+import 'package:face_net_authentication/tc/application/shared/tc_providers.dart';
 import 'package:face_net_authentication/unlink/application/unlink_notifier.dart';
 import 'package:face_net_authentication/widgets/v_async_widget.dart';
 
@@ -48,9 +50,17 @@ class SignInPage extends HookConsumerWidget {
                           .getSavedLocations(),
                       initializeGeofenceList: () =>
                           ref.read(geofenceProvider.notifier).getGeofenceList(),
-                      redirect: () => ref
-                          .read(authNotifierProvider.notifier)
-                          .checkAndUpdateAuthStatus(),
+                      redirect: () async {
+                        await ref
+                            .read(authNotifierProvider.notifier)
+                            .checkAndUpdateAuthStatus();
+                        await ref
+                            .read(imeiIntroNotifierProvider.notifier)
+                            .checkAndUpdateImeiIntro();
+                        await ref
+                            .read(tcNotifierProvider.notifier)
+                            .checkAndUpdateStatusTC();
+                      },
                     ))));
 
     final isSubmitting = ref.watch(

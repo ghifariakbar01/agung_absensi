@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../constants/assets.dart';
+import '../../constants/constants.dart';
 import '../../copyright/presentation/copyright_page.dart';
 import '../../cross_auth/application/cross_auth_notifier.dart';
 import '../../routes/application/route_names.dart';
@@ -121,7 +122,7 @@ class HomeScaffold extends ConsumerWidget {
                   children: [
                     const AppLogo(),
                     const SizedBox(height: 24),
-                    Testing(),
+                    Constants.isDev ? Testing() : Container(),
 
                     const SizedBox(height: 24),
                     ...isTester.maybeWhen(

@@ -9,9 +9,11 @@ import '../../cross_auth/application/is_user_crossed.dart';
 import '../../domain/imei_failure.dart';
 import '../../err_log/application/err_log_notifier.dart';
 import '../../firebase/remote_config/application/firebase_remote_config_notifier.dart';
+import '../../imei_introduction/application/shared/imei_introduction_providers.dart';
 import '../../ip/application/ip_notifier.dart';
 import '../../shared/future_providers.dart';
 import '../../shared/providers.dart';
+import '../../tc/application/shared/tc_providers.dart';
 import '../../widgets/alert_helper.dart';
 import '../../widgets/error_message_widget.dart';
 import '../../widgets/loading_overlay.dart';
@@ -30,8 +32,13 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
   void initState() {
     super.initState();
 
-    // WidgetsBinding.instance.addPostFrameCallback(
-    //     (_) => ref.read(imeiInitFutureProvider(context).future));
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await ref.read(authNotifierProvider.notifier).checkAndUpdateAuthStatus();
+      await ref.read(tcNotifierProvider.notifier).checkAndUpdateStatusTC();
+      await ref
+          .read(imeiIntroNotifierProvider.notifier)
+          .checkAndUpdateImeiIntro();
+    });
   }
 
   @override

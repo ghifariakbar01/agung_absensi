@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
@@ -18,6 +19,7 @@ import '../../geofence/application/geofence_response.dart';
 
 import '../../home/presentation/home_saved.dart';
 import '../../shared/providers.dart';
+import '../../user/application/user_model.dart';
 import '../../widgets/alert_helper.dart';
 import '../../widgets/loading_overlay.dart';
 import '../../widgets/v_async_widget.dart';
@@ -37,6 +39,33 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      try {
+        final _res =
+            await ref.read(userNotifierProvider.notifier).getUserString();
+
+        final _user = UserModelWithPassword.fromJson(
+            jsonDecode(_res) as Map<String, dynamic>);
+
+        await Future.delayed(
+          Duration(seconds: 1),
+          () => ref.read(userNotifierProvider.notifier).setUser(_user),
+        );
+
+        await Future.delayed(
+          Duration(seconds: 1),
+          () => ref.read(dioRequestProvider).addAll({
+            "username": "${_user.nama}",
+            "password": "${_user.password}",
+            "server": "${_user.ptServer}",
+          }),
+        );
+      } catch (_) {
+        await ref.read(userNotifierProvider.notifier).logout();
+        await ref
+            .read(authNotifierProvider.notifier)
+            .checkAndUpdateAuthStatus();
+      }
+
       await ref.read(backgroundNotifierProvider.notifier).getSavedLocations();
 
       final isOffline = ref.read(absenOfflineModeProvider);
@@ -109,7 +138,9 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
   }
 
   Future<void> _getAndInitializeGeofence(
-      List<GeofenceResponse> geofenceList, BuildContext buildContext) async {
+    List<GeofenceResponse> geofenceList,
+    BuildContext buildContext,
+  ) async {
     final Function(Location location) mockListener =
         ref.read(mockLocationNotifierProvider.notifier).checkMockLocationState;
     //
@@ -154,93 +185,88 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
       List<Geofence> geofence,
       Function(Location location) mockListener,
       BuildContext buildContext) async {
-    {
-      //
-      final List<SavedLocation> savedItems =
-          ref.read(backgroundNotifierProvider).savedBackgroundItems;
+    final List<SavedLocation> savedItems =
+        ref.read(backgroundNotifierProvider).savedBackgroundItems;
 
-      final geofenceNotifier = ref.read(geofenceProvider.notifier);
-      await geofenceNotifier.startAutoAbsen(
-          geofenceResponseList: geofenceList,
-          savedBackgroundItems: savedItems,
-          saveGeofence: geofenceNotifier.saveGeofence,
-          showDialogAndLogout: () => showDialog(
-                  context: context,
-                  builder: (context) => VSimpleDialog(
-                        asset: Assets.iconCrossed,
-                        label: 'Error',
-                        labelDescription:
-                            'Mohon Maaf Storage Anda penuh. Mohon luangkan storage Anda agar bisa menyimpan data Geofence.',
-                      ))
-              .then((_) => ref.read(userNotifierProvider.notifier).logout()),
-          startAbsenSaved: (savedItems) async {
-            // ABSEN TERSIMPAN
-            if (savedItems.isNotEmpty) {
+    final geofenceNotifier = ref.read(geofenceProvider.notifier);
+    await geofenceNotifier.startAutoAbsen(
+        geofenceResponseList: geofenceList,
+        savedBackgroundItems: savedItems,
+        saveGeofence: geofenceNotifier.saveGeofence,
+        showDialogAndLogout: () => showDialog(
+                context: context,
+                builder: (context) => VSimpleDialog(
+                      asset: Assets.iconCrossed,
+                      label: 'Error',
+                      labelDescription:
+                          'Mohon Maaf Storage Anda penuh. Mohon luangkan storage Anda agar bisa menyimpan data Geofence.',
+                    ))
+            .then((_) => ref.read(userNotifierProvider.notifier).logout()),
+        startAbsenSaved: (savedItems) async {
+          // ABSEN TERSIMPAN
+          if (savedItems.isNotEmpty) {
+            await geofenceNotifier.initializeGeoFence(
+              geofence,
+              onError: (e) => log('error geofence $e'),
+            );
+            await ref
+                .read(geofenceProvider.notifier)
+                .addGeofenceMockListener(mockListener: mockListener);
+
+            // debugger();
+            log('savedItems $savedItems');
+
+            // [AUTO ABSEN]
+            final imei = ref.read(imeiNotifierProvider).imei;
+
+            // REFRESH CURRENT NETWORK TIME
+            final dbDate = await ref.refresh(networkTimeFutureProvider.future);
+            // GET CURRENT NETWORK TIME
+            await ref.read(networkTimeFutureProvider.future);
+            //
+            final List<SavedLocation> savedItemsCurrent = ref
+                .read(autoAbsenNotifierProvider.notifier)
+                .currentNetworkTimeForSavedAbsen(
+                    dbDate: dbDate, savedItems: savedItems);
+
+            final Map<String, List<SavedLocation>> autoAbsen = ref
+                .read(autoAbsenNotifierProvider.notifier)
+                .sortAbsenMap(savedItemsCurrent);
+
+            // debugger();
+
+            await ref.read(autoAbsenNotifierProvider.notifier).processAutoAbsen(
+                  imei: imei,
+                  geofence: geofence,
+                  autoAbsenMap: autoAbsen,
+                  buildContext: buildContext,
+                  savedItems: savedItemsCurrent,
+                );
+
+            // debugger();
+          } else {
+            final thereAreGeofences = geofence.isNotEmpty;
+            if (thereAreGeofences) {
               await geofenceNotifier.initializeGeoFence(
-                  //
-                  geofence,
-                  onError: (e) => log('error geofence $e'));
+                geofence,
+                onError: (e) => log('error geofence $e'),
+              );
               await ref
                   .read(geofenceProvider.notifier)
                   .addGeofenceMockListener(mockListener: mockListener);
-
-              // debugger();
-              log('savedItems $savedItems');
-
-              // [AUTO ABSEN]
-              final imei = ref.read(imeiNotifierProvider).imei;
-
-              // REFRESH CURRENT NETWORK TIME
-              final dbDate =
-                  await ref.refresh(networkTimeFutureProvider.future);
-              // GET CURRENT NETWORK TIME
-              await ref.read(networkTimeFutureProvider.future);
-              //
-              final List<SavedLocation> savedItemsCurrent = ref
-                  .read(autoAbsenNotifierProvider.notifier)
-                  .currentNetworkTimeForSavedAbsen(
-                      dbDate: dbDate, savedItems: savedItems);
-
-              final Map<String, List<SavedLocation>> autoAbsen = ref
-                  .read(autoAbsenNotifierProvider.notifier)
-                  .sortAbsenMap(savedItemsCurrent);
-
-              // debugger();
-
-              await ref
-                  .read(autoAbsenNotifierProvider.notifier)
-                  .processAutoAbsen(
-                    imei: imei,
-                    geofence: geofence,
-                    autoAbsenMap: autoAbsen,
-                    buildContext: buildContext,
-                    savedItems: savedItemsCurrent,
-                  );
-
-              // debugger();
             } else {
-              final thereAreGeofences = geofence.isNotEmpty;
-              if (thereAreGeofences) {
-                //
-                await geofenceNotifier.initializeGeoFence(geofence,
-                    onError: (e) => log('error geofence $e'));
-                await ref
-                    .read(geofenceProvider.notifier)
-                    .addGeofenceMockListener(mockListener: mockListener);
-              } else {
-                await ref
-                    .read(geofenceProvider.notifier)
-                    .getGeofenceListFromStorage();
-              }
-
-              // might be redundant
               await ref
-                  .read(backgroundNotifierProvider.notifier)
-                  .getSavedLocations();
+                  .read(geofenceProvider.notifier)
+                  .getGeofenceListFromStorage();
             }
-          });
-      // debugger();
-    }
+
+            // might be redundant
+            await ref
+                .read(backgroundNotifierProvider.notifier)
+                .getSavedLocations();
+          }
+        });
+    // debugger();
   }
 
   _otherError(GeofenceFailure failure) async {
@@ -302,18 +328,23 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
     final String imeiDb =
         await ref.read(imeiNotifierProvider.notifier).getImeiString();
 
-    await ref
-        .read(errLogControllerProvider.notifier)
-        .sendLog(imeiDb: imeiDb, imeiSaved: imeiSaved, errMessage: errMessage);
+    await ref.read(errLogControllerProvider.notifier).sendLog(
+          imeiDb: imeiDb,
+          imeiSaved: imeiSaved,
+          errMessage: errMessage,
+        );
 
     return showCupertinoDialog(
-            context: context,
-            barrierDismissible: true,
-            builder: (_) => VSimpleDialog(
-                label: 'Error',
-                labelDescription: "",
-                asset: Assets.iconCrossed,
-                color: Colors.red))
-        .then((_) => ref.read(userNotifierProvider.notifier).logout());
+        context: context,
+        barrierDismissible: true,
+        builder: (_) => VSimpleDialog(
+              label: 'Error',
+              labelDescription: errMessage,
+              asset: Assets.iconCrossed,
+              color: Colors.red,
+            )).then((_) async {
+      await ref.read(userNotifierProvider.notifier).logout();
+      await ref.read(authNotifierProvider.notifier).checkAndUpdateAuthStatus();
+    });
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../constants/constants.dart';
 import '../../copyright/presentation/copyright_page.dart';
 import '../../shared/providers.dart';
 import '../../style/style.dart';
@@ -89,10 +90,12 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
                     physics: const NeverScrollableScrollPhysics(),
                     children: <Widget>[
                       ...logoAndName(isOfflineMode, nama ?? ''),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Testing(),
-                      ),
+                      Constants.isDev
+                          ? Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Testing(),
+                            )
+                          : Container(),
                       const SizedBox(
                         height: 24,
                       ),

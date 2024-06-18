@@ -140,7 +140,11 @@ class RouterNotifier extends ChangeNotifier {
           if (weAlreadyDidAllProcedures) {
             return RouteNames.homeNameRoute;
           } else {
-            return RouteNames.initUserNameRoute;
+            if (!weVisitedTC) {
+              return RouteNames.termsAndConditionNameRoute;
+            } else {
+              return RouteNames.initUserNameRoute;
+            }
           }
         }
 

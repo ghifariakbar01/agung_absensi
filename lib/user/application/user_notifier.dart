@@ -79,7 +79,7 @@ class UserNotifier extends StateNotifier<UserState> {
         failureOrSuccessOptionUpdate: optionOf(failureOrSuccess));
   }
 
-  _setUser(UserModelWithPassword user) {
+  setUser(UserModelWithPassword user) {
     // debugger();
     state = state.copyWith(user: user);
     state = state.copyWith(user: user);
@@ -102,7 +102,7 @@ class UserNotifier extends StateNotifier<UserState> {
       {required Ref ref, required UserModelWithPassword user}) async {
     return _onUserParsed(
       initializeUser: () =>
-          Future.delayed(Duration(seconds: 1), () => _setUser(user)),
+          Future.delayed(Duration(seconds: 1), () => setUser(user)),
       initializeDioRequest: () => Future.delayed(
         Duration(seconds: 1),
         () => ref.read(dioRequestProvider).addAll({
