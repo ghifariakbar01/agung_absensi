@@ -34,7 +34,6 @@ import '../../imei_introduction/application/imei_state.dart';
 import '../../imei_introduction/application/shared/imei_introduction_providers.dart';
 import '../../imei_introduction/presentation/imei_introduction_page.dart';
 import '../../init_user/application/init_user_status.dart';
-import '../../init_user/presentation/init_user_scaffold.dart';
 import '../../izin/create_izin/presentation/create_izin_page.dart';
 import '../../izin/create_izin/presentation/edit_izin_page.dart';
 import '../../izin/izin_list/application/izin_list.dart';
@@ -104,8 +103,6 @@ class RouterNotifier extends ChangeNotifier {
     final areWeReadingTC = current == RouteNames.termsAndConditionRoute;
     final areWeReadingImei = current == RouteNames.imeiInstructionRoute;
 
-    final areWeInitializingUser = current == RouteNames.initUserRoute;
-
     final weInitializedUser = initUserState == InitUserStatus.success();
 
     final weVisitedTC = tcState == TCState.visited();
@@ -118,33 +115,31 @@ class RouterNotifier extends ChangeNotifier {
       authenticated: (_) {
         if (areWeSigningIn || defaultRoute) {
           if (weVisitedTC && weVisitedImei) {
-            return RouteNames.initUserRoute;
+            return RouteNames.homeRoute;
           } else {
             return RouteNames.termsAndConditionRoute;
           }
         }
 
         if (areWeReadingTC && weVisitedTC) {
-          return RouteNames.imeiInstructionNameRoute;
+          return RouteNames.imeiInstructionRoute;
         }
 
         if (areWeReadingImei && weVisitedImei) {
-          return RouteNames.initUserNameRoute;
+          return RouteNames.homeRoute;
         }
 
         if (!weVisitedImei) {
-          return RouteNames.imeiInstructionNameRoute;
+          return RouteNames.imeiInstructionRoute;
         }
 
-        if (areWeInitializingUser || areWeAtDefaultRoute) {
+        if (areWeAtDefaultRoute) {
+          if (!weVisitedTC) {
+            return RouteNames.termsAndConditionRoute;
+          }
+
           if (weAlreadyDidAllProcedures) {
-            return RouteNames.homeNameRoute;
-          } else {
-            if (!weVisitedTC) {
-              return RouteNames.termsAndConditionNameRoute;
-            } else {
-              return RouteNames.initUserNameRoute;
-            }
+            return RouteNames.homeRoute;
           }
         }
 
@@ -176,11 +171,6 @@ class RouterNotifier extends ChangeNotifier {
           name: RouteNames.imeiInstructionNameRoute,
           path: RouteNames.imeiInstructionRoute,
           builder: (context, state) => ImeiIntroductionPage()),
-      GoRoute(
-        name: RouteNames.initUserNameRoute,
-        path: RouteNames.initUserRoute,
-        builder: (context, state) => InitUserScaffold(),
-      ),
 
       GoRoute(
           name: RouteNames.homeNameRoute,

@@ -6,6 +6,7 @@ import 'package:upgrader/upgrader.dart';
 import '../../firebase/remote_config/application/firebase_remote_cfg.dart';
 import '../../firebase/remote_config/application/firebase_remote_config_notifier.dart';
 import '../../init/presentation/init_geofence_scaffold.dart';
+import '../../init_user/presentation/init_user_scaffold.dart';
 import '../../main.dart';
 import '../../network_state/application/network_state_notifier.dart';
 import '../../shared/providers.dart';
@@ -25,11 +26,16 @@ class _HomePageState extends ConsumerState<HomePage> {
     final router = ref.watch(routerProvider);
     final firebaseRemoteCfg = ref.watch(firebaseRemoteConfigNotifierProvider);
 
+    final status = ref.watch(initUserStatusNotifierProvider);
+
     return VAsyncValueWidget<FirebaseRemoteCfg>(
       value: firebaseRemoteCfg,
       data: (cfg) => UpgradeAlert(
         key: UniqueKey(),
-        child: InitGeofenceScaffold(),
+        child: status.maybeWhen(
+          success: () => InitGeofenceScaffold(),
+          orElse: () => InitUserScaffold(),
+        ),
         navigatorKey: router.routerDelegate.navigatorKey,
         upgrader: Upgrader(
             minAppVersion: cfg.minApp,

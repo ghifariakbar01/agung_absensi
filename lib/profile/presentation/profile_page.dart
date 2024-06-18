@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:dartz/dartz.dart';
 
-import 'package:face_net_authentication/widgets/loading_overlay.dart';
 import 'package:face_net_authentication/widgets/v_async_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -60,16 +59,12 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
           .then((_) => _onImeiCleared()),
     );
 
-    final userUpdate = ref.watch(userInitFutureProvider(context));
+    final user = ref.watch(getUserFutureProvider);
 
     return VAsyncWidgetScaffold(
-        value: userUpdate,
-        data: (_) => Stack(
-              children: [
-                const ProfileScaffold(),
-                const LoadingOverlay(isLoading: false)
-              ],
-            ));
+      value: user,
+      data: (_) => ProfileScaffold(),
+    );
   }
 
   Future<void> _onImeiCleared() async {

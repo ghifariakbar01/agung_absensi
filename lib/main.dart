@@ -1,3 +1,5 @@
+// ignore_for_file: unused_result
+
 import 'package:dartz/dartz.dart';
 
 import 'package:flutter/material.dart';
@@ -14,6 +16,7 @@ import 'helper.dart';
 
 import 'imei_introduction/application/shared/imei_introduction_providers.dart';
 import 'ip/application/ip_notifier.dart';
+import 'shared/future_providers.dart';
 import 'shared/providers.dart';
 import 'style/style.dart';
 import 'tc/application/shared/tc_providers.dart';
@@ -54,9 +57,35 @@ final initializationProvider = FutureProvider<Unit>((ref) async {
   return unit;
 });
 
-class MyApp extends ConsumerWidget {
+class MyApp extends ConsumerStatefulWidget {
+  const MyApp();
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() => _MyAppState();
+}
+
+class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    WidgetsBinding.instance.addObserver(this);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (state == AppLifecycleState.resumed) {
+      await ref.refresh(imeiInitFutureProvider(context).future);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     ref.listen(initializationProvider, (_, __) {});
 
     final router = ref.watch(routerProvider);

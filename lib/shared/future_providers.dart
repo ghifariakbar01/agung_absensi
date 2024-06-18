@@ -4,14 +4,11 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../constants/assets.dart';
-
 import '../constants/constants.dart';
 import '../cross_auth/application/cross_auth_notifier.dart';
 import '../firebase/remote_config/application/firebase_remote_config_notifier.dart';
 import '../user/application/user_model.dart';
 import '../user/application/user_notifier.dart';
-import '../widgets/v_dialogs.dart';
 import 'providers.dart';
 
 _determineBaseUrl(UserModelWithPassword user) {
@@ -78,7 +75,6 @@ final getUserFutureProvider = FutureProvider<Unit>((ref) async {
         await userNotifier.logout();
         return unit;
       }
-      //
     }
 
     if (json.isNotEmpty) {
@@ -190,40 +186,5 @@ final imeiInitFutureProvider =
     }
   } else {
     throw AssertionError('Error validating user. IdKary user is empty');
-  }
-});
-
-final userInitFutureProvider =
-    FutureProvider.family<void, BuildContext>((ref, context) async {
-  final update = ref.read(userNotifierProvider).failureOrSuccessOptionUpdate;
-
-  if (update != none()) {
-    return Future.delayed(
-        Duration(seconds: 1),
-        () => update.fold(
-            () {},
-            (either) => either.fold(
-                    (failure) => failure.maybeMap(
-                          noConnection: (_) => ref
-                              .read(initUserStatusNotifierProvider.notifier)
-                              .letYouThrough(),
-                          orElse: () => showDialog(
-                            context: context,
-                            barrierDismissible: true,
-                            builder: (_) => VSimpleDialog(
-                              label: 'Error',
-                              asset: Assets.iconCrossed,
-                              labelDescription: failure.maybeMap(
-                                orElse: () => '',
-                                storage: (_) => 'Storage Penuh',
-                                server: (server) =>
-                                    '${server.errorCode} ${server.message}',
-                              ),
-                            ),
-                          ),
-                        ), (_) async {
-                  ref.invalidate(getUserFutureProvider);
-                  await ref.read(getUserFutureProvider.future);
-                })));
   }
 });
