@@ -15,12 +15,12 @@ class NetworkWidget extends ConsumerWidget {
     final network = ref.watch(networkStateNotifier2Provider);
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 18),
+      padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 16),
       child: VAsyncValueWidget<NetworkState>(
         value: network,
         data: (netw) => Ink(
           height: 25,
-          width: 8,
+          width: 12,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(2),
             color: netw.when(

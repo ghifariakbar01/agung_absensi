@@ -17,6 +17,7 @@ class Constants {
   static const String minApp = '1.2.6';
   static const int passExpCode = 4;
   static const int passWrongCode = 3;
+  static const int decryptErrorCode = 11;
   static const String passWrong = 'Password Wrong';
   static const String passExpString = 'Password Expired';
   static const Map<String, String> ptMap = {

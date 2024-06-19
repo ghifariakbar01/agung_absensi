@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dartz/dartz.dart';
 
 import 'package:face_net_authentication/constants/assets.dart';
@@ -19,56 +17,33 @@ class RiwayatAbsenPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Either<PasswordExpiredFailure, Unit>?
     ref.listen<Option<Either<RiwayatAbsenFailure, List<RiwayatAbsenModel>>>>(
         riwayatAbsenNotifierProvider
             .select((value) => value.failureOrSuccessOption),
         (_, failureOrSuccessOption) => failureOrSuccessOption.fold(
             () {},
             (either) => either.fold(
-                    (error) => error.maybeWhen(
-                        orElse: () => showCupertinoDialog(
-                            context: context,
-                            barrierDismissible: true,
-                            builder: (builder) => VSimpleDialog(
-                                  label: 'Error',
-                                  labelDescription: error.maybeWhen(
-                                      noConnection: () => 'no connection',
-                                      wrongFormat: (message) =>
-                                          'wrong format $message',
-                                      server: (errorCode, message) =>
-                                          'error server $errorCode $message',
-                                      passwordExpired: () => 'Password Expired',
-                                      passwordWrong: () => 'Password Wrong',
-                                      orElse: () => ''),
-                                  asset: Assets.iconCrossed,
-                                ))), (list) {
-                  log('list.length ${list.length}');
-
-                  final oldList =
-                      ref.read(riwayatAbsenNotifierProvider).riwayatAbsen;
-                  final page = ref.read(riwayatAbsenNotifierProvider).page;
-
-                  if (list.length < 1 && page != 1) {
-                    // debugger(message: 'called');
-
-                    ref
-                        .read(riwayatAbsenNotifierProvider.notifier)
-                        .changeIsMore(false);
-                  } else if (list.length > 1 && page == 1) {
-                    // debugger(message: 'called');
-
-                    ref
-                        .read(riwayatAbsenNotifierProvider.notifier)
-                        .replaceAbsenRiwayat(list);
-                  } else {
-                    // debugger(message: 'called');
-
-                    ref
-                        .read(riwayatAbsenNotifierProvider.notifier)
-                        .changeAbsenRiwayat(oldList, list);
-                  }
-                })));
+                (e) => e.maybeWhen(
+                    orElse: () => showCupertinoDialog(
+                        context: context,
+                        barrierDismissible: true,
+                        builder: (builder) => VSimpleDialog(
+                              asset: Assets.iconCrossed,
+                              label: 'Error',
+                              labelDescription: e.maybeWhen(
+                                orElse: () => '',
+                                noConnection: () => 'no connection',
+                                passwordExpired: () => 'Password Expired',
+                                passwordWrong: () => 'Password Wrong',
+                                wrongFormat: (message) =>
+                                    'wrong format $message',
+                                server: (errorCode, message) =>
+                                    'error server $errorCode $message',
+                              ),
+                            ))),
+                ref
+                    .read(riwayatAbsenNotifierProvider.notifier)
+                    .replaceAbsenRiwayat)));
 
     final isLoading = ref
         .watch(riwayatAbsenNotifierProvider.select((value) => value.isGetting));

@@ -24,7 +24,7 @@ import '../../cuti/cuti_list/presentation/cuti_list_page.dart';
 import '../../dt_pc/create_dt_pc/presentation/create_dt_pc_page.dart';
 import '../../dt_pc/dt_pc_list/application/dt_pc_list.dart';
 import '../../dt_pc/dt_pc_list/presentation/dt_pc_list_page.dart';
-import '../../edit_profile/presentation/edit_profile_page.dart';
+
 import '../../ganti_hari/create_ganti_hari/presentation/create_ganti_hari_page.dart';
 import '../../ganti_hari/create_ganti_hari/presentation/edit_ganti_hari_page.dart';
 import '../../ganti_hari/ganti_hari_list/application/ganti_hari_list.dart';
@@ -185,11 +185,6 @@ class RouterNotifier extends ChangeNotifier {
               name: RouteNames.riwayatAbsenNameRoute,
               path: RouteNames.riwayatAbsenRoute,
               builder: (context, state) => const RiwayatAbsenPage(),
-            ),
-            GoRoute(
-              name: RouteNames.editProfileNameRoute,
-              path: RouteNames.editProfileRoute,
-              builder: (context, state) => const EditProfilePage(),
             ),
             GoRoute(
               name: RouteNames.profileNameRoute,

@@ -24,10 +24,7 @@ import '../auto_absen/application/auto_absen_repository.dart';
 import '../auto_absen/application/auto_absen_state.dart';
 import '../background/application/background_notifier.dart';
 import '../background/application/background_state.dart';
-import '../edit_profile/application/edit_profile_notifier.dart';
-import '../edit_profile/application/edit_profile_state.dart';
-import '../edit_profile/infrastructures/edit_profile_remote_service.dart';
-import '../edit_profile/infrastructures/edit_profile_repository.dart';
+
 import '../geofence/application/geofence_notifier.dart';
 import '../geofence/application/geofence_state.dart';
 import '../geofence/infrastructures/geofence_remote_service.dart';
@@ -41,6 +38,7 @@ import '../imei/application/imei_reset_notifier.dart';
 import '../imei/application/imei_reset_state.dart';
 import '../imei/application/imei_state.dart';
 
+import '../imei/infrastructures/imei_remote_service.dart';
 import '../infrastructures/cache_storage/auto_absen_storage.dart';
 import '../background/infrastructures/background_repository.dart';
 import '../infrastructures/credentials_storage/credentials_storage.dart';
@@ -165,26 +163,6 @@ final backgroundNotifierProvider =
     StateNotifierProvider<BackgroundNotifier, BackgroundState>(
         (ref) => BackgroundNotifier(BackgroundRepository()));
 
-// EDIT PROFILE
-final editProfileRemoteServiceProvider = Provider(
-  (ref) => EditProfileRemoteService(
-    ref.watch(dioProviderHosting),
-    ref.watch(dioRequestProvider),
-  ),
-);
-
-final editProfileRepositoryProvider = Provider(
-  (ref) => EditProfileRepostiroy(
-    ref.watch(imeiCredentialsStorageProvider),
-    ref.watch(editProfileRemoteServiceProvider),
-  ),
-);
-
-final editProfileNotifierProvider =
-    StateNotifierProvider<EditProfileNotifier, EditProfileState>(
-  (ref) => EditProfileNotifier(ref.watch(editProfileRepositoryProvider)),
-);
-
 // ABSEN
 final absenRemoteServiceProvider = Provider((ref) => AbsenRemoteService(
     ref.watch(dioProvider),
@@ -244,14 +222,23 @@ final karyawanShiftFutureProvider = FutureProvider<bool>((ref) async {
 });
 
 // IMEI
-
-/// imeiCredentialsStorageProvider is used by [EditProfileRepostiroy] and [ImeiRepository]
-final imeiRepositoryProvider = Provider(
-    (ref) => ImeiRepository(ref.watch(imeiCredentialsStorageProvider)));
-
 final imeiNotifierProvider = StateNotifierProvider<ImeiNotifier, ImeiState>(
-    (ref) => ImeiNotifier(ref.watch(editProfileRepositoryProvider),
-        ref.watch(imeiRepositoryProvider)));
+    (ref) => ImeiNotifier(ref.watch(imeiRepositoryProvider)));
+
+// EDIT PROFILE
+final imeiRemoteServiceProvider = Provider(
+  (ref) => ImeiRemoteService(
+    ref.watch(dioProvider),
+    ref.watch(dioRequestProvider),
+  ),
+);
+
+final imeiRepositoryProvider = Provider(
+  (ref) => ImeiRepository(
+    ref.watch(imeiCredentialsStorageProvider),
+    ref.watch(imeiRemoteServiceProvider),
+  ),
+);
 
 final imeiAuthNotifierProvider =
     StateNotifierProvider<ImeiAuthNotifier, ImeiAuthState>(

@@ -23,8 +23,10 @@ class AuthInterceptor extends Interceptor {
     final errorNum = items['errornum'] as int?;
 
     if (errorNum == Constants.passWrongCode ||
-        errorNum == Constants.passExpCode) {
+        errorNum == Constants.passExpCode ||
+        errorNum == Constants.decryptErrorCode) {
       await _ref.read(userNotifierProvider.notifier).logout();
+      await _ref.read(authNotifierProvider.notifier).checkAndUpdateAuthStatus();
     }
   }
 

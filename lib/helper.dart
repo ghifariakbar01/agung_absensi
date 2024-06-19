@@ -11,13 +11,12 @@ import 'utils/dialog_helper.dart';
 abstract class Helper {
   Future<void> storageDebugMode(Ref<Object?> ref,
       {required bool isDebug}) async {}
-  Future<void> fixStorageOnAndroidDevices(Ref ref) async {}
+  Future<void> fixStorage(Ref ref) async {}
 }
 
 class HelperImpl implements Helper {
   @override
-  Future<void> fixStorageOnAndroidDevices(Ref<Object?> ref) async {
-    //
+  Future<void> fixStorage(Ref<Object?> ref) async {
     Future<Unit> _saveCurrentImei(String? imei) async {
       if (imei == null) {
         return unit;

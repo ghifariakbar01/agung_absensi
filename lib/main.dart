@@ -41,7 +41,7 @@ final initializationProvider = FutureProvider<Unit>((ref) async {
 
   final helper = HelperImpl();
   // await helper.storageDebugMode(ref, isDebug: true);
-  await helper.fixStorageOnAndroidDevices(ref);
+  await helper.fixStorage(ref);
 
   if (!BuildConfig.isProduction) {
     ref.read(dioProvider).interceptors.add(PrettyDioLogger(

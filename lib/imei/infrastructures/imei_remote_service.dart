@@ -8,8 +8,8 @@ import '../../imei/application/imei_register_state.dart';
 import '../../infrastructures/exceptions.dart';
 import '../../utils/string_utils.dart';
 
-class EditProfileRemoteService {
-  EditProfileRemoteService(
+class ImeiRemoteService {
+  ImeiRemoteService(
     this._dio,
     this._dioRequest,
   );
@@ -117,10 +117,6 @@ class EditProfileRemoteService {
 
       final response = await _dio.post('',
           data: jsonEncode(data), options: Options(contentType: 'text/plain'));
-
-      log('data ${jsonEncode(data)}');
-
-      log('response $response');
 
       final items = response.data?[0];
 
@@ -246,72 +242,6 @@ class EditProfileRemoteService {
           items['errornum'] as int?,
           items['error'] as String?,
         );
-      }
-    } on FormatException {
-      throw FormatException();
-    } on DioException catch (e) {
-      if ((e.type == DioExceptionType.connectionError ||
-          e.type == DioExceptionType.connectionTimeout)) {
-        throw NoConnectionException();
-      } else if (e.response != null) {
-        throw RestApiException(e.response?.statusCode);
-      } else {
-        rethrow;
-      }
-    }
-  }
-
-  Future<Unit> submitEdit(
-      {required String noTelp1,
-      required String noTelp2,
-      required String email1,
-      required String email2,
-      required String idKary}) async {
-    try {
-      /*
-        FOR TESTING,
-          use gs_12 on login, absen, riwayat
-      */
-      final Map<String, dynamic> data = {};
-      data.addAll(_dioRequest);
-      final _testing = data.update('server', (_) => 'gs_12');
-
-      if (_testing != 'gs_12') {
-        throw Exception('server override invalid');
-      }
-
-      final commandUpdate =
-          "UPDATE $dbName SET no_telp1 = '$noTelp1', no_telp2 = '$noTelp2', email = '$email1', email2 = '$email2' WHERE idKary = '$idKary'";
-
-      final Map<String, String> edit = {
-        'command': commandUpdate,
-        'mode': 'UPDATE'
-      };
-
-      debugger();
-
-      data.addAll(edit);
-
-      final response = await _dio.post('',
-          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
-
-      log('data ${jsonEncode(data)}');
-
-      log('response $response');
-
-      final items = response.data?[0];
-
-      if (items['status'] == 'Success') {
-        debugger();
-
-        return unit;
-      } else {
-        debugger();
-
-        final message = items['error'] as String?;
-        final errorCode = items['errornum'] as int;
-
-        throw RestApiExceptionWithMessage(errorCode, message);
       }
     } on FormatException {
       throw FormatException();

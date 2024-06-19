@@ -14,7 +14,7 @@ import 'package:uuid/uuid.dart';
 import '../../constants/assets.dart';
 import '../../domain/edit_failure.dart';
 import '../../domain/imei_failure.dart';
-import '../../edit_profile/infrastructures/edit_profile_repository.dart';
+
 import '../../imei_introduction/application/shared/imei_introduction_providers.dart';
 import '../../tc/application/shared/tc_providers.dart';
 import '../../user/application/user_model.dart';
@@ -29,28 +29,24 @@ import 'imei_auth_state.dart';
 import 'imei_state.dart';
 
 class ImeiNotifier extends StateNotifier<ImeiState> {
-  ImeiNotifier(this._editProfileRepostiroy, this._imeiRepository)
-      : super(ImeiState.initial());
+  ImeiNotifier(this._imeiRepository) : super(ImeiState.initial());
 
-  final EditProfileRepostiroy _editProfileRepostiroy;
   final ImeiRepository _imeiRepository;
 
   Future<String> getImeiString() => _imeiRepository
       .getImeiCredentials()
       .then((value) => value.fold((_) => '', (imei) => imei ?? ''));
 
-  Future<String> getImeiStringDb({required String idKary}) =>
-      _editProfileRepostiroy
-          .getImei(idKary: idKary)
-          .then((value) => value.fold((_) => '', (imei) => imei ?? ''));
+  Future<String> getImeiStringDb({required String idKary}) => _imeiRepository
+      .getImei(idKary: idKary)
+      .then((value) => value.fold((_) => '', (imei) => imei ?? ''));
 
-  Future<bool> clearImeiSuccess({required String idKary}) async =>
-      await _editProfileRepostiroy.clearImeiSuccess(idKary: idKary);
+  Future<bool> clearImeiSuccess({required String idKary}) =>
+      _imeiRepository.clearImeiSuccess(idKary: idKary);
 
   String generateImei() => Uuid().v4();
 
   changeSavedImei(String imei) {
-    // debugger();
     state = state.copyWith(imei: imei);
   }
 
@@ -105,6 +101,26 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
     await imeiInstructionNotifier.checkAndUpdateImeiIntro();
   }
 
+  Future<void> onEditProfile({
+    required Function saveUser,
+    required Function onUser,
+  }) async {
+    await saveUser();
+    await onUser();
+  }
+
+  Future<void> registerAndShowDialog({
+    required Function signUp,
+    required Function getImei,
+    required Function onImeiComplete,
+    required Function areYouSuccessOrNot,
+  }) async {
+    await signUp();
+    await getImei();
+    await onImeiComplete();
+    await areYouSuccessOrNot();
+  }
+
   Future<void> getImeiCredentials() async {
     Either<ImeiFailure, String?> failureOrSuccess;
 
@@ -116,19 +132,6 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
         isGetting: false, failureOrSuccessOption: optionOf(failureOrSuccess));
   }
 
-  Future<void> clearImeiFromDB({required String idKary}) async {
-    Either<EditFailure, Unit>? failureOrSuccess;
-
-    state = state.copyWith(
-        isGetting: true, failureOrSuccessOptionClearRegisterImei: none());
-
-    failureOrSuccess = await _editProfileRepostiroy.clearImei(idKary: idKary);
-
-    state = state.copyWith(
-        isGetting: false,
-        failureOrSuccessOptionClearRegisterImei: optionOf(failureOrSuccess));
-  }
-
   Future<void> logClearImeiFromDB({
     required String nama,
     required String idUser,
@@ -138,7 +141,7 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
     state = state.copyWith(
         isGetting: true, failureOrSuccessOptionClearRegisterImei: none());
 
-    failureOrSuccess = await _editProfileRepostiroy.logClearImei(
+    failureOrSuccess = await _imeiRepository.logClearImei(
         imei: state.imei, nama: nama, idUser: idUser);
 
     state = state.copyWith(
@@ -154,7 +157,7 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
         isGetting: true, failureOrSuccessOptionClearRegisterImei: none());
 
     failureOrSuccess =
-        await _editProfileRepostiroy.registerImei(imei: imei, idKary: idKary);
+        await _imeiRepository.registerImei(imei: imei, idKary: idKary);
 
     state = state.copyWith(
         isGetting: false,
@@ -203,8 +206,6 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
           break;
       }
     }
-
-    // debugger();
 
     if (imeiAuthState == ImeiAuthState.registered()) {
       switch (savedImei.isEmpty) {
@@ -325,7 +326,7 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
     required String savedImei,
     required String generatedImeiString,
   }) async {
-    return ref.read(editProfileNotifierProvider.notifier).registerAndShowDialog(
+    return ref.read(imeiNotifierProvider.notifier).registerAndShowDialog(
         signUp: () => ref.read(imeiNotifierProvider.notifier).registerImei(
               imei: generatedImeiString,
               idKary: user.IdKary ?? 'null',
@@ -333,7 +334,7 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
         getImei: () =>
             ref.read(imeiNotifierProvider.notifier).getImeiCredentials(),
         onImeiComplete: () => ref
-            .read(editProfileNotifierProvider.notifier)
+            .read(imeiNotifierProvider.notifier)
             .onEditProfile(
               saveUser: () => ref
                   .read(userNotifierProvider.notifier)
