@@ -18,6 +18,7 @@ import '../../err_log/application/err_log_notifier.dart';
 import '../../geofence/application/geofence_response.dart';
 
 import '../../home/presentation/home_saved.dart';
+import '../../network_state/application/network_state_notifier.dart';
 import '../../shared/providers.dart';
 import '../../user/application/user_model.dart';
 import '../../widgets/alert_helper.dart';
@@ -79,6 +80,8 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
 
   @override
   Widget build(BuildContext buildContext) {
+    ref.listen(networkCallbackProvider, (_, __) {});
+
     // SAVED ABSEN
     ref.listen<Option<Either<BackgroundFailure, List<SavedLocation>>>>(
         backgroundNotifierProvider.select(

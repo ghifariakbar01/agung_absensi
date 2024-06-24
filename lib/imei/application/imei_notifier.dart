@@ -111,25 +111,12 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
 
   Future<void> registerAndShowDialog({
     required Function signUp,
-    required Function getImei,
     required Function onImeiComplete,
     required Function areYouSuccessOrNot,
   }) async {
     await signUp();
-    await getImei();
     await onImeiComplete();
     await areYouSuccessOrNot();
-  }
-
-  Future<void> getImeiCredentials() async {
-    Either<ImeiFailure, String?> failureOrSuccess;
-
-    state = state.copyWith(isGetting: true, failureOrSuccessOption: none());
-
-    failureOrSuccess = await _imeiRepository.getImeiCredentials();
-
-    state = state.copyWith(
-        isGetting: false, failureOrSuccessOption: optionOf(failureOrSuccess));
   }
 
   Future<void> logClearImeiFromDB({
@@ -292,10 +279,9 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
     final imeiAuthState = ref.read(imeiAuthNotifierProvider);
     final savedImei = ref.read(imeiNotifierProvider).imei;
 
-    final imeiNotifier = ref.read(imeiNotifierProvider.notifier);
-    String generatedImeiString = imeiNotifier.generateImei();
+    String generatedImeiString = generateImei();
 
-    return imeiNotifier.onImei(
+    return onImei(
         imeiDBString: imei,
         savedImei: savedImei,
         appleUsername: user.nama,
@@ -326,78 +312,17 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
     required String savedImei,
     required String generatedImeiString,
   }) async {
-    return ref.read(imeiNotifierProvider.notifier).registerAndShowDialog(
-        signUp: () => ref.read(imeiNotifierProvider.notifier).registerImei(
-              imei: generatedImeiString,
-              idKary: user.IdKary ?? 'null',
-            ),
-        getImei: () =>
-            ref.read(imeiNotifierProvider.notifier).getImeiCredentials(),
-        onImeiComplete: () => ref
-            .read(imeiNotifierProvider.notifier)
-            .onEditProfile(
-              saveUser: () => ref
-                  .read(userNotifierProvider.notifier)
-                  .saveUserAfterUpdate(user: user),
-              onUser: () => ref.read(userNotifierProvider.notifier).getUser(),
-            ),
-        areYouSuccessOrNot: () async {
-          await ref
-              .read(userNotifierProvider.notifier)
-              .saveUserAfterUpdate(user: user);
+    await registerImei(
+      imei: generatedImeiString,
+      idKary: user.IdKary ?? 'null',
+    );
 
-          await ref
-              .read(userNotifierProvider)
-              .failureOrSuccessOptionUpdate
-              .fold(
-                  () {},
-                  (either) => either.fold(
-                      (failure) => _onErr(
-                            failure,
-                            ref,
-                            imei,
-                            savedImei,
-                            context,
-                          ),
-                      (_) => showSuccessDialog(context).then((_) => ref
-                          .read(initUserStatusNotifierProvider.notifier)
-                          .letYouThrough())));
-        });
-  }
+    await ref
+        .read(userNotifierProvider.notifier)
+        .saveUserAfterUpdate(user: user);
 
-  Future<void> _onErr(AuthFailure failure, Ref<Object?> ref, String imei,
-      String savedImei, BuildContext context) {
-    {
-      return failure.maybeWhen(
-          noConnection:
-              ref.read(initUserStatusNotifierProvider.notifier).letYouThrough,
-          orElse: () async {
-            final String errMessage = failure.maybeWhen(
-              orElse: () => '',
-              server: (errorCode, message) =>
-                  'Error Kode $errorCode : $message',
-              passwordWrong: () => 'Password yang anda masukkan salah',
-              storage: () =>
-                  'Mohon maaf storage anda penuh. Mohon luangkan storage anda agar bisa menyimpan Installation ID. Terimakasih',
-            );
-
-            await ref.read(errLogControllerProvider.notifier).sendLog(
-                imeiDb: imei, imeiSaved: savedImei, errMessage: errMessage);
-
-            return showDialog(
-              context: context,
-              barrierDismissible: true,
-              builder: (_) => VSimpleDialog(
-                label: 'Error',
-                labelDescription: errMessage,
-                asset: Assets.iconCrossed,
-              ),
-            ).then((_) async {
-              ref.read(initUserStatusNotifierProvider.notifier).hold();
-              await ref.read(userNotifierProvider.notifier).logout();
-            });
-          });
-    }
+    return showSuccessDialog(context).then((_) =>
+        ref.read(initUserStatusNotifierProvider.notifier).letYouThrough());
   }
 
   Future<void> _onImeiAlreadyRegistered({

@@ -9,8 +9,6 @@ import 'package:upgrader/upgrader.dart';
 
 import 'config/configuration.dart';
 
-import 'firebase/remote_config/application/firebase_remote_cfg.dart';
-import 'firebase/remote_config/application/firebase_remote_config_notifier.dart';
 import 'firebase/remote_config/helper/firebase_remote_config_initializer.dart';
 import 'helper.dart';
 
@@ -91,32 +89,27 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
     final router = ref.watch(routerProvider);
     final routerDelegate = router.routerDelegate;
 
-    final firebaseRemoteCfg = ref.watch(firebaseRemoteConfigNotifierProvider);
     final ipNotifier = ref.watch(ipNotifierProvider);
 
-    return VAsyncWidgetScaffoldWrappedMaterial<FirebaseRemoteCfg>(
-      value: firebaseRemoteCfg,
-      data: (cfg) => VAsyncWidgetScaffoldWrappedMaterial<void>(
-          value: ipNotifier,
-          data: (_) => MaterialApp.router(
-              debugShowCheckedModeBanner: false,
-              debugShowMaterialGrid: false,
-              themeMode: ThemeMode.light,
-              theme: Themes.lightTheme(context),
-              routeInformationProvider: router.routeInformationProvider,
-              routeInformationParser: router.routeInformationParser,
-              routerDelegate: routerDelegate,
-              builder: (_, c) => UpgradeAlert(
-                    key: UniqueKey(),
-                    navigatorKey: routerDelegate.navigatorKey,
-                    child: c,
-                    upgrader: Upgrader(
-                      messages: MyUpgraderMessages(),
-                      minAppVersion: cfg.minApp,
-                      durationUntilAlertAgain: Duration(hours: 3),
-                    ),
-                  ))),
-    );
+    return VAsyncWidgetScaffoldWrappedMaterial<void>(
+        value: ipNotifier,
+        data: (_) => MaterialApp.router(
+            debugShowCheckedModeBanner: false,
+            debugShowMaterialGrid: false,
+            themeMode: ThemeMode.light,
+            theme: Themes.lightTheme(context),
+            routeInformationProvider: router.routeInformationProvider,
+            routeInformationParser: router.routeInformationParser,
+            routerDelegate: routerDelegate,
+            builder: (_, c) => UpgradeAlert(
+                  key: UniqueKey(),
+                  navigatorKey: routerDelegate.navigatorKey,
+                  child: c,
+                  upgrader: Upgrader(
+                    messages: MyUpgraderMessages(),
+                    durationUntilAlertAgain: Duration(hours: 3),
+                  ),
+                )));
   }
 }
 

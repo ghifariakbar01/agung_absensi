@@ -22,26 +22,11 @@ class HomePage extends ConsumerStatefulWidget {
 class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
-    ref.listen(networkCallbackProvider, (_, __) {});
-    final router = ref.watch(routerProvider);
-    final firebaseRemoteCfg = ref.watch(firebaseRemoteConfigNotifierProvider);
-
     final status = ref.watch(initUserStatusNotifierProvider);
 
-    return VAsyncValueWidget<FirebaseRemoteCfg>(
-      value: firebaseRemoteCfg,
-      data: (cfg) => UpgradeAlert(
-        key: UniqueKey(),
-        child: status.maybeWhen(
-          success: () => InitGeofenceScaffold(),
-          orElse: () => InitUserScaffold(),
-        ),
-        navigatorKey: router.routerDelegate.navigatorKey,
-        upgrader: Upgrader(
-            minAppVersion: cfg.minApp,
-            durationUntilAlertAgain: Duration(hours: 3),
-            messages: MyUpgraderMessages()),
-      ),
+    return status.maybeWhen(
+      success: () => InitGeofenceScaffold(),
+      orElse: () => InitUserScaffold(),
     );
   }
 }

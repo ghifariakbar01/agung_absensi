@@ -83,54 +83,50 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
                       .checkAndUpdateAuthStatus();
                 })));
 
-    final ip = ref.watch(ipNotifierProvider);
     final errLog = ref.watch(errLogControllerProvider);
     final _isUserCrossed = ref.watch(isUserCrossedProvider);
 
     final imeiInitFuture = ref.watch(imeiInitFutureProvider(context));
 
     return VAsyncWidgetScaffold(
-      value: ip,
-      data: (_) => VAsyncWidgetScaffold(
-        value: errLog,
-        data: (_) => VAsyncWidgetScaffold<IsUserCrossedState>(
-          value: _isUserCrossed,
-          data: (data) {
-            final _isCrossed = data.when(
-              crossed: () => true,
-              notCrossed: () => false,
-            );
+      value: errLog,
+      data: (_) => VAsyncWidgetScaffold<IsUserCrossedState>(
+        value: _isUserCrossed,
+        data: (data) {
+          final _isCrossed = data.when(
+            crossed: () => true,
+            notCrossed: () => false,
+          );
 
-            return Scaffold(
-              body: Stack(
-                  //
-                  children: [
-                    imeiInitFuture.when(
-                      data: (_) => LoadingOverlay(
-                        isLoading: true,
-                        loadingMessage: _isCrossed
-                            ? 'Uncrossing User...'
-                            : 'Initializing User & Installation ID...',
-                      ),
-                      loading: () => LoadingOverlay(
-                        isLoading: true,
-                        loadingMessage: 'Getting Data...',
-                      ),
-                      error: (error, stackTrace) => ErrorMessageWidget(
-                        errorMessage: error.toString(),
-                        additionalWidgets: [
-                          VButton(
-                              label: 'Logout & Retry',
-                              onPressed: () => ref
-                                  .read(imeiResetNotifierProvider.notifier)
-                                  .clearImeiFromStorage())
-                        ],
-                      ),
+          return Scaffold(
+            body: Stack(
+                //
+                children: [
+                  imeiInitFuture.when(
+                    data: (_) => LoadingOverlay(
+                      isLoading: true,
+                      loadingMessage: _isCrossed
+                          ? 'Uncrossing User...'
+                          : 'Initializing User & Installation ID...',
                     ),
-                  ]),
-            );
-          },
-        ),
+                    loading: () => LoadingOverlay(
+                      isLoading: true,
+                      loadingMessage: 'Getting Data...',
+                    ),
+                    error: (error, stackTrace) => ErrorMessageWidget(
+                      errorMessage: error.toString(),
+                      additionalWidgets: [
+                        VButton(
+                            label: 'Logout & Retry',
+                            onPressed: () => ref
+                                .read(imeiResetNotifierProvider.notifier)
+                                .clearImeiFromStorage())
+                      ],
+                    ),
+                  ),
+                ]),
+          );
+        },
       ),
     );
   }

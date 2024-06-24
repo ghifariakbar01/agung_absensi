@@ -80,11 +80,6 @@ class RouterNotifier extends ChangeNotifier {
       imeiIntroNotifierProvider,
       (_, __) => notifyListeners(),
     );
-
-    _ref.listen<InitUserStatus>(
-      initUserStatusNotifierProvider,
-      (_, __) => notifyListeners(),
-    );
   }
 
   final Ref _ref;
@@ -92,7 +87,7 @@ class RouterNotifier extends ChangeNotifier {
   String? redirectLogic(BuildContext context, GoRouterState state) {
     final tcState = _ref.read(tcNotifierProvider);
     final authState = _ref.read(authNotifierProvider);
-    final initUserState = _ref.read(initUserStatusNotifierProvider);
+
     final imeiIntroState = _ref.read(imeiIntroNotifierProvider);
 
     final String current = state.matchedLocation;
@@ -103,13 +98,10 @@ class RouterNotifier extends ChangeNotifier {
     final areWeReadingTC = current == RouteNames.termsAndConditionRoute;
     final areWeReadingImei = current == RouteNames.imeiInstructionRoute;
 
-    final weInitializedUser = initUserState == InitUserStatus.success();
-
     final weVisitedTC = tcState == TCState.visited();
     final weVisitedImei = imeiIntroState == ImeiIntroductionState.visited();
 
-    final weAlreadyDidAllProcedures =
-        weInitializedUser && weVisitedTC && weVisitedImei;
+    final weAlreadyDidAllProcedures = weVisitedTC && weVisitedImei;
 
     return authState.maybeMap(
       authenticated: (_) {
