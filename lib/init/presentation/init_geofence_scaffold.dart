@@ -146,23 +146,21 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
   ) async {
     final Function(Location location) mockListener =
         ref.read(mockLocationNotifierProvider.notifier).checkMockLocationState;
-    //
+
     if (geofenceList.isNotEmpty) {
-      //
       final List<Geofence> geofence = ref
           .read(geofenceProvider.notifier)
           .geofenceResponseToList(geofenceList);
 
       final isOffline = ref.read(absenOfflineModeProvider);
 
-      // Is currently offline
       if (!isOffline) {
         await _onGeonfeceNotOffline(
-            //
-            geofenceList,
-            geofence,
-            mockListener,
-            buildContext);
+          buildContext,
+          geofence,
+          geofenceList,
+          mockListener,
+        );
       } else {
         log('onGeofenceOffline');
         await _onGeofenceOffline(geofence, mockListener);
@@ -184,10 +182,11 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
   }
 
   Future<void> _onGeonfeceNotOffline(
-      List<GeofenceResponse> geofenceList,
-      List<Geofence> geofence,
-      Function(Location location) mockListener,
-      BuildContext buildContext) async {
+    BuildContext buildContext,
+    List<Geofence> geofence,
+    List<GeofenceResponse> geofenceList,
+    Function(Location location) mockListener,
+  ) async {
     final List<SavedLocation> savedItems =
         ref.read(backgroundNotifierProvider).savedBackgroundItems;
 
@@ -232,7 +231,7 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
                 .currentNetworkTimeForSavedAbsen(
                     dbDate: dbDate, savedItems: savedItems);
 
-            final Map<String, List<SavedLocation>> autoAbsen = ref
+            final Map<DateTime, List<SavedLocation>> autoAbsen = ref
                 .read(autoAbsenNotifierProvider.notifier)
                 .sortAbsenMap(savedItemsCurrent);
 

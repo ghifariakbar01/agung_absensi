@@ -65,8 +65,9 @@ class BackgroundNotifier extends StateNotifier<BackgroundState> {
     }
   }
 
-  Future<void> removeLocationFromSaved(SavedLocation currentLocation,
-      {required Function onSaved}) async {
+  Future<void> removeLocationFromSaved(
+    SavedLocation currentLocation,
+  ) async {
     final _sharedPreference = await SharedPreferences.getInstance();
 
     if (_sharedPreference.getString("locations") != null) {
@@ -80,8 +81,6 @@ class BackgroundNotifier extends StateNotifier<BackgroundState> {
 
       await _sharedPreference.setString(
           "locations", jsonEncode(processLocation));
-
-      await onSaved();
     }
   }
 }

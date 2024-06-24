@@ -20,12 +20,13 @@ import '../../routes/application/route_names.dart';
 import '../../shared/providers.dart';
 import '../../style/style.dart';
 import '../../tester/application/tester_state.dart';
+import '../../utils/enums.dart';
 import '../../utils/geofence_utils.dart';
 import '../../utils/string_utils.dart';
 import '../../widgets/v_async_widget.dart';
 import '../../widgets/v_button.dart';
 import '../../widgets/v_dialogs.dart';
-import '../application/absen_enum.dart';
+
 import '../application/absen_state.dart';
 import 'absen_reset.dart';
 
@@ -285,72 +286,66 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
   }
 
   Future<void> _onBerhasilSimpanAbsen(BuildContext context) async {
-    {
-      await OSVibrate.vibrate();
-      await ref.read(backgroundNotifierProvider.notifier).getSavedLocations();
-      await showDialog(
-          context: context,
-          barrierDismissible: true,
-          builder: (_) => VSimpleDialog(
-                asset: Assets.iconChecked,
-                label: 'Saved',
-                labelDescription: 'Absen tersimpan',
-              ));
-    }
+    await OSVibrate.vibrate();
+    await ref.read(backgroundNotifierProvider.notifier).getSavedLocations();
+    await showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (_) => VSimpleDialog(
+              asset: Assets.iconChecked,
+              label: 'Saved',
+              labelDescription: 'Absen tersimpan',
+            ));
   }
 
   Future<void> _onBerhasilAbsen(BuildContext context) async {
-    {
-      // RESET BUTTON
-      ref.read(buttonResetVisibilityProvider.notifier).state = false;
-      ref.read(absenOfflineModeProvider.notifier).state = false;
-      await OSVibrate.vibrate();
-      await ref.read(absenNotifierProvidier.notifier).getAbsenToday();
+    // RESET BUTTON
+    ref.read(buttonResetVisibilityProvider.notifier).state = false;
+    ref.read(absenOfflineModeProvider.notifier).state = false;
+    await OSVibrate.vibrate();
+    await ref.read(absenNotifierProvidier.notifier).getAbsenToday();
 
-      String jamBerhasilStr = StringUtils.hoursDate(
-          await ref.refresh(networkTimeFutureProvider.future));
+    String jamBerhasilStr = StringUtils.hoursDate(
+        await ref.refresh(networkTimeFutureProvider.future));
 
-      await showDialog(
-              context: context,
-              barrierDismissible: true,
-              builder: (_) => VSimpleDialog(
-                    asset: Assets.iconChecked,
-                    label: 'JAM $jamBerhasilStr',
-                    labelDescription: 'BERHASIL',
-                  ))
-          .then((_) => context.pushNamed(RouteNames.riwayatAbsenNameRoute));
-    }
+    await showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (_) => VSimpleDialog(
+              asset: Assets.iconChecked,
+              label: 'JAM $jamBerhasilStr',
+              labelDescription: 'BERHASIL',
+            )).then((_) => context.pushNamed(RouteNames.riwayatAbsenNameRoute));
   }
 
   _onErrOther(AbsenFailure failure, BuildContext context) async {
-    {
-      final String errMessage = failure.maybeWhen(
-          server: (code, message) => 'Error $code $message',
-          passwordExpired: () => 'Password Expired',
-          passwordWrong: () => 'Password Wrong',
-          orElse: () => '');
+    final String errMessage = failure.maybeWhen(
+        server: (code, message) => 'Error $code $message',
+        passwordExpired: () => 'Password Expired',
+        passwordWrong: () => 'Password Wrong',
+        orElse: () => '');
 
-      final String imeiSaved =
-          await ref.read(imeiNotifierProvider.notifier).getImeiString();
-      final String imeiDb =
-          await ref.read(imeiNotifierProvider.notifier).getImeiString();
+    final String imeiSaved =
+        await ref.read(imeiNotifierProvider.notifier).getImeiString();
+    final String imeiDb =
+        await ref.read(imeiNotifierProvider.notifier).getImeiString();
 
-      await ref.read(errLogControllerProvider.notifier).sendLog(
-          imeiDb: imeiDb, imeiSaved: imeiSaved, errMessage: errMessage);
+    await ref
+        .read(errLogControllerProvider.notifier)
+        .sendLog(imeiDb: imeiDb, imeiSaved: imeiSaved, errMessage: errMessage);
 
-      return showDialog(
-          context: context,
-          barrierDismissible: true,
-          builder: (_) => VSimpleDialog(
-                asset: Assets.iconCrossed,
-                label: 'Error',
-                labelDescription: failure.maybeWhen(
-                    server: (code, message) => 'Error $code $message',
-                    passwordExpired: () => 'Password Expired',
-                    passwordWrong: () => 'Password Wrong',
-                    orElse: () => ''),
-              ));
-    }
+    return showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (_) => VSimpleDialog(
+              asset: Assets.iconCrossed,
+              label: 'Error',
+              labelDescription: failure.maybeWhen(
+                  server: (code, message) => 'Error $code $message',
+                  passwordExpired: () => 'Password Expired',
+                  passwordWrong: () => 'Password Wrong',
+                  orElse: () => ''),
+            ));
   }
 
   _onNoConnection(

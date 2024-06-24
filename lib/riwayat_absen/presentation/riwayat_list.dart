@@ -2,7 +2,7 @@ import 'package:face_net_authentication/shared/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../absen/application/absen_enum.dart';
+import '../../utils/enums.dart';
 import 'riwayat_item.dart';
 import 'riwayat_tanggal.dart';
 

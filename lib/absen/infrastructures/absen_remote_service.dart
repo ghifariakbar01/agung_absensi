@@ -7,8 +7,9 @@ import 'package:dio/dio.dart';
 import '../../infrastructures/exceptions.dart';
 import '../../riwayat_absen/application/riwayat_absen_model.dart';
 import '../../user/application/user_model.dart';
+import '../../utils/enums.dart';
 import '../../utils/string_utils.dart';
-import '../application/absen_enum.dart';
+
 import '../application/absen_state.dart';
 
 class AbsenRemoteService {

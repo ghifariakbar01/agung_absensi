@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../absen/application/absen_enum.dart';
+import '../../utils/enums.dart';
 import 'saved_location.dart';
 
 part 'recent_absen_state.freezed.dart';

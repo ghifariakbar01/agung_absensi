@@ -93,19 +93,15 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
     required Future<void> Function(List<GeofenceResponse>) saveGeofence,
     required Function showDialogAndLogout,
     required Future<void> Function(List<SavedLocation>) startAbsenSaved,
-    //
     required List<GeofenceResponse> geofenceResponseList,
     required List<SavedLocation> savedBackgroundItems,
   }) async {
     await saveGeofence(geofenceResponseList);
     await this.state.failureOrSuccessOptionStorage.fold(
         () {},
-        (either) => either.fold(
-            //
-            (_) => showDialogAndLogout(),
-            //
-            (_) => startAbsenSaved(savedBackgroundItems)
-            //
+        (e) => e.fold(
+              (_) => showDialogAndLogout(),
+              (_) => startAbsenSaved(savedBackgroundItems),
             ));
   }
 

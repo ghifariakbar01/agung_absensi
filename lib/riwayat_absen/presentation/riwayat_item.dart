@@ -3,8 +3,8 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../absen/application/absen_enum.dart';
 import '../../style/style.dart';
+import '../../utils/enums.dart';
 
 class RiwayatItem extends ConsumerWidget {
   const RiwayatItem({

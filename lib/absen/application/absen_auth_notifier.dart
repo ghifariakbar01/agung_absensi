@@ -6,9 +6,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../background/application/saved_location.dart';
 import '../../domain/absen_failure.dart';
+import '../../utils/enums.dart';
 import '../infrastructures/absen_repository.dart';
 import 'absen_auth_state.dart';
-import 'absen_enum.dart';
 
 class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
   AbsenAuthNotifier(this._absenRepository) : super(AbsenAuthState.initial());
@@ -39,8 +39,6 @@ class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
         idGeof: idGeof,
         imei: imei);
 
-    debugger(message: 'called');
-
     log('failureOrSuccess $failureOrSuccess');
 
     state = state.copyWith(
@@ -59,47 +57,48 @@ class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
     required String imei,
     required Future<void> Function() onAbsen,
     required Future<void> Function() deleteSaved,
-    required Future<void> Function() showSuccessDialog,
+    required Function() onSuccess,
+    required Function() onFailure,
     required Future<void> Function(String code, String message)
         showFailureDialog,
   }) async {
     state = state.copyWith(isSubmitting: true);
 
     this._changeBackgroundAbsenStateSaved(backgroundItemState);
-
-    SavedLocation location = backgroundItemState;
-
-    // debugger();
+    final SavedLocation location = backgroundItemState;
 
     try {
       await absen(
-          lokasi: '${location.alamat}',
           date: location.date,
           dbDate: location.dbDate,
-          latitude: '${location.latitude ?? 0}',
-          longitude: '${location.longitude ?? 0}',
           idGeof: idGeof,
           imei: imei,
-          inOrOut: jenisAbsen);
+          inOrOut: jenisAbsen,
+          lokasi: '${location.alamat}',
+          latitude: '${location.latitude ?? 0}',
+          longitude: '${location.longitude ?? 0}');
     } catch (e) {
-      showFailureDialog('', e.toString());
+      await onFailure();
+      await showFailureDialog('', e.toString());
       return;
     }
 
     try {
       await onAbsen();
     } catch (e) {
-      showFailureDialog('', e.toString());
+      await onFailure();
+      await showFailureDialog('', e.toString());
       return;
     }
     try {
       await deleteSaved();
     } catch (e) {
-      showFailureDialog('', e.toString());
+      await onFailure();
+      await showFailureDialog('', e.toString());
       return;
     }
 
     state = state.copyWith(isSubmitting: false);
-    await showSuccessDialog();
+    await onSuccess();
   }
 }

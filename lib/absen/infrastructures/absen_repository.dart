@@ -4,7 +4,8 @@ import '../../domain/absen_failure.dart';
 import '../../domain/riwayat_absen_failure.dart';
 import '../../infrastructures/exceptions.dart';
 import '../../riwayat_absen/application/riwayat_absen_model.dart';
-import '../application/absen_enum.dart';
+
+import '../../utils/enums.dart';
 import '../application/absen_state.dart';
 import 'absen_remote_service.dart';
 
