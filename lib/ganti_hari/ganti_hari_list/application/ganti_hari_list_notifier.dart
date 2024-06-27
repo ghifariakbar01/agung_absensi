@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../helper.dart';
 import '../../../shared/providers.dart';
 
 import '../infrastructures/ganti_hari_list_remote_service.dart';
@@ -75,16 +76,12 @@ class GantiHariListController extends _$GantiHariListController {
     final username = ref.read(userNotifierProvider).user.nama!;
     final pass = ref.read(userNotifierProvider).user.password!;
 
-    final List<GantiHariList> _list =
-        await ref.read(gantiHariListRepositoryProvider).getGantiHariList(
-              username: username,
-              pass: pass,
-              dateRange: dateRange ??
-                  DateTimeRange(
-                    start: DateTime.now().subtract(Duration(days: 30)),
-                    end: DateTime.now().add(Duration(days: 1)),
-                  ),
-            );
+    final List<GantiHariList> _list = await ref
+        .read(gantiHariListRepositoryProvider)
+        .getGantiHariList(
+            username: username,
+            pass: pass,
+            dateRange: dateRange ?? CalendarHelper.initialDateRange());
 
     if (searchUser == null) {
       return _list;

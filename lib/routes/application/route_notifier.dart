@@ -33,7 +33,6 @@ import '../../home/presentation/home_page.dart';
 import '../../imei_introduction/application/imei_state.dart';
 import '../../imei_introduction/application/shared/imei_introduction_providers.dart';
 import '../../imei_introduction/presentation/imei_introduction_page.dart';
-import '../../init_user/application/init_user_status.dart';
 import '../../izin/create_izin/presentation/create_izin_page.dart';
 import '../../izin/create_izin/presentation/edit_izin_page.dart';
 import '../../izin/izin_list/application/izin_list.dart';

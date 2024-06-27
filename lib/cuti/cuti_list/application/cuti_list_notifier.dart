@@ -1,6 +1,9 @@
+// ignore_for_file: sdk_version_since
+
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../helper.dart';
 import '../../../shared/providers.dart';
 
 import '../infrastructures/cuti_list_remote_service.dart';
@@ -82,11 +85,7 @@ class CutiListController extends _$CutiListController {
         await ref.read(cutiListRepositoryProvider).getCutiList(
               username: username,
               pass: pass,
-              dateRange: dateRange ??
-                  DateTimeRange(
-                    start: DateTime.now().subtract(Duration(days: 30)),
-                    end: DateTime.now().add(Duration(days: 1)),
-                  ),
+              dateRange: dateRange ?? CalendarHelper.initialDateRange(),
             );
 
     if (searchUser == null) {

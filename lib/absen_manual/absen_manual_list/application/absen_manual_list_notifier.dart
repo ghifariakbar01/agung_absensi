@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../helper.dart';
 import '../../../shared/providers.dart';
 import '../infrastructures/absen_manual_list_remote_service.dart';
 import '../infrastructures/absen_manual_list_repository.dart';
@@ -88,11 +89,7 @@ class AbsenManualListController extends _$AbsenManualListController {
         await ref.read(absenManualListRepositoryProvider).getAbsenManualList(
               username: username,
               pass: pass,
-              dateRange: dateRange ??
-                  DateTimeRange(
-                    start: DateTime.now().subtract(Duration(days: 30)),
-                    end: DateTime.now().add(Duration(days: 1)),
-                  ),
+              dateRange: dateRange ?? CalendarHelper.initialDateRange(),
             );
 
     if (searchUser == null) {

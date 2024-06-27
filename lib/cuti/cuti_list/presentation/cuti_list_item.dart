@@ -139,10 +139,10 @@ class CutiListItem extends HookConsumerWidget {
                   // MIDDLE
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       SizedBox(
-                        width: 90,
+                        width: 75,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -169,16 +169,41 @@ class CutiListItem extends HookConsumerWidget {
                         ),
                       ),
 
-                      SizedBox(
-                        width: 25,
-                      ),
-
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Row(
                             children: [
+                              SizedBox(
+                                width: 65,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Saldo Awal',
+                                      style: Themes.customColor(7,
+                                          color: item.btlSta == true
+                                              ? Colors.white
+                                              : Colors.grey),
+                                    ),
+                                    SizedBox(
+                                      height: 2,
+                                    ),
+                                    Text(
+                                      item.saldoAwal == null
+                                          ? '-'
+                                          : item.saldoAwal.toString(),
+                                      style: Themes.customColor(9,
+                                          color: item.btlSta == true
+                                              ? Colors.white
+                                              : Palette.primaryColor,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ],
+                                ),
+                              ),
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -235,7 +260,7 @@ class CutiListItem extends HookConsumerWidget {
                                         fontWeight: FontWeight.w500),
                                   ),
                                 ],
-                              )
+                              ),
                             ],
                           ),
                           SizedBox(
@@ -243,6 +268,38 @@ class CutiListItem extends HookConsumerWidget {
                           ),
                           Row(
                             children: [
+                              SizedBox(
+                                width: 65,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Saldo Akhir',
+                                      style: Themes.customColor(7,
+                                          color: item.btlSta == true
+                                              ? Colors.white
+                                              : Colors.grey),
+                                    ),
+                                    SizedBox(
+                                      height: 2,
+                                    ),
+                                    Text(
+                                      item.saldoAkhir == null
+                                          ? '-'
+                                          : item.saldoAkhir.toString(),
+                                      style: Themes.customColor(9,
+                                          color: item.btlSta == true
+                                              ? Colors.white
+                                              : Palette.primaryColor,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height: 4,
+                              ),
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -302,7 +359,7 @@ class CutiListItem extends HookConsumerWidget {
                                     ),
                                   ),
                                 ],
-                              )
+                              ),
                             ],
                           ),
                         ],

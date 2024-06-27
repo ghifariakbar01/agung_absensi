@@ -37,6 +37,8 @@ class CutiList with _$CutiList {
     @JsonKey(name: 'c_user') required String? cUser,
     @JsonKey(name: 'u_date') required DateTime? uDate,
     @JsonKey(name: 'u_user') required String? uUser,
+    @JsonKey(name: 'saldo_awal') required int? saldoAwal,
+    @JsonKey(name: 'saldo_akhir') required int? saldoAkhir,
     @JsonKey(name: 'fullname') required String? fullname,
     @JsonKey(name: 'dept') required String? dept,
     @JsonKey(name: 'email') required String? email,

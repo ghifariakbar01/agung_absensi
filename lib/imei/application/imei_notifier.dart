@@ -2,7 +2,6 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
-import 'package:face_net_authentication/domain/auth_failure.dart';
 import 'package:face_net_authentication/err_log/application/err_log_notifier.dart';
 import 'package:face_net_authentication/unlink/application/unlink_notifier.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +12,6 @@ import 'package:uuid/uuid.dart';
 
 import '../../constants/assets.dart';
 import '../../domain/edit_failure.dart';
-import '../../domain/imei_failure.dart';
 
 import '../../imei_introduction/application/shared/imei_introduction_providers.dart';
 import '../../tc/application/shared/tc_providers.dart';

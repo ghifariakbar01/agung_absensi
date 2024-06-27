@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../helper.dart';
 import '../../../shared/providers.dart';
 import '../infrastructures/sakit_list_remote_service.dart';
 import '../infrastructures/sakit_list_repository.dart';
@@ -79,11 +80,7 @@ class SakitListController extends _$SakitListController {
         await ref.read(sakitListRepositoryProvider).getSakitList(
               username: username,
               pass: pass,
-              dateRange: dateRange ??
-                  DateTimeRange(
-                    start: DateTime.now().subtract(Duration(days: 30)),
-                    end: DateTime.now().add(Duration(days: 1)),
-                  ),
+              dateRange: dateRange ?? CalendarHelper.initialDateRange(),
             );
 
     if (searchUser == null) {

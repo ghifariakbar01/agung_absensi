@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../helper.dart';
 import '../../../shared/providers.dart';
 import '../infrastructures/tugas_dinas_list_remote_service.dart';
 import '../infrastructures/tugas_dinas_list_repository.dart';
@@ -90,11 +91,7 @@ class TugasDinasListController extends _$TugasDinasListController {
         await ref.read(tugasDinasListRepositoryProvider).getTugasDinasList(
               username: username,
               pass: pass,
-              dateRange: dateRange ??
-                  DateTimeRange(
-                    start: DateTime.now().subtract(Duration(days: 30)),
-                    end: DateTime.now().add(Duration(days: 1)),
-                  ),
+              dateRange: dateRange ?? CalendarHelper.initialDateRange(),
             );
 
     if (searchUser == null) {
