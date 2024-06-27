@@ -70,10 +70,8 @@ class HelperImpl implements Helper {
 
 class CalendarHelper {
   static DateTimeRange initialDateRange() {
-    final _end = DateTime.now().copyWith(day: 15);
-
-    final _monthBefore = DateTime.now().month - 1;
-    final _start = DateTime.now().copyWith(month: _monthBefore, day: 15);
+    final _end = DateTime.now().add(Duration(days: 15));
+    final _start = DateTime.now().subtract(Duration(days: 15));
 
     return DateTimeRange(
       start: _start,
