@@ -63,14 +63,17 @@ class DtPcApproveRemoteService {
     required int idDt,
     required String username,
     required String pass,
+    String? server = Constants.isDev ? 'testing' : 'live',
   }) async {
     try {
       final response = await _dio.post(
-        '/service_dt.asmx/batalDt',
+        '/service_dt.asmx/approveDt',
         options: Options(contentType: 'text/plain', headers: {
           'id_dt': idDt,
           'username': username,
           'pass': pass,
+          'server': server,
+          'jenis_app': 'batal',
         }),
       );
 

@@ -33,6 +33,7 @@ class SakitList with _$SakitList {
     @JsonKey(name: 'btl_sta') bool? btlSta,
     @JsonKey(name: 'btl_tgl') DateTime? btlTgl,
     @JsonKey(name: 'btl_nm') String? btlNm,
+    @JsonKey(name: 'btl_msg') String? btlMsg,
     @JsonKey(name: 'sisa_cuti') String? sisaCuti,
     @JsonKey(name: 'idkary') String? idkary,
     @JsonKey(name: 'fullname') String? fullname,

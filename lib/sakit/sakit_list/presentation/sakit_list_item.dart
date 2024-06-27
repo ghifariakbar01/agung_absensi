@@ -85,33 +85,32 @@ class SakitListItem extends HookConsumerWidget {
                       SizedBox(
                         width: 4,
                       ),
-                      if (false)
-                        TappableSvg(
-                            assetPath: Assets.iconBatal,
-                            onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) => VBatalDialog(
-                                  onTap: () async {
-                                    if (!false) {
-                                      return showDialog(
-                                        context: context,
-                                        builder: (context) => VFailedDialog(
-                                          message: '',
-                                        ),
+                      TappableSvg(
+                          assetPath: Assets.iconBatal,
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => VBatalDialog(
+                                onTap: () async {
+                                  if (item.btlSta!) {
+                                    return showDialog(
+                                      context: context,
+                                      builder: (context) => VFailedDialog(
+                                        message: '',
+                                      ),
+                                    );
+                                  }
+                                  context.pop();
+                                  await ref
+                                      .read(sakitApproveControllerProvider
+                                          .notifier)
+                                      .batal(
+                                        idSakit: item.idSakit!,
                                       );
-                                    }
-                                    context.pop();
-                                    await ref
-                                        .read(sakitApproveControllerProvider
-                                            .notifier)
-                                        .batal(
-                                          idSakit: item.idSakit!,
-                                        );
-                                  },
-                                ),
-                              );
-                            }),
+                                },
+                              ),
+                            );
+                          }),
                     ],
                   ),
 

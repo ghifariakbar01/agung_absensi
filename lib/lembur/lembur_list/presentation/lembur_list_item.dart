@@ -94,32 +94,31 @@ class LemburListItem extends HookConsumerWidget {
                       SizedBox(
                         width: 4,
                       ),
-                      if (false)
-                        TappableSvg(
-                            assetPath: Assets.iconBatal,
-                            onTap: () async {
-                              if (item.btlSta!) {
-                                return showDialog(
-                                  context: context,
-                                  builder: (context) => VFailedDialog(
-                                    message: item.btlMsg,
-                                  ),
-                                );
-                              } else {
-                                return showDialog(
-                                  context: context,
-                                  builder: (context) => VBatalDialog(
-                                    onTap: () async {
-                                      context.pop();
-                                      await ref
-                                          .read(lemburApproveControllerProvider
-                                              .notifier)
-                                          .batal(idLembur: item.idLmbr!);
-                                    },
-                                  ),
-                                );
-                              }
-                            }),
+                      TappableSvg(
+                          assetPath: Assets.iconBatal,
+                          onTap: () async {
+                            if (item.btlSta!) {
+                              return showDialog(
+                                context: context,
+                                builder: (context) => VFailedDialog(
+                                  message: item.btlMsg,
+                                ),
+                              );
+                            } else {
+                              return showDialog(
+                                context: context,
+                                builder: (context) => VBatalDialog(
+                                  onTap: () async {
+                                    context.pop();
+                                    await ref
+                                        .read(lemburApproveControllerProvider
+                                            .notifier)
+                                        .batal(idLembur: item.idLmbr!);
+                                  },
+                                ),
+                              );
+                            }
+                          }),
                     ],
                   ),
 

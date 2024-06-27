@@ -64,14 +64,17 @@ class SakitApproveRemoteService {
     required int idSakit,
     required String username,
     required String pass,
+    String? server = Constants.isDev ? 'testing' : 'live',
   }) async {
     try {
       final response = await _dio.post(
-        '/service_sakit.asmx/batalSakit',
+        '/service_sakit.asmx/approveSakit',
         options: Options(contentType: 'text/plain', headers: {
           'id_sakit': idSakit,
           'username': username,
           'pass': pass,
+          'server': server,
+          'jenis_app': 'batal',
         }),
       );
 

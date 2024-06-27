@@ -64,14 +64,17 @@ class TugasDinasApproveRemoteService {
     required int idDinas,
     required String username,
     required String pass,
+    String? server = Constants.isDev ? 'testing' : 'live',
   }) async {
     try {
       final response = await _dio.post(
-        '/service_dinas.asmx/batalDinas',
+        '/service_dinas.asmx/approveDinas',
         options: Options(contentType: 'text/plain', headers: {
           'id_dinas': idDinas,
           'username': username,
           'pass': pass,
+          'server': server,
+          'jenis_app': 'batal',
         }),
       );
 

@@ -64,14 +64,17 @@ class CutiApproveRemoteService {
     required int idCuti,
     required String username,
     required String pass,
+    String? server = Constants.isDev ? 'testing' : 'live',
   }) async {
     try {
       final response = await _dio.post(
-        '/service_cuti.asmx/batalCuti',
+        '/service_cuti.asmx/approveCuti',
         options: Options(contentType: 'text/plain', headers: {
           'id_cuti': idCuti,
           'username': username,
           'pass': pass,
+          'server': server,
+          'jenis_app': 'batal',
         }),
       );
 

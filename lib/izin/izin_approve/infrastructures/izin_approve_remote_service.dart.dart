@@ -64,14 +64,17 @@ class IzinApproveRemoteService {
     required int idIzin,
     required String username,
     required String pass,
+    String? server = Constants.isDev ? 'testing' : 'live',
   }) async {
     try {
       final response = await _dio.post(
-        '/service_izin.asmx/batalIzin',
+        '/service_izin.asmx/approveIzin',
         options: Options(contentType: 'text/plain', headers: {
           'id_izin': idIzin,
           'username': username,
           'pass': pass,
+          'server': server,
+          'jenis_app': 'batal',
         }),
       );
 

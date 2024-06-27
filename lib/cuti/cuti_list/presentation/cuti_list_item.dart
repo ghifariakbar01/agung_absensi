@@ -94,32 +94,31 @@ class CutiListItem extends HookConsumerWidget {
                       SizedBox(
                         width: 4,
                       ),
-                      if (false)
-                        TappableSvg(
-                            assetPath: Assets.iconBatal,
-                            onTap: () async {
-                              if (item.btlSta!) {
-                                return showDialog(
-                                  context: context,
-                                  builder: (context) => VFailedDialog(
-                                    message: item.btlMsg,
-                                  ),
-                                );
-                              } else {
-                                return showDialog(
-                                  context: context,
-                                  builder: (context) => VBatalDialog(
-                                    onTap: () async {
-                                      context.pop();
-                                      await ref
-                                          .read(cutiApproveControllerProvider
-                                              .notifier)
-                                          .batal(idCuti: item.idCuti!);
-                                    },
-                                  ),
-                                );
-                              }
-                            }),
+                      TappableSvg(
+                          assetPath: Assets.iconBatal,
+                          onTap: () async {
+                            if (item.btlSta!) {
+                              return showDialog(
+                                context: context,
+                                builder: (context) => VFailedDialog(
+                                  message: item.btlMsg,
+                                ),
+                              );
+                            } else {
+                              return showDialog(
+                                context: context,
+                                builder: (context) => VBatalDialog(
+                                  onTap: () async {
+                                    context.pop();
+                                    await ref
+                                        .read(cutiApproveControllerProvider
+                                            .notifier)
+                                        .batal(idCuti: item.idCuti!);
+                                  },
+                                ),
+                              );
+                            }
+                          }),
                     ],
                   ),
 

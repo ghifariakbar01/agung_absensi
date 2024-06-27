@@ -64,14 +64,17 @@ class LemburApproveRemoteService {
     required int idLembur,
     required String username,
     required String pass,
+    String? server = Constants.isDev ? 'testing' : 'live',
   }) async {
     try {
       final response = await _dio.post(
-        '/service_lmbr.asmx/batalLmbr',
+        '/service_lmbr.asmx/approveLmbr',
         options: Options(contentType: 'text/plain', headers: {
           'id_lmbr': idLembur,
           'username': username,
           'pass': pass,
+          'server': server,
+          'jenis_app': 'batal',
         }),
       );
 
