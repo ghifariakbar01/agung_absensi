@@ -2,7 +2,9 @@ import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../cross_auth/application/cross_auth_notifier.dart';
 import '../../cross_auth/application/is_user_crossed.dart';
@@ -10,9 +12,9 @@ import '../../domain/imei_failure.dart';
 import '../../err_log/application/err_log_notifier.dart';
 import '../../firebase/remote_config/application/firebase_remote_config_notifier.dart';
 import '../../imei_introduction/application/shared/imei_introduction_providers.dart';
-import '../../ip/application/ip_notifier.dart';
 import '../../shared/future_providers.dart';
 import '../../shared/providers.dart';
+import '../../style/style.dart';
 import '../../tc/application/shared/tc_providers.dart';
 import '../../widgets/alert_helper.dart';
 import '../../widgets/error_message_widget.dart';
@@ -20,7 +22,7 @@ import '../../widgets/loading_overlay.dart';
 import '../../widgets/v_async_widget.dart';
 import '../../widgets/v_button.dart';
 
-class InitUserScaffold extends ConsumerStatefulWidget {
+class InitUserScaffold extends StatefulHookConsumerWidget {
   const InitUserScaffold();
 
   @override
@@ -88,6 +90,8 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
 
     final imeiInitFuture = ref.watch(imeiInitFutureProvider(context));
 
+    final _controller = useAnimationController();
+
     return VAsyncWidgetScaffold(
       value: errLog,
       data: (_) => VAsyncWidgetScaffold<IsUserCrossedState>(
@@ -109,9 +113,31 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
                           ? 'Uncrossing User...'
                           : 'Initializing User & Installation ID...',
                     ),
-                    loading: () => LoadingOverlay(
-                      isLoading: true,
-                      loadingMessage: 'Getting Data...',
+                    loading: () => Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Lottie.asset(
+                          'assets/avatar.json',
+                          controller: _controller,
+                          onLoaded: (composition) {
+                            _controller
+                              ..duration = composition.duration
+                              ..forward()
+                              ..repeat();
+                          },
+                        ),
+                        SizedBox(
+                          height: 4,
+                        ),
+                        Text(
+                          'Getting User...',
+                          style: Themes.customColor(
+                            20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
                     error: (error, stackTrace) => ErrorMessageWidget(
                       errorMessage: error.toString(),

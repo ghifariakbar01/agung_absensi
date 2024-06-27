@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../shared/providers.dart';
+import '../../style/style.dart';
 import 'absen_button.dart';
 
 class AbsenReset extends ConsumerWidget {
@@ -29,14 +30,14 @@ class AbsenReset extends ConsumerWidget {
                 ? Theme.of(context).primaryColor
                 : Theme.of(context).disabledColor),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 32),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
                 'Absen Ulang',
                 style: TextStyle(
-                    fontSize: 14,
+                    fontSize: 15,
                     fontWeight: FontWeight.bold,
                     color: nearest < minDistance && nearest != 0
                         ? Theme.of(context).secondaryHeaderColor
@@ -48,6 +49,7 @@ class AbsenReset extends ConsumerWidget {
               IgnorePointer(
                 ignoring: nearest > minDistance || nearest == 0,
                 child: Switch(
+                  activeColor: Palette.primaryColor,
                   value: buttonResetVisibility,
                   onChanged: (value) => ref
                       .read(buttonResetVisibilityProvider.notifier)

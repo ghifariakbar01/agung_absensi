@@ -39,7 +39,12 @@ class _ImageAbsenState extends ConsumerState<ImageAbsen> {
     return VAsyncValueWidget<NetworkState>(
         value: networkState,
         data: (netw) => netw.when(
-              online: () => SizedBox(
+              online: () => Container(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: Colors.white,
+                  ),
                   height: displayImage
                       ? 425
                       : imageError == false
@@ -134,10 +139,7 @@ class _ImageAbsenState extends ConsumerState<ImageAbsen> {
                                 child: Container(
                                     height: 350,
                                     width: 300,
-                                    decoration: BoxDecoration(
-                                      color: Palette.secondaryColor,
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
+                                    decoration: BoxDecoration(),
                                     padding: EdgeInsets.all(8),
                                     child: IgnorePointer(
                                       ignoring: true,

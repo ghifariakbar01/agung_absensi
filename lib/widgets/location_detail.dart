@@ -15,108 +15,116 @@ class LocationDetail extends ConsumerWidget {
     final nearest =
         ref.watch(geofenceProvider.select((value) => value.nearestCoordinates));
 
-    return Column(
-      children: [
-        //
-        Row(
-          children: [
-            Text(
-              'Kantor Terdekat',
+    return Container(
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        color: Theme.of(context).primaryColor,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            padding: EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: Colors.white,
+            ),
+            child: Text(
+              '${nearest.nama}',
               style: Themes.customColor(
-                13,
+                20,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Text(
-              ' : ',
-              style: Themes.customColor(
-                13,
-                fontWeight: FontWeight.bold,
-              ),
+          ),
+          SizedBox(
+            height: 8,
+          ),
+          Container(
+            padding: EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: Colors.white,
             ),
-            Flexible(
-              child: Text(
-                ' ${nearest.nama}',
-                maxLines: 10,
-                style: Themes.customColor(
-                  13,
-                  fontWeight: FontWeight.bold,
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      'Jarak Maksimum',
+                      style: Themes.customColor(
+                        15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      ' : ',
+                      style: Themes.customColor(
+                        15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    if (nearest.minDistance == 0) ...[
+                      Text('....Loading....',
+                          style: Themes.customColor(
+                            15,
+                            fontWeight: FontWeight.bold,
+                          ))
+                    ],
+                    if (nearest.minDistance != 0) ...[
+                      Text(' ${nearest.minDistance.round()} m',
+                          style: Themes.customColor(
+                            15,
+                            fontWeight: FontWeight.bold,
+                          ))
+                    ]
+                  ],
                 ),
-              ),
+                Row(
+                  children: [
+                    Text(
+                      'Jarak',
+                      style: Themes.customColor(
+                        15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      ' : ',
+                      style: Themes.customColor(
+                        15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    if (nearest.remainingDistance == 0) ...[
+                      Text('....Loading....',
+                          style: Themes.customColor(
+                            15,
+                            fontWeight: FontWeight.bold,
+                          ))
+                    ],
+                    if (nearest.remainingDistance != 0) ...[
+                      Text(' ${nearest.remainingDistance.round()} m',
+                          style: nearest.remainingDistance < nearest.minDistance
+                              ? Themes.customColor(14,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.green)
+                              : Themes.customColor(14,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.red)),
+                    ]
+                  ],
+                ),
+              ],
             ),
-          ],
-        ),
-
-        Row(
-          children: [
-            Text(
-              'Jarak Maksimum',
-              style: Themes.customColor(
-                13,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              ' : ',
-              style: Themes.customColor(
-                13,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            if (nearest.minDistance == 0) ...[
-              Text('....Loading....',
-                  style: Themes.customColor(
-                    13,
-                    fontWeight: FontWeight.bold,
-                  ))
-            ],
-            if (nearest.minDistance != 0) ...[
-              Text(' ${nearest.minDistance.round()} m',
-                  style: Themes.customColor(
-                    13,
-                    fontWeight: FontWeight.bold,
-                  ))
-            ]
-          ],
-        ),
-
-        //
-        Row(
-          children: [
-            Text(
-              'Jarak',
-              style: Themes.customColor(
-                13,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              ' : ',
-              style: Themes.customColor(
-                13,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            if (nearest.remainingDistance == 0) ...[
-              Text('....Loading....',
-                  style: Themes.customColor(
-                    13,
-                    fontWeight: FontWeight.bold,
-                  ))
-            ],
-            if (nearest.remainingDistance != 0) ...[
-              Text(' ${nearest.remainingDistance.round()} m',
-                  style: nearest.remainingDistance < nearest.minDistance
-                      ? Themes.customColor(14,
-                          fontWeight: FontWeight.bold, color: Colors.green)
-                      : Themes.customColor(14,
-                          fontWeight: FontWeight.bold, color: Colors.red)),
-            ]
-          ],
-        ),
-
-        displayImage == false || isOfflineMode ? Container() : ImageAbsen(),
-      ],
+          ),
+          SizedBox(
+            height: 4,
+          ),
+          displayImage == false && isOfflineMode ? Container() : ImageAbsen(),
+        ],
+      ),
     );
   }
 }

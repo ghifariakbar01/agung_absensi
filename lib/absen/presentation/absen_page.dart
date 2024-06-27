@@ -82,58 +82,76 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
             physics: const AlwaysScrollableScrollPhysics(),
             child: SizedBox(
                 height: displayImage == false || isOfflineMode
-                    ? MediaQuery.of(context).size.height + 200
+                    ? MediaQuery.of(context).size.height
                     : MediaQuery.of(context).size.height + 475,
-                width: MediaQuery.of(context).size.width,
                 child: Stack(children: [
-                  ListView(
-                    physics: const NeverScrollableScrollPhysics(),
-                    children: <Widget>[
-                      ...logoAndName(isOfflineMode, nama ?? ''),
-                      Constants.isDev
-                          ? Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Testing(),
-                            )
-                          : Container(),
-                      const SizedBox(
-                        height: 24,
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Container(
+                      padding: EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color:
+                            Palette.containerBackgroundColor.withOpacity(0.1),
                       ),
-                      ...isTester.maybeWhen(
-                        tester: () => [AbsenButton()],
-                        orElse: () => mockLocation.maybeWhen(
-                          mocked: () => [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                  'Anda diduga mengunakan Fake GPS. Harap matikan Fake GPS agar bisa menggunakan aplikasi.'),
-                            )
-                          ],
-                          original: () => [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8.0),
-                              child: LocationDetail(),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          SizedBox(
+                            height: 24,
+                          ),
+                          UserInfo(
+                            title:
+                                'User ${isOfflineMode ? '(Mode Offline)' : ''}',
+                            user: nama ?? '-',
+                          ),
+                          Constants.isDev
+                              ? Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Testing(),
+                                )
+                              : Container(),
+                          const SizedBox(
+                            height: 24,
+                          ),
+                          ...isTester.maybeWhen(
+                            tester: () => [AbsenButton()],
+                            orElse: () => mockLocation.maybeWhen(
+                              mocked: () => [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                      'Anda diduga mengunakan Fake GPS. Harap matikan Fake GPS agar bisa menggunakan aplikasi.'),
+                                )
+                              ],
+                              original: () => [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: LocationDetail(),
+                                ),
+                                SizedBox(
+                                  height: 32,
+                                ),
+                                AbsenButton(),
+                              ],
+                              orElse: () => [
+                                Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              ],
                             ),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            AbsenButton(),
-                          ],
-                          orElse: () => [
-                            Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
+                  Positioned(
+                    bottom: 20,
+                    left: 0,
+                    right: 0,
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Center(child: CopyrightAgung()),
                         Center(
@@ -159,21 +177,6 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
           ),
         ));
   }
-
-  List<Widget> logoAndName(bool isOfflineMode, String nama) => [
-        SizedBox(
-            height: 200, child: Image(image: AssetImage('assets/logo.png'))),
-        SizedBox(
-          height: 24,
-        ),
-        UserInfo(
-          title: 'User ${isOfflineMode ? '(Mode Offline)' : ''}',
-          user: nama,
-        ),
-        SizedBox(
-          height: 8,
-        ),
-      ];
 }
 
 

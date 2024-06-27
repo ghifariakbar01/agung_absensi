@@ -6,9 +6,11 @@ import 'package:face_net_authentication/widgets/async_value_ui.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:geofence_service/geofence_service.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../background/application/saved_location.dart';
 import '../../constants/assets.dart';
@@ -20,13 +22,13 @@ import '../../geofence/application/geofence_response.dart';
 import '../../home/presentation/home_saved.dart';
 import '../../network_state/application/network_state_notifier.dart';
 import '../../shared/providers.dart';
+import '../../style/style.dart';
 import '../../user/application/user_model.dart';
 import '../../widgets/alert_helper.dart';
-import '../../widgets/loading_overlay.dart';
 import '../../widgets/v_async_widget.dart';
 import '../../widgets/v_dialogs.dart';
 
-class InitGeofenceScaffold extends ConsumerStatefulWidget {
+class InitGeofenceScaffold extends StatefulHookConsumerWidget {
   const InitGeofenceScaffold();
 
   @override
@@ -125,17 +127,45 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
 
     final errLog = ref.watch(errLogControllerProvider);
 
+    final _controller = useAnimationController();
+
     return VAsyncWidgetScaffold<void>(
       value: errLog,
       data: (_) => Scaffold(
+        backgroundColor: Colors.white,
         body: Stack(children: [
-          HomeSaved(),
-          LoadingOverlay(
-            isLoading: isLoading,
-            loadingMessage: 'Initializing Geofence & Saved Locations...',
-          ),
+          if (!isLoading) ...[
+            HomeSaved(),
+          ],
+          if (isLoading) ...[
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Lottie.asset(
+                  'assets/location.json',
+                  controller: _controller,
+                  onLoaded: (composition) {
+                    _controller
+                      ..duration = composition.duration
+                      ..forward()
+                      ..repeat();
+                  },
+                ),
+                SizedBox(
+                  height: 4,
+                ),
+                Text(
+                  'Initializing Geofence...',
+                  style: Themes.customColor(
+                    20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ]
         ]),
-        backgroundColor: Colors.transparent,
       ),
     );
   }

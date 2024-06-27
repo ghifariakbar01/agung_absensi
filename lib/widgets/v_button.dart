@@ -34,7 +34,7 @@ class VButton extends StatelessWidget {
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
                   color: color ?? Palette.primaryColor,
-                  borderRadius: BorderRadius.circular(10)),
+                  borderRadius: BorderRadius.circular(16)),
               child: Center(
                 child: Text(label,
                     style: textStyle ??
@@ -51,15 +51,15 @@ class VButton extends StatelessWidget {
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
                     color: Theme.of(context).disabledColor,
-                    borderRadius: BorderRadius.circular(10)),
+                    borderRadius: BorderRadius.circular(16)),
                 child: Center(
                   child: Text(
                     label,
+                    textAlign: textAlign ?? TextAlign.start,
                     style: textStyle ??
                         Themes.customColor(fontSize ?? 16,
                             fontWeight: FontWeight.bold,
                             color: Theme.of(context).disabledColor),
-                    textAlign: textAlign ?? TextAlign.start,
                   ),
                 )),
           );

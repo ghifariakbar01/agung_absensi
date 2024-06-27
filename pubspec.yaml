@@ -47,13 +47,14 @@ dependencies:
   geofence_service: ^5.0.0
 
   #* UI
-  dropdown_search: ^5.0.6
-  flash: ^3.0.5+1
-  flutter_svg: ^2.0.0
-  google_fonts: 6.1.0
   auto_size_text: ^3.0.0
   cached_network_image: ^3.3.0
+  dropdown_search: ^5.0.6
+  flash: ^3.0.5+1
   flutter_keyboard_visibility: ^6.0.0
+  flutter_svg: ^2.0.0
+  google_fonts: 6.1.0
+  lottie: ^2.7.0
 
   #* Network
   alice: ^0.4.1

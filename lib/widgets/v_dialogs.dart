@@ -121,7 +121,10 @@ class VSimpleDialog extends StatelessWidget {
     return Center(
       child: SimpleDialog(
         backgroundColor: color ?? Theme.of(context).primaryColor,
-        title: SizedBox(height: 28, child: SvgPicture.asset(asset)),
+        title: SizedBox(
+          height: 28,
+          child: SvgPicture.asset(asset),
+        ),
         children: [
           SizedBox(
             height: 4,
@@ -153,6 +156,101 @@ class VSimpleDialog extends StatelessWidget {
             ),
           )
         ],
+      ),
+    );
+  }
+}
+
+class VAlertDialog3 extends StatelessWidget {
+  const VAlertDialog3({
+    Key? key,
+    required this.label,
+    required this.labelDescription,
+    required this.onPressed,
+    this.pressedLabel,
+  }) : super(key: key);
+
+  final String label;
+  final String labelDescription;
+  final String? pressedLabel;
+  final Function() onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: SizedBox(
+        height: 315,
+        child: Stack(
+          children: [
+            Container(
+              height: 215,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              padding: EdgeInsets.all(8),
+              child: Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      label,
+                      textAlign: TextAlign.center,
+                      style:
+                          Themes.customColor(24, fontWeight: FontWeight.w500),
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Text(
+                      labelDescription,
+                      textAlign: TextAlign.center,
+                      style:
+                          Themes.customColor(30, fontWeight: FontWeight.w600),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: SizedBox(
+                height: 50,
+                child: Material(
+                  color: Colors.transparent,
+                  child: Ink(
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                        color: Palette.green,
+                        borderRadius: BorderRadius.only(
+                          bottomRight: Radius.circular(20),
+                          bottomLeft: Radius.circular(20),
+                        )),
+                    child: InkWell(
+                      onTap: onPressed,
+                      child: Center(
+                        child: Text(
+                          pressedLabel ?? 'Ok',
+                          style: Themes.customColor(
+                            12,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

@@ -16,7 +16,7 @@ class UserInfo extends StatelessWidget {
           child: Text(
             title,
             style: Themes.customColor(
-              18,
+              25,
             ),
           ),
         ),
@@ -25,7 +25,7 @@ class UserInfo extends StatelessWidget {
           child: Text(
             user,
             style: Themes.customColor(
-              24,
+              40,
               fontWeight: FontWeight.bold,
             ),
           ),

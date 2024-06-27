@@ -31,4 +31,5 @@ class Assets {
   static const String iconThumbDown = 'assets/ic_thumb_down.svg';
   static const String iconEdit = 'assets/ic_edit.svg';
   static const String iconDelete = 'assets/ic_delete.svg';
+  // animation
 }

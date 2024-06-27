@@ -1,8 +1,11 @@
 import 'package:face_net_authentication/infrastructures/exceptions.dart';
 import 'package:face_net_authentication/widgets/v_scaffold_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:lottie/lottie.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../style/style.dart';
 import 'error_message_widget.dart';
 
 class VAsyncWidgetScaffold<T> extends StatelessWidget {
@@ -38,7 +41,7 @@ class VAsyncWidgetScaffold<T> extends StatelessWidget {
   }
 }
 
-class VAsyncWidgetScaffoldWrappedMaterial<T> extends StatelessWidget {
+class VAsyncWidgetScaffoldWrappedMaterial<T> extends HookWidget {
   const VAsyncWidgetScaffoldWrappedMaterial({
     required this.value,
     required this.data,
@@ -48,6 +51,8 @@ class VAsyncWidgetScaffoldWrappedMaterial<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _controller = useAnimationController();
+
     return value.when(
       data: data,
       error: (e, st) => MaterialApp(
@@ -56,7 +61,38 @@ class VAsyncWidgetScaffoldWrappedMaterial<T> extends StatelessWidget {
           body: Center(child: ErrorMessageWidget(errorMessage: e.toString())),
         ),
       ),
-      loading: () => Center(child: CircularProgressIndicator()),
+      loading: () => Directionality(
+        textDirection: TextDirection.ltr,
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Lottie.asset(
+                'assets/network.json',
+                controller: _controller,
+                onLoaded: (composition) {
+                  _controller
+                    ..duration = composition.duration
+                    ..forward()
+                    ..repeat();
+                },
+              ),
+              SizedBox(
+                height: 4,
+              ),
+              Text(
+                'Fetching url...',
+                style: Themes.customColor(
+                  20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
