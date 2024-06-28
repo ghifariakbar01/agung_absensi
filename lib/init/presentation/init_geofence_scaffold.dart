@@ -10,7 +10,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:geofence_service/geofence_service.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:lottie/lottie.dart';
 
 import '../../background/application/saved_location.dart';
 import '../../constants/assets.dart';
@@ -21,8 +20,8 @@ import '../../geofence/application/geofence_response.dart';
 
 import '../../home/presentation/home_saved.dart';
 import '../../network_state/application/network_state_notifier.dart';
+import '../../shared/common_widgets.dart';
 import '../../shared/providers.dart';
-import '../../style/style.dart';
 import '../../user/application/user_model.dart';
 import '../../widgets/alert_helper.dart';
 import '../../widgets/v_async_widget.dart';
@@ -138,32 +137,11 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
             HomeSaved(),
           ],
           if (isLoading) ...[
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Lottie.asset(
-                  'assets/location.json',
-                  controller: _controller,
-                  onLoaded: (composition) {
-                    _controller
-                      ..duration = composition.duration
-                      ..forward()
-                      ..repeat();
-                  },
-                ),
-                SizedBox(
-                  height: 4,
-                ),
-                Text(
-                  'Initializing Geofence...',
-                  style: Themes.customColor(
-                    20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
+            CommonWidget().lottie(
+              'assets/location.json',
+              'Initializing Geofence...',
+              _controller,
+            )
           ]
         ]),
       ),
