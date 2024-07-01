@@ -335,7 +335,8 @@ class EditIzinPage extends HookConsumerWidget {
                                         idUser: item.idUser!,
                                         noteHrd: hrdTextController.text,
                                         noteSpv: spvTextController.text,
-                                        ket: keteranganTextController.text,
+                                        ket: keteranganTextController.text
+                                            .replaceAll("\n", " "),
                                         idMstIzin:
                                             jenisIzinTextController.value!,
                                         onError: (msg) {

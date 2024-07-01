@@ -10,6 +10,7 @@ class SearchFilterInfoWidget extends StatelessWidget {
     required this.lastSearch,
     required this.isBottom,
     required this.isScrolling,
+    this.isSearchVisible,
     this.onTapName,
     this.onTapDate,
   }) : super(key: key);
@@ -19,6 +20,7 @@ class SearchFilterInfoWidget extends StatelessWidget {
   final bool isBottom;
   final bool isScrolling;
   final String lastSearch;
+  final bool? isSearchVisible;
   final Function()? onTapName;
   final Function()? onTapDate;
 
@@ -38,19 +40,21 @@ class SearchFilterInfoWidget extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Ink(
-                    child: InkWell(
-                      onTap: onTapName,
-                      child: Text(
-                        ' 🧑 : $lastSearch',
-                        style: Themes.customColor(
-                          14,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white,
+                  isSearchVisible == null
+                      ? Container()
+                      : Ink(
+                          child: InkWell(
+                            onTap: onTapName,
+                            child: Text(
+                              ' 🧑 : $lastSearch',
+                              style: Themes.customColor(
+                                14,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
                   Ink(
                     child: InkWell(
                       onTap: onTapDate,

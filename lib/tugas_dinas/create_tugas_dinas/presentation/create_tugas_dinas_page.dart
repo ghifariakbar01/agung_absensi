@@ -517,7 +517,8 @@ class CreateTugasDinasPage extends HookConsumerWidget {
                                         lokasi: alamatTextController.text,
                                         jenis: khusus.value,
                                         jamAkhir: jamAkhirTextController.value,
-                                        ket: keteranganTextController.text,
+                                        ket: keteranganTextController.text
+                                            .replaceAll("\n", " "),
                                         onError: (msg) {
                                           return DialogHelper.showCustomDialog(
                                             msg,

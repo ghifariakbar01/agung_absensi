@@ -3,14 +3,15 @@ import 'package:face_net_authentication/utils/string_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../shared/providers.dart';
 import '../../widgets/network_widget.dart';
 import '../application/riwayat_absen_notifier.dart';
 import 'riwayat_header.dart';
 import 'riwayat_list.dart';
 
 class RiwayatAbsenScaffold extends ConsumerStatefulWidget {
-  RiwayatAbsenScaffold();
+  RiwayatAbsenScaffold({required this.isFromAbsen});
+
+  final bool? isFromAbsen;
 
   @override
   ConsumerState<RiwayatAbsenScaffold> createState() =>
@@ -23,15 +24,11 @@ class _RiwayatAbsenScaffoldState extends ConsumerState<RiwayatAbsenScaffold> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await ref.read(testerNotifierProvider).maybeWhen(
-          forcedRegularUser: () {},
-          orElse: () => ref
-              .read(testerNotifierProvider.notifier)
-              .checkAndUpdateTesterState());
-
-      await ref.read(riwayatAbsenNotifierProvider.notifier).getAbsenRiwayat(
-          dateFirst: ref.read(riwayatAbsenNotifierProvider).dateFirst,
-          dateSecond: ref.read(riwayatAbsenNotifierProvider).dateSecond);
+      if (widget.isFromAbsen == null) {
+        await ref.read(riwayatAbsenNotifierProvider.notifier).getAbsenRiwayat(
+            dateFirst: ref.read(riwayatAbsenNotifierProvider).dateFirst,
+            dateSecond: ref.read(riwayatAbsenNotifierProvider).dateSecond);
+      }
     });
   }
 

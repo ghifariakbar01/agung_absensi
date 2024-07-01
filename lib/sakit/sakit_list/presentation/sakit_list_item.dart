@@ -365,7 +365,7 @@ class SakitListItem extends HookConsumerWidget {
                                 : Colors.grey),
                       ),
                       SizedBox(
-                        height: 2,
+                        height: item.qtyfoto == 0 ? 8 : 2,
                       ),
                       Material(
                         color: Colors.transparent,
@@ -379,18 +379,23 @@ class SakitListItem extends HookConsumerWidget {
                                   RouteNames.sakitDtlRoute,
                                   extra: item.idSakit,
                                 ),
-                          child: Ink(
-                            child: Text(
-                                item.qtyfoto == 0
-                                    ? '-'
-                                    : 'Upload : ${item.qtyfoto} Images',
-                                style: Themes.customColor(
-                                  9,
+                          child: item.qtyfoto == 0
+                              ? Ink(
+                                  child: Icon(
+                                  Icons.upload,
                                   color: item.btlSta == true
                                       ? Colors.white
-                                      : Palette.blueLink,
-                                )),
-                          ),
+                                      : Palette.primaryColor,
+                                ))
+                              : Ink(
+                                  child: Text('Upload : ${item.qtyfoto} Images',
+                                      style: Themes.customColor(
+                                        9,
+                                        color: item.btlSta == true
+                                            ? Colors.white
+                                            : Palette.blueLink,
+                                      )),
+                                ),
                         ),
                       ),
                     ],

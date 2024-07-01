@@ -475,9 +475,10 @@ class EditAbsenManualPage extends HookConsumerWidget {
                                         jamAwal: _jamAwal,
                                         jamAkhir: _jamAkhir,
                                         jenisAbsen: jenis.value!,
-                                        ket: keteranganTextController.text,
                                         noteSpv: noteSpvTextController.text,
                                         noteHrd: noteHrdTextController.text,
+                                        ket: keteranganTextController.text
+                                            .replaceAll("\n", " "),
                                         onError: (msg) {
                                           return DialogHelper.showCustomDialog(
                                             msg,

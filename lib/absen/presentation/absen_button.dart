@@ -19,6 +19,7 @@ import '../../domain/background_failure.dart';
 import '../../err_log/application/err_log_notifier.dart';
 import '../../network_state/application/network_state.dart';
 import '../../network_state/application/network_state_notifier.dart';
+import '../../riwayat_absen/application/riwayat_absen_notifier.dart';
 import '../../routes/application/route_names.dart';
 import '../../shared/providers.dart';
 import '../../style/style.dart';
@@ -136,11 +137,14 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
 
             return Column(
               children: [
-                // Toggle Absen Ulang
-                Visibility(visible: !isOfflineMode, child: AbsenReset()),
-
+                Visibility(
+                    visible: !isOfflineMode,
+                    child: AbsenReset(
+                        isTester: isTester.maybeWhen(
+                      tester: () => true,
+                      orElse: () => false,
+                    ))),
                 SizedBox(height: 20),
-
                 Visibility(
                   visible: !isOfflineMode,
                   child: VAsyncValueWidget<NetworkState>(
@@ -311,6 +315,10 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
     await ref.read(absenNotifierProvidier.notifier).getAbsenToday();
     final _refreshed = await ref.refresh(networkTimeFutureProvider.future);
 
+    await ref.read(riwayatAbsenNotifierProvider.notifier).getAndReplace(
+        dateFirst: ref.read(riwayatAbsenNotifierProvider).dateFirst,
+        dateSecond: ref.read(riwayatAbsenNotifierProvider).dateSecond);
+
     await showModalBottomSheet(
         context: context,
         isScrollControlled: true,
@@ -417,9 +425,10 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
         barrierDismissible: true,
         builder: (_) => VAlertDialog3(
             label:
-                '\nIngin absen-out ?\n\n${DateFormat('dd MMM').format(refreshed)}',
+                '\nIngin Absen Pulang ?\n\n${DateFormat('dd MMM yyyy').format(refreshed)}',
             labelDescription: DateFormat('HH:mm').format(refreshed),
             onPressed: () async {
+              context.pop();
               await isTester.maybeWhen(
                   tester: () =>
                       ref.read(absenAuthNotifierProvidier.notifier).absen(
@@ -443,8 +452,6 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                             dbDate: refreshed,
                             inOrOut: JenisAbsen.absenOut,
                           ));
-
-              context.pop();
             }));
   }
 
@@ -472,7 +479,7 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
         barrierDismissible: true,
         builder: (_) => VAlertDialog3(
             label:
-                '\nIngin absen-in ?\n\n${DateFormat('dd MMM').format(refreshed)}',
+                '\nIngin Absen Masuk ?\n\n${DateFormat('dd MMM yyyy').format(refreshed)}',
             labelDescription: DateFormat('HH:mm').format(refreshed),
             onPressed: () async {
               await isTester.maybeWhen(
@@ -521,12 +528,13 @@ class Success extends HookWidget {
           child: Lottie.asset(
             'assets/success.json',
             controller: _controller,
+            frameRate: FrameRate(60),
             onLoaded: (composition) {
               _controller
                 ..duration = Duration(seconds: 3)
                 ..forward().then((_) {
                   context.pop();
-                  context.pushNamed(RouteNames.riwayatAbsenRoute);
+                  context.pushNamed(RouteNames.riwayatAbsenRoute, extra: true);
                 });
             },
           ),
@@ -538,6 +546,7 @@ class Success extends HookWidget {
           'Berhasil Absen',
           style: Themes.customColor(
             30,
+            color: Colors.black,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -548,6 +557,7 @@ class Success extends HookWidget {
           jam,
           style: Themes.customColor(
             45,
+            color: Colors.black,
             fontWeight: FontWeight.bold,
           ),
         ),

@@ -1,5 +1,6 @@
 class Assets {
-  static const String iconLogo = 'assets/app_logo.png';
+  static const String iconLogo = 'assets/logo.png';
+  static const String iconLogoFinger = 'assets/app_logo.png';
   static const String iconChecked = 'assets/ic_checked.svg';
   static const String iconCrossed = 'assets/ic_crossed.svg';
   static const String iconClock = 'assets/ic_clock.svg';

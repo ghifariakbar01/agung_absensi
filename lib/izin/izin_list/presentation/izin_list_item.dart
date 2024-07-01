@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 
 import '../../../constants/assets.dart';
 
+import '../../../routes/application/route_names.dart';
 import '../../../style/style.dart';
 
 import '../../../utils/dialog_helper.dart';
@@ -36,7 +37,7 @@ class IzinListItem extends HookConsumerWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: SizedBox(
-        height: 200,
+        height: 215,
         child: Stack(
           children: [
             Container(
@@ -146,23 +147,84 @@ class IzinListItem extends HookConsumerWidget {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              'Nama',
-                              style: Themes.customColor(7,
-                                  color: item.btlSta == true
-                                      ? Colors.white
-                                      : Colors.grey),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Nama',
+                                  style: Themes.customColor(7,
+                                      color: item.btlSta == true
+                                          ? Colors.white
+                                          : Colors.grey),
+                                ),
+                                SizedBox(
+                                  height: 2,
+                                ),
+                                Text(
+                                  item.fullname!,
+                                  style: Themes.customColor(9,
+                                      color: item.btlSta == true
+                                          ? Colors.white
+                                          : Palette.primaryColor,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ],
                             ),
                             SizedBox(
-                              height: 2,
+                              height: 4,
                             ),
-                            Text(
-                              item.fullname!,
-                              style: Themes.customColor(9,
-                                  color: item.btlSta == true
-                                      ? Colors.white
-                                      : Palette.primaryColor,
-                                  fontWeight: FontWeight.w500),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Keterangan',
+                                  style: Themes.customColor(7,
+                                      color: item.btlSta == true
+                                          ? Colors.white
+                                          : Colors.grey),
+                                ),
+                                SizedBox(
+                                  height: 2,
+                                ),
+                                Ink(
+                                    height: 15,
+                                    child: InkWell(
+                                        onTap: () => showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return SimpleDialog(
+                                                  title: Text(
+                                                    'Diagnosa',
+                                                    style:
+                                                        Themes.customColor(10),
+                                                  ),
+                                                  children: [
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              16.0),
+                                                      child: Text(
+                                                        item.ket!,
+                                                        style:
+                                                            Themes.customColor(
+                                                                10),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            ),
+                                        child: Text(
+                                          '${item.ket}',
+                                          style: Themes.customColor(9,
+                                              color: item.btlSta == true
+                                                  ? Colors.white
+                                                  : Palette.primaryColor,
+                                              fontWeight: FontWeight.w500),
+                                        ))),
+                              ],
                             ),
                           ],
                         ),
@@ -312,55 +374,51 @@ class IzinListItem extends HookConsumerWidget {
                     ],
                   ),
 
-                  SizedBox(
-                    height: 4,
-                  ),
-
                   Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Keterangan',
+                        'Document',
                         style: Themes.customColor(7,
                             color: item.btlSta == true
                                 ? Colors.white
                                 : Colors.grey),
                       ),
                       SizedBox(
-                        height: 2,
+                        height: item.qtyfoto == 0 ? 8 : 2,
                       ),
-                      Ink(
-                          height: 15,
-                          child: InkWell(
-                              onTap: () => showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return SimpleDialog(
-                                        title: Text(
-                                          'Diagnosa',
-                                          style: Themes.customColor(10),
-                                        ),
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.all(16.0),
-                                            child: Text(
-                                              item.ket!,
-                                              style: Themes.customColor(10),
-                                            ),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  ),
-                              child: Text(
-                                '${item.ket}',
-                                style: Themes.customColor(9,
-                                    color: item.btlSta == true
-                                        ? Colors.white
-                                        : Palette.primaryColor,
-                                    fontWeight: FontWeight.w500),
-                              ))),
+                      Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () => item.qtyfoto == 0
+                              ? context.pushNamed(
+                                  RouteNames.izinUploadRoute,
+                                  extra: item.idIzin,
+                                )
+                              : context.pushNamed(
+                                  RouteNames.izinDtlRoute,
+                                  extra: item.idIzin,
+                                ),
+                          child: item.qtyfoto == 0
+                              ? Ink(
+                                  child: Icon(
+                                  Icons.upload,
+                                  color: item.btlSta == true
+                                      ? Colors.white
+                                      : Palette.primaryColor,
+                                ))
+                              : Ink(
+                                  child: Text('Upload : ${item.qtyfoto} Images',
+                                      style: Themes.customColor(
+                                        9,
+                                        color: item.btlSta == true
+                                            ? Colors.white
+                                            : Palette.blueLink,
+                                      )),
+                                ),
+                        ),
+                      ),
                     ],
                   ),
                 ],

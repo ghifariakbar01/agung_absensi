@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../constants/assets.dart';
 import '../style/style.dart';
 
 class UserInfo extends StatelessWidget {
@@ -12,13 +13,10 @@ class UserInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Center(
-          child: Text(
-            title,
-            style: Themes.customColor(
-              25,
-            ),
-          ),
+        SizedBox(
+          width: 325,
+          height: 100,
+          child: Image.asset(Assets.iconLogo),
         ),
         const SizedBox(height: 8),
         Center(

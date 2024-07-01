@@ -14,7 +14,7 @@ class CommonWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Lottie.asset(
-          'assets/location.json',
+          asset,
           controller: _controller,
           onLoaded: (composition) {
             _controller
@@ -27,7 +27,7 @@ class CommonWidget {
           height: 4,
         ),
         Text(
-          'Initializing Geofence...',
+          message,
           style: Themes.customColor(
             20,
             fontWeight: FontWeight.bold,
@@ -35,5 +35,69 @@ class CommonWidget {
         ),
       ],
     );
+  }
+
+  information(
+    List<List<String>> _info, {
+    double? width,
+    double? fontSize,
+  }) {
+    return _info.isEmpty
+        ? Container()
+        : Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              for (int i = 0; i < _info.length; i++) ...[
+                Builder(builder: (_) {
+                  final list = _info[i];
+                  return Column(children: [
+                    for (int j = 0; j < list.length; j++) ...[
+                      Builder(builder: (_) {
+                        final item = list[j];
+                        final isItemSub = item.contains('SUB');
+                        final isListSub = list.any(
+                          (element) => element.contains('SUB'),
+                        );
+
+                        return Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            if (isItemSub == false)
+                              Text(
+                                "${isListSub ? j : j + 1}. ",
+                                textAlign: TextAlign.start,
+                                style: Themes.customColor(fontSize ?? 13,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            SizedBox(
+                              width: width ?? 250,
+                              child: Text(
+                                isItemSub
+                                    ? "\n${item.replaceAll("<SUB>", "")}\n"
+                                    : "${item}",
+                                textAlign: TextAlign.start,
+                                style: Themes.customColor(
+                                  fontSize ?? 13,
+                                  fontWeight: isItemSub
+                                      ? FontWeight.bold
+                                      : FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      }),
+                      SizedBox(
+                        height: 4,
+                      )
+                    ],
+                  ]);
+                })
+              ]
+            ],
+          );
   }
 }

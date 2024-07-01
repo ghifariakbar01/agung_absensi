@@ -82,7 +82,7 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
             physics: const AlwaysScrollableScrollPhysics(),
             child: SizedBox(
                 height: displayImage == false || isOfflineMode
-                    ? MediaQuery.of(context).size.height
+                    ? MediaQuery.of(context).size.height + 200
                     : MediaQuery.of(context).size.height + 475,
                 child: Stack(children: [
                   Padding(

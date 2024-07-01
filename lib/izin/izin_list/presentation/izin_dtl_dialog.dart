@@ -279,31 +279,28 @@ class IzinDtlDialog extends ConsumerWidget {
                     SizedBox(
                       height: 2,
                     ),
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () => item.qtyfoto! == 0
-                            ? context.pushNamed(RouteNames.sakitUploadRoute,
-                                extra: item.idIzin)
-                            : context.pushNamed(RouteNames.sakitDtlRoute,
-                                extra: item.idIzin),
-                        child: Ink(
-                          child: Text(
-                              item.qtyfoto == 0
-                                  ? '-'
-                                  : 'Upload : ${item.qtyfoto} Images',
-                              style: Themes.customColor(
-                                9,
-                                color: Palette.blueLink,
-                              )),
-                        ),
+                    InkWell(
+                      onTap: () => item.qtyfoto! == 0
+                          ? context.pushNamed(RouteNames.sakitUploadRoute,
+                              extra: item.idIzin)
+                          : context.pushNamed(RouteNames.sakitDtlRoute,
+                              extra: item.idIzin),
+                      child: Ink(
+                        child: Text(
+                            item.qtyfoto == 0
+                                ? '-'
+                                : 'Upload : ${item.qtyfoto} Images',
+                            style: Themes.customColor(
+                              9,
+                              color: Palette.blueLink,
+                            )),
                       ),
                     ),
                   ],
                 ),
               ],
             ),
-            Spacer(),
+
             if (item.btlSta == false)
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,

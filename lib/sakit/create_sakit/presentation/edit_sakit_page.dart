@@ -319,12 +319,13 @@ class EditSakitPage extends HookConsumerWidget {
                                 .read(createSakitNotifierProvider.notifier)
                                 .updateSakit(
                                     idSakit: item.idSakit!,
-                                    keterangan: diagnosaTextController.text,
                                     surat: suratDokterText,
                                     tglEnd: tglEnd.value!,
                                     tglStart: tglStart.value!,
                                     noteHrd: hrdTextController.text,
                                     noteSpv: spvTextController.text,
+                                    keterangan: diagnosaTextController.text
+                                        .replaceAll("\n", " "),
                                     onError: (msg) {
                                       return DialogHelper.showCustomDialog(
                                         msg,

@@ -6,7 +6,9 @@ import '../../style/style.dart';
 import 'absen_button.dart';
 
 class AbsenReset extends ConsumerWidget {
-  const AbsenReset();
+  const AbsenReset({required this.isTester});
+
+  final bool isTester;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -47,7 +49,8 @@ class AbsenReset extends ConsumerWidget {
                 width: 8,
               ),
               IgnorePointer(
-                ignoring: nearest > minDistance || nearest == 0,
+                ignoring:
+                    isTester ? false : nearest > minDistance || nearest == 0,
                 child: Switch(
                   activeColor: Palette.primaryColor,
                   value: buttonResetVisibility,

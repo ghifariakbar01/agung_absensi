@@ -86,6 +86,15 @@ class RouteNames {
   static const editIzinNameRoute = 'editIzin';
   static const editIzinRoute = 'editIzin';
 
+  static const izinDtlNameRoute = 'izinDtl';
+  static const izinDtlRoute = 'izinDtl';
+
+  static const izinUploadNameRoute = 'izinUpload';
+  static const izinUploadRoute = 'izinUpload';
+
+  static const izinPhotoDtlNameRoute = 'izinPhotoDtl';
+  static const izinPhotoDtlRoute = 'izinPhotoDtl';
+
   static const dtPcListNameRoute = 'dtPcList';
   static const dtPcListRoute = 'dtPcList';
 
@@ -115,6 +124,15 @@ class RouteNames {
 
   static const searchPemberiTugasDinasNameRoute = 'searchPemberiTugasDinas';
   static const searchPemberiTugasDinasRoute = 'searchPemberiTugasDinas';
+
+  static const tugasDinasDtlNameRoute = 'tugasDinasDtl';
+  static const tugasDinasDtlRoute = 'tugasDinasDtl';
+
+  static const tugasDinasUploadNameRoute = 'tugasDinasUpload';
+  static const tugasDinasUploadRoute = 'tugasDinasUpload';
+
+  static const tugasDinasPhotoDtlNameRoute = 'tugasDinasPhotoDtl';
+  static const tugasDinasPhotoDtlRoute = 'tugasDinasPhotoDtl';
 
   static const gantiHariListNameRoute = 'gantiHariList';
   static const gantiHariListRoute = 'gantiHariList';

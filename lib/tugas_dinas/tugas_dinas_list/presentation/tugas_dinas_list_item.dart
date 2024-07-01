@@ -7,14 +7,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../constants/assets.dart';
-import '../../../constants/constants.dart';
-import '../../../shared/providers.dart';
+import '../../../routes/application/route_names.dart';
 import '../../../style/style.dart';
 
-import '../../../user/application/user_model.dart';
 import '../../../utils/dialog_helper.dart';
 import '../../../widgets/tappable_widget.dart';
 import '../../../widgets/v_async_widget.dart';
@@ -35,27 +32,9 @@ class TugasDinasListItem extends HookConsumerWidget {
 
   final TugasDinasList item;
 
-  _determineBaseUrl(UserModelWithPassword user) {
-    final pt = user.ptServer;
-    if (pt == null) {
-      throw AssertionError('pt null');
-    }
-
-    return Constants.ptMap.entries
-        .firstWhere(
-          (element) => element.key == pt,
-          orElse: () => Constants.ptMap.entries.first,
-        )
-        .value
-        .replaceAll('/services', '');
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-
-    final user = ref.watch(userNotifierProvider).user;
-    final _url = _determineBaseUrl(user);
 
     final jenisTugasDinas = ref.watch(jenisTugasDinasNotifierProvider);
     final masterUser = ref.watch(mstUserListNotifierProvider);
@@ -65,7 +44,7 @@ class TugasDinasListItem extends HookConsumerWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: SizedBox(
-        height: 250,
+        height: 300,
         child: Stack(
           children: [
             Container(
@@ -123,23 +102,7 @@ class TugasDinasListItem extends HookConsumerWidget {
                       SizedBox(
                         width: 4,
                       ),
-                      TappableSvg(
-                          assetPath: Assets.iconViewSurat,
-                          color: item.btlSta == true
-                              ? Colors.white
-                              : Palette.primaryColor,
-                          onTap: () {
-                            final Uri url = Uri.parse(
-                              '$_url/page_print_mob.aspx?userid=${user.idUser}&userpass=${user.password}&mode=dinas&noid=${item.idDinas}',
-                            );
-                            return launchUrl(
-                              url,
-                              mode: LaunchMode.externalApplication,
-                            );
-                          }),
-                      SizedBox(
-                        width: 4,
-                      ),
+
                       TappableSvg(
                           assetPath: Assets.iconBatal,
                           onTap: () async {
@@ -281,6 +244,57 @@ class TugasDinasListItem extends HookConsumerWidget {
                                         ? Colors.white
                                         : Palette.blue,
                                     fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 4,
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Document',
+                                style: Themes.customColor(7,
+                                    color: item.btlSta == true
+                                        ? Colors.white
+                                        : Colors.grey),
+                              ),
+                              SizedBox(
+                                height: item.qtyfoto == 0 ? 8 : 2,
+                              ),
+                              Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  onTap: () => item.qtyfoto == 0
+                                      ? context.pushNamed(
+                                          RouteNames.tugasDinasUploadRoute,
+                                          extra: item.idDinas,
+                                        )
+                                      : context.pushNamed(
+                                          RouteNames.tugasDinasDtlRoute,
+                                          extra: item.idDinas,
+                                        ),
+                                  child: item.qtyfoto == 0
+                                      ? Ink(
+                                          child: Icon(
+                                          Icons.upload,
+                                          color: item.btlSta == true
+                                              ? Colors.white
+                                              : Palette.primaryColor,
+                                        ))
+                                      : Ink(
+                                          child: Text(
+                                              'Upload : ${item.qtyfoto} Documents',
+                                              style: Themes.customColor(
+                                                9,
+                                                color: item.btlSta == true
+                                                    ? Colors.white
+                                                    : Palette.blueLink,
+                                              )),
+                                        ),
+                                ),
                               ),
                             ],
                           ),

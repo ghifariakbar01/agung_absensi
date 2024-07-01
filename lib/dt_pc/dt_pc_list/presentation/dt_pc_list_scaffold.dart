@@ -18,6 +18,7 @@ import '../../../firebase/remote_config/application/firebase_remote_config_notif
 import '../../../helper.dart';
 import '../../../routes/application/route_names.dart';
 import '../../../shared/providers.dart';
+import '../../../user/application/user_notifier.dart';
 import '../../../utils/dialog_helper.dart';
 import '../../../widgets/v_async_widget.dart';
 import '../../../widgets/v_scaffold_widget.dart';
@@ -165,10 +166,11 @@ class DtPcListScaffold extends HookConsumerWidget
       return () => scrollController.removeListener(onScrolledVisibility);
     }, [scrollController]);
 
-    final infoMessage =
-        "1. Input DT/PC harus di input maksimal pada hari H DT/PC (H-0)\n"
-        "2. harus sudah Approve atasan maksimal (H+3) dari penginputan\n"
-        "3. dari HR sudah harus di approve maksimal H+1 dari approve atasan.";
+    final infoMessage = [
+      "Input DT/PC harus di input maksimal pada hari H DT/PC (H-0)",
+      "Harus sudah Approve atasan maksimal (H+3) dari penginputan",
+      "Dari HR sudah harus di approve maksimal H+1 dari approve atasan.",
+    ];
 
     ref.listen<AsyncValue>(dtPcListControllerProvider, (_, state) async {
       if (!state.isLoading &&
@@ -183,6 +185,7 @@ class DtPcListScaffold extends HookConsumerWidget
     });
 
     final errLog = ref.watch(errLogControllerProvider);
+    final _userHasStaff = ref.watch(userHasStaffProvider);
     final _isUserCrossed = ref.watch(isUserCrossedProvider);
 
     final _isSearching = useState(false);
@@ -224,7 +227,7 @@ class DtPcListScaffold extends HookConsumerWidget
                   data: (_) => VScaffoldTabLayout(
                     scaffoldTitle: 'DT / PC',
                     mapPT: mapPT,
-                    additionalInfo: VAdditionalInfo(infoMessage: infoMessage),
+                    additionalInfo: VAdditionalInfo(infoMessage: [infoMessage]),
                     scaffoldFAB: _isCrossed
                         ? Container()
                         : FloatingActionButton.small(
@@ -244,18 +247,22 @@ class DtPcListScaffold extends HookConsumerWidget
                     onFilterSelected: onFilterSelected,
                     onDropdownChanged: onDropdownChanged,
                     initialDateRange: _dateTimeRange.value,
-                    bottomLeftWidget: SearchFilterInfoWidget(
-                      d1: _d1,
-                      d2: _d2,
-                      lastSearch: _lastSearch.value,
-                      isScrolling: _isScrollStopped.value,
-                      isBottom: _isAtBottom.value,
-                      onTapName: () {
-                        _isSearching.value = true;
-                        _searchFocus.requestFocus();
-                      },
-                      onTapDate: () => CalendarHelper.callCalendar(
-                          context, onFilterSelected),
+                    bottomLeftWidget: VAsyncValueWidget<bool>(
+                      value: _userHasStaff,
+                      data: (s) => SearchFilterInfoWidget(
+                        d1: _d1,
+                        d2: _d2,
+                        isSearchVisible: s,
+                        lastSearch: _lastSearch.value,
+                        isScrolling: _isScrollStopped.value,
+                        isBottom: _isAtBottom.value,
+                        onTapName: () {
+                          _isSearching.value = true;
+                          _searchFocus.requestFocus();
+                        },
+                        onTapDate: () => CalendarHelper.callCalendar(
+                            context, onFilterSelected),
+                      ),
                     ),
                     scaffoldBody: [
                       VAsyncValueWidget<List<DtPcList>>(

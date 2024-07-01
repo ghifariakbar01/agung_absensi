@@ -117,7 +117,6 @@ class VScaffoldTabLayout extends HookWidget with DialogHelper, CalendarHelper {
   final String scaffoldTitle;
   final List<String> currPT;
   final Map<String, List<String>>? mapPT;
-  //
   final List<Widget> scaffoldBody;
   final Widget scaffoldFAB;
   final Widget? additionalInfo;
@@ -288,6 +287,10 @@ class VScaffoldTabLayout extends HookWidget with DialogHelper, CalendarHelper {
                           ),
                       onChanged: (List<String>? value) {
                         if (value != null) {
+                          if (value == _currPt.value) {
+                            return;
+                          }
+
                           _currPt.value = value;
                           onDropdownChanged(value);
                         }
@@ -298,6 +301,7 @@ class VScaffoldTabLayout extends HookWidget with DialogHelper, CalendarHelper {
                         return DropdownMenuItem<List<String>>(
                           value: value,
                           child: Container(
+                            padding: EdgeInsets.symmetric(vertical: 3),
                             child: Text(
                               "${value.map((e) => e
                                 ..replaceAll('[', '(')

@@ -158,8 +158,10 @@ class GantiHariListScaffold extends HookConsumerWidget
       return () => scrollController.removeListener(onScrolledVisibility);
     }, [scrollController]);
 
-    final infoMessage = "1. Tanggal Off : Untuk menginput hari libur/masuk\n"
-        "2. Ganti Hari : untuk menginput ganti hari libur/masuk \n";
+    final infoMessage = [
+      "Tanggal Off : Untuk menginput hari libur/masuk",
+      "Ganti Hari : untuk menginput ganti hari libur/masuk",
+    ];
 
     ref.listen<AsyncValue>(gantiHariListControllerProvider, (_, state) async {
       if (!state.isLoading &&
@@ -215,7 +217,8 @@ class GantiHariListScaffold extends HookConsumerWidget
                     data: (_) => VScaffoldTabLayout(
                       scaffoldTitle: 'Ganti Hari',
                       mapPT: mapPT,
-                      additionalInfo: VAdditionalInfo(infoMessage: infoMessage),
+                      additionalInfo:
+                          VAdditionalInfo(infoMessage: [infoMessage]),
                       scaffoldFAB: _isCrossed
                           ? Container()
                           : FloatingActionButton.small(

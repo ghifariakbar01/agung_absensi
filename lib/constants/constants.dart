@@ -1,5 +1,5 @@
 class Constants {
-  static const bool isDev = true;
+  static const bool isDev = false;
   static const String keyUrl = 'url';
   static const String keyBaseUrl = 'base_url';
   static const String keyBaseUrlHosting = 'base_url_hosting';

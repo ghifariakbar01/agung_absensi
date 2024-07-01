@@ -35,7 +35,6 @@ class CreateIzinNotifier extends _$CreateIzinNotifier {
     required String cUser,
     required String tglAwal,
     required String tglAkhir,
-    required String keterangan,
     required Future<void> Function(String errMessage) onError,
   }) async {
     state = const AsyncLoading();

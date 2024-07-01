@@ -19,12 +19,10 @@ class SakitDtlRemoteService {
 
   Future<List<SakitDtl>> getSakitDetail({required int idSakit}) async {
     try {
-      // debugger();
       final data = _dioRequest;
 
       final Map<String, String> select = {
-        'command': //
-            " SELECT * FROM $dbName WHERE id_sakit = $idSakit ",
+        'command': " SELECT * FROM $dbName WHERE id_sakit = $idSakit ",
         'mode': 'SELECT'
       };
 

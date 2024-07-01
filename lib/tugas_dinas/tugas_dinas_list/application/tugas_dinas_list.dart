@@ -57,6 +57,7 @@ class TugasDinasList with _$TugasDinasList {
     String? dept,
     String? comp,
     String? email,
+    @JsonKey(name: 'qtyfoto') int? qtyfoto,
     @JsonKey(name: 'email2') String? email2,
     @JsonKey(name: 'level_user') int? levelUser,
     @JsonKey(name: 'agingspv') int? agingSpv,

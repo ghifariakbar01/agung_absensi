@@ -322,7 +322,8 @@ class CreateGantiHariPage extends HookConsumerWidget {
                                     .submitGantiHari(
                                       tglOff: tglOffClean,
                                       tglGanti: tglGantiClean,
-                                      ket: keteranganTextController.text,
+                                      ket: keteranganTextController.text
+                                          .replaceAll("\n", " "),
                                       idAbsen: int.parse(
                                           idAbsenGantiHariTextController.text),
                                       onError: (msg) {

@@ -13,7 +13,9 @@ import '../application/riwayat_absen_notifier.dart';
 import 'riwayat_scaffold.dart';
 
 class RiwayatAbsenPage extends ConsumerWidget {
-  const RiwayatAbsenPage();
+  const RiwayatAbsenPage({required this.isFromAbsen});
+
+  final bool? isFromAbsen;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -50,7 +52,7 @@ class RiwayatAbsenPage extends ConsumerWidget {
 
     return Stack(
       children: [
-        RiwayatAbsenScaffold(),
+        RiwayatAbsenScaffold(isFromAbsen: isFromAbsen),
         LoadingOverlay(isLoading: isLoading),
       ],
     );

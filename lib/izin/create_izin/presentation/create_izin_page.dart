@@ -307,9 +307,8 @@ class CreateIzinPage extends HookConsumerWidget {
                                         cUser: user.nama!,
                                         tglAwal: tglAwalTextController.value,
                                         tglAkhir: tglAkhirTextController.value,
-                                        keterangan:
-                                            keteranganTextController.text,
-                                        ket: keteranganTextController.text,
+                                        ket: keteranganTextController.text
+                                            .replaceAll("\n", " "),
                                         idMstIzin:
                                             jenisIzinTextController.value,
                                         onError: (msg) {

@@ -33,7 +33,7 @@ class LocationDetail extends ConsumerWidget {
             child: Text(
               '${nearest.nama}',
               style: Themes.customColor(
-                20,
+                19,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -54,28 +54,28 @@ class LocationDetail extends ConsumerWidget {
                     Text(
                       'Jarak Maksimum',
                       style: Themes.customColor(
-                        15,
+                        13,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
                       ' : ',
                       style: Themes.customColor(
-                        15,
+                        13,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     if (nearest.minDistance == 0) ...[
                       Text('....Loading....',
                           style: Themes.customColor(
-                            15,
+                            13,
                             fontWeight: FontWeight.bold,
                           ))
                     ],
                     if (nearest.minDistance != 0) ...[
                       Text(' ${nearest.minDistance.round()} m',
                           style: Themes.customColor(
-                            15,
+                            13,
                             fontWeight: FontWeight.bold,
                           ))
                     ]
@@ -86,21 +86,21 @@ class LocationDetail extends ConsumerWidget {
                     Text(
                       'Jarak',
                       style: Themes.customColor(
-                        15,
+                        13,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
                       ' : ',
                       style: Themes.customColor(
-                        15,
+                        13,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     if (nearest.remainingDistance == 0) ...[
                       Text('....Loading....',
                           style: Themes.customColor(
-                            15,
+                            13,
                             fontWeight: FontWeight.bold,
                           ))
                     ],

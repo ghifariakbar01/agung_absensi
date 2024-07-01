@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:face_net_authentication/cross_auth/application/cross_auth_notifier.dart';
 import 'package:face_net_authentication/firebase/remote_config/application/firebase_remote_config_notifier.dart';
 import 'package:face_net_authentication/shared/providers.dart';
+import 'package:face_net_authentication/user/application/user_notifier.dart';
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -165,13 +166,15 @@ class AbsenManualListScaffold extends HookConsumerWidget
       },
     );
 
-    final infoMessage =
-        "1. Absen Manual Di input Maks H=0 dan di approve oleh atasan dan HR maks H+1\n"
-        "2. WFH : khusus untuk karyawan yang bekerja dari rumah (work from home)\n"
-        "3. Absen Harian : untuk karyawan yang lokasi kerjanya tidak tersedia mesin finger print.\n"
-        "4. Absen Lainnya / Kasus : untuk kasus-kasus tidak melakukan finger print karena listrik mati, mesin error / rusak, sidik jari tidak terbaca, lupa absen, jaringan trouble / internet mati saat akan input absen manual dll.";
+    final infoMessage = [
+      "Absen Manual Di input Maks H=0 dan di approve oleh atasan dan HR maks H+1",
+      "WFH : khusus untuk karyawan yang bekerja dari rumah (work from home)",
+      "Absen Harian : untuk karyawan yang lokasi kerjanya tidak tersedia mesin finger print.",
+      "Absen Lainnya / Kasus : untuk kasus-kasus tidak melakukan finger print karena listrik mati, mesin error / rusak, sidik jari tidak terbaca, lupa absen, jaringan trouble / internet mati saat akan input absen manual dll.",
+    ];
 
     final errLog = ref.watch(errLogControllerProvider);
+    final _userHasStaff = ref.watch(userHasStaffProvider);
     final _isUserCrossed = ref.watch(isUserCrossedProvider);
 
     final _isSearching = useState(false);
@@ -215,7 +218,8 @@ class AbsenManualListScaffold extends HookConsumerWidget
                     child: VScaffoldTabLayout(
                       scaffoldTitle: 'Absen Manual',
                       mapPT: mapPT,
-                      additionalInfo: VAdditionalInfo(infoMessage: infoMessage),
+                      additionalInfo:
+                          VAdditionalInfo(infoMessage: [infoMessage]),
                       currPT: _initialDropdown ?? _initialDropdownPlaceholder,
                       searchFocus: _searchFocus,
                       isSearching: _isSearching,
@@ -235,18 +239,24 @@ class AbsenManualListScaffold extends HookConsumerWidget
                               onPressed: () => context.pushNamed(
                                     RouteNames.createAbsenManualNameRoute,
                                   )),
-                      bottomLeftWidget: SearchFilterInfoWidget(
-                        d1: _d1,
-                        d2: _d2,
-                        lastSearch: _lastSearch.value,
-                        isScrolling: _isScrollStopped.value,
-                        isBottom: _isAtBottom.value,
-                        onTapName: () {
-                          _isSearching.value = true;
-                          _searchFocus.requestFocus();
-                        },
-                        onTapDate: () => CalendarHelper.callCalendar(
-                            context, onFilterSelected),
+                      bottomLeftWidget: VAsyncValueWidget<bool>(
+                        value: _userHasStaff,
+                        data: (s) => SearchFilterInfoWidget(
+                          d1: _d1,
+                          d2: _d2,
+                          isSearchVisible: s,
+                          lastSearch: _lastSearch.value,
+                          isScrolling: _isScrollStopped.value,
+                          isBottom: _isAtBottom.value,
+                          onTapName: () {
+                            _isSearching.value = true;
+                            _searchFocus.requestFocus();
+                          },
+                          onTapDate: () => CalendarHelper.callCalendar(
+                            context,
+                            onFilterSelected,
+                          ),
+                        ),
                       ),
                       scaffoldBody: [
                         VAsyncValueWidget<List<AbsenManualList>>(

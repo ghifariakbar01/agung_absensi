@@ -18,7 +18,7 @@ CreateTugasDinasRemoteService createTugasDinasRemoteService(
     CreateTugasDinasRemoteServiceRef ref) {
   return CreateTugasDinasRemoteService(
     ref.watch(dioProviderCuti),
-    ref.watch(dioProviderHosting),
+    ref.watch(dioProvider),
     ref.watch(dioRequestProvider),
   );
 }

@@ -315,7 +315,8 @@ class CreateDtPcPage extends HookConsumerWidget {
                                         dtTgl: _dtTgl,
                                         jam: _jam,
                                         kategori: kategori,
-                                        ket: keteranganTextController.text,
+                                        ket: keteranganTextController.text
+                                            .replaceAll("\n", " "),
                                         onError: (msg) {
                                           return DialogHelper.showCustomDialog(
                                             msg,

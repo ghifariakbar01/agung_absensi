@@ -346,8 +346,9 @@ class EditCutiPage extends HookConsumerWidget {
                                         tglEnd: tglEnd.value,
                                         spvNote: spvTextController.text,
                                         hrdNote: hrdTextController.text,
-                                        keterangan:
-                                            keteranganCutiTextController.text,
+                                        keterangan: keteranganCutiTextController
+                                            .text
+                                            .replaceAll("\n", " "),
                                         jenisCuti:
                                             jenisCutiTextController.value,
                                         alasanCuti:

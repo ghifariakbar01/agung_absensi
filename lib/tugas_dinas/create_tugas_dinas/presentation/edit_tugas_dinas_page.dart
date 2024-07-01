@@ -573,9 +573,10 @@ class EditTugasDinasPage extends HookConsumerWidget {
                                             perusahaanTextController.text,
                                         lokasi: alamatTextController.text,
                                         jenis: khusus.value ?? false,
-                                        ket: keteranganTextController.text,
                                         idPemberi: pemberiTugasController
                                             .value.idUser!,
+                                        ket: keteranganTextController.text
+                                            .replaceAll("\n", " "),
                                         onError: (msg) {
                                           return DialogHelper.showCustomDialog(
                                             msg,

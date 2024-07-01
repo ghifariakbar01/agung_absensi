@@ -7,6 +7,6 @@ class AppLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(height: 139, child: Image.asset(Assets.iconLogo));
+    return SizedBox(height: 139, child: Image.asset(Assets.iconLogoFinger));
   }
 }

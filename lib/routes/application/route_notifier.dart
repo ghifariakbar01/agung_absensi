@@ -35,6 +35,9 @@ import '../../imei_introduction/application/shared/imei_introduction_providers.d
 import '../../imei_introduction/presentation/imei_introduction_page.dart';
 import '../../izin/create_izin/presentation/create_izin_page.dart';
 import '../../izin/create_izin/presentation/edit_izin_page.dart';
+import '../../izin/izin_dtl/presentation/izin_dtl_page.dart';
+import '../../izin/izin_dtl/presentation/izin_dtl_photo_page.dart';
+import '../../izin/izin_dtl/presentation/izin_upload_page.dart';
 import '../../izin/izin_list/application/izin_list.dart';
 import '../../izin/izin_list/presentation/izin_list_page.dart';
 import '../../lembur/create_lembur/presentation/create_lembur_page.dart';
@@ -57,6 +60,9 @@ import '../../tc/application/tc_state.dart';
 import '../../tc/presentation/tc_page.dart';
 import '../../tugas_dinas/create_tugas_dinas/presentation/edit_tugas_dinas_page.dart';
 import '../../tugas_dinas/create_tugas_dinas/presentation/search_pemberi_tugas.dart';
+import '../../tugas_dinas/tugas_dinas_dtl/presentation/tugas_dinas_dtl_page.dart';
+import '../../tugas_dinas/tugas_dinas_dtl/presentation/tugas_dinas_dtl_photo_page.dart';
+import '../../tugas_dinas/tugas_dinas_dtl/presentation/tugas_dinas_upload_page.dart';
 import '../../tugas_dinas/tugas_dinas_list/application/tugas_dinas_list.dart';
 import '../../tugas_dinas/tugas_dinas_list/presentation/tugas_dinas_list_page.dart';
 import '../../tugas_dinas/tugas_dinas_list/presentation/tugas_dinas_view_surat.dart';
@@ -175,7 +181,10 @@ class RouterNotifier extends ChangeNotifier {
             GoRoute(
               name: RouteNames.riwayatAbsenNameRoute,
               path: RouteNames.riwayatAbsenRoute,
-              builder: (context, state) => const RiwayatAbsenPage(),
+              builder: (context, state) {
+                final isFromAbsen = state.extra as bool?;
+                return RiwayatAbsenPage(isFromAbsen: isFromAbsen);
+              },
             ),
             GoRoute(
               name: RouteNames.profileNameRoute,
@@ -276,6 +285,27 @@ class RouterNotifier extends ChangeNotifier {
               },
             ),
             GoRoute(
+                name: RouteNames.izinDtlNameRoute,
+                path: RouteNames.izinDtlRoute,
+                builder: (context, state) {
+                  final id = state.extra as int;
+                  return IzinDtlPageBy(id);
+                }),
+            GoRoute(
+                name: RouteNames.izinUploadNameRoute,
+                path: RouteNames.izinUploadRoute,
+                builder: (context, state) {
+                  final id = state.extra as int;
+                  return IzinUploadPage(id);
+                }),
+            GoRoute(
+                name: RouteNames.izinPhotoDtlNameRoute,
+                path: RouteNames.izinPhotoDtlRoute,
+                builder: (context, state) {
+                  final imageUrl = state.extra as String;
+                  return IzinDtlPhotoPage(imageUrl: imageUrl);
+                }),
+            GoRoute(
               name: RouteNames.dtPcListNameRoute,
               path: RouteNames.dtPcListRoute,
               builder: (context, state) => DtPcListPage(),
@@ -337,6 +367,27 @@ class RouterNotifier extends ChangeNotifier {
               path: RouteNames.searchPemberiTugasDinasRoute,
               builder: (context, state) => SearchPemberiTugas(),
             ),
+            GoRoute(
+                name: RouteNames.tugasDinasDtlNameRoute,
+                path: RouteNames.tugasDinasDtlRoute,
+                builder: (context, state) {
+                  final id = state.extra as int;
+                  return TugasDinasDtlPageBy(id);
+                }),
+            GoRoute(
+                name: RouteNames.tugasDinasUploadNameRoute,
+                path: RouteNames.tugasDinasUploadRoute,
+                builder: (context, state) {
+                  final id = state.extra as int;
+                  return TugasDinasUploadPage(id);
+                }),
+            GoRoute(
+                name: RouteNames.tugasDinasPhotoDtlNameRoute,
+                path: RouteNames.tugasDinasPhotoDtlRoute,
+                builder: (context, state) {
+                  final imageUrl = state.extra as String;
+                  return TugasDinasDtlPhotoPage(imageUrl: imageUrl);
+                }),
             GoRoute(
               name: RouteNames.gantiHariListNameRoute,
               path: RouteNames.gantiHariListRoute,

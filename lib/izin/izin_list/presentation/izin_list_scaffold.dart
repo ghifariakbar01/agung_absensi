@@ -17,6 +17,7 @@ import '../../../firebase/remote_config/application/firebase_remote_config_notif
 import '../../../helper.dart';
 import '../../../routes/application/route_names.dart';
 import '../../../shared/providers.dart';
+import '../../../user/application/user_notifier.dart';
 import '../../../utils/dialog_helper.dart';
 import '../../../widgets/v_async_widget.dart';
 import '../../../widgets/v_scaffold_widget.dart';
@@ -158,10 +159,12 @@ class IzinListScaffold extends HookConsumerWidget
       return () => scrollController.removeListener(onScrolledVisibility);
     }, [scrollController]);
 
-    final infoMessage = "1. Ijin wajib diinput paling lambat H-5\n"
-        "2. persetujuan atasan paling lambat H-1.\n"
-        "3. Khusus untuk ijin terkait kedukaan, istri melahirkan/keguguran, dan force majeur ijin diinput paling lambat hari H masuk bekerja.\n"
-        "4. Ijin melahirkan diinput H-30.";
+    final infoMessage = [
+      "Ijin wajib diinput paling lambat H-5.",
+      "Persetujuan atasan paling lambat H-1.",
+      "Khusus untuk ijin terkait kedukaan, istri melahirkan/keguguran, dan force majeur ijin diinput paling lambat hari H masuk bekerja.",
+      "Ijin melahirkan diinput H-30.",
+    ];
 
     ref.listen<AsyncValue>(izinListControllerProvider, (_, state) async {
       if (!state.isLoading &&
@@ -176,6 +179,7 @@ class IzinListScaffold extends HookConsumerWidget
     });
 
     final errLog = ref.watch(errLogControllerProvider);
+    final _userHasStaff = ref.watch(userHasStaffProvider);
     final _isUserCrossed = ref.watch(isUserCrossedProvider);
 
     final _isSearching = useState(false);
@@ -218,7 +222,7 @@ class IzinListScaffold extends HookConsumerWidget
                             scaffoldTitle: 'Izin',
                             mapPT: mapPT,
                             additionalInfo:
-                                VAdditionalInfo(infoMessage: infoMessage),
+                                VAdditionalInfo(infoMessage: [infoMessage]),
                             currPT:
                                 _initialDropdown ?? _initialDropdownPlaceholder,
                             searchFocus: _searchFocus,
@@ -239,18 +243,22 @@ class IzinListScaffold extends HookConsumerWidget
                                     onPressed: () => context.pushNamed(
                                           RouteNames.createIzinNameRoute,
                                         )),
-                            bottomLeftWidget: SearchFilterInfoWidget(
-                              d1: _d1,
-                              d2: _d2,
-                              lastSearch: _lastSearch.value,
-                              isScrolling: _isScrollStopped.value,
-                              isBottom: _isAtBottom.value,
-                              onTapName: () {
-                                _isSearching.value = true;
-                                _searchFocus.requestFocus();
-                              },
-                              onTapDate: () => CalendarHelper.callCalendar(
-                                  context, onFilterSelected),
+                            bottomLeftWidget: VAsyncValueWidget<bool>(
+                              value: _userHasStaff,
+                              data: (s) => SearchFilterInfoWidget(
+                                d1: _d1,
+                                d2: _d2,
+                                isSearchVisible: s,
+                                lastSearch: _lastSearch.value,
+                                isScrolling: _isScrollStopped.value,
+                                isBottom: _isAtBottom.value,
+                                onTapName: () {
+                                  _isSearching.value = true;
+                                  _searchFocus.requestFocus();
+                                },
+                                onTapDate: () => CalendarHelper.callCalendar(
+                                    context, onFilterSelected),
+                              ),
                             ),
                             scaffoldBody: [
                               VAsyncValueWidget<List<IzinList>>(

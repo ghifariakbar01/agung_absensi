@@ -12,6 +12,33 @@ import '../../domain/value_objects_copy.dart';
 import 'user_model.dart';
 import 'user_state.dart';
 
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'user_notifier.g.dart';
+
+@riverpod
+class UserHasStaff extends _$UserHasStaff {
+  @override
+  FutureOr<bool> build() async {
+    final _staff = ref.watch(userNotifierProvider).user.staf;
+    if (_staff == null) {
+      return false;
+    }
+
+    final _list = _staff
+        .split(',')
+        .map((e) => e.trim())
+        .where((element) => element.isNotEmpty)
+        .toList();
+
+    if (_list.length == 1 || _list.isEmpty) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+}
+
 class UserNotifier extends StateNotifier<UserState> {
   UserNotifier(
     this._repository,

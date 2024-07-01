@@ -113,8 +113,8 @@ final imeiCredentialsStorageProvider = Provider<CredentialsStorage>(
 );
 
 final authRemoteServiceProvider = Provider(
-  (ref) => AuthRemoteService(
-      ref.watch(dioProviderHosting), ref.watch(dioRequestProvider)),
+  (ref) =>
+      AuthRemoteService(ref.watch(dioProvider), ref.watch(dioRequestProvider)),
 );
 
 final authRepositoryProvider = Provider((ref) => AuthRepository(
@@ -199,7 +199,7 @@ final geofenceSecureStorageProvider = Provider<CredentialsStorage>(
     (ref) => GeofenceSecureStorage(ref.watch(flutterSecureStorageProvider)));
 
 final geofenceRemoteServiceProvider = Provider((ref) => GeofenceRemoteService(
-    ref.watch(dioProviderHosting), ref.watch(dioRequestProvider)));
+    ref.watch(dioProvider), ref.watch(dioRequestProvider)));
 
 final geofenceRepositoryProvider = Provider(
   (ref) => GeofenceRepository(ref.watch(geofenceRemoteServiceProvider),

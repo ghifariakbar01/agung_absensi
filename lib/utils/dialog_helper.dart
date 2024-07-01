@@ -14,7 +14,7 @@ class DialogHelper<T> {
     String? assets,
     bool? isLarge,
   }) async {
-    return OSVibrate.vibrate().then((value) => showDialog(
+    return OSVibrate.vibrate().then((_) => showDialog(
         context: context,
         barrierDismissible: true,
         builder: (_) => VSimpleDialog(

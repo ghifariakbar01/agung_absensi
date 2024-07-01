@@ -17,6 +17,7 @@ import '../../../firebase/remote_config/application/firebase_remote_config_notif
 import '../../../helper.dart';
 import '../../../routes/application/route_names.dart';
 import '../../../shared/providers.dart';
+import '../../../user/application/user_notifier.dart';
 import '../../../utils/dialog_helper.dart';
 import '../../../widgets/v_async_widget.dart';
 import '../../../widgets/v_scaffold_widget.dart';
@@ -173,13 +174,15 @@ class SakitListScaffold extends HookConsumerWidget
       return state.showAlertDialogOnError(context, ref);
     });
 
-    final infoMessage =
-        "1. Input sakit harus dimasukan pada hari pertama kerja s/d maksimal H+3 sejak masuk kerja.\n"
-        "2. Approve Atasan maksimal H+3 dari penginputan.\n"
-        "3. Approve HR maksimal H+1 dari approve Atasan.\n"
-        "4. Perhitungan Hari berdasarkan hari kerja.";
+    final infoMessage = [
+      "Input sakit harus dimasukan pada hari pertama kerja s/d maksimal H+3 sejak masuk kerja.",
+      "Approve Atasan maksimal H+3 dari penginputan.",
+      "Approve HR maksimal H+1 dari approve Atasan.",
+      "Perhitungan Hari berdasarkan hari kerja."
+    ];
 
     final errLog = ref.watch(errLogControllerProvider);
+    final _userHasStaff = ref.watch(userHasStaffProvider);
     final _isUserCrossed = ref.watch(isUserCrossedProvider);
 
     final _isSearching = useState(false);
@@ -221,7 +224,8 @@ class SakitListScaffold extends HookConsumerWidget
                     data: (_) => VScaffoldTabLayout(
                       scaffoldTitle: 'Sakit',
                       mapPT: mapPT,
-                      additionalInfo: VAdditionalInfo(infoMessage: infoMessage),
+                      additionalInfo:
+                          VAdditionalInfo(infoMessage: [infoMessage]),
                       currPT: _initialDropdown ?? _initialDropdownPlaceholder,
                       searchFocus: _searchFocus,
                       isSearching: _isSearching,
@@ -241,9 +245,12 @@ class SakitListScaffold extends HookConsumerWidget
                               onPressed: () => context.pushNamed(
                                     RouteNames.createSakitNameRoute,
                                   )),
-                      bottomLeftWidget: SearchFilterInfoWidget(
+                      bottomLeftWidget: VAsyncValueWidget<bool>(
+                        value: _userHasStaff,
+                        data: (s) => SearchFilterInfoWidget(
                           d1: _d1,
                           d2: _d2,
+                          isSearchVisible: s,
                           lastSearch: _lastSearch.value,
                           isScrolling: _isScrollStopped.value,
                           isBottom: _isAtBottom.value,
@@ -252,7 +259,9 @@ class SakitListScaffold extends HookConsumerWidget
                             _searchFocus.requestFocus();
                           },
                           onTapDate: () => CalendarHelper.callCalendar(
-                              context, onFilterSelected)),
+                              context, onFilterSelected),
+                        ),
+                      ),
                       scaffoldBody: [
                         VAsyncValueWidget<List<SakitList>>(
                             value: sakitList,

@@ -458,7 +458,8 @@ class CreateAbsenManualPage extends HookConsumerWidget {
                                         jamAwal: jamAwalTextController.value,
                                         jenisAbsen: jenisTextController.value,
                                         jamAkhir: jamAkhirTextController.value,
-                                        ket: keteranganTextController.text,
+                                        ket: keteranganTextController.text
+                                            .replaceAll("\n", " "),
                                         onError: (msg) {
                                           return DialogHelper.showCustomDialog(
                                             msg,

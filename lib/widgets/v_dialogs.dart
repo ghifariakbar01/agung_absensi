@@ -558,7 +558,8 @@ class VFormDialog<T> extends ConsumerWidget {
                                 borderRadius: BorderRadius.only(
                                     bottomRight: Radius.circular(10))),
                             child: InkWell(
-                              onTap: () => context.pop(formController.text),
+                              onTap: () => context.pop(
+                                  formController.text.replaceAll("\n", " ")),
                               child: Center(
                                 child: Text(
                                   pressedLabel ?? 'Ok',

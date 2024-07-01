@@ -17,6 +17,7 @@ import '../../../mst_karyawan_cuti/application/mst_karyawan_cuti_notifier.dart';
 import '../../../routes/application/route_names.dart';
 import '../../../shared/providers.dart';
 import '../../../style/style.dart';
+import '../../../user/application/user_notifier.dart';
 import '../../../widgets/v_async_widget.dart';
 import '../../../widgets/v_scaffold_widget.dart';
 import '../../cuti_approve/application/cuti_approve_notifier.dart';
@@ -171,6 +172,7 @@ class CutiListScaffold extends HookConsumerWidget {
     }, [scrollController]);
 
     final errLog = ref.watch(errLogControllerProvider);
+    final _userHasStaff = ref.watch(userHasStaffProvider);
     final _isUserCrossed = ref.watch(isUserCrossedProvider);
 
     final _isSearching = useState(false);
@@ -234,18 +236,22 @@ class CutiListScaffold extends HookConsumerWidget {
                                     onPressed: () => context.pushNamed(
                                           RouteNames.createCutiNameRoute,
                                         )),
-                            bottomLeftWidget: SearchFilterInfoWidget(
-                              d1: _d1,
-                              d2: _d2,
-                              lastSearch: _lastSearch.value,
-                              isScrolling: _isScrollStopped.value,
-                              isBottom: _isAtBottom.value,
-                              onTapName: () {
-                                _isSearching.value = true;
-                                _searchFocus.requestFocus();
-                              },
-                              onTapDate: () => CalendarHelper.callCalendar(
-                                  context, onFilterSelected),
+                            bottomLeftWidget: VAsyncValueWidget<bool>(
+                              value: _userHasStaff,
+                              data: (s) => SearchFilterInfoWidget(
+                                d1: _d1,
+                                d2: _d2,
+                                isSearchVisible: s,
+                                lastSearch: _lastSearch.value,
+                                isScrolling: _isScrollStopped.value,
+                                isBottom: _isAtBottom.value,
+                                onTapName: () {
+                                  _isSearching.value = true;
+                                  _searchFocus.requestFocus();
+                                },
+                                onTapDate: () => CalendarHelper.callCalendar(
+                                    context, onFilterSelected),
+                              ),
                             ),
                             scaffoldBody: [
                               VAsyncValueWidget<List<CutiList>>(

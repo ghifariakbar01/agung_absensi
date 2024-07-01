@@ -95,7 +95,6 @@ class SakitDtlWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
     final imageUrl = ref
         .watch(sakitDtlNotifierProvider.notifier)
         .urlImageFormSakit(item.namaImg);
@@ -103,9 +102,9 @@ class SakitDtlWidget extends HookConsumerWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        color: theme.primaryColor,
+        color: Palette.containerBackgroundColor.withOpacity(0.1),
       ),
-      padding: EdgeInsets.all(8),
+      padding: EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -114,23 +113,26 @@ class SakitDtlWidget extends HookConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'id : ${item.namaImg}',
-                style: Themes.customColor(11,
-                    fontWeight: FontWeight.w500,
-                    color: Theme.of(context).unselectedWidgetColor),
+                'ID : ${item.namaImg}',
+                style: Themes.customColor(
+                  18,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
               Text(
-                'by : ${item.cUser}',
-                style: Themes.customColor(11,
-                    fontWeight: FontWeight.w500,
-                    color: Theme.of(context).unselectedWidgetColor),
+                'By : ${item.cUser}',
+                style: Themes.customColor(
+                  14,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
               Text(
-                'at : ${DateFormat('E, dd-MM-yyyy HH:mm').format(DateTime.parse(item.cDate))}',
+                '${DateFormat('E, dd MMM yyyy HH:mm').format(DateTime.parse(item.cDate))}',
                 maxLines: 3,
-                style: Themes.customColor(9,
-                    fontWeight: FontWeight.w500,
-                    color: Theme.of(context).unselectedWidgetColor),
+                style: Themes.customColor(
+                  14,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ],
           ),
@@ -142,12 +144,9 @@ class SakitDtlWidget extends HookConsumerWidget {
           // RIGHT
           Container(
               height: 350,
-              // width: 300,
               decoration: BoxDecoration(
-                color: Palette.secondaryColor,
                 borderRadius: BorderRadius.circular(12),
               ),
-              padding: EdgeInsets.all(8),
               child: IgnorePointer(
                 ignoring: true,
                 child: InAppWebView(

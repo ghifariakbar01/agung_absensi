@@ -299,10 +299,11 @@ class CreateSakitPage extends HookConsumerWidget {
                                       .submitSakit(
                                           tglStart: tglStart.value,
                                           tglEnd: tglEnd.value,
-                                          keterangan:
-                                              diagnosaTextController.text,
                                           surat:
                                               suratDokterTextController.value,
+                                          keterangan: diagnosaTextController
+                                              .text
+                                              .replaceAll("\n", " "),
                                           onError: (msg) {
                                             return DialogHelper
                                                 .showCustomDialog(

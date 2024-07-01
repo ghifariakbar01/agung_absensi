@@ -160,13 +160,11 @@ class LemburListScaffold extends HookConsumerWidget
       return () => scrollController.removeListener(onScrolledVisibility);
     }, [scrollController]);
 
-    final infoMessage = "Ketentuan Lembur :\n\n";
-
-    "1. Input lembur harus di input maksimal pada hari H lembur (H+1).\n";
-    "2. harus sudah Approve atasan maksimal H+1 dari penginputan.\n";
-    "3. Harus sudah diapprove HR maksimal H+1 dari approve atasan.\n";
-
-    "NOTE : Data Absensi yang dapat di tampilkan hanya dari aplikasi finger. Untuk Absen dari mesin finger di cek manual oleh HR";
+    final infoMessage = [
+      "Input lembur harus di input maksimal pada hari H lembur (H+1).",
+      "Harus sudah Approve atasan maksimal H+1 dari penginputan.",
+      "Harus sudah diapprove HR maksimal H+1 dari approve atasan.",
+    ];
 
     ref.listen<AsyncValue>(lemburListControllerProvider, (_, state) async {
       if (!state.isLoading &&
@@ -222,7 +220,8 @@ class LemburListScaffold extends HookConsumerWidget
                     data: (_) => VScaffoldTabLayout(
                       scaffoldTitle: 'Lembur',
                       mapPT: mapPT,
-                      additionalInfo: VAdditionalInfo(infoMessage: infoMessage),
+                      additionalInfo:
+                          VAdditionalInfo(infoMessage: [infoMessage]),
                       scaffoldFAB: _isCrossed
                           ? Container()
                           : FloatingActionButton.small(
