@@ -100,19 +100,23 @@ class SearchPemberiTugas extends HookConsumerWidget {
 
                       return Ink(
                           decoration: BoxDecoration(
-                            color: Palette.primaryColor,
                             borderRadius: BorderRadius.circular(12),
+                            color: Palette.containerBackgroundColor
+                                .withOpacity(0.1),
                           ),
                           child: InkWell(
                               onTap: () {
                                 context.pop(list[index]);
                               },
                               child: Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.all(16.0),
                                 child: Text(
                                   nama,
-                                  style: Themes.customColor(9,
-                                      color: Colors.white),
+                                  style: Themes.customColor(
+                                    14,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               )));
                     },

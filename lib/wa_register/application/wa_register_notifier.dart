@@ -1,481 +1,481 @@
-import 'dart:convert';
+// import 'dart:convert';
 
-import 'package:face_net_authentication/send_wa/application/send_wa_notifier.dart';
-import 'package:face_net_authentication/widgets/v_button.dart';
-import 'package:face_net_authentication/widgets/v_dialogs.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:go_router/go_router.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:url_launcher/url_launcher.dart';
 
-import '../../../shared/providers.dart';
+// import 'package:face_net_authentication/widgets/v_button.dart';
+// import 'package:face_net_authentication/widgets/v_dialogs.dart';
+// import 'package:flutter/material.dart';
+// import 'package:flutter_hooks/flutter_hooks.dart';
+// import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+// import 'package:flutter_svg/svg.dart';
+// import 'package:go_router/go_router.dart';
+// import 'package:hooks_riverpod/hooks_riverpod.dart';
+// import 'package:riverpod_annotation/riverpod_annotation.dart';
+// import 'package:url_launcher/url_launcher.dart';
 
-import '../../constants/assets.dart';
-import '../../infrastructures/cache_storage/wa_regist_storage.dart';
-import '../../infrastructures/credentials_storage/credentials_storage.dart';
-import '../../send_wa/application/phone_num.dart';
-import '../../style/style.dart';
-import '../infrastructures/wa_register_repository.dart';
-import 'wa_register.dart';
+// import '../../../shared/providers.dart';
 
-part 'wa_register_notifier.g.dart';
+// import '../../constants/assets.dart';
+// import '../../infrastructures/cache_storage/wa_regist_storage.dart';
+// import '../../infrastructures/credentials_storage/credentials_storage.dart';
 
-final waStorageProvider = Provider<CredentialsStorage>(
-  (ref) => WaStorage(ref.watch(flutterSecureStorageProvider)),
-);
+// import '../../style/style.dart';
+// import '../infrastructures/wa_register_repository.dart';
+// import 'wa_register.dart';
 
-@Riverpod(keepAlive: true)
-WaRegisterRepository waRegisterRepository(WaRegisterRepositoryRef ref) {
-  return WaRegisterRepository(
-    ref.watch(waStorageProvider),
-  );
-}
+// part 'wa_register_notifier.g.dart';
 
-@riverpod
-class CurrentlySavedPhoneNumberNotifier
-    extends _$CurrentlySavedPhoneNumberNotifier {
-  @override
-  FutureOr<PhoneNum> build() async {
-    final idUser = ref.read(userNotifierProvider).user.idUser!;
-    return ref
-        .read(sendWaNotifierProvider.notifier)
-        .getPhoneById(idUser: idUser);
-  }
+// final waStorageProvider = Provider<CredentialsStorage>(
+//   (ref) => WaStorage(ref.watch(flutterSecureStorageProvider)),
+// );
 
-  Future<void> refresh() async {
-    state = const AsyncLoading();
+// @Riverpod(keepAlive: true)
+// WaRegisterRepository waRegisterRepository(WaRegisterRepositoryRef ref) {
+//   return WaRegisterRepository(
+//     ref.watch(waStorageProvider),
+//   );
+// }
 
-    state = await AsyncValue.guard(() async {
-      final idUser = ref.read(userNotifierProvider).user.idUser!;
-      return ref
-          .read(sendWaNotifierProvider.notifier)
-          .getPhoneById(idUser: idUser);
-    });
-  }
-}
+// @riverpod
+// class CurrentlySavedPhoneNumberNotifier
+//     extends _$CurrentlySavedPhoneNumberNotifier {
+//   @override
+//   FutureOr<PhoneNum> build() async {
+//     final idUser = ref.read(userNotifierProvider).user.idUser!;
+//     return ref
+//         .read(sendWaNotifierProvider.notifier)
+//         .getPhoneById(idUser: idUser);
+//   }
 
-@riverpod
-class WaRegisterNotifier extends _$WaRegisterNotifier {
-  @override
-  FutureOr<WaRegister> build() async {
-    final response =
-        await ref.read(waRegisterRepositoryProvider).getWaRegister();
+//   Future<void> refresh() async {
+//     state = const AsyncLoading();
 
-    if (response == null) {
-      // debugger();
-      return WaRegister.initial();
-    }
+//     state = await AsyncValue.guard(() async {
+//       final idUser = ref.read(userNotifierProvider).user.idUser!;
+//       return ref
+//           .read(sendWaNotifierProvider.notifier)
+//           .getPhoneById(idUser: idUser);
+//     });
+//   }
+// }
 
-    final fromJsonResponse = jsonDecode(response);
+// @riverpod
+// class WaRegisterNotifier extends _$WaRegisterNotifier {
+//   @override
+//   FutureOr<WaRegister> build() async {
+//     final response =
+//         await ref.read(waRegisterRepositoryProvider).getWaRegister();
 
-    return WaRegister.fromJson(fromJsonResponse);
-  }
+//     if (response == null) {
+//       // debugger();
+//       return WaRegister.initial();
+//     }
 
-  Future<void> refresh() async {
-    state = const AsyncLoading();
+//     final fromJsonResponse = jsonDecode(response);
 
-    state = await AsyncValue.guard<WaRegister>(() async {
-      final response =
-          await ref.read(waRegisterRepositoryProvider).getWaRegister();
+//     return WaRegister.fromJson(fromJsonResponse);
+//   }
 
-      if (response == null) {
-        return WaRegister.initial();
-      }
+//   Future<void> refresh() async {
+//     state = const AsyncLoading();
 
-      final fromJsonResponse = jsonDecode(response);
+//     state = await AsyncValue.guard<WaRegister>(() async {
+//       final response =
+//           await ref.read(waRegisterRepositoryProvider).getWaRegister();
 
-      return WaRegister.fromJson(fromJsonResponse);
-    });
-  }
+//       if (response == null) {
+//         return WaRegister.initial();
+//       }
 
-  Future<WaRegister> getCurrentRegisteredWa() async {
-    final response =
-        await ref.read(waRegisterRepositoryProvider).getWaRegister();
+//       final fromJsonResponse = jsonDecode(response);
 
-    if (response == null) {
-      // debugger();
-      return WaRegister.initial();
-    }
+//       return WaRegister.fromJson(fromJsonResponse);
+//     });
+//   }
 
-    final fromJsonResponse = jsonDecode(response);
+//   Future<WaRegister> getCurrentRegisteredWa() async {
+//     final response =
+//         await ref.read(waRegisterRepositoryProvider).getWaRegister();
 
-    return WaRegister.fromJson(fromJsonResponse);
-  }
+//     if (response == null) {
+//       // debugger();
+//       return WaRegister.initial();
+//     }
 
-  Future<void> confirmRegisterWa({
-    required BuildContext context,
-  }) async {
-    try {
-      final String? phone = ref.read(userNotifierProvider).user.noTelp1;
+//     final fromJsonResponse = jsonDecode(response);
 
-      final String? newPhone =
-          await showWaBottomSheet(phone: phone ?? "", context: context);
+//     return WaRegister.fromJson(fromJsonResponse);
+//   }
 
-      if (newPhone != null) {
-        // check if same
-        final noTelp1 = ref.read(userNotifierProvider).user.noTelp1;
-        final noTelp2 = ref.read(userNotifierProvider).user.noTelp2;
+//   Future<void> confirmRegisterWa({
+//     required BuildContext context,
+//   }) async {
+//     try {
+//       final String? phone = ref.read(userNotifierProvider).user.noTelp1;
 
-        if (noTelp1 != null) {
-          if (newPhone == noTelp1) {
-            await _registerWaForNotif(newPhone, context);
-            return;
-          }
-        }
+//       final String? newPhone =
+//           await showWaBottomSheet(phone: phone ?? "", context: context);
 
-        if (noTelp2 != null) {
-          if (newPhone == noTelp2) {
-            await _registerWaForNotif(newPhone, context);
-            return;
-          }
-        }
+//       if (newPhone != null) {
+//         // check if same
+//         final noTelp1 = ref.read(userNotifierProvider).user.noTelp1;
+//         final noTelp2 = ref.read(userNotifierProvider).user.noTelp2;
 
-        return showDialog(
-          context: context,
-          barrierDismissible: true,
-          builder: (_) => VFailedDialog(
-            message:
-                'Nomor hp tidak sama dengan database. Silahkan hubungi HR untuk mengubah data',
-          ),
-        );
-      }
-    } catch (e) {
-      state = AsyncError(e, StackTrace.current);
-    }
-  }
+//         if (noTelp1 != null) {
+//           if (newPhone == noTelp1) {
+//             await _registerWaForNotif(newPhone, context);
+//             return;
+//           }
+//         }
 
-  Future<void> retryRegisterWa({
-    required BuildContext context,
-  }) async {
-    // await ref.read(waRegisterRepositoryProvider).clear();
-    return confirmRegisterWa(context: context);
-  }
+//         if (noTelp2 != null) {
+//           if (newPhone == noTelp2) {
+//             await _registerWaForNotif(newPhone, context);
+//             return;
+//           }
+//         }
 
-  Future<void> _registerWaForNotif(
-    String newPhone,
-    BuildContext context,
-  ) async {
-    state = const AsyncLoading();
+//         return showDialog(
+//           context: context,
+//           barrierDismissible: true,
+//           builder: (_) => VFailedDialog(
+//             message:
+//                 'Nomor hp tidak sama dengan database. Silahkan hubungi HR untuk mengubah data',
+//           ),
+//         );
+//       }
+//     } catch (e) {
+//       state = AsyncError(e, StackTrace.current);
+//     }
+//   }
 
-    try {
-      final bool? isRegistered = await showWaDialog(context: context);
+//   Future<void> retryRegisterWa({
+//     required BuildContext context,
+//   }) async {
+//     // await ref.read(waRegisterRepositoryProvider).clear();
+//     return confirmRegisterWa(context: context);
+//   }
 
-      // debugger();
+//   Future<void> _registerWaForNotif(
+//     String newPhone,
+//     BuildContext context,
+//   ) async {
+//     state = const AsyncLoading();
 
-      if (isRegistered != null) {
-        final WaRegister waRegister =
-            WaRegister(phone: newPhone, isRegistered: isRegistered);
+//     try {
+//       final bool? isRegistered = await showWaDialog(context: context);
 
-        final waRegisterJsonEncode = jsonEncode(waRegister);
+//       // debugger();
 
-        state = await AsyncValue.guard(() async {
-          await ref
-              .read(waRegisterRepositoryProvider)
-              .save(waRegisterJsonEncode);
+//       if (isRegistered != null) {
+//         final WaRegister waRegister =
+//             WaRegister(phone: newPhone, isRegistered: isRegistered);
 
-          // debugger();
-          return waRegister;
-        });
+//         final waRegisterJsonEncode = jsonEncode(waRegister);
 
-        //
-      } else {
-        state = AsyncError(
-            AssertionError('Failed Registration'), StackTrace.current);
-      }
-    } catch (e) {
-      state = AsyncError(e, StackTrace.current);
-    }
-  }
-}
+//         state = await AsyncValue.guard(() async {
+//           await ref
+//               .read(waRegisterRepositoryProvider)
+//               .save(waRegisterJsonEncode);
 
-Future<String?> showWaBottomSheet({
-  required String phone,
-  required BuildContext context,
-}) async {
-  TextEditingController? formController;
+//           // debugger();
+//           return waRegister;
+//         });
 
-  formController = TextEditingController(text: phone);
+//         //
+//       } else {
+//         state = AsyncError(
+//             AssertionError('Failed Registration'), StackTrace.current);
+//       }
+//     } catch (e) {
+//       state = AsyncError(e, StackTrace.current);
+//     }
+//   }
+// }
 
-  final String? result = await showModalBottomSheet(
-    context: context,
-    isDismissible: false,
-    builder: (_) => WaPhoneBottomSheet(
-      formController: formController!,
-    ),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(10.0)),
-    ),
-  );
+// Future<String?> showWaBottomSheet({
+//   required String phone,
+//   required BuildContext context,
+// }) async {
+//   TextEditingController? formController;
 
-  formController = null;
-  if (result != null) {
-    return result;
-  }
+//   formController = TextEditingController(text: phone);
 
-  return null;
-}
+//   final String? result = await showModalBottomSheet(
+//     context: context,
+//     isDismissible: false,
+//     builder: (_) => WaPhoneBottomSheet(
+//       formController: formController!,
+//     ),
+//     shape: RoundedRectangleBorder(
+//       borderRadius: BorderRadius.vertical(top: Radius.circular(10.0)),
+//     ),
+//   );
 
-Future<bool?> showWaDialog({
-  required BuildContext context,
-}) async {
-  final bool? result = await showDialog(
-    context: context,
-    barrierDismissible: false,
-    builder: (_) => WaRegisterDialog(),
-  );
+//   formController = null;
+//   if (result != null) {
+//     return result;
+//   }
 
-  if (result != null) {
-    return result;
-  }
+//   return null;
+// }
 
-  return null;
-}
+// Future<bool?> showWaDialog({
+//   required BuildContext context,
+// }) async {
+//   final bool? result = await showDialog(
+//     context: context,
+//     barrierDismissible: false,
+//     builder: (_) => WaRegisterDialog(),
+//   );
 
-class WaPhoneBottomSheet extends HookConsumerWidget {
-  WaPhoneBottomSheet({required this.formController});
+//   if (result != null) {
+//     return result;
+//   }
 
-  final TextEditingController formController;
+//   return null;
+// }
 
-  //
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final _formKey = useMemoized(GlobalKey<FormState>.new, const []);
+// class WaPhoneBottomSheet extends HookConsumerWidget {
+//   WaPhoneBottomSheet({required this.formController});
 
-    return KeyboardDismissOnTap(
-      child: Padding(
-        padding:
-            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-        child: Container(
-          color: Colors.transparent,
-          height: MediaQuery.of(context).size.height / 3,
-          child: Form(
-            key: _formKey,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            child: ListView(
-              children: [
-                Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: RichText(
-                      textAlign: TextAlign.center,
-                      text: TextSpan(
-                        text:
-                            'Isi dengan nomor HP yang ingin digunakan untuk menerima notifikasi pesan via ',
-                        style: Themes.customColor(9, color: Colors.black),
-                        children: <TextSpan>[
-                          TextSpan(
-                              text: 'WhatsApp',
-                              style:
-                                  Themes.customColor(9, color: Colors.green)),
-                        ],
-                      ),
-                    )),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: TextFormField(
-                    controller: formController,
-                    decoration: Themes.formStyleBordered('Nomor hp'),
-                    validator: (value) {
-                      if (value == null) {
-                        return 'Tidak boleh kosong';
-                      }
+//   final TextEditingController formController;
 
-                      if (!value.startsWith('08')) {
-                        return ' Nomor harus diawal 08 (Contoh 0896xxxxxxxx)';
-                      }
+//   //
+//   @override
+//   Widget build(BuildContext context, WidgetRef ref) {
+//     final _formKey = useMemoized(GlobalKey<FormState>.new, const []);
 
-                      return null;
-                    },
-                  ),
-                ),
-                VButton(
-                    label: 'Konfirmasi',
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        _formKey.currentState!.save();
-                        context.pop(formController.text);
-                      }
-                    })
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
+//     return KeyboardDismissOnTap(
+//       child: Padding(
+//         padding:
+//             EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+//         child: Container(
+//           color: Colors.transparent,
+//           height: MediaQuery.of(context).size.height / 3,
+//           child: Form(
+//             key: _formKey,
+//             autovalidateMode: AutovalidateMode.onUserInteraction,
+//             child: ListView(
+//               children: [
+//                 Padding(
+//                     padding: const EdgeInsets.all(16.0),
+//                     child: RichText(
+//                       textAlign: TextAlign.center,
+//                       text: TextSpan(
+//                         text:
+//                             'Isi dengan nomor HP yang ingin digunakan untuk menerima notifikasi pesan via ',
+//                         style: Themes.customColor(9, color: Colors.black),
+//                         children: <TextSpan>[
+//                           TextSpan(
+//                               text: 'WhatsApp',
+//                               style:
+//                                   Themes.customColor(9, color: Colors.green)),
+//                         ],
+//                       ),
+//                     )),
+//                 Padding(
+//                   padding: const EdgeInsets.all(16.0),
+//                   child: TextFormField(
+//                     controller: formController,
+//                     decoration: Themes.formStyleBordered('Nomor hp'),
+//                     validator: (value) {
+//                       if (value == null) {
+//                         return 'Tidak boleh kosong';
+//                       }
 
-class WaRegisterDialog extends HookConsumerWidget {
-  const WaRegisterDialog();
+//                       if (!value.startsWith('08')) {
+//                         return ' Nomor harus diawal 08 (Contoh 0896xxxxxxxx)';
+//                       }
 
-  //
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    return SafeArea(
-      child: Container(
-        color: theme.canvasColor,
-        // padding: EdgeInsets.all(4),
-        child: Column(
-          children: [
-            Container(
-              height: 48,
-              width: MediaQuery.of(context).size.width,
-              color: Palette.primaryColor,
-              child: Center(
-                child: Text(
-                  'Register Notifikasi WhatsApp',
-                  style: Themes.customColor(18,
-                      fontWeight: FontWeight.bold, color: Colors.white),
-                ),
-              ),
-            ),
-            Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
-                    text: 'Apakah sudah pernah meregistrasi nomor anda ke ',
-                    style: Themes.customColor(9, color: Colors.black),
-                    children: <TextSpan>[
-                      TextSpan(
-                          text: '+852 5420 1273',
-                          style: Themes.customColor(9,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold)),
-                      TextSpan(
-                          text: '  ? (Contoh gambar di bawah)',
-                          style: Themes.customColor(
-                            9,
-                            color: Colors.black,
-                          )),
-                    ],
-                  ),
-                )),
-            SizedBox(
-              height: 4,
-            ),
-            SizedBox(
-              height: 200,
-              width: 200,
-              child: Image.asset(Assets.imgRegisterWa),
-            ),
-            SizedBox(
-              height: 4,
-            ),
-            Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
-                    text: 'Jika belum, pilih ',
-                    style: Themes.customColor(9, color: Colors.black),
-                    children: <TextSpan>[
-                      TextSpan(
-                          text: 'Tombol Belum',
-                          style: Themes.customColor(9,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold)),
-                      TextSpan(
-                          text:
-                              ' dan kirim pesan “hi” yang sudah diketik ke nomor tersebut.',
-                          style: Themes.customColor(
-                            9,
-                            color: Colors.black,
-                          )),
-                    ],
-                  ),
-                )),
-            SizedBox(
-              height: 4,
-            ),
-            VButton(
-              label: 'Belum',
-              onPressed: () => launchUrl(
-                      Uri.parse("https://wa.me/+85254201273?text=hi"),
-                      mode: LaunchMode.externalApplication)
-                  // show dialog
-                  .then((_) => showDialog(
-                          context: context,
-                          builder: (context) => Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Dialog(
-                                  // backgroundColor: Theme.of(context).primaryColor,
-                                  // alignment: Alignment.center,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: Container(
-                                    height: 234,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        SizedBox(
-                                            height: 36,
-                                            width: 36,
-                                            child: SvgPicture.asset(
-                                                Assets.iconWa)),
-                                        SizedBox(
-                                          height: 13,
-                                        ),
-                                        RichText(
-                                          textAlign: TextAlign.center,
-                                          text: TextSpan(
-                                            text: 'Membuka ',
-                                            style: Themes.customColor(11,
-                                                color: Palette.primaryColor),
-                                            children: <TextSpan>[
-                                              TextSpan(
-                                                  text: 'WhatsApp...',
-                                                  style: Themes.customColor(
-                                                    11,
-                                                    color: Colors.green,
-                                                  )),
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 4,
-                                        ),
-                                        Text(
-                                            'Beberapa saat lagi anda akan diarahkan ke aplikasi WhatsApp',
-                                            textAlign: TextAlign.center,
-                                            style: Themes.customColor(11,
-                                                color: Palette.primaryColor)),
-                                      ],
-                                    ),
-                                  ),
-                                  // after show dialog
-                                ),
-                              ))
-                      .then((_) => context.pop(true))
-                      // after show dialog dismissed
+//                       return null;
+//                     },
+//                   ),
+//                 ),
+//                 VButton(
+//                     label: 'Konfirmasi',
+//                     onPressed: () {
+//                       if (_formKey.currentState!.validate()) {
+//                         _formKey.currentState!.save();
+//                         context.pop(formController.text);
+//                       }
+//                     })
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
 
-                      .then((_) => context.pop(true))),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Text(
-              " Jika sudah, anda tidak perlu melakukan tahap selanjutnya. "
-              " Anda sudah bisa menerima pesan Wa. Terimakasih!",
-              textAlign: TextAlign.center,
-              style: Themes.customColor(
-                9,
-              ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            VButton(label: 'Sudah', onPressed: () => context.pop(true))
-          ],
-        ),
-      ),
-    );
-  }
-}
+// class WaRegisterDialog extends HookConsumerWidget {
+//   const WaRegisterDialog();
+
+//   //
+//   @override
+//   Widget build(BuildContext context, WidgetRef ref) {
+//     final theme = Theme.of(context);
+//     return SafeArea(
+//       child: Container(
+//         color: theme.canvasColor,
+//         // padding: EdgeInsets.all(4),
+//         child: Column(
+//           children: [
+//             Container(
+//               height: 48,
+//               width: MediaQuery.of(context).size.width,
+//               color: Palette.primaryColor,
+//               child: Center(
+//                 child: Text(
+//                   'Register Notifikasi WhatsApp',
+//                   style: Themes.customColor(18,
+//                       fontWeight: FontWeight.bold, color: Colors.white),
+//                 ),
+//               ),
+//             ),
+//             Padding(
+//                 padding: const EdgeInsets.all(16.0),
+//                 child: RichText(
+//                   textAlign: TextAlign.center,
+//                   text: TextSpan(
+//                     text: 'Apakah sudah pernah meregistrasi nomor anda ke ',
+//                     style: Themes.customColor(9, color: Colors.black),
+//                     children: <TextSpan>[
+//                       TextSpan(
+//                           text: '+852 5420 1273',
+//                           style: Themes.customColor(9,
+//                               color: Colors.black,
+//                               fontWeight: FontWeight.bold)),
+//                       TextSpan(
+//                           text: '  ? (Contoh gambar di bawah)',
+//                           style: Themes.customColor(
+//                             9,
+//                             color: Colors.black,
+//                           )),
+//                     ],
+//                   ),
+//                 )),
+//             SizedBox(
+//               height: 4,
+//             ),
+//             SizedBox(
+//               height: 200,
+//               width: 200,
+//               child: Image.asset(Assets.imgRegisterWa),
+//             ),
+//             SizedBox(
+//               height: 4,
+//             ),
+//             Padding(
+//                 padding: const EdgeInsets.all(16.0),
+//                 child: RichText(
+//                   textAlign: TextAlign.center,
+//                   text: TextSpan(
+//                     text: 'Jika belum, pilih ',
+//                     style: Themes.customColor(9, color: Colors.black),
+//                     children: <TextSpan>[
+//                       TextSpan(
+//                           text: 'Tombol Belum',
+//                           style: Themes.customColor(9,
+//                               color: Colors.black,
+//                               fontWeight: FontWeight.bold)),
+//                       TextSpan(
+//                           text:
+//                               ' dan kirim pesan “hi” yang sudah diketik ke nomor tersebut.',
+//                           style: Themes.customColor(
+//                             9,
+//                             color: Colors.black,
+//                           )),
+//                     ],
+//                   ),
+//                 )),
+//             SizedBox(
+//               height: 4,
+//             ),
+//             VButton(
+//               label: 'Belum',
+//               onPressed: () => launchUrl(
+//                       Uri.parse("https://wa.me/+85254201273?text=hi"),
+//                       mode: LaunchMode.externalApplication)
+//                   // show dialog
+//                   .then((_) => showDialog(
+//                           context: context,
+//                           builder: (context) => Padding(
+//                                 padding: const EdgeInsets.all(8.0),
+//                                 child: Dialog(
+//                                   // backgroundColor: Theme.of(context).primaryColor,
+//                                   // alignment: Alignment.center,
+//                                   shape: RoundedRectangleBorder(
+//                                       borderRadius: BorderRadius.circular(10)),
+//                                   child: Container(
+//                                     height: 234,
+//                                     child: Column(
+//                                       crossAxisAlignment:
+//                                           CrossAxisAlignment.center,
+//                                       mainAxisAlignment:
+//                                           MainAxisAlignment.center,
+//                                       children: [
+//                                         SizedBox(
+//                                             height: 36,
+//                                             width: 36,
+//                                             child: SvgPicture.asset(
+//                                                 Assets.iconWa)),
+//                                         SizedBox(
+//                                           height: 13,
+//                                         ),
+//                                         RichText(
+//                                           textAlign: TextAlign.center,
+//                                           text: TextSpan(
+//                                             text: 'Membuka ',
+//                                             style: Themes.customColor(11,
+//                                                 color: Palette.primaryColor),
+//                                             children: <TextSpan>[
+//                                               TextSpan(
+//                                                   text: 'WhatsApp...',
+//                                                   style: Themes.customColor(
+//                                                     11,
+//                                                     color: Colors.green,
+//                                                   )),
+//                                             ],
+//                                           ),
+//                                         ),
+//                                         SizedBox(
+//                                           height: 4,
+//                                         ),
+//                                         Text(
+//                                             'Beberapa saat lagi anda akan diarahkan ke aplikasi WhatsApp',
+//                                             textAlign: TextAlign.center,
+//                                             style: Themes.customColor(11,
+//                                                 color: Palette.primaryColor)),
+//                                       ],
+//                                     ),
+//                                   ),
+//                                   // after show dialog
+//                                 ),
+//                               ))
+//                       .then((_) => context.pop(true))
+//                       // after show dialog dismissed
+
+//                       .then((_) => context.pop(true))),
+//             ),
+//             SizedBox(
+//               height: 20,
+//             ),
+//             Text(
+//               " Jika sudah, anda tidak perlu melakukan tahap selanjutnya. "
+//               " Anda sudah bisa menerima pesan Wa. Terimakasih!",
+//               textAlign: TextAlign.center,
+//               style: Themes.customColor(
+//                 9,
+//               ),
+//             ),
+//             SizedBox(
+//               height: 10,
+//             ),
+//             VButton(label: 'Sudah', onPressed: () => context.pop(true))
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }

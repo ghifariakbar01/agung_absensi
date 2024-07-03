@@ -15,7 +15,7 @@ import '../../../utils/dialog_helper.dart';
 import '../../../widgets/alert_helper.dart';
 import '../../../widgets/v_async_widget.dart';
 import '../../../style/style.dart';
-import '../../../user_helper/user_helper_notifier.dart';
+
 import '../../../widgets/v_button.dart';
 import '../../../widgets/v_scaffold_widget.dart';
 import '../../tugas_dinas_list/application/tugas_dinas_list_notifier.dart';
@@ -52,10 +52,6 @@ class CreateTugasDinasPage extends HookConsumerWidget {
     final jamAkhirTextController = useState('');
 
     final khusus = useState(false);
-
-    ref.listen<AsyncValue>(userHelperNotifierProvider, (_, state) async {
-      return state.showAlertDialogOnError(context, ref);
-    });
 
     ref.listen<AsyncValue>(createTugasDinasNotifierProvider, (_, state) async {
       if (!state.isLoading &&

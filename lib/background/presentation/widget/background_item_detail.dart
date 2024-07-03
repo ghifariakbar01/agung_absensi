@@ -31,7 +31,7 @@ class BackgroundItemDetail extends StatelessWidget {
                 width: width,
                 padding: EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                    color: Palette.primaryColor.withOpacity(0.9),
+                    color: Palette.containerBackgroundColor.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(10)),
                 child: // Lokasi Masuk
                     Column(
@@ -43,7 +43,7 @@ class BackgroundItemDetail extends StatelessWidget {
                         Icon(
                           Icons.pin_drop_rounded,
                           size: 15,
-                          color: Theme.of(context).primaryColorLight,
+                          color: Palette.primaryColor,
                         ),
                         SizedBox(
                           width: 4,
@@ -86,7 +86,8 @@ class BackgroundItemDetail extends StatelessWidget {
                         width: width,
                         padding: EdgeInsets.all(4),
                         decoration: BoxDecoration(
-                            color: Palette.primaryColor.withOpacity(0.9),
+                            color: Palette.containerBackgroundColor
+                                .withOpacity(0.1),
                             borderRadius: BorderRadius.circular(10)),
                         child: // Lokasi Masuk
                             Row(
@@ -94,7 +95,7 @@ class BackgroundItemDetail extends StatelessWidget {
                             Icon(
                               Icons.numbers,
                               size: 20,
-                              color: Theme.of(context).primaryColorLight,
+                              color: Palette.primaryColor,
                             ),
                             SizedBox(
                               width: 5,
@@ -137,7 +138,8 @@ class BackgroundItemDetail extends StatelessWidget {
                         width: width,
                         padding: EdgeInsets.all(4),
                         decoration: BoxDecoration(
-                            color: Palette.primaryColor.withOpacity(0.9),
+                            color: Palette.containerBackgroundColor
+                                .withOpacity(0.1),
                             borderRadius: BorderRadius.circular(10)),
                         child: // Longitude
                             Row(
@@ -145,7 +147,7 @@ class BackgroundItemDetail extends StatelessWidget {
                             Icon(
                               Icons.numbers,
                               size: 15,
-                              color: Theme.of(context).primaryColorLight,
+                              color: Palette.primaryColor,
                             ),
                             SizedBox(
                               width: 5,
@@ -187,7 +189,7 @@ class BackgroundItemDetail extends StatelessWidget {
                 width: width,
                 padding: EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                    color: Palette.primaryColor.withOpacity(0.9),
+                    color: Palette.containerBackgroundColor.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(10)),
                 child: // Longitude
                     Column(
@@ -197,7 +199,7 @@ class BackgroundItemDetail extends StatelessWidget {
                         Icon(
                           Icons.date_range,
                           size: 15,
-                          color: Theme.of(context).primaryColorLight,
+                          color: Palette.primaryColor,
                         ),
                         SizedBox(
                           width: 4,

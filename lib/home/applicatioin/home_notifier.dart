@@ -17,25 +17,30 @@ import 'home_state.dart';
 class HomeNotifier extends StateNotifier<HomeState> {
   HomeNotifier() : super(const HomeState.initial());
 
-  Future<void> redirect(
-      {required String route,
-      required WidgetRef ref,
-      required BuildContext context}) async {
+  Future<void> redirect({
+    required String route,
+    required WidgetRef ref,
+    required BuildContext context,
+  }) async {
     state = const HomeState.inProgress();
 
-    await _processRedirect(ref: ref, route: route, context: context);
+    await _processRedirect(
+      ref: ref,
+      route: route,
+      context: context,
+    );
 
     state = const HomeState.success();
   }
 
-  Future<void> _processRedirect(
-      {
-      //
-      required String route,
-      required WidgetRef ref,
-      required BuildContext context}) async {
+  Future<void> _processRedirect({
+    required String route,
+    required WidgetRef ref,
+    required BuildContext context,
+  }) async {
     bool isAbsenRoute = route == RouteNames.absenRoute;
     bool isRiwayatRoute = route == RouteNames.riwayatRoute;
+
     bool isSlipGajiRoute = route == RouteNames.slipGajiRoute;
 
     bool isGpsOff = await FlLocation.isLocationServicesEnabled == false;

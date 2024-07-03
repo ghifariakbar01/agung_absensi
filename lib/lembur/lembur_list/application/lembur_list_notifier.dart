@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../helper.dart';
 import '../../../shared/providers.dart';
 
 import '../infrastructures/lembur_list_remote_service.dart';
@@ -83,11 +84,7 @@ class LemburListController extends _$LemburListController {
         await ref.read(lemburListRepositoryProvider).getLemburList(
               username: username,
               pass: pass,
-              dateRange: dateRange ??
-                  DateTimeRange(
-                    start: DateTime.now().subtract(Duration(days: 30)),
-                    end: DateTime.now().add(Duration(days: 1)),
-                  ),
+              dateRange: dateRange ?? CalendarHelper.initialDateRange(),
             );
 
     if (searchUser == null) {

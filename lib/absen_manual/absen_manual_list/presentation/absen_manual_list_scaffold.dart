@@ -15,7 +15,7 @@ import '../../../cross_auth/application/is_user_crossed.dart';
 import '../../../err_log/application/err_log_notifier.dart';
 import '../../../helper.dart';
 import '../../../routes/application/route_names.dart';
-import '../../../send_wa/application/send_wa_notifier.dart';
+
 import '../../../utils/dialog_helper.dart';
 import '../../../widgets/v_additional_info.dart';
 import '../../../widgets/v_async_widget.dart';
@@ -34,7 +34,6 @@ class AbsenManualListScaffold extends HookConsumerWidget
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final sendWa = ref.watch(sendWaNotifierProvider);
     final crossAuth = ref.watch(crossAuthNotifierProvider);
     final absenManualList = ref.watch(absenManualListControllerProvider);
     final absenApprove = ref.watch(absenManualApproveControllerProvider);
@@ -185,41 +184,42 @@ class AbsenManualListScaffold extends HookConsumerWidget
       data: (_) => VAsyncWidgetScaffold(
         value: crossAuth,
         data: (_) => VAsyncWidgetScaffold(
-          value: sendWa,
-          data: (_) => VAsyncWidgetScaffold(
-            value: absenApprove,
-            data: (_) => VAsyncWidgetScaffold<IsUserCrossedState>(
-                value: _isUserCrossed,
-                data: (data) {
-                  final _isCrossed = data.when(
-                    crossed: () => true,
-                    notCrossed: () => false,
-                  );
+          value: absenApprove,
+          data: (_) => VAsyncWidgetScaffold<IsUserCrossedState>(
+              value: _isUserCrossed,
+              data: (data) {
+                final _isCrossed = data.when(
+                  crossed: () => true,
+                  notCrossed: () => false,
+                );
 
-                  return WillPopScope(
-                    onWillPop: () async {
-                      final user = ref.read(userNotifierProvider).user;
-                      final _ptMap = await ref
-                          .read(firebaseRemoteConfigNotifierProvider.notifier)
-                          .getPtMap();
+                return WillPopScope(
+                  onWillPop: () async {
+                    final user = ref.read(userNotifierProvider).user;
+                    final _ptMap = await ref
+                        .read(firebaseRemoteConfigNotifierProvider.notifier)
+                        .getPtMap();
 
-                      if (_isCrossed) {
-                        await ref
-                            .read(crossAuthNotifierProvider.notifier)
-                            .uncross(
-                              userId: user.nama!,
-                              password: user.password!,
-                              url: _ptMap,
-                            );
-                      }
+                    if (_isCrossed) {
+                      await ref
+                          .read(crossAuthNotifierProvider.notifier)
+                          .uncross(
+                            userId: user.nama!,
+                            password: user.password!,
+                            url: _ptMap,
+                          );
+                    }
 
-                      return true;
-                    },
-                    child: VScaffoldTabLayout(
+                    return true;
+                  },
+                  child: VAsyncValueWidget<bool>(
+                    value: _userHasStaff,
+                    data: (s) => VScaffoldTabLayout(
                       scaffoldTitle: 'Absen Manual',
                       mapPT: mapPT,
                       additionalInfo:
                           VAdditionalInfo(infoMessage: [infoMessage]),
+                      isSearchVisible: s,
                       currPT: _initialDropdown ?? _initialDropdownPlaceholder,
                       searchFocus: _searchFocus,
                       isSearching: _isSearching,
@@ -239,23 +239,20 @@ class AbsenManualListScaffold extends HookConsumerWidget
                               onPressed: () => context.pushNamed(
                                     RouteNames.createAbsenManualNameRoute,
                                   )),
-                      bottomLeftWidget: VAsyncValueWidget<bool>(
-                        value: _userHasStaff,
-                        data: (s) => SearchFilterInfoWidget(
-                          d1: _d1,
-                          d2: _d2,
-                          isSearchVisible: s,
-                          lastSearch: _lastSearch.value,
-                          isScrolling: _isScrollStopped.value,
-                          isBottom: _isAtBottom.value,
-                          onTapName: () {
-                            _isSearching.value = true;
-                            _searchFocus.requestFocus();
-                          },
-                          onTapDate: () => CalendarHelper.callCalendar(
-                            context,
-                            onFilterSelected,
-                          ),
+                      bottomLeftWidget: SearchFilterInfoWidget(
+                        d1: _d1,
+                        d2: _d2,
+                        isSearchVisible: s,
+                        lastSearch: _lastSearch.value,
+                        isScrolling: _isScrollStopped.value,
+                        isBottom: _isAtBottom.value,
+                        onTapName: () {
+                          _isSearching.value = true;
+                          _searchFocus.requestFocus();
+                        },
+                        onTapDate: () => CalendarHelper.callCalendar(
+                          context,
+                          onFilterSelected,
                         ),
                       ),
                       scaffoldBody: [
@@ -304,9 +301,9 @@ class AbsenManualListScaffold extends HookConsumerWidget
                             }),
                       ],
                     ),
-                  );
-                }),
-          ),
+                  ),
+                );
+              }),
         ),
       ),
     );

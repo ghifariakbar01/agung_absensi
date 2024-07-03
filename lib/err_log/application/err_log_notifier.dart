@@ -17,9 +17,24 @@ ErrLogRemoteService errLogRemoteService(ErrLogRemoteServiceRef ref) {
 }
 
 @Riverpod(keepAlive: true)
+ErrLogRemoteService errLogRemoteServiceHosting(ErrLogRemoteServiceRef ref) {
+  return ErrLogRemoteService(
+    ref.watch(dioProviderHosting),
+    ref.watch(dioRequestProvider),
+  );
+}
+
+@Riverpod(keepAlive: true)
 ErrLogRepository errLogRepository(ErrLogRepositoryRef ref) {
   return ErrLogRepository(
     ref.watch(errLogRemoteServiceProvider),
+  );
+}
+
+@Riverpod(keepAlive: true)
+ErrLogRepository errLogRepositoryHosting(ErrLogRepositoryRef ref) {
+  return ErrLogRepository(
+    ref.watch(errLogRemoteServiceHostingProvider),
   );
 }
 
@@ -29,6 +44,7 @@ class ErrLogController extends _$ErrLogController {
   FutureOr<void> build() async {}
 
   Future<void> sendLog({
+    bool? isHoting,
     String? imeiDb,
     String? imeiSaved,
     required String errMessage,
@@ -38,20 +54,35 @@ class ErrLogController extends _$ErrLogController {
     final user = ref.read(userNotifierProvider).user;
 
     final _imei = ref.read(imeiNotifierProvider.notifier);
+
+    final _saved = user.imeiHp ?? '-';
     final _db =
         imeiDb ?? await _imei.getImeiStringDb(idKary: user.IdKary ?? '-');
-    final _saved = imeiSaved ?? await _imei.getImeiString();
 
     final platform = Platform.isIOS ? 'iOS' : 'Android';
 
-    state = await AsyncValue.guard(() async => await ref
-        .read(errLogRepositoryProvider)
-        .sendLog(
+    state = await AsyncValue.guard(() async {
+      if (isHoting != null) {
+        await ref.read(errLogRepositoryHostingProvider).sendLog(
+              idUser: user.idUser ?? 0,
+              nama: user.nama ?? '',
+              platform: platform,
+              imeiDb: _db,
+              imeiSaved: _saved,
+              errMessage: errMessage,
+            );
+      }
+
+      await ref.read(errLogRepositoryProvider).sendLog(
             idUser: user.idUser ?? 0,
             nama: user.nama ?? '',
             platform: platform,
             imeiDb: _db,
             imeiSaved: _saved,
-            errMessage: errMessage));
+            errMessage: errMessage,
+          );
+
+      return;
+    });
   }
 }

@@ -10,7 +10,7 @@ class SearchFilterInfoWidget extends StatelessWidget {
     required this.lastSearch,
     required this.isBottom,
     required this.isScrolling,
-    this.isSearchVisible,
+    required this.isSearchVisible,
     this.onTapName,
     this.onTapDate,
   }) : super(key: key);

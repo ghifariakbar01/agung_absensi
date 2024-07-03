@@ -1,5 +1,4 @@
 import 'package:face_net_authentication/style/style.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -7,13 +6,11 @@ import '../../application/saved_location.dart';
 import 'background_item_detail.dart';
 
 class BackgroundItem extends ConsumerWidget {
-  const BackgroundItem(
-      {
-      //
-      Key? key,
-      required this.index,
-      required this.item})
-      : super(key: key);
+  const BackgroundItem({
+    Key? key,
+    required this.index,
+    required this.item,
+  }) : super(key: key);
 
   final int index;
   final SavedLocation item;
@@ -28,7 +25,7 @@ class BackgroundItem extends ConsumerWidget {
         width: width,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(14),
-          color: Palette.primaryColor.withOpacity(0.1),
+          color: Palette.containerBackgroundColor.withOpacity(0.1),
         ),
         padding: EdgeInsets.all(4),
         child: Column(
@@ -42,11 +39,9 @@ class BackgroundItem extends ConsumerWidget {
                 longitude: item.longitude.toString(),
               ),
             ),
-
             SizedBox(
               height: 4,
             ),
-
             Flexible(
               flex: 0,
               child: Padding(
@@ -55,7 +50,7 @@ class BackgroundItem extends ConsumerWidget {
                     width: width,
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                        color: Palette.primaryColor.withOpacity(0.9),
+                        color: Palette.primaryColor,
                         borderRadius: BorderRadius.circular(10)),
                     child: // Lokasi Masuk
                         Column(
@@ -70,96 +65,16 @@ class BackgroundItem extends ConsumerWidget {
                               orElse: () => 'NaN',
                               empty: () => 'Jenis : Absen Masuk',
                               absenIn: () => 'Jenis : Absen Keluar'),
-                          style: Themes.customColor(11,
-                              fontWeight: FontWeight.bold),
+                          style: Themes.customColor(
+                            11,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                         )
                       ],
                     )),
               ),
             ),
-
-            //
-            // ...[
-            //   if (item.abenStates == AbsenState.empty() ||
-            //       item.abenStates == AbsenState.incomplete()) ...[
-            //     Flexible(
-            //       flex: 1,
-            //       child: VButton(
-            //           label: 'ABSEN IN',
-            //           onPressed: () => showCupertinoDialog(
-            //               context: context,
-            //               builder: (_) => VAlertDialog(
-            //                   label: 'Ingin absen-in ?',
-            //                   labelDescription:
-            //                       'JAM: ${StringUtils.hoursDate(DateTime.parse(date))}',
-            //                   onPressed: () async {
-            //                     context.pop();
-
-            //                     debugger(message: 'called');
-
-            //                     ref
-            //                         .read(absenAuthNotifierProvidier.notifier)
-            //                         .changeBackgroundAbsenStateSaved(item);
-
-            //                     await ref
-            //                         .read(absenAuthNotifierProvidier.notifier)
-            //                         .absenAndUpdateSaved(
-            //                             jenisAbsen: JenisAbsen.absenIn);
-
-            //                     await ref
-            //                         .read(backgroundNotifierProvider.notifier)
-            //                         .getSavedLocations();
-            //                   }))),
-            //     )
-            //   ] else if (item.abenStates == AbsenState.empty() &&
-            //       item.abenStates == AbsenState.incomplete() &&
-            //       item.abenStates == AbsenState.absenIn()) ...[
-            //     Flexible(
-            //       flex: 1,
-            //       child: VButton(
-            //           label: 'ABSEN OUT',
-            //           onPressed: () => showCupertinoDialog(
-            //               context: context,
-            //               builder: (_) => VAlertDialog(
-            //                   label: 'Ingin absen-out ?',
-            //                   labelDescription:
-            //                       'JAM: ${StringUtils.hoursDate(DateTime.parse(date))}',
-            //                   onPressed: () async {
-            //                     context.pop();
-
-            //                     debugger(message: 'called');
-
-            //                     ref
-            //                         .read(absenAuthNotifierProvidier.notifier)
-            //                         .changeBackgroundAbsenStateSaved(item);
-
-            //                     await ref
-            //                         .read(absenAuthNotifierProvidier.notifier)
-            //                         .absenAndUpdateSaved(
-            //                             jenisAbsen: JenisAbsen.absenOut);
-
-            //                     await ref
-            //                         .read(backgroundNotifierProvider.notifier)
-            //                         .getSavedLocations();
-            //                   }))),
-            //     )
-            //   ] else if (item.abenStates == AbsenState.complete()) ...[
-            //     Flexible(
-            //       flex: 1,
-            //       child: VButton(
-            //           label: 'ABSEN OUT',
-            //           isEnabled: false,
-            //           onPressed: () => {}),
-            //     )
-            //   ] else ...[
-            //     Flexible(
-            //       flex: 1,
-            //       child: VButton(
-            //           label: 'TIDAK BISA ABSEN',
-            //           isEnabled: false,
-            //           onPressed: () => {}),
-            //     )
-            //   ],
             SizedBox(
               width: 4,
             ),

@@ -1,46 +1,46 @@
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+// import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../shared/providers.dart';
+// import '../../../shared/providers.dart';
 
-import '../infrastructures/wa_head_helper_remote_service.dart';
-import '../infrastructures/wa_head_helper_repository.dart';
-import 'wa_head.dart';
+// import '../infrastructures/wa_head_helper_remote_service.dart';
+// import '../infrastructures/wa_head_helper_repository.dart';
+// import 'wa_head.dart';
 
-part 'wa_head_helper_notifier.g.dart';
+// part 'wa_head_helper_notifier.g.dart';
 
-@Riverpod(keepAlive: true)
-WaHeadHelperRemoteService waHeadHelperRemoteService(
-    WaHeadHelperRemoteServiceRef ref) {
-  return WaHeadHelperRemoteService(
-      ref.watch(dioProviderHosting), ref.watch(dioRequestProvider));
-}
+// @Riverpod(keepAlive: true)
+// WaHeadHelperRemoteService waHeadHelperRemoteService(
+//     WaHeadHelperRemoteServiceRef ref) {
+//   return WaHeadHelperRemoteService(
+//       ref.watch(dioProviderHosting), ref.watch(dioRequestProvider));
+// }
 
-@Riverpod(keepAlive: true)
-WaHeadHelperRepository waHeadHelperRepository(WaHeadHelperRepositoryRef ref) {
-  return WaHeadHelperRepository(
-    ref.watch(waHeadHelperRemoteServiceProvider),
-  );
-}
+// @Riverpod(keepAlive: true)
+// WaHeadHelperRepository waHeadHelperRepository(WaHeadHelperRepositoryRef ref) {
+//   return WaHeadHelperRepository(
+//     ref.watch(waHeadHelperRemoteServiceProvider),
+//   );
+// }
 
-@riverpod
-class WaHeadHelperNotifier extends _$WaHeadHelperNotifier {
-  @override
-  FutureOr<List<WaHead>> build() {
-    return [];
-  }
+// @riverpod
+// class WaHeadHelperNotifier extends _$WaHeadHelperNotifier {
+//   @override
+//   FutureOr<List<WaHead>> build() {
+//     return [];
+//   }
 
-  Future<void> loadWaHeads({
-    required int idUser,
-  }) async {
-    state = const AsyncLoading();
+//   Future<void> loadWaHeads({
+//     required int idUser,
+//   }) async {
+//     state = const AsyncLoading();
 
-    state = await AsyncValue.guard(() =>
-        ref.read(waHeadHelperRepositoryProvider).getWaHead(idUser: idUser));
-  }
+//     state = await AsyncValue.guard(() =>
+//         ref.read(waHeadHelperRepositoryProvider).getWaHead(idUser: idUser));
+//   }
 
-  Future<List<WaHead>> getWaHeads({required int idUser}) async {
-    return await ref
-        .read(waHeadHelperRepositoryProvider)
-        .getWaHead(idUser: idUser);
-  }
-}
+//   Future<List<WaHead>> getWaHeads({required int idUser}) async {
+//     return await ref
+//         .read(waHeadHelperRepositoryProvider)
+//         .getWaHead(idUser: idUser);
+//   }
+// }

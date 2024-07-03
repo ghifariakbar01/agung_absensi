@@ -14,7 +14,7 @@ import '../../../utils/dialog_helper.dart';
 import '../../../widgets/alert_helper.dart';
 import '../../../widgets/v_async_widget.dart';
 import '../../../style/style.dart';
-import '../../../user_helper/user_helper_notifier.dart';
+
 import '../../../widgets/v_button.dart';
 import '../../../widgets/v_scaffold_widget.dart';
 
@@ -32,7 +32,6 @@ class EditAbsenManualPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final nama = ref.watch(userNotifierProvider);
     final namaTextController = useTextEditingController(text: nama.user.nama);
-    final ptTextController = useTextEditingController(text: nama.user.payroll);
 
     final keteranganTextController = useTextEditingController(text: item.ket);
 
@@ -57,10 +56,6 @@ class EditAbsenManualPage extends HookConsumerWidget {
     final _tgl = useState(item.tgl!);
     final jamAwal = useState((item.jamAwal!));
     final jamAkhir = useState(item.jamAkhir!);
-
-    ref.listen<AsyncValue>(userHelperNotifierProvider, (_, state) async {
-      return state.showAlertDialogOnError(context, ref);
-    });
 
     ref.listen<AsyncValue>(createAbsenManualNotifierProvider, (_, state) async {
       if (!state.isLoading &&
@@ -111,33 +106,6 @@ class EditAbsenManualPage extends HookConsumerWidget {
                           cursorColor: Palette.primaryColor,
                           decoration: Themes.formStyleBordered(
                             'Nama',
-                          ),
-                          style: Themes.customColor(
-                            14,
-                            fontWeight: FontWeight.normal,
-                          ),
-                          validator: (item) {
-                            if (item == null) {
-                              return 'Form tidak boleh kosong';
-                            } else if (item.isEmpty) {
-                              return 'Form tidak boleh kosong';
-                            }
-
-                            return null;
-                          }),
-
-                      SizedBox(
-                        height: 16,
-                      ),
-
-                      // PT
-                      TextFormField(
-                          enabled: false,
-                          controller: ptTextController,
-                          cursorColor: Palette.primaryColor,
-                          keyboardType: TextInputType.name,
-                          decoration: Themes.formStyleBordered(
-                            'PT',
                           ),
                           style: Themes.customColor(
                             14,
@@ -457,7 +425,7 @@ class EditAbsenManualPage extends HookConsumerWidget {
                               ).format(jamAkhir.value));
 
                               log(' VARIABLES : \n  Nama : ${namaTextController.value.text} ');
-                              log(' Payroll: ${ptTextController.value.text} \n ');
+
                               log(' Keterangan: ${keteranganTextController.value.text} \n ');
                               log(' Jenis Absen: ${jenis.value} \n ');
                               log(' Tanggal: ${_tgl.value} \n ');

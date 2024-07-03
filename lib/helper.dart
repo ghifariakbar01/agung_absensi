@@ -70,8 +70,8 @@ class HelperImpl implements Helper {
 
 class CalendarHelper {
   static DateTimeRange initialDateRange() {
-    final _end = DateTime.now().add(Duration(days: 15));
-    final _start = DateTime.now().subtract(Duration(days: 15));
+    final _end = DateTime.now().add(Duration(days: 30));
+    final _start = DateTime.now().subtract(Duration(days: 30));
 
     return DateTimeRange(
       start: _start,
@@ -92,11 +92,11 @@ class CalendarHelper {
         lastDate: DateTime.now().add(_oneYear));
 
     if (picked != null) {
-      if (picked.duration.inDays < 32) {
+      if (picked.duration.inDays < 62) {
         onFilterSelected(picked);
       } else {
         DialogHelper.showCustomDialog(
-          'Filter melebihi 30 hari',
+          'Filter melebihi 60 hari',
           context,
         ).then((_) => callCalendar(
               context,

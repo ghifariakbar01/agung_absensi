@@ -102,6 +102,7 @@ class VScaffoldTabLayout extends HookWidget with DialogHelper, CalendarHelper {
     required this.scaffoldFAB,
     required this.currPT,
     required this.initialDateRange,
+    required this.isSearchVisible,
     this.bottomLeftWidget,
     this.isSearching,
     this.searchFocus,
@@ -122,6 +123,7 @@ class VScaffoldTabLayout extends HookWidget with DialogHelper, CalendarHelper {
   final Widget? additionalInfo;
   final Widget? bottomLeftWidget;
   //
+  final bool isSearchVisible;
   final ValueNotifier<bool>? isSearching;
   final FocusNode? searchFocus;
   final DateTimeRange initialDateRange;
@@ -329,18 +331,19 @@ class VScaffoldTabLayout extends HookWidget with DialogHelper, CalendarHelper {
                 /*
                   Search bar
                 */
-                IconButton(
-                    onPressed: () {
-                      _isSearching.value
-                          ? _isSearching.value = false
-                          : _isSearching.value = true;
+                if (isSearchVisible)
+                  IconButton(
+                      onPressed: () {
+                        _isSearching.value
+                            ? _isSearching.value = false
+                            : _isSearching.value = true;
 
-                      _searchFocus.requestFocus();
-                    },
-                    color: _searchController.text.isNotEmpty
-                        ? Palette.orange
-                        : null,
-                    icon: Icon(Icons.search)),
+                        _searchFocus.requestFocus();
+                      },
+                      color: _searchController.text.isNotEmpty
+                          ? Palette.orange
+                          : null,
+                      icon: Icon(Icons.search)),
                 additionalInfo != null ? additionalInfo! : Container(),
                 NetworkWidget(),
               ]

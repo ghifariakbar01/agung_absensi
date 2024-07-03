@@ -26,13 +26,6 @@ class AbsenRepository {
     required String longitude,
     required JenisAbsen inOrOut,
   }) async {
-//
-// FOR TESTING PURPOSES
-// id geof 4
-// -6.277117, 107.066174
-// 7c7707f6-43d0-4d4d-bc44-625a54806853
-// P3F8+2CX, Jl. Kelana, Cibuntu, Kec. Cibitung, Kabupaten Bekasi, Jawa Barat 17510
-
     try {
       await _remoteService.absen(
         imei: imei,

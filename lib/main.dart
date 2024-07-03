@@ -35,11 +35,11 @@ Future<void> main() async {
 }
 
 final initializationProvider = FutureProvider<Unit>((ref) async {
-  await FirebaseRemoteConfigInitializer.setupRemoteConfig(ref);
-
   final helper = HelperImpl();
   // await helper.storageDebugMode(ref, isDebug: true);
   await helper.fixStorage(ref);
+
+  await FirebaseRemoteConfigInitializer.setupRemoteConfig(ref);
 
   if (!BuildConfig.isProduction) {
     ref.read(dioProvider).interceptors.add(PrettyDioLogger(

@@ -67,7 +67,7 @@ class _TugasDinasDtlPageByState extends ConsumerState<TugasDinasDtlPageBy> {
                         color: Colors.white,
                       ),
                       onPressed: () => context.pushNamed(
-                          RouteNames.sakitUploadRoute,
+                          RouteNames.tugasDinasUploadRoute,
                           extra: dtl.first.idDinas)),
                   scaffoldBody: ListView.separated(
                     itemCount: dtl.length,
@@ -76,7 +76,7 @@ class _TugasDinasDtlPageByState extends ConsumerState<TugasDinasDtlPageBy> {
                     ),
                     itemBuilder: (context, index) => InkWell(
                         onTap: () => context.pushNamed(
-                            RouteNames.sakitPhotoDtlRoute,
+                            RouteNames.tugasDinasPhotoDtlRoute,
                             extra: ref
                                 .read(tugasDinasDtlNotifierProvider.notifier)
                                 .urlImageFormTugasDinas(dtl[index].namaImg)),

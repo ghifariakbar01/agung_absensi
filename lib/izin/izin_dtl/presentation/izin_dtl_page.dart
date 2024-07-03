@@ -65,7 +65,7 @@ class _IzinDtlPageByState extends ConsumerState<IzinDtlPageBy> {
                         color: Colors.white,
                       ),
                       onPressed: () => context.pushNamed(
-                          RouteNames.sakitUploadRoute,
+                          RouteNames.izinUploadRoute,
                           extra: dtl.first.idIzin)),
                   scaffoldBody: ListView.separated(
                     itemCount: dtl.length,
@@ -74,7 +74,7 @@ class _IzinDtlPageByState extends ConsumerState<IzinDtlPageBy> {
                     ),
                     itemBuilder: (context, index) => InkWell(
                         onTap: () => context.pushNamed(
-                            RouteNames.sakitPhotoDtlRoute,
+                            RouteNames.izinPhotoDtlRoute,
                             extra: ref
                                 .read(izinDtlNotifierProvider.notifier)
                                 .urlImageFormIzin(dtl[index].namaImg)),

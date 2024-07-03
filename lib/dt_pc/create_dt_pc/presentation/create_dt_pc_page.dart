@@ -15,7 +15,7 @@ import '../../../utils/dialog_helper.dart';
 import '../../../widgets/alert_helper.dart';
 import '../../../widgets/v_async_widget.dart';
 import '../../../style/style.dart';
-import '../../../user_helper/user_helper_notifier.dart';
+
 import '../../../utils/string_utils.dart';
 import '../../../widgets/v_button.dart';
 import '../../../widgets/v_scaffold_widget.dart';
@@ -28,7 +28,6 @@ class CreateDtPcPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final nama = ref.watch(userNotifierProvider);
     final namaTextController = useTextEditingController(text: nama.user.nama);
-    final ptTextController = useTextEditingController(text: nama.user.payroll);
 
     final keteranganTextController = useTextEditingController();
     final kategoriTextController = useState('Datang Telat');
@@ -37,10 +36,6 @@ class CreateDtPcPage extends HookConsumerWidget {
 
     final dtTglTextController = useState('');
     final jamTextController = useState('');
-
-    ref.listen<AsyncValue>(userHelperNotifierProvider, (_, state) async {
-      return state.showAlertDialogOnError(context, ref);
-    });
 
     ref.listen<AsyncValue>(createDtPcNotifierProvider, (_, state) async {
       if (!state.isLoading &&
@@ -92,33 +87,6 @@ class CreateDtPcPage extends HookConsumerWidget {
                           cursorColor: Palette.primaryColor,
                           decoration: Themes.formStyleBordered(
                             'Nama',
-                          ),
-                          style: Themes.customColor(
-                            14,
-                            fontWeight: FontWeight.normal,
-                          ),
-                          validator: (item) {
-                            if (item == null) {
-                              return 'Form tidak boleh kosong';
-                            } else if (item.isEmpty) {
-                              return 'Form tidak boleh kosong';
-                            }
-
-                            return null;
-                          }),
-
-                      SizedBox(
-                        height: 16,
-                      ),
-
-                      // PT
-                      TextFormField(
-                          enabled: false,
-                          controller: ptTextController,
-                          cursorColor: Palette.primaryColor,
-                          keyboardType: TextInputType.name,
-                          decoration: Themes.formStyleBordered(
-                            'PT',
                           ),
                           style: Themes.customColor(
                             14,
@@ -300,7 +268,7 @@ class CreateDtPcPage extends HookConsumerWidget {
                                   0, jamTextController.value.length - 3);
 
                               log(' VARIABLES : \n  Nama : ${namaTextController.value.text} ');
-                              log(' Payroll: ${ptTextController.value.text} \n ');
+
                               log(' Keterangan: ${keteranganTextController.value.text} \n ');
                               log(' Kategori DT / PC: ${kategoriTextController.value} \n ');
                               log(' DT Tanggal: ${_dtTgl} \n ');

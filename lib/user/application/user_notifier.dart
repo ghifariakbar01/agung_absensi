@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/domain/auth_failure.dart';
@@ -21,8 +22,19 @@ class UserHasStaff extends _$UserHasStaff {
   @override
   FutureOr<bool> build() async {
     final _staff = ref.watch(userNotifierProvider).user.staf;
+    final _fullAkses = ref.watch(userNotifierProvider).user.fullAkses;
+
+    bool fullAkses = false;
+    bool staff = false;
+
+    if (_fullAkses == null) {
+      //
+    } else {
+      fullAkses = _fullAkses;
+    }
+
     if (_staff == null) {
-      return false;
+      return fullAkses;
     }
 
     final _list = _staff
@@ -32,10 +44,13 @@ class UserHasStaff extends _$UserHasStaff {
         .toList();
 
     if (_list.length == 1 || _list.isEmpty) {
-      return false;
+      staff = false;
     } else {
-      return true;
+      staff = true;
     }
+    log("fullAkses $fullAkses staff $staff");
+
+    return fullAkses || staff;
   }
 }
 

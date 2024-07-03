@@ -63,6 +63,7 @@ class BackgroundScaffold extends ConsumerWidget {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Palette.primaryColor,
+          iconTheme: IconThemeData(color: Colors.white),
           elevation: 0,
           title: Text(
             'Absen Tersimpan',

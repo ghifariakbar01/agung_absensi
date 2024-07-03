@@ -2,7 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:face_net_authentication/dt_pc/dt_pc_approve/application/dt_pc_approve_notifier.dart';
 import 'package:face_net_authentication/dt_pc/dt_pc_list/application/dt_pc_list_notifier.dart';
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
-import 'package:face_net_authentication/send_wa/application/send_wa_notifier.dart';
 import 'package:face_net_authentication/widgets/v_additional_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -34,7 +33,6 @@ class DtPcListScaffold extends HookConsumerWidget
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final sendWa = ref.watch(sendWaNotifierProvider);
     final dtPcList = ref.watch(dtPcListControllerProvider);
     final dtPcApprove = ref.watch(dtPcApproveControllerProvider);
     final crossAuth = ref.watch(crossAuthNotifierProvider);
@@ -222,9 +220,9 @@ class DtPcListScaffold extends HookConsumerWidget
 
                   return true;
                 },
-                child: VAsyncWidgetScaffold(
-                  value: sendWa,
-                  data: (_) => VScaffoldTabLayout(
+                child: VAsyncWidgetScaffold<bool>(
+                  value: _userHasStaff,
+                  data: (s) => VScaffoldTabLayout(
                     scaffoldTitle: 'DT / PC',
                     mapPT: mapPT,
                     additionalInfo: VAdditionalInfo(infoMessage: [infoMessage]),
@@ -239,6 +237,7 @@ class DtPcListScaffold extends HookConsumerWidget
                             onPressed: () => context.pushNamed(
                                   RouteNames.createDtPcNameRoute,
                                 )),
+                    isSearchVisible: s,
                     currPT: _initialDropdown ?? _initialDropdownPlaceholder,
                     searchFocus: _searchFocus,
                     isSearching: _isSearching,
@@ -247,22 +246,19 @@ class DtPcListScaffold extends HookConsumerWidget
                     onFilterSelected: onFilterSelected,
                     onDropdownChanged: onDropdownChanged,
                     initialDateRange: _dateTimeRange.value,
-                    bottomLeftWidget: VAsyncValueWidget<bool>(
-                      value: _userHasStaff,
-                      data: (s) => SearchFilterInfoWidget(
-                        d1: _d1,
-                        d2: _d2,
-                        isSearchVisible: s,
-                        lastSearch: _lastSearch.value,
-                        isScrolling: _isScrollStopped.value,
-                        isBottom: _isAtBottom.value,
-                        onTapName: () {
-                          _isSearching.value = true;
-                          _searchFocus.requestFocus();
-                        },
-                        onTapDate: () => CalendarHelper.callCalendar(
-                            context, onFilterSelected),
-                      ),
+                    bottomLeftWidget: SearchFilterInfoWidget(
+                      d1: _d1,
+                      d2: _d2,
+                      isSearchVisible: s,
+                      lastSearch: _lastSearch.value,
+                      isScrolling: _isScrollStopped.value,
+                      isBottom: _isAtBottom.value,
+                      onTapName: () {
+                        _isSearching.value = true;
+                        _searchFocus.requestFocus();
+                      },
+                      onTapDate: () => CalendarHelper.callCalendar(
+                          context, onFilterSelected),
                     ),
                     scaffoldBody: [
                       VAsyncValueWidget<List<DtPcList>>(

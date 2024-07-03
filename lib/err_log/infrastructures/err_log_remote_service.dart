@@ -18,13 +18,14 @@ class ErrLogRemoteService {
 
   static const String dbName = 'log_error_finger_mobile';
 
-  Future<Unit> sendLog(
-      {required int idUser,
-      required String nama,
-      required String imeiDb,
-      required String platform,
-      required String imeiSaved,
-      required String errMessage}) async {
+  Future<Unit> sendLog({
+    required int idUser,
+    required String nama,
+    required String imeiDb,
+    required String platform,
+    required String imeiSaved,
+    required String errMessage,
+  }) async {
     try {
       // debugger();
       final data = _dioRequest;

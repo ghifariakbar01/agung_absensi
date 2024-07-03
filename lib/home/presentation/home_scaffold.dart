@@ -124,7 +124,6 @@ class HomeScaffold extends ConsumerWidget {
                     const SizedBox(height: 24),
                     Constants.isDev ? Testing() : Container(),
 
-                    const SizedBox(height: 24),
                     ...isTester.maybeWhen(
                         tester: () {
                           return [
@@ -142,6 +141,7 @@ class HomeScaffold extends ConsumerWidget {
                         orElse: user.user.nama == 'Ghifar'
                             ? () {
                                 return [
+                                  const SizedBox(height: 24),
                                   Text(
                                     'Toggle Location',
                                     style: Themes.customColor(10,

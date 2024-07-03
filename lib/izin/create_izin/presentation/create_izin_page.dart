@@ -21,7 +21,7 @@ import '../../../utils/dialog_helper.dart';
 import '../../../widgets/alert_helper.dart';
 import '../../../widgets/v_async_widget.dart';
 import '../../../style/style.dart';
-import '../../../user_helper/user_helper_notifier.dart';
+
 import '../../../utils/string_utils.dart';
 import '../../izin_list/application/jenis_izin.dart';
 
@@ -32,7 +32,6 @@ class CreateIzinPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userNotifierProvider).user;
     final namaTextController = useTextEditingController(text: user.nama);
-    final ptTextController = useTextEditingController(text: user.payroll);
 
     final keteranganTextController = useTextEditingController();
     final jenisIzinTextController = useState(1);
@@ -43,10 +42,6 @@ class CreateIzinPage extends HookConsumerWidget {
 
     final spvTextController = useTextEditingController();
     final hrdTextController = useTextEditingController();
-
-    ref.listen<AsyncValue>(userHelperNotifierProvider, (_, state) async {
-      return state.showAlertDialogOnError(context, ref);
-    });
 
     ref.listen<AsyncValue>(createIzinNotifierProvider, (_, state) async {
       if (!state.isLoading &&
@@ -98,33 +93,6 @@ class CreateIzinPage extends HookConsumerWidget {
                           cursorColor: Palette.primaryColor,
                           decoration: Themes.formStyleBordered(
                             'Nama',
-                          ),
-                          style: Themes.customColor(
-                            14,
-                            fontWeight: FontWeight.normal,
-                          ),
-                          validator: (item) {
-                            if (item == null) {
-                              return 'Form tidak boleh kosong';
-                            } else if (item.isEmpty) {
-                              return 'Form tidak boleh kosong';
-                            }
-
-                            return null;
-                          }),
-
-                      SizedBox(
-                        height: 16,
-                      ),
-
-                      // PT
-                      TextFormField(
-                          enabled: false,
-                          controller: ptTextController,
-                          cursorColor: Palette.primaryColor,
-                          keyboardType: TextInputType.name,
-                          decoration: Themes.formStyleBordered(
-                            'PT',
                           ),
                           style: Themes.customColor(
                             14,
@@ -290,7 +258,7 @@ class CreateIzinPage extends HookConsumerWidget {
                             label: 'Apply Izin',
                             onPressed: () async {
                               log(' VARIABLES : \n  Nama : ${namaTextController.value.text} ');
-                              log(' Payroll: ${ptTextController.value.text} \n ');
+
                               log(' Keterangan: ${keteranganTextController.value.text} \n ');
                               log(' Jenis Izin: ${jenisIzinTextController.value} \n ');
                               log(' Tgl Awal: ${tglAwalTextController.value} Tgl Akhir: ${tglAkhirTextController.value} \n ');

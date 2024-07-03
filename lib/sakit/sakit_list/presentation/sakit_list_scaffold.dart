@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
 import 'package:face_net_authentication/sakit/sakit_approve/application/sakit_approve_notifier.dart';
-import 'package:face_net_authentication/send_wa/application/send_wa_notifier.dart';
 import 'package:face_net_authentication/widgets/v_additional_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -34,7 +33,6 @@ class SakitListScaffold extends HookConsumerWidget
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final sendWa = ref.watch(sendWaNotifierProvider);
     final sakitList = ref.watch(sakitListControllerProvider);
     final sakitApprove = ref.watch(sakitApproveControllerProvider);
     final crossAuth = ref.watch(crossAuthNotifierProvider);
@@ -219,13 +217,14 @@ class SakitListScaffold extends HookConsumerWidget
                 },
                 child: VAsyncWidgetScaffold(
                   value: sakitApprove,
-                  data: (_) => VAsyncWidgetScaffold(
-                    value: sendWa,
-                    data: (_) => VScaffoldTabLayout(
+                  data: (_) => VAsyncWidgetScaffold<bool>(
+                    value: _userHasStaff,
+                    data: (s) => VScaffoldTabLayout(
                       scaffoldTitle: 'Sakit',
                       mapPT: mapPT,
                       additionalInfo:
                           VAdditionalInfo(infoMessage: [infoMessage]),
+                      isSearchVisible: s,
                       currPT: _initialDropdown ?? _initialDropdownPlaceholder,
                       searchFocus: _searchFocus,
                       isSearching: _isSearching,
@@ -245,22 +244,19 @@ class SakitListScaffold extends HookConsumerWidget
                               onPressed: () => context.pushNamed(
                                     RouteNames.createSakitNameRoute,
                                   )),
-                      bottomLeftWidget: VAsyncValueWidget<bool>(
-                        value: _userHasStaff,
-                        data: (s) => SearchFilterInfoWidget(
-                          d1: _d1,
-                          d2: _d2,
-                          isSearchVisible: s,
-                          lastSearch: _lastSearch.value,
-                          isScrolling: _isScrollStopped.value,
-                          isBottom: _isAtBottom.value,
-                          onTapName: () {
-                            _isSearching.value = true;
-                            _searchFocus.requestFocus();
-                          },
-                          onTapDate: () => CalendarHelper.callCalendar(
-                              context, onFilterSelected),
-                        ),
+                      bottomLeftWidget: SearchFilterInfoWidget(
+                        d1: _d1,
+                        d2: _d2,
+                        isSearchVisible: s,
+                        lastSearch: _lastSearch.value,
+                        isScrolling: _isScrollStopped.value,
+                        isBottom: _isAtBottom.value,
+                        onTapName: () {
+                          _isSearching.value = true;
+                          _searchFocus.requestFocus();
+                        },
+                        onTapDate: () => CalendarHelper.callCalendar(
+                            context, onFilterSelected),
                       ),
                       scaffoldBody: [
                         VAsyncValueWidget<List<SakitList>>(

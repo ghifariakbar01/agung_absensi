@@ -74,7 +74,7 @@ class SakitApproveRemoteService {
           'username': username,
           'pass': pass,
           'server': server,
-          'jenis_app': 'batal',
+          'jenis_app': 'btl',
         }),
       );
 

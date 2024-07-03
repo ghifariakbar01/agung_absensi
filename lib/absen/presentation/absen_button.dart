@@ -17,8 +17,6 @@ import '../../constants/assets.dart';
 import '../../domain/absen_failure.dart';
 import '../../domain/background_failure.dart';
 import '../../err_log/application/err_log_notifier.dart';
-import '../../network_state/application/network_state.dart';
-import '../../network_state/application/network_state_notifier.dart';
 import '../../riwayat_absen/application/riwayat_absen_notifier.dart';
 import '../../routes/application/route_names.dart';
 import '../../shared/providers.dart';
@@ -26,7 +24,6 @@ import '../../style/style.dart';
 import '../../tester/application/tester_state.dart';
 import '../../utils/enums.dart';
 import '../../utils/geofence_utils.dart';
-import '../../widgets/v_async_widget.dart';
 import '../../widgets/v_button.dart';
 import '../../widgets/v_dialogs.dart';
 
@@ -52,9 +49,11 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
   Widget build(BuildContext context) {
     // LAT, LONG
     final currentLocationLatitude = ref.watch(
-        geofenceProvider.select((value) => value.currentLocation.latitude));
+      geofenceProvider.select((value) => value.currentLocation.latitude),
+    );
     final currentLocationLongitude = ref.watch(
-        geofenceProvider.select((value) => value.currentLocation.longitude));
+      geofenceProvider.select((value) => value.currentLocation.longitude),
+    );
 
     final buttonResetVisibility = ref.watch(buttonResetVisibilityProvider);
 
@@ -67,11 +66,10 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
             (either) => either.fold(
                 (failure) => failure.maybeWhen(
                     noConnection: () => _onNoConnection(
-                        //
-                        context,
-                        currentLocationLatitude,
-                        currentLocationLongitude,
-                        absenState: ref.read(absenNotifierProvidier)),
+                          context,
+                          currentLocationLatitude,
+                          currentLocationLongitude,
+                        ),
                     orElse: () => _onErrOther(failure, context)),
                 (_) => _onBerhasilAbsen(context))));
 
@@ -89,10 +87,11 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                       builder: (_) => VSimpleDialog(
                         label: 'Error',
                         labelDescription: failure.maybeMap(
-                            empty: (_) => 'No saved found',
-                            unknown: (unkn) =>
-                                '${unkn.errorCode} ${unkn.message}',
-                            orElse: () => ''),
+                          orElse: () => '',
+                          empty: (_) => 'No saved found',
+                          unknown: (unkn) =>
+                              '${unkn.errorCode} ${unkn.message}',
+                        ),
                         asset: Assets.iconCrossed,
                       ),
                     ),
@@ -122,9 +121,6 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
     final savedIsNotEmpty = ref.watch(backgroundNotifierProvider
         .select((value) => value.savedBackgroundItems.isNotEmpty));
 
-    // NETWORK
-    final network = ref.watch(networkStateNotifier2Provider);
-
     return Column(
       children: [
         // Load Karyawan Shift
@@ -147,72 +143,58 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                 SizedBox(height: 20),
                 Visibility(
                   visible: !isOfflineMode,
-                  child: VAsyncValueWidget<NetworkState>(
-                    value: network,
-                    data: (netw) => VButton(
-                        label: 'ABSEN IN $karyawanShiftStr',
-                        isEnabled: isTesting
-                            ? true
-                            : netw.when(
-                                online: () => isTester.maybeWhen(
-                                    tester: () =>
-                                        buttonResetVisibility ||
-                                        isShift ||
-                                        absen == AbsenState.empty() ||
-                                        absen == AbsenState.incomplete(),
-                                    orElse: () =>
-                                        buttonResetVisibility ||
-                                        isShift &&
-                                            nearest < minDistance &&
-                                            nearest != 0 ||
-                                        absen == AbsenState.empty() &&
-                                            nearest < minDistance &&
-                                            nearest != 0 ||
-                                        absen == AbsenState.incomplete() &&
-                                            nearest < 100 &&
-                                            nearest != 0),
-                                offline: () => false,
-                              ),
-                        onPressed: () => _absenIn(
-                            context: context,
-                            isTester: isTester,
-                            currentLocationLatitude: currentLocationLatitude,
-                            currentLocationLongitude: currentLocationLongitude
-                            //
-                            )),
-                  ),
+                  child: VButton(
+                      label: 'ABSEN IN $karyawanShiftStr',
+                      isEnabled: isTesting
+                          ? true
+                          : isTester.maybeWhen(
+                              tester: () =>
+                                  buttonResetVisibility ||
+                                  isShift ||
+                                  absen == AbsenState.empty() ||
+                                  absen == AbsenState.incomplete(),
+                              orElse: () =>
+                                  buttonResetVisibility ||
+                                  isShift &&
+                                      nearest < minDistance &&
+                                      nearest != 0 ||
+                                  absen == AbsenState.empty() &&
+                                      nearest < minDistance &&
+                                      nearest != 0 ||
+                                  absen == AbsenState.incomplete() &&
+                                      nearest < 100 &&
+                                      nearest != 0),
+                      onPressed: () => _absenIn(
+                          context: context,
+                          isTester: isTester,
+                          currentLocationLatitude: currentLocationLatitude,
+                          currentLocationLongitude: currentLocationLongitude)),
                 ),
                 Visibility(
-                    visible: !isOfflineMode,
-                    child: VAsyncValueWidget<NetworkState>(
-                      value: network,
-                      data: (netw) => VButton(
-                          label: 'ABSEN OUT $karyawanShiftStr',
-                          isEnabled: isTesting
-                              ? true
-                              : netw.when(
-                                  online: () => isTester.maybeWhen(
-                                      tester: () =>
-                                          buttonResetVisibility ||
-                                          isShift ||
-                                          absen == AbsenState.absenIn(),
-                                      orElse: () =>
-                                          buttonResetVisibility ||
-                                          isShift &&
-                                              nearest < minDistance &&
-                                              nearest != 0 ||
-                                          absen == AbsenState.absenIn() &&
-                                              nearest < minDistance &&
-                                              nearest != 0),
-                                  offline: () => false),
-                          onPressed: () => _absenOut(
-                              context: context,
-                              isTester: isTester,
-                              currentLocationLatitude: currentLocationLatitude,
-                              currentLocationLongitude: currentLocationLongitude
-                              //
-                              )),
-                    ))
+                  visible: !isOfflineMode,
+                  child: VButton(
+                      label: 'ABSEN OUT $karyawanShiftStr',
+                      isEnabled: isTesting
+                          ? true
+                          : isTester.maybeWhen(
+                              tester: () =>
+                                  buttonResetVisibility ||
+                                  isShift ||
+                                  absen == AbsenState.absenIn(),
+                              orElse: () =>
+                                  buttonResetVisibility ||
+                                  isShift &&
+                                      nearest < minDistance &&
+                                      nearest != 0 ||
+                                  absen == AbsenState.absenIn() &&
+                                      nearest < minDistance &&
+                                      nearest != 0),
+                      onPressed: () => _absenOut(
+                          context: context,
+                          isTester: isTester,
+                          currentLocationLatitude: currentLocationLatitude,
+                          currentLocationLongitude: currentLocationLongitude)),
+                )
               ],
             );
           },
@@ -315,10 +297,6 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
     await ref.read(absenNotifierProvidier.notifier).getAbsenToday();
     final _refreshed = await ref.refresh(networkTimeFutureProvider.future);
 
-    await ref.read(riwayatAbsenNotifierProvider.notifier).getAndReplace(
-        dateFirst: ref.read(riwayatAbsenNotifierProvider).dateFirst,
-        dateSecond: ref.read(riwayatAbsenNotifierProvider).dateSecond);
-
     await showModalBottomSheet(
         context: context,
         isScrollControlled: true,
@@ -331,21 +309,20 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
             ));
   }
 
-  _onErrOther(AbsenFailure failure, BuildContext context) async {
+  _onErrOther(
+    AbsenFailure failure,
+    BuildContext context,
+  ) async {
     final String errMessage = failure.maybeWhen(
         server: (code, message) => 'Error $code $message',
         passwordExpired: () => 'Password Expired',
         passwordWrong: () => 'Password Wrong',
         orElse: () => '');
 
-    final String imeiSaved =
-        await ref.read(imeiNotifierProvider.notifier).getImeiString();
-    final String imeiDb =
-        await ref.read(imeiNotifierProvider.notifier).getImeiString();
-
-    await ref
-        .read(errLogControllerProvider.notifier)
-        .sendLog(imeiDb: imeiDb, imeiSaved: imeiSaved, errMessage: errMessage);
+    await ref.read(errLogControllerProvider.notifier).sendLog(
+          isHoting: true,
+          errMessage: errMessage,
+        );
 
     return showDialog(
         context: context,
@@ -362,15 +339,13 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
   }
 
   _onNoConnection(
-      //
-      BuildContext context,
-      double currentLocationLatitude,
-      double currentLocationLongitude,
-      {required AbsenState absenState}) async {
-    // ALAMAT GEOFENCE
+    BuildContext context,
+    double currentLocationLatitude,
+    double currentLocationLongitude,
+  ) async {
+    final absenState = ref.read(absenNotifierProvidier);
     final alamat = ref.read(geofenceProvider).nearestCoordinates;
 
-    // SAVE ABSEN
     await ref.read(backgroundNotifierProvider.notifier).addSavedLocation(
             savedLocation: SavedLocation(
           idGeof: alamat.id,
@@ -400,7 +375,6 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
             )));
   }
 
-  // Functions
   Future<dynamic> _absenOut({
     required BuildContext context,
     required TesterState isTester,
@@ -410,11 +384,13 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
     await OSVibrate.vibrate();
 
     DateTime refreshed = await ref.refresh(networkTimeFutureProvider.future);
-    String idGeof = ref
-        .read(geofenceProvider.select((value) => value.nearestCoordinates.id));
-    String imei = ref.read(imeiNotifierProvider.select((value) => value.imei));
+    String idGeof = ref.read(geofenceProvider).nearestCoordinates.id;
+    String imei = ref.read(userNotifierProvider).user.imeiHp ?? '';
+
     String lokasi = await GeofenceUtil.getLokasiStr(
-        lat: currentLocationLatitude, long: currentLocationLongitude);
+      lat: currentLocationLatitude,
+      long: currentLocationLongitude,
+    );
 
     if (imei.isEmpty) {
       return;
@@ -465,10 +441,12 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
 
     DateTime refreshed = await ref.refresh(networkTimeFutureProvider.future);
     String idGeof = ref.read(geofenceProvider).nearestCoordinates.id;
-    String imei = ref.read(imeiNotifierProvider).imei;
+    String imei = ref.read(userNotifierProvider).user.imeiHp ?? '';
 
     String lokasi = await GeofenceUtil.getLokasiStr(
-        lat: currentLocationLatitude, long: currentLocationLongitude);
+      lat: currentLocationLatitude,
+      long: currentLocationLongitude,
+    );
 
     if (imei.isEmpty) {
       return;
@@ -482,6 +460,7 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                 '\nIngin Absen Masuk ?\n\n${DateFormat('dd MMM yyyy').format(refreshed)}',
             labelDescription: DateFormat('HH:mm').format(refreshed),
             onPressed: () async {
+              context.pop();
               await isTester.maybeWhen(
                   tester: () =>
                       ref.read(absenAuthNotifierProvidier.notifier).absen(
@@ -505,63 +484,76 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                             dbDate: refreshed,
                             inOrOut: JenisAbsen.absenIn,
                           ));
-
-              context.pop();
             }));
   }
 }
 
-class Success extends HookWidget {
+class Success extends HookConsumerWidget {
   const Success(this.jam);
   final String jam;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final _controller = useAnimationController();
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SizedBox(
-          height: 450,
-          child: Lottie.asset(
-            'assets/success.json',
-            controller: _controller,
-            frameRate: FrameRate(60),
-            onLoaded: (composition) {
-              _controller
-                ..duration = Duration(seconds: 3)
-                ..forward().then((_) {
-                  context.pop();
-                  context.pushNamed(RouteNames.riwayatAbsenRoute, extra: true);
-                });
-            },
+    return ColoredBox(
+      color: Palette.green,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+            height: 450,
+            child: Lottie.asset(
+              'assets/success.json',
+              controller: _controller,
+              frameRate: FrameRate(60),
+              onLoaded: (composition) async {
+                final _riwayat = ref.read(riwayatAbsenNotifierProvider);
+
+                await ref
+                    .read(riwayatAbsenNotifierProvider.notifier)
+                    .getAndReplace(
+                      dateFirst: _riwayat.dateFirst,
+                      dateSecond: _riwayat.dateSecond,
+                    );
+
+                _controller
+                  ..duration = Duration(seconds: 3)
+                  ..forward().then((_) {
+                    context.pop();
+                    context.pushNamed(
+                      RouteNames.riwayatAbsenRoute,
+                      extra: true,
+                    );
+                  });
+              },
+            ),
           ),
-        ),
-        SizedBox(
-          height: 8,
-        ),
-        Text(
-          'Berhasil Absen',
-          style: Themes.customColor(
-            30,
-            color: Colors.black,
-            fontWeight: FontWeight.w500,
+          SizedBox(
+            height: 8,
           ),
-        ),
-        SizedBox(
-          height: 4,
-        ),
-        Text(
-          jam,
-          style: Themes.customColor(
-            45,
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
+          Text(
+            'Berhasil Absen',
+            style: Themes.customColor(
+              30,
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+            ),
           ),
-        ),
-      ],
+          SizedBox(
+            height: 4,
+          ),
+          Text(
+            jam,
+            style: Themes.customColor(
+              45,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

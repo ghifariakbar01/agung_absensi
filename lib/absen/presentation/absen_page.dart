@@ -40,15 +40,19 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
   Future<void> _initializeGeofenceImeiAndAbsen() async {
     await ref.read(testerNotifierProvider).maybeWhen(tester: () async {
       final imeiNotifier = ref.read(imeiNotifierProvider.notifier);
-      String imei = await imeiNotifier.getImeiString();
+      final imei = await imeiNotifier.getImeiString();
       await Future.delayed(
-          Duration(seconds: 1), () => imeiNotifier.changeSavedImei(imei));
+        Duration(seconds: 1),
+        () => imeiNotifier.changeSavedImei(imei),
+      );
     }, orElse: () async {
       final imeiNotifier = ref.read(imeiNotifierProvider.notifier);
-
-      String imei = await imeiNotifier.getImeiString();
+      final imei = await imeiNotifier.getImeiString();
       await Future.delayed(
-          Duration(seconds: 1), () => imeiNotifier.changeSavedImei(imei));
+        Duration(seconds: 1),
+        () => imeiNotifier.changeSavedImei(imei),
+      );
+
       await ref.read(backgroundNotifierProvider.notifier).getSavedLocations();
       await ref.read(geofenceProvider.notifier).getGeofenceList();
       await ref.read(absenNotifierProvidier.notifier).getAbsenToday();
@@ -63,8 +67,10 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
     final mockLocation = ref.watch(mockLocationNotifierProvider);
 
     final isOfflineMode = ref.watch(absenOfflineModeProvider);
-    final nama =
-        ref.watch(userNotifierProvider.select((value) => value.user.nama));
+
+    final nama = ref.watch(
+      userNotifierProvider.select((value) => value.user.nama),
+    );
 
     final packageInfo = ref.watch(packageInfoProvider);
 

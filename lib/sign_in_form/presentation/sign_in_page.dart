@@ -10,6 +10,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../constants/assets.dart';
+import '../../constants/constants.dart';
 import '../../domain/auth_failure.dart';
 import '../../shared/providers.dart';
 import '../../style/style.dart';
@@ -87,33 +88,38 @@ class SignInPage extends HookConsumerWidget {
                       child: VButton(
                         onPressed: () async {
                           FocusScope.of(context).unfocus();
+
                           await ref
                               .read(signInFormNotifierProvider.notifier)
                               .signInAndRemember(
-                                init: () => _initSignIn(ref),
-                                remember: () => ref
-                                    .read(signInFormNotifierProvider.notifier)
-                                    .rememberInfo(),
-                                clearSaved: () => ref
-                                    .read(signInFormNotifierProvider.notifier)
-                                    .clearInfo(),
-                                showDialogAndLogout: () =>
-                                    _showDialogAndLogout(context, ref),
-                                signIn: () => _serverSelected == 'gs_12'
-                                    ? ref
-                                        .read(
-                                            signInFormNotifierProvider.notifier)
-                                        .signInWithUserIdEmailAndPasswordACT()
-                                    : ref
-                                        .read(
-                                            signInFormNotifierProvider.notifier)
-                                        .signInWithUserIdEmailAndPasswordARV(),
-                                onSuccessLoginAfterRemember: () => ref
-                                    .read(authNotifierProvider.notifier)
-                                    .checkAndUpdateAuthStatus(),
-                              );
+                                  init: () => _initSignIn(ref),
+                                  remember:
+                                      () =>
+                                          ref
+                                              .read(
+                                                  signInFormNotifierProvider
+                                                      .notifier)
+                                              .rememberInfo(),
+                                  clearSaved: () => ref
+                                      .read(signInFormNotifierProvider.notifier)
+                                      .clearInfo(),
+                                  showDialogAndLogout: () =>
+                                      _showDialogAndLogout(context, ref),
+                                  signIn: () => _serverSelected == 'gs_12'
+                                      ? ref
+                                          .read(signInFormNotifierProvider
+                                              .notifier)
+                                          .signInWithUserIdEmailAndPasswordACT()
+                                      : ref
+                                          .read(signInFormNotifierProvider
+                                              .notifier)
+                                          .signInWithUserIdEmailAndPasswordARV(),
+                                  onSuccessLoginAfterRemember: () => ref
+                                      .read(authNotifierProvider.notifier)
+                                      .checkAndUpdateAuthStatus());
                         },
-                        label: 'LOGIN (APK TESTING)',
+                        label:
+                            'LOGIN ${Constants.isDev ? '(APK TESTING)' : ''}',
                       )),
                   LoadingOverlay(isLoading: isSubmitting),
                 ],

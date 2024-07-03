@@ -6,14 +6,15 @@ class ErrLogRepository {
 
   final ErrLogRemoteService _remoteService;
 
-  Future<Unit> sendLog(
-      {required int idUser,
-      required String nama,
-      required String imeiDb,
-      required String platform,
-      required String imeiSaved,
-      required String errMessage}) async {
-    return await _remoteService.sendLog(
+  Future<Unit> sendLog({
+    required int idUser,
+    required String nama,
+    required String imeiDb,
+    required String platform,
+    required String imeiSaved,
+    required String errMessage,
+  }) async {
+    return _remoteService.sendLog(
         idUser: idUser,
         nama: nama,
         imeiDb: imeiDb,

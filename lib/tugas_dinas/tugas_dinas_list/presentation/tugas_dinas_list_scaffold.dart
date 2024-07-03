@@ -2,7 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:face_net_authentication/tugas_dinas/tugas_dinas_approve/application/tugas_dinas_approve_notifier.dart';
 import 'package:face_net_authentication/tugas_dinas/tugas_dinas_list/application/tugas_dinas_list_notifier.dart';
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
-import 'package:face_net_authentication/send_wa/application/send_wa_notifier.dart';
 import 'package:face_net_authentication/widgets/v_additional_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -18,6 +17,7 @@ import '../../../firebase/remote_config/application/firebase_remote_config_notif
 import '../../../helper.dart';
 import '../../../routes/application/route_names.dart';
 import '../../../shared/providers.dart';
+import '../../../user/application/user_notifier.dart';
 import '../../../utils/dialog_helper.dart';
 import '../../../widgets/v_async_widget.dart';
 import '../../../widgets/v_scaffold_widget.dart';
@@ -34,7 +34,6 @@ class TugasDinasListScaffold extends HookConsumerWidget
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final sendWa = ref.watch(sendWaNotifierProvider);
     final tugasdDinasList = ref.watch(tugasDinasListControllerProvider);
     final tugasDinasApprove = ref.watch(tugasDinasApproveControllerProvider);
     final crossAuth = ref.watch(crossAuthNotifierProvider);
@@ -188,6 +187,7 @@ class TugasDinasListScaffold extends HookConsumerWidget
     });
 
     final errLog = ref.watch(errLogControllerProvider);
+    final _userHasStaff = ref.watch(userHasStaffProvider);
     final _isUserCrossed = ref.watch(isUserCrossedProvider);
 
     final _isSearching = useState(false);
@@ -225,13 +225,14 @@ class TugasDinasListScaffold extends HookConsumerWidget
                 },
                 child: VAsyncWidgetScaffold(
                   value: tugasDinasApprove,
-                  data: (_) => VAsyncWidgetScaffold(
-                    value: sendWa,
-                    data: (_) => VScaffoldTabLayout(
+                  data: (_) => VAsyncWidgetScaffold<bool>(
+                    value: _userHasStaff,
+                    data: (s) => VScaffoldTabLayout(
                       scaffoldTitle: 'Tugas Dinas',
                       mapPT: mapPT,
                       additionalInfo: VAdditionalInfo(
                           infoMessage: [infoMessage, infoMessage2]),
+                      isSearchVisible: s,
                       currPT: _initialDropdown ?? _initialDropdownPlaceholder,
                       searchFocus: _searchFocus,
                       isSearching: _isSearching,
@@ -254,15 +255,18 @@ class TugasDinasListScaffold extends HookConsumerWidget
                       bottomLeftWidget: SearchFilterInfoWidget(
                         d1: _d1,
                         d2: _d2,
+                        isSearchVisible: s,
+                        isBottom: _isAtBottom.value,
                         lastSearch: _lastSearch.value,
                         isScrolling: _isScrollStopped.value,
-                        isBottom: _isAtBottom.value,
                         onTapName: () {
                           _isSearching.value = true;
                           _searchFocus.requestFocus();
                         },
                         onTapDate: () => CalendarHelper.callCalendar(
-                            context, onFilterSelected),
+                          context,
+                          onFilterSelected,
+                        ),
                       ),
                       scaffoldBody: [
                         VAsyncValueWidget<List<TugasDinasList>>(

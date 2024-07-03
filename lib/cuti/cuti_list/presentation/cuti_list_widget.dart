@@ -36,9 +36,12 @@ class CutiListWidget extends ConsumerWidget {
         child: list.isEmpty
             ? Padding(
                 padding: const EdgeInsets.only(
-                    top: 10.0, left: 16.0, right: 16.0, bottom: 0),
+                  top: 10.0,
+                  left: 16.0,
+                  right: 16.0,
+                  bottom: 0,
+                ),
                 child: Container(
-                  height: 100,
                   padding: EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     color: Palette.greyDisabled.withOpacity(0.1),
@@ -71,24 +74,21 @@ class CutiListWidget extends ConsumerWidget {
                                                 .information([_info]),
                                           ),
                                         )),
-                                child: SizedBox(
-                                  width: 225,
-                                  child: CommonWidget().information([_info],
-                                      fontSize: 8, width: 225),
-                                ),
+                                child: CommonWidget().information([_info],
+                                    fontSize: 8, width: 250),
                               ),
                             ),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
-                                  'Saldo Cuti \n(${mst.dateOpen} )',
+                                  'Saldo Cuti \n(${mst.cutiBaru != 0 ? mst.tahunCutiBaru : mst.tahunCutiTidakBaru} )',
                                   style: Themes.customColor(10,
                                       fontWeight: FontWeight.bold),
                                   textAlign: TextAlign.center,
                                 ),
                                 Text(
-                                  '${mst.cutiAktif}',
+                                  '${mst.cutiBaru != 0 ? mst.cutiBaru : mst.cutiTidakBaru}',
                                   style: Themes.customColor(20,
                                       color: Colors.red,
                                       fontWeight: FontWeight.bold),

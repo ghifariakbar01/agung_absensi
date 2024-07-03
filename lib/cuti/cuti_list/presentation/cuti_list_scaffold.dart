@@ -212,100 +212,99 @@ class CutiListScaffold extends HookConsumerWidget {
                     value: mstCuti,
                     data: (mst) => VAsyncValueWidget(
                         value: cutiApprove,
-                        data: (_) {
-                          return VScaffoldTabLayout(
-                            scaffoldTitle: 'Cuti',
-                            mapPT: mapPT,
-                            currPT:
-                                _initialDropdown ?? _initialDropdownPlaceholder,
-                            searchFocus: _searchFocus,
-                            isSearching: _isSearching,
-                            onPageChanged: onPageChanged,
-                            onFieldSubmitted: onFieldSubmitted,
-                            onFilterSelected: onFilterSelected,
-                            onDropdownChanged: onDropdownChanged,
-                            initialDateRange: _dateTimeRange.value,
-                            scaffoldFAB: _isCrossed
-                                ? Container()
-                                : FloatingActionButton.small(
-                                    backgroundColor: Palette.primaryColor,
-                                    child: Icon(
-                                      Icons.add,
-                                      color: Colors.white,
-                                    ),
-                                    onPressed: () => context.pushNamed(
-                                          RouteNames.createCutiNameRoute,
-                                        )),
-                            bottomLeftWidget: VAsyncValueWidget<bool>(
+                        data: (_) => VAsyncValueWidget<bool>(
                               value: _userHasStaff,
-                              data: (s) => SearchFilterInfoWidget(
-                                d1: _d1,
-                                d2: _d2,
+                              data: (s) => VScaffoldTabLayout(
+                                scaffoldTitle: 'Cuti',
+                                mapPT: mapPT,
+                                currPT: _initialDropdown ??
+                                    _initialDropdownPlaceholder,
                                 isSearchVisible: s,
-                                lastSearch: _lastSearch.value,
-                                isScrolling: _isScrollStopped.value,
-                                isBottom: _isAtBottom.value,
-                                onTapName: () {
-                                  _isSearching.value = true;
-                                  _searchFocus.requestFocus();
-                                },
-                                onTapDate: () => CalendarHelper.callCalendar(
-                                    context, onFilterSelected),
-                              ),
-                            ),
-                            scaffoldBody: [
-                              VAsyncValueWidget<List<CutiList>>(
-                                  value: cutiList,
-                                  data: (list) {
-                                    final waiting = list
-                                        .where((e) =>
-                                            (e.spvSta == false ||
-                                                e.hrdSta == false) &&
-                                            e.btlSta == false)
-                                        .toList();
+                                searchFocus: _searchFocus,
+                                isSearching: _isSearching,
+                                onPageChanged: onPageChanged,
+                                onFieldSubmitted: onFieldSubmitted,
+                                onFilterSelected: onFilterSelected,
+                                onDropdownChanged: onDropdownChanged,
+                                initialDateRange: _dateTimeRange.value,
+                                scaffoldFAB: _isCrossed
+                                    ? Container()
+                                    : FloatingActionButton.small(
+                                        backgroundColor: Palette.primaryColor,
+                                        child: Icon(
+                                          Icons.add,
+                                          color: Colors.white,
+                                        ),
+                                        onPressed: () => context.pushNamed(
+                                              RouteNames.createCutiNameRoute,
+                                            )),
+                                bottomLeftWidget: SearchFilterInfoWidget(
+                                  d1: _d1,
+                                  d2: _d2,
+                                  isSearchVisible: s,
+                                  lastSearch: _lastSearch.value,
+                                  isScrolling: _isScrollStopped.value,
+                                  isBottom: _isAtBottom.value,
+                                  onTapName: () {
+                                    _isSearching.value = true;
+                                    _searchFocus.requestFocus();
+                                  },
+                                  onTapDate: () => CalendarHelper.callCalendar(
+                                      context, onFilterSelected),
+                                ),
+                                scaffoldBody: [
+                                  VAsyncValueWidget<List<CutiList>>(
+                                      value: cutiList,
+                                      data: (list) {
+                                        final waiting = list
+                                            .where((e) =>
+                                                (e.spvSta == false ||
+                                                    e.hrdSta == false) &&
+                                                e.btlSta == false)
+                                            .toList();
 
-                                    return CutiListWidget(
-                                      _isCrossed,
-                                      mst,
-                                      waiting,
-                                      onRefresh,
-                                      scrollController,
-                                    );
-                                  }),
-                              VAsyncValueWidget<List<CutiList>>(
-                                  value: cutiList,
-                                  data: (list) {
-                                    final approved = list
-                                        .where((e) =>
-                                            (e.spvSta == true &&
-                                                e.hrdSta == true) &&
-                                            e.btlSta == false)
-                                        .toList();
-                                    return CutiListWidget(
-                                      _isCrossed,
-                                      mst,
-                                      approved,
-                                      onRefresh,
-                                      scrollController,
-                                    );
-                                  }),
-                              VAsyncValueWidget<List<CutiList>>(
-                                  value: cutiList,
-                                  data: (list) {
-                                    final cancelled = list
-                                        .where((e) => e.btlSta == true)
-                                        .toList();
-                                    return CutiListWidget(
-                                      _isCrossed,
-                                      mst,
-                                      cancelled,
-                                      onRefresh,
-                                      scrollController,
-                                    );
-                                  }),
-                            ],
-                          );
-                        }),
+                                        return CutiListWidget(
+                                          _isCrossed,
+                                          mst,
+                                          waiting,
+                                          onRefresh,
+                                          scrollController,
+                                        );
+                                      }),
+                                  VAsyncValueWidget<List<CutiList>>(
+                                      value: cutiList,
+                                      data: (list) {
+                                        final approved = list
+                                            .where((e) =>
+                                                (e.spvSta == true &&
+                                                    e.hrdSta == true) &&
+                                                e.btlSta == false)
+                                            .toList();
+                                        return CutiListWidget(
+                                          _isCrossed,
+                                          mst,
+                                          approved,
+                                          onRefresh,
+                                          scrollController,
+                                        );
+                                      }),
+                                  VAsyncValueWidget<List<CutiList>>(
+                                      value: cutiList,
+                                      data: (list) {
+                                        final cancelled = list
+                                            .where((e) => e.btlSta == true)
+                                            .toList();
+                                        return CutiListWidget(
+                                          _isCrossed,
+                                          mst,
+                                          cancelled,
+                                          onRefresh,
+                                          scrollController,
+                                        );
+                                      }),
+                                ],
+                              ),
+                            )),
                   ));
             }),
       ),

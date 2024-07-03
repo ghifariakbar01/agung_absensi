@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
+import 'package:face_net_authentication/device_detector/device_detector_notifier.dart';
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
 
 import 'package:flutter/cupertino.dart';
@@ -22,6 +23,7 @@ import '../../home/presentation/home_saved.dart';
 import '../../network_state/application/network_state_notifier.dart';
 import '../../shared/common_widgets.dart';
 import '../../shared/providers.dart';
+import '../../style/style.dart';
 import '../../user/application/user_model.dart';
 import '../../widgets/alert_helper.dart';
 import '../../widgets/v_async_widget.dart';
@@ -128,13 +130,31 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
 
     final _controller = useAnimationController();
 
+    final _device = ref.watch(deviceDetectorNotifierProvider);
+
     return VAsyncWidgetScaffold<void>(
       value: errLog,
       data: (_) => Scaffold(
         backgroundColor: Colors.white,
         body: Stack(children: [
           if (!isLoading) ...[
-            HomeSaved(),
+            VAsyncValueWidget<bool>(
+                value: _device,
+                data: (dev) => dev == false
+                    ? Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(
+                            'Anda dideteksi menggunakan emulator. Harap gunakan aplikasi E-FINGER pada device fisik anda.',
+                            textAlign: TextAlign.center,
+                            style: Themes.customColor(
+                              20,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      )
+                    : HomeSaved()),
           ],
           if (isLoading) ...[
             CommonWidget().lottie(
