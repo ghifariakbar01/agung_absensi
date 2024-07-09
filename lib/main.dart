@@ -20,6 +20,7 @@ import 'style/style.dart';
 import 'tc/application/shared/tc_providers.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'utils/upgrader_message.dart';
 import 'widgets/v_async_widget.dart';
 
 Future<void> main() async {
@@ -111,24 +112,4 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
                   ),
                 )));
   }
-}
-
-class MyUpgraderMessages extends UpgraderMessages {
-  @override
-  String get body => 'Mohon Lakukan update dengan versi aplikasi terbaru';
-
-  @override
-  String get buttonTitleIgnore => '-';
-
-  @override
-  String get title => 'Ada Pembaharuan';
-
-  @override
-  String get buttonTitleUpdate => 'Update';
-
-  @override
-  String get buttonTitleLater => 'Nanti Saja';
-
-  @override
-  String get prompt => '';
 }

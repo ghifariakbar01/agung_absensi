@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dartz/dartz.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -27,23 +25,25 @@ class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
   }) async {
     Either<AbsenFailure, Unit> failureOrSuccess;
 
-    state = state.copyWith(isSubmitting: true, failureOrSuccessOption: none());
+    state = state.copyWith(
+      isSubmitting: true,
+      failureOrSuccessOption: none(),
+    );
 
     failureOrSuccess = await _absenRepository.absen(
+        imei: imei,
         date: date,
         dbDate: dbDate,
         lokasi: lokasi,
         latitude: latitude,
         longitude: longitude,
         inOrOut: inOrOut,
-        idGeof: idGeof,
-        imei: imei);
-
-    log('failureOrSuccess $failureOrSuccess');
+        idGeof: idGeof);
 
     state = state.copyWith(
-        isSubmitting: false,
-        failureOrSuccessOption: optionOf(failureOrSuccess));
+      isSubmitting: false,
+      failureOrSuccessOption: optionOf(failureOrSuccess),
+    );
   }
 
   void _changeBackgroundAbsenStateSaved(SavedLocation backgroundItemState) {

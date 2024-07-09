@@ -58,7 +58,7 @@ class AuthRepository {
       return await authResponse.when(
         withUser: (user) async {
           await saveUser(user);
-          await saveUser(user);
+          await _credentialsStorage.read();
 
           return right(unit);
         },
@@ -94,12 +94,10 @@ class AuthRepository {
         password: passwordStr,
       );
 
-      return await authResponse.when(
+      return authResponse.when(
         withUser: (user) async {
-          String userSave = jsonEncode(user);
-          await _credentialsStorage.save(userSave);
-          await _credentialsStorage.save(userSave);
-          await _credentialsStorage.save(userSave);
+          await saveUser(user);
+          await _credentialsStorage.read();
 
           return right(unit);
         },

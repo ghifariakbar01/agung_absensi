@@ -32,47 +32,38 @@ class SignInPage extends HookConsumerWidget {
         (_, failureOrSuccessOption) => failureOrSuccessOption.fold(
             () {},
             (either) => either.fold(
-                (failure) => AlertHelper.showSnackBar(
-                      context,
-                      message: failure.map(
-                        passwordWrong: (_) => 'Password Salah',
-                        passwordExpired: (_) => 'Password Expired',
-                        noConnection: (_) => 'tidak ada koneksi',
-                        server: (value) => value.message ?? 'server error',
-                        storage: (_) =>
-                            'Mohon maaf Storage Anda penuh. Mohon luangkan storage agar bisa menyimpan data user.',
-                      ),
-                    ),
-                (_) => ref
-                    .read(signInFormNotifierProvider.notifier)
-                    .initializeAndRedirect(
-                      initializeSavedLocations: () => ref
-                          .read(backgroundNotifierProvider.notifier)
-                          .getSavedLocations(),
-                      initializeGeofenceList: () =>
-                          ref.read(geofenceProvider.notifier).getGeofenceList(),
-                      redirect: () async {
-                        await ref
-                            .read(authNotifierProvider.notifier)
-                            .checkAndUpdateAuthStatus();
-                        await ref
-                            .read(imeiIntroNotifierProvider.notifier)
-                            .checkAndUpdateImeiIntro();
-                        await ref
-                            .read(tcNotifierProvider.notifier)
-                            .checkAndUpdateStatusTC();
-                      },
-                    ))));
+                    (failure) => AlertHelper.showSnackBar(
+                          context,
+                          message: failure.map(
+                            passwordWrong: (_) => 'Password Salah',
+                            passwordExpired: (_) => 'Password Expired',
+                            noConnection: (_) => 'tidak ada koneksi',
+                            server: (value) => value.message ?? 'server error',
+                            storage: (_) =>
+                                'Mohon maaf Storage Anda penuh. Mohon luangkan storage agar bisa menyimpan data user.',
+                          ),
+                        ), (_) async {
+                  await ref
+                      .read(authNotifierProvider.notifier)
+                      .checkAndUpdateAuthStatus();
+                  await ref
+                      .read(imeiIntroNotifierProvider.notifier)
+                      .checkAndUpdateImeiIntro();
+                  await ref
+                      .read(tcNotifierProvider.notifier)
+                      .checkAndUpdateStatusTC();
+                })));
+
+    final ip = ref.watch(ipNotifierProvider);
+    final unlink = ref.watch(unlinkNotifierProvider);
 
     final isSubmitting = ref.watch(
       signInFormNotifierProvider.select((state) => state.isSubmitting),
     );
 
-    final ip = ref.watch(ipNotifierProvider);
-    final unlink = ref.watch(unlinkNotifierProvider);
-
-    final _serverSelected =
-        ref.watch(signInFormNotifierProvider).ptServerSelected.getOrLeave('');
+    final _serverSelected = ref.watch(signInFormNotifierProvider.select(
+      (value) => value.ptServerSelected.getOrLeave(''),
+    ));
 
     return VAsyncWidgetScaffold(
       value: ip,
@@ -92,31 +83,25 @@ class SignInPage extends HookConsumerWidget {
                           await ref
                               .read(signInFormNotifierProvider.notifier)
                               .signInAndRemember(
-                                  init: () => _initSignIn(ref),
-                                  remember:
-                                      () =>
-                                          ref
-                                              .read(
-                                                  signInFormNotifierProvider
-                                                      .notifier)
-                                              .rememberInfo(),
-                                  clearSaved: () => ref
-                                      .read(signInFormNotifierProvider.notifier)
-                                      .clearInfo(),
-                                  showDialogAndLogout: () =>
-                                      _showDialogAndLogout(context, ref),
-                                  signIn: () => _serverSelected == 'gs_12'
-                                      ? ref
-                                          .read(signInFormNotifierProvider
-                                              .notifier)
-                                          .signInWithUserIdEmailAndPasswordACT()
-                                      : ref
-                                          .read(signInFormNotifierProvider
-                                              .notifier)
-                                          .signInWithUserIdEmailAndPasswordARV(),
-                                  onSuccessLoginAfterRemember: () => ref
-                                      .read(authNotifierProvider.notifier)
-                                      .checkAndUpdateAuthStatus());
+                                init: () => _initSignIn(ref),
+                                remember: () => ref
+                                    .read(signInFormNotifierProvider.notifier)
+                                    .rememberInfo(),
+                                clearSaved: () => ref
+                                    .read(signInFormNotifierProvider.notifier)
+                                    .clearInfo(),
+                                showDialogAndLogout: () =>
+                                    _showDialogAndLogout(context, ref),
+                                signIn: () => _serverSelected == 'gs_18'
+                                    ? ref
+                                        .read(
+                                            signInFormNotifierProvider.notifier)
+                                        .signInWithUserIdEmailAndPasswordARV()
+                                    : ref
+                                        .read(
+                                            signInFormNotifierProvider.notifier)
+                                        .signInWithUserIdEmailAndPasswordACT(),
+                              );
                         },
                         label:
                             'LOGIN ${Constants.isDev ? '(APK TESTING)' : ''}',
@@ -154,15 +139,16 @@ class SignInPage extends HookConsumerWidget {
   }
 
   _initSignIn(WidgetRef ref) {
-    String server =
-        ref.read(signInFormNotifierProvider).ptServerSelected.getOrLeave('');
-    String username =
-        ref.read(signInFormNotifierProvider).userId.getOrLeave('');
-    String password =
-        ref.read(signInFormNotifierProvider).password.getOrLeave('');
+    final _signIn = ref.read(signInFormNotifierProvider);
 
-    ref
-        .read(dioRequestProvider)
-        .addAll({"server": server, "username": username, "password": password});
+    final server = _signIn.ptServerSelected.getOrLeave('');
+    final username = _signIn.userId.getOrLeave('');
+    final password = _signIn.password.getOrLeave('');
+
+    ref.read(dioRequestProvider).addAll({
+      "server": server,
+      "username": username,
+      "password": password,
+    });
   }
 }

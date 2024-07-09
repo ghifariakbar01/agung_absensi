@@ -64,10 +64,12 @@ class VAsyncWidgetScaffoldWrappedMaterial<T> extends HookWidget {
         textDirection: TextDirection.ltr,
         child: Scaffold(
           backgroundColor: Colors.white,
-          body: CommonWidget().lottie(
-            'assets/network.json',
-            'Fetching url...',
-            _controller,
+          body: Center(
+            child: CommonWidget().lottie(
+              'assets/network.json',
+              'Fetching url...',
+              _controller,
+            ),
           ),
         ),
       ),

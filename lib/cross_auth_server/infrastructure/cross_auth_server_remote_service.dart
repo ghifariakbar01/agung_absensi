@@ -11,7 +11,7 @@ class CrossAuthServerRemoteService {
 
   final Dio _dio;
 
-  Future<Unit> getCutiList({
+  Future<Unit> getSakitList({
     required String username,
     required String pass,
   }) async {
@@ -20,7 +20,7 @@ class CrossAuthServerRemoteService {
       final d2 = DateFormat('yyyy-MM-dd')
           .format(DateTime.now().subtract(Duration(days: 1)));
 
-      final response = await _dio.get('/service_cuti.asmx/getCuti',
+      final response = await _dio.get('/service_sakit.asmx/getSakit',
           options: Options(
             headers: {
               'username': username,

@@ -1,136 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-	<dict>
-		<key>CFBundleDevelopmentRegion</key>
-		<string>$(DEVELOPMENT_LANGUAGE)</string>
-		<key>CFBundleExecutable</key>
-		<string>$(EXECUTABLE_NAME)</string>
-		<key>CFBundleIdentifier</key>
-		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-		<key>CFBundleInfoDictionaryVersion</key>
-		<string>6.0</string>
-		<key>CFBundleName</key>
-		<string>E-FINGER</string>
-		<key>CFBundlePackageType</key>
-		<string>APPL</string>
-		<key>CFBundleShortVersionString</key>
-		<string>$(FLUTTER_BUILD_NAME)</string>
-		<key>CFBundleSignature</key>
-		<string>????</string>
-		<key>CFBundleVersion</key>
-		<string>$(FLUTTER_BUILD_NUMBER)</string>
-		<key>LSRequiresIPhoneOS</key>
-		<true/>
-		<key>io.flutter.embedded_views_preview</key>
-  		<true/>
-		<key>NSAppTransportSecurity</key>
-		<dict>
-    	<key>NSAllowsArbitraryLoads</key>
-		<true/>
-		</dict>
-		<key>NSLocationWhenInUseUsageDescription</key>
-		<string>This app requires access to your location to validate your presence within a specific radius for attendance purposes. Your location information will only be used for this purpose and will not be shared with any third parties.</string>
-		<key>NSMotionUsageDescription</key>
-		<string>Unused in the app. Used by external libraries.</string>
-		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-		<string>Unused in the app. Used by external libraries.</string>
-		<key>UILaunchStoryboardName</key>
-		<string>LaunchScreen.storyboard</string>
-		<key>UIMainStoryboardFile</key>
-		<string>Main</string>
-		<key>UISupportedInterfaceOrientations</key>
-		<array>
-			<string>UIInterfaceOrientationPortrait</string>
-		</array>
-		<key>UISupportedInterfaceOrientations~ipad</key>
-		<array>
-			<string>UIInterfaceOrientationPortrait</string>
-		</array>
-		<key>UIViewControllerBasedStatusBarAppearance</key>
-		<false/>
-		<key>CADisableMinimumFrameDurationOnPhone</key>
-		<true/>
-		<key>UIApplicationSupportsIndirectInputEvents</key>
-		<true/>
-		<key>UIStatusBarHidden</key>
-		<false/>
-	</dict>
-</plist>
-
-<!-- <key>LSApplicationQueriesSchemes</key>
-		<array>
-			<string>sms</string>
-			<string>tel</string>
-		</array> -->
-		<!-- <key>NSCameraUsageDescription</key>
-		<string>This app requires access to your camera to use facial recognition for validating your presence and ensuring security during attendance tracking.</string> -->
-
-
-		
-<!-- 
 <dict>
-					<key>NSExceptionDomains</key>
-					<dict>
-						<!-- 1232 -->
-						<key>agunglogisticsapp.co.id:1232</key>
-						<dict>
-							<!-- add this key to enable subdomains such as sub.yourserver.com -->
-							<key>NSIncludesSubdomains</key>
-							<true/>
-							<!-- add this key to allow standard HTTP requests, thus negating the ATS -->
-							<key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
-							<true/>
-							<!-- add this key to specify the minimum TLS version to accept -->
-							<key>NSTemporaryExceptionMinimumTLSVersion</key>
-							<string>TLSv1.1</string>
-						</dict>
-						<!-- END -->
-
-						<!-- 1261 -->
-						<key>agunglogisticsapp.co.id:1261</key>
-						<dict>
-							<!-- add this key to enable subdomains such as sub.yourserver.com -->
-							<key>NSIncludesSubdomains</key>
-							<true/>
-							<!-- add this key to allow standard HTTP requests, thus negating the ATS -->
-							<key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
-							<true/>
-							<!-- add this key to specify the minimum TLS version to accept -->
-							<key>NSTemporaryExceptionMinimumTLSVersion</key>
-							<string>TLSv1.1</string>
-						</dict>
-						<!-- END -->
-
-						<!-- 1026 -->
-						<key>agunglogisticsapp.co.id:1026</key>
-						<dict>
-							<!-- add this key to enable subdomains such as sub.yourserver.com -->
-							<key>NSIncludesSubdomains</key>
-							<true/>
-							<!-- add this key to allow standard HTTP requests, thus negating the ATS -->
-							<key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
-							<true/>
-							<!-- add this key to specify the minimum TLS version to accept -->
-							<key>NSTemporaryExceptionMinimumTLSVersion</key>
-							<string>TLSv1.1</string>
-						</dict>
-						<!-- END -->
-
-						<!-- 1063 -->
-						<key>agunglogisticsapp.co.id:1063</key>
-						<dict>
-							<!-- add this key to enable subdomains such as sub.yourserver.com -->
-							<key>NSIncludesSubdomains</key>
-							<true/>
-							<!-- add this key to allow standard HTTP requests, thus negating the ATS -->
-							<key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
-							<true/>
-							<!-- add this key to specify the minimum TLS version to accept -->
-							<key>NSTemporaryExceptionMinimumTLSVersion</key>
-							<string>TLSv1.1</string>
-						</dict>
-						<!-- END -->
-						
-					</dict>
-				</dict> -->
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>E-FINGER</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>$(FLUTTER_BUILD_NAME)</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Unused in the app. Used by external libraries.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app requires access to your location to validate your presence within a specific radius for attendance purposes. Your location information will only be used for this purpose and will not be shared with any third parties.</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Unused in the app. Used by external libraries.</string>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen.storyboard</string>
+	<key>UIMainStoryboardFile</key>
+	<string>Main</string>
+	<key>UIRequiresFullScreen</key>
+	<true/>
+	<key>UIStatusBarHidden</key>
+	<false/>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
+	<key>io.flutter.embedded_views_preview</key>
+	<true/>
+</dict>
+</plist>

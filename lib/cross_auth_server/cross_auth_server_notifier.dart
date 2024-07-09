@@ -81,7 +81,7 @@ class CrossAuthServerNotifier extends _$CrossAuthServerNotifier {
       _resetCutiDioProvider(_map[i].value);
 
       final _resp =
-          await ref.read(crossAuthServerRepositoryProvider).getCutiList(
+          await ref.read(crossAuthServerRepositoryProvider).getSakitList(
                 username: username,
                 pass: pass,
               );

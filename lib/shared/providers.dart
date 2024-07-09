@@ -2,10 +2,10 @@
 
 import 'package:dio/dio.dart';
 
-import 'package:ntp/ntp.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../absen/application/absen_auth_notifier.dart';
 import '../absen/application/absen_auth_state.dart';
@@ -59,6 +59,9 @@ import '../tester/application/tester_notifier.dart';
 import '../tester/application/tester_state.dart';
 import '../user/application/user_notifier.dart';
 import '../user/application/user_state.dart';
+
+part 'providers.g.dart';
+
 // import '../utils/string_utils.dart';
 
 /*
@@ -94,18 +97,21 @@ AndroidOptions _getAndroidOptions() => const AndroidOptions(
     );
 
 // STORAGE
-final flutterSecureStorageProvider = Provider(
-  (ref) => FlutterSecureStorage(
+@Riverpod(keepAlive: true)
+FlutterSecureStorage flutterSecureStorage(FlutterSecureStorageRef ref) {
+  return FlutterSecureStorage(
     aOptions: _getAndroidOptions(),
-  ),
-);
+  );
+}
+
+@Riverpod(keepAlive: true)
+SecureCredentialsStorage credentialsStorage(CredentialsStorageRef ref) {
+  return SecureCredentialsStorage(ref.watch(flutterSecureStorageProvider));
+}
 
 /*
   ------------------
 */
-
-final credentialsStorageProvider = Provider<CredentialsStorage>(
-    (ref) => SecureCredentialsStorage(ref.watch(flutterSecureStorageProvider)));
 
 final imeiCredentialsStorageProvider = Provider<CredentialsStorage>(
   (ref) =>
@@ -117,10 +123,13 @@ final authRemoteServiceProvider = Provider(
       AuthRemoteService(ref.watch(dioProvider), ref.watch(dioRequestProvider)),
 );
 
-final authRepositoryProvider = Provider((ref) => AuthRepository(
-      ref.watch(credentialsStorageProvider),
-      ref.watch(authRemoteServiceProvider),
-    ));
+@Riverpod(keepAlive: true)
+AuthRepository authRepository(AuthRepositoryRef ref) {
+  return AuthRepository(
+    ref.watch(credentialsStorageProvider),
+    ref.watch(authRemoteServiceProvider),
+  );
+}
 
 final authInterceptorProvider = Provider(
   (ref) => AuthInterceptor(ref),
@@ -187,12 +196,6 @@ final absenOfflineModeProvider = StateProvider<bool>(
 final absenAuthNotifierProvidier =
     StateNotifierProvider<AbsenAuthNotifier, AbsenAuthState>(
         (ref) => AbsenAuthNotifier(ref.watch(absenRepositoryProvider)));
-
-final networkTimeFutureProvider = FutureProvider((ref) async {
-  DateTime startDate = new DateTime.now().toLocal();
-  int offset = await NTP.getNtpOffset(localTime: startDate);
-  return startDate.add(new Duration(milliseconds: offset));
-});
 
 // GEOFENCE
 final geofenceSecureStorageProvider = Provider<CredentialsStorage>(

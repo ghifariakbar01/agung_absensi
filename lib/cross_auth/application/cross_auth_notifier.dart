@@ -21,8 +21,7 @@ CrossAuthStorage crossAuthStorage(CrossAuthStorageRef ref) {
 
 @Riverpod(keepAlive: true)
 CrossAuthRemoteService crossAuthRemoteService(CrossAuthRemoteServiceRef ref) {
-  return CrossAuthRemoteService(
-      ref.watch(dioProvider), ref.watch(dioRequestProvider));
+  return CrossAuthRemoteService(ref.watch(dioProvider));
 }
 
 @Riverpod(keepAlive: true)

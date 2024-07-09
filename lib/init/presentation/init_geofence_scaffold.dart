@@ -1,8 +1,8 @@
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/device_detector/device_detector_notifier.dart';
+import 'package:face_net_authentication/network_time/network_time_notifier.dart';
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
 
 import 'package:flutter/cupertino.dart';
@@ -24,7 +24,6 @@ import '../../network_state/application/network_state_notifier.dart';
 import '../../shared/common_widgets.dart';
 import '../../shared/providers.dart';
 import '../../style/style.dart';
-import '../../user/application/user_model.dart';
 import '../../widgets/alert_helper.dart';
 import '../../widgets/v_async_widget.dart';
 import '../../widgets/v_dialogs.dart';
@@ -43,33 +42,6 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      try {
-        final _res =
-            await ref.read(userNotifierProvider.notifier).getUserString();
-
-        final _user = UserModelWithPassword.fromJson(
-            jsonDecode(_res) as Map<String, dynamic>);
-
-        await Future.delayed(
-          Duration(seconds: 1),
-          () => ref.read(userNotifierProvider.notifier).setUser(_user),
-        );
-
-        await Future.delayed(
-          Duration(seconds: 1),
-          () => ref.read(dioRequestProvider).addAll({
-            "username": "${_user.nama}",
-            "password": "${_user.password}",
-            "server": "${_user.ptServer}",
-          }),
-        );
-      } catch (_) {
-        await ref.read(userNotifierProvider.notifier).logout();
-        await ref
-            .read(authNotifierProvider.notifier)
-            .checkAndUpdateAuthStatus();
-      }
-
       await ref.read(backgroundNotifierProvider.notifier).getSavedLocations();
 
       final isOffline = ref.read(absenOfflineModeProvider);
@@ -157,10 +129,13 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
                     : HomeSaved()),
           ],
           if (isLoading) ...[
-            CommonWidget().lottie(
-              'assets/location.json',
-              'Initializing Geofence...',
-              _controller,
+            Align(
+              alignment: Alignment.center,
+              child: CommonWidget().lottie(
+                'assets/location.json',
+                'Initializing Geofence...',
+                _controller,
+              ),
             )
           ]
         ]),
@@ -250,9 +225,10 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
             final imei = ref.read(imeiNotifierProvider).imei;
 
             // REFRESH CURRENT NETWORK TIME
-            final dbDate = await ref.refresh(networkTimeFutureProvider.future);
+            final dbDate =
+                await ref.refresh(networkTimeNotifierProvider.future);
             // GET CURRENT NETWORK TIME
-            await ref.read(networkTimeFutureProvider.future);
+            await ref.read(networkTimeNotifierProvider.future);
             //
             final List<SavedLocation> savedItemsCurrent = ref
                 .read(autoAbsenNotifierProvider.notifier)

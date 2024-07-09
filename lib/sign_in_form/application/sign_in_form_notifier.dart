@@ -106,35 +106,23 @@ class SignInFormNotifier extends StateNotifier<SignInFormState> {
     changeDropdownSelected();
   }
 
-  Future<void> initializeAndRedirect({
-    required Function initializeSavedLocations,
-    required Function initializeGeofenceList,
-    required Function redirect,
-  }) async {
-    await initializeSavedLocations();
-    await initializeGeofenceList();
-    await redirect();
-  }
-
   Future<void> signInAndRemember({
     required Function() init,
     required Future<void> Function() signIn,
     required Future<void> Function() clearSaved,
     required Future<void> Function() showDialogAndLogout,
-    required Future<void> Function() onSuccessLoginAfterRemember,
     required Future<Either<AuthFailure, Unit>> Function() remember,
   }) async {
     await init();
-    await signIn();
+
     if (!state.isChecked) {
       await clearSaved();
     } else {
       final result = await remember();
       await result.fold(
-          // if remember failed
-          (_) => showDialogAndLogout(),
-          // if remember success
-          (_) => onSuccessLoginAfterRemember());
+        (_) => showDialogAndLogout(),
+        (_) => signIn(),
+      );
     }
   }
 

@@ -33,10 +33,7 @@ class AuthRemoteService {
       required String password,
       required String server}) async {
     try {
-      final Map<String, dynamic> data = {};
-      data.addAll(_dioRequest);
-
-      data.addAll({
+      _dioRequest.addAll({
         "username": "$userId",
         "password": "$password",
         "mode": "SELECT",
@@ -66,7 +63,8 @@ class AuthRemoteService {
       });
 
       final response = await _dio.post('',
-          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
+          data: jsonEncode(_dioRequest),
+          options: Options(contentType: 'text/plain'));
 
       final items = response.data?[0];
 
@@ -139,9 +137,6 @@ class AuthRemoteService {
       required String password,
       required String server}) async {
     try {
-      final Map<String, dynamic> data = {};
-      data.addAll(_dioRequest);
-
       _dioRequest.addAll({
         "username": "$userId",
         "password": "$password",
@@ -166,7 +161,8 @@ class AuthRemoteService {
       });
 
       final response = await _dio.post('',
-          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
+          data: jsonEncode(_dioRequest),
+          options: Options(contentType: 'text/plain'));
 
       final items = response.data?[0];
 

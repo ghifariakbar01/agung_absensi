@@ -112,10 +112,12 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
                           ? 'Uncrossing User...'
                           : 'Initializing User & Installation ID...',
                     ),
-                    loading: () => CommonWidget().lottie(
-                      'assets/avatar.json',
-                      'Getting User...',
-                      _controller,
+                    loading: () => Center(
+                      child: CommonWidget().lottie(
+                        'assets/avatar.json',
+                        'Getting User...',
+                        _controller,
+                      ),
                     ),
                     error: (error, stackTrace) => ErrorMessageWidget(
                       errorMessage: error.toString(),
@@ -149,7 +151,7 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
         .getPtMap();
 
     if (_isCrossed) {
-      await ref.read(crossAuthNotifierProvider.notifier).uncross(
+      await ref.read(crossAuthNotifierProvider.notifier).uncrossStl(
             url: _ptMap,
             userId: user.nama!,
             password: user.password!,

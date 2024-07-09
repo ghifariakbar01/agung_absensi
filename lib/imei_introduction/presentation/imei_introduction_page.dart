@@ -48,7 +48,7 @@ class ImeiIntroductionPage extends ConsumerWidget {
                   ' Pengguna iOS tidak bisa melakukan unlink tanpa menggati device. ',
               textAlign: TextAlign.justify,
               style: Themes.customColor(
-                15,
+                18,
                 fontWeight: FontWeight.normal,
               ),
             ),
@@ -56,48 +56,75 @@ class ImeiIntroductionPage extends ConsumerWidget {
           Column(
             children: [
               SizedBox(
-                height: 4,
+                height: 18,
               ),
               Center(
                 child: Text(
                     'Untuk petunjuk melakukan Unlink Device ikuti langkah di bawah ini.',
                     style: Themes.customColor(
-                      15,
+                      18,
                       fontWeight: FontWeight.normal,
                     )),
               ),
               SizedBox(
-                height: 4,
+                height: 18,
               ),
-              instructionImage(1),
-              SizedBox(
-                height: 8,
-              ),
-              instructionImage(2),
-              SizedBox(
-                height: 4,
-              ),
-              instructionImage(3),
-              SizedBox(
-                height: 4,
-              ),
-              instructionImage(4),
-              SizedBox(
-                height: 4,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(32.0),
-                child: Center(
-                  child: Text('Langkah terakhir, UNINSTALL aplikasi E-FINGER.',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15,
-                          color: Palette.red)),
+              RichText(
+                text: TextSpan(
+                  text: 'Dari halaman Home, lalu tap Ujung Kanan  ',
+                  style: Themes.customColor(
+                    18,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.black,
+                  ),
+                  children: const <TextSpan>[
+                    TextSpan(
+                        text: '(icon Profil)',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    TextSpan(
+                        text: ' -> ',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    TextSpan(
+                        text: ' Scroll ke bawah Halaman ',
+                        style: TextStyle(fontWeight: FontWeight.normal)),
+                    TextSpan(
+                        text: ' -> ',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    TextSpan(
+                        text: ' Tap button ',
+                        style: TextStyle(fontWeight: FontWeight.normal)),
+                    TextSpan(
+                        text: ' Unlink ',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    TextSpan(
+                        text: ' -> ',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    TextSpan(
+                        text: ' Tap Ya ',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    TextSpan(
+                        text: ' -> ',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    TextSpan(
+                        text: ' Uninstall',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    TextSpan(
+                        text: ' Aplikasi dari HP Anda ',
+                        style: TextStyle(fontWeight: FontWeight.normal)),
+                    TextSpan(
+                        text: ' -> ',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    TextSpan(
+                        text: ' Download & Install',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    TextSpan(
+                        text: ' kembali di HP yang baru. ',
+                        style: TextStyle(fontWeight: FontWeight.normal)),
+                  ],
                 ),
               ),
               SizedBox(
-                height: 4,
+                height: 36,
               ),
               VButton(
                 label: 'Ok, Saya Mengerti.',

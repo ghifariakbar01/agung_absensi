@@ -8,11 +8,9 @@ import '../../user/application/user_model.dart';
 import '../application/cross_auth_response.dart';
 
 class CrossAuthRemoteService {
-  CrossAuthRemoteService(this._dio, this._dioRequest);
+  CrossAuthRemoteService(this._dio);
 
   final Dio _dio;
-
-  final Map<String, String> _dioRequest;
 
   Future<CrossAuthResponse> crossToACT({
     required String server,
@@ -20,14 +18,10 @@ class CrossAuthRemoteService {
     required String password,
   }) async {
     try {
-      final Map<String, dynamic> data = {};
-      data.addAll(_dioRequest);
-
-      data.update('server', (_) => server);
-
-      data.addAll({
-        "username": "$userId",
-        "password": "$password",
+      final Map<String, dynamic> data = {
+        "username": userId,
+        "password": password,
+        "server": server,
         "mode": "SELECT",
         "command": "SELECT  " +
             _commonQueryACT +
@@ -35,10 +29,13 @@ class CrossAuthRemoteService {
                 "    mst_user A JOIN hr_user B ON A.id_user = B.id_user "
                 " WHERE  "
                 "    nama = '$userId'  "
-      });
+      };
 
-      final response = await _dio.post('',
-          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
+      final response = await _dio.post(
+        '',
+        data: jsonEncode(data),
+        options: Options(contentType: 'text/plain'),
+      );
 
       log('data $data');
       log('response $response');
@@ -202,19 +199,15 @@ class CrossAuthRemoteService {
     required String password,
   }) async {
     try {
-      final Map<String, dynamic> data = {};
-      data.addAll(_dioRequest);
-
-      data.update('server', (_) => server);
-
-      data.addAll({
-        "username": "$userId",
-        "password": "$password",
+      final Map<String, dynamic> data = {
+        "username": userId,
+        "password": password,
+        "server": server,
         "mode": "SELECT",
         "command": "SELECT *, " +
             _commonQueryARV +
             " FROM mst_user A WHERE nama = '$userId' ",
-      });
+      };
 
       final response = await _dio.post('',
           data: jsonEncode(data), options: Options(contentType: 'text/plain'));

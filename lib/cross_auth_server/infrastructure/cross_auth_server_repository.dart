@@ -9,12 +9,12 @@ class CrossAuthServerRepository {
 
   final CrossAuthServerRemoteService _remoteService;
 
-  Future<Either<UserNotFound, Unit>> getCutiList({
+  Future<Either<UserNotFound, Unit>> getSakitList({
     required String username,
     required String pass,
   }) async {
     try {
-      final resp = await _remoteService.getCutiList(
+      final resp = await _remoteService.getSakitList(
         username: username,
         pass: pass,
       );

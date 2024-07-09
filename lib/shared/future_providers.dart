@@ -4,11 +4,11 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../auth/infrastructures/auth_repository.dart';
 import '../constants/constants.dart';
 import '../cross_auth/application/cross_auth_notifier.dart';
 import '../firebase/remote_config/application/firebase_remote_config_notifier.dart';
 import '../user/application/user_model.dart';
-import '../user/application/user_notifier.dart';
 import 'providers.dart';
 
 _determineBaseUrl(UserModelWithPassword user) {
@@ -27,8 +27,10 @@ _determineBaseUrl(UserModelWithPassword user) {
 
 // 1. GET AND SET USER
 final getUserFutureProvider = FutureProvider<Unit>((ref) async {
-  UserNotifier userNotifier = ref.read(userNotifierProvider.notifier);
-  String userString = await userNotifier.getUserString();
+  AuthRepository _repo = ref.read(authRepositoryProvider);
+  final userString = await _repo.getUserString();
+
+  final userNotifier = ref.read(userNotifierProvider.notifier);
 
   // PARSE USER SUCCESS / FAILURE
   if (userString.isNotEmpty) {
@@ -89,23 +91,12 @@ final getUserFutureProvider = FutureProvider<Unit>((ref) async {
   }
 });
 
-/*
-
-  ref.read(initUserStatusNotifierProvider.notifier).letYouThrough();
-
-  ---
-
-  is connected to route notifier, 
-  which bypass current route directly to home
-
-*/
-
 // 2. INIT IMEI WITH USER
 final imeiInitFutureProvider =
     FutureProvider.family<Unit, BuildContext>((ref, context) async {
   try {
-    UserNotifier userNotifier = ref.read(userNotifierProvider.notifier);
-    String userString = await userNotifier.getUserString();
+    AuthRepository _repo = ref.read(authRepositoryProvider);
+    final userString = await _repo.getUserString();
 
     final json = jsonDecode(userString) as Map<String, Object?>;
     final user = UserModelWithPassword.fromJson(json);
@@ -130,11 +121,7 @@ final imeiInitFutureProvider =
               password: user.password!,
             );
       }
-
-      //
-    } else {
-      //
-    }
+    } else {}
   } catch (e) {
     throw AssertionError('Error validating cross server. Error : $e');
   }
