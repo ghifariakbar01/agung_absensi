@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../copyright/presentation/copyright_page.dart';
 import '../../shared/providers.dart';
 import '../infrastructures/err_log_remote_service.dart';
 import '../infrastructures/err_log_repository.dart';
@@ -59,14 +60,16 @@ class ErrLogController extends _$ErrLogController {
     final _db =
         imeiDb ?? await _imei.getImeiStringDb(idKary: user.IdKary ?? '-');
 
+    final version = await ref.read(packageInfoProvider.future);
     final platform = Platform.isIOS ? 'iOS' : 'Android';
+    final plat = platform + '($version)';
 
     state = await AsyncValue.guard(() async {
       if (isHoting != null) {
         await ref.read(errLogRepositoryHostingProvider).sendLog(
               idUser: user.idUser ?? 0,
               nama: user.nama ?? '',
-              platform: platform,
+              platform: plat,
               imeiDb: _db,
               imeiSaved: _saved,
               errMessage: errMessage,
@@ -76,7 +79,7 @@ class ErrLogController extends _$ErrLogController {
       await ref.read(errLogRepositoryProvider).sendLog(
             idUser: user.idUser ?? 0,
             nama: user.nama ?? '',
-            platform: platform,
+            platform: plat,
             imeiDb: _db,
             imeiSaved: _saved,
             errMessage: errMessage,

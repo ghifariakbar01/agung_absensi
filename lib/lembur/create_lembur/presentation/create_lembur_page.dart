@@ -323,8 +323,8 @@ class CreateLemburPage extends HookConsumerWidget {
                                     .read(createLemburNotifierProvider.notifier)
                                     .submitLembur(
                                       tgl: tglStart.value,
-                                      jamAkhir: tglStart.value,
-                                      jamAwal: tglEnd.value,
+                                      jamAkhir: tglEnd.value,
+                                      jamAwal: tglStart.value,
                                       keterangan:
                                           keteranganLemburTextController.text,
                                       kategori: jenisLemburTextController.value,

@@ -1,8 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 
-import 'package:intl/intl.dart';
-
 import '../../constants/constants.dart';
 import '../../infrastructures/exceptions.dart';
 
@@ -16,17 +14,11 @@ class CrossAuthServerRemoteService {
     required String pass,
   }) async {
     try {
-      final d1 = DateFormat('yyyy-MM-dd').format(DateTime.now());
-      final d2 = DateFormat('yyyy-MM-dd')
-          .format(DateTime.now().subtract(Duration(days: 1)));
-
-      final response = await _dio.get('/service_sakit.asmx/getSakit',
+      final response = await _dio.get('/service_auth.asmx/getAuth',
           options: Options(
             headers: {
               'username': username,
               'pass': pass,
-              'date_awal': d1,
-              'date_akhir': d2,
               'server': Constants.isDev ? 'testing' : 'live',
             },
           ));
