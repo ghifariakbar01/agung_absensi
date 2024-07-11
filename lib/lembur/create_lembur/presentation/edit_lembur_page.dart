@@ -37,6 +37,14 @@ class EditLemburPage extends HookConsumerWidget {
     final keteranganLemburTextController =
         useTextEditingController(text: item.ket);
 
+    final _tgl = DateTime.parse(item.lmbrTgl!);
+
+    final tglPlaceholder = useTextEditingController(
+        text: DateFormat(
+      'E, dd MMM yyyy',
+    ).format(_tgl));
+    final tgl = useState(_tgl);
+
     final _jamAwal = DateTime.parse(item.jamAwal!);
 
     final tglStartPlaceholder = useTextEditingController(
@@ -159,6 +167,56 @@ class EditLemburPage extends HookConsumerWidget {
                               ),
                             );
                           }).toList(),
+                        ),
+                      ),
+
+                      SizedBox(
+                        height: 16,
+                      ),
+
+                      // TANGGAL LEMBUR
+                      Ink(
+                        child: InkWell(
+                          onTap: () async {
+                            final _oneYear = Duration(days: 365);
+
+                            final picked = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime.now().subtract(_oneYear),
+                              lastDate: DateTime.now().add(_oneYear),
+                            );
+
+                            if (picked != null) {
+                              tglPlaceholder.text = DateFormat(
+                                'E, dd MMM yyyy',
+                              ).format(tgl.value);
+                            }
+                          },
+                          child: IgnorePointer(
+                            ignoring: true,
+                            child: TextFormField(
+                                maxLines: 1,
+                                cursorColor: Palette.primaryColor,
+                                controller: tglPlaceholder,
+                                decoration: Themes.formStyleBordered(
+                                  'Tanggal Lembur',
+                                  icon: Icon(Icons.calendar_month),
+                                ),
+                                style: Themes.customColor(
+                                  14,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                                validator: (item) {
+                                  if (item == null) {
+                                    return 'Form tidak boleh kosong';
+                                  } else if (item.isEmpty) {
+                                    return 'Form tidak boleh kosong';
+                                  }
+
+                                  return null;
+                                }),
+                          ),
                         ),
                       ),
 
@@ -328,8 +386,10 @@ class EditLemburPage extends HookConsumerWidget {
                               log(' VARIABLES : \n  Nama : ${namaTextController.value.text} ');
                               log(' Jenis Lembur: ${jenisLemburTextController.value} \n ');
                               log(' Keterangan: ${keteranganLemburTextController.text} \n ');
+                              log(' Tgl PlaceHolder: ${tglPlaceholder.text} \n ');
                               log(' Tgl Start PlaceHolder: ${tglStartPlaceholder.text} \n ');
                               log(' Tgl End PlaceHolder: ${tglEndPlaceholder.text} \n ');
+                              log(' Tgl : ${tgl.value} \n ');
                               log(' Tgl Start: ${tglStart.value} \n ');
                               log(' Tgl End: ${tglEnd.value} \n ');
 
@@ -339,7 +399,7 @@ class EditLemburPage extends HookConsumerWidget {
                                     .read(createLemburNotifierProvider.notifier)
                                     .updateLembur(
                                       idLembur: item.idLmbr!,
-                                      tgl: tglStart.value,
+                                      tgl: tgl.value,
                                       jamAkhir: tglEnd.value,
                                       jamAwal: tglStart.value,
                                       keterangan:

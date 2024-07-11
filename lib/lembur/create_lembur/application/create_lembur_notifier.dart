@@ -68,8 +68,8 @@ class CreateLemburNotifier extends _$CreateLemburNotifier {
             pass: pass,
             ket: keterangan,
             tgl: _tgl,
-            jamAkhir: _start,
-            jamAwal: _end,
+            jamAkhir: _end,
+            jamAwal: _start,
             kategori: kategori,
           );
 

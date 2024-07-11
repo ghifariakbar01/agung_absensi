@@ -177,13 +177,14 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                           await ref
                               .read(networkTimeNotifierProvider.notifier)
                               .refresh();
+
                           return _absenIn(
-                              currTime: time,
-                              context: context,
-                              isTester: isTester,
-                              currentLocationLatitude: currentLocationLatitude,
-                              currentLocationLongitude:
-                                  currentLocationLongitude);
+                            currTime: time,
+                            context: context,
+                            isTester: isTester,
+                            currentLocationLatitude: currentLocationLatitude,
+                            currentLocationLongitude: currentLocationLongitude,
+                          );
                         }),
                   ),
                 ),
@@ -212,13 +213,14 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                           await ref
                               .read(networkTimeNotifierProvider.notifier)
                               .refresh();
+
                           return _absenOut(
-                              currTime: time,
-                              context: context,
-                              isTester: isTester,
-                              currentLocationLatitude: currentLocationLatitude,
-                              currentLocationLongitude:
-                                  currentLocationLongitude);
+                            currTime: time,
+                            context: context,
+                            isTester: isTester,
+                            currentLocationLatitude: currentLocationLatitude,
+                            currentLocationLongitude: currentLocationLongitude,
+                          );
                         }),
                   ),
                 )
