@@ -151,4 +151,26 @@ class ImeiRepository {
       return left(EditFailure.noConnection());
     }
   }
+
+  Future<Unit> registerImeiInline({
+    required String imei,
+    required String idKary,
+  }) async {
+    try {
+      final response = await _remoteService.registerImei(
+        imei: imei,
+        idKary: idKary,
+      );
+
+      return response.when(withImei: (imei) async {
+        await _credentialsStorage.save(imei);
+
+        return unit;
+      }, failure: ((errorCode, message) {
+        throw EditFailure.server(errorCode, message);
+      }));
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

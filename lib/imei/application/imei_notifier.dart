@@ -149,6 +149,16 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
         failureOrSuccessOptionClearRegisterImei: optionOf(failureOrSuccess));
   }
 
+  Future<Unit> registerImeiInline({
+    required String imei,
+    required String idKary,
+  }) async {
+    return _imeiRepository.registerImeiInline(
+      imei: imei,
+      idKary: idKary,
+    );
+  }
+
   Future<void> onImeiAlreadyRegistered({
     required Function sendLog,
     required Function showDialog,
@@ -236,7 +246,7 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
     String? appleUsername,
   ) async {
     if (appleUsername != null) {
-      if (appleUsername == 'Ghifar' || appleUsername == 'Alfin') {
+      if (appleUsername == 'Ghifar') {
         // await onImeiNotRegistered();
         onImeiOK();
       } else {
@@ -267,6 +277,21 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
               asset: Assets.iconCrossed,
             ),
           ));
+
+  Future<void> showErrorDialog(
+    BuildContext context,
+    String message,
+  ) =>
+      showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (_) => VSimpleDialog(
+          label: 'Oops',
+          color: Palette.red,
+          labelDescription: message,
+          asset: Assets.iconCrossed,
+        ),
+      );
 
   Future<void> processImei({
     required Ref ref,
@@ -310,17 +335,30 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
     required String savedImei,
     required String generatedImeiString,
   }) async {
-    await registerImei(
+    await registerImeiInline(
       imei: generatedImeiString,
       idKary: user.IdKary ?? 'null',
     );
 
-    await ref
+    final fos = await ref
         .read(userNotifierProvider.notifier)
-        .saveUserAfterUpdate(user: user);
+        .saveUserAfterUpdateInline(user: user);
 
-    return showSuccessDialog(context).then((_) =>
-        ref.read(initUserStatusNotifierProvider.notifier).letYouThrough());
+    return fos.fold(
+      (l) => showErrorDialog(
+          context,
+          l.map(
+            server: (s) => s.toString(),
+            storage: (_) => 'Kesalahan / Storage Penuh',
+            passwordExpired: (_) => 'Password Expired',
+            passwordWrong: (_) => 'Password Wrong',
+            noConnection: (_) => 'Tidak ada koneksi',
+          )),
+      (_) => showSuccessDialog(context).then(
+        (_) =>
+            ref.read(initUserStatusNotifierProvider.notifier).letYouThrough(),
+      ),
+    );
   }
 
   Future<void> _onImeiAlreadyRegistered({

@@ -110,15 +110,38 @@ class UserNotifier extends StateNotifier<UserState> {
     final server = PTName(user.ptServer ?? '');
     final password = Password(user.password ?? '');
 
-    state =
-        state.copyWith(isGetting: true, failureOrSuccessOptionUpdate: none());
+    state = state.copyWith(
+      isGetting: true,
+      failureOrSuccessOptionUpdate: none(),
+    );
 
     failureOrSuccess = await _repository.saveUserAfterUpdate(
-        password: password, userId: userId, server: server);
+      password: password,
+      userId: userId,
+      server: server,
+    );
 
     state = state.copyWith(
-        isGetting: false,
-        failureOrSuccessOptionUpdate: optionOf(failureOrSuccess));
+      isGetting: false,
+      failureOrSuccessOptionUpdate: optionOf(failureOrSuccess),
+    );
+  }
+
+  Future<Either<AuthFailure, Unit?>> saveUserAfterUpdateInline({
+    required UserModelWithPassword user,
+  }) async {
+    if (user.password == null || user.nama == null || user.ptServer == null) {
+      return left(AuthFailure.server(
+        404,
+        'User Password / Id User / Pt Server Null',
+      ));
+    }
+
+    return await _repository.saveUserAfterUpdate(
+      password: Password(user.password!),
+      userId: UserId(user.nama!),
+      server: PTName(user.ptServer!),
+    );
   }
 
   setUser(UserModelWithPassword user) {

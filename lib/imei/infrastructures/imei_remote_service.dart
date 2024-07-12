@@ -22,9 +22,6 @@ class ImeiRemoteService {
 
   Future<String?> getImei({required String idKary}) async {
     try {
-      final Map<String, dynamic> data = {};
-      data.addAll(_dioRequest);
-
       final commandUpdate =
           "SELECT imei_hp FROM $dbName WHERE idKary = '$idKary'";
 
@@ -33,12 +30,13 @@ class ImeiRemoteService {
         'mode': 'SELECT'
       };
 
-      data.addAll(select);
+      _dioRequest.addAll(select);
 
       final response = await _dio.post('',
-          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
+          data: jsonEncode(_dioRequest),
+          options: Options(contentType: 'text/plain'));
 
-      log('data ${jsonEncode(data)}');
+      log('_dioRequest ${jsonEncode(_dioRequest)}');
       log('response $response');
 
       final items = response.data?[0];

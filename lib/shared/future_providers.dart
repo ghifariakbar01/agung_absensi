@@ -133,7 +133,11 @@ final imeiInitFutureProvider =
     throw AssertionError('Error validating user. Error : $e');
   }
 
-  final user = ref.read(userNotifierProvider).user;
+  AuthRepository _repo = ref.read(authRepositoryProvider);
+  final userString = await _repo.getUserString();
+
+  final json = jsonDecode(userString) as Map<String, Object?>;
+  final user = UserModelWithPassword.fromJson(json);
 
   if (user.IdKary!.isNotEmpty) {
     final String? imeiDb;
@@ -143,7 +147,10 @@ final imeiInitFutureProvider =
       // 3. GET IMEI DATA
       String imei = await imeiNotifier.getImeiString();
 
-      imeiNotifier.changeSavedImei(imei);
+      await Future.delayed(
+        Duration(seconds: 1),
+        () => imeiNotifier.changeSavedImei(imei),
+      );
 
       imeiDb = await imeiNotifier.getImeiStringDb(
         idKary: user.IdKary ?? 'null',
