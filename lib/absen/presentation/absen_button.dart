@@ -154,6 +154,7 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                     value: networkTimeFutureProvider,
                     data: (time) => VButton(
                         label: 'ABSEN IN $karyawanShiftStr',
+                        height: 50,
                         isEnabled: isTesting
                             ? true
                             : isTester.maybeWhen(
@@ -194,6 +195,7 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                     value: networkTimeFutureProvider,
                     data: (time) => VButton(
                         label: 'ABSEN OUT $karyawanShiftStr',
+                        height: 50,
                         isEnabled: isTesting
                             ? true
                             : isTester.maybeWhen(
@@ -233,6 +235,7 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
             visible: isTesting ? true : isOfflineMode,
             child: VButton(
                 label: 'SIMPAN ABSEN IN',
+                height: 50,
                 isEnabled: isTester.maybeWhen(
                     tester: () => true,
                     orElse: () => isTesting
@@ -263,6 +266,7 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
             visible: isTesting ? true : isOfflineMode,
             child: VButton(
                 label: 'SIMPAN ABSEN OUT',
+                height: 50,
                 isEnabled: isTester.maybeWhen(
                     tester: () => true,
                     orElse: () => isTesting
@@ -293,6 +297,7 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
             visible: isTesting ? true : savedIsNotEmpty,
             child: VButton(
                 label: 'ABSEN TERSIMPAN',
+                height: 50,
                 onPressed: () async {
                   await ref
                       .read(backgroundNotifierProvider.notifier)

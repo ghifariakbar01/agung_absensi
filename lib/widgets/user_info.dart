@@ -14,8 +14,8 @@ class UserInfo extends StatelessWidget {
     return Column(
       children: [
         SizedBox(
-          width: 325,
-          height: 100,
+          // width: 325,
+          height: 50,
           child: Image.asset(Assets.iconLogo),
         ),
         const SizedBox(height: 8),
@@ -23,7 +23,7 @@ class UserInfo extends StatelessWidget {
           child: Text(
             user,
             style: Themes.customColor(
-              40,
+              20,
               fontWeight: FontWeight.bold,
             ),
           ),

@@ -26,6 +26,7 @@ class AbsenReset extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Container(
+        height: 50,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
             color: nearest < minDistance && nearest != 0

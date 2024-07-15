@@ -33,16 +33,16 @@ class LocationDetail extends ConsumerWidget {
             child: Text(
               '${nearest.nama}',
               style: Themes.customColor(
-                19,
+                15,
                 fontWeight: FontWeight.bold,
               ),
             ),
           ),
           SizedBox(
-            height: 8,
+            height: 2,
           ),
           Container(
-            padding: EdgeInsets.all(16),
+            padding: EdgeInsets.all(4),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
               color: Colors.white,
@@ -54,28 +54,28 @@ class LocationDetail extends ConsumerWidget {
                     Text(
                       'Jarak Maksimum',
                       style: Themes.customColor(
-                        13,
+                        12,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
                       ' : ',
                       style: Themes.customColor(
-                        13,
+                        12,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     if (nearest.minDistance == 0) ...[
                       Text('....Loading....',
                           style: Themes.customColor(
-                            13,
+                            12,
                             fontWeight: FontWeight.bold,
                           ))
                     ],
                     if (nearest.minDistance != 0) ...[
                       Text(' ${nearest.minDistance.round()} m',
                           style: Themes.customColor(
-                            13,
+                            12,
                             fontWeight: FontWeight.bold,
                           ))
                     ]
@@ -86,33 +86,37 @@ class LocationDetail extends ConsumerWidget {
                     Text(
                       'Jarak',
                       style: Themes.customColor(
-                        13,
+                        12,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
                       ' : ',
                       style: Themes.customColor(
-                        13,
+                        12,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     if (nearest.remainingDistance == 0) ...[
                       Text('....Loading....',
                           style: Themes.customColor(
-                            13,
+                            12,
                             fontWeight: FontWeight.bold,
                           ))
                     ],
                     if (nearest.remainingDistance != 0) ...[
                       Text(' ${nearest.remainingDistance.round()} m',
                           style: nearest.remainingDistance < nearest.minDistance
-                              ? Themes.customColor(14,
+                              ? Themes.customColor(
+                                  12,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.green)
-                              : Themes.customColor(14,
+                                  color: Colors.green,
+                                )
+                              : Themes.customColor(
+                                  12,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.red)),
+                                  color: Colors.red,
+                                )),
                     ]
                   ],
                 ),

@@ -105,7 +105,7 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           SizedBox(
-                            height: 24,
+                            height: 4,
                           ),
                           UserInfo(
                             title:
