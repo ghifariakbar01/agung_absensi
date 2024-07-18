@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'package:face_net_authentication/utils/logging.dart';
 
 import 'package:collection/collection.dart';
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
@@ -527,14 +527,17 @@ class EditTugasDinasPage extends HookConsumerWidget {
                         child: VButton(
                             label: 'Update Form Tugas Dinas',
                             onPressed: () async {
-                              log(' VARIABLES : \n  Nama : ${namaTextController.value.text} ');
-                              log(' Jenis Tugas Dinas: ${jenisTugasDinasTextController.value.text} \n ');
-                              log(' Keterangan: ${keteranganTextController.value.text} \n ');
-                              log(' Tanggal: ${tglAwal.value} \n ');
-                              log(' Tgl Awal: ${tglAwal.value} \n ');
-                              log(' Jam Awal: ${jamAwal.value} \n ');
-                              log(' Tgl Akhir: ${tglAkhir.value} \n ');
-                              log(' Jam Akhir: ${jamAkhir.value} \n ');
+                              Log.info(
+                                  ' VARIABLES : \n  Nama : ${namaTextController.value.text} ');
+                              Log.info(
+                                  ' Jenis Tugas Dinas: ${jenisTugasDinasTextController.value.text} \n ');
+                              Log.info(
+                                  ' Keterangan: ${keteranganTextController.value.text} \n ');
+                              Log.info(' Tanggal: ${tglAwal.value} \n ');
+                              Log.info(' Tgl Awal: ${tglAwal.value} \n ');
+                              Log.info(' Jam Awal: ${jamAwal.value} \n ');
+                              Log.info(' Tgl Akhir: ${tglAkhir.value} \n ');
+                              Log.info(' Jam Akhir: ${jamAkhir.value} \n ');
 
                               final _tglAwal = DateFormat(
                                 'yyyy-MM-dd',

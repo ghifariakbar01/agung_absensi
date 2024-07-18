@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'package:face_net_authentication/utils/logging.dart';
 
 import 'package:face_net_authentication/dt_pc/dt_pc_list/application/dt_pc_list_notifier.dart';
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
@@ -183,7 +183,7 @@ class CreateDtPcPage extends HookConsumerWidget {
                                 'dd MMM yyyy HH:mm',
                               ).format(jam);
 
-                              log('jam $jam dtTgl $dtTgl ');
+                              Log.info('jam $jam dtTgl $dtTgl ');
 
                               jamTextController.value =
                                   jam.toString().replaceAll('.000', '');
@@ -267,12 +267,15 @@ class CreateDtPcPage extends HookConsumerWidget {
                               final _jam = jamTextController.value.substring(
                                   0, jamTextController.value.length - 3);
 
-                              log(' VARIABLES : \n  Nama : ${namaTextController.value.text} ');
+                              Log.info(
+                                  ' VARIABLES : \n  Nama : ${namaTextController.value.text} ');
 
-                              log(' Keterangan: ${keteranganTextController.value.text} \n ');
-                              log(' Kategori DT / PC: ${kategoriTextController.value} \n ');
-                              log(' DT Tanggal: ${_dtTgl} \n ');
-                              log(' Jam: ${_jam} \n ');
+                              Log.info(
+                                  ' Keterangan: ${keteranganTextController.value.text} \n ');
+                              Log.info(
+                                  ' Kategori DT / PC: ${kategoriTextController.value} \n ');
+                              Log.info(' DT Tanggal: ${_dtTgl} \n ');
+                              Log.info(' Jam: ${_jam} \n ');
 
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();

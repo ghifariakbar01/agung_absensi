@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'package:face_net_authentication/utils/logging.dart';
 
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/device_detector/device_detector_notifier.dart';
@@ -13,6 +13,7 @@ import 'package:geofence_service/geofence_service.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../background/application/saved_location.dart';
+import '../../config/configuration.dart';
 import '../../constants/assets.dart';
 import '../../domain/background_failure.dart';
 import '../../domain/geofence_failure.dart';
@@ -112,21 +113,31 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
           if (!isLoading) ...[
             VAsyncValueWidget<bool>(
                 value: _device,
-                data: (dev) => dev == false
-                    ? Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Text(
-                            'Anda dideteksi menggunakan emulator. Harap gunakan aplikasi E-FINGER pada device fisik anda.',
-                            textAlign: TextAlign.center,
-                            style: Themes.customColor(
-                              20,
-                              fontWeight: FontWeight.w500,
+                data: (dev) {
+                  bool cond = false;
+
+                  if (BuildConfig.isProduction) {
+                    cond = dev == false;
+                  } else {
+                    cond = dev;
+                  }
+
+                  return cond
+                      ? Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Text(
+                              'Anda dideteksi menggunakan emulator. Harap gunakan aplikasi E-FINGER pada device fisik anda.',
+                              textAlign: TextAlign.center,
+                              style: Themes.customColor(
+                                20,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
-                        ),
-                      )
-                    : HomeSaved()),
+                        )
+                      : HomeSaved();
+                }),
           ],
           if (isLoading) ...[
             Align(
@@ -165,7 +176,7 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
           mockListener,
         );
       } else {
-        log('onGeofenceOffline');
+        Log.info('onGeofenceOffline');
         await _onGeofenceOffline(geofence, mockListener);
       }
     } else {
@@ -175,9 +186,8 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
 
   Future<void> _onGeofenceOffline(
       List<Geofence> geofence, mockListener(Location location)) async {
-    await ref
-        .read(geofenceProvider.notifier)
-        .initializeGeoFence(geofence, onError: (e) => log('error geofence $e'));
+    await ref.read(geofenceProvider.notifier).initializeGeoFence(geofence,
+        onError: (e) => Log.info('error geofence $e'));
 
     await ref
         .read(geofenceProvider.notifier)
@@ -212,14 +222,14 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
           if (savedItems.isNotEmpty) {
             await geofenceNotifier.initializeGeoFence(
               geofence,
-              onError: (e) => log('error geofence $e'),
+              onError: (e) => Log.info('error geofence $e'),
             );
             await ref
                 .read(geofenceProvider.notifier)
                 .addGeofenceMockListener(mockListener: mockListener);
 
             // debugger();
-            log('savedItems $savedItems');
+            Log.info('savedItems $savedItems');
 
             // [AUTO ABSEN]
             final imei = ref.read(imeiNotifierProvider).imei;
@@ -255,7 +265,7 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
             if (thereAreGeofences) {
               await geofenceNotifier.initializeGeoFence(
                 geofence,
-                onError: (e) => log('error geofence $e'),
+                onError: (e) => Log.info('error geofence $e'),
               );
               await ref
                   .read(geofenceProvider.notifier)

@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:developer';
+import 'package:face_net_authentication/utils/logging.dart';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
@@ -36,8 +36,8 @@ class ImeiRemoteService {
           data: jsonEncode(_dioRequest),
           options: Options(contentType: 'text/plain'));
 
-      log('_dioRequest ${jsonEncode(_dioRequest)}');
-      log('response $response');
+      Log.info('_dioRequest ${jsonEncode(_dioRequest)}');
+      Log.info('response $response');
 
       final items = response.data?[0];
 
@@ -176,9 +176,9 @@ class ImeiRemoteService {
       final response = await _dio.post('',
           data: jsonEncode(data), options: Options(contentType: 'text/plain'));
 
-      log('data ${jsonEncode(data)}');
+      Log.info('data ${jsonEncode(data)}');
 
-      log('response $response');
+      Log.info('response $response');
 
       final items = response.data?[0];
 
@@ -227,9 +227,9 @@ class ImeiRemoteService {
       final response = await _dio.post('',
           data: jsonEncode(data), options: Options(contentType: 'text/plain'));
 
-      log('data ${jsonEncode(data)}');
+      Log.info('data ${jsonEncode(data)}');
 
-      log('response $response');
+      Log.info('response $response');
 
       final items = response.data?[0];
 

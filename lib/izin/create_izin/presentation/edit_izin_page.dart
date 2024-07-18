@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'package:face_net_authentication/utils/logging.dart';
 
 import 'package:face_net_authentication/izin/create_izin/application/create_izin_notifier.dart';
 import 'package:face_net_authentication/izin/izin_list/application/izin_list_notifier.dart';
@@ -278,10 +278,14 @@ class EditIzinPage extends HookConsumerWidget {
                       VButton(
                           label: 'Update Form Izin',
                           onPressed: () async {
-                            log(' VARIABLES : \n  Nama : ${namaTextController.value.text} ');
-                            log(' Diagnosa: ${keteranganTextController.value.text} \n ');
-                            log(' Surat Dokter: ${jenisIzinTextController.value}  \n ');
-                            log(' SPV Note : ${spvTextController.value.text} HRD Note : ${hrdTextController.value.text} \n  ');
+                            Log.info(
+                                ' VARIABLES : \n  Nama : ${namaTextController.value.text} ');
+                            Log.info(
+                                ' Diagnosa: ${keteranganTextController.value.text} \n ');
+                            Log.info(
+                                ' Surat Dokter: ${jenisIzinTextController.value}  \n ');
+                            Log.info(
+                                ' SPV Note : ${spvTextController.value.text} HRD Note : ${hrdTextController.value.text} \n  ');
 
                             final _tglAkhir =
                                 DateFormat('yyyy-MM-dd').format(tglEnd.value);

@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:developer';
+import 'package:face_net_authentication/utils/logging.dart';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
@@ -46,9 +46,9 @@ class ErrLogRemoteService {
       final response = await _dio.post('',
           data: jsonEncode(data), options: Options(contentType: 'text/plain'));
 
-      log('data ${jsonEncode(data)}');
+      Log.info('data ${jsonEncode(data)}');
 
-      log('response $response');
+      Log.info('response $response');
 
       // debugger();
 

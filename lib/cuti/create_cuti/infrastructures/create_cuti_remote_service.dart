@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'package:face_net_authentication/utils/logging.dart';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
@@ -51,7 +51,7 @@ class CreateCutiRemoteService {
 
       final items = response.data;
 
-      log('_headers ${_headers}');
+      Log.info('_headers ${_headers}');
 
       if (items['status_code'] == 200) {
         return unit;

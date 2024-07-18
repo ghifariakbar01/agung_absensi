@@ -48,7 +48,7 @@ class BackgroundNotifier extends StateNotifier<BackgroundState> {
       {required String? savedLocations}) async {
     final parsedData = jsonDecode(savedLocations!);
 
-    // log('parsedData $parsedData ');
+    // Log.info('parsedData $parsedData ');
 
     if (parsedData is Map<String, dynamic>) {
       final location = SavedLocation.fromJson(parsedData);

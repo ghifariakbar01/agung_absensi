@@ -30,7 +30,9 @@ Future<void> main() async {
   );
 
   Themes.initUiOverlayStyle();
-  BuildConfig.init();
+
+  const bool isProduction = bool.fromEnvironment('dart.vm.product');
+  BuildConfig.init(flavor: isProduction ? 'production' : 'development');
 
   runApp(ProviderScope(child: MyApp()));
 }
@@ -107,9 +109,8 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
                   navigatorKey: routerDelegate.navigatorKey,
                   child: c,
                   upgrader: Upgrader(
-                    messages: MyUpgraderMessages(),
-                    durationUntilAlertAgain: Duration(hours: 3),
-                  ),
+                      messages: MyUpgraderMessages(),
+                      durationUntilAlertAgain: Duration(hours: 3)),
                 )));
   }
 }

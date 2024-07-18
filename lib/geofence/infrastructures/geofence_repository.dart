@@ -72,7 +72,7 @@ class GeofenceRepository {
       {required String? savedGeofence}) async {
     final parsedData = jsonDecode(savedGeofence!);
 
-    // log('parsedData $parsedData ');
+    // Log.info('parsedData $parsedData ');
 
     if (parsedData is Map<String, dynamic>) {
       final location = GeofenceResponse.fromJson(parsedData);

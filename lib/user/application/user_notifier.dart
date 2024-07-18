@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:developer';
+import 'package:face_net_authentication/utils/logging.dart';
 
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/domain/auth_failure.dart';
@@ -48,7 +48,7 @@ class UserHasStaff extends _$UserHasStaff {
     } else {
       staff = true;
     }
-    log("fullAkses $fullAkses staff $staff");
+    Log.info("fullAkses $fullAkses staff $staff");
 
     return fullAkses || staff;
   }

@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'package:face_net_authentication/utils/logging.dart';
 
 import 'package:face_net_authentication/cuti/create_cuti/application/jenis_cuti.dart';
 import 'package:face_net_authentication/cuti/cuti_list/application/cuti_list_notifier.dart';
@@ -278,13 +278,18 @@ class CreateCutiPage extends HookConsumerWidget {
                         child: VButton(
                             label: 'Apply Cuti',
                             onPressed: () async {
-                              log(' VARIABLES : \n  Nama : ${namaTextController.value.text} ');
-                              log(' Jenis Cuti: ${jenisCutiTextController.value} \n ');
-                              log(' Alasan: ${alasanCutiTextController.value} \n ');
-                              log(' Keterangan: ${keteranganCutiTextController.text} \n ');
-                              log(' Tgl PlaceHolder: ${tglPlaceholderTextController.text} \n ');
-                              log(' Tgl Start: ${tglStart.value} \n ');
-                              log(' Tgl End: ${tglEnd.value} \n ');
+                              Log.info(
+                                  ' VARIABLES : \n  Nama : ${namaTextController.value.text} ');
+                              Log.info(
+                                  ' Jenis Cuti: ${jenisCutiTextController.value} \n ');
+                              Log.info(
+                                  ' Alasan: ${alasanCutiTextController.value} \n ');
+                              Log.info(
+                                  ' Keterangan: ${keteranganCutiTextController.text} \n ');
+                              Log.info(
+                                  ' Tgl PlaceHolder: ${tglPlaceholderTextController.text} \n ');
+                              Log.info(' Tgl Start: ${tglStart.value} \n ');
+                              Log.info(' Tgl End: ${tglEnd.value} \n ');
 
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();

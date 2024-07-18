@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'package:face_net_authentication/utils/logging.dart';
 
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
 import 'package:flutter/material.dart';
@@ -182,7 +182,7 @@ class CreateTugasDinasPage extends HookConsumerWidget {
                                     RouteNames.searchPemberiTugasDinasRoute);
 
                             if (pemberiTugas != null) {
-                              log('pemberiTugas ${pemberiTugas.toJson()}');
+                              Log.info('pemberiTugas ${pemberiTugas.toJson()}');
                               pemberiTugasController.value = pemberiTugas;
                               pemberiTugasPlaceHolderTextController.text =
                                   pemberiTugas.fullname!;
@@ -305,7 +305,8 @@ class CreateTugasDinasPage extends HookConsumerWidget {
                                   DateFormat('yyyy-MM-dd').format(picked);
                               tglAwalTextController.value = tgl;
 
-                              log('tglAwalTextController.value ${tglAwalTextController.value}');
+                              Log.info(
+                                  'tglAwalTextController.value ${tglAwalTextController.value}');
 
                               final jam = DateTime(picked.year, picked.month,
                                   picked.day, hour!.hour, hour.minute);

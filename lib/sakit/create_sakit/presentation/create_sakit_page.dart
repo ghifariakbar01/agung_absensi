@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'package:face_net_authentication/utils/logging.dart';
 
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
 import 'package:face_net_authentication/widgets/v_button.dart';
@@ -248,12 +248,17 @@ class CreateSakitPage extends HookConsumerWidget {
                                 ? 'Apply Leave dan Upload Surat'
                                 : 'Apply Leave',
                             onPressed: () async {
-                              log(' VARIABLES : \n  Nama : ${namaTextController.value.text} ');
+                              Log.info(
+                                  ' VARIABLES : \n  Nama : ${namaTextController.value.text} ');
 
-                              log(' Diagnosa: ${diagnosaTextController.value.text} \n ');
-                              log(' Surat Dokter: ${suratDokterTextController.value} \n ');
-                              log(' Tgl Awal: ${tglStart.value} Tgl Akhir: ${tglEnd.value} \n ');
-                              log(' SPV Note : ${spvTextController.value.text} HRD Note : ${hrdTextController.value.text} \n  ');
+                              Log.info(
+                                  ' Diagnosa: ${diagnosaTextController.value.text} \n ');
+                              Log.info(
+                                  ' Surat Dokter: ${suratDokterTextController.value} \n ');
+                              Log.info(
+                                  ' Tgl Awal: ${tglStart.value} Tgl Akhir: ${tglEnd.value} \n ');
+                              Log.info(
+                                  ' SPV Note : ${spvTextController.value.text} HRD Note : ${hrdTextController.value.text} \n  ');
 
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();

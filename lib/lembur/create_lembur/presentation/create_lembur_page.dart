@@ -1,6 +1,6 @@
 // ignore_for_file: sdk_version_since
 
-import 'dart:developer';
+import 'package:face_net_authentication/utils/logging.dart';
 
 import 'package:face_net_authentication/lembur/lembur_list/application/lembur_list_notifier.dart';
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
@@ -362,15 +362,21 @@ class CreateLemburPage extends HookConsumerWidget {
                         child: VButton(
                             label: 'Apply Lembur',
                             onPressed: () async {
-                              log(' VARIABLES : \n  Nama : ${namaTextController.value.text} ');
-                              log(' Jenis Lembur: ${jenisLemburTextController.value} \n ');
-                              log(' Keterangan: ${keteranganLemburTextController.text} \n ');
-                              log(' Tgl PlaceHolder: ${tglPlaceholder.text} \n ');
-                              log(' Tgl Start PlaceHolder: ${tglStartPlaceholder.text} \n ');
-                              log(' Tgl End PlaceHolder: ${tglEndPlaceholder.text} \n ');
-                              log(' Tgl : ${tgl.value} \n ');
-                              log(' Tgl Start: ${tglStart.value} \n ');
-                              log(' Tgl End: ${tglEnd.value} \n ');
+                              Log.info(
+                                  ' VARIABLES : \n  Nama : ${namaTextController.value.text} ');
+                              Log.info(
+                                  ' Jenis Lembur: ${jenisLemburTextController.value} \n ');
+                              Log.info(
+                                  ' Keterangan: ${keteranganLemburTextController.text} \n ');
+                              Log.info(
+                                  ' Tgl PlaceHolder: ${tglPlaceholder.text} \n ');
+                              Log.info(
+                                  ' Tgl Start PlaceHolder: ${tglStartPlaceholder.text} \n ');
+                              Log.info(
+                                  ' Tgl End PlaceHolder: ${tglEndPlaceholder.text} \n ');
+                              Log.info(' Tgl : ${tgl.value} \n ');
+                              Log.info(' Tgl Start: ${tglStart.value} \n ');
+                              Log.info(' Tgl End: ${tglEnd.value} \n ');
 
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();

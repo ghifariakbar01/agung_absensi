@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'package:face_net_authentication/utils/logging.dart';
 
 import 'package:face_net_authentication/izin/create_izin/application/create_izin_notifier.dart';
 import 'package:face_net_authentication/izin/create_izin/application/jenis_izin_notifier.dart';
@@ -257,12 +257,17 @@ class CreateIzinPage extends HookConsumerWidget {
                         child: VButton(
                             label: 'Apply Izin',
                             onPressed: () async {
-                              log(' VARIABLES : \n  Nama : ${namaTextController.value.text} ');
+                              Log.info(
+                                  ' VARIABLES : \n  Nama : ${namaTextController.value.text} ');
 
-                              log(' Keterangan: ${keteranganTextController.value.text} \n ');
-                              log(' Jenis Izin: ${jenisIzinTextController.value} \n ');
-                              log(' Tgl Awal: ${tglAwalTextController.value} Tgl Akhir: ${tglAkhirTextController.value} \n ');
-                              log(' SPV Note : ${spvTextController.value.text} HRD Note : ${hrdTextController.value.text} \n  ');
+                              Log.info(
+                                  ' Keterangan: ${keteranganTextController.value.text} \n ');
+                              Log.info(
+                                  ' Jenis Izin: ${jenisIzinTextController.value} \n ');
+                              Log.info(
+                                  ' Tgl Awal: ${tglAwalTextController.value} Tgl Akhir: ${tglAkhirTextController.value} \n ');
+                              Log.info(
+                                  ' SPV Note : ${spvTextController.value.text} HRD Note : ${hrdTextController.value.text} \n  ');
 
                               final user = ref.read(userNotifierProvider).user;
 

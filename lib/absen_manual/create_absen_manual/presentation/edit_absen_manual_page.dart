@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'package:face_net_authentication/utils/logging.dart';
 
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
 import 'package:flutter/material.dart';
@@ -424,13 +424,15 @@ class EditAbsenManualPage extends HookConsumerWidget {
                                 'dd MMM yyyy HH:mm',
                               ).format(jamAkhir.value));
 
-                              log(' VARIABLES : \n  Nama : ${namaTextController.value.text} ');
+                              Log.info(
+                                  ' VARIABLES : \n  Nama : ${namaTextController.value.text} ');
 
-                              log(' Keterangan: ${keteranganTextController.value.text} \n ');
-                              log(' Jenis Absen: ${jenis.value} \n ');
-                              log(' Tanggal: ${_tgl.value} \n ');
-                              log(' Jam Awal: $_jamAwal \n ');
-                              log(' Jam Akhir: $_jamAkhir \n ');
+                              Log.info(
+                                  ' Keterangan: ${keteranganTextController.value.text} \n ');
+                              Log.info(' Jenis Absen: ${jenis.value} \n ');
+                              Log.info(' Tanggal: ${_tgl.value} \n ');
+                              Log.info(' Jam Awal: $_jamAwal \n ');
+                              Log.info(' Jam Akhir: $_jamAkhir \n ');
 
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();

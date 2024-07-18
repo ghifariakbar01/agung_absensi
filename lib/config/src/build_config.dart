@@ -1,6 +1,6 @@
 part of configuration;
 
-enum Flavor { development, staging, release }
+enum Flavor { development, release }
 
 class BuildConfig {
   const BuildConfig._({
@@ -18,15 +18,6 @@ class BuildConfig {
           connectTimeout: Duration(seconds: 10),
           receiveTimeout: Duration(seconds: 10),
           flavor: Flavor.development,
-        );
-
-  BuildConfig._staging()
-      : this._(
-          baseUrl: '',
-          socketUrl: '',
-          connectTimeout: Duration(seconds: 10),
-          receiveTimeout: Duration(seconds: 10),
-          flavor: Flavor.staging,
         );
 
   BuildConfig._release()
@@ -51,9 +42,6 @@ class BuildConfig {
       case 'development':
         _instance = BuildConfig._development();
         break;
-      case 'staging':
-        _instance = BuildConfig._staging();
-        break;
       default:
         _instance = BuildConfig._release();
         break;
@@ -69,7 +57,6 @@ class BuildConfig {
     await Log.init();
     switch (_instance.flavor) {
       case Flavor.development:
-      case Flavor.staging:
         Log.setLevel(Level.ALL);
         break;
       case Flavor.release:
@@ -87,8 +74,6 @@ class BuildConfig {
   static String get flavorName => _instance.flavor.name;
 
   static bool get isProduction => _instance.flavor == Flavor.release;
-
-  static bool get isStaging => _instance.flavor == Flavor.staging;
 
   static bool get isDevelopment => _instance.flavor == Flavor.development;
 }

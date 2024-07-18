@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'package:face_net_authentication/utils/logging.dart';
 
 import 'package:face_net_authentication/absen_manual/absen_manual_list/application/absen_manual_list_notifier.dart';
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
@@ -253,7 +253,7 @@ class CreateAbsenManualPage extends HookConsumerWidget {
                                   hour!.hour,
                                   hour.minute);
 
-                              log('tgl $tgl ');
+                              Log.info('tgl $tgl ');
 
                               jamAwalTextController.value =
                                   jam.toString().replaceAll('.000', '');
@@ -327,7 +327,7 @@ class CreateAbsenManualPage extends HookConsumerWidget {
                                   hour!.hour,
                                   hour.minute);
 
-                              log('tgl $tgl ');
+                              Log.info('tgl $tgl ');
 
                               jamAkhirTextController.value =
                                   jam.toString().replaceAll('.000', '');
@@ -408,13 +408,19 @@ class CreateAbsenManualPage extends HookConsumerWidget {
                         child: VButton(
                             label: 'Submit Absen Manual',
                             onPressed: () async {
-                              log(' VARIABLES : \n  Nama : ${namaTextController.value.text} ');
+                              Log.info(
+                                  ' VARIABLES : \n  Nama : ${namaTextController.value.text} ');
 
-                              log(' Keterangan: ${keteranganTextController.value.text} \n ');
-                              log(' Jenis Absen: ${jenisTextController.value} \n ');
-                              log(' Tanggal: ${tglTextController.value} \n ');
-                              log(' Jam Awal: ${jamAwalTextController.value} \n ');
-                              log(' Jam Akhir: ${jamAkhirTextController.value} \n ');
+                              Log.info(
+                                  ' Keterangan: ${keteranganTextController.value.text} \n ');
+                              Log.info(
+                                  ' Jenis Absen: ${jenisTextController.value} \n ');
+                              Log.info(
+                                  ' Tanggal: ${tglTextController.value} \n ');
+                              Log.info(
+                                  ' Jam Awal: ${jamAwalTextController.value} \n ');
+                              Log.info(
+                                  ' Jam Akhir: ${jamAkhirTextController.value} \n ');
 
                               final user = ref.read(userNotifierProvider).user;
 

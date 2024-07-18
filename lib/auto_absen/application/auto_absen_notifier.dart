@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'package:face_net_authentication/utils/logging.dart';
 
 import 'package:collection/collection.dart';
 import 'package:intl/intl.dart';
@@ -89,11 +89,13 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
 
           // debugger();
 
-          log('CONDITION 1 : ${belumAbsen || jenisAbsenShift == JenisAbsen.absenIn}');
-          log('CONDITION 2 : ${udahAbsenMasuk || jenisAbsenShift == JenisAbsen.absenOut}');
+          Log.info(
+              'CONDITION 1 : ${belumAbsen || jenisAbsenShift == JenisAbsen.absenIn}');
+          Log.info(
+              'CONDITION 2 : ${udahAbsenMasuk || jenisAbsenShift == JenisAbsen.absenOut}');
 
           if (belumAbsen || jenisAbsenShift == JenisAbsen.absenIn) {
-            // debugger(message: 'called');
+            //
             final jenisAbsen = jenisAbsenShift == JenisAbsen.unknown
                 ? JenisAbsen.absenIn
                 : jenisAbsenShift;
@@ -156,7 +158,7 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
 
             incrementIndex();
           } else if (udahAbsenMasuk || jenisAbsenShift == JenisAbsen.absenOut) {
-            // debugger(message: 'called');
+            //
             final jenisAbsen = jenisAbsenShift == JenisAbsen.unknown
                 ? JenisAbsen.absenOut
                 : jenisAbsenShift;

@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'package:face_net_authentication/utils/logging.dart';
 
 import 'package:dio/dio.dart';
 
@@ -42,7 +42,7 @@ class IzinListRemoteService {
       final _data = items['data'];
 
       if (items['status_code'] == 200) {
-        log('_data is ${_data != null} ${_data.runtimeType}');
+        Log.info('_data is ${_data != null} ${_data.runtimeType}');
 
         final listExist = _data != null && _data is List;
 

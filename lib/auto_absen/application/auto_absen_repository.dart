@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:developer';
+import 'package:face_net_authentication/utils/logging.dart';
 
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/domain/auto_absen_failure.dart';
@@ -14,18 +14,14 @@ class AutoAbsenRepository {
   AutoAbsenRepository(this.credentialsStorage);
 
   Future<void> saveRecentAbsen(String recentAbsen) async {
-    debugger(message: 'called');
-
     await credentialsStorage.save(recentAbsen);
   }
 
   Future<void> addRecentAbsen(String recentAbsen) async {
-    debugger(message: 'called');
-
     try {
       final recents = await credentialsStorage.read();
 
-      log('recents $recents');
+      Log.info('recents $recents');
 
       if (recents != null) {
         final savedRecentAbsens =
@@ -37,27 +33,22 @@ class AutoAbsenRepository {
         final processRecentAbsen =
             [...savedRecentAbsens, currentRecentAbsens].toSet().toList();
 
-        debugger(message: 'called');
-
-        log('processRecentAbsen currentRecentAbsens savedRecentAbsens $processRecentAbsen $currentRecentAbsens $savedRecentAbsens');
+        Log.info(
+            'processRecentAbsen currentRecentAbsens savedRecentAbsens $processRecentAbsen $currentRecentAbsens $savedRecentAbsens');
 
         await saveRecentAbsen(jsonEncode(processRecentAbsen));
       } else {
-        debugger(message: 'called');
-
         await saveRecentAbsen(recentAbsen);
       }
     } catch (e) {
-      debugger(message: 'called');
-
-      log('error $e');
+      Log.info('error $e');
     }
   }
 
   Future<Either<AutoAbsenFailure, List<RecentAbsenState>>>
       getRecentAbsen() async {
     try {
-      // debugger(message: 'called');
+      //
 
       final recents = await credentialsStorage.read();
 
@@ -65,13 +56,13 @@ class AutoAbsenRepository {
         final savedRecentAbsens =
             await parseRecentAbsen(savedLocations: recents);
 
-        // debugger(message: 'called');
+        //
 
-        log('savedRecentAbsens $savedRecentAbsens');
+        Log.info('savedRecentAbsens $savedRecentAbsens');
 
         return right(savedRecentAbsens);
       } else {
-        // debugger(message: 'called');
+        //
 
         return right([]);
       }
@@ -84,7 +75,7 @@ class AutoAbsenRepository {
       {required String? savedLocations}) async {
     final parsedData = jsonDecode(savedLocations!);
 
-    log('parsedData $parsedData ');
+    Log.info('parsedData $parsedData ');
 
     if (parsedData is Map<String, dynamic>) {
       final location = RecentAbsenState.fromJson(parsedData);

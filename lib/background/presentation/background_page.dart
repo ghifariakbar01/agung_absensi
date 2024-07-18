@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'package:face_net_authentication/utils/logging.dart';
 
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/widgets/loading_overlay.dart';
@@ -47,9 +47,9 @@ class _BackgroundPageState extends ConsumerState<BackgroundPage> {
                         ),
                       ), (savedLocations) {
                 if (savedLocations.isNotEmpty) {
-                  // debugger(message: 'called');
+                  //
 
-                  log('savedLocations $savedLocations');
+                  Log.info('savedLocations $savedLocations');
 
                   ref
                       .read(backgroundNotifierProvider.notifier)

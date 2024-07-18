@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'package:face_net_authentication/utils/logging.dart';
 
 import 'package:face_net_authentication/ganti_hari/ganti_hari_list/application/ganti_hari_list_notifier.dart';
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
@@ -320,11 +320,14 @@ class EditGantiHariPage extends HookConsumerWidget {
                                   StringUtils.midnightDate(tglGanti.value)
                                       .replaceAll('.000', '');
 
-                              log(' VARIABLES : \n  Nama : ${namaTextController.value.text} ');
-                              log(' ID Absen : ${idAbsenGantiHariTextController.value.text} \n ');
-                              log(' Keterangan: ${keteranganTextController.value.text} \n ');
-                              log(' Tgl Off: $tglOffClean \n ');
-                              log(' Tgl Ganti: $tglGantiClean \n ');
+                              Log.info(
+                                  ' VARIABLES : \n  Nama : ${namaTextController.value.text} ');
+                              Log.info(
+                                  ' ID Absen : ${idAbsenGantiHariTextController.value.text} \n ');
+                              Log.info(
+                                  ' Keterangan: ${keteranganTextController.value.text} \n ');
+                              Log.info(' Tgl Off: $tglOffClean \n ');
+                              Log.info(' Tgl Ganti: $tglGantiClean \n ');
 
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();

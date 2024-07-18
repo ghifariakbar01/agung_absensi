@@ -1,9 +1,9 @@
 import 'dart:convert';
-import 'dart:developer' as log;
 import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:dartz/dartz.dart';
+import 'package:face_net_authentication/utils/logging.dart';
 import 'package:geofence_service/geofence_service.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -57,9 +57,9 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
 
     state = state.copyWith(isGetting: true, failureOrSuccessOption: none());
 
-    log.log('geofence got 1');
+    Log.info('geofence got 1');
     failureOrSuccess = await _repository.readGeofenceList();
-    log.log('geofence got 2');
+    Log.info('geofence got 2');
 
     state = state.copyWith(
         isGetting: false, failureOrSuccessOption: optionOf(failureOrSuccess));
@@ -130,9 +130,9 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
         .start([...geofenceList])
         .catchError(onError)
         .onError((error, stackTrace) {
-          // log.debugger(message: 'called');
+          // log.
 
-          log.log('error $error stack $stackTrace');
+          Log.info('error $error stack $stackTrace');
         });
   }
 

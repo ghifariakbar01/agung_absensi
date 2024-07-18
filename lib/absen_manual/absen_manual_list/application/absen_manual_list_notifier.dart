@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'package:face_net_authentication/utils/logging.dart';
 
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -82,8 +82,8 @@ class AbsenManualListController extends _$AbsenManualListController {
     final username = ref.read(userNotifierProvider).user.nama!;
     final pass = ref.read(userNotifierProvider).user.password!;
 
-    log('username : $username');
-    log('pass : $pass');
+    Log.info('username : $username');
+    Log.info('pass : $pass');
 
     final List<AbsenManualList> _list =
         await ref.read(absenManualListRepositoryProvider).getAbsenManualList(

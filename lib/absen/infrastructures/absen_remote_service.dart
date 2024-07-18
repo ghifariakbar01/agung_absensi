@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
@@ -145,8 +144,6 @@ class AbsenRemoteService {
 
       final response = await _dio.post('',
           data: jsonEncode(data), options: Options(contentType: 'text/plain'));
-
-      log('_dio baseUrl ${_dio.options.baseUrl}');
 
       final items = response.data?[0];
 

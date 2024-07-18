@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:developer';
+import 'package:face_net_authentication/utils/logging.dart';
 
 import 'package:dio/dio.dart';
 
@@ -37,8 +37,8 @@ class CrossAuthRemoteService {
         options: Options(contentType: 'text/plain'),
       );
 
-      log('data $data');
-      log('response $response');
+      Log.info('data $data');
+      Log.info('response $response');
 
       final items = response.data?[0];
 
@@ -124,8 +124,8 @@ class CrossAuthRemoteService {
       final response = await _dio.post('',
           data: jsonEncode(data), options: Options(contentType: 'text/plain'));
 
-      log('data $data');
-      log('response $response');
+      Log.info('data $data');
+      Log.info('response $response');
 
       final items = response.data?[0];
 
@@ -212,8 +212,8 @@ class CrossAuthRemoteService {
       final response = await _dio.post('',
           data: jsonEncode(data), options: Options(contentType: 'text/plain'));
 
-      log('data $data');
-      log('response $response');
+      Log.info('data $data');
+      Log.info('response $response');
 
       final items = response.data?[0];
 
@@ -296,8 +296,8 @@ class CrossAuthRemoteService {
       final response = await _dio.post('',
           data: jsonEncode(data), options: Options(contentType: 'text/plain'));
 
-      log('data $data');
-      log('response $response');
+      Log.info('data $data');
+      Log.info('response $response');
 
       final items = response.data?[0];
 

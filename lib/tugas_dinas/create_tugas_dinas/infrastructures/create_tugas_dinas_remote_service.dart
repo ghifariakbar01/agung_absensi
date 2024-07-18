@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:developer';
+import 'package:face_net_authentication/utils/logging.dart';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
@@ -59,19 +59,19 @@ class CreateTugasDinasRemoteService {
             'jenis': jenis ? 1 : 0,
           }));
 
-      log('username : ' + username);
-      log('pass : ' + pass);
-      log('id_user : ' + idUser.toString());
-      log('server : ' + server!);
-      log('tgl_start : ' + tglAwal);
-      log('tgl_end : ' + tglAkhir);
-      log('jam_start : ' + jamAwal);
-      log('jam_end : ' + jamAkhir);
-      log('ket : ' + ket);
-      log('perusahaan : ' + perusahaan);
-      log('lokasi : ' + lokasi);
-      log('id_pemberi : ' + idPemberi.toString());
-      log('jenis : ${jenis == true ? '1' : '0'}');
+      Log.info('username : ' + username);
+      Log.info('pass : ' + pass);
+      Log.info('id_user : ' + idUser.toString());
+      Log.info('server : ' + server!);
+      Log.info('tgl_start : ' + tglAwal);
+      Log.info('tgl_end : ' + tglAkhir);
+      Log.info('jam_start : ' + jamAwal);
+      Log.info('jam_end : ' + jamAkhir);
+      Log.info('ket : ' + ket);
+      Log.info('perusahaan : ' + perusahaan);
+      Log.info('lokasi : ' + lokasi);
+      Log.info('id_pemberi : ' + idPemberi.toString());
+      Log.info('jenis : ${jenis == true ? '1' : '0'}');
 
       final items = response.data;
 
@@ -141,7 +141,7 @@ class CreateTugasDinasRemoteService {
             headers: _headers,
           ));
 
-      log('_headers $_headers');
+      Log.info('_headers $_headers');
 
       final items = response.data;
 
@@ -236,8 +236,8 @@ class CreateTugasDinasRemoteService {
         options: Options(contentType: 'text/plain'),
       );
 
-      log('data ${jsonEncode(data)}');
-      log('response $response');
+      Log.info('data ${jsonEncode(data)}');
+      Log.info('response $response');
       final items = response.data?[0];
 
       if (items['status'] == 'Success') {

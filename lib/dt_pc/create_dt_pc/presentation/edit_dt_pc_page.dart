@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'package:face_net_authentication/utils/logging.dart';
 
 import 'package:face_net_authentication/dt_pc/dt_pc_list/application/dt_pc_list_notifier.dart';
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
@@ -203,7 +203,7 @@ class EditDtPcPage extends HookConsumerWidget {
                                 'dd MMM yyyy HH:mm',
                               ).format(jam);
 
-                              log('jam $jam dtTgl $picked ');
+                              Log.info('jam $jam dtTgl $picked ');
 
                               jamText.value = jam;
 
@@ -328,14 +328,18 @@ class EditDtPcPage extends HookConsumerWidget {
                               final _jamText = DateFormat('yyyy-MM-dd HH:mm')
                                   .format(jamText.value);
 
-                              log(' VARIABLES : \n  Nama : ${namaTextController.value.text} ');
+                              Log.info(
+                                  ' VARIABLES : \n  Nama : ${namaTextController.value.text} ');
 
-                              log(' Keterangan: ${keteranganTextController.value.text} \n ');
-                              log(' Jenis DT/PC: $kategori \n ');
-                              log(' Dt Tgl: $_dtTgl \n ');
-                              log(' Jam Text: $_jamText \n ');
-                              log(' Note Spv: ${noteSpvTextController.text} \n ');
-                              log(' Note Hrd: ${noteHrdTextController.text} \n ');
+                              Log.info(
+                                  ' Keterangan: ${keteranganTextController.value.text} \n ');
+                              Log.info(' Jenis DT/PC: $kategori \n ');
+                              Log.info(' Dt Tgl: $_dtTgl \n ');
+                              Log.info(' Jam Text: $_jamText \n ');
+                              Log.info(
+                                  ' Note Spv: ${noteSpvTextController.text} \n ');
+                              Log.info(
+                                  ' Note Hrd: ${noteHrdTextController.text} \n ');
 
                               final user = ref.read(userNotifierProvider).user;
 

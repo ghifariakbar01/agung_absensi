@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'package:face_net_authentication/utils/logging.dart';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
@@ -103,7 +103,7 @@ class CreateSakitRemoteService {
         ),
       );
 
-      log('message $_headers');
+      Log.info('message $_headers');
 
       final items = response.data;
 

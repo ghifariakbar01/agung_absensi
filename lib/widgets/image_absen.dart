@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'package:face_net_authentication/utils/logging.dart';
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -71,7 +71,7 @@ class _ImageAbsenState extends ConsumerState<ImageAbsen> {
                                 source:
                                     "window.document.getElementsByTagName('html')[0].outerHTML;");
 
-                            log('html $html');
+                            Log.info('html $html');
 
                             if (html.contains('Runtime Error')) {
                               ref.read(imageErrorProvider.notifier).state =

@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:developer';
+import 'package:face_net_authentication/utils/logging.dart';
 
 import 'package:dio/dio.dart';
 
@@ -31,8 +31,8 @@ class IzinDtlRemoteService {
       final response = await _dio.post('',
           data: jsonEncode(data), options: Options(contentType: 'text/plain'));
 
-      log('data ${jsonEncode(data)}');
-      log('response page $idIzin : $response');
+      Log.info('data ${jsonEncode(data)}');
+      Log.info('response page $idIzin : $response');
 
       final items = response.data?[0];
 

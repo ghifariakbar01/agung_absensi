@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dartz/dartz.dart';
 
 import 'package:face_net_authentication/style/style.dart';
@@ -37,7 +35,6 @@ class BackgroundScaffold extends ConsumerWidget {
                                   passwordWrong: () => 'Password Wrong',
                                   noConnection: () => 'Tidak Ada Koneksi'),
                             )), (_) async {
-                  debugger(message: 'called');
                   await ref
                       .read(absenNotifierProvidier.notifier)
                       .getAbsenToday();

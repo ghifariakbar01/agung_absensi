@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:developer';
+import 'package:face_net_authentication/utils/logging.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -62,7 +62,7 @@ class SearchPemberiTugas extends HookConsumerWidget {
             TextFormField(
               controller: searchController,
               onChanged: (value) {
-                log('value $value');
+                Log.info('value $value');
                 if (value.isNotEmpty) {
                   timerTick.value = 2;
 

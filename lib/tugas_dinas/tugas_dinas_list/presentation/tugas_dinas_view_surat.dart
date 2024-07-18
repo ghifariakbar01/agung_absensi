@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'package:face_net_authentication/utils/logging.dart';
 
 import 'package:face_net_authentication/shared/providers.dart';
 import 'package:face_net_authentication/widgets/v_scaffold_widget.dart';
@@ -54,8 +54,8 @@ class TugasDinasViewSuratPage extends HookConsumerWidget {
           onWebViewCreated: (_) {},
           initialUrlRequest: URLRequest(url: WebUri.uri(Uri.parse(url.value))),
           onZoomScaleChanged: (controller, oldScale, newScale) {
-            log('oldScale $oldScale');
-            log('newScale $newScale');
+            Log.info('oldScale $oldScale');
+            Log.info('newScale $newScale');
           },
           onLoadStop: (controller, url) async {
             String html = await controller.evaluateJavascript(

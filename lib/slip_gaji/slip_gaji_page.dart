@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'package:face_net_authentication/utils/logging.dart';
 
 import 'package:face_net_authentication/shared/providers.dart';
 import 'package:face_net_authentication/widgets/v_async_widget.dart';
@@ -83,7 +83,7 @@ class SlipGajiPage extends HookConsumerWidget {
               )
             : InAppWebView(
                 onLoadStart: (controller, url) {
-                  log('url start $url');
+                  Log.info('url start $url');
                 },
                 initialUrlRequest:
                     URLRequest(url: WebUri.uri(Uri.parse(url.value))),
