@@ -15,11 +15,12 @@ class BackgroundRepository {
       getSavedLocations() async {
     try {
       final _sharedPreference = await SharedPreferences.getInstance();
-      final String? locations = _sharedPreference.getString("locations");
+      final String? locations = await _sharedPreference.getString("locations");
 
       if (locations != null) {
-        final List<SavedLocation> savedLocations =
-            await parseLocationJson(savedLocations: locations);
+        final List<SavedLocation> savedLocations = await parseLocationJson(
+          savedLocations: locations,
+        );
 
         return right(savedLocations);
       }
@@ -34,7 +35,7 @@ class BackgroundRepository {
       {required SavedLocation savedLocation}) async {
     final _sharedPreference = await SharedPreferences.getInstance();
 
-    final String? locations = _sharedPreference.getString("locations");
+    final String? locations = await _sharedPreference.getString("locations");
 
     if (locations != null) {
       final savedLocations = await parseLocationJson(savedLocations: locations);

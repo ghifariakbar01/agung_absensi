@@ -37,8 +37,9 @@ class HelperImpl implements Helper {
 
     final prefs = await SharedPreferences.getInstance();
     const String name = 'first_run';
+    final saved = await prefs.getBool(name) ?? true;
 
-    if (prefs.getBool(name) ?? true) {
+    if (saved) {
       final String? _imei = await _getCurrentImei();
       await _deleteAll();
       await _saveCurrentImei(_imei);

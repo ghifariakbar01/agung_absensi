@@ -196,7 +196,7 @@ class _SignInFormState extends ConsumerState<SignInForm> {
     ref.read(passwordVisibleProvider.notifier).state = false;
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final rememberMe = prefs.getString('remember_me');
+    final rememberMe = await prefs.getString('remember_me');
 
     if (rememberMe != null) {
       final saved = RememberMeModel.fromJson(jsonDecode(rememberMe));

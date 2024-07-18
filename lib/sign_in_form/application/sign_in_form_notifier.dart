@@ -157,8 +157,9 @@ class SignInFormNotifier extends StateNotifier<SignInFormState> {
 
   Future<void> clearInfo() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final str = await prefs.getString('$saveStr');
 
-    if (prefs.getString('$saveStr') != null) {
+    if (str != null) {
       await prefs.remove(
         '$saveStr',
       );

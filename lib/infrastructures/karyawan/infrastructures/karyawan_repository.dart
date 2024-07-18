@@ -17,11 +17,12 @@ class KaryawanShiftRepository {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-      final rememberMe = prefs.getString('remember_me');
+      final rememberMe = await prefs.getString('remember_me');
 
       if (rememberMe != null) {
-        final rememberMeModel =
-            RememberMeModel.fromJson(jsonDecode(rememberMe));
+        final json = jsonDecode(rememberMe);
+
+        final rememberMeModel = RememberMeModel.fromJson(json);
 
         return right(rememberMeModel.isKaryawan);
       }

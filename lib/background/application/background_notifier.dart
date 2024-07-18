@@ -69,10 +69,12 @@ class BackgroundNotifier extends StateNotifier<BackgroundState> {
     SavedLocation currentLocation,
   ) async {
     final _sharedPreference = await SharedPreferences.getInstance();
+    final _loc = await _sharedPreference.getString("locations");
 
-    if (_sharedPreference.getString("locations") != null) {
+    if (_loc != null) {
       final savedLocations = await _parseLocation(
-          savedLocations: _sharedPreference.getString("locations"));
+        savedLocations: _loc,
+      );
 
       final processLocation = savedLocations
           .where((location) => location.date != currentLocation.date)
