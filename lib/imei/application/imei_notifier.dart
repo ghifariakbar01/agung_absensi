@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
@@ -171,31 +170,25 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
 
   Future<void> onImei({
     required Function onImeiOK,
-    required String? savedImei,
-    required String? imeiDBString,
+    required String savedImei,
+    required String imeiDBString,
     required String? appleUsername,
     required ImeiAuthState imeiAuthState,
     required Future<void> onImeiNotRegistered(),
     required Future<void> onImeiAlreadyRegistered(),
   }) async {
-    log('imei condition ${savedImei != null} ${savedImei!.isEmpty} ');
-
     if (imeiAuthState == ImeiAuthState.empty()) {
       switch (savedImei.isEmpty) {
         case true:
-          // debugger(message: 'called');
-
           await onImeiNotRegistered();
           break;
 
         case false:
-          // debugger(message: 'called');
-
           await _onImeiTester(
+            appleUsername,
             onImeiOK,
             onImeiNotRegistered,
             onImeiAlreadyRegistered,
-            appleUsername,
           );
 
           break;
@@ -205,30 +198,26 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
     if (imeiAuthState == ImeiAuthState.registered()) {
       switch (savedImei.isEmpty) {
         case true:
-          // debugger(message: 'called');
           // FOR APPLE REVIEW
           await _onImeiTester(
+            appleUsername,
             onImeiOK,
             onImeiNotRegistered,
             onImeiAlreadyRegistered,
-            appleUsername,
           );
 
           break;
         case false:
           () async {
             if (imeiDBString == savedImei) {
-              // debugger(message: 'called');
-
               onImeiOK();
             } else if (imeiDBString != savedImei) {
-              // debugger(message: 'called');
               // FOR APPLE REVIEW
               await _onImeiTester(
+                appleUsername,
                 onImeiOK,
                 onImeiNotRegistered,
                 onImeiAlreadyRegistered,
-                appleUsername,
               );
             }
           }();
@@ -240,10 +229,10 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
   }
 
   Future<void> _onImeiTester(
+    String? appleUsername,
     Function onImeiOK,
     Future<void> onImeiNotRegistered(),
     Future<void> onImeiAlreadyRegistered(),
-    String? appleUsername,
   ) async {
     if (appleUsername != null) {
       if (appleUsername == 'Ghifar') {
@@ -296,11 +285,11 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
   Future<void> processImei({
     required Ref ref,
     required String imei,
+    required String savedImei,
     required BuildContext context,
   }) async {
     final user = ref.read(userNotifierProvider).user;
     final imeiAuthState = ref.read(imeiAuthNotifierProvider);
-    final savedImei = ref.read(imeiNotifierProvider).imei;
 
     String generatedImeiString = generateImei();
 

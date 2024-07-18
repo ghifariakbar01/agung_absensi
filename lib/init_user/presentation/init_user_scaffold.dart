@@ -9,7 +9,6 @@ import '../../cross_auth/application/cross_auth_notifier.dart';
 import '../../cross_auth/application/is_user_crossed.dart';
 import '../../domain/imei_failure.dart';
 import '../../err_log/application/err_log_notifier.dart';
-import '../../firebase/remote_config/application/firebase_remote_config_notifier.dart';
 import '../../imei_introduction/application/shared/imei_introduction_providers.dart';
 import '../../shared/common_widgets.dart';
 import '../../shared/future_providers.dart';
@@ -44,18 +43,6 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen<AsyncValue<IsUserCrossedState>>(isUserCrossedProvider,
-        (__, state) async {
-      if (!state.isLoading &&
-          state.hasValue &&
-          state.value != null &&
-          state.hasError == false) {
-        await _uncross(state);
-      }
-
-      return state.showAlertDialogOnError(context, ref);
-    });
-
     ref.listen<AsyncValue>(imeiInitFutureProvider(context), (_, state) async {
       return state.showAlertDialogOnError(context, ref);
     });
@@ -102,60 +89,36 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
           );
 
           return Scaffold(
-            body: Stack(
-                //
-                children: [
-                  imeiInitFuture.when(
-                    data: (_) => LoadingOverlay(
-                      isLoading: true,
-                      loadingMessage: _isCrossed
-                          ? 'Uncrossing User...'
-                          : 'Initializing User & Installation ID...',
-                    ),
-                    loading: () => Center(
-                      child: CommonWidget().lottie(
-                        'assets/avatar.json',
-                        'Getting User...',
-                        _controller,
-                      ),
-                    ),
-                    error: (error, stackTrace) => ErrorMessageWidget(
-                      errorMessage: error.toString(),
-                      additionalWidgets: [
-                        VButton(
-                            label: 'Logout & Retry',
-                            onPressed: () => ref
-                                .read(imeiResetNotifierProvider.notifier)
-                                .clearImeiFromStorage())
-                      ],
-                    ),
+            body: Stack(children: [
+              imeiInitFuture.when(
+                data: (_) => LoadingOverlay(
+                  isLoading: true,
+                  loadingMessage: _isCrossed
+                      ? 'Uncrossing User...'
+                      : 'Initializing User & Installation ID...',
+                ),
+                loading: () => Center(
+                  child: CommonWidget().lottie(
+                    'assets/avatar.json',
+                    'Getting User...',
+                    _controller,
                   ),
-                ]),
+                ),
+                error: (error, stackTrace) => ErrorMessageWidget(
+                  errorMessage: error.toString(),
+                  additionalWidgets: [
+                    VButton(
+                        label: 'Logout & Retry',
+                        onPressed: () => ref
+                            .read(imeiResetNotifierProvider.notifier)
+                            .clearImeiFromStorage())
+                  ],
+                ),
+              ),
+            ]),
           );
         },
       ),
     );
-  }
-
-  Future<void> _uncross(AsyncValue<IsUserCrossedState> state) async {
-    final user = ref.read(userNotifierProvider).user;
-    final _data = state.requireValue;
-
-    final _isCrossed = _data.when(
-      crossed: () => true,
-      notCrossed: () => false,
-    );
-
-    final _ptMap = await ref
-        .read(firebaseRemoteConfigNotifierProvider.notifier)
-        .getPtMap();
-
-    if (_isCrossed) {
-      await ref.read(crossAuthNotifierProvider.notifier).uncrossStl(
-            url: _ptMap,
-            userId: user.nama!,
-            password: user.password!,
-          );
-    }
   }
 }

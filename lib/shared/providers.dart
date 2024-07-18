@@ -113,11 +113,6 @@ SecureCredentialsStorage credentialsStorage(CredentialsStorageRef ref) {
   ------------------
 */
 
-final imeiCredentialsStorageProvider = Provider<CredentialsStorage>(
-  (ref) =>
-      ImeiSecureCredentialsStorage(ref.watch(flutterSecureStorageProvider)),
-);
-
 final authRemoteServiceProvider = Provider(
   (ref) =>
       AuthRemoteService(ref.watch(dioProvider), ref.watch(dioRequestProvider)),
@@ -224,11 +219,11 @@ final karyawanShiftFutureProvider = FutureProvider<bool>((ref) async {
   return await _repository.isKaryawanShift();
 });
 
-// IMEI
-final imeiNotifierProvider = StateNotifierProvider<ImeiNotifier, ImeiState>(
-    (ref) => ImeiNotifier(ref.watch(imeiRepositoryProvider)));
+final imeiCredentialsStorageProvider = Provider<CredentialsStorage>(
+  (ref) =>
+      ImeiSecureCredentialsStorage(ref.watch(flutterSecureStorageProvider)),
+);
 
-// EDIT PROFILE
 final imeiRemoteServiceProvider = Provider(
   (ref) => ImeiRemoteService(
     ref.watch(dioProvider),
@@ -236,12 +231,17 @@ final imeiRemoteServiceProvider = Provider(
   ),
 );
 
-final imeiRepositoryProvider = Provider(
-  (ref) => ImeiRepository(
+// IMEI
+@Riverpod(keepAlive: true)
+ImeiRepository imeiRepository(ImeiRepositoryRef ref) {
+  return ImeiRepository(
     ref.watch(imeiCredentialsStorageProvider),
     ref.watch(imeiRemoteServiceProvider),
-  ),
-);
+  );
+}
+
+final imeiNotifierProvider = StateNotifierProvider<ImeiNotifier, ImeiState>(
+    (ref) => ImeiNotifier(ref.watch(imeiRepositoryProvider)));
 
 final imeiAuthNotifierProvider =
     StateNotifierProvider<ImeiAuthNotifier, ImeiAuthState>(

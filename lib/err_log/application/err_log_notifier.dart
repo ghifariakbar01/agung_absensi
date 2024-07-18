@@ -56,7 +56,7 @@ class ErrLogController extends _$ErrLogController {
 
     final _imei = ref.read(imeiNotifierProvider.notifier);
 
-    final _saved = user.imeiHp ?? '-';
+    final _saved = imeiSaved ?? await _imei.getImeiString();
     final _db =
         imeiDb ?? await _imei.getImeiStringDb(idKary: user.IdKary ?? '-');
 

@@ -8,6 +8,7 @@ import '../auth/infrastructures/auth_repository.dart';
 import '../constants/constants.dart';
 import '../cross_auth/application/cross_auth_notifier.dart';
 import '../firebase/remote_config/application/firebase_remote_config_notifier.dart';
+import '../imei/infrastructures/imei_repository.dart';
 import '../user/application/user_model.dart';
 import 'providers.dart';
 
@@ -103,6 +104,10 @@ final imeiInitFutureProvider =
 
     final _data = await ref.read(isUserCrossedProvider.future);
 
+    if (user.IdKary == null) {
+      throw AssertionError('Error validating user. IdKary user is null');
+    }
+
     if (user.IdKary!.isEmpty) {
       // uncross
       final _isCrossed = _data.when(
@@ -139,22 +144,38 @@ final imeiInitFutureProvider =
   final json = jsonDecode(userString) as Map<String, Object?>;
   final user = UserModelWithPassword.fromJson(json);
 
+  if (user.IdKary == null) {
+    throw AssertionError('Error validating user. IdKary user is null');
+  }
+
   if (user.IdKary!.isNotEmpty) {
     final String? imeiDb;
+    final String? imeiSaved;
 
     try {
       final imeiNotifier = ref.read(imeiNotifierProvider.notifier);
       // 3. GET IMEI DATA
-      String imei = await imeiNotifier.getImeiString();
+      ImeiRepository imeiRepo = ref.read(imeiRepositoryProvider);
+
+      imeiSaved =
+          await imeiRepo.getImeiCredentials().then((value) => value.fold(
+                    (_) => '',
+                    (r) => r,
+                  )) ??
+              '';
 
       await Future.delayed(
         Duration(seconds: 1),
-        () => imeiNotifier.changeSavedImei(imei),
+        () => imeiNotifier.changeSavedImei(imeiSaved ?? ''),
       );
 
-      imeiDb = await imeiNotifier.getImeiStringDb(
-        idKary: user.IdKary ?? 'null',
-      );
+      imeiDb = await imeiRepo
+              .getImei(idKary: user.IdKary!)
+              .then((value) => value.fold(
+                    (_) => '',
+                    (r) => r,
+                  )) ??
+          '';
 
       await ref
           .read(imeiAuthNotifierProvider.notifier)
@@ -163,14 +184,21 @@ final imeiInitFutureProvider =
       throw AssertionError('Error validating imei. Error : $e');
     }
 
+    await Future.delayed(
+      Duration(seconds: 1),
+    );
+
     // 4. PROCESS IMEI DATA
     // IF OFFLINE FROM USER INIT
     final isOfflineFromInit = ref.read(absenOfflineModeProvider);
 
     if (!isOfflineFromInit) {
-      await ref
-          .read(imeiNotifierProvider.notifier)
-          .processImei(imei: imeiDb, ref: ref, context: context);
+      await ref.read(imeiNotifierProvider.notifier).processImei(
+            imei: imeiDb,
+            ref: ref,
+            context: context,
+            savedImei: imeiSaved,
+          );
 
       return unit;
     } else {

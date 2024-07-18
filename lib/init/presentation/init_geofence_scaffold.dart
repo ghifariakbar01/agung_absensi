@@ -276,7 +276,7 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
   }
 
   _otherError(GeofenceFailure failure) async {
-    final String errMessage = failure.maybeMap(
+    final errMessage = failure.maybeMap(
       orElse: () => '',
       passwordExpired: (_) => 'Pass Expire',
       passwordWrong: (value) => 'Pass Wrong',
@@ -284,15 +284,9 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
       wrongFormat: (val) => 'Error parsing geofence : $val',
     );
 
-    final String imeiSaved =
-        await ref.read(imeiNotifierProvider.notifier).getImeiString();
-
-    final String imeiDb =
-        await ref.read(imeiNotifierProvider.notifier).getImeiString();
-
     await ref
         .read(errLogControllerProvider.notifier)
-        .sendLog(imeiDb: imeiDb, imeiSaved: imeiSaved, errMessage: errMessage);
+        .sendLog(errMessage: errMessage);
 
     return showCupertinoDialog(
         context: context,
@@ -306,20 +300,14 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
   }
 
   _savedBackgroundItemsError(BackgroundFailure failure) async {
-    final String errMessage = failure.map(
+    final errMessage = failure.map(
       empty: (_) => '',
       unknown: (value) => 'Error ${value.errorCode} ${value.message} ',
     );
 
-    final String imeiSaved =
-        await ref.read(imeiNotifierProvider.notifier).getImeiString();
-
-    final String imeiDb =
-        await ref.read(imeiNotifierProvider.notifier).getImeiString();
-
     await ref
         .read(errLogControllerProvider.notifier)
-        .sendLog(imeiDb: imeiDb, imeiSaved: imeiSaved, errMessage: errMessage);
+        .sendLog(errMessage: errMessage);
 
     return AlertHelper.showSnackBar(context, message: errMessage);
   }
@@ -328,17 +316,9 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
     final String errMessage =
         'Geofence Belum Disimpan sehingga tidak ada Geofence Offline.';
 
-    final String imeiSaved =
-        await ref.read(imeiNotifierProvider.notifier).getImeiString();
-
-    final String imeiDb =
-        await ref.read(imeiNotifierProvider.notifier).getImeiString();
-
-    await ref.read(errLogControllerProvider.notifier).sendLog(
-          imeiDb: imeiDb,
-          imeiSaved: imeiSaved,
-          errMessage: errMessage,
-        );
+    await ref
+        .read(errLogControllerProvider.notifier)
+        .sendLog(errMessage: errMessage);
 
     return showCupertinoDialog(
         context: context,
