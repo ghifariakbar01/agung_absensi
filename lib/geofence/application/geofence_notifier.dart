@@ -105,35 +105,29 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
             ));
   }
 
-  // Geofence initializatioin
-
-  addGeofenceMockListener(
-          {required Function(Location location) mockListener}) =>
-      geofenceservice.addLocationChangeListener(mockListener);
-
   Future<void> initializeGeoFence(
     List<Geofence> geofenceList, {
     required Function(Object a) onError,
+    required Function(Location location) mockListener,
   }) async {
     if (geofenceservice.isRunningService) return;
 
+    final list = [...geofenceList];
+
     // debugger();
     geofenceservice.addLocationChangeListener(
-      (location) => onLocationChanged(location, geofenceList),
+      (location) => onLocationChanged(
+        location,
+        list,
+      ),
     );
 
+    geofenceservice.addLocationChangeListener(mockListener);
+
     geofenceservice.addStreamErrorListener(onErrorStream);
+    geofenceservice.addGeofenceList(list);
 
-    geofenceservice.addGeofenceList([...geofenceList]);
-
-    await geofenceservice
-        .start([...geofenceList])
-        .catchError(onError)
-        .onError((error, stackTrace) {
-          // log.
-
-          Log.shout('error $error stack $stackTrace');
-        });
+    return geofenceservice.start().catchError(onError);
   }
 
   onLocationChanged(
@@ -243,7 +237,10 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
     final radius = jsonDecode(clean) as Map<String, dynamic>;
 
     radius.forEach((key, value) {
-      list.add(GeofenceRadius(id: key, length: (value as int).toDouble()));
+      list.add(GeofenceRadius(
+        id: key,
+        length: (value as int).toDouble(),
+      ));
     });
 
     return list;

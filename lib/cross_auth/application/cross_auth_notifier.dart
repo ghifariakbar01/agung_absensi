@@ -326,13 +326,6 @@ class CrossAuthNotifier extends _$CrossAuthNotifier {
       await _response.when(
         withUser: (user) async {
           await _saveUser(user);
-          await ref
-              .read(authNotifierProvider.notifier)
-              .checkAndUpdateAuthStatus();
-
-          await ref
-              .read(userNotifierProvider.notifier)
-              .onUserParsedRaw(ref: ref, user: user);
         },
         failure: (errorCode, message) {
           throw CrossAuthResponse.failure(
@@ -399,14 +392,6 @@ class CrossAuthNotifier extends _$CrossAuthNotifier {
       await _response.when(
         withUser: (user) async {
           await _saveUser(user);
-          await ref
-              .read(authNotifierProvider.notifier)
-              .checkAndUpdateAuthStatus();
-
-          await ref.read(userNotifierProvider.notifier).onUserParsedRaw(
-                ref: ref,
-                user: user,
-              );
         },
         failure: (errorCode, message) {
           throw CrossAuthResponse.failure(

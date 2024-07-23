@@ -1,3 +1,4 @@
+import 'package:face_net_authentication/err_log/application/err_log_notifier.dart';
 import 'package:face_net_authentication/utils/logging.dart';
 
 import 'package:collection/collection.dart';
@@ -352,11 +353,15 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
     required Function(Location location) mockListener,
   }) async {
     await getSavedLocations();
-    await ref
-        .read(geofenceProvider.notifier)
-        .initializeGeoFence(geofence, onError: (e) {});
-    await ref
-        .read(geofenceProvider.notifier)
-        .addGeofenceMockListener(mockListener: mockListener);
+    await ref.read(geofenceProvider.notifier).initializeGeoFence(
+      geofence,
+      mockListener: mockListener,
+      onError: (e) async {
+        Log.shout('error initializeGeoFence $e');
+        return ref
+            .read(errLogControllerProvider.notifier)
+            .sendLog(errMessage: 'error initializeGeoFence $e');
+      },
+    );
   }
 }

@@ -10,7 +10,7 @@ import 'package:upgrader/upgrader.dart';
 import 'config/configuration.dart';
 
 import 'firebase/remote_config/helper/firebase_remote_config_initializer.dart';
-import 'helper.dart';
+// import 'helper.dart';
 
 import 'imei_introduction/application/shared/imei_introduction_providers.dart';
 import 'ip/application/ip_notifier.dart';
@@ -38,9 +38,9 @@ Future<void> main() async {
 }
 
 final initializationProvider = FutureProvider<Unit>((ref) async {
-  final helper = HelperImpl();
+  // final helper = HelperImpl();
   // await helper.storageDebugMode(ref, isDebug: true);
-  await helper.fixStorage(ref);
+  // await helper.fixStorage(ref);
 
   await FirebaseRemoteConfigInitializer.setupRemoteConfig(ref);
 

@@ -209,8 +209,6 @@ class IzinListScaffold extends HookConsumerWidget
                           url: _ptMap,
                         );
                   }
-
-                  context.pop();
                 },
                 child: VAsyncWidgetScaffold(
                   value: izinApprove,

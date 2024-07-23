@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:face_net_authentication/utils/logging.dart';
 
 import 'package:face_net_authentication/err_log/application/err_log_notifier.dart';
@@ -24,6 +25,9 @@ extension AsyncValueUI on AsyncValue {
         message = (error as FormatException).message;
       } else if (error is RestApiException) {
         message = (error as RestApiException).errorCode.toString();
+      } else if (error is DioException) {
+        message =
+            'Error DioException Type ' + (error as DioException).type.name;
       } else {
         Log.shout('error is here');
 
@@ -31,6 +35,10 @@ extension AsyncValueUI on AsyncValue {
       }
 
       if (error is NoConnectionException == false) {
+        await _sendLog(ref, message);
+      }
+
+      if (error is DioException) {
         await _sendLog(ref, message);
       }
 

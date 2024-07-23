@@ -185,13 +185,16 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
   }
 
   Future<void> _onGeofenceOffline(
-      List<Geofence> geofence, mockListener(Location location)) async {
-    await ref.read(geofenceProvider.notifier).initializeGeoFence(geofence,
-        onError: (e) => Log.shout('error geofence $e'));
-
-    await ref
-        .read(geofenceProvider.notifier)
-        .addGeofenceMockListener(mockListener: mockListener);
+    List<Geofence> geofence,
+    mockListener(Location location),
+  ) async {
+    await ref.read(geofenceProvider.notifier).initializeGeoFence(
+      geofence,
+      mockListener: mockListener,
+      onError: (e) {
+        Log.shout('error geofence $e');
+      },
+    );
   }
 
   Future<void> _onGeonfeceNotOffline(
@@ -222,12 +225,14 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
           if (savedItems.isNotEmpty) {
             await geofenceNotifier.initializeGeoFence(
               geofence,
-              onError: (e) => Log.shout('error geofence $e'),
+              mockListener: mockListener,
+              onError: (e) async {
+                Log.shout('error initializeGeoFence $e');
+                return ref
+                    .read(errLogControllerProvider.notifier)
+                    .sendLog(errMessage: 'error initializeGeoFence $e');
+              },
             );
-
-            await ref
-                .read(geofenceProvider.notifier)
-                .addGeofenceMockListener(mockListener: mockListener);
 
             // debugger();
             Log.info('savedItems $savedItems');
@@ -266,11 +271,14 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
             if (thereAreGeofences) {
               await geofenceNotifier.initializeGeoFence(
                 geofence,
-                onError: (e) => Log.shout('error geofence $e'),
+                mockListener: mockListener,
+                onError: (e) async {
+                  Log.shout('error geofence $e');
+                  return ref
+                      .read(errLogControllerProvider.notifier)
+                      .sendLog(errMessage: 'error geofence $e');
+                },
               );
-              await ref
-                  .read(geofenceProvider.notifier)
-                  .addGeofenceMockListener(mockListener: mockListener);
             } else {
               await ref
                   .read(geofenceProvider.notifier)

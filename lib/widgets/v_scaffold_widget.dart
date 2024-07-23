@@ -208,6 +208,7 @@ class VScaffoldTabLayout extends HookWidget with DialogHelper, CalendarHelper {
                     onTap: (value) {
                       controller.animateTo(value);
                     },
+                    dividerColor: Colors.transparent,
                     indicatorColor: Colors.transparent,
                     overlayColor: WidgetStatePropertyAll(Colors.transparent),
                     tabs: [
