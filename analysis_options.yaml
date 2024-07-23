@@ -2,3 +2,4 @@ analyzer:
   errors:
     invalid_annotation_target: ignore
     duplicate_ignore: ignore
+    non_nullable_equals_parameter: ignore

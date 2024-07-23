@@ -196,8 +196,8 @@ class LemburListScaffold extends HookConsumerWidget
                 notCrossed: () => false,
               );
 
-              return WillPopScope(
-                onWillPop: () async {
+              return PopScope(
+                onPopInvoked: (_) async {
                   final user = ref.read(userNotifierProvider).user;
                   final _ptMap = await ref
                       .read(firebaseRemoteConfigNotifierProvider.notifier)
@@ -211,7 +211,7 @@ class LemburListScaffold extends HookConsumerWidget
                         );
                   }
 
-                  return true;
+                  context.pop();
                 },
                 child: VAsyncWidgetScaffold(
                   value: lemburApprove,

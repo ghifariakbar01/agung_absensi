@@ -26,8 +26,8 @@ class SakitUploadPage extends ConsumerWidget {
 
     final sakitDtl = ref.watch(sakitDtlNotifierProvider);
 
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      onPopInvoked: (_) async {
         bool _isFinised = false;
 
         await showDialog(
@@ -48,8 +48,8 @@ class SakitUploadPage extends ConsumerWidget {
         value: sakitDtl,
         data: (_) => VScaffoldWidget(
             scaffoldTitle: 'Form Upload',
-            scaffoldBody: WillPopScope(
-              onWillPop: () async {
+            scaffoldBody: PopScope(
+              onPopInvoked: (_) async {
                 await ref
                     .read(sakitDtlNotifierProvider.notifier)
                     .loadSakitDetail(idSakit: id);

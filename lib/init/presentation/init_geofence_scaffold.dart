@@ -176,7 +176,7 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
           mockListener,
         );
       } else {
-        Log.info('onGeofenceOffline');
+        Log.warning('onGeofenceOffline');
         await _onGeofenceOffline(geofence, mockListener);
       }
     } else {
@@ -187,7 +187,7 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
   Future<void> _onGeofenceOffline(
       List<Geofence> geofence, mockListener(Location location)) async {
     await ref.read(geofenceProvider.notifier).initializeGeoFence(geofence,
-        onError: (e) => Log.info('error geofence $e'));
+        onError: (e) => Log.shout('error geofence $e'));
 
     await ref
         .read(geofenceProvider.notifier)
@@ -222,8 +222,9 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
           if (savedItems.isNotEmpty) {
             await geofenceNotifier.initializeGeoFence(
               geofence,
-              onError: (e) => Log.info('error geofence $e'),
+              onError: (e) => Log.shout('error geofence $e'),
             );
+
             await ref
                 .read(geofenceProvider.notifier)
                 .addGeofenceMockListener(mockListener: mockListener);
@@ -265,7 +266,7 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
             if (thereAreGeofences) {
               await geofenceNotifier.initializeGeoFence(
                 geofence,
-                onError: (e) => Log.info('error geofence $e'),
+                onError: (e) => Log.shout('error geofence $e'),
               );
               await ref
                   .read(geofenceProvider.notifier)

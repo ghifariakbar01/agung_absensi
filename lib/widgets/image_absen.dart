@@ -71,7 +71,7 @@ class _ImageAbsenState extends ConsumerState<ImageAbsen> {
                                 source:
                                     "window.document.getElementsByTagName('html')[0].outerHTML;");
 
-                            Log.info('html $html');
+                            Log.warning('html $html');
 
                             if (html.contains('Runtime Error')) {
                               ref.read(imageErrorProvider.notifier).state =

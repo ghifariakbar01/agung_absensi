@@ -386,13 +386,13 @@ class TugasDinasDtlDialog extends ConsumerWidget {
                             scale: 0.5,
                             child: Checkbox(
                               fillColor:
-                                  MaterialStatePropertyAll(Colors.transparent),
+                                  WidgetStatePropertyAll(Colors.transparent),
                               checkColor: Palette.primaryColor,
                               value: item.jenis,
                               onChanged: (val) {},
                               shape: ContinuousRectangleBorder(
                                   borderRadius: BorderRadius.circular(2)),
-                              side: MaterialStateBorderSide.resolveWith(
+                              side: WidgetStateBorderSide.resolveWith(
                                 (states) => BorderSide(
                                     width: 2.0, color: Palette.primaryColor),
                               ),

@@ -20,7 +20,7 @@ import '../auth/infrastructures/auth_interceptor_two.dart';
 import '../auth/infrastructures/auth_remote_service.dart';
 import '../auth/infrastructures/auth_repository.dart';
 import '../auto_absen/application/auto_absen_notifier.dart';
-import '../auto_absen/application/auto_absen_repository.dart';
+
 import '../auto_absen/application/auto_absen_state.dart';
 import '../background/application/background_notifier.dart';
 import '../background/application/background_state.dart';
@@ -155,9 +155,6 @@ final initUserStatusNotifierProvider =
 final autoAbsenSecureStorageProvider = Provider<CredentialsStorage>(
   (ref) => AutoAbsenStorage(ref.watch(flutterSecureStorageProvider)),
 );
-
-final autoAbsenRepositoryProvider = Provider(
-    (ref) => AutoAbsenRepository(ref.watch(autoAbsenSecureStorageProvider)));
 
 final autoAbsenNotifierProvider =
     StateNotifierProvider<AutoAbsenNotifier, AutoAbsenState>(

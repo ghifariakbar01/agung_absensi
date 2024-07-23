@@ -12,11 +12,11 @@ import '../shared/providers.dart';
 extension AsyncValueUI on AsyncValue {
   Future<void> showAlertDialogOnError(
       BuildContext context, WidgetRef ref) async {
-    Log.info('isLoading: $isLoading, hasError: $hasError');
+    Log.shout('isLoading: $isLoading, hasError: $hasError');
     if (!isLoading && hasError) {
       String message = '';
 
-      Log.info('error is $error');
+      Log.shout('error is $error');
       if (error is RestApiExceptionWithMessage) {
         message = (error as RestApiExceptionWithMessage).message ??
             'Error RestApiExceptionWithMessage';
@@ -25,7 +25,7 @@ extension AsyncValueUI on AsyncValue {
       } else if (error is RestApiException) {
         message = (error as RestApiException).errorCode.toString();
       } else {
-        Log.info('error is here');
+        Log.shout('error is here');
 
         message = error.toString();
       }

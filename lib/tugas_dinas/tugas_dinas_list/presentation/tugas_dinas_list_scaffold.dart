@@ -205,8 +205,8 @@ class TugasDinasListScaffold extends HookConsumerWidget
                 notCrossed: () => false,
               );
 
-              return WillPopScope(
-                onWillPop: () async {
+              return PopScope(
+                onPopInvoked: (_) async {
                   final user = ref.read(userNotifierProvider).user;
 
                   final _ptMap = await ref
@@ -221,7 +221,7 @@ class TugasDinasListScaffold extends HookConsumerWidget
                         );
                   }
 
-                  return true;
+                  context.pop();
                 },
                 child: VAsyncWidgetScaffold(
                   value: tugasDinasApprove,

@@ -112,9 +112,9 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
       geofenceservice.addLocationChangeListener(mockListener);
 
   Future<void> initializeGeoFence(
-      //
-      List<Geofence> geofenceList,
-      {required Function(Object a) onError}) async {
+    List<Geofence> geofenceList, {
+    required Function(Object a) onError,
+  }) async {
     if (geofenceservice.isRunningService) return;
 
     // debugger();
@@ -132,7 +132,7 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
         .onError((error, stackTrace) {
           // log.
 
-          Log.info('error $error stack $stackTrace');
+          Log.shout('error $error stack $stackTrace');
         });
   }
 

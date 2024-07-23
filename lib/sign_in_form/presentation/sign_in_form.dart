@@ -170,7 +170,7 @@ class _SignInFormState extends ConsumerState<SignInForm> {
               Checkbox(
                   key: UniqueKey(),
                   checkColor: Theme.of(context).primaryColorLight,
-                  fillColor: MaterialStateProperty.resolveWith(
+                  fillColor: WidgetStateProperty.resolveWith(
                       (state) => getColor(state, context)),
                   value: signInForm.isKaryawan,
                   onChanged: (_) => ref

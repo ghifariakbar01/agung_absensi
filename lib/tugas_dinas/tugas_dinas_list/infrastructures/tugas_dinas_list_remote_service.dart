@@ -111,7 +111,7 @@ class TugasDinasListRemoteService {
 
               return map;
             } catch (e) {
-              Log.info('error is $e');
+              Log.shout('error is $e');
               throw e;
             }
           } else {

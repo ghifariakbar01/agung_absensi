@@ -25,8 +25,8 @@ class IzinUploadPage extends ConsumerWidget {
 
     final izinDtl = ref.watch(izinDtlNotifierProvider);
 
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      onPopInvoked: (_) async {
         bool _isFinised = false;
 
         await showDialog(
@@ -47,8 +47,8 @@ class IzinUploadPage extends ConsumerWidget {
         value: izinDtl,
         data: (_) => VScaffoldWidget(
             scaffoldTitle: 'Form Upload',
-            scaffoldBody: WillPopScope(
-              onWillPop: () async {
+            scaffoldBody: PopScope(
+              onPopInvoked: (_) async {
                 await ref
                     .read(izinDtlNotifierProvider.notifier)
                     .loadIzinDetail(idIzin: id);

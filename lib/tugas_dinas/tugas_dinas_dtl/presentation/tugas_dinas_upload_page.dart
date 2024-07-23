@@ -26,8 +26,8 @@ class TugasDinasUploadPage extends ConsumerWidget {
 
     final tugasDinasDtl = ref.watch(tugasDinasDtlNotifierProvider);
 
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      onPopInvoked: (_) async {
         bool _isFinised = false;
 
         await showDialog(
@@ -48,8 +48,8 @@ class TugasDinasUploadPage extends ConsumerWidget {
         value: tugasDinasDtl,
         data: (_) => VScaffoldWidget(
             scaffoldTitle: 'Form Upload',
-            scaffoldBody: WillPopScope(
-              onWillPop: () async {
+            scaffoldBody: PopScope(
+              onPopInvoked: (_) async {
                 await ref
                     .read(tugasDinasDtlNotifierProvider.notifier)
                     .loadTugasDinasDetail(idTugasDinas: id);

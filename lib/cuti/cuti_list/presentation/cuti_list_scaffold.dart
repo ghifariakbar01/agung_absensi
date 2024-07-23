@@ -190,8 +190,8 @@ class CutiListScaffold extends HookConsumerWidget {
                 notCrossed: () => false,
               );
 
-              return WillPopScope(
-                  onWillPop: () async {
+              return PopScope(
+                  onPopInvoked: (_) async {
                     final user = ref.read(userNotifierProvider).user;
                     final _rmt = await ref
                         .read(firebaseRemoteConfigNotifierProvider.future);
@@ -206,7 +206,7 @@ class CutiListScaffold extends HookConsumerWidget {
                           );
                     }
 
-                    return true;
+                    context.pop();
                   },
                   child: VAsyncWidgetScaffold<MstKaryawanCuti>(
                     value: mstCuti,

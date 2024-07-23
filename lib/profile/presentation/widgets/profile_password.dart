@@ -47,7 +47,7 @@ class ProfilePassword extends ConsumerWidget {
             width: 30,
             child: TextButton(
               style: ButtonStyle(
-                  padding: MaterialStateProperty.all(EdgeInsets.zero)),
+                  padding: WidgetStateProperty.all(EdgeInsets.zero)),
               onPressed: () => ref
                   .read(passwordVisibleProvider.notifier)
                   .state = toggleVisibility(passwordVisible),
@@ -61,7 +61,7 @@ class ProfilePassword extends ConsumerWidget {
             width: 30,
             child: TextButton(
               style: ButtonStyle(
-                  padding: MaterialStateProperty.all(EdgeInsets.zero)),
+                  padding: WidgetStateProperty.all(EdgeInsets.zero)),
               onPressed: () =>
                   copyAndNotify(userProvider.user.password ?? '', context),
               child: Icon(

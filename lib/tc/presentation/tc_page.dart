@@ -175,7 +175,7 @@ class TCPage extends ConsumerWidget {
               Checkbox(
                   key: UniqueKey(),
                   checkColor: Theme.of(context).primaryColorLight,
-                  fillColor: MaterialStateProperty.resolveWith(
+                  fillColor: WidgetStateProperty.resolveWith(
                       (state) => getColor(state, context)),
                   value: isPrivacy,
                   onChanged: (_) =>
@@ -199,7 +199,7 @@ class TCPage extends ConsumerWidget {
               Checkbox(
                   key: UniqueKey(),
                   checkColor: Theme.of(context).primaryColorLight,
-                  fillColor: MaterialStateProperty.resolveWith(
+                  fillColor: WidgetStateProperty.resolveWith(
                       (state) => getColor(state, context)),
                   value: isTerms,
                   onChanged: (_) =>
@@ -279,11 +279,11 @@ bool toggleBool(bool toggled) {
   return toggled ? false : true;
 }
 
-Color getColor(Set<MaterialState> states, BuildContext context) {
-  const Set<MaterialState> interactiveStates = <MaterialState>{
-    MaterialState.pressed,
-    MaterialState.hovered,
-    MaterialState.focused,
+Color getColor(Set<WidgetState> states, BuildContext context) {
+  const Set<WidgetState> interactiveStates = <WidgetState>{
+    WidgetState.pressed,
+    WidgetState.hovered,
+    WidgetState.focused,
   };
   if (states.any(interactiveStates.contains)) {
     return Palette.primaryColor;

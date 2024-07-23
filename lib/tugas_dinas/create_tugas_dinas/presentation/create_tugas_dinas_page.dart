@@ -463,7 +463,7 @@ class CreateTugasDinasPage extends HookConsumerWidget {
                           children: [
                             Checkbox(
                               fillColor:
-                                  MaterialStatePropertyAll(Colors.transparent),
+                                  WidgetStatePropertyAll(Colors.transparent),
                               checkColor: Palette.primaryColor,
                               value: khusus.value,
                               onChanged: (val) {
@@ -471,7 +471,7 @@ class CreateTugasDinasPage extends HookConsumerWidget {
                               },
                               shape: ContinuousRectangleBorder(
                                   borderRadius: BorderRadius.circular(2)),
-                              side: MaterialStateBorderSide.resolveWith(
+                              side: WidgetStateBorderSide.resolveWith(
                                 (states) => BorderSide(
                                     width: 2.0, color: Palette.primaryColor),
                               ),
