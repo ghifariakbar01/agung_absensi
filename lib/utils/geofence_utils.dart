@@ -2,11 +2,17 @@ import 'package:geocoding/geocoding.dart';
 
 class GeofenceUtil {
   static Future<Placemark?> _getAddressFromCoordinates(
-      double latitude, double longitude) async {
-    final list = await placemarkFromCoordinates(latitude, longitude);
+    double latitude,
+    double longitude,
+  ) async {
+    try {
+      final list = await placemarkFromCoordinates(latitude, longitude);
 
-    if (list.isNotEmpty) {
-      return list.first;
+      if (list.isNotEmpty) {
+        return list.first;
+      }
+    } on UnimplementedError catch (e) {
+      throw e;
     }
 
     return null;
@@ -16,19 +22,26 @@ class GeofenceUtil {
     required double? latitude,
     required double? longitude,
   }) async {
-    Placemark? lokasi =
-        await _getAddressFromCoordinates(latitude ?? 0, longitude ?? 0);
+    Placemark? lokasi = await _getAddressFromCoordinates(
+      latitude ?? 0,
+      longitude ?? 0,
+    );
 
     if (lokasi == null) {
       lokasi = Placemark(
-          street: 'LOCATION UKNOWN', subAdministrativeArea: '', postalCode: '');
+        street: 'LOCATION UKNOWN',
+        subAdministrativeArea: '',
+        postalCode: '',
+      );
     }
 
     return lokasi;
   }
 
-  static Future<String> getLokasiStr(
-      {required double lat, required double long}) async {
+  static Future<String> getLokasiStr({
+    required double lat,
+    required double long,
+  }) async {
     Placemark? placeMark = await getLokasi(latitude: lat, longitude: long);
 
     if (placeMark != null) {

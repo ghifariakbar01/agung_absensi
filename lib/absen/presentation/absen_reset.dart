@@ -54,6 +54,9 @@ class AbsenReset extends ConsumerWidget {
                     isTester ? false : nearest > minDistance || nearest == 0,
                 child: Switch(
                   activeColor: Palette.primaryColor,
+                  inactiveThumbColor: Palette.primaryColor,
+                  inactiveTrackColor:
+                      Palette.containerBackgroundColor.withOpacity(0.1),
                   value: buttonResetVisibility,
                   onChanged: (value) => ref
                       .read(buttonResetVisibilityProvider.notifier)

@@ -1,3 +1,4 @@
+import 'package:face_net_authentication/copyright/presentation/copyright_item.dart';
 import 'package:face_net_authentication/cross_auth_server/cross_auth_server_notifier.dart';
 import 'package:face_net_authentication/widgets/v_async_widget.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +6,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../constants/assets.dart';
 import '../../constants/constants.dart';
-import '../../copyright/presentation/copyright_page.dart';
 import '../../cross_auth/application/cross_auth_notifier.dart';
 import '../../routes/application/route_names.dart';
 import '../../shared/providers.dart';
@@ -13,7 +13,6 @@ import '../../style/style.dart';
 
 import '../../widgets/alert_helper.dart';
 import '../../widgets/app_logo.dart';
-import '../../widgets/copyright_text.dart';
 import '../../widgets/testing.dart';
 import '../applicatioin/home_state.dart';
 import 'home_appbar.dart';
@@ -66,7 +65,6 @@ class HomeScaffold extends ConsumerWidget {
     final user = ref.watch(userNotifierProvider);
 
     final isTester = ref.watch(testerNotifierProvider);
-    final packageInfo = ref.watch(packageInfoProvider);
 
     // REDIRECT FROM HOME
     ref.listen<HomeState>(
@@ -191,23 +189,7 @@ class HomeScaffold extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Center(child: CopyrightAgung()),
-                        Center(
-                          child: SelectableText(
-                            'APP VERSION: ${packageInfo.when(
-                              loading: () => '',
-                              data: (packageInfo) => packageInfo,
-                              error: (error, stackTrace) =>
-                                  'Error: $error StackTrace: $stackTrace',
-                            )}',
-                            textAlign: TextAlign.center,
-                            maxLines: 2,
-                            style: Themes.customColor(
-                              8,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
+                        Center(child: CopyrightItem()),
                       ],
                     ),
                   ],

@@ -1,4 +1,3 @@
-import 'package:face_net_authentication/err_log/application/err_log_notifier.dart';
 import 'package:face_net_authentication/utils/logging.dart';
 
 import 'package:collection/collection.dart';
@@ -6,7 +5,9 @@ import 'package:intl/intl.dart';
 
 import '../../absen/application/absen_state.dart';
 import '../../background/application/saved_location.dart';
+import '../../geofence/application/geofence_error_notifier.dart';
 import '../../routes/application/route_names.dart';
+import '../../utils/dialog_helper.dart';
 import '../../utils/enums.dart';
 import '../../utils/os_vibrate.dart';
 import 'auto_absen_state.dart';
@@ -243,6 +244,7 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
 
           // REINITIALIZE
           await reinitializeDependencies(
+            context: buildContext,
             geofence: geofence,
             mockListener: mockListener,
           );
@@ -349,6 +351,7 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
   }
 
   Future<void> reinitializeDependencies({
+    required BuildContext context,
     required List<Geofence> geofence,
     required Function(Location location) mockListener,
   }) async {
@@ -357,10 +360,26 @@ class AutoAbsenNotifier extends StateNotifier<AutoAbsenState> {
       geofence,
       mockListener: mockListener,
       onError: (e) async {
-        Log.shout('error initializeGeoFence $e');
-        return ref
-            .read(errLogControllerProvider.notifier)
-            .sendLog(errMessage: 'error initializeGeoFence $e');
+        String msg = '';
+
+        if (e is ErrorCodes) {
+          msg = ref
+              .read(geofenceErrorNotifierProvider.notifier)
+              .geofenceErrMessage(e);
+
+          ref
+              .read(geofenceErrorNotifierProvider.notifier)
+              .checkAndUpdateError(e);
+        } else {
+          msg = e.toString();
+        }
+
+        Log.shout(msg);
+
+        await DialogHelper.showCustomDialog(
+          msg,
+          context,
+        );
       },
     );
   }

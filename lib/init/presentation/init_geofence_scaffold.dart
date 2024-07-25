@@ -1,3 +1,4 @@
+import 'package:face_net_authentication/geofence/application/geofence_error_notifier.dart';
 import 'package:face_net_authentication/utils/logging.dart';
 
 import 'package:dartz/dartz.dart';
@@ -25,6 +26,7 @@ import '../../network_state/application/network_state_notifier.dart';
 import '../../shared/common_widgets.dart';
 import '../../shared/providers.dart';
 import '../../style/style.dart';
+import '../../utils/dialog_helper.dart';
 import '../../widgets/alert_helper.dart';
 import '../../widgets/v_async_widget.dart';
 import '../../widgets/v_dialogs.dart';
@@ -191,8 +193,27 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
     await ref.read(geofenceProvider.notifier).initializeGeoFence(
       geofence,
       mockListener: mockListener,
-      onError: (e) {
-        Log.shout('error geofence $e');
+      onError: (e) async {
+        String msg = '';
+
+        if (e is ErrorCodes) {
+          msg = ref
+              .read(geofenceErrorNotifierProvider.notifier)
+              .geofenceErrMessage(e);
+
+          ref
+              .read(geofenceErrorNotifierProvider.notifier)
+              .checkAndUpdateError(e);
+        } else {
+          msg = e.toString();
+        }
+
+        Log.shout(msg);
+
+        await DialogHelper.showCustomDialog(
+          msg,
+          context,
+        );
       },
     );
   }
@@ -227,10 +248,26 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
               geofence,
               mockListener: mockListener,
               onError: (e) async {
-                Log.shout('error initializeGeoFence $e');
-                return ref
-                    .read(errLogControllerProvider.notifier)
-                    .sendLog(errMessage: 'error initializeGeoFence $e');
+                String msg = '';
+
+                if (e is ErrorCodes) {
+                  msg = ref
+                      .read(geofenceErrorNotifierProvider.notifier)
+                      .geofenceErrMessage(e);
+
+                  ref
+                      .read(geofenceErrorNotifierProvider.notifier)
+                      .checkAndUpdateError(e);
+                } else {
+                  msg = e.toString();
+                }
+
+                Log.shout(msg);
+
+                await DialogHelper.showCustomDialog(
+                  msg,
+                  context,
+                );
               },
             );
 
@@ -273,10 +310,26 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
                 geofence,
                 mockListener: mockListener,
                 onError: (e) async {
-                  Log.shout('error geofence $e');
-                  return ref
-                      .read(errLogControllerProvider.notifier)
-                      .sendLog(errMessage: 'error geofence $e');
+                  String msg = '';
+
+                  if (e is ErrorCodes) {
+                    msg = ref
+                        .read(geofenceErrorNotifierProvider.notifier)
+                        .geofenceErrMessage(e);
+
+                    ref
+                        .read(geofenceErrorNotifierProvider.notifier)
+                        .checkAndUpdateError(e);
+                  } else {
+                    msg = e.toString();
+                  }
+
+                  Log.shout(msg);
+
+                  await DialogHelper.showCustomDialog(
+                    msg,
+                    context,
+                  );
                 },
               );
             } else {

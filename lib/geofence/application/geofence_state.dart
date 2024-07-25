@@ -12,19 +12,18 @@ part 'geofence_state.freezed.dart';
 
 @freezed
 class GeofenceState with _$GeofenceState {
-  const factory GeofenceState(
-      {required GeofenceService geofenceService,
-      //
-      required List<GeofenceCoordinate> geofenceCoordinates,
-      required GeofenceCoordinate nearestCoordinates,
-      required Location currentLocation,
-      //
-      required bool isGetting,
-      required Option<Either<GeofenceFailure, List<GeofenceResponse>>>
-          failureOrSuccessOption,
-      // GEOFENCE STORAGE ACTIVITY
-      required Option<Either<GeofenceFailure, Unit>>
-          failureOrSuccessOptionStorage}) = _GeofenceState;
+  const factory GeofenceState({
+    required GeofenceService geofenceService,
+    required List<GeofenceCoordinate> geofenceCoordinates,
+    required GeofenceCoordinate nearestCoordinates,
+    required Location currentLocation,
+    required bool isGetting,
+    required Option<Either<GeofenceFailure, List<GeofenceResponse>>>
+        failureOrSuccessOption,
+    // GEOFENCE STORAGE ACTIVITY
+    required Option<Either<GeofenceFailure, Unit>>
+        failureOrSuccessOptionStorage,
+  }) = _GeofenceState;
 
   factory GeofenceState.initial() => GeofenceState(
         isGetting: false,

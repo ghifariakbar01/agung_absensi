@@ -34,19 +34,23 @@ final buttonResetVisibilityProvider = StateProvider<bool>((ref) {
   return false;
 });
 
-class AbsenButton extends ConsumerStatefulWidget {
-  const AbsenButton();
+class AbsenButton extends StatefulHookConsumerWidget {
+  const AbsenButton(
+    this.isTesting, {
+    Key? key,
+  }) : super(key: key);
+
+  final ValueNotifier<bool> isTesting;
 
   @override
   ConsumerState<AbsenButton> createState() => _AbsenButtonState();
 }
 
 class _AbsenButtonState extends ConsumerState<AbsenButton> {
-  // MODIFY WHEN TESTING
-  bool isTesting = false;
-
   @override
   Widget build(BuildContext context) {
+    final isTesting = widget.isTesting;
+
     // ABSEN MODE OFFLINE
     ref.listen<Option<Either<BackgroundFailure, Unit>>>(
         backgroundNotifierProvider.select(
@@ -130,11 +134,11 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
 
     return Column(
       children: [
-        // Load Karyawan Shift
         karyawanAsync.when(
           loading: () => Container(),
-          error: ((error, stackTrace) =>
-              Text('Error: $error \n StackTrace: $stackTrace')),
+          error: (error, stackTrace) {
+            return Text('Error: $error \n StackTrace: $stackTrace');
+          },
           data: (isShift) {
             final String karyawanShiftStr = isShift ? 'SHIFT' : '';
 
@@ -155,7 +159,7 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                     data: (time) => VButton(
                         label: 'ABSEN IN $karyawanShiftStr',
                         height: 50,
-                        isEnabled: isTesting
+                        isEnabled: isTesting.value
                             ? true
                             : isTester.maybeWhen(
                                 tester: () =>
@@ -196,7 +200,7 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
                     data: (time) => VButton(
                         label: 'ABSEN OUT $karyawanShiftStr',
                         height: 50,
-                        isEnabled: isTesting
+                        isEnabled: isTesting.value
                             ? true
                             : isTester.maybeWhen(
                                 tester: () =>
@@ -230,16 +234,15 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
             );
           },
         ),
-
         Visibility(
-            visible: isTesting ? true : isOfflineMode,
+            visible: isTesting.value ? true : isOfflineMode,
             child: VButton(
                 label: 'SIMPAN ABSEN IN',
                 height: 50,
                 isEnabled: isTester.maybeWhen(
                     tester: () => true,
-                    orElse: () => isTesting
-                        ? isTesting
+                    orElse: () => isTesting.value
+                        ? isTesting.value
                         : nearest < minDistance && nearest != 0),
                 onPressed: () async {
                   await HapticFeedback.selectionClick();
@@ -261,16 +264,15 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
 
                   //
                 })),
-
         Visibility(
-            visible: isTesting ? true : isOfflineMode,
+            visible: isTesting.value ? true : isOfflineMode,
             child: VButton(
                 label: 'SIMPAN ABSEN OUT',
                 height: 50,
                 isEnabled: isTester.maybeWhen(
                     tester: () => true,
-                    orElse: () => isTesting
-                        ? isTesting
+                    orElse: () => isTesting.value
+                        ? isTesting.value
                         : nearest < minDistance && nearest != 0),
                 onPressed: () async {
                   await OSVibrate.vibrate();
@@ -292,9 +294,8 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
 
                   //
                 })),
-
         Visibility(
-            visible: isTesting ? true : savedIsNotEmpty,
+            visible: isTesting.value ? true : savedIsNotEmpty,
             child: VButton(
                 label: 'ABSEN TERSIMPAN',
                 height: 50,
@@ -431,9 +432,9 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
       return;
     }
 
-    if (ModalRoute.of(context)?.isCurrent != true) {
-      context.pop();
-    }
+    // if (ModalRoute.of(context)?.isCurrent != true) {
+    //   context.pop();
+    // }
 
     return showCupertinoDialog(
         context: context,
@@ -491,9 +492,9 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
       return;
     }
 
-    if (ModalRoute.of(context)?.isCurrent != true) {
-      context.pop();
-    }
+    // if (ModalRoute.of(context)?.isCurrent != true) {
+    //   context.pop();
+    // }
 
     return showCupertinoDialog(
         context: context,

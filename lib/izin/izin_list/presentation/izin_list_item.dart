@@ -189,7 +189,7 @@ class IzinListItem extends HookConsumerWidget {
                                   height: 2,
                                 ),
                                 Ink(
-                                    height: 15,
+                                    // height: 30,
                                     child: InkWell(
                                         onTap: () => showDialog(
                                               context: context,
@@ -372,6 +372,10 @@ class IzinListItem extends HookConsumerWidget {
 
                       // tgl, jumlah sakit, surat info
                     ],
+                  ),
+
+                  SizedBox(
+                    height: 8,
                   ),
 
                   Column(
