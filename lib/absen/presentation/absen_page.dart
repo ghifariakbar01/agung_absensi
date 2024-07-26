@@ -1,7 +1,11 @@
+// ignore_for_file: unused_result
+
+import 'package:face_net_authentication/riwayat_absen/application/riwayat_absen_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../constants/constants.dart';
+import '../../network_time/network_time_notifier.dart';
 import '../../shared/providers.dart';
 import '../../style/style.dart';
 import '../../widgets/image_absen.dart';
@@ -36,6 +40,11 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
   }
 
   Future<void> _initializeGeofenceImeiAndAbsen() async {
+    ref.read(riwayatAbsenNotifierProvider.notifier).reset();
+    ref.read(riwayatAbsenNotifierProvider.notifier).reset();
+
+    await ref.refresh(networkTimeNotifierProvider);
+
     await ref.read(testerNotifierProvider).maybeWhen(
       tester: () async {
         await _initializeImei();
@@ -63,6 +72,10 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
     final displayImage = ref.watch(displayImageProvider);
     final isOfflineMode = ref.watch(absenOfflineModeProvider);
 
+    final riwayatLoading = ref.watch(
+      riwayatAbsenNotifierProvider.select((value) => value.isGetting),
+    );
+
     return Scaffold(
         appBar: AppBar(
           elevation: 0,
@@ -81,45 +94,52 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
                     : MediaQuery.of(context).size.height + 475,
                 child: Stack(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Container(
-                        padding: EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color:
-                              Palette.containerBackgroundColor.withOpacity(0.1),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            SizedBox(
-                              height: 4,
-                            ),
-                            UserInfo(
-                              'User ${isOfflineMode ? '(Mode Offline)' : ''}',
-                            ),
-                            Constants.isDev
-                                ? Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Testing(),
-                                  )
-                                : Container(),
-                            const SizedBox(
-                              height: 24,
-                            ),
-                            AbsenErrorAndButton(),
-                          ],
+                    if (riwayatLoading) ...[
+                      Align(
+                        alignment: Alignment.center,
+                        child: CircularProgressIndicator(),
+                      )
+                    ] else ...[
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Container(
+                          padding: EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: Palette.containerBackgroundColor
+                                .withOpacity(0.1),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              SizedBox(
+                                height: 4,
+                              ),
+                              UserInfo(
+                                'User ${isOfflineMode ? '(Mode Offline)' : ''}',
+                              ),
+                              Constants.isDev
+                                  ? Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Testing(),
+                                    )
+                                  : Container(),
+                              const SizedBox(
+                                height: 24,
+                              ),
+                              AbsenErrorAndButton(),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    Positioned(
-                      bottom: 20,
-                      left: 0,
-                      right: 0,
-                      child: CopyrightItem(),
-                    )
+                      Positioned(
+                        bottom: 20,
+                        left: 0,
+                        right: 0,
+                        child: CopyrightItem(),
+                      )
+                    ]
                   ],
                 )),
           ),

@@ -66,6 +66,7 @@ class BackgroundScaffold extends ConsumerWidget {
             'Absen Tersimpan',
             style: Themes.customColor(
               20,
+              color: Colors.white,
               fontWeight: FontWeight.bold,
             ),
           ),

@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lottie/lottie.dart';
 
-import '../../riwayat_absen/application/riwayat_absen_notifier.dart';
 import '../../routes/application/route_names.dart';
 import '../../style/style.dart';
 
@@ -16,8 +15,9 @@ class Success extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final _controller = useAnimationController();
 
-    return ColoredBox(
+    return Container(
       color: Palette.green,
+      width: double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -29,17 +29,8 @@ class Success extends HookConsumerWidget {
               controller: _controller,
               frameRate: FrameRate(60),
               onLoaded: (composition) async {
-                final _riwayat = ref.read(riwayatAbsenNotifierProvider);
-
-                await ref
-                    .read(riwayatAbsenNotifierProvider.notifier)
-                    .getAndReplace(
-                      dateFirst: _riwayat.dateFirst,
-                      dateSecond: _riwayat.dateSecond,
-                    );
-
                 _controller
-                  ..duration = Duration(seconds: 3)
+                  ..duration = composition.duration
                   ..forward().then((_) {
                     context.pop();
                     context.pushNamed(

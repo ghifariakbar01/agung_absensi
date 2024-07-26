@@ -14,22 +14,8 @@ class RiwayatAbsenNotifier extends StateNotifier<RiwayatAbsenState> {
 
   final AbsenRepository _absenRepository;
 
-  Future<void> getAndReplace({
-    required String? dateFirst,
-    required String? dateSecond,
-  }) async {
-    final either = await _absenRepository.getRiwayatAbsen(
-      dateFirst: dateFirst,
-      dateSecond: dateSecond,
-    );
-
-    return either.fold(
-      (_) => state = state.copyWith(
-        riwayatAbsen: [],
-        failureOrSuccessOption: optionOf(either),
-      ),
-      (r) => replaceAbsenRiwayat(r),
-    );
+  reset() {
+    state = RiwayatAbsenState.initial();
   }
 
   Future<void> getAbsenRiwayat({
@@ -65,6 +51,10 @@ class RiwayatAbsenNotifier extends StateNotifier<RiwayatAbsenState> {
     final list = [...listAbsen].toSet().toList();
 
     state = state.copyWith(riwayatAbsen: [...list]);
+  }
+
+  void resetAbsenFOSO() {
+    state = state.copyWith(failureOrSuccessOption: none());
   }
 
   void changePage(int page) {

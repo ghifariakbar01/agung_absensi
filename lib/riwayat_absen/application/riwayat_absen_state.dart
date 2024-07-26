@@ -26,16 +26,17 @@ class RiwayatAbsenState with _$RiwayatAbsenState {
   }) = _RiwayatAbsenState;
 
   factory RiwayatAbsenState.initial() => RiwayatAbsenState(
-      riwayatAbsen: [],
-      isMore: true,
-      isGetting: false,
-      failureOrSuccessOption: none(),
-      failureOrSuccessOptionByID: none(),
-      dateFirst:
-          StringUtils.yyyyMMddWithStripe(DateTime.now().add(Duration(days: 1))),
-      dateSecond: StringUtils.yyyyMMddWithStripe(DateTime.now().copyWith(
-        month: DateTime.now().month - 1,
-        day: 15,
-      )),
-      page: 1);
+        riwayatAbsen: [],
+        isMore: true,
+        isGetting: false,
+        failureOrSuccessOption: none(),
+        failureOrSuccessOptionByID: none(),
+        dateFirst: StringUtils.yyyyMMddWithStripe(
+            DateTime.now().add(Duration(days: 1))),
+        dateSecond: StringUtils.yyyyMMddWithStripe(DateTime.now().copyWith(
+          month: DateTime.now().month - 1,
+          day: 15,
+        )),
+        page: 1,
+      );
 }
