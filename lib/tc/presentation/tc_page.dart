@@ -223,8 +223,8 @@ class TCPage extends ConsumerWidget {
                 textAlign: TextAlign.center,
                 label: 'CONTINUE',
                 isEnabled: isPrivacy && isTerms,
-                onPressed: () async {
-                  await showDialog(
+                onPressed: () {
+                  return showDialog(
                       context: context,
                       barrierDismissible: true,
                       builder: (context) => VAlertDialog(

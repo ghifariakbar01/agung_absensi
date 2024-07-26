@@ -1,6 +1,7 @@
 // ignore_for_file: unused_result
 
 import 'package:dartz/dartz.dart';
+// import 'package:face_net_authentication/helper.dart';
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -34,13 +35,19 @@ Future<void> main() async {
   const bool isProduction = bool.fromEnvironment('dart.vm.product');
   BuildConfig.init(flavor: isProduction ? 'production' : 'development');
 
-  runApp(ProviderScope(child: MyApp()));
+  runApp(ProviderScope(
+    child: MyApp(),
+  ));
 }
 
 final initializationProvider = FutureProvider<Unit>((ref) async {
   // final helper = HelperImpl();
   // await helper.storageDebugMode(ref, isDebug: true);
   // await helper.fixStorage(ref);
+
+  await ref.read(authNotifierProvider.notifier).checkAndUpdateAuthStatus();
+  await ref.read(tcNotifierProvider.notifier).checkAndUpdateStatusTC();
+  await ref.read(imeiIntroNotifierProvider.notifier).checkAndUpdateImeiIntro();
 
   await FirebaseRemoteConfigInitializer.setupRemoteConfig(ref);
 
@@ -50,10 +57,6 @@ final initializationProvider = FutureProvider<Unit>((ref) async {
           requestBody: true,
         ));
   }
-
-  await ref.read(authNotifierProvider.notifier).checkAndUpdateAuthStatus();
-  await ref.read(tcNotifierProvider.notifier).checkAndUpdateStatusTC();
-  await ref.read(imeiIntroNotifierProvider.notifier).checkAndUpdateImeiIntro();
 
   return unit;
 });
@@ -105,12 +108,11 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
             routeInformationParser: router.routeInformationParser,
             routerDelegate: routerDelegate,
             builder: (_, c) => UpgradeAlert(
-                  key: UniqueKey(),
-                  navigatorKey: routerDelegate.navigatorKey,
-                  child: c,
-                  upgrader: Upgrader(
-                      messages: MyUpgraderMessages(),
-                      durationUntilAlertAgain: Duration(hours: 3)),
-                )));
+                key: UniqueKey(),
+                navigatorKey: routerDelegate.navigatorKey,
+                child: c,
+                upgrader: Upgrader(
+                    messages: MyUpgraderMessages(),
+                    durationUntilAlertAgain: Duration(hours: 3)))));
   }
 }

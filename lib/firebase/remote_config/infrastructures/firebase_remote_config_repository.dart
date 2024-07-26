@@ -22,6 +22,7 @@ class FirebaseRemoteConfigRepository {
     return _credentialsStorage.save(json);
   }
 
-  Future<void> clearFirebaseRemoteConfigStorage() =>
-      _credentialsStorage.clear();
+  Future<void> clearFirebaseRemoteConfigStorage() async {
+    return _credentialsStorage.clear();
+  }
 }

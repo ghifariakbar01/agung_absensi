@@ -77,11 +77,6 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
     }
   }
 
-  _authCheck(WidgetRef ref) async {
-    await ref.read(userNotifierProvider.notifier).logout();
-    await ref.read(authNotifierProvider.notifier).checkAndUpdateAuthStatus();
-  }
-
   _backToLoginScreen(WidgetRef ref) {
     ref.read(userNotifierProvider.notifier).setUserInitial();
     ref.read(initUserStatusNotifierProvider.notifier).hold();
@@ -96,6 +91,11 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
         ref.read(imeiIntroNotifierProvider.notifier);
     await imeiInstructionNotifier.clearVisitedIMEIIntroduction();
     await imeiInstructionNotifier.checkAndUpdateImeiIntro();
+  }
+
+  _authCheck(WidgetRef ref) async {
+    await ref.read(userNotifierProvider.notifier).logout();
+    await ref.read(authNotifierProvider.notifier).checkAndUpdateAuthStatus();
   }
 
   Future<void> onEditProfile({
@@ -123,14 +123,20 @@ class ImeiNotifier extends StateNotifier<ImeiState> {
     Either<EditFailure, Unit>? failureOrSuccess;
 
     state = state.copyWith(
-        isGetting: true, failureOrSuccessOptionClearRegisterImei: none());
+      isGetting: true,
+      failureOrSuccessOptionClearRegisterImei: none(),
+    );
 
     failureOrSuccess = await _imeiRepository.logClearImei(
-        imei: state.imei, nama: nama, idUser: idUser);
+      imei: state.imei,
+      nama: nama,
+      idUser: idUser,
+    );
 
     state = state.copyWith(
-        isGetting: false,
-        failureOrSuccessOptionClearRegisterImei: optionOf(failureOrSuccess));
+      isGetting: false,
+      failureOrSuccessOptionClearRegisterImei: optionOf(failureOrSuccess),
+    );
   }
 
   Future<void> registerImei(

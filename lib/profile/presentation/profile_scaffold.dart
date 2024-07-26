@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:face_net_authentication/ios_user_maintanance/ios_user_maintanance_notifier.dart';
+import 'package:face_net_authentication/widgets/v_async_widget.dart';
 import 'package:face_net_authentication/widgets/v_dialogs.dart';
 import 'package:face_net_authentication/shared/providers.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +14,7 @@ import '../../widgets/v_button.dart';
 import 'profile_view.dart';
 
 class ProfileScaffold extends HookConsumerWidget {
-  const ProfileScaffold();
+  const ProfileScaffold({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -20,6 +22,7 @@ class ProfileScaffold extends HookConsumerWidget {
     final user = userProvider.user;
 
     final scrollController = useScrollController();
+    final iosUserMaintanance = ref.watch(iosUserMaintananceProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -50,6 +53,26 @@ class ProfileScaffold extends HookConsumerWidget {
           controller: scrollController,
           children: [
             const ProfileView(),
+            VAsyncValueWidget<String>(
+                value: iosUserMaintanance,
+                data: (iosUser) {
+                  if (user.nama == iosUser) {
+                    return VButton(
+                        label: 'Button Maintanance $iosUser',
+                        color: Palette.blueLink,
+                        onPressed: () async {
+                          return ref
+                              .read(imeiNotifierProvider.notifier)
+                              .logClearImeiFromDB(
+                                  idUser: user.idUser.toString(),
+                                  nama: user.nama!.isEmpty
+                                      ? ''
+                                      : '${user.nama} Button Maintanance $iosUser ');
+                        });
+                  } else {
+                    return Container();
+                  }
+                }),
             VButton(
                 label: 'UNLINK HP',
                 color: Palette.red,
