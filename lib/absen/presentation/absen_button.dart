@@ -505,9 +505,9 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
       long: currentLocationLongitude,
     );
 
-    if (imei.isEmpty) {
-      return;
-    }
+    // if (imei.isEmpty) {
+    //   return;
+    // }
 
     // if (ModalRoute.of(context)?.isCurrent != true) {
     //   context.pop();
@@ -565,9 +565,9 @@ class _AbsenButtonState extends ConsumerState<AbsenButton> {
       long: currentLocationLongitude,
     );
 
-    if (imei.isEmpty) {
-      return;
-    }
+    // if (imei.isEmpty) {
+    //   return;
+    // }
 
     // if (ModalRoute.of(context)?.isCurrent != true) {
     //   context.pop();

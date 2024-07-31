@@ -61,6 +61,7 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
   Future<void> _initializeImei() async {
     final imeiNotifier = ref.read(imeiNotifierProvider.notifier);
     final imei = await imeiNotifier.getImeiString();
+
     await Future.delayed(
       Duration(seconds: 1),
       () => imeiNotifier.changeSavedImei(imei),
@@ -94,7 +95,7 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
                     : MediaQuery.of(context).size.height + 475,
                 child: Stack(
                   children: [
-                    if (riwayatLoading) ...[
+                    if (!isOfflineMode && riwayatLoading) ...[
                       Align(
                         alignment: Alignment.center,
                         child: CircularProgressIndicator(),

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:face_net_authentication/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -105,6 +106,8 @@ final imeiInitFutureProvider =
     final _data = await ref.read(isUserCrossedProvider.future);
 
     if (user.IdKary == null) {
+      final helper = HelperImpl();
+      await helper.storageDebugMode(ref, isDebug: true);
       throw AssertionError('Error validating user. IdKary user is null');
     }
 
@@ -128,6 +131,8 @@ final imeiInitFutureProvider =
       }
     } else {}
   } catch (e) {
+    final helper = HelperImpl();
+    await helper.storageDebugMode(ref, isDebug: true);
     throw AssertionError('Error validating cross server. Error : $e');
   }
 
@@ -135,6 +140,8 @@ final imeiInitFutureProvider =
     ref.invalidate(getUserFutureProvider);
     await ref.read(getUserFutureProvider.future);
   } catch (e) {
+    final helper = HelperImpl();
+    await helper.storageDebugMode(ref, isDebug: true);
     throw AssertionError('Error validating user. Error : $e');
   }
 
@@ -145,6 +152,8 @@ final imeiInitFutureProvider =
   final user = UserModelWithPassword.fromJson(json);
 
   if (user.IdKary == null) {
+    final helper = HelperImpl();
+    await helper.storageDebugMode(ref, isDebug: true);
     throw AssertionError('Error validating user. IdKary user is null');
   }
 
@@ -207,6 +216,8 @@ final imeiInitFutureProvider =
       return unit;
     }
   } else {
+    final helper = HelperImpl();
+    await helper.storageDebugMode(ref, isDebug: true);
     throw AssertionError('Error validating user. IdKary user is empty');
   }
 });
