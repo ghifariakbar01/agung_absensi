@@ -95,7 +95,9 @@ class SignInFormNotifier extends StateNotifier<SignInFormState> {
 
   changeDropdownSelected(String dropdownStr) {
     state = state.copyWith(
-        ptDropdownSelected: dropdownStr, failureOrSuccessOption: none());
+      ptDropdownSelected: dropdownStr,
+      failureOrSuccessOption: none(),
+    );
   }
 
   changePTNameAndDropdown({

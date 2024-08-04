@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:face_net_authentication/ip/application/ip_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -54,14 +55,16 @@ class _SignInFormState extends ConsumerState<SignInForm> {
             iconSize: 20,
             icon: const Icon(Icons.arrow_downward),
             decoration: Themes.formStyle('Masukkan PT'),
-            // style: const TextStyle(color: Palette.primaryColor),
             onChanged: (String? value) => ref
                 .read(signInFormNotifierProvider)
                 .ptMap
                 .forEach((serverName, ptNameStrList) {
               for (final ptNameStr in ptNameStrList) {
                 if (value == ptNameStr && value != null) {
-                  // ref.read(ipNotifierProvider.notifier).initOnLogin();
+                  ref
+                      .read(ipNotifierProvider.notifier)
+                      .initUrlFromPtServer(serverName);
+
                   ref
                       .read(signInFormNotifierProvider.notifier)
                       .changePTNameAndDropdown(

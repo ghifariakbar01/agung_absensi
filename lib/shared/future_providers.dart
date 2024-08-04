@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:face_net_authentication/helper.dart';
+import 'package:face_net_authentication/ip/application/ip_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -155,6 +156,13 @@ final imeiInitFutureProvider =
     final helper = HelperImpl();
     await helper.storageDebugMode(ref, isDebug: true);
     throw AssertionError('Error validating user. IdKary user is null');
+  }
+
+  try {
+    final String ptServer = user.ptServer ?? '';
+    ref.read(ipNotifierProvider.notifier).initUrlFromPtServer(ptServer);
+  } catch (e) {
+    //
   }
 
   if (user.IdKary!.isNotEmpty) {

@@ -32,16 +32,16 @@ class IpNotifier extends _$IpNotifier {
     debugPrint(
         '╚══════════════════════════════════════════════════════════════╝');
 
-    ref.read(dioProvider)
-      ..options = BaseOptions(
-        connectTimeout: BuildConfig.get().connectTimeout,
-        receiveTimeout: BuildConfig.get().receiveTimeout,
-        validateStatus: (status) {
-          return true;
-        },
-        baseUrl: cfg.baseUrl,
-      )
-      ..interceptors.add(ref.read(authInterceptorProvider));
+    // ref.read(dioProvider)
+    //   ..options = BaseOptions(
+    //     connectTimeout: BuildConfig.get().connectTimeout,
+    //     receiveTimeout: BuildConfig.get().receiveTimeout,
+    //     validateStatus: (status) {
+    //       return true;
+    //     },
+    //     baseUrl: cfg.baseUrl,
+    //   )
+    //   ..interceptors.add(ref.read(authInterceptorProvider));
     // ..interceptors.add(ref.read(aliceProvider).getDioInterceptor());
 
     ref.read(dioProviderHosting)
@@ -56,13 +56,31 @@ class IpNotifier extends _$IpNotifier {
       ..interceptors.add(ref.read(authInterceptorProvider));
   }
 
-  initUrlFromDropdown() {
-    //
+  initUrlFromPtServer(final String ptServerSelected) {
+    String serv = '';
+
+    if (ptServerSelected == 'gs_18') {
+      serv = ipPriyok;
+    } else {
+      serv = ipCut;
+    }
+
+    ref.read(dioProvider)
+      ..options = BaseOptions(
+        connectTimeout: BuildConfig.get().connectTimeout,
+        receiveTimeout: BuildConfig.get().receiveTimeout,
+        validateStatus: (status) {
+          return true;
+        },
+        baseUrl: serv,
+      )
+      ..interceptors.add(ref.read(authInterceptorProvider));
   }
 }
 
 const ipCut = Constants.baseUrl;
 const ipHosting = Constants.baseUrlHosting;
+const ipPriyok = 'http://118.97.100.75:1025/service_mobile.asmx/Perintah';
 
 // const domain =
 //     'http://agunglogisticsapp.co.id:1225/service_mobile.asmx/Perintah';
@@ -80,7 +98,7 @@ const ipHosting = Constants.baseUrlHosting;
 // const domainPriyok =
 //     'http://agunglogisticsapp.co.id:1025/service_mobile.asmx/Perintah';
 
-// const ipPriyok = 'http://118.97.100.75:1025/service_mobile.asmx/Perintah';
+
 
 // [16:35, 18/12/2023] Pak Ismu: oke gini gs_18 dan gs_21 diarahkan ke http://118.97.100.75:1025/service_mobile.asmx/Perintah
 // [16:36, 18/12/2023] Pak Ismu: gs_12, gs_14, gs_16 diarahkan ke http://180.250.79.122:1025/service_mobile.asmx/Perintah
