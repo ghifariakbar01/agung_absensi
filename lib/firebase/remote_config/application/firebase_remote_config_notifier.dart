@@ -52,35 +52,52 @@ class FirebaseRemoteConfigNotifier extends _$FirebaseRemoteConfigNotifier {
       "gs_21": "https://www.agunglogisticsapp.co.id:3603/services",
     });
 
-    FirebaseRemoteCfg cfg = FirebaseRemoteCfg.initial();
+    late FirebaseRemoteCfg? cfg;
 
     remoteConfig.onConfigUpdated.listen((event) async {
       await remoteConfig.activate();
 
       cfg = _returnCfg(remoteConfig);
-      await _saveCfg(cfg);
+
+      if (cfg == null) {
+        return;
+      }
+
+      await _saveCfg(cfg!);
 
       state = const AsyncLoading();
 
       state = await AsyncValue.guard(() async {
         await ref.refresh(ipNotifierProvider.future);
-        return cfg;
+        return cfg!;
       });
     });
 
     cfg = _returnCfg(remoteConfig);
 
+    if (cfg == null) {
+      return FirebaseRemoteCfg.initial();
+    }
+
+    final isOffline = ref.read(absenOfflineModeProvider);
+    if (isOffline) {
+      cfg = await _onOffline(
+        remoteConfig,
+        onFormatException: () => onFormatException(cfg!),
+      );
+    }
+
     try {
       await remoteConfig.fetchAndActivate();
     } on FirebaseException catch (_) {
-      return await _onOffline(
+      cfg = await _onOffline(
         remoteConfig,
-        onFormatException: () => onFormatException(cfg),
+        onFormatException: () => onFormatException(cfg!),
       );
     }
 
     await remoteConfig.ensureInitialized();
-    return cfg;
+    return cfg!;
   }
 
   Map<String, String> getPtMap() {
@@ -182,11 +199,11 @@ class FirebaseRemoteConfigNotifier extends _$FirebaseRemoteConfigNotifier {
 
   Future<void> _saveCfg(FirebaseRemoteCfg cfg) async {
     final repo = ref.read(firebaseRemoteConfigRepositoryProvider);
-    return repo.saveFirebaseRemoteConfigStorage(cfg);
+    return await repo.saveFirebaseRemoteConfigStorage(cfg);
   }
 
   Future<void> clearSavedCfg() async {
     final repo = ref.read(firebaseRemoteConfigRepositoryProvider);
-    return repo.clearFirebaseRemoteConfigStorage();
+    return await repo.clearFirebaseRemoteConfigStorage();
   }
 }

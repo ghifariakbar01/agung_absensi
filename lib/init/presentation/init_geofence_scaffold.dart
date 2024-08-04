@@ -45,6 +45,7 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await ref.read(networkCallbackProvider.notifier).startFetch();
       await ref.read(backgroundNotifierProvider.notifier).getSavedLocations();
 
       final isOffline = ref.read(absenOfflineModeProvider);
@@ -258,6 +259,10 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
                   ref
                       .read(geofenceErrorNotifierProvider.notifier)
                       .checkAndUpdateError(e);
+
+                  await ref
+                      .read(errLogControllerProvider.notifier)
+                      .sendLog(errMessage: msg);
                 } else {
                   msg = e.toString();
                 }
@@ -320,6 +325,10 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
                     ref
                         .read(geofenceErrorNotifierProvider.notifier)
                         .checkAndUpdateError(e);
+
+                    await ref
+                        .read(errLogControllerProvider.notifier)
+                        .sendLog(errMessage: msg);
                   } else {
                     msg = e.toString();
                   }

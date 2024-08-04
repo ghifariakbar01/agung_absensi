@@ -38,7 +38,9 @@ class CrossAuthServerRemoteService {
           final errorCode = items['status_code'] as int;
 
           throw RestApiExceptionWithMessage(
-              errorCode, "$errorCode : $message $errmessage ");
+            errorCode,
+            "$errorCode : $message $errmessage ",
+          );
         }
       } else {
         final message = items['message'] as String?;

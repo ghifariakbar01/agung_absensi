@@ -91,8 +91,10 @@ class CrossAuthRemoteService {
         );
       }
     } on DioException catch (e) {
-      if ((e.type == DioExceptionType.connectionError ||
-          e.type == DioExceptionType.connectionTimeout)) {
+      if (e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.sendTimeout ||
+          e.type == DioExceptionType.receiveTimeout) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);
@@ -178,8 +180,10 @@ class CrossAuthRemoteService {
         );
       }
     } on DioException catch (e) {
-      if ((e.type == DioExceptionType.connectionError ||
-          e.type == DioExceptionType.connectionTimeout)) {
+      if (e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.sendTimeout ||
+          e.type == DioExceptionType.receiveTimeout) {
         return CrossAuthResponse.failure(
           errorCode: 404,
           message:
@@ -266,8 +270,10 @@ class CrossAuthRemoteService {
         );
       }
     } on DioException catch (e) {
-      if ((e.type == DioExceptionType.connectionError ||
-          e.type == DioExceptionType.connectionTimeout)) {
+      if (e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.sendTimeout ||
+          e.type == DioExceptionType.receiveTimeout) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);
@@ -350,8 +356,10 @@ class CrossAuthRemoteService {
         );
       }
     } on DioException catch (e) {
-      if ((e.type == DioExceptionType.connectionError ||
-          e.type == DioExceptionType.connectionTimeout)) {
+      if (e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.sendTimeout ||
+          e.type == DioExceptionType.receiveTimeout) {
         return CrossAuthResponse.failure(
           errorCode: 404,
           message:

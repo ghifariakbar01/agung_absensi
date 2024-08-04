@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 
-import '../../infrastructures/exceptions.dart';
 import '../../user/application/user_model.dart';
 import '../application/network_response.dart';
 
@@ -67,11 +66,19 @@ class NetworkStateRemoteService {
         );
       }
     } on DioException catch (e) {
-      if ((e.type == DioExceptionType.connectionError ||
-          e.type == DioExceptionType.connectionTimeout)) {
-        throw NoConnectionException();
+      if (e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.receiveTimeout ||
+          e.type == DioExceptionType.sendTimeout) {
+        return NetworkResponse.failure(
+          errorCode: 500,
+          message: 'Bad Request (Timeout)',
+        );
       } else if (e.response != null) {
-        throw RestApiException(e.response?.statusCode);
+        return NetworkResponse.failure(
+          errorCode: 500,
+          message: 'Bad Request (Exception)',
+        );
       } else {
         rethrow;
       }

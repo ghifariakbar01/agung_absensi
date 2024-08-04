@@ -34,6 +34,11 @@ class CrossAuthServerNotifier extends _$CrossAuthServerNotifier {
     final username = ref.read(userNotifierProvider).user.nama!;
     final pass = ref.read(userNotifierProvider).user.password!;
 
+    final isOffline = ref.read(absenOfflineModeProvider);
+    if (isOffline) {
+      return _returnMap([]);
+    }
+
     final _list = await _iterate(
       _map,
       username,
@@ -104,6 +109,11 @@ class CrossAuthServerNotifier extends _$CrossAuthServerNotifier {
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(() async {
+      final isOffline = ref.read(absenOfflineModeProvider);
+      if (isOffline) {
+        return _returnMap([]);
+      }
+
       final _list = await _iterate(
         _map,
         username,
@@ -117,8 +127,8 @@ class CrossAuthServerNotifier extends _$CrossAuthServerNotifier {
   _resetCutiDioProvider(String baseUrl) {
     return ref.read(dioProviderCutiServer)
       ..options = BaseOptions(
-        connectTimeout: Duration(seconds: 20),
-        receiveTimeout: Duration(seconds: 20),
+        connectTimeout: Duration(seconds: 10),
+        receiveTimeout: Duration(seconds: 10),
         validateStatus: (status) {
           return true;
         },

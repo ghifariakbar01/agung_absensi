@@ -31,8 +31,6 @@ class GeofenceErrorNotifier extends _$GeofenceErrorNotifier {
   }
 
   checkAndUpdateError(ErrorCodes errorCode) {
-    state = const AsyncLoading();
-
     switch (errorCode) {
       case ErrorCodes.ALREADY_STARTED:
         state = AsyncValue.data(GeofenceErrorState.ALREADY_STARTED());
@@ -54,6 +52,8 @@ class GeofenceErrorNotifier extends _$GeofenceErrorNotifier {
         break;
 
       default:
+        state =
+            AsyncValue.data(GeofenceErrorState.LOCATION_SERVICES_DISABLED());
         break;
     }
   }

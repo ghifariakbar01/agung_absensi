@@ -41,8 +41,11 @@ class _HomeSavedState extends ConsumerState<HomeSaved> {
     });
 
     final errLog = ref.watch(errLogControllerProvider);
+
     return VAsyncWidgetScaffold<void>(
-        value: errLog, data: (_) => HomeScaffold());
+      value: errLog,
+      data: (_) => HomeScaffold(),
+    );
   }
 
   _onErrElse(AbsenFailure failure) {

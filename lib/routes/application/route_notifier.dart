@@ -66,6 +66,7 @@ import '../../tugas_dinas/tugas_dinas_dtl/presentation/tugas_dinas_upload_page.d
 import '../../tugas_dinas/tugas_dinas_list/application/tugas_dinas_list.dart';
 import '../../tugas_dinas/tugas_dinas_list/presentation/tugas_dinas_list_page.dart';
 import '../../tugas_dinas/tugas_dinas_list/presentation/tugas_dinas_view_surat.dart';
+import '../../utils/logging.dart';
 import '../../widgets/splash_page.dart';
 import 'route_names.dart';
 
@@ -90,6 +91,8 @@ class RouterNotifier extends ChangeNotifier {
   final Ref _ref;
 
   String? redirectLogic(BuildContext context, GoRouterState state) {
+    Log.info('current route ${state.fullPath}');
+
     final tcState = _ref.read(tcNotifierProvider);
     final authState = _ref.read(authNotifierProvider);
 

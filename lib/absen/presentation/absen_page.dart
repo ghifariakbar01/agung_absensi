@@ -84,6 +84,9 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
           toolbarHeight: 45,
           actions: [
             NetworkWidget(),
+            SizedBox(
+              width: 8,
+            )
           ],
         ),
         body: SafeArea(

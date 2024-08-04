@@ -55,6 +55,10 @@ class IpNotifier extends _$IpNotifier {
       )
       ..interceptors.add(ref.read(authInterceptorProvider));
   }
+
+  initUrlFromDropdown() {
+    //
+  }
 }
 
 const ipCut = Constants.baseUrl;
@@ -81,85 +85,85 @@ const ipHosting = Constants.baseUrlHosting;
 // [16:35, 18/12/2023] Pak Ismu: oke gini gs_18 dan gs_21 diarahkan ke http://118.97.100.75:1025/service_mobile.asmx/Perintah
 // [16:36, 18/12/2023] Pak Ismu: gs_12, gs_14, gs_16 diarahkan ke http://180.250.79.122:1025/service_mobile.asmx/Perintah
 
-  // @override
-  // FutureOr<void> build() async {
-  //   // final SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   // final String? _json = prefs.getString('remember_me');
+// @override
+// FutureOr<void> build() async {
+//   // final SharedPreferences prefs = await SharedPreferences.getInstance();
+//   // final String? _json = prefs.getString('remember_me');
 
-  //   // if (_json != null) {
-  //   //   final model = _parseJson(_json);
+//   // if (_json != null) {
+//   //   final model = _parseJson(_json);
 
-  //   //   initOnLogin(pt: model.ptName);
-  //   // } else {
-  //   //   initOnLogin();
-  //   // }
+//   //   initOnLogin(pt: model.ptName);
+//   // } else {
+//   //   initOnLogin();
+//   // }
 
-  //   /*
-  //     get from RemoteConfig
-  //   */
-  //   final String baseUrl = '';
-  //   initOnLogin(baseUrl: baseUrl);
-  // }
+//   /*
+//     get from RemoteConfig
+//   */
+//   final String baseUrl = '';
+//   initOnLogin(baseUrl: baseUrl);
+// }
 
-  // initOnLogin(
-  //     // {String? pt}
-  //     {required String baseUrl}) {
-  //   // String ip = '';
+// initOnLogin(
+//     // {String? pt}
+//     {required String baseUrl}) {
+//   // String ip = '';
 
-  //   // if (pt == null) {
-  //   //   ip = ipCut;
-  //   // } else {
-  //   //   ip = _initializeIp(pt: pt);
-  //   // }
+//   // if (pt == null) {
+//   //   ip = ipCut;
+//   // } else {
+//   //   ip = _initializeIp(pt: pt);
+//   // }
 
-  //   ref.read(dioProvider)
-  //     ..options = BaseOptions(
-  //       connectTimeout: BuildConfig.get().connectTimeout,
-  //       receiveTimeout: BuildConfig.get().receiveTimeout,
-  //       validateStatus: (status) {
-  //         return true;
-  //       },
-  //       baseUrl: ipCut,
-  //     )
-  //     ..interceptors.add(ref.read(authInterceptorProvider));
+//   ref.read(dioProvider)
+//     ..options = BaseOptions(
+//       connectTimeout: BuildConfig.get().connectTimeout,
+//       receiveTimeout: BuildConfig.get().receiveTimeout,
+//       validateStatus: (status) {
+//         return true;
+//       },
+//       baseUrl: ipCut,
+//     )
+//     ..interceptors.add(ref.read(authInterceptorProvider));
 
-  //   ref.read(dioProviderHosting)
-  //     ..options = BaseOptions(
-  //       connectTimeout: BuildConfig.get().connectTimeout,
-  //       receiveTimeout: BuildConfig.get().receiveTimeout,
-  //       validateStatus: (status) {
-  //         return true;
-  //       },
-  //       baseUrl: ipHosting,
-  //     )
-  //     ..interceptors.add(ref.read(authInterceptorProvider));
-  // }
+//   ref.read(dioProviderHosting)
+//     ..options = BaseOptions(
+//       connectTimeout: BuildConfig.get().connectTimeout,
+//       receiveTimeout: BuildConfig.get().receiveTimeout,
+//       validateStatus: (status) {
+//         return true;
+//       },
+//       baseUrl: ipHosting,
+//     )
+//     ..interceptors.add(ref.read(authInterceptorProvider));
+// }
 
-  // RememberMeModel _parseJson(String json) {
-  //   return RememberMeModel.fromJson(jsonDecode(json) as Map<String, dynamic>);
-  // }
+// RememberMeModel _parseJson(String json) {
+//   return RememberMeModel.fromJson(jsonDecode(json) as Map<String, dynamic>);
+// }
 
-  // Map<String, List<String>> _ipMap = {
-  //   ipCut: [
-  //     'PT Agung Citra Transformasi',
-  //     'PT Agung Transina Raya',
-  //     'PT Agung Lintas Raya'
-  //         'PT Agung Tama Raya'
-  //   ],
-  //   domain: ['PT Agung Raya', 'PT Agung Jasa Logistik'],
-  // };
+// Map<String, List<String>> _ipMap = {
+//   ipCut: [
+//     'PT Agung Citra Transformasi',
+//     'PT Agung Transina Raya',
+//     'PT Agung Lintas Raya'
+//         'PT Agung Tama Raya'
+//   ],
+//   domain: ['PT Agung Raya', 'PT Agung Jasa Logistik'],
+// };
 
-  // String _initializeIp({required String pt}) {
-  //   final ptInMap = _ipMap.entries.firstWhereOrNull(
-  //     (entries) =>
-  //         entries.value.firstWhereOrNull((element) => element == pt) != null,
-  //   );
+// String _initializeIp({required String pt}) {
+//   final ptInMap = _ipMap.entries.firstWhereOrNull(
+//     (entries) =>
+//         entries.value.firstWhereOrNull((element) => element == pt) != null,
+//   );
 
-  //   if (ptInMap != null) {
-  //     final ip = ptInMap.key;
-  //     return ip;
-  //   } else {
-  //     // default
-  //     return ipCut;
-  //   }
-  // }
+//   if (ptInMap != null) {
+//     final ip = ptInMap.key;
+//     return ip;
+//   } else {
+//     // default
+//     return ipCut;
+//   }
+// }

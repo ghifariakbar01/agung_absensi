@@ -36,6 +36,9 @@ class VScaffoldWidget extends StatelessWidget {
           toolbarHeight: 45,
           actions: [
             NetworkWidget(),
+            SizedBox(
+              width: 8,
+            )
           ],
         ),
         resizeToAvoidBottomInset: false,

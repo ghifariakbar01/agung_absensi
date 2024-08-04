@@ -8,10 +8,12 @@ import '../style/style.dart';
 class ErrorMessageWidget extends ConsumerWidget {
   const ErrorMessageWidget({
     required this.errorMessage,
+    // this.showButtonLogout,
     this.additionalWidgets,
   });
   final String errorMessage;
   final List<Widget>? additionalWidgets;
+  // final bool showButtonLogout;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -234,8 +234,8 @@ class CrossAuthNotifier extends _$CrossAuthNotifier {
   }) {
     return ref.read(dioProviderCuti)
       ..options = BaseOptions(
-        connectTimeout: Duration(seconds: 20),
-        receiveTimeout: Duration(seconds: 20),
+        connectTimeout: Duration(seconds: 10),
+        receiveTimeout: Duration(seconds: 10),
         validateStatus: (status) {
           return true;
         },

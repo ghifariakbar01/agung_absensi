@@ -1,6 +1,9 @@
+// ignore_for_file: unused_result
+
 import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:face_net_authentication/cross_auth_server/cross_auth_server_notifier.dart';
 
 import 'package:riverpod/riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -102,13 +105,15 @@ class NetworkCallback extends _$NetworkCallback {
     ref.read(absenOfflineModeProvider.notifier).state = true;
   }
 
-  void _setOnlineMode() {
+  Future<void> _setOnlineMode() async {
     print(
         'PING -- _fetchCurrentUrl() getting Current Url State : NetworkState.online() ');
     ref.read(networkStateNotifier2Provider.notifier).state =
         AsyncValue.data(NetworkState.online());
-
     ref.read(absenOfflineModeProvider.notifier).state = false;
+
+    await FirebaseRemoteConfigInitializer.setupRemoteConfig(ref);
+    await ref.refresh(crossAuthServerNotifierProvider);
   }
 
   Future<Timer> _fetchCurrentUrlEvery(Duration interval,
@@ -117,8 +122,6 @@ class NetworkCallback extends _$NetworkCallback {
   }
 
   Future<NetworkResponse> _fetchCurrentUrl() async {
-    print('PING -- _fetchCurrentUrl() getting Current Url ');
-    await FirebaseRemoteConfigInitializer.setupRemoteConfig(ref);
     return ref.read(networkStateRepositoryProvider).fetchCurrentUrl();
   }
 }

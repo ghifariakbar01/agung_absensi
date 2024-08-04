@@ -24,7 +24,9 @@ class AuthInterceptorTwo extends Interceptor {
     super.onError(e, handler);
 
     if (e.type == DioExceptionType.connectionError ||
-        e.type == DioExceptionType.connectionTimeout) {
+        e.type == DioExceptionType.connectionTimeout ||
+        e.type == DioExceptionType.receiveTimeout ||
+        e.type == DioExceptionType.sendTimeout) {
       _ref.read(absenOfflineModeProvider.notifier).state = true;
     }
   }

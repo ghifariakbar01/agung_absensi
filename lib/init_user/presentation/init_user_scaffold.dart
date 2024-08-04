@@ -1,4 +1,3 @@
-import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
 
 import 'package:flutter/material.dart';
@@ -7,14 +6,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../cross_auth/application/cross_auth_notifier.dart';
 import '../../cross_auth/application/is_user_crossed.dart';
-import '../../domain/imei_failure.dart';
 import '../../err_log/application/err_log_notifier.dart';
 import '../../imei_introduction/application/shared/imei_introduction_providers.dart';
 import '../../shared/common_widgets.dart';
 import '../../shared/future_providers.dart';
 import '../../shared/providers.dart';
 import '../../tc/application/shared/tc_providers.dart';
-import '../../widgets/alert_helper.dart';
+import '../../utils/dialog_helper.dart';
 import '../../widgets/error_message_widget.dart';
 import '../../widgets/loading_overlay.dart';
 import '../../widgets/v_async_widget.dart';
@@ -43,33 +41,13 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen<AsyncValue>(imeiInitFutureProvider(context), (_, state) async {
-      return state.showAlertDialogOnError(context, ref);
-    });
+    // ref.listen<AsyncValue>(imeiInitFutureProvider(context), (_, state) async {
+    //   return state.showAlertDialogOnError(context, ref);
+    // });
 
     ref.listen<AsyncValue>(errLogControllerProvider, (_, state) async {
       return state.showAlertDialogOnError(context, ref);
     });
-
-    ref.listen<Option<Either<ImeiFailure, Unit?>>>(
-        imeiResetNotifierProvider
-            .select((value) => value.failureOrSuccessOption),
-        (_, foso) => foso.fold(
-            () {},
-            (either) => either.fold(
-                    (l) => AlertHelper.showSnackBar(context,
-                        message: l.map(
-                          unknown: (value) => 'Error Unknown',
-                          errorParsing: (value) => 'Error Parsing $value',
-                          storage: (value) => 'There is a problem with storage',
-                          empty: (value) =>
-                              'There is a problem with connection',
-                        )), (_) async {
-                  await ref.read(userNotifierProvider.notifier).logout();
-                  await ref
-                      .read(authNotifierProvider.notifier)
-                      .checkAndUpdateAuthStatus();
-                })));
 
     final errLog = ref.watch(errLogControllerProvider);
     final _isUserCrossed = ref.watch(isUserCrossedProvider);
@@ -108,10 +86,27 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
                   errorMessage: error.toString(),
                   additionalWidgets: [
                     VButton(
-                        label: 'Logout & Retry',
-                        onPressed: () => ref
-                            .read(imeiResetNotifierProvider.notifier)
-                            .clearImeiFromStorage())
+                        label: 'Retry',
+                        onPressed: () =>
+                            ref.refresh(imeiInitFutureProvider(context))),
+                    if (error.toString().toLowerCase().contains('timeout') ==
+                        false)
+                      VButton(
+                          label: 'Logout & Retry',
+                          onPressed: () async {
+                            return DialogHelper.showConfirmationDialog(
+                                context: context,
+                                label:
+                                    '(PERINGATAN) Jika Tap Ya, anda akan LOGOUT dari E-Finger / ( PERLU INTERNET UNTUK LOGIN ). ',
+                                onPressed: () async {
+                                  await ref
+                                      .read(userNotifierProvider.notifier)
+                                      .logout();
+                                  await ref
+                                      .read(authNotifierProvider.notifier)
+                                      .checkAndUpdateAuthStatus();
+                                });
+                          }),
                   ],
                 ),
               ),

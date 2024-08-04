@@ -18,7 +18,7 @@ class FirebaseRemoteConfigRepository {
   }
 
   Future<void> saveFirebaseRemoteConfigStorage(FirebaseRemoteCfg cfg) async {
-    final json = jsonEncode(cfg.toJson());
+    final json = jsonEncode(cfg);
     return _credentialsStorage.save(json);
   }
 
