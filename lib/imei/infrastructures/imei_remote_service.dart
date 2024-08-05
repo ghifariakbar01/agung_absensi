@@ -41,6 +41,10 @@ class ImeiRemoteService {
 
       final items = response.data?[0];
 
+      if (response.statusCode != 200) {
+        throw NoConnectionException();
+      }
+
       if (items['status'] == 'Success') {
         //
         if (items['items'] == null) {
@@ -83,7 +87,8 @@ class ImeiRemoteService {
     } on FormatException catch (e) {
       throw FormatException(e.message);
     } on DioException catch (e) {
-      if (e.type == DioExceptionType.connectionError ||
+      if (e.type == DioExceptionType.unknown ||
+          e.type == DioExceptionType.connectionError ||
           e.type == DioExceptionType.connectionTimeout ||
           e.type == DioExceptionType.sendTimeout ||
           e.type == DioExceptionType.receiveTimeout) {

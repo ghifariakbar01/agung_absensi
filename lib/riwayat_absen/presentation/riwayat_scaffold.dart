@@ -54,7 +54,7 @@ class _RiwayatAbsenScaffoldState extends ConsumerState<RiwayatAbsenScaffold> {
           actions: [
             NetworkWidget(),
             SizedBox(
-              width: 8,
+              width: 24,
             )
           ],
         ),

@@ -85,7 +85,7 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
           actions: [
             NetworkWidget(),
             SizedBox(
-              width: 8,
+              width: 24,
             )
           ],
         ),

@@ -85,7 +85,7 @@ class HomeAppBar extends ConsumerWidget implements PreferredSizeWidget {
         ),
         NetworkWidget(),
         SizedBox(
-          width: 8,
+          width: 24,
         )
       ],
     );

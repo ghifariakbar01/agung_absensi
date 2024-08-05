@@ -14,6 +14,11 @@ class AuthInterceptorTwo extends Interceptor {
 
     final items = response.data;
 
+    if (response.statusCode != 200) {
+      _ref.read(absenOfflineModeProvider.notifier).state = true;
+      return;
+    }
+
     if (items['status_code'] == 200) {
       _ref.read(absenOfflineModeProvider.notifier).state = false;
     }
@@ -23,7 +28,16 @@ class AuthInterceptorTwo extends Interceptor {
   void onError(DioException e, ErrorInterceptorHandler handler) {
     super.onError(e, handler);
 
-    if (e.type == DioExceptionType.connectionError ||
+    if (e.response == null) {
+      _ref.read(absenOfflineModeProvider.notifier).state = true;
+    }
+
+    if (e.response!.statusCode != 200) {
+      _ref.read(absenOfflineModeProvider.notifier).state = true;
+    }
+
+    if (e.type == DioExceptionType.unknown ||
+        e.type == DioExceptionType.connectionError ||
         e.type == DioExceptionType.connectionTimeout ||
         e.type == DioExceptionType.receiveTimeout ||
         e.type == DioExceptionType.sendTimeout) {

@@ -7,18 +7,32 @@ import '../network_state/application/network_state_notifier.dart';
 import '../utils/dialog_helper.dart';
 import 'v_async_widget.dart';
 
-class NetworkWidget extends ConsumerWidget {
+class NetworkWidget extends ConsumerStatefulWidget {
   const NetworkWidget();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() => _NetworkWidgetState();
+}
+
+class _NetworkWidgetState extends ConsumerState<NetworkWidget> {
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      return ref.read(networkCallbackProvider.notifier).startFetch();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final network = ref.watch(networkStateNotifier2Provider);
 
     return VAsyncValueWidget<NetworkState>(
       value: network,
       data: (netw) => Ink(
-        height: 15,
-        width: 12,
+        height: 30,
+        width: 30,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(2),
           color: netw.when(

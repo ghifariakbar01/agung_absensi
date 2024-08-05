@@ -37,7 +37,7 @@ class VScaffoldWidget extends StatelessWidget {
           actions: [
             NetworkWidget(),
             SizedBox(
-              width: 8,
+              width: 24,
             )
           ],
         ),
@@ -350,6 +350,9 @@ class VScaffoldTabLayout extends HookWidget with DialogHelper, CalendarHelper {
                       icon: Icon(Icons.search)),
                 additionalInfo != null ? additionalInfo! : Container(),
                 NetworkWidget(),
+                SizedBox(
+                  width: 24,
+                )
               ]
             ],
           ),

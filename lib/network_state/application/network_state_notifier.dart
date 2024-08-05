@@ -38,7 +38,19 @@ NetworkStateRepository networkStateRepository(NetworkStateRepositoryRef ref) {
 class NetworkStateNotifier2 extends _$NetworkStateNotifier2 {
   @override
   FutureOr<NetworkState> build() async {
-    return NetworkState.online();
+    return NetworkState.offline();
+  }
+
+  setOnline() {
+    state = const AsyncData(NetworkState.online());
+  }
+
+  setOffline() {
+    state = const AsyncData(NetworkState.offline());
+  }
+
+  setLoading() {
+    state = const AsyncLoading();
   }
 }
 
@@ -67,7 +79,6 @@ class NetworkCallback extends _$NetworkCallback {
 
         if (firstTime) {
           await startFetch();
-
           ref.read(firstTimeTimerProvider.notifier).state = false;
         }
 
@@ -80,13 +91,12 @@ class NetworkCallback extends _$NetworkCallback {
   }
 
   Future<void> startFetch() async {
-    ref.read(networkStateNotifier2Provider.notifier).state =
-        AsyncValue.loading();
+    ref.read(networkStateNotifier2Provider.notifier).setLoading();
 
     try {
       final _resp = await _fetchCurrentUrl();
       await _resp.maybeWhen(withData: () async {
-        _setOnlineMode();
+        await _setOnlineMode();
       }, orElse: () {
         _setOfflineMode();
       });
@@ -98,22 +108,23 @@ class NetworkCallback extends _$NetworkCallback {
   void _setOfflineMode() {
     print(
         'PING -- _fetchCurrentUrl() getting Current Url State : NetworkState.offline() ');
-    ref.read(networkStateNotifier2Provider.notifier).state =
-        AsyncValue.data(NetworkState.offline());
 
     ref.read(firstTimeTimerProvider.notifier).state = true;
     ref.read(absenOfflineModeProvider.notifier).state = true;
+
+    ref.read(networkStateNotifier2Provider.notifier).setOffline();
   }
 
   Future<void> _setOnlineMode() async {
     print(
         'PING -- _fetchCurrentUrl() getting Current Url State : NetworkState.online() ');
-    ref.read(networkStateNotifier2Provider.notifier).state =
-        AsyncValue.data(NetworkState.online());
+
     ref.read(absenOfflineModeProvider.notifier).state = false;
 
     await FirebaseRemoteConfigInitializer.setupRemoteConfig(ref);
     await ref.refresh(crossAuthServerNotifierProvider);
+
+    ref.read(networkStateNotifier2Provider.notifier).setOnline();
   }
 
   Future<Timer> _fetchCurrentUrlEvery(Duration interval,
