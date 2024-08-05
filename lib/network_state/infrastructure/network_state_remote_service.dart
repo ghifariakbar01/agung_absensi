@@ -66,7 +66,8 @@ class NetworkStateRemoteService {
         );
       }
     } on DioException catch (e) {
-      if (e.type == DioExceptionType.connectionError ||
+      if (e.type == DioExceptionType.unknown ||
+          e.type == DioExceptionType.connectionError ||
           e.type == DioExceptionType.connectionTimeout ||
           e.type == DioExceptionType.receiveTimeout ||
           e.type == DioExceptionType.sendTimeout) {

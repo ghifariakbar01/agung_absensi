@@ -1,3 +1,4 @@
+import 'package:face_net_authentication/shared/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -20,7 +21,16 @@ class _NetworkWidgetState extends ConsumerState<NetworkWidget> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      return ref.read(networkCallbackProvider.notifier).startFetch();
+      final user = ref.read(userNotifierProvider).user;
+      if (user.nama == null) {
+        return;
+      }
+
+      if (user.nama!.isEmpty) {
+        //
+      } else {
+        return ref.read(networkCallbackProvider.notifier).startFetch();
+      }
     });
   }
 
