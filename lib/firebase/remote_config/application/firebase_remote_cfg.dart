@@ -1,5 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../../constants/constants.dart';
+
 part 'firebase_remote_cfg.freezed.dart';
 part 'firebase_remote_cfg.g.dart';
 
@@ -14,11 +16,11 @@ class FirebaseRemoteCfg with _$FirebaseRemoteCfg {
   }) = _FirebaseRemoteConfig;
 
   factory FirebaseRemoteCfg.initial() => FirebaseRemoteCfg(
-        ptMap: {},
-        minApp: '',
-        baseUrl: '',
-        baseUrlHosting: '',
-        iosUserMaintanance: '',
+        ptMap: Constants.ptMap,
+        minApp: Constants.minApp,
+        baseUrl: Constants.baseUrl,
+        baseUrlHosting: Constants.baseUrlHosting,
+        iosUserMaintanance: Constants.iosUserMaintanance,
       );
 
   factory FirebaseRemoteCfg.fromJson(Map<String, dynamic> json) =>

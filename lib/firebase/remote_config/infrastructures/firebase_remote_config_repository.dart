@@ -14,11 +14,21 @@ class FirebaseRemoteConfigRepository {
 
   Future<FirebaseRemoteCfg?> getFirebaseRemoteConfigStorage() async {
     final json = await _credentialsStorage.read();
-    return FirebaseRemoteCfg.fromJson(json as Map<String, dynamic>);
+    if (json == null) {
+      return FirebaseRemoteCfg.initial();
+    } else {
+      try {
+        final _resp = jsonDecode(json);
+        return FirebaseRemoteCfg.fromJson(_resp as Map<String, dynamic>);
+      } on FormatException catch (_) {
+        await _credentialsStorage.clear();
+        return FirebaseRemoteCfg.initial();
+      }
+    }
   }
 
   Future<void> saveFirebaseRemoteConfigStorage(FirebaseRemoteCfg cfg) async {
-    final json = jsonEncode(cfg);
+    final json = jsonEncode(cfg.toJson());
     return _credentialsStorage.save(json);
   }
 

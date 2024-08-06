@@ -32,17 +32,16 @@ class IpNotifier extends _$IpNotifier {
     debugPrint(
         '╚══════════════════════════════════════════════════════════════╝');
 
-    // ref.read(dioProvider)
-    //   ..options = BaseOptions(
-    //     connectTimeout: BuildConfig.get().connectTimeout,
-    //     receiveTimeout: BuildConfig.get().receiveTimeout,
-    //     validateStatus: (status) {
-    //       return true;
-    //     },
-    //     baseUrl: cfg.baseUrl,
-    //   )
-    //   ..interceptors.add(ref.read(authInterceptorProvider));
-    // ..interceptors.add(ref.read(aliceProvider).getDioInterceptor());
+    ref.read(dioProvider)
+      ..options = BaseOptions(
+        connectTimeout: BuildConfig.get().connectTimeout,
+        receiveTimeout: BuildConfig.get().receiveTimeout,
+        validateStatus: (status) {
+          return true;
+        },
+        baseUrl: cfg.baseUrl,
+      )
+      ..interceptors.add(ref.read(authInterceptorProvider));
 
     ref.read(dioProviderHosting)
       ..options = BaseOptions(

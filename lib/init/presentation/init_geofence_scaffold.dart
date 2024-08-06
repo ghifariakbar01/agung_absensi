@@ -59,8 +59,6 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
 
   @override
   Widget build(BuildContext buildContext) {
-    ref.listen(networkCallbackProvider, (_, __) {});
-
     // SAVED ABSEN
     ref.listen<Option<Either<BackgroundFailure, List<SavedLocation>>>>(
         backgroundNotifierProvider.select(
@@ -125,7 +123,7 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
                     cond = dev;
                   }
 
-                  return cond
+                  return false
                       ? Center(
                           child: Padding(
                             padding: const EdgeInsets.all(16.0),

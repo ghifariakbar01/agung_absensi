@@ -97,60 +97,14 @@ final getUserFutureProvider = FutureProvider<Unit>((ref) async {
 // 2. INIT IMEI WITH USER
 final imeiInitFutureProvider =
     FutureProvider.family<Unit, BuildContext>((ref, context) async {
-  try {
-    AuthRepository _repo = ref.read(authRepositoryProvider);
-    final userString = await _repo.getUserString();
-
-    final json = jsonDecode(userString) as Map<String, Object?>;
-    final user = UserModelWithPassword.fromJson(json);
-
-    final _data = await ref.read(isUserCrossedProvider.future);
-
-    if (user.IdKary == null) {
-      final helper = HelperImpl();
-      await helper.storageDebugMode(ref, isDebug: true);
-      throw AssertionError('Error validating user. IdKary user is null');
-    }
-
-    if (user.IdKary!.isEmpty) {
-      // uncross
-      final _isCrossed = _data.when(
-        crossed: () => true,
-        notCrossed: () => false,
-      );
-
-      final _ptMap = await ref
-          .read(firebaseRemoteConfigNotifierProvider.notifier)
-          .getPtMap();
-
-      if (_isCrossed) {
-        await ref.read(crossAuthNotifierProvider.notifier).uncrossStl(
-              url: _ptMap,
-              userId: user.nama!,
-              password: user.password!,
-            );
-      }
-    } else {}
-  } catch (e) {
-    final helper = HelperImpl();
-    await helper.storageDebugMode(ref, isDebug: true);
-    throw AssertionError('Error validating cross server. Error : $e');
-  }
-
-  try {
-    ref.invalidate(getUserFutureProvider);
-    await ref.read(getUserFutureProvider.future);
-  } catch (e) {
-    final helper = HelperImpl();
-    await helper.storageDebugMode(ref, isDebug: true);
-    throw AssertionError('Error validating user. Error : $e');
-  }
-
+  //
   AuthRepository _repo = ref.read(authRepositoryProvider);
   final userString = await _repo.getUserString();
 
   final json = jsonDecode(userString) as Map<String, Object?>;
   final user = UserModelWithPassword.fromJson(json);
+
+  final _data = await ref.read(isUserCrossedProvider.future);
 
   if (user.IdKary == null) {
     final helper = HelperImpl();
@@ -158,11 +112,39 @@ final imeiInitFutureProvider =
     throw AssertionError('Error validating user. IdKary user is null');
   }
 
+  if (user.IdKary!.isNotEmpty) {
+    // uncross
+    final _isCrossed = _data.when(
+      crossed: () => true,
+      notCrossed: () => false,
+    );
+
+    final _ptMap = await ref
+        .read(firebaseRemoteConfigNotifierProvider.notifier)
+        .getPtMap();
+
+    if (_isCrossed) {
+      await ref.read(crossAuthNotifierProvider.notifier).uncrossStl(
+            url: _ptMap,
+            userId: user.nama!,
+            password: user.password!,
+          );
+    }
+  } else {}
+
+  try {
+    await ref.read(getUserFutureProvider.future);
+  } catch (e) {
+    final helper = HelperImpl();
+    await helper.storageDebugMode(ref, isDebug: true);
+    throw AssertionError('Error validating user. Error : $e');
+  }
+
   try {
     final String ptServer = user.ptServer ?? '';
     ref.read(ipNotifierProvider.notifier).initUrlFromPtServer(ptServer);
   } catch (e) {
-    //
+    throw AssertionError('Error while initUrlFromPtServer');
   }
 
   if (user.IdKary!.isNotEmpty) {

@@ -7,7 +7,10 @@ import '../application/network_response.dart';
 
 class NetworkStateRemoteService {
   NetworkStateRemoteService(
-      this._dio, this._dioRequestNotifier, this._userModelWithPassword);
+    this._dio,
+    this._dioRequestNotifier,
+    this._userModelWithPassword,
+  );
 
   final Dio _dio;
   final Map<String, String> _dioRequestNotifier;
@@ -34,28 +37,7 @@ class NetworkStateRemoteService {
       final items = response.data?[0];
 
       if (items['status'] == 'Success') {
-        final userExist = items['items'] != null && items['items'] is List;
-
-        if (userExist) {
-          final list = items['items'] as List;
-
-          if (list.isNotEmpty) {
-            return NetworkResponse.withData();
-          } else {
-            return NetworkResponse.failure(
-              errorCode: 00,
-              message: 'List in mst_user is empty',
-            );
-          }
-        } else {
-          final message = items['error'] as String?;
-          final errorCode = items['errornum'] as int;
-
-          return NetworkResponse.failure(
-            errorCode: errorCode,
-            message: message,
-          );
-        }
+        return NetworkResponse.withData();
       } else {
         final message = items['error'] as String?;
         final errorCode = items['errornum'] as int;
