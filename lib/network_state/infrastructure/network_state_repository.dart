@@ -6,7 +6,13 @@ class NetworkStateRepository {
 
   NetworkStateRepository(this._remoteService);
 
-  Future<NetworkResponse> fetchCurrentUrl() async {
-    return _remoteService.ping();
+  Future<NetworkResponse> fetchCurrentUrl({
+    required String nama,
+    required String password,
+  }) async {
+    return _remoteService.ping(
+      nama: nama,
+      password: password,
+    );
   }
 }

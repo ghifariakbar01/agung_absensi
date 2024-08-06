@@ -23,7 +23,6 @@ NetworkStateRemoteService networkStateRemoteService(
   return NetworkStateRemoteService(
     ref.watch(dioProvider),
     ref.watch(dioRequestProvider),
-    ref.watch(userNotifierProvider).user,
   );
 }
 
@@ -76,25 +75,40 @@ class NetworkCallback extends _$NetworkCallback {
         _setOfflineMode();
       } else {
         final firstTime = ref.read(firstTimeTimerProvider);
+        final user = ref.read(userNotifierProvider).user;
+        final nama = user.nama ?? 'Ghifar';
+        final password = user.password ?? 'hovvir-7kipqe-cubquH';
 
         if (firstTime) {
-          await startFetch();
+          await startFetch(
+            nama: nama,
+            password: password,
+          );
           ref.read(firstTimeTimerProvider.notifier).state = false;
         }
 
         await _fetchCurrentUrlEvery(
           Duration(minutes: 30),
-          fetchUrl: startFetch,
+          fetchUrl: () => startFetch(
+            nama: nama,
+            password: password,
+          ),
         );
       }
     });
   }
 
-  Future<void> startFetch() async {
+  Future<void> startFetch({
+    required String nama,
+    required String password,
+  }) async {
     ref.read(networkStateNotifier2Provider.notifier).setLoading();
 
     try {
-      final _resp = await _fetchCurrentUrl();
+      final _resp = await _fetchCurrentUrl(
+        nama: nama,
+        password: password,
+      );
       await _resp.maybeWhen(withData: () async {
         await _setOnlineMode();
       }, orElse: () {
@@ -129,10 +143,19 @@ class NetworkCallback extends _$NetworkCallback {
 
   Future<Timer> _fetchCurrentUrlEvery(Duration interval,
       {required Future<void> Function() fetchUrl}) async {
-    return Timer.periodic(interval, (_) => fetchUrl());
+    return Timer.periodic(
+      interval,
+      (_) => fetchUrl(),
+    );
   }
 
-  Future<NetworkResponse> _fetchCurrentUrl() async {
-    return ref.read(networkStateRepositoryProvider).fetchCurrentUrl();
+  Future<NetworkResponse> _fetchCurrentUrl({
+    required String nama,
+    required String password,
+  }) async {
+    return ref.read(networkStateRepositoryProvider).fetchCurrentUrl(
+          nama: nama,
+          password: password,
+        );
   }
 }

@@ -29,7 +29,14 @@ class _NetworkWidgetState extends ConsumerState<NetworkWidget> {
       if (user.nama!.isEmpty) {
         //
       } else {
-        return ref.read(networkCallbackProvider.notifier).startFetch();
+        final user = ref.read(userNotifierProvider).user;
+        final nama = user.nama ?? 'Ghifar';
+        final password = user.password ?? 'hovvir-7kipqe-cubquH';
+
+        return ref.read(networkCallbackProvider.notifier).startFetch(
+              nama: nama,
+              password: password,
+            );
       }
     });
   }
@@ -64,7 +71,14 @@ class _NetworkWidgetState extends ConsumerState<NetworkWidget> {
               label: 'Cek status server ? ',
               onPressed: () async {
                 context.pop();
-                return ref.read(networkCallbackProvider.notifier).startFetch();
+                final user = ref.read(userNotifierProvider).user;
+                final nama = user.nama ?? 'Ghifar';
+                final password = user.password ?? 'hovvir-7kipqe-cubquH';
+
+                return ref.read(networkCallbackProvider.notifier).startFetch(
+                      nama: nama,
+                      password: password,
+                    );
               }),
           child: Container(),
         ),

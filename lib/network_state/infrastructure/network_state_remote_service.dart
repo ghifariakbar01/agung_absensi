@@ -2,30 +2,29 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 
-import '../../user/application/user_model.dart';
 import '../application/network_response.dart';
 
 class NetworkStateRemoteService {
   NetworkStateRemoteService(
     this._dio,
     this._dioRequestNotifier,
-    this._userModelWithPassword,
   );
 
   final Dio _dio;
   final Map<String, String> _dioRequestNotifier;
-  final UserModelWithPassword _userModelWithPassword;
 
-  Future<NetworkResponse> ping() async {
+  Future<NetworkResponse> ping({
+    required String nama,
+    required String password,
+  }) async {
     try {
       final data = _dioRequestNotifier;
 
       data.addAll({
-        "username": "${_userModelWithPassword.nama}",
-        "password": "${_userModelWithPassword.password}",
+        "username": nama,
+        "password": password,
         "mode": "SELECT",
-        "command":
-            "SELECT * FROM mst_user WHERE nama LIKE '%${_userModelWithPassword.nama}%'",
+        "command": "SELECT * FROM mst_user WHERE nama LIKE '%$nama%'",
       });
 
       final response = await _dio.post(

@@ -45,7 +45,14 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await ref.read(networkCallbackProvider.notifier).startFetch();
+      final user = ref.read(userNotifierProvider).user;
+      final nama = user.nama ?? 'Ghifar';
+      final password = user.password ?? 'hovvir-7kipqe-cubquH';
+
+      await ref.read(networkCallbackProvider.notifier).startFetch(
+            nama: nama,
+            password: password,
+          );
       await ref.read(backgroundNotifierProvider.notifier).getSavedLocations();
 
       final isOffline = ref.read(absenOfflineModeProvider);
@@ -123,7 +130,7 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
                     cond = dev;
                   }
 
-                  return false
+                  return cond
                       ? Center(
                           child: Padding(
                             padding: const EdgeInsets.all(16.0),
