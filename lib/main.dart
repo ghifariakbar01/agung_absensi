@@ -5,6 +5,7 @@ import 'package:dartz/dartz.dart';
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:upgrader/upgrader.dart';
 
@@ -15,7 +16,7 @@ import 'firebase/remote_config/helper/firebase_remote_config_initializer.dart';
 
 import 'imei_introduction/application/shared/imei_introduction_providers.dart';
 import 'ip/application/ip_notifier.dart';
-import 'shared/future_providers.dart';
+// import 'shared/future_providers.dart';
 import 'shared/providers.dart';
 import 'style/style.dart';
 import 'tc/application/shared/tc_providers.dart';
@@ -26,6 +27,9 @@ import 'widgets/v_async_widget.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Permission.camera.request();
+  // await Permission.microphone.request();
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -45,8 +49,8 @@ final initializationProvider = FutureProvider<Unit>((ref) async {
   // await helper.storageDebugMode(ref, isDebug: true);
   // await helper.fixStorage(ref);
 
-  await ref.read(authNotifierProvider.notifier).checkAndUpdateAuthStatus();
   await ref.read(tcNotifierProvider.notifier).checkAndUpdateStatusTC();
+  await ref.read(authNotifierProvider.notifier).checkAndUpdateAuthStatus();
   await ref.read(imeiIntroNotifierProvider.notifier).checkAndUpdateImeiIntro();
 
   await FirebaseRemoteConfigInitializer.setupRemoteConfig(ref);
@@ -84,7 +88,7 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.resumed) {
-      await ref.refresh(imeiInitFutureProvider(context).future);
+      // await ref.refresh(imeiInitFutureProvider(context).future);
     }
   }
 

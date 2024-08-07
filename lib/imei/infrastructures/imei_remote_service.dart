@@ -46,7 +46,7 @@ class ImeiRemoteService {
       }
 
       if (items['status'] == 'Success') {
-        //
+        // handle if items are null
         if (items['items'] == null) {
           final message = items['error'] as String?;
           final errorCode = items['errornum'] as int;
@@ -54,6 +54,7 @@ class ImeiRemoteService {
           throw RestApiExceptionWithMessage(errorCode, message);
         }
 
+        // if items are list
         if (items['items'] is List) {
           final _items = items['items'];
           final isEmpty = (items['items'] as List).isEmpty;
@@ -136,8 +137,11 @@ class ImeiRemoteService {
     } on FormatException {
       throw FormatException();
     } on DioException catch (e) {
-      if ((e.type == DioExceptionType.connectionError ||
-          e.type == DioExceptionType.connectionTimeout)) {
+      if (e.type == DioExceptionType.unknown ||
+          e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.sendTimeout ||
+          e.type == DioExceptionType.receiveTimeout) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);
@@ -200,8 +204,11 @@ class ImeiRemoteService {
     } on FormatException {
       throw FormatException();
     } on DioException catch (e) {
-      if ((e.type == DioExceptionType.connectionError ||
-          e.type == DioExceptionType.connectionTimeout)) {
+      if (e.type == DioExceptionType.unknown ||
+          e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.sendTimeout ||
+          e.type == DioExceptionType.receiveTimeout) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);
@@ -251,8 +258,11 @@ class ImeiRemoteService {
     } on FormatException {
       throw FormatException();
     } on DioException catch (e) {
-      if ((e.type == DioExceptionType.connectionError ||
-          e.type == DioExceptionType.connectionTimeout)) {
+      if (e.type == DioExceptionType.unknown ||
+          e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.sendTimeout ||
+          e.type == DioExceptionType.receiveTimeout) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);

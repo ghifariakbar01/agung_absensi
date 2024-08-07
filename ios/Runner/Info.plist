@@ -37,6 +37,11 @@
 	<string>Unused in the app. Used by external libraries.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>App needs access to photo lib for upload image document in forms</string>
+
+	<key>NSCameraUsageDescription</key>
+	<string>App needs to capture photo for upload image document in forms</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen.storyboard</string>
 	<key>UIMainStoryboardFile</key>

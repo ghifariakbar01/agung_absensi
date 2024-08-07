@@ -1,8 +1,8 @@
 import 'package:face_net_authentication/utils/logging.dart';
 
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../style/style.dart';
 import '../infrastructures/image/infrastructures/image_repository.dart';

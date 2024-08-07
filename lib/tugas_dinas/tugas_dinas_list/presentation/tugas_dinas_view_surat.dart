@@ -1,10 +1,11 @@
+import 'package:face_net_authentication/shared/webview_widget.dart';
 import 'package:face_net_authentication/utils/logging.dart';
 
 import 'package:face_net_authentication/shared/providers.dart';
 import 'package:face_net_authentication/widgets/v_scaffold_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -50,24 +51,7 @@ class TugasDinasViewSuratPage extends HookConsumerWidget {
               'Lihat di Browser',
               style: Themes.customColor(11),
             )),
-        scaffoldBody: InAppWebView(
-          onWebViewCreated: (_) {},
-          initialUrlRequest: URLRequest(url: WebUri.uri(Uri.parse(url.value))),
-          onZoomScaleChanged: (controller, oldScale, newScale) {
-            Log.info('oldScale $oldScale');
-            Log.info('newScale $newScale');
-          },
-          onLoadStop: (controller, url) async {
-            String html = await controller.evaluateJavascript(
-                source:
-                    "window.document.getElementsByTagName('html')[0].outerHTML;");
-
-            if (html.contains('Runtime Error')) {}
-          },
-          onConsoleMessage: (controller, consoleMessage) {
-            print(consoleMessage);
-          },
-        ),
+        scaffoldBody: WebViewWidget(url.value),
       ),
     );
   }

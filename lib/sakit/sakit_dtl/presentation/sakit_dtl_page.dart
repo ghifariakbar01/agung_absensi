@@ -1,12 +1,12 @@
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../err_log/application/err_log_notifier.dart';
 import '../../../routes/application/route_names.dart';
+import '../../../shared/webview_widget.dart';
 import '../../../widgets/v_async_widget.dart';
 import '../../../widgets/v_scaffold_widget.dart';
 import '../../../style/style.dart';
@@ -149,21 +149,7 @@ class SakitDtlWidget extends HookConsumerWidget {
               ),
               child: IgnorePointer(
                 ignoring: true,
-                child: InAppWebView(
-                  onWebViewCreated: (_) {},
-                  initialUrlRequest:
-                      URLRequest(url: WebUri.uri(Uri.parse(imageUrl))),
-                  onLoadStop: (controller, url) async {
-                    String html = await controller.evaluateJavascript(
-                        source:
-                            "window.document.getElementsByTagName('html')[0].outerHTML;");
-
-                    if (html.contains('Runtime Error')) {}
-                  },
-                  onConsoleMessage: (controller, consoleMessage) {
-                    print(consoleMessage);
-                  },
-                ),
+                child: WebViewWidget(imageUrl),
               )),
 
           SizedBox(

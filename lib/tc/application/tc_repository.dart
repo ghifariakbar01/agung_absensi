@@ -16,10 +16,10 @@ class TCRepository {
   }
 
   Future<void> save(String visited) async {
-    await _storage.save(visited);
+    return _storage.save(visited);
   }
 
   Future<void> clear() async {
-    await _storage.clear();
+    return _storage.clear();
   }
 }

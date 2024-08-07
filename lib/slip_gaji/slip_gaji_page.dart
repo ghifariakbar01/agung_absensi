@@ -1,17 +1,16 @@
-import 'package:face_net_authentication/utils/logging.dart';
-
 import 'package:face_net_authentication/shared/providers.dart';
 import 'package:face_net_authentication/widgets/v_async_widget.dart';
 import 'package:face_net_authentication/widgets/v_button.dart';
 import 'package:face_net_authentication/widgets/v_scaffold_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../constants/constants.dart';
 import '../cross_auth/application/cross_auth_notifier.dart';
+import '../shared/webview_widget.dart';
 import '../style/style.dart';
 import '../user/application/user_model.dart';
 
@@ -81,23 +80,7 @@ class SlipGajiPage extends HookConsumerWidget {
                       })
                 ],
               )
-            : InAppWebView(
-                onLoadStart: (controller, url) {
-                  Log.info('url start $url');
-                },
-                initialUrlRequest:
-                    URLRequest(url: WebUri.uri(Uri.parse(url.value))),
-                onLoadStop: (controller, url) async {
-                  String html = await controller.evaluateJavascript(
-                      source:
-                          "window.document.getElementsByTagName('html')[0].outerHTML;");
-
-                  if (html.contains('Runtime Error')) {}
-                },
-                onConsoleMessage: (controller, consoleMessage) {
-                  print(consoleMessage);
-                },
-              ),
+            : WebViewWidget(url.value),
       ),
     ));
   }

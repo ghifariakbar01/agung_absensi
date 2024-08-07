@@ -235,9 +235,10 @@ class TCPage extends ConsumerWidget {
                           backPressedLabel: 'No',
                           pressedLabel: 'Yes',
                           onPressed: () async {
+                            final save = '${DateTime.now()}';
                             await ref
                                 .read(tcNotifierProvider.notifier)
-                                .saveVisitedTC('${DateTime.now()}');
+                                .saveVisitedTC(save);
 
                             await ref
                                 .read(tcNotifierProvider.notifier)

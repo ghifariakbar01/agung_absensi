@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+
+import '../../../shared/webview_widget.dart';
 
 class IzinDtlPhotoPage extends HookWidget {
   const IzinDtlPhotoPage({Key? key, required this.imageUrl}) : super(key: key);
@@ -14,7 +15,6 @@ class IzinDtlPhotoPage extends HookWidget {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          iconTheme: IconThemeData(color: Colors.white),
           actions: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -28,20 +28,7 @@ class IzinDtlPhotoPage extends HookWidget {
         ),
         body: RotatedBox(
           quarterTurns: rotate.value,
-          child: InAppWebView(
-            onWebViewCreated: (_) {},
-            initialUrlRequest: URLRequest(url: WebUri.uri(Uri.parse(imageUrl))),
-            onLoadStop: (controller, url) async {
-              String html = await controller.evaluateJavascript(
-                  source:
-                      "window.document.getElementsByTagName('html')[0].outerHTML;");
-
-              if (html.contains('Runtime Error')) {}
-            },
-            onConsoleMessage: (controller, consoleMessage) {
-              print(consoleMessage);
-            },
-          ),
+          child: WebViewWidget(imageUrl),
         ),
       ),
     );

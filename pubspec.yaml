@@ -57,7 +57,6 @@ dependencies:
   lottie: ^2.7.0
 
   #* Network
-  alice: ^0.4.1
   dio: ^5.4.3+1
   pretty_dio_logger: ^1.2.0-beta-1
   url_launcher: ^6.1.5

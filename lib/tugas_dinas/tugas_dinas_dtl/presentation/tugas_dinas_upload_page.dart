@@ -2,10 +2,11 @@ import 'package:face_net_authentication/widgets/v_async_widget.dart';
 import 'package:face_net_authentication/widgets/v_dialogs.dart';
 import 'package:face_net_authentication/widgets/v_scaffold_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../shared/webview_widget.dart';
 import '../../../style/style.dart';
 import '../../tugas_dinas_list/application/tugas_dinas_list_notifier.dart';
 import '../application/tugas_dinas_dtl.dart';
@@ -57,21 +58,7 @@ class TugasDinasUploadPage extends ConsumerWidget {
               },
               child: Stack(
                 children: [
-                  InAppWebView(
-                    onWebViewCreated: (_) {},
-                    initialUrlRequest:
-                        URLRequest(url: WebUri.uri(Uri.parse(formUploadUrl))),
-                    onLoadStop: (controller, url) async {
-                      String html = await controller.evaluateJavascript(
-                          source:
-                              "window.document.getElementsByTagName('html')[0].outerHTML;");
-
-                      if (html.contains('Runtime Error')) {}
-                    },
-                    onConsoleMessage: (controller, consoleMessage) {
-                      print(consoleMessage);
-                    },
-                  ),
+                  WebViewWidget(formUploadUrl),
                   Positioned(
                     bottom: 0,
                     child: SizedBox(
