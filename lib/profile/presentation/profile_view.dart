@@ -121,11 +121,6 @@ class ProfileView extends ConsumerWidget {
               text: userProvider.user.jabatan ?? '-',
               label: 'Jabatan',
             ),
-            ProfileItem(
-              text: userProvider.user.imeiHp ?? '-',
-              icon: Icons.numbers,
-              label: 'Installation ID',
-            ),
             SizedBox(
               height: 8,
             ),

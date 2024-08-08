@@ -146,5 +146,7 @@ final imeiInitFutureProvider =
     throw AssertionError('Error while initUrlFromPtServer');
   }
 
+  ref.read(initUserStatusNotifierProvider.notifier).letYouThrough();
+
   return unit;
 });

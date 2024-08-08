@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:face_net_authentication/widgets/async_value_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,7 +17,6 @@ import '../../shared/providers.dart';
 import '../../tc/application/shared/tc_providers.dart';
 import '../../utils/dialog_helper.dart';
 import '../../widgets/v_async_widget.dart';
-import '../../widgets/v_dialogs.dart';
 import 'profile_scaffold.dart';
 
 class ProfilePage extends StatefulHookConsumerWidget {
@@ -45,42 +45,33 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    // ref.listen<AsyncValue<ImeiState>>(imeiNotifierProvider, (_, state) {
-    //   if (!state.isLoading &&
-    //       state.hasValue &&
-    //       state.value != null &&
-    //       state.hasError == false) {
-    //     state.requireValue.failureOrSuccessOptionClearRegisterImei
-    //         .fold(
-    //             () {},
-    //             (either) => either.fold(
-    //                 (failure) => failure.maybeMap(
-    //                       noConnection: (_) => null,
-    //                       orElse: () => showDialog(
-    //                         context: context,
-    //                         barrierDismissible: true,
-    //                         builder: (_) => VSimpleDialog(
-    //                           label: 'Error',
-    //                           labelDescription: failure.maybeMap(
-    //                             server: (server) => 'error server $server',
-    //                             noConnection: (_) => 'tidak ada koneksi',
-    //                             storage: (_) => 'error menghapus imei',
-    //                             orElse: () => '',
-    //                           ),
-    //                           asset: Assets.iconCrossed,
-    //                         ),
-    //                       ),
-    //                     ),
-    //                 (_) => DialogHelper.showCustomDialog(
-    //                       'Unlink Sukses. Mohon Uninstall Aplikasi. Terimakasih 🙏',
-    //                       context,
-    //                       label: 'Uninstall',
-    //                       isLarge: true,
-    //                       assets: Assets.iconChecked,
-    //                     )))!
-    //         .then((_) => _onImeiCleared());
-    //   }
-    // });
+    ref.listen<AsyncValue<ImeiState>>(imeiNotifierProvider, (_, state) {
+      if (!state.isLoading &&
+          state.hasValue &&
+          state.value != null &&
+          state.hasError == false) {
+        if (!state.isLoading &&
+            state.hasValue &&
+            state.value != '' &&
+            state.value != null &&
+            state.hasError == false) {
+          state.requireValue.maybeWhen(
+            cleared: () => DialogHelper.showCustomDialog(
+              'Unlink Sukses. Mohon Uninstall Aplikasi. Terimakasih 🙏',
+              context,
+              label: 'Uninstall',
+              isLarge: true,
+              assets: Assets.iconChecked,
+            ).then(
+              (_) => _onImeiCleared(),
+            ),
+            orElse: () {},
+          );
+        } else {
+          if (state.hasError) state.showAlertDialogOnError(context, ref);
+        }
+      }
+    });
 
     final user = ref.watch(getUserFutureProvider);
     final imei = ref.watch(imeiNotifierProvider);

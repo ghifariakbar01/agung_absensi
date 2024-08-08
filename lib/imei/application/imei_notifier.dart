@@ -1,16 +1,13 @@
 import 'dart:io';
 
-import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/err_log/application/err_log_notifier.dart';
 import 'package:face_net_authentication/unlink/application/unlink_notifier.dart';
-import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:uuid/uuid.dart';
 
 import '../../constants/constants.dart';
-import '../../domain/auth_failure.dart';
 import '../../imei_introduction/application/shared/imei_introduction_providers.dart';
 import '../../tc/application/shared/tc_providers.dart';
 import '../../user/application/user_model.dart';
@@ -146,7 +143,7 @@ class ImeiNotifier extends _$ImeiNotifier {
             idKary: idKary,
           );
 
-      return ImeiState.notRegistered();
+      return ImeiState.ok();
     });
   }
 
@@ -259,49 +256,22 @@ class ImeiNotifier extends _$ImeiNotifier {
     });
   }
 
-  onImeiOK() async {
-    await ref.read(authNotifierProvider.notifier).checkAndUpdateAuthStatus();
-    await ref
-        .read(imeiIntroNotifierProvider.notifier)
-        .checkAndUpdateImeiIntro();
-    await ref.read(tcNotifierProvider.notifier).checkAndUpdateStatusTC();
-  }
-
   Future<void> onImeiAlreadyRegistered({
-    required String imeiDb,
-    required String imeiSaved,
+    required String idKary,
   }) async {
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(() async {
+      final imeiDb = await getImeiStringFromServer(idKary: idKary);
+      final imeiSaved = await getImeiStringFromStorage();
+
       await ref.read(errLogControllerProvider.notifier).sendLog(
             imeiDb: imeiDb,
             imeiSaved: imeiSaved,
             errMessage: Constants.imeiAlreadyRegistered,
           );
 
-      return ImeiState.alreadyRegistered();
+      return ImeiState.initial();
     });
-  }
-
-  _updateUserAfterRegister({
-    required UserModelWithPassword user,
-    required Future<void> onSuccess(),
-    required BuildContext context,
-  }) async {
-    final Either<AuthFailure, Unit?> resp = await ref
-        .read(userNotifierProvider.notifier)
-        .saveUserAfterUpdateInline(user: user);
-
-    resp.fold(
-        (falure) => showErrorDialog(
-            context,
-            falure.map(
-                storage: (_) => 'Storage Penuh : _updateUserAfterRegister',
-                server: (server) => server.toString(),
-                passwordExpired: (_) => 'Password Expired',
-                passwordWrong: (_) => 'Password Wrong',
-                noConnection: (_) => 'Tidak ada koneksi')),
-        (_) {});
   }
 }

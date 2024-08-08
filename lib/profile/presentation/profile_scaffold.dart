@@ -19,8 +19,7 @@ class ProfileScaffold extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userProvider = ref.watch(userNotifierProvider);
-    final user = userProvider.user;
+    final user = ref.watch(userNotifierProvider).user;
 
     final scrollController = useScrollController();
     final iosUserMaintanance = ref.watch(iosUserMaintananceProvider);

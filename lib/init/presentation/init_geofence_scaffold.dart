@@ -22,7 +22,6 @@ import '../../err_log/application/err_log_notifier.dart';
 import '../../geofence/application/geofence_response.dart';
 
 import '../../home/presentation/home_saved.dart';
-import '../../imei/application/imei_notifier.dart';
 import '../../network_state/application/network_state_notifier.dart';
 import '../../shared/common_widgets.dart';
 import '../../shared/providers.dart';

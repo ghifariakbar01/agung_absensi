@@ -1,8 +1,14 @@
+import 'dart:convert';
+
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/imei/application/imei_auth_state.dart';
 import 'package:face_net_authentication/imei/application/imei_notifier.dart';
+import 'package:face_net_authentication/imei_introduction/application/shared/imei_introduction_providers.dart';
 import 'package:face_net_authentication/ip/application/ip_notifier.dart';
+import 'package:face_net_authentication/tc/application/shared/tc_providers.dart';
 import 'package:face_net_authentication/unlink/application/unlink_notifier.dart';
+import 'package:face_net_authentication/user/application/user_model.dart';
+import 'package:face_net_authentication/widgets/async_value_ui.dart';
 import 'package:face_net_authentication/widgets/v_async_widget.dart';
 
 import 'package:flutter/material.dart';
@@ -47,7 +53,13 @@ class SignInPage extends HookConsumerWidget {
                           ),
                         ), (_) async {
                   final imeiNotifier = ref.read(imeiNotifierProvider.notifier);
-                  final user = ref.read(userNotifierProvider).user;
+                  final String resp = await ref
+                      .read(userNotifierProvider.notifier)
+                      .getUserString();
+
+                  final json = jsonDecode(resp) as Map<String, dynamic>;
+                  final UserModelWithPassword user =
+                      UserModelWithPassword.fromJson(json);
 
                   final imei = await imeiNotifier.getImeiStringFromServer(
                     idKary: user.IdKary ?? '-',
@@ -79,15 +91,11 @@ class SignInPage extends HookConsumerWidget {
           state.value != null &&
           state.hasError == false) {
         state.requireValue.maybeWhen(
-          ok: () => imeiNotifier.onImeiOK(),
+          initial: () => logout(ref),
+          ok: () => login(ref),
           alreadyRegistered: () async {
-            final imeiDb =
-                await imeiNotifier.getImeiStringFromServer(idKary: idKary);
-            final imeiSaved = await imeiNotifier.getImeiStringFromStorage();
-
             await imeiNotifier.onImeiAlreadyRegistered(
-              imeiDb: imeiDb,
-              imeiSaved: imeiSaved,
+              idKary: idKary,
             );
 
             return showErrorDialog(
@@ -103,10 +111,14 @@ class SignInPage extends HookConsumerWidget {
               idKary: idKary,
             );
 
-            return showSuccessDialog(context);
+            return showSuccessDialog(context).then(
+              (_) => login(ref),
+            );
           },
           orElse: () {},
         );
+      } else {
+        if (state.hasError) state.showAlertDialogOnError(context, ref);
       }
     });
 
@@ -199,7 +211,9 @@ class SignInPage extends HookConsumerWidget {
               labelDescription:
                   'Mohon maaf storage anda penuh sehingga Aplikasi gagal menyimpan data user. Mohon luangkan storage dan dicoba login kembali',
               asset: Assets.iconCrossed,
-            )).then((_) => ref.read(userNotifierProvider.notifier).logout());
+            )).then(
+      (_) => ref.read(userNotifierProvider.notifier).logout(),
+    );
   }
 
   _initSignIn(WidgetRef ref) {
@@ -256,7 +270,10 @@ class SignInPage extends HookConsumerWidget {
   }
 
   login(WidgetRef ref) async {
-    await ref.read(userNotifierProvider.notifier).logout();
     await ref.read(authNotifierProvider.notifier).checkAndUpdateAuthStatus();
+    await ref.read(tcNotifierProvider.notifier).checkAndUpdateStatusTC();
+    await ref
+        .read(imeiIntroNotifierProvider.notifier)
+        .checkAndUpdateImeiIntro();
   }
 }

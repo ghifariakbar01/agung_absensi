@@ -1,7 +1,6 @@
 // ignore_for_file: unused_result
 
 import 'package:dartz/dartz.dart';
-import 'package:face_net_authentication/helper.dart';
 // import 'package:face_net_authentication/helper.dart';
 
 import 'package:flutter/material.dart';
@@ -16,7 +15,6 @@ import 'firebase/remote_config/helper/firebase_remote_config_initializer.dart';
 // import 'helper.dart';
 
 import 'imei_introduction/application/shared/imei_introduction_providers.dart';
-import 'ip/application/ip_notifier.dart';
 // import 'shared/future_providers.dart';
 import 'shared/providers.dart';
 import 'style/style.dart';
@@ -24,7 +22,6 @@ import 'tc/application/shared/tc_providers.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'utils/upgrader_message.dart';
-import 'widgets/v_async_widget.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,7 +43,7 @@ Future<void> main() async {
 }
 
 final initializationProvider = FutureProvider<Unit>((ref) async {
-  final helper = HelperImpl();
+  // final helper = HelperImpl();
   // await helper.storageDebugMode(ref, isDebug: true);
   // await helper.fixStorage(ref);
 
@@ -100,24 +97,20 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
     final router = ref.watch(routerProvider);
     final routerDelegate = router.routerDelegate;
 
-    final ipNotifier = ref.watch(ipNotifierProvider);
-
-    return VAsyncWidgetScaffoldWrappedMaterial<void>(
-        value: ipNotifier,
-        data: (_) => MaterialApp.router(
-            debugShowCheckedModeBanner: false,
-            debugShowMaterialGrid: false,
-            themeMode: ThemeMode.light,
-            theme: Themes.lightTheme(context),
-            routeInformationProvider: router.routeInformationProvider,
-            routeInformationParser: router.routeInformationParser,
-            routerDelegate: routerDelegate,
-            builder: (_, c) => UpgradeAlert(
-                key: UniqueKey(),
-                navigatorKey: routerDelegate.navigatorKey,
-                child: c,
-                upgrader: Upgrader(
-                    messages: MyUpgraderMessages(),
-                    durationUntilAlertAgain: Duration(hours: 3)))));
+    return MaterialApp.router(
+        debugShowCheckedModeBanner: false,
+        debugShowMaterialGrid: false,
+        themeMode: ThemeMode.light,
+        theme: Themes.lightTheme(context),
+        routeInformationProvider: router.routeInformationProvider,
+        routeInformationParser: router.routeInformationParser,
+        routerDelegate: routerDelegate,
+        builder: (_, c) => UpgradeAlert(
+            key: UniqueKey(),
+            navigatorKey: routerDelegate.navigatorKey,
+            child: c,
+            upgrader: Upgrader(
+                messages: MyUpgraderMessages(),
+                durationUntilAlertAgain: Duration(hours: 3))));
   }
 }
