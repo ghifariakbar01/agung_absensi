@@ -47,8 +47,6 @@ class _SignInFormState extends ConsumerState<SignInForm> {
           SizedBox(
             height: 4,
           ),
-
-          // dropdown pt
           DropdownButtonFormField<String>(
             value: ptDropdownSelected,
             elevation: 16,
@@ -92,10 +90,7 @@ class _SignInFormState extends ConsumerState<SignInForm> {
               );
             }).toList(),
           ),
-
           const SizedBox(height: 16),
-
-          // user name
           ProfileLabel(icon: Icons.person, label: 'Username'),
           SizedBox(
             height: 4,
@@ -126,8 +121,6 @@ class _SignInFormState extends ConsumerState<SignInForm> {
                     ),
           ),
           const SizedBox(height: 16),
-
-          // password
           ProfileLabel(icon: Icons.lock_rounded, label: 'Password'),
           SizedBox(
             height: 4,
@@ -166,8 +159,6 @@ class _SignInFormState extends ConsumerState<SignInForm> {
                     ),
           ),
           const SizedBox(height: 8),
-
-          // jadwal shift
           Row(
             children: [
               Checkbox(

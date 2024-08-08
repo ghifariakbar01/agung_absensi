@@ -10,7 +10,6 @@ import '../auth/infrastructures/auth_repository.dart';
 import '../constants/constants.dart';
 import '../cross_auth/application/cross_auth_notifier.dart';
 import '../firebase/remote_config/application/firebase_remote_config_notifier.dart';
-import '../imei/infrastructures/imei_repository.dart';
 import '../user/application/user_model.dart';
 import 'providers.dart';
 
@@ -147,67 +146,5 @@ final imeiInitFutureProvider =
     throw AssertionError('Error while initUrlFromPtServer');
   }
 
-  if (user.IdKary!.isNotEmpty) {
-    final String? imeiDb;
-    final String? imeiSaved;
-
-    try {
-      final imeiNotifier = ref.read(imeiNotifierProvider.notifier);
-      // 3. GET IMEI DATA
-      ImeiRepository imeiRepo = ref.read(imeiRepositoryProvider);
-
-      imeiSaved =
-          await imeiRepo.getImeiCredentials().then((value) => value.fold(
-                    (_) => '',
-                    (r) => r,
-                  )) ??
-              '';
-
-      await Future.delayed(
-        Duration(seconds: 1),
-        () => imeiNotifier.changeSavedImei(imeiSaved ?? ''),
-      );
-
-      imeiDb = await imeiRepo
-              .getImei(idKary: user.IdKary!)
-              .then((value) => value.fold(
-                    (_) => '',
-                    (r) => r,
-                  )) ??
-          '';
-
-      await ref
-          .read(imeiAuthNotifierProvider.notifier)
-          .checkAndUpdateImei(imeiDb: imeiDb);
-    } catch (e) {
-      throw AssertionError('Error validating imei. Error : $e');
-    }
-
-    await Future.delayed(
-      Duration(seconds: 1),
-    );
-
-    // 4. PROCESS IMEI DATA
-    // IF OFFLINE FROM USER INIT
-    final isOfflineFromInit = ref.read(absenOfflineModeProvider);
-
-    if (!isOfflineFromInit) {
-      await ref.read(imeiNotifierProvider.notifier).processImei(
-            imei: imeiDb,
-            ref: ref,
-            context: context,
-            savedImei: imeiSaved,
-          );
-
-      return unit;
-    } else {
-      // IF CURRENT APP IS OFFLINE
-      ref.read(initUserStatusNotifierProvider.notifier).letYouThrough();
-      return unit;
-    }
-  } else {
-    final helper = HelperImpl();
-    await helper.storageDebugMode(ref, isDebug: true);
-    throw AssertionError('Error validating user. IdKary user is empty');
-  }
+  return unit;
 });

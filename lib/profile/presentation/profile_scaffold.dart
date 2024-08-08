@@ -9,6 +9,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../imei/application/imei_notifier.dart';
 import '../../style/style.dart';
 import '../../widgets/v_button.dart';
 import 'profile_view.dart';
@@ -64,10 +65,12 @@ class ProfileScaffold extends HookConsumerWidget {
                           return ref
                               .read(imeiNotifierProvider.notifier)
                               .logClearImeiFromDB(
-                                  idUser: user.idUser.toString(),
-                                  nama: user.nama!.isEmpty
-                                      ? ''
-                                      : '${user.nama} Button Maintanance $iosUser ');
+                                imei: user.imeiHp ?? '-',
+                                idUser: user.idUser.toString(),
+                                nama: user.nama!.isEmpty
+                                    ? ''
+                                    : '${user.nama} Button Maintanance $iosUser ',
+                              );
                         });
                   } else {
                     return Container();
@@ -89,8 +92,10 @@ class ProfileScaffold extends HookConsumerWidget {
                               await ref
                                   .read(imeiNotifierProvider.notifier)
                                   .logClearImeiFromDB(
-                                      nama: user.nama ?? '',
-                                      idUser: user.idUser.toString());
+                                    nama: user.nama ?? '',
+                                    idUser: user.idUser.toString(),
+                                    imei: user.imeiHp ?? '',
+                                  );
                             })
                         : VAlertDialog(
                             label: 'Unlink HP & Uninstall ?',
@@ -102,8 +107,10 @@ class ProfileScaffold extends HookConsumerWidget {
                               await ref
                                   .read(imeiNotifierProvider.notifier)
                                   .logClearImeiFromDB(
-                                      nama: user.nama ?? '',
-                                      idUser: user.idUser.toString());
+                                    nama: user.nama ?? '',
+                                    idUser: user.idUser.toString(),
+                                    imei: user.imeiHp ?? '',
+                                  );
                             })))
           ],
         ),

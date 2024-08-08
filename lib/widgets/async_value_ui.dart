@@ -8,6 +8,7 @@ import 'package:face_net_authentication/utils/string_hardcoded.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../imei/application/imei_notifier.dart';
 import '../shared/providers.dart';
 
 extension AsyncValueUI on AsyncValue {
@@ -55,10 +56,11 @@ Future<void> _sendLog(WidgetRef ref, String message) async {
   final imeiNotifier = ref.read(imeiNotifierProvider.notifier);
   final user = ref.read(userNotifierProvider).user;
 
-  final String imeiDb = await imeiNotifier.getImeiStringDb(
+  final String imeiDb = await imeiNotifier.getImeiStringFromServer(
     idKary: user.IdKary ?? 'IdKary null or no internet',
   );
-  final String imei = await imeiNotifier.getImeiString();
+
+  final String imei = await imeiNotifier.getImeiStringFromStorage();
 
   await ref.read(errLogControllerProvider.notifier).sendLog(
         imeiDb: imeiDb,

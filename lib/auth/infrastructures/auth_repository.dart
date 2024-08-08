@@ -126,16 +126,23 @@ class AuthRepository {
       final serverStr = server.getOrCrash();
 
       if (serverStr == 'gs_18') {
-        //
         return signInWithIdKaryawanUsernameAndPasswordARV(
-            server: server, userId: userId, password: password);
+          server: server,
+          userId: userId,
+          password: password,
+        );
       } else {
-        //
         return signInWithIdKaryawanUsernameAndPasswordACT(
-            server: server, userId: userId, password: password);
+          server: server,
+          userId: userId,
+          password: password,
+        );
       }
     } on RestApiException catch (e) {
-      return left(AuthFailure.server(e.errorCode));
+      return left(AuthFailure.server(
+        e.errorCode,
+        e.toString(),
+      ));
     } on PlatformException {
       return left(const AuthFailure.storage());
     } on NoConnectionException {

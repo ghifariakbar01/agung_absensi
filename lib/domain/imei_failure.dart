@@ -4,9 +4,9 @@ part 'imei_failure.freezed.dart';
 
 @freezed
 class ImeiFailure with _$ImeiFailure {
-  const factory ImeiFailure.errorParsing([String? message]) = _ErrorParsing;
-  const factory ImeiFailure.empty() = _Empty;
-  const factory ImeiFailure.unknown([int? errorCode, String? message]) =
-      _Unknown;
+  const factory ImeiFailure.server([int? errorCode, String? message]) = _Server;
+  const factory ImeiFailure.noConnection() = _NoConnection;
   const factory ImeiFailure.storage() = _Storage;
+  const factory ImeiFailure.formatException([String? message]) =
+      _FormatException;
 }

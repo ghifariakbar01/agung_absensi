@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../copyright/presentation/copyright_page.dart';
+import '../../imei/application/imei_notifier.dart';
 import '../../shared/providers.dart';
 import '../infrastructures/err_log_remote_service.dart';
 import '../infrastructures/err_log_repository.dart';
@@ -56,9 +57,9 @@ class ErrLogController extends _$ErrLogController {
 
     final _imei = ref.read(imeiNotifierProvider.notifier);
 
-    final _saved = imeiSaved ?? await _imei.getImeiString();
-    final _db =
-        imeiDb ?? await _imei.getImeiStringDb(idKary: user.IdKary ?? '-');
+    final _saved = imeiSaved ?? await _imei.getImeiStringFromStorage();
+    final _db = imeiDb ??
+        await _imei.getImeiStringFromServer(idKary: user.IdKary ?? '-');
 
     final version = await ref.read(packageInfoProvider.future);
     final platform = Platform.isIOS ? 'iOS' : 'Android';

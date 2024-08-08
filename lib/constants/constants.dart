@@ -51,4 +51,8 @@ class Constants {
   static const int decryptErrorCode = 11;
   static const String passWrong = 'Password Wrong';
   static const String passExpString = 'Password Expired';
+
+  static const String notRegistered = 'Sukses';
+  static const String imeiAlreadyRegistered =
+      'Anda belum melakukan unlink di hp sebelumnya, karena terindikasi sudah punya Installation ID. Mohon Uninstall Aplikasi. Terimakasih 🙏';
 }

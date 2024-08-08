@@ -1,6 +1,7 @@
 // import 'package:face_net_authentication/utils/logging.dart';
 
 import 'package:dio/dio.dart';
+import 'package:face_net_authentication/infrastructures/cache_storage/imei_checked_storage.dart';
 
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -216,29 +217,42 @@ final karyawanShiftFutureProvider = FutureProvider<bool>((ref) async {
   return await _repository.isKaryawanShift();
 });
 
-final imeiCredentialsStorageProvider = Provider<CredentialsStorage>(
-  (ref) =>
-      ImeiSecureCredentialsStorage(ref.watch(flutterSecureStorageProvider)),
-);
-
-final imeiRemoteServiceProvider = Provider(
-  (ref) => ImeiRemoteService(
-    ref.watch(dioProvider),
-    ref.watch(dioRequestProvider),
-  ),
-);
-
-// IMEI
+/* 
+ =================================================================
+ ================== [ IMEI PROVIDERS ] ===========================
+=================================================================
+ */
 @Riverpod(keepAlive: true)
-ImeiRepository imeiRepository(ImeiRepositoryRef ref) {
-  return ImeiRepository(
-    ref.watch(imeiCredentialsStorageProvider),
-    ref.watch(imeiRemoteServiceProvider),
+ImeiSecureCredentialsStorage imeiSecureCredentialsStorage(
+    ImeiSecureCredentialsStorageRef ref) {
+  return ImeiSecureCredentialsStorage(
+    ref.watch(flutterSecureStorageProvider),
   );
 }
 
-final imeiNotifierProvider = StateNotifierProvider<ImeiNotifier, ImeiState>(
-    (ref) => ImeiNotifier(ref.watch(imeiRepositoryProvider)));
+@Riverpod(keepAlive: true)
+ImeiCheckedStorage imeiCheckedStorage(ImeiCheckedStorageRef ref) {
+  return ImeiCheckedStorage(
+    ref.watch(flutterSecureStorageProvider),
+  );
+}
+
+@Riverpod(keepAlive: true)
+ImeiRemoteService imeiRemoteService(ImeiRemoteServiceRef ref) {
+  return ImeiRemoteService(
+    ref.watch(dioProvider),
+    ref.watch(dioRequestProvider),
+  );
+}
+
+@Riverpod(keepAlive: true)
+ImeiRepository imeiRepository(ImeiRepositoryRef ref) {
+  return ImeiRepository(
+    ref.watch(imeiSecureCredentialsStorageProvider),
+    ref.watch(imeiCheckedStorageProvider),
+    ref.watch(imeiRemoteServiceProvider),
+  );
+}
 
 final imeiAuthNotifierProvider =
     StateNotifierProvider<ImeiAuthNotifier, ImeiAuthState>(
@@ -247,6 +261,12 @@ final imeiAuthNotifierProvider =
 final imeiResetNotifierProvider =
     StateNotifierProvider<ImeiResetNotifier, ImeiResetState>(
         (ref) => ImeiResetNotifier(ref.watch(imeiRepositoryProvider)));
+
+/* 
+   ==================================================================
+   ================== END ===========================================
+   ==================================================================
+ */
 
 // HOME
 

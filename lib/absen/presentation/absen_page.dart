@@ -46,26 +46,14 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
     await ref.refresh(networkTimeNotifierProvider);
 
     await ref.read(testerNotifierProvider).maybeWhen(
-      tester: () async {
-        await _initializeImei();
-      },
-      orElse: () async {
-        await _initializeImei();
-
-        await ref.read(backgroundNotifierProvider.notifier).getSavedLocations();
-        await ref.read(absenNotifierProvidier.notifier).getAbsenToday();
-      },
-    );
-  }
-
-  Future<void> _initializeImei() async {
-    final imeiNotifier = ref.read(imeiNotifierProvider.notifier);
-    final imei = await imeiNotifier.getImeiString();
-
-    await Future.delayed(
-      Duration(seconds: 1),
-      () => imeiNotifier.changeSavedImei(imei),
-    );
+          tester: () async {},
+          orElse: () async {
+            await ref
+                .read(backgroundNotifierProvider.notifier)
+                .getSavedLocations();
+            await ref.read(absenNotifierProvidier.notifier).getAbsenToday();
+          },
+        );
   }
 
   @override

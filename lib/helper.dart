@@ -21,13 +21,13 @@ class HelperImpl implements Helper {
       if (imei == null) {
         return unit;
       } else {
-        await ref.read(imeiCredentialsStorageProvider).save(imei);
+        await ref.read(imeiSecureCredentialsStorageProvider).save(imei);
         return unit;
       }
     }
 
     Future<String?> _getCurrentImei() async {
-      return ref.read(imeiCredentialsStorageProvider).read();
+      return ref.read(imeiSecureCredentialsStorageProvider).read();
     }
 
     Future<Unit> _deleteAll() async {

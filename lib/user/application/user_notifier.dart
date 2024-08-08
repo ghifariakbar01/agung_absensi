@@ -130,18 +130,22 @@ class UserNotifier extends StateNotifier<UserState> {
   Future<Either<AuthFailure, Unit?>> saveUserAfterUpdateInline({
     required UserModelWithPassword user,
   }) async {
+    Either<AuthFailure, Unit?> resp;
+
     if (user.password == null || user.nama == null || user.ptServer == null) {
-      return left(AuthFailure.server(
+      return left(const AuthFailure.server(
         404,
-        'User Password / Id User / Pt Server Null',
+        'Tidak dapat melakukan query saveUserAfterUpdateInline, password / nama / ptserver null',
       ));
     }
 
-    return await _repository.saveUserAfterUpdate(
-      password: Password(user.password!),
+    resp = await _repository.saveUserAfterUpdate(
       userId: UserId(user.nama!),
+      password: Password(user.password!),
       server: PTName(user.ptServer!),
     );
+
+    return resp;
   }
 
   setUser(UserModelWithPassword user) {

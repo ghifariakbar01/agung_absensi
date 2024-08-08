@@ -1,15 +1,14 @@
 import 'dart:io';
 
-import 'package:dartz/dartz.dart';
-
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../constants/assets.dart';
 import '../../constants/constants.dart';
-import '../../domain/edit_failure.dart';
 import '../../firebase/remote_config/application/firebase_remote_config_notifier.dart';
+import '../../imei/application/imei_notifier.dart';
+import '../../imei/application/imei_state.dart';
 import '../../imei_introduction/application/shared/imei_introduction_providers.dart';
 import '../../ios_user_maintanance/ios_user_maintanance_notifier.dart';
 import '../../shared/future_providers.dart';
@@ -46,46 +45,53 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    // FOR UNLINK DEVICE
-    ref.listen<Option<Either<EditFailure, Unit?>>>(
-      imeiNotifierProvider.select(
-        (state) => state.failureOrSuccessOptionClearRegisterImei,
-      ),
-      (_, failureOrSuccessOption) => failureOrSuccessOption
-          .fold(
-              () {},
-              (either) => either.fold(
-                  (failure) => failure.maybeMap(
-                        noConnection: (_) => null,
-                        orElse: () => showDialog(
-                          context: context,
-                          barrierDismissible: true,
-                          builder: (_) => VSimpleDialog(
-                            label: 'Error',
-                            labelDescription: failure.maybeMap(
-                                server: (server) => 'error server $server',
-                                passwordExpired: (password) => '$password',
-                                passwordWrong: (password) => '$password',
-                                orElse: () => ''),
-                            asset: Assets.iconCrossed,
-                          ),
-                        ),
-                      ),
-                  (_) => DialogHelper.showCustomDialog(
-                        'Unlink Sukses. Mohon Uninstall Aplikasi. Terimakasih 🙏',
-                        context,
-                        label: 'Uninstall',
-                        isLarge: true,
-                        assets: Assets.iconChecked,
-                      )))!
-          .then((_) => _onImeiCleared()),
-    );
+    // ref.listen<AsyncValue<ImeiState>>(imeiNotifierProvider, (_, state) {
+    //   if (!state.isLoading &&
+    //       state.hasValue &&
+    //       state.value != null &&
+    //       state.hasError == false) {
+    //     state.requireValue.failureOrSuccessOptionClearRegisterImei
+    //         .fold(
+    //             () {},
+    //             (either) => either.fold(
+    //                 (failure) => failure.maybeMap(
+    //                       noConnection: (_) => null,
+    //                       orElse: () => showDialog(
+    //                         context: context,
+    //                         barrierDismissible: true,
+    //                         builder: (_) => VSimpleDialog(
+    //                           label: 'Error',
+    //                           labelDescription: failure.maybeMap(
+    //                             server: (server) => 'error server $server',
+    //                             noConnection: (_) => 'tidak ada koneksi',
+    //                             storage: (_) => 'error menghapus imei',
+    //                             orElse: () => '',
+    //                           ),
+    //                           asset: Assets.iconCrossed,
+    //                         ),
+    //                       ),
+    //                     ),
+    //                 (_) => DialogHelper.showCustomDialog(
+    //                       'Unlink Sukses. Mohon Uninstall Aplikasi. Terimakasih 🙏',
+    //                       context,
+    //                       label: 'Uninstall',
+    //                       isLarge: true,
+    //                       assets: Assets.iconChecked,
+    //                     )))!
+    //         .then((_) => _onImeiCleared());
+    //   }
+    // });
 
     final user = ref.watch(getUserFutureProvider);
+    final imei = ref.watch(imeiNotifierProvider);
 
     return VAsyncWidgetScaffold(
       value: user,
-      data: (_) => ProfileScaffold(),
+      data: (_) => VAsyncWidgetScaffold<ImeiState>(
+          value: imei,
+          data: (_) {
+            return ProfileScaffold();
+          }),
     );
   }
 

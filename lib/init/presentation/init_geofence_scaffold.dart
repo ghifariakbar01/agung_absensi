@@ -22,6 +22,7 @@ import '../../err_log/application/err_log_notifier.dart';
 import '../../geofence/application/geofence_response.dart';
 
 import '../../home/presentation/home_saved.dart';
+import '../../imei/application/imei_notifier.dart';
 import '../../network_state/application/network_state_notifier.dart';
 import '../../shared/common_widgets.dart';
 import '../../shared/providers.dart';
@@ -130,7 +131,7 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
                     cond = dev;
                   }
 
-                  return false
+                  return cond
                       ? Center(
                           child: Padding(
                             padding: const EdgeInsets.all(16.0),
@@ -285,7 +286,7 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
             Log.info('savedItems $savedItems');
 
             // [AUTO ABSEN]
-            final imei = ref.read(imeiNotifierProvider).imei;
+            final imei = '';
 
             // REFRESH CURRENT NETWORK TIME
             final dbDate =

@@ -6,7 +6,9 @@ part 'imei_register_state.freezed.dart';
 class ImeiRegisterResponse with _$ImeiRegisterResponse {
   const factory ImeiRegisterResponse.withImei({required String imei}) =
       _WithImei;
-  const factory ImeiRegisterResponse.failure(
-      [int? errorCode, String? message]) = _ImeiFailure;
+  const factory ImeiRegisterResponse.failure([
+    int? errorCode,
+    String? message,
+  ]) = _ImeiFailure;
   const ImeiRegisterResponse._();
 }

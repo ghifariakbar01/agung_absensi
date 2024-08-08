@@ -1,6 +1,7 @@
 // ignore_for_file: unused_result
 
 import 'package:dartz/dartz.dart';
+import 'package:face_net_authentication/helper.dart';
 // import 'package:face_net_authentication/helper.dart';
 
 import 'package:flutter/material.dart';
@@ -45,7 +46,7 @@ Future<void> main() async {
 }
 
 final initializationProvider = FutureProvider<Unit>((ref) async {
-  // final helper = HelperImpl();
+  final helper = HelperImpl();
   // await helper.storageDebugMode(ref, isDebug: true);
   // await helper.fixStorage(ref);
 

@@ -1,19 +1,20 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../infrastructures/cache_storage/unlink_storage.dart';
-import '../../infrastructures/credentials_storage/credentials_storage.dart';
 import '../../shared/providers.dart';
 import '../infrastructures/unlink_repository.dart';
 
 part 'unlink_notifier.g.dart';
 
-final unlinkSecureStorageProvider = Provider<CredentialsStorage>(
-  (ref) => UnlinkSecureStorage(ref.watch(flutterSecureStorageProvider)),
-);
+@Riverpod(keepAlive: true)
+UnlinkSecureStorage unlinkSecureStorage(UnlinkSecureStorageRef ref) {
+  return UnlinkSecureStorage(ref.watch(flutterSecureStorageProvider));
+}
 
-final unlinkRepositoryProvider = Provider((ref) => UnlinkRepository(
-      ref.watch(unlinkSecureStorageProvider),
-    ));
+@Riverpod(keepAlive: true)
+UnlinkRepository unlinkRepository(UnlinkRepositoryRef ref) {
+  return UnlinkRepository(ref.watch(unlinkSecureStorageProvider));
+}
 
 @riverpod
 class UnlinkNotifier extends _$UnlinkNotifier {

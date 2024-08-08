@@ -1,5 +1,4 @@
 import 'package:face_net_authentication/shared/webview_widget.dart';
-import 'package:face_net_authentication/utils/logging.dart';
 
 import 'package:face_net_authentication/shared/providers.dart';
 import 'package:face_net_authentication/widgets/v_scaffold_widget.dart';
