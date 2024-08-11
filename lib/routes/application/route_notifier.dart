@@ -91,14 +91,12 @@ class RouterNotifier extends ChangeNotifier {
   final Ref _ref;
 
   String? redirectLogic(BuildContext context, GoRouterState state) {
-    Log.info('current route ${state.fullPath}');
-
     final tcState = _ref.read(tcNotifierProvider);
     final authState = _ref.read(authNotifierProvider);
-
     final imeiIntroState = _ref.read(imeiIntroNotifierProvider);
 
-    final String current = state.matchedLocation;
+    final current = state.matchedLocation;
+
     final areWeAtDefaultRoute = current == RouteNames.defaultRoute;
 
     final defaultRoute = current == RouteNames.defaultRoute;

@@ -14,6 +14,7 @@ import 'config/configuration.dart';
 import 'firebase/remote_config/helper/firebase_remote_config_initializer.dart';
 // import 'helper.dart';
 
+import 'helper.dart';
 import 'imei_introduction/application/shared/imei_introduction_providers.dart';
 // import 'shared/future_providers.dart';
 import 'shared/providers.dart';
@@ -43,12 +44,12 @@ Future<void> main() async {
 }
 
 final initializationProvider = FutureProvider<Unit>((ref) async {
-  // final helper = HelperImpl();
-  // await helper.storageDebugMode(ref, isDebug: true);
+  final helper = HelperImpl();
+  await helper.storageDebugMode(ref, isDebug: true);
   // await helper.fixStorage(ref);
 
-  await ref.read(tcNotifierProvider.notifier).checkAndUpdateStatusTC();
   await ref.read(authNotifierProvider.notifier).checkAndUpdateAuthStatus();
+  await ref.read(tcNotifierProvider.notifier).checkAndUpdateStatusTC();
   await ref.read(imeiIntroNotifierProvider.notifier).checkAndUpdateImeiIntro();
 
   await FirebaseRemoteConfigInitializer.setupRemoteConfig(ref);

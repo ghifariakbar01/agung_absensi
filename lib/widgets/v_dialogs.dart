@@ -168,11 +168,15 @@ class VAlertDialog3 extends StatelessWidget {
     required this.labelDescription,
     required this.onPressed,
     this.pressedLabel,
+    this.labelFont,
+    this.height,
   }) : super(key: key);
 
   final String label;
   final String labelDescription;
   final String? pressedLabel;
+  final double? labelFont;
+  final double? height;
   final Function() onPressed;
 
   @override
@@ -182,11 +186,10 @@ class VAlertDialog3 extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
       ),
       child: SizedBox(
-        height: 315,
+        height: height ?? 315,
         child: Stack(
           children: [
             Container(
-              height: 215,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(20),
@@ -209,8 +212,8 @@ class VAlertDialog3 extends StatelessWidget {
                     Text(
                       labelDescription,
                       textAlign: TextAlign.center,
-                      style:
-                          Themes.customColor(30, fontWeight: FontWeight.w600),
+                      style: Themes.customColor(labelFont ?? 30,
+                          fontWeight: FontWeight.w600),
                     ),
                   ],
                 ),

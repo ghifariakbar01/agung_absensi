@@ -15,7 +15,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
   final AuthRepository _repository;
 
   Future<void> checkAndUpdateAuthStatus() async {
-    // debugger();
     final isSignedIn = await _repository.isSignedIn();
 
     if (isSignedIn) {

@@ -9,6 +9,7 @@ part 'saved_location.g.dart';
 @freezed
 class SavedLocation with _$SavedLocation {
   const factory SavedLocation({
+    required int id,
     required DateTime date,
     required String? alamat,
     required String? idGeof,
@@ -22,6 +23,7 @@ class SavedLocation with _$SavedLocation {
       _$SavedLocationFromJson(json);
 
   factory SavedLocation.initial() => SavedLocation(
+      id: 0,
       idGeof: '',
       alamat: '',
       latitude: 0,

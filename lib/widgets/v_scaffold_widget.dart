@@ -35,10 +35,10 @@ class VScaffoldWidget extends StatelessWidget {
           ),
           toolbarHeight: 45,
           actions: [
-            NetworkWidget(),
-            SizedBox(
-              width: 24,
-            )
+            // NetworkWidget(),
+            // SizedBox(
+            //   width: 24,
+            // )
           ],
         ),
         resizeToAvoidBottomInset: false,
@@ -349,10 +349,10 @@ class VScaffoldTabLayout extends HookWidget with DialogHelper, CalendarHelper {
                           : null,
                       icon: Icon(Icons.search)),
                 additionalInfo != null ? additionalInfo! : Container(),
-                NetworkWidget(),
-                SizedBox(
-                  width: 24,
-                )
+                // NetworkWidget(),
+                // SizedBox(
+                //   width: 24,
+                // )
               ]
             ],
           ),

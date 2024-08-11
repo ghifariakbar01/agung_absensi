@@ -61,11 +61,15 @@ class UserNotifier extends StateNotifier<UserState> {
 
   final AuthRepository _repository;
 
-  Future<String> getUserString() => _repository.getUserString();
+  Future<UserModelWithPassword> getUserString() async {
+    final resp = await _repository.getUserString();
+    final json = jsonDecode(resp) as Map<String, dynamic>;
+
+    return UserModelWithPassword.fromJson(json);
+  }
 
   Future<bool> getIsTester() async {
-    // debugger();
-    String userString = await getUserString();
+    final userString = await _repository.getUserString();
 
     // PARSE USER SUCCESS / FAILURE
     if (userString.isNotEmpty) {
@@ -83,23 +87,17 @@ class UserNotifier extends StateNotifier<UserState> {
   Future<void> getUser() async {
     Either<UserFailure, String?> failureOrSuccess;
 
-    state = state.copyWith(isGetting: true, failureOrSuccessOption: none());
+    state = state.copyWith(
+      isGetting: true,
+      failureOrSuccessOption: none(),
+    );
 
     failureOrSuccess = await _repository.getSignedInCredentials();
 
     state = state.copyWith(
-        isGetting: false, failureOrSuccessOption: optionOf(failureOrSuccess));
-  }
-
-  Future<void> getUserState() async {
-    Either<UserFailure, String?> failureOrSuccess;
-
-    state = state.copyWith(isGetting: true, failureOrSuccessOption: none());
-
-    failureOrSuccess = await _repository.getSignedInCredentials();
-
-    state = state.copyWith(
-        isGetting: false, failureOrSuccessOption: optionOf(failureOrSuccess));
+      isGetting: false,
+      failureOrSuccessOption: optionOf(failureOrSuccess),
+    );
   }
 
   Future<void> saveUserAfterUpdate(
@@ -149,7 +147,6 @@ class UserNotifier extends StateNotifier<UserState> {
   }
 
   setUser(UserModelWithPassword user) {
-    // debugger();
     state = state.copyWith(user: user);
     state = state.copyWith(user: user);
     state = state.copyWith(user: user);
@@ -167,11 +164,15 @@ class UserNotifier extends StateNotifier<UserState> {
     await initializeDioRequest();
   }
 
-  Future<void> onUserParsedRaw(
-      {required Ref ref, required UserModelWithPassword user}) async {
+  Future<void> onUserParsedRaw({
+    required Ref ref,
+    required UserModelWithPassword user,
+  }) async {
     return _onUserParsed(
-      initializeUser: () =>
-          Future.delayed(Duration(seconds: 1), () => setUser(user)),
+      initializeUser: () => Future.delayed(
+        Duration(seconds: 1),
+        () => setUser(user),
+      ),
       initializeDioRequest: () => Future.delayed(
         Duration(seconds: 1),
         () => ref.read(dioRequestProvider).addAll({
@@ -189,6 +190,7 @@ class UserNotifier extends StateNotifier<UserState> {
     failureOrSuccessOption = await _repository.clearCredentialsStorage();
 
     state = state.copyWith(
-        failureOrSuccessOptionUpdate: optionOf(failureOrSuccessOption));
+      failureOrSuccessOptionUpdate: optionOf(failureOrSuccessOption),
+    );
   }
 }

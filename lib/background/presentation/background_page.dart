@@ -1,5 +1,3 @@
-import 'package:face_net_authentication/utils/logging.dart';
-
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/widgets/loading_overlay.dart';
 import 'package:face_net_authentication/shared/providers.dart';
@@ -42,24 +40,14 @@ class _BackgroundPageState extends ConsumerState<BackgroundPage> {
                         context,
                         message: failure.map(
                           empty: (_) => '',
-                          unknown: (value) =>
-                              'Error ${value.errorCode} ${value.message} ',
+                          unknown: (l) =>
+                              'Unknown: ${l.errorCode} ${l.message} ',
+                          formatException: (l) => 'Formatexception: $l',
                         ),
-                      ), (savedLocations) {
-                if (savedLocations.isNotEmpty) {
-                  //
-
-                  Log.info('savedLocations $savedLocations');
-
+                      ),
                   ref
                       .read(backgroundNotifierProvider.notifier)
-                      .changeBackgroundItems(savedLocations);
-                } else {
-                  ref
-                      .read(backgroundNotifierProvider.notifier)
-                      .changeBackgroundItems([]);
-                }
-              }),
+                      .changeBackgroundItems),
             ));
 
     final isLoading = ref.watch(

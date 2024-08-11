@@ -8,5 +8,6 @@ class ImeiState with _$ImeiState {
   const factory ImeiState.alreadyRegistered() = _AlreadyRegistered;
   const factory ImeiState.notRegistered() = _NotRegistered;
   const factory ImeiState.initial() = _Initial;
+  const factory ImeiState.rejected() = _Rejected;
   const factory ImeiState.cleared() = _Cleared;
 }

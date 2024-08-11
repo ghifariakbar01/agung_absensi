@@ -16,16 +16,37 @@ class AuthInterceptor extends Interceptor {
 
     final items = response.data?[0];
 
-    if (items != null) {
+    if (items == null) {
+      _ref.read(absenOfflineModeProvider.notifier).state = true;
+      throw DioException.connectionTimeout(
+          requestOptions: response.requestOptions,
+          timeout: Duration(
+            seconds: 10,
+          ));
+    }
+
+    if (response.statusCode == 200) {
       _ref.read(absenOfflineModeProvider.notifier).state = false;
     }
 
     if (response.statusCode != 200) {
       _ref.read(absenOfflineModeProvider.notifier).state = true;
-      return;
+      throw DioException.connectionTimeout(
+          requestOptions: response.requestOptions,
+          timeout: Duration(
+            seconds: 10,
+          ));
     }
 
     final errorNum = items['errornum'] as int?;
+    if (errorNum == 1) {
+      _ref.read(absenOfflineModeProvider.notifier).state = true;
+      throw DioException.connectionTimeout(
+          requestOptions: response.requestOptions,
+          timeout: Duration(
+            seconds: 10,
+          ));
+    }
 
     if (errorNum == Constants.passWrongCode ||
         errorNum == Constants.passExpCode ||

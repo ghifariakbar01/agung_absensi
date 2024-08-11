@@ -6,16 +6,19 @@ class GeofenceUtil {
     double longitude,
   ) async {
     try {
-      final list = await placemarkFromCoordinates(latitude, longitude);
+      final list = await placemarkFromCoordinates(
+        latitude,
+        longitude,
+      );
 
-      if (list.isNotEmpty) {
+      if (list.isEmpty) {
+        return null;
+      } else {
         return list.first;
       }
-    } on UnimplementedError catch (e) {
-      throw e;
+    } on UnimplementedError {
+      return null;
     }
-
-    return null;
   }
 
   static Future<Placemark?> getLokasi({
@@ -38,16 +41,19 @@ class GeofenceUtil {
     return lokasi;
   }
 
-  static Future<String> getLokasiStr({
+  static Future<String?> getLokasiStr({
     required double lat,
     required double long,
   }) async {
-    Placemark? placeMark = await getLokasi(latitude: lat, longitude: long);
+    Placemark? placeMark = await getLokasi(
+      latitude: lat,
+      longitude: long,
+    );
 
     if (placeMark != null) {
       return '${placeMark.street}, ${placeMark.locality}, ${placeMark.administrativeArea}. ${placeMark.postalCode}';
     } else {
-      return 'LOCATION UNKNOWN';
+      return null;
     }
   }
 }

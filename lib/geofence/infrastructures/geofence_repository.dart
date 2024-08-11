@@ -6,6 +6,7 @@ import 'package:face_net_authentication/infrastructures/credentials_storage/cred
 
 import 'package:flutter/services.dart';
 
+import '../../constants/constants.dart';
 import '../../domain/geofence_failure.dart';
 import '../../infrastructures/exceptions.dart';
 import '../application/geofence_response.dart';
@@ -17,10 +18,18 @@ class GeofenceRepository {
 
   GeofenceRepository(this._remoteService, this._credentialsStorage);
 
+  Future<bool> hasOfflineData() =>
+      readGeofenceList().then((credentials) => credentials.fold(
+            (_) => false,
+            (_) => true,
+          ));
+
   Future<Either<GeofenceFailure, List<GeofenceResponse>>>
       getGeofenceList() async {
     try {
-      return right(await _remoteService.getGeofenceList());
+      final geof = await _remoteService.getGeofenceList();
+
+      return right(geof);
     } on FormatException {
       return left(const GeofenceFailure.wrongFormat());
     } on NoConnectionException {
@@ -30,7 +39,10 @@ class GeofenceRepository {
     } on RestApiExceptionWithMessage catch (e) {
       return left(GeofenceFailure.server(e.errorCode, e.message));
     } catch (e) {
-      return left(GeofenceFailure.server(01, e.toString()));
+      return left(GeofenceFailure.server(
+        01,
+        e.toString(),
+      ));
     }
   }
 
@@ -43,10 +55,7 @@ class GeofenceRepository {
 
       return right(unit);
     } on PlatformException {
-      return left(GeofenceFailure.server(01,
-          'Mohon Maaf Storage Anda penuh. Mohon luangkan storage Anda agar bisa menyimpan data Geofence.'));
-    } catch (e) {
-      return left(GeofenceFailure.server(01, '$e'));
+      return left(GeofenceFailure.storage(Constants.geofenceStorageError));
     }
   }
 
@@ -59,29 +68,26 @@ class GeofenceRepository {
       if (list == null) {
         return left(GeofenceFailure.empty());
       } else {
-        final parsedGeofence = await parseGeofenceSaved(savedGeofence: list);
+        if (list.isEmpty) {
+          return right([]);
+        } else {
+          final parsedGeofence = await parseGeofenceSaved(savedGeofence: list);
 
-        return right(parsedGeofence);
+          return right(parsedGeofence);
+        }
       }
     } on PlatformException {
-      return left(GeofenceFailure.server(0, 'Storage penuh'));
+      return left(GeofenceFailure.storage(Constants.geofenceStorageError));
     }
   }
 
   Future<List<GeofenceResponse>> parseGeofenceSaved(
-      {required String? savedGeofence}) async {
-    final parsedData = jsonDecode(savedGeofence!);
-
-    // Log.info('parsedData $parsedData ');
+      {required String savedGeofence}) async {
+    final parsedData = jsonDecode(savedGeofence);
 
     if (parsedData is Map<String, dynamic>) {
       final location = GeofenceResponse.fromJson(parsedData);
-
-      final List<GeofenceResponse> empty = [];
-
-      empty.add(location);
-
-      return empty;
+      return [location];
     } else {
       return (parsedData as List<dynamic>)
           .map((locationData) => GeofenceResponse.fromJson(locationData))

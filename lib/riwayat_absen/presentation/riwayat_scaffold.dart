@@ -52,10 +52,10 @@ class _RiwayatAbsenScaffoldState extends ConsumerState<RiwayatAbsenScaffold> {
           ),
           toolbarHeight: 45,
           actions: [
-            NetworkWidget(),
-            SizedBox(
-              width: 24,
-            )
+            // NetworkWidget(),
+            // SizedBox(
+            //   width: 24,
+            // )
           ],
         ),
         body: Padding(

@@ -35,12 +35,7 @@ class GeofenceRemoteService {
           final list = items['items'] as List;
 
           if (list.isNotEmpty) {
-            final List<GeofenceResponse> geofences = [];
-            list.forEach((element) {
-              geofences.add(GeofenceResponse.fromJson(element));
-            });
-
-            return geofences;
+            return list.map((e) => GeofenceResponse.fromJson(e)).toList();
           } else {
             final message = items['error'] as String?;
             final errorCode = items['errornum'] as int;
@@ -59,19 +54,20 @@ class GeofenceRemoteService {
 
         throw RestApiExceptionWithMessage(errorCode, message);
       }
-    } on FormatException {
-      throw FormatException();
     } on DioException catch (e) {
-      if ((e.type == DioExceptionType.connectionError ||
-          e.type == DioExceptionType.connectionTimeout)) {
+      if (e.type == DioExceptionType.unknown ||
+          e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.sendTimeout ||
+          e.type == DioExceptionType.receiveTimeout) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);
       } else {
         rethrow;
       }
-    } catch (e) {
-      throw e;
+    } catch (_) {
+      rethrow;
     }
   }
 }

@@ -20,9 +20,7 @@ import '../auth/infrastructures/auth_interceptor.dart';
 import '../auth/infrastructures/auth_interceptor_two.dart';
 import '../auth/infrastructures/auth_remote_service.dart';
 import '../auth/infrastructures/auth_repository.dart';
-import '../auto_absen/application/auto_absen_notifier.dart';
 
-import '../auto_absen/application/auto_absen_state.dart';
 import '../background/application/background_notifier.dart';
 import '../background/application/background_state.dart';
 
@@ -34,10 +32,8 @@ import '../home/applicatioin/home_notifier.dart';
 import '../home/applicatioin/home_state.dart';
 import '../imei/application/imei_auth_notifier.dart';
 import '../imei/application/imei_auth_state.dart';
-import '../imei/application/imei_notifier.dart';
 import '../imei/application/imei_reset_notifier.dart';
 import '../imei/application/imei_reset_state.dart';
-import '../imei/application/imei_state.dart';
 
 import '../imei/infrastructures/imei_remote_service.dart';
 import '../infrastructures/cache_storage/auto_absen_storage.dart';
@@ -105,11 +101,6 @@ FlutterSecureStorage flutterSecureStorage(FlutterSecureStorageRef ref) {
   );
 }
 
-@Riverpod(keepAlive: true)
-SecureCredentialsStorage credentialsStorage(CredentialsStorageRef ref) {
-  return SecureCredentialsStorage(ref.watch(flutterSecureStorageProvider));
-}
-
 /*
   ------------------
 */
@@ -118,6 +109,13 @@ final authRemoteServiceProvider = Provider(
   (ref) =>
       AuthRemoteService(ref.watch(dioProvider), ref.watch(dioRequestProvider)),
 );
+
+@Riverpod(keepAlive: true)
+SecureCredentialsStorage credentialsStorage(CredentialsStorageRef ref) {
+  return SecureCredentialsStorage(
+    ref.watch(flutterSecureStorageProvider),
+  );
+}
 
 @Riverpod(keepAlive: true)
 AuthRepository authRepository(AuthRepositoryRef ref) {
@@ -157,20 +155,18 @@ final autoAbsenSecureStorageProvider = Provider<CredentialsStorage>(
   (ref) => AutoAbsenStorage(ref.watch(flutterSecureStorageProvider)),
 );
 
-final autoAbsenNotifierProvider =
-    StateNotifierProvider<AutoAbsenNotifier, AutoAbsenState>(
-        (ref) => AutoAbsenNotifier(ref));
-
 final backgroundNotifierProvider =
     StateNotifierProvider<BackgroundNotifier, BackgroundState>(
         (ref) => BackgroundNotifier(BackgroundRepository()));
 
 // ABSEN
-final absenRemoteServiceProvider = Provider((ref) => AbsenRemoteService(
-    ref.watch(dioProvider),
-    ref.watch(dioProviderHosting),
-    ref.watch(dioRequestProvider),
-    ref.watch(userNotifierProvider).user));
+final absenRemoteServiceProvider = Provider(
+  (ref) => AbsenRemoteService(
+      ref.watch(dioProvider),
+      ref.watch(dioProviderHosting),
+      ref.watch(dioRequestProvider),
+      ref.watch(userNotifierProvider).user),
+);
 
 final absenRepositoryProvider = Provider(
   (ref) => AbsenRepository(

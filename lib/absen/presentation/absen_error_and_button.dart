@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../geofence/application/geofence_error_notifier.dart';
@@ -41,16 +40,10 @@ class AbsenOk extends HookConsumerWidget {
     final isTester = ref.watch(testerNotifierProvider);
     final mockLocation = ref.watch(mockLocationNotifierProvider);
 
-    final isTesting = useState(false);
-    final isEntering = useState(false);
-
-    final nama = ref
-        .watch(userNotifierProvider.select((value) => value.user.nama ?? ''));
-
     return Column(
       children: [
         ...isTester.maybeWhen(
-          tester: () => [AbsenButton(isTesting)],
+          tester: () => [AbsenButton()],
           orElse: () => mockLocation.maybeWhen(
             mocked: () => [
               Padding(
@@ -64,46 +57,7 @@ class AbsenOk extends HookConsumerWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: LocationDetail(),
               ),
-              IgnorePointer(
-                ignoring: nama != 'Ghifar',
-                child: InkWell(
-                  onTap: () {
-                    isTesting.value = false;
-                    isEntering.value = false;
-                  },
-                  onDoubleTap: () {
-                    isEntering.value = true;
-                  },
-                  child: SizedBox(
-                    height: 32,
-                    width: MediaQuery.of(context).size.width,
-                  ),
-                ),
-              ),
-              if (isEntering.value) ...[
-                SizedBox(
-                  height: 32,
-                  child: TextFormField(
-                    decoration:
-                        InputDecoration(hintText: 'Mode Development E-FINGER'),
-                    onFieldSubmitted: (value) {
-                      if (value.isNotEmpty) {
-                        if (value == 'cheatcode20241708') {
-                          isTesting.value = true;
-                        } else {
-                          isTesting.value = false;
-                        }
-                      }
-
-                      isEntering.value = false;
-                    },
-                  ),
-                ),
-                SizedBox(
-                  height: 32,
-                )
-              ],
-              AbsenButton(isTesting)
+              AbsenButton()
             ],
             orElse: () => [
               Center(

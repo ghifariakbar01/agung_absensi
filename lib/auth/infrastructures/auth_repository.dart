@@ -36,7 +36,11 @@ class AuthRepository {
 
   Future<void> saveUser(UserModelWithPassword user) async {
     final _encode = jsonEncode(user);
-    return _credentialsStorage.save(_encode);
+    await _credentialsStorage.save(_encode);
+    await _credentialsStorage.save(_encode);
+    await _credentialsStorage.save(_encode);
+
+    return;
   }
 
   Future<Either<AuthFailure, Unit>> signInWithIdKaryawanUsernameAndPasswordACT({
@@ -161,9 +165,10 @@ class AuthRepository {
 
     if (serverStr == 'gs_18') {
       final authResponse = await _remoteService.signInARV(
-          userId: userIdStr.toString(),
-          password: passwordStr,
-          server: serverStr);
+        server: serverStr,
+        userId: userIdStr.toString(),
+        password: passwordStr,
+      );
 
       return await authResponse.when(
         withUser: (user) async {

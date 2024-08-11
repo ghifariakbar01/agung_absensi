@@ -9,7 +9,6 @@ import '../../network_time/network_time_notifier.dart';
 import '../../shared/providers.dart';
 import '../../style/style.dart';
 import '../../widgets/image_absen.dart';
-import '../../widgets/network_widget.dart';
 import '../../widgets/testing.dart';
 import '../../widgets/user_info.dart';
 import 'absen_error_and_button.dart';
@@ -51,6 +50,7 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
             await ref
                 .read(backgroundNotifierProvider.notifier)
                 .getSavedLocations();
+
             await ref.read(absenNotifierProvidier.notifier).getAbsenToday();
           },
         );
@@ -61,9 +61,12 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
     final displayImage = ref.watch(displayImageProvider);
     final isOfflineMode = ref.watch(absenOfflineModeProvider);
 
-    final riwayatLoading = ref.watch(
-      riwayatAbsenNotifierProvider.select((value) => value.isGetting),
-    );
+    final isLoading = ref.watch(
+          backgroundNotifierProvider.select((value) => value.isGetting),
+        ) ||
+        ref.watch(
+          riwayatAbsenNotifierProvider.select((value) => value.isGetting),
+        );
 
     return Scaffold(
         appBar: AppBar(
@@ -71,10 +74,10 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
           backgroundColor: Colors.transparent,
           toolbarHeight: 45,
           actions: [
-            NetworkWidget(),
-            SizedBox(
-              width: 24,
-            )
+            // NetworkWidget(),
+            // SizedBox(
+            //   width: 24,
+            // )
           ],
         ),
         body: SafeArea(
@@ -82,11 +85,11 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
             physics: const AlwaysScrollableScrollPhysics(),
             child: SizedBox(
                 height: displayImage == false || isOfflineMode
-                    ? MediaQuery.of(context).size.height + 200
+                    ? MediaQuery.of(context).size.height + 300
                     : MediaQuery.of(context).size.height + 475,
                 child: Stack(
                   children: [
-                    if (!isOfflineMode && riwayatLoading) ...[
+                    if (!isOfflineMode && isLoading) ...[
                       Align(
                         alignment: Alignment.center,
                         child: CircularProgressIndicator(),

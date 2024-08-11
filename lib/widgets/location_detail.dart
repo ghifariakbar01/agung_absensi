@@ -126,7 +126,7 @@ class LocationDetail extends ConsumerWidget {
           SizedBox(
             height: 4,
           ),
-          displayImage == false && isOfflineMode ? Container() : ImageAbsen(),
+          // displayImage == false && isOfflineMode ? Container() : ImageAbsen(),
         ],
       ),
     );

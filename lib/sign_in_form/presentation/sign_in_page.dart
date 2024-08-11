@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/imei/application/imei_auth_state.dart';
 import 'package:face_net_authentication/imei/application/imei_notifier.dart';
@@ -7,7 +5,6 @@ import 'package:face_net_authentication/imei_introduction/application/shared/ime
 import 'package:face_net_authentication/ip/application/ip_notifier.dart';
 import 'package:face_net_authentication/tc/application/shared/tc_providers.dart';
 import 'package:face_net_authentication/unlink/application/unlink_notifier.dart';
-import 'package:face_net_authentication/user/application/user_model.dart';
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
 import 'package:face_net_authentication/widgets/v_async_widget.dart';
 
@@ -53,13 +50,9 @@ class SignInPage extends HookConsumerWidget {
                           ),
                         ), (_) async {
                   final imeiNotifier = ref.read(imeiNotifierProvider.notifier);
-                  final String resp = await ref
+                  final user = await ref
                       .read(userNotifierProvider.notifier)
                       .getUserString();
-
-                  final json = jsonDecode(resp) as Map<String, dynamic>;
-                  final UserModelWithPassword user =
-                      UserModelWithPassword.fromJson(json);
 
                   final imei = await imeiNotifier.getImeiStringFromServer(
                     idKary: user.IdKary ?? '-',
@@ -73,7 +66,7 @@ class SignInPage extends HookConsumerWidget {
 
                   return imeiNotifier.processImei(
                     imei: imei,
-                    user: user,
+                    nama: user.nama ?? '-',
                     savedImei: savedImei,
                     imeiAuthState: imeiAuthState,
                   );
@@ -91,8 +84,6 @@ class SignInPage extends HookConsumerWidget {
           state.value != null &&
           state.hasError == false) {
         state.requireValue.maybeWhen(
-          initial: () => logout(ref),
-          ok: () => login(ref),
           alreadyRegistered: () async {
             await imeiNotifier.onImeiAlreadyRegistered(
               idKary: idKary,
@@ -115,6 +106,9 @@ class SignInPage extends HookConsumerWidget {
               (_) => login(ref),
             );
           },
+          ok: () => login(ref),
+          initial: () => login(ref),
+          rejected: () => logout(ref),
           orElse: () {},
         );
       } else {

@@ -45,7 +45,7 @@ class Constants {
     "gs_21": "https://www.agunglogisticsapp.co.id:3603/services",
   };
 
-  static const String minApp = '1.2.6';
+  static const String minApp = '3.0.17';
   static const int passExpCode = 4;
   static const int passWrongCode = 3;
   static const int decryptErrorCode = 11;
@@ -55,4 +55,9 @@ class Constants {
   static const String notRegistered = 'Sukses';
   static const String imeiAlreadyRegistered =
       'Anda belum melakukan unlink di hp sebelumnya, karena terindikasi sudah punya Installation ID. Mohon Uninstall Aplikasi. Terimakasih 🙏';
+
+  static const String geofenceStorageError =
+      'Mohon Maaf Storage Anda penuh. Mohon luangkan storage Anda agar bisa menyimpan data Geofence.';
+
+  static const String keyLocation = 'location';
 }

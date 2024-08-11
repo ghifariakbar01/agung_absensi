@@ -32,8 +32,8 @@ class _SignInFormState extends ConsumerState<SignInForm> {
 
     final signInForm = ref.watch(signInFormNotifierProvider);
 
-    final userId = signInForm.userId.getOrLeave('');
-    final password = signInForm.password.getOrLeave('');
+    final userId = signInForm.userId.getOrLeave('Ghifar');
+    final password = signInForm.password.getOrLeave('hovvir-7kipqe-cubquH');
 
     final ptDropdownSelected = signInForm.ptDropdownSelected;
 
@@ -111,14 +111,14 @@ class _SignInFormState extends ConsumerState<SignInForm> {
             onChanged: (value) => ref
                 .read(signInFormNotifierProvider.notifier)
                 .changeUserId(value),
-            validator: (_) =>
-                ref.read(signInFormNotifierProvider).userId.value.fold(
-                      (f) => f.maybeMap(
-                        empty: (_) => 'kosong',
-                        orElse: () => null,
-                      ),
-                      (_) => null,
-                    ),
+            // validator: (_) =>
+            //     ref.read(signInFormNotifierProvider).userId.value.fold(
+            //           (f) => f.maybeMap(
+            //             empty: (_) => 'kosong',
+            //             orElse: () => null,
+            //           ),
+            //           (_) => null,
+            //         ),
           ),
           const SizedBox(height: 16),
           ProfileLabel(icon: Icons.lock_rounded, label: 'Password'),
@@ -149,14 +149,14 @@ class _SignInFormState extends ConsumerState<SignInForm> {
             onChanged: (value) => ref
                 .read(signInFormNotifierProvider.notifier)
                 .changePassword(value),
-            validator: (_) =>
-                ref.read(signInFormNotifierProvider).password.value.fold(
-                      (f) => f.maybeMap(
-                        shortPassword: (_) => 'terlalu pendek',
-                        orElse: () => null,
-                      ),
-                      (_) => null,
-                    ),
+            // validator: (_) =>
+            //     ref.read(signInFormNotifierProvider).password.value.fold(
+            //           (f) => f.maybeMap(
+            //             shortPassword: (_) => 'terlalu pendek',
+            //             orElse: () => null,
+            //           ),
+            //           (_) => null,
+            //         ),
           ),
           const SizedBox(height: 8),
           Row(
@@ -192,23 +192,47 @@ class _SignInFormState extends ConsumerState<SignInForm> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final rememberMe = await prefs.getString('remember_me');
 
+    ref
+        .read(signInFormNotifierProvider.notifier)
+        .changeInitializeNamaPT(namaPT: 'PT Agung Citra Transformasi');
+
+    ref.read(signInFormNotifierProvider.notifier).changeAllData(
+          isChecked: true,
+          ptNameStr: 'PT Agung Citra Transformasi',
+          userStr: 'Ghifar',
+          idKaryawanStr: '23060742',
+          passwordStr: 'hovvir-7kipqe-cubquH',
+          isKaryawan: false,
+        );
+
+    return;
+
     if (rememberMe != null) {
       final saved = RememberMeModel.fromJson(jsonDecode(rememberMe));
       final savedPt = saved.ptName;
 
       ref.read(signInFormNotifierProvider.notifier).changeAllData(
             isChecked: true,
-            ptNameStr: savedPt,
-            userStr: saved.nama,
+            ptNameStr: 'PT Agung Citra Transformasi',
+            userStr: 'Ghifar',
             idKaryawanStr: saved.nik,
-            passwordStr: saved.password,
-            isKaryawan: saved.isKaryawan,
+            passwordStr: 'hovvir-7kipqe-cubquH',
+            isKaryawan: false,
           );
 
       if (savedPt.isNotEmpty) {
         ref
             .read(signInFormNotifierProvider.notifier)
-            .changeInitializeNamaPT(namaPT: savedPt);
+            .changeInitializeNamaPT(namaPT: 'PT Agung Citra Transformasi');
+
+        ref.read(signInFormNotifierProvider.notifier).changeAllData(
+              isChecked: true,
+              ptNameStr: 'PT Agung Citra Transformasi',
+              userStr: 'Ghifar',
+              idKaryawanStr: saved.nik,
+              passwordStr: 'hovvir-7kipqe-cubquH',
+              isKaryawan: false,
+            );
       }
     }
   }

@@ -6,7 +6,6 @@ import 'package:dio/dio.dart';
 import '../../infrastructures/exceptions.dart';
 import '../../riwayat_absen/application/riwayat_absen_model.dart';
 import '../../user/application/user_model.dart';
-import '../../utils/enums.dart';
 import '../../utils/string_utils.dart';
 
 import '../application/absen_state.dart';
@@ -27,40 +26,30 @@ class AbsenRemoteService {
   static const String dbNameProd = 'hr_trs_absen';
 
   Future<Unit> absen({
-    required String lokasi,
-    required String latitude,
-    required String longitude,
-    required String idGeof,
-    required String imei,
-    required DateTime date,
-    required DateTime dbDate,
-    required JenisAbsen inOrOut,
+    required Map<String, dynamic> absenMap,
   }) async {
-    final trimmedDate = StringUtils.trimmedDate(date);
-    final trimmedDateDb = StringUtils.trimmedDate(dbDate);
-
-    final ket = inOrOut == JenisAbsen.absenIn ? 'MASUK' : 'PULANG';
-    final coancenate = inOrOut == JenisAbsen.absenIn ? 'masuk' : 'keluar';
-
     try {
-      final Map<String, dynamic> dataProd = {};
-      dataProd.addAll(_dioRequest);
+      final query = absenMap.values.fold<String>(
+        "",
+        (previousValue, element) => previousValue + " " + element,
+      );
 
-      dataProd.addAll({
+      _dioRequest.addAll({
         "mode": 'INSERT',
-        "command": "INSERT INTO $dbNameProd " +
-            "(tgljam, mode, id_user, imei, id_geof, c_date, c_user, latitude_$coancenate, longitude_$coancenate, lokasi_$coancenate)" +
-            " VALUES " +
-            "('$trimmedDate', '$ket', '${_userModelWithPassword.idUser}', '$imei', '$idGeof', '$trimmedDateDb', '${_userModelWithPassword.nama}', '$latitude', '$longitude', '$lokasi')",
+        "command": query,
       });
 
-      await _dioHosting.post('',
-          data: jsonEncode(dataProd),
-          options: Options(contentType: 'text/plain'));
+      await _dioHosting.post(
+        '',
+        data: jsonEncode(_dioRequest),
+        options: Options(contentType: 'text/plain'),
+      );
 
-      final responseProd = await _dio.post('',
-          data: jsonEncode(dataProd),
-          options: Options(contentType: 'text/plain'));
+      final responseProd = await _dio.post(
+        '',
+        data: jsonEncode(_dioRequest),
+        options: Options(contentType: 'text/plain'),
+      );
 
       final itemsProd = responseProd.data?[0];
 
@@ -114,8 +103,11 @@ class AbsenRemoteService {
         throw RestApiExceptionWithMessage(errorCode, message);
       }
     } on DioException catch (e) {
-      if ((e.type == DioExceptionType.connectionError ||
-          e.type == DioExceptionType.connectionTimeout)) {
+      if (e.type == DioExceptionType.unknown ||
+          e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.sendTimeout ||
+          e.type == DioExceptionType.receiveTimeout) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);
@@ -185,8 +177,11 @@ class AbsenRemoteService {
 
       throw RestApiExceptionWithMessage(errorCode, message);
     } on DioException catch (e) {
-      if ((e.type == DioExceptionType.connectionError ||
-          e.type == DioExceptionType.connectionTimeout)) {
+      if (e.type == DioExceptionType.unknown ||
+          e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.sendTimeout ||
+          e.type == DioExceptionType.receiveTimeout) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);
@@ -206,8 +201,20 @@ class AbsenRemoteService {
 
       data.addAll({
         "mode": "SELECT",
-        "command":
-            "with contoh as (select format(tgljam,'yyyy-MM-dd') as tgl, id_user from $dbNameProd where id_user = ${_userModelWithPassword.idUser} and tgljam >= '$dateSecond' and tgljam < '$dateFirst' group by format(tgljam,'yyyy-MM-dd'), id_user) select *, (select max(lokasi_masuk) from $dbNameProd where id_user = contoh.id_user and mode = 'MASUK' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as lokasi_masuk, (select max(latitude_masuk) from $dbNameProd where id_user = contoh.id_user and mode = 'MASUK' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as latitude_masuk, (select max(longitude_masuk) from $dbNameProd where id_user = contoh.id_user and mode = 'MASUK' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as longitude_masuk, (select min(tgljam) from $dbNameProd where id_user = contoh.id_user and mode = 'MASUK' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as masuk, (select max(lokasi_keluar) from $dbNameProd where id_user = contoh.id_user and mode = 'PULANG' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as lokasi_keluar, (select max(latitude_keluar) from $dbNameProd where id_user = contoh.id_user and mode = 'PULANG' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as latitude_keluar, (select max(longitude_keluar) from $dbNameProd where id_user = contoh.id_user and mode = 'PULANG' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as longitude_keluar, (select max(tgljam) from $dbNameProd where id_user = contoh.id_user and mode = 'PULANG' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as pulang from contoh",
+        "command": "with contoh as (select format(tgljam,'yyyy-MM-dd') as tgl, id_user from $dbNameProd "
+            " where id_user = ${_userModelWithPassword.idUser} and tgljam >= '$dateSecond' and tgljam < '$dateFirst' "
+            " group by format(tgljam,'yyyy-MM-dd'), id_user) select *, (select max(lokasi_masuk) from $dbNameProd "
+            " where id_user = contoh.id_user and mode = 'MASUK' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as  "
+            " lokasi_masuk, (select max(latitude_masuk) from $dbNameProd where id_user = contoh.id_user and mode = 'MASUK' and  "
+            " format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as latitude_masuk, (select max(longitude_masuk) from $dbNameProd "
+            " where id_user = contoh.id_user and mode = 'MASUK' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as longitude_masuk, "
+            " (select min(tgljam) from $dbNameProd where id_user = contoh.id_user and mode = 'MASUK' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as masuk, "
+            " (select max(lokasi_keluar) from $dbNameProd where id_user = contoh.id_user and mode = 'PULANG' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) "
+            " as lokasi_keluar, (select max(latitude_keluar) from $dbNameProd where id_user = contoh.id_user and mode = 'PULANG' "
+            " and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as latitude_keluar, (select max(longitude_keluar) "
+            " from $dbNameProd where id_user = contoh.id_user and mode = 'PULANG' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) "
+            " as longitude_keluar, (select max(tgljam) from $dbNameProd where id_user = contoh.id_user and mode = 'PULANG' "
+            " and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as pulang from contoh",
       });
 
       final response = await _dio.post(
@@ -248,8 +255,11 @@ class AbsenRemoteService {
     } on FormatException {
       throw FormatException();
     } on DioException catch (e) {
-      if ((e.type == DioExceptionType.connectionError ||
-          e.type == DioExceptionType.connectionTimeout)) {
+      if (e.type == DioExceptionType.unknown ||
+          e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.sendTimeout ||
+          e.type == DioExceptionType.receiveTimeout) {
         throw NoConnectionException();
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);

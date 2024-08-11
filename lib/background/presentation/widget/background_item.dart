@@ -21,7 +21,7 @@ class BackgroundItem extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
-        height: 125,
+        height: 150,
         width: width,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(14),

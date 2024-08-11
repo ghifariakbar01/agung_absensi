@@ -10,7 +10,6 @@ import 'package:uuid/uuid.dart';
 import '../../constants/constants.dart';
 import '../../imei_introduction/application/shared/imei_introduction_providers.dart';
 import '../../tc/application/shared/tc_providers.dart';
-import '../../user/application/user_model.dart';
 
 import '../../shared/providers.dart';
 
@@ -228,7 +227,7 @@ class ImeiNotifier extends _$ImeiNotifier {
   Future<void> processImei({
     required String imei,
     required String savedImei,
-    required UserModelWithPassword user,
+    required String nama,
     required ImeiAuthState imeiAuthState,
   }) async {
     state = const AsyncLoading();
@@ -240,7 +239,7 @@ class ImeiNotifier extends _$ImeiNotifier {
       await onImei(
           imeiDBString: imei,
           savedImei: savedImei,
-          appleUsername: user.nama,
+          appleUsername: nama,
           imeiAuthState: imeiAuthState,
           onImeiOK: () {
             current = ImeiState.ok();
@@ -271,7 +270,7 @@ class ImeiNotifier extends _$ImeiNotifier {
             errMessage: Constants.imeiAlreadyRegistered,
           );
 
-      return ImeiState.initial();
+      return ImeiState.rejected();
     });
   }
 }

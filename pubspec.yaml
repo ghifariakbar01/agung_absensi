@@ -123,6 +123,18 @@ dev_dependencies:
   json_serializable: ^6.5.4
   riverpod_generator: ^2.3.3
 
+dependency_overrides:
+  flutter_inappwebview_android: # https://github.com/pichillilorenzo/flutter_inappwebview/issues/2139
+    git:
+      url: https://github.com/navaronbracke/flutter_inappwebview.git
+      path: flutter_inappwebview_android
+      ref: android_release_mode_hotfix
+  flutter_inappwebview_platform_interface: # https://github.com/pichillilorenzo/flutter_inappwebview/issues/2139
+    git:
+      url: https://github.com/navaronbracke/flutter_inappwebview.git
+      path: flutter_inappwebview_platform_interface
+      ref: android_release_mode_hotfix
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

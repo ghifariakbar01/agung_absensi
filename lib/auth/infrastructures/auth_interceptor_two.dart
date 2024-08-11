@@ -14,13 +14,36 @@ class AuthInterceptorTwo extends Interceptor {
 
     final items = response.data;
 
-    if (response.statusCode != 200) {
+    if (items == null) {
       _ref.read(absenOfflineModeProvider.notifier).state = true;
-      return;
+      throw DioException.connectionTimeout(
+          requestOptions: response.requestOptions,
+          timeout: Duration(
+            seconds: 10,
+          ));
     }
 
-    if (items['status_code'] == 200) {
+    if (response.statusCode == 200) {
       _ref.read(absenOfflineModeProvider.notifier).state = false;
+    }
+
+    if (response.statusCode != 200) {
+      _ref.read(absenOfflineModeProvider.notifier).state = true;
+      throw DioException.connectionTimeout(
+          requestOptions: response.requestOptions,
+          timeout: Duration(
+            seconds: 10,
+          ));
+    }
+
+    final errorNum = items['errornum'] as int?;
+    if (errorNum == 1) {
+      _ref.read(absenOfflineModeProvider.notifier).state = true;
+      throw DioException.connectionTimeout(
+          requestOptions: response.requestOptions,
+          timeout: Duration(
+            seconds: 10,
+          ));
     }
   }
 

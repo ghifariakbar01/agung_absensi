@@ -8,7 +8,6 @@ import 'package:geofence_service/geofence_service.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../background/application/saved_location.dart';
 import '../../domain/geofence_failure.dart';
 
 import '../infrastructures/geofence_repository.dart';
@@ -26,43 +25,46 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
 
   GeofenceService get geofenceservice => state.geofenceService;
 
-  Future<void> saveGeofence(List<GeofenceResponse> geofenceResponseList) async {
-    Either<GeofenceFailure, Unit> failureOrSuccess;
+  Future<bool> hasOfflineData() => _repository.hasOfflineData();
 
-    state =
-        state.copyWith(isGetting: true, failureOrSuccessOptionStorage: none());
-
-    failureOrSuccess =
-        await _repository.saveGeofence(geofenceList: geofenceResponseList);
-
-    state = state.copyWith(
-        isGetting: false,
-        failureOrSuccessOptionStorage: optionOf(failureOrSuccess));
+  Future<Either<GeofenceFailure, Unit>> saveGeofence(
+      List<GeofenceResponse> geofenceResponseList) async {
+    return _repository.saveGeofence(geofenceList: geofenceResponseList);
   }
 
   // GET GEOFENCE
   Future<void> getGeofenceList() async {
     Either<GeofenceFailure, List<GeofenceResponse>> failureOrSuccess;
 
-    state = state.copyWith(isGetting: true, failureOrSuccessOption: none());
+    state = state.copyWith(
+      isGetting: true,
+      failureOrSuccessOption: none(),
+    );
 
     failureOrSuccess = await _repository.getGeofenceList();
 
     state = state.copyWith(
-        isGetting: false, failureOrSuccessOption: optionOf(failureOrSuccess));
+      isGetting: false,
+      failureOrSuccessOption: optionOf(failureOrSuccess),
+    );
   }
 
   Future<void> getGeofenceListFromStorage() async {
     Either<GeofenceFailure, List<GeofenceResponse>> failureOrSuccess;
 
-    state = state.copyWith(isGetting: true, failureOrSuccessOption: none());
+    state = state.copyWith(
+      isGetting: true,
+      failureOrSuccessOption: none(),
+    );
 
     Log.info('geofence got 1');
     failureOrSuccess = await _repository.readGeofenceList();
     Log.info('geofence got 2');
 
     state = state.copyWith(
-        isGetting: false, failureOrSuccessOption: optionOf(failureOrSuccess));
+      isGetting: false,
+      failureOrSuccessOption: optionOf(failureOrSuccess),
+    );
   }
 
   List<Geofence> geofenceResponseToList(
@@ -89,22 +91,6 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
   }
   // END
 
-  Future<void> startAutoAbsen({
-    required Future<void> Function(List<GeofenceResponse>) saveGeofence,
-    required Function showDialogAndLogout,
-    required Future<void> Function(List<SavedLocation>) startAbsenSaved,
-    required List<GeofenceResponse> geofenceResponseList,
-    required List<SavedLocation> savedBackgroundItems,
-  }) async {
-    await saveGeofence(geofenceResponseList);
-    await this.state.failureOrSuccessOptionStorage.fold(
-        () {},
-        (e) => e.fold(
-              (_) => showDialogAndLogout(),
-              (_) => startAbsenSaved(savedBackgroundItems),
-            ));
-  }
-
   Future<void> initializeGeoFence(
     List<Geofence> geofenceList, {
     required Function(Object a) onError,
@@ -114,7 +100,6 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
 
     final list = [...geofenceList];
 
-    // debugger();
     geofenceservice.addLocationChangeListener(
       (location) => onLocationChanged(
         location,

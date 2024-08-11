@@ -5,7 +5,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../imei_introduction/application/shared/imei_introduction_providers.dart';
 import '../../routes/application/route_names.dart';
 import '../../style/style.dart';
-import '../../widgets/network_widget.dart';
 
 class HomeAppBar extends ConsumerWidget implements PreferredSizeWidget {
   const HomeAppBar();
@@ -83,10 +82,10 @@ class HomeAppBar extends ConsumerWidget implements PreferredSizeWidget {
         SizedBox(
           width: 8,
         ),
-        NetworkWidget(),
-        SizedBox(
-          width: 24,
-        )
+        // NetworkWidget(),
+        // SizedBox(
+        //   width: 24,
+        // )
       ],
     );
   }
