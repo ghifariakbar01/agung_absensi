@@ -10,6 +10,7 @@ class RiwayatAbsenFailure with _$RiwayatAbsenFailure {
       _WrongFormat;
   const factory RiwayatAbsenFailure.passwordExpired() = _PasswordExpired;
   const factory RiwayatAbsenFailure.passwordWrong() = _PasswordWrong;
+  const factory RiwayatAbsenFailure.storage() = _Storage;
 
   const factory RiwayatAbsenFailure.noConnection() = _NoConnection;
 }

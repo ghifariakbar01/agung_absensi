@@ -27,15 +27,18 @@ class ImeiNotifier extends _$ImeiNotifier {
     return ImeiState.initial();
   }
 
+  reset() {
+    state = AsyncData(const ImeiState.initial());
+  }
+
   Future<String> getImeiStringFromStorage() => ref
       .read(imeiRepositoryProvider)
       .getImeiCredentials()
       .then((value) => value.fold((_) => '', (imei) => imei ?? ''));
 
-  Future<String> getImeiStringFromServer({required String idKary}) => ref
-      .read(imeiRepositoryProvider)
-      .getImei(idKary: idKary)
-      .then((value) => value.fold((_) => '', (imei) => imei ?? ''));
+  Future<String> getImeiStringFromServer({required String idKary}) async {
+    return ref.read(imeiRepositoryProvider).getImei(idKary: idKary);
+  }
 
   Future<bool> clearImeiSuccess({required String idKary}) =>
       ref.read(imeiRepositoryProvider).clearImeiSuccess(idKary: idKary);
@@ -48,15 +51,15 @@ class ImeiNotifier extends _$ImeiNotifier {
 
     await _saveUnlink(ref);
     _backToLoginScreen(ref);
-    await _resetIntroScreens(ref);
     await _authCheck(ref);
+    await _resetIntroScreens(ref);
   }
 
   Future<void> clearImeiFromDBAndLogout(WidgetRef ref) async {
     await _saveUnlink(ref);
     _backToLoginScreen(ref);
-    await _resetIntroScreens(ref);
     await _authCheck(ref);
+    await _resetIntroScreens(ref);
   }
 
   Future<void> _saveUnlink(WidgetRef ref) async {
@@ -74,7 +77,6 @@ class ImeiNotifier extends _$ImeiNotifier {
   }
 
   _backToLoginScreen(WidgetRef ref) {
-    ref.read(userNotifierProvider.notifier).setUserInitial();
     ref.read(initUserStatusNotifierProvider.notifier).hold();
   }
 
@@ -130,6 +132,20 @@ class ImeiNotifier extends _$ImeiNotifier {
     });
   }
 
+  Future<void> registerImeiAfterAbsen({
+    required String imei,
+    required String idKary,
+  }) async {
+    state = await AsyncValue.guard(() async {
+      await ref.read(imeiRepositoryProvider).registerImei(
+            imei: imei,
+            idKary: idKary,
+          );
+
+      return ImeiState.notRegisteredAfterAbsen();
+    });
+  }
+
   Future<void> registerImei({
     required String imei,
     required String idKary,
@@ -155,6 +171,7 @@ class ImeiNotifier extends _$ImeiNotifier {
     required Function onImeiNotRegistered,
     required Function onImeiAlreadyRegistered,
   }) async {
+    // return onImeiNotRegistered();
     if (imeiAuthState == ImeiAuthState.empty()) {
       switch (savedImei.isEmpty) {
         case true:
@@ -233,7 +250,6 @@ class ImeiNotifier extends _$ImeiNotifier {
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(() async {
-      // String generatedImeiString = generateImei();
       var current = ImeiState.initial();
 
       await onImei(
@@ -258,8 +274,6 @@ class ImeiNotifier extends _$ImeiNotifier {
   Future<void> onImeiAlreadyRegistered({
     required String idKary,
   }) async {
-    state = const AsyncLoading();
-
     state = await AsyncValue.guard(() async {
       final imeiDb = await getImeiStringFromServer(idKary: idKary);
       final imeiSaved = await getImeiStringFromStorage();

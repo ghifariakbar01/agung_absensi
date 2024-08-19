@@ -100,11 +100,11 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
           return _executeMaintanance(ref);
         }
 
-        return ref
+        return await ref
             .read(imeiNotifierProvider.notifier)
             .clearImeiFromDBAndLogoutiOS(ref);
       } else {
-        return ref
+        return await ref
             .read(imeiNotifierProvider.notifier)
             .clearImeiFromDBAndLogout(ref);
       }

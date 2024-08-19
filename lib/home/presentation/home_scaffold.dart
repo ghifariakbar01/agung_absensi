@@ -1,12 +1,9 @@
-import 'package:face_net_authentication/copyright/presentation/copyright_item.dart';
-import 'package:face_net_authentication/cross_auth_server/cross_auth_server_notifier.dart';
-import 'package:face_net_authentication/widgets/v_async_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../constants/assets.dart';
 import '../../constants/constants.dart';
-import '../../cross_auth/application/cross_auth_notifier.dart';
+import '../../copyright/presentation/copyright_item.dart';
 import '../../routes/application/route_names.dart';
 import '../../shared/providers.dart';
 import '../../style/style.dart';
@@ -99,102 +96,88 @@ class HomeScaffold extends ConsumerWidget {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
 
-    final crossAuth = ref.watch(crossAuthNotifierProvider);
-    final crossAuthServer = ref.watch(crossAuthServerNotifierProvider);
-
-    final isOffline = ref.watch(absenOfflineModeProvider);
-
     return Scaffold(
       appBar: HomeAppBar(),
-      body: VAsyncValueWidget(
-        value: crossAuth,
-        data: (_) => VAsyncValueWidget(
-          value: crossAuthServer,
-          data: (_) => SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: SizedBox(
-                height: height,
-                width: width,
-                child: ListView(
-                  children: [
-                    const AppLogo(),
-                    const SizedBox(height: 24),
-                    Constants.isDev ? Testing() : Container(),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SizedBox(
+            height: height,
+            width: width,
+            child: ListView(
+              children: [
+                const AppLogo(),
+                const SizedBox(height: 24),
+                Constants.isDev ? Testing() : Container(),
 
-                    ...isTester.maybeWhen(
-                        tester: () {
-                          return [
-                            Text(
-                              'Toggle Location',
-                              style: Themes.customColor(10,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            HomeTesterOn(),
-                          ];
-                        },
-                        orElse: user.user.nama == 'Ghifar'
-                            ? () {
-                                return [
-                                  const SizedBox(height: 24),
-                                  Text(
-                                    'Toggle Location',
-                                    style: Themes.customColor(10,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  SizedBox(
-                                    height: 8,
-                                  ),
-                                  HomeTesterOff(),
-                                ];
-                              }
-                            : () {
-                                return [Container()];
-                              }
-
-                        //
+                ...isTester.maybeWhen(
+                    tester: () {
+                      return [
+                        Text(
+                          'Toggle Location',
+                          style: Themes.customColor(10,
+                              fontWeight: FontWeight.bold),
                         ),
-                    // isOffline ? Container() : HomeWa(onRefresh),
-                    // ...categories(title: 'Admin', width: width, item: admin),
-                    ...categories(
-                      title: 'Attendance',
-                      width: width,
-                      item: isOffline
-                          ? attendance.sublist(0, 2).toList()
-                          : attendance,
-                    ),
-                    if (!isOffline) ...[
-                      ...categories(
-                        title: 'Leave Request',
-                        width: width,
-                        item: leaveRequest,
-                      ),
-                      ...categories(
-                        title: 'Activity',
-                        width: width,
-                        item: activity,
-                      ),
-                      // ...categories(
-                      //   title: 'Others',
-                      //   width: width,
-                      //   item: others,
-                      // ),
-                    ],
+                        SizedBox(
+                          height: 8,
+                        ),
+                        HomeTesterOn(),
+                      ];
+                    },
+                    orElse: user.user.nama == 'Ghifar'
+                        ? () {
+                            return [
+                              const SizedBox(height: 24),
+                              Text(
+                                'Toggle Location',
+                                style: Themes.customColor(10,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              HomeTesterOff(),
+                            ];
+                          }
+                        : () {
+                            return [Container()];
+                          }
 
-                    const SizedBox(height: 48),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Center(child: CopyrightItem()),
-                      ],
+                    //
                     ),
+                // isOffline ? Container() : HomeWa(onRefresh),
+                // ...categories(title: 'Admin', width: width, item: admin),
+                ...categories(
+                  title: 'Attendance',
+                  width: width,
+                  item: attendance,
+                ),
+
+                ...categories(
+                  title: 'Leave Request',
+                  width: width,
+                  item: leaveRequest,
+                ),
+                ...categories(
+                  title: 'Activity',
+                  width: width,
+                  item: activity,
+                ),
+                // ...categories(
+                //   title: 'Others',
+                //   width: width,
+                //   item: others,
+                // ),
+
+                const SizedBox(height: 48),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Center(child: CopyrightItem()),
                   ],
                 ),
-              ),
+              ],
             ),
           ),
         ),

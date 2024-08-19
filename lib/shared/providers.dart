@@ -38,6 +38,7 @@ import '../imei/application/imei_reset_state.dart';
 import '../imei/infrastructures/imei_remote_service.dart';
 import '../infrastructures/cache_storage/auto_absen_storage.dart';
 import '../background/infrastructures/background_repository.dart';
+import '../infrastructures/cache_storage/riwayat_storage.dart';
 import '../infrastructures/credentials_storage/credentials_storage.dart';
 import '../infrastructures/credentials_storage/secure_credentials_storage.dart';
 
@@ -50,6 +51,8 @@ import '../init_user/application/init_user_notifier.dart';
 import '../init_user/application/init_user_status.dart';
 import '../mock_location/application/mock_location_notifier.dart';
 import '../mock_location/application/mock_location_state.dart';
+import '../riwayat_absen/application/riwayat_absen_notifier.dart';
+import '../riwayat_absen/application/riwayat_absen_state.dart';
 import '../routes/application/route_notifier.dart';
 import '../sign_in_form/application/sign_in_form_notifier.dart';
 import '../tester/application/tester_notifier.dart';
@@ -168,9 +171,18 @@ final absenRemoteServiceProvider = Provider(
       ref.watch(userNotifierProvider).user),
 );
 
+// RIWAYAT ABSEN
+@Riverpod(keepAlive: true)
+RiwayatStorage riwayatStorage(RiwayatStorageRef ref) {
+  return RiwayatStorage(
+    ref.watch(flutterSecureStorageProvider),
+  );
+}
+
 final absenRepositoryProvider = Provider(
   (ref) => AbsenRepository(
     ref.watch(absenRemoteServiceProvider),
+    ref.watch(riwayatStorageProvider),
   ),
 );
 
@@ -179,6 +191,12 @@ final absenNotifierProvidier = StateNotifierProvider<AbsenNotifier, AbsenState>(
 
 final absenOfflineModeProvider = StateProvider<bool>(
   (ref) => false,
+);
+
+// RIWAYAT ABSEN
+final riwayatAbsenNotifierProvider =
+    StateNotifierProvider<RiwayatAbsenNotifier, RiwayatAbsenState>(
+  (ref) => RiwayatAbsenNotifier(ref.watch(absenRepositoryProvider)),
 );
 
 // ABSEN AUTH

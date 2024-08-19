@@ -7,7 +7,6 @@ import 'package:flutter/services.dart';
 import '../../domain/imei_failure.dart';
 import '../../infrastructures/cache_storage/imei_checked_storage.dart';
 import '../../infrastructures/exceptions.dart';
-import '../application/imei_register_state.dart';
 import 'imei_remote_service.dart';
 
 class ImeiRepository {
@@ -20,12 +19,6 @@ class ImeiRepository {
   final ImeiSecureCredentialsStorage _credentialsStorage;
   final ImeiCheckedStorage _checkedStorage;
   final ImeiRemoteService _remoteService;
-
-  Future<bool> hasImei({required String idKary}) =>
-      getImei(idKary: idKary).then((response) => response.fold(
-            (_) => false,
-            (imei) => imei != null ? true : false,
-          ));
 
   Future<bool> hasCheckedImei() =>
       getHasCheckedImei().then((response) => response.fold(
@@ -76,24 +69,8 @@ class ImeiRepository {
     }
   }
 
-  Future<Either<ImeiFailure, String?>> getImei({required String idKary}) async {
-    try {
-      final response = await _remoteService.getImei(idKary: idKary);
-      return right(response);
-    } on RestApiExceptionWithMessage catch (e) {
-      return left(ImeiFailure.server(e.errorCode, e.message));
-    } on RestApiException catch (e) {
-      return left(ImeiFailure.server(
-        e.errorCode,
-        'RestApi exception get imei',
-      ));
-    } on NoConnectionException {
-      return left(ImeiFailure.noConnection());
-    } on FormatException catch (e) {
-      return left(ImeiFailure.formatException(e.message));
-    } catch (_) {
-      rethrow;
-    }
+  Future<String> getImei({required String idKary}) async {
+    return _remoteService.getImei(idKary: idKary);
   }
 
   Future<Either<ImeiFailure, Unit?>> getHasCheckedImei() async {
@@ -147,35 +124,15 @@ class ImeiRepository {
     );
   }
 
-  Future<Either<ImeiFailure, Unit>> registerImei({
+  Future<void> registerImei({
     required String imei,
     required String idKary,
   }) async {
-    final ImeiRegisterResponse response = await _remoteService.registerImei(
+    final String response = await _remoteService.registerImei(
       imei: imei,
       idKary: idKary,
     );
 
-    return response.when(withImei: (imei) async {
-      try {
-        await _credentialsStorage.save(imei);
-
-        return right(unit);
-      } on FormatException catch (e) {
-        return left(ImeiFailure.formatException(e.message));
-      } on PlatformException {
-        return left(ImeiFailure.storage());
-      }
-    }, failure: ((errorCode, message) {
-      //
-      if (errorCode == 404) {
-        return left(ImeiFailure.noConnection());
-      } else {
-        return left(ImeiFailure.server(
-          errorCode,
-          message,
-        ));
-      }
-    }));
+    return _credentialsStorage.save(response);
   }
 }

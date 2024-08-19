@@ -3,8 +3,8 @@ import 'package:face_net_authentication/utils/string_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../widgets/network_widget.dart';
-import '../application/riwayat_absen_notifier.dart';
+import '../../shared/providers.dart';
+import '../application/riwayat_absen_state.dart';
 import 'riwayat_header.dart';
 import 'riwayat_list.dart';
 
@@ -25,9 +25,22 @@ class _RiwayatAbsenScaffoldState extends ConsumerState<RiwayatAbsenScaffold> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (widget.isFromAbsen == null) {
-        await ref.read(riwayatAbsenNotifierProvider.notifier).getAbsenRiwayat(
-            dateFirst: ref.read(riwayatAbsenNotifierProvider).dateFirst,
-            dateSecond: ref.read(riwayatAbsenNotifierProvider).dateSecond);
+        final hasOfflineData = await ref
+            .read(riwayatAbsenNotifierProvider.notifier)
+            .hasOfflineData();
+
+        if (hasOfflineData) {
+          await ref
+              .read(riwayatAbsenNotifierProvider.notifier)
+              .getAbsenRiwayatFromStorage();
+        } else {
+          final riwayat = RiwayatAbsenState.initial();
+
+          await ref.read(riwayatAbsenNotifierProvider.notifier).getAbsenRiwayat(
+                dateFirst: riwayat.dateFirst,
+                dateSecond: riwayat.dateSecond,
+              );
+        }
       }
     });
   }
@@ -65,40 +78,50 @@ class _RiwayatAbsenScaffoldState extends ConsumerState<RiwayatAbsenScaffold> {
                 borderRadius: BorderRadius.circular(10),
                 color: Palette.containerBackgroundColor.withOpacity(0.1)),
             padding: EdgeInsets.all(8),
-            child: ListView.separated(
-              separatorBuilder: (context, index) => SizedBox(
-                height: 4,
-              ),
-              physics: const BouncingScrollPhysics(),
-              itemCount: list.length,
-              itemBuilder: (context, index) => index == 0
-                  ? Column(
-                      children: [
-                        RiwayatHeader(
-                          date: StringUtils.formattedRange(
-                            dateFirst ?? '',
-                            dateSecond ?? '',
+            child: RefreshIndicator(
+              onRefresh: () async {
+                return ref
+                    .read(riwayatAbsenNotifierProvider.notifier)
+                    .getAbsenRiwayat(
+                      dateFirst: dateFirst,
+                      dateSecond: dateSecond,
+                    );
+              },
+              child: ListView.separated(
+                separatorBuilder: (context, index) => SizedBox(
+                  height: 4,
+                ),
+                physics: const BouncingScrollPhysics(),
+                itemCount: list.length,
+                itemBuilder: (context, index) => index == 0
+                    ? Column(
+                        children: [
+                          RiwayatHeader(
+                            date: StringUtils.formattedRange(
+                              dateFirst ?? '',
+                              dateSecond ?? '',
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 12,
-                        ),
-                        RiwayatList(
-                          lokasiMasuk: list[index].lokasiMasuk ?? '',
-                          lokasiPulang: list[index].lokasiKeluar ?? '',
-                          masuk: list[index].masuk ?? '',
-                          pulang: list[index].pulang ?? '',
-                          tanggal: list[index].tgl ?? '',
-                        ),
-                      ],
-                    )
-                  : RiwayatList(
-                      lokasiMasuk: list[index].lokasiMasuk ?? '',
-                      lokasiPulang: list[index].lokasiKeluar ?? '',
-                      masuk: list[index].masuk ?? '',
-                      pulang: list[index].pulang ?? '',
-                      tanggal: list[index].tgl ?? '',
-                    ),
+                          SizedBox(
+                            height: 12,
+                          ),
+                          RiwayatList(
+                            lokasiMasuk: list[index].lokasiMasuk ?? '',
+                            lokasiPulang: list[index].lokasiKeluar ?? '',
+                            masuk: list[index].masuk ?? '',
+                            pulang: list[index].pulang ?? '',
+                            tanggal: list[index].tgl ?? '',
+                          ),
+                        ],
+                      )
+                    : RiwayatList(
+                        lokasiMasuk: list[index].lokasiMasuk ?? '',
+                        lokasiPulang: list[index].lokasiKeluar ?? '',
+                        masuk: list[index].masuk ?? '',
+                        pulang: list[index].pulang ?? '',
+                        tanggal: list[index].tgl ?? '',
+                      ),
+              ),
             ),
           ),
         ));

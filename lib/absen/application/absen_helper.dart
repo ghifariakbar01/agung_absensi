@@ -34,8 +34,9 @@ class AbsenHelper {
 
     final savedFormat = DateFormat('dd MMM yyyy HH:mm');
 
-    final labelStr =
-        absenList.length != 1 ? currDateStr + '\n' + currHourStr : '';
+    final labelStr = absenList.length != 1
+        ? "$currDateStr \n $currHourStr"
+        : '$currDateStr   ';
     final descStr = absenList.length != 1 ? '' : currHourStr + '\n';
 
     final descStrExtended = absenList.length == 1
@@ -43,16 +44,23 @@ class AbsenHelper {
         : ' Absen Tersimpan berikut juga akan diupload ke server : \n' +
             " ${absenList.map((e) => savedFormat.format(e.date))} ";
 
-    ref.read(backgroundNotifierProvider.notifier).reset();
+    final backgroundNotifier = ref.read(backgroundNotifierProvider.notifier);
+    backgroundNotifier.reset();
 
     return showCupertinoDialog(
         context: context,
-        barrierDismissible: true,
         builder: (_) => VAlertDialog3(
             label: '\nIngin Absen $str ?\n\n$labelStr',
             labelDescription: descStr + descStrExtended,
             labelFont: absenList.length == 1 ? 30 : 10,
             height: absenList.length == 1 ? 315 : 350,
+            onBackPressedLabel: 'Tidak, Saya Ingin Menghapus Absen',
+            onBackPressed: () async {
+              context.pop();
+              final last = await backgroundNotifier.getLastSavedLocations();
+              await backgroundNotifier.removeLocationFromSaved(last);
+              return backgroundNotifier.getSavedLocations();
+            },
             onPressed: () async {
               context.pop();
               return isTester.maybeWhen(

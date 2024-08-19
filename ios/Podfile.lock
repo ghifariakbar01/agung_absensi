@@ -4,6 +4,40 @@ PODS:
     - ReachabilitySwift
   - device_info_plus (0.0.1):
     - Flutter
+  - DKImagePickerController/Core (4.3.8):
+    - DKImagePickerController/ImageDataManager
+    - DKImagePickerController/Resource
+  - DKImagePickerController/ImageDataManager (4.3.8)
+  - DKImagePickerController/PhotoGallery (4.3.8):
+    - DKImagePickerController/Core
+    - DKPhotoGallery
+  - DKImagePickerController/Resource (4.3.8)
+  - DKPhotoGallery (0.0.18):
+    - DKPhotoGallery/Core (= 0.0.18)
+    - DKPhotoGallery/Model (= 0.0.18)
+    - DKPhotoGallery/Preview (= 0.0.18)
+    - DKPhotoGallery/Resource (= 0.0.18)
+    - SDWebImage
+    - SwiftyGif
+  - DKPhotoGallery/Core (0.0.18):
+    - DKPhotoGallery/Model
+    - DKPhotoGallery/Preview
+    - SDWebImage
+    - SwiftyGif
+  - DKPhotoGallery/Model (0.0.18):
+    - SDWebImage
+    - SwiftyGif
+  - DKPhotoGallery/Preview (0.0.18):
+    - DKPhotoGallery/Model
+    - DKPhotoGallery/Resource
+    - SDWebImage
+    - SwiftyGif
+  - DKPhotoGallery/Resource (0.0.18):
+    - SDWebImage
+    - SwiftyGif
+  - file_picker (0.0.1):
+    - DKImagePickerController/PhotoGallery
+    - Flutter
   - Firebase/Analytics (10.18.0):
     - Firebase/Core
   - Firebase/Core (10.18.0):
@@ -69,15 +103,6 @@ PODS:
   - Flutter (1.0.0)
   - flutter_activity_recognition (0.0.1):
     - Flutter
-  - flutter_foreground_task (0.0.1):
-    - Flutter
-  - flutter_inappwebview_ios (0.0.1):
-    - Flutter
-    - flutter_inappwebview_ios/Core (= 0.0.1)
-    - OrderedSet (~> 5.0)
-  - flutter_inappwebview_ios/Core (0.0.1):
-    - Flutter
-    - OrderedSet (~> 5.0)
   - flutter_keyboard_visibility (0.0.1):
     - Flutter
   - flutter_native_splash (0.0.1):
@@ -136,12 +161,13 @@ PODS:
   - GoogleUtilities/UserDefaults (7.13.0):
     - GoogleUtilities/Logger
     - GoogleUtilities/Privacy
+  - image_picker_ios (0.0.1):
+    - Flutter
   - nanopb (2.30909.1):
     - nanopb/decode (= 2.30909.1)
     - nanopb/encode (= 2.30909.1)
   - nanopb/decode (2.30909.1)
   - nanopb/encode (2.30909.1)
-  - OrderedSet (5.0.0)
   - package_info_plus (0.4.5):
     - Flutter
   - path_provider_foundation (0.0.1):
@@ -151,40 +177,49 @@ PODS:
     - Flutter
   - PromisesObjC (2.4.0)
   - ReachabilitySwift (5.0.0)
+  - SDWebImage (5.19.1):
+    - SDWebImage/Core (= 5.19.1)
+  - SDWebImage/Core (5.19.1)
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
   - sqflite (0.0.3):
     - Flutter
     - FlutterMacOS
+  - SwiftyGif (5.4.5)
   - url_launcher_ios (0.0.1):
+    - Flutter
+  - webview_flutter_wkwebview (0.0.1):
     - Flutter
 
 DEPENDENCIES:
   - connectivity_plus (from `.symlinks/plugins/connectivity_plus/ios`)
   - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
+  - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_remote_config (from `.symlinks/plugins/firebase_remote_config/ios`)
   - fl_location (from `.symlinks/plugins/fl_location/ios`)
   - Flutter (from `Flutter`)
   - flutter_activity_recognition (from `.symlinks/plugins/flutter_activity_recognition/ios`)
-  - flutter_foreground_task (from `.symlinks/plugins/flutter_foreground_task/ios`)
-  - flutter_inappwebview_ios (from `.symlinks/plugins/flutter_inappwebview_ios/ios`)
   - flutter_keyboard_visibility (from `.symlinks/plugins/flutter_keyboard_visibility/ios`)
   - flutter_native_splash (from `.symlinks/plugins/flutter_native_splash/ios`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
   - geocoding_ios (from `.symlinks/plugins/geocoding_ios/ios`)
   - geofence_service (from `.symlinks/plugins/geofence_service/ios`)
+  - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
   - sqflite (from `.symlinks/plugins/sqflite/darwin`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
+  - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/ios`)
 
 SPEC REPOS:
   trunk:
+    - DKImagePickerController
+    - DKPhotoGallery
     - Firebase
     - FirebaseABTesting
     - FirebaseAnalytics
@@ -196,15 +231,18 @@ SPEC REPOS:
     - GoogleAppMeasurement
     - GoogleUtilities
     - nanopb
-    - OrderedSet
     - PromisesObjC
     - ReachabilitySwift
+    - SDWebImage
+    - SwiftyGif
 
 EXTERNAL SOURCES:
   connectivity_plus:
     :path: ".symlinks/plugins/connectivity_plus/ios"
   device_info_plus:
     :path: ".symlinks/plugins/device_info_plus/ios"
+  file_picker:
+    :path: ".symlinks/plugins/file_picker/ios"
   firebase_analytics:
     :path: ".symlinks/plugins/firebase_analytics/ios"
   firebase_core:
@@ -217,10 +255,6 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_activity_recognition:
     :path: ".symlinks/plugins/flutter_activity_recognition/ios"
-  flutter_foreground_task:
-    :path: ".symlinks/plugins/flutter_foreground_task/ios"
-  flutter_inappwebview_ios:
-    :path: ".symlinks/plugins/flutter_inappwebview_ios/ios"
   flutter_keyboard_visibility:
     :path: ".symlinks/plugins/flutter_keyboard_visibility/ios"
   flutter_native_splash:
@@ -231,6 +265,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/geocoding_ios/ios"
   geofence_service:
     :path: ".symlinks/plugins/geofence_service/ios"
+  image_picker_ios:
+    :path: ".symlinks/plugins/image_picker_ios/ios"
   package_info_plus:
     :path: ".symlinks/plugins/package_info_plus/ios"
   path_provider_foundation:
@@ -243,10 +279,15 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/sqflite/darwin"
   url_launcher_ios:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
+  webview_flutter_wkwebview:
+    :path: ".symlinks/plugins/webview_flutter_wkwebview/ios"
 
 SPEC CHECKSUMS:
   connectivity_plus: bf0076dd84a130856aa636df1c71ccaff908fa1d
   device_info_plus: c6fb39579d0f423935b0c9ce7ee2f44b71b9fce6
+  DKImagePickerController: a7836546cfdfe014171694f643a7d575bc8ace7f
+  DKPhotoGallery: acbd8a3bab19cf6e5fe64a853fc07bfbd247a8f6
+  file_picker: 09aa5ec1ab24135ccd7a1621c46c84134bfd6655
   Firebase: 414ad272f8d02dfbf12662a9d43f4bba9bec2a06
   firebase_analytics: b3d6dd14c61549a29abb10e9843446a4d8bb53eb
   firebase_core: 0af4a2b24f62071f9bf283691c0ee41556dcb3f5
@@ -261,8 +302,6 @@ SPEC CHECKSUMS:
   fl_location: 68b4a6c4aad2a453493ff66f196e0748280cf43e
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_activity_recognition: 5c3b026997742b01e82424ef257db9640822ad77
-  flutter_foreground_task: 21ef182ab0a29a3005cc72cd70e5f45cb7f7f817
-  flutter_inappwebview_ios: 97215cf7d4677db55df76782dbd2930c5e1c1ea0
   flutter_keyboard_visibility: 0339d06371254c3eb25eeb90ba8d17dca8f9c069
   flutter_native_splash: edf599c81f74d093a4daf8e17bd7a018854bc778
   flutter_secure_storage: d33dac7ae2ea08509be337e775f6b59f1ff45f12
@@ -270,16 +309,19 @@ SPEC CHECKSUMS:
   geofence_service: e007ddec3cf8b85531e8f7b202c1ceabca669d64
   GoogleAppMeasurement: 70ce9aa438cff1cfb31ea3e660bcc67734cb716e
   GoogleUtilities: d053d902a8edaa9904e1bd00c37535385b8ed152
+  image_picker_ios: c560581cceedb403a6ff17f2f816d7fea1421fc1
   nanopb: d4d75c12cd1316f4a64e3c6963f879ecd4b5e0d5
-  OrderedSet: aaeb196f7fef5a9edf55d89760da9176ad40b93c
   package_info_plus: 115f4ad11e0698c8c1c5d8a689390df880f47e85
   path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
   permission_handler_apple: 9878588469a2b0d0fc1e048d9f43605f92e6cec2
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
+  SDWebImage: 40b0b4053e36c660a764958bff99eed16610acbb
   shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
   sqflite: 673a0e54cc04b7d6dba8d24fb8095b31c3a99eec
+  SwiftyGif: 706c60cf65fa2bc5ee0313beece843c8eb8194d4
   url_launcher_ios: 5334b05cef931de560670eeae103fd3e431ac3fe
+  webview_flutter_wkwebview: 2a23822e9039b7b1bc52e5add778e5d89ad488d1
 
 PODFILE CHECKSUM: 05fa7b615d70b735425c03679b0c1cbf6c4175aa
 

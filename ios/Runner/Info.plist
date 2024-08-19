@@ -42,6 +42,7 @@
 
 	<key>NSCameraUsageDescription</key>
 	<string>App needs to capture photo for upload image document in forms</string>
+	
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen.storyboard</string>
 	<key>UIMainStoryboardFile</key>

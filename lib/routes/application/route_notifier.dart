@@ -97,9 +97,12 @@ class RouterNotifier extends ChangeNotifier {
 
     final current = state.matchedLocation;
 
-    final areWeAtDefaultRoute = current == RouteNames.defaultRoute;
+    Log.info('current $current');
 
-    final defaultRoute = current == RouteNames.defaultRoute;
+    final areWeAtDefaultRoute = current == RouteNames.defaultRoute;
+    final areWeAtHome = current == RouteNames.homeRoute;
+
+    // final defaultRoute = current == RouteNames.defaultRoute;
     final areWeSigningIn = current == RouteNames.signInRoute;
     final areWeReadingTC = current == RouteNames.termsAndConditionRoute;
     final areWeReadingImei = current == RouteNames.imeiInstructionRoute;
@@ -109,42 +112,57 @@ class RouterNotifier extends ChangeNotifier {
 
     final weAlreadyDidAllProcedures = weVisitedTC && weVisitedImei;
 
-    return authState.maybeMap(
-      authenticated: (_) {
-        if (areWeSigningIn || defaultRoute) {
-          if (weVisitedTC && weVisitedImei) {
-            return RouteNames.homeRoute;
-          } else {
-            return RouteNames.termsAndConditionRoute;
-          }
-        }
+    return authState.maybeMap(authenticated: (_) {
+      if (!weVisitedImei) {
+        return RouteNames.imeiInstructionRoute;
+      }
 
-        if (areWeReadingTC && weVisitedTC) {
-          return RouteNames.imeiInstructionRoute;
-        }
+      if (!weVisitedTC) {
+        return RouteNames.termsAndConditionRoute;
+      }
 
-        if (areWeReadingImei && weVisitedImei) {
-          return RouteNames.homeRoute;
-        }
+      if (areWeReadingTC && weVisitedTC) {
+        return RouteNames.imeiInstructionRoute;
+      }
 
+      if (areWeReadingImei && weVisitedImei) {
+        return RouteNames.homeRoute;
+      }
+
+      if (areWeAtDefaultRoute && weAlreadyDidAllProcedures) {
+        return RouteNames.homeRoute;
+      }
+
+      if (areWeAtHome && weAlreadyDidAllProcedures) {
+        return null;
+      }
+
+      if (areWeSigningIn) {
         if (!weVisitedImei) {
           return RouteNames.imeiInstructionRoute;
         }
 
-        if (areWeAtDefaultRoute) {
-          if (!weVisitedTC) {
-            return RouteNames.termsAndConditionRoute;
-          }
-
-          if (weAlreadyDidAllProcedures) {
-            return RouteNames.homeRoute;
-          }
+        if (!weVisitedTC) {
+          return RouteNames.termsAndConditionRoute;
         }
 
+        if (weAlreadyDidAllProcedures) {
+          return RouteNames.homeRoute;
+        }
+      }
+
+      return null;
+    }, orElse: () {
+      if (areWeSigningIn) {
         return null;
-      },
-      orElse: () => areWeSigningIn ? null : RouteNames.signInRoute,
-    );
+      }
+
+      if (!weVisitedImei) {
+        return RouteNames.imeiInstructionRoute;
+      }
+
+      return RouteNames.signInRoute;
+    });
   }
 
   List<GoRoute> get routes {
@@ -168,7 +186,10 @@ class RouterNotifier extends ChangeNotifier {
       GoRoute(
           name: RouteNames.imeiInstructionNameRoute,
           path: RouteNames.imeiInstructionRoute,
-          builder: (context, state) => ImeiIntroductionPage()),
+          builder: (context, state) {
+            final isUnlink = state.extra as bool?;
+            return ImeiIntroductionPage(isUnlink: isUnlink);
+          }),
 
       GoRoute(
           name: RouteNames.homeNameRoute,

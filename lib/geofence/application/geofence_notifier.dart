@@ -27,12 +27,40 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
 
   Future<bool> hasOfflineData() => _repository.hasOfflineData();
 
+  Future<List<GeofenceResponse>> getGeofenceStorage() =>
+      _repository.readGeofenceList().then((value) => value.fold(
+            (_) => [],
+            (r) => r,
+          ));
+
+  void resetFOSO() {
+    state = state.copyWith(
+      failureOrSuccessOption: none(),
+      failureOrSuccessOptionAfterAbsen: none(),
+    );
+  }
+
   Future<Either<GeofenceFailure, Unit>> saveGeofence(
       List<GeofenceResponse> geofenceResponseList) async {
     return _repository.saveGeofence(geofenceList: geofenceResponseList);
   }
 
-  // GET GEOFENCE
+  Future<void> getGeofenceListAfterAbsen() async {
+    Either<GeofenceFailure, List<GeofenceResponse>> failureOrSuccess;
+
+    state = state.copyWith(
+      isGetting: true,
+      failureOrSuccessOptionAfterAbsen: none(),
+    );
+
+    failureOrSuccess = await _repository.getGeofenceList();
+
+    state = state.copyWith(
+      isGetting: false,
+      failureOrSuccessOptionAfterAbsen: optionOf(failureOrSuccess),
+    );
+  }
+
   Future<void> getGeofenceList() async {
     Either<GeofenceFailure, List<GeofenceResponse>> failureOrSuccess;
 
@@ -46,6 +74,24 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
     state = state.copyWith(
       isGetting: false,
       failureOrSuccessOption: optionOf(failureOrSuccess),
+    );
+  }
+
+  Future<void> getGeofenceListFromStorageAfterAbsen() async {
+    Either<GeofenceFailure, List<GeofenceResponse>> failureOrSuccess;
+
+    state = state.copyWith(
+      isGetting: true,
+      failureOrSuccessOptionAfterAbsen: none(),
+    );
+
+    Log.info('geofence got 1');
+    failureOrSuccess = await _repository.readGeofenceList();
+    Log.info('geofence got 2');
+
+    state = state.copyWith(
+      isGetting: false,
+      failureOrSuccessOptionAfterAbsen: optionOf(failureOrSuccess),
     );
   }
 
@@ -89,14 +135,23 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
 
     return geofences;
   }
-  // END
 
   Future<void> initializeGeoFence(
     List<Geofence> geofenceList, {
     required Function(Object a) onError,
     required Function(Location location) mockListener,
+    bool isRestart = false,
   }) async {
-    if (geofenceservice.isRunningService) return;
+    if (geofenceservice.isRunningService) {
+      if (isRestart == false) {
+        return;
+      } else {
+        if (geofenceservice.isRunningService) {
+          stop();
+          await state.geofenceService.stop();
+        }
+      }
+    }
 
     final list = [...geofenceList];
 
@@ -106,6 +161,10 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
         list,
       ),
     );
+
+    if (geofenceservice.isRunningService) {
+      Log.info('running');
+    }
 
     geofenceservice.addLocationChangeListener(mockListener);
 
@@ -190,10 +249,9 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
     print('ErrorCode: $errorCode');
   }
 
-  stop() {
-    state.geofenceService.removeStreamErrorListener(onErrorStream);
+  stop() async {
     state.geofenceService.clearAllListeners();
-    state.geofenceService.stop();
+    state.geofenceService.clearGeofenceList();
   }
 
   List<GeofenceCoordinate> updateCoordinatesFromGeofence(

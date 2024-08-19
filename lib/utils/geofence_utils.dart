@@ -16,29 +16,19 @@ class GeofenceUtil {
       } else {
         return list.first;
       }
-    } on UnimplementedError {
+    } catch (e) {
       return null;
     }
   }
 
   static Future<Placemark?> getLokasi({
-    required double? latitude,
-    required double? longitude,
+    required double latitude,
+    required double longitude,
   }) async {
-    Placemark? lokasi = await _getAddressFromCoordinates(
-      latitude ?? 0,
-      longitude ?? 0,
+    return _getAddressFromCoordinates(
+      latitude,
+      longitude,
     );
-
-    if (lokasi == null) {
-      lokasi = Placemark(
-        street: 'LOCATION UKNOWN',
-        subAdministrativeArea: '',
-        postalCode: '',
-      );
-    }
-
-    return lokasi;
   }
 
   static Future<String?> getLokasiStr({

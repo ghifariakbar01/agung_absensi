@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../constants/assets.dart';
 import '../../cross_auth/application/cross_auth_notifier.dart';
 import '../../firebase/remote_config/application/firebase_remote_config_notifier.dart';
+import '../../imei/application/imei_notifier.dart';
 import '../../permission/application/shared/permission_introduction_providers.dart';
 import '../../routes/application/route_names.dart';
 import '../../tester/application/tester_state.dart';
@@ -51,20 +52,6 @@ class HomeNotifier extends StateNotifier<HomeState> {
     final permissionNotifier = ref.read(permissionNotifierProvider.notifier);
     bool isLocationDenied = await permissionNotifier.isLocationDenied();
 
-    // if (!isAbsenRoute) {
-    //   if (!isMe && waRegister == WaRegister.initial()) {
-    //     return showDialog(
-    //       context: context,
-    //       builder: (context) => VSimpleDialog(
-    //         asset: Assets.iconWa,
-    //         label: 'Nomor Wa Belum Terdaftar',
-    //         labelDescription:
-    //             'Mohon lakukan registrasi nomor Wa terlebih dahulu, agar bisa menerima notifikasi pesan Wa. Terimakasih 🙏',
-    //       ),
-    //     );
-    //   }
-    // }
-
     if (isAbsenRoute || isRiwayatRoute || isSlipGajiRoute) {
       await _uncross(ref);
     }
@@ -73,6 +60,8 @@ class HomeNotifier extends StateNotifier<HomeState> {
       Saat masuk ke Absen, atau Riwayat
     */
     if (isAbsenRoute) {
+      _resetFoso(ref);
+
       if (!isTester) {
         if (isGpsOff) {
           return showDialog(
@@ -122,5 +111,12 @@ class HomeNotifier extends StateNotifier<HomeState> {
             url: _ptMap,
           );
     }
+  }
+
+  _resetFoso(WidgetRef ref) {
+    ref.read(imeiNotifierProvider.notifier).reset();
+    ref.read(riwayatAbsenNotifierProvider.notifier).reset();
+    ref.read(absenAuthNotifierProvidier.notifier).resetFoso();
+    ref.read(geofenceProvider.notifier).resetFOSO();
   }
 }

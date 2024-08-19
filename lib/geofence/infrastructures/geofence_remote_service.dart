@@ -23,8 +23,11 @@ class GeofenceRemoteService {
             "SELECT id_geof, nm_lokasi, geof, radius FROM $dbName WHERE app_sta = '1'",
       });
 
-      final response = await _dio.post('',
-          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
+      final response = await _dio.post(
+        '',
+        data: jsonEncode(data),
+        options: Options(contentType: 'text/plain'),
+      );
 
       final items = response.data?[0];
 

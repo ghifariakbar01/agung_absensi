@@ -17,4 +17,11 @@ class GeofenceResponse with _$GeofenceResponse {
 
   factory GeofenceResponse.fromJson(Map<String, Object?> json) =>
       _$GeofenceResponseFromJson(json);
+
+  factory GeofenceResponse.inital() => GeofenceResponse(
+        id: 2,
+        namaLokasi: 'Agung Logistics Cut Mutiah',
+        latLong: '-6.1863276,106.8343200',
+        radius: '{u0027radius_30mu0027 : 30}',
+      );
 }

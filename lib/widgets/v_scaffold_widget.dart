@@ -4,7 +4,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import '../helper.dart';
 import '../style/style.dart';
 import '../utils/dialog_helper.dart';
-import 'network_widget.dart';
 
 class VScaffoldWidget extends StatelessWidget {
   const VScaffoldWidget(

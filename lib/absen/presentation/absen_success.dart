@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../routes/application/route_names.dart';
+import '../../shared/providers.dart';
 import '../../style/style.dart';
 
 class Success extends HookConsumerWidget {
@@ -30,10 +31,11 @@ class Success extends HookConsumerWidget {
               frameRate: FrameRate(60),
               onLoaded: (composition) async {
                 _controller
-                  ..duration = composition.duration
+                  ..duration = Duration(seconds: 2)
                   ..forward().then((_) {
+                    ref.read(geofenceProvider.notifier).resetFOSO();
                     context.pop();
-                    context.pushNamed(
+                    context.pushReplacementNamed(
                       RouteNames.riwayatAbsenRoute,
                       extra: true,
                     );

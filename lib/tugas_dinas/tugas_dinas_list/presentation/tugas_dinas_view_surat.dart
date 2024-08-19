@@ -50,7 +50,7 @@ class TugasDinasViewSuratPage extends HookConsumerWidget {
               'Lihat di Browser',
               style: Themes.customColor(11),
             )),
-        scaffoldBody: WebViewWidget(url.value),
+        scaffoldBody: WebViewCustom(url.value),
       ),
     );
   }

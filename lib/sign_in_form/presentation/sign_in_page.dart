@@ -9,6 +9,7 @@ import 'package:face_net_authentication/widgets/async_value_ui.dart';
 import 'package:face_net_authentication/widgets/v_async_widget.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
@@ -16,8 +17,10 @@ import '../../constants/assets.dart';
 import '../../constants/constants.dart';
 import '../../domain/auth_failure.dart';
 import '../../imei/application/imei_state.dart';
+import '../../infrastructures/exceptions.dart';
 import '../../shared/providers.dart';
 import '../../style/style.dart';
+import '../../utils/dialog_helper.dart';
 import '../../widgets/alert_helper.dart';
 import '../../widgets/loading_overlay.dart';
 import '../../widgets/v_button.dart';
@@ -50,6 +53,7 @@ class SignInPage extends HookConsumerWidget {
                           ),
                         ), (_) async {
                   final imeiNotifier = ref.read(imeiNotifierProvider.notifier);
+
                   final user = await ref
                       .read(userNotifierProvider.notifier)
                       .getUserString();
@@ -72,47 +76,64 @@ class SignInPage extends HookConsumerWidget {
                   );
                 })));
 
-    ref.listen<AsyncValue<ImeiState>>(imeiNotifierProvider, (_, state) {
-      final imeiNotifier = ref.read(imeiNotifierProvider.notifier);
-
-      final idKary = ref.read(userNotifierProvider).user.IdKary ?? '-';
-      final generateImei = imeiNotifier.generateImei();
-
+    ref.listen<AsyncValue<ImeiState>>(imeiNotifierProvider, (_, state) async {
       if (!state.isLoading &&
           state.hasValue &&
           state.value != '' &&
           state.value != null &&
           state.hasError == false) {
+        final imeiNotifier = ref.read(imeiNotifierProvider.notifier);
+
+        final user =
+            await ref.read(userNotifierProvider.notifier).getUserString();
+        final idKary = user.IdKary ?? '-';
+        final generateImei = imeiNotifier.generateImei();
+
         state.requireValue.maybeWhen(
-          alreadyRegistered: () async {
-            await imeiNotifier.onImeiAlreadyRegistered(
-              idKary: idKary,
-            );
-
-            return showErrorDialog(
-              context,
-              Constants.imeiAlreadyRegistered,
-            ).then(
-              (_) => logout(ref),
-            );
-          },
-          notRegistered: () async {
-            await imeiNotifier.registerImei(
-              imei: generateImei,
-              idKary: idKary,
-            );
-
-            return showSuccessDialog(context).then(
-              (_) => login(ref),
-            );
-          },
+          alreadyRegistered: () => _onImeiNotRegistered(
+            imeiNotifier,
+            generateImei,
+            idKary,
+            context,
+          ),
+          notRegistered: () => _onImeiNotRegistered(
+            imeiNotifier,
+            generateImei,
+            idKary,
+            context,
+          ),
+          initial: () {},
           ok: () => login(ref),
-          initial: () => login(ref),
           rejected: () => logout(ref),
           orElse: () {},
         );
       } else {
-        if (state.hasError) state.showAlertDialogOnError(context, ref);
+        if (state.hasError) {
+          final error = state.error;
+          if (error is PlatformException) {
+            return DialogHelper.showCustomDialog(
+              'Error Storage Penuh : Tidak bisa menyimpan imei',
+              context,
+            ).then((_) => _reset(ref));
+          } else if (error is NoConnectionException) {
+            return DialogHelper.showCustomDialog(
+              'Tidak ada jaringan internet / server down.',
+              context,
+            ).then((_) => _reset(ref));
+          } else if (error is RestApiExceptionWithMessage) {
+            return DialogHelper.showCustomDialog(
+              'Error server. ${error.errorCode} : ${error.message}',
+              context,
+            ).then((_) => _reset(ref));
+          } else if (error is RestApiException) {
+            return DialogHelper.showCustomDialog(
+              'Error server. ${error.errorCode}',
+              context,
+            ).then((_) => _reset(ref));
+          }
+
+          return state.showAlertDialogOnError(context, ref);
+        }
       }
     });
 
@@ -196,6 +217,34 @@ class SignInPage extends HookConsumerWidget {
       ),
     );
   }
+
+  _onImeiAlreadyRegistered(
+      ImeiNotifier imeiNotifier, String idKary, BuildContext context) async {
+    {
+      await imeiNotifier.onImeiAlreadyRegistered(
+        idKary: idKary,
+      );
+
+      return showErrorDialog(
+        context,
+        Constants.imeiAlreadyRegistered,
+      );
+    }
+  }
+
+  _onImeiNotRegistered(ImeiNotifier imeiNotifier, String generateImei,
+      String idKary, BuildContext context) async {
+    {
+      await imeiNotifier.registerImei(
+        imei: generateImei,
+        idKary: idKary,
+      );
+
+      return showSuccessDialog(context);
+    }
+  }
+
+  _reset(WidgetRef ref) => ref.read(imeiNotifierProvider.notifier).reset();
 
   Future<void> _showDialogAndLogout(BuildContext context, WidgetRef ref) {
     return showDialog(

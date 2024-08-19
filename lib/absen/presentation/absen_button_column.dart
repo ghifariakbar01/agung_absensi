@@ -25,9 +25,6 @@ class AbsenButtonColumn extends ConsumerWidget {
     // IS TESTER
     final isTester = ref.watch(testerNotifierProvider);
 
-    // IS OFFLINE MODE
-    final isOfflineMode = ref.watch(absenOfflineModeProvider);
-
     // KARYAWAN SHIFT
     final karyawanAsync = ref.watch(karyawanShiftFutureProvider);
 
@@ -62,18 +59,58 @@ class AbsenButtonColumn extends ConsumerWidget {
 
             return Column(
               children: [
-                Visibility(
-                    visible: !isOfflineMode,
-                    child: AbsenReset(
-                        isTester: isTester.maybeWhen(
-                      tester: () => true,
-                      orElse: () => false,
-                    ))),
+                AbsenReset(
+                    isTester: isTester.maybeWhen(
+                  tester: () => true,
+                  orElse: () => false,
+                )),
                 SizedBox(height: 20),
-                Visibility(
-                  visible: !isOfflineMode,
-                  child: VButton(
-                    label: 'ABSEN IN $karyawanShiftStr',
+                VButton(
+                  label: 'ABSEN IN $karyawanShiftStr',
+                  height: 50,
+                  isEnabled: isTesting
+                      ? true
+                      : isTester.maybeWhen(
+                          tester: () =>
+                              buttonResetVisibility ||
+                              isShift ||
+                              absen == AbsenState.empty() ||
+                              absen == AbsenState.incomplete(),
+                          orElse: () =>
+                              buttonResetVisibility ||
+                              isShift &&
+                                  nearest < minDistance &&
+                                  nearest != 0 ||
+                              absen == AbsenState.empty() &&
+                                  nearest < minDistance &&
+                                  nearest != 0 ||
+                              absen == AbsenState.incomplete() &&
+                                  nearest < minDistance &&
+                                  nearest != 0),
+                  onPressed: () async {
+                    final geof = ref.read(geofenceProvider).currentLocation;
+                    final lat = geof.latitude;
+                    final long = geof.longitude;
+                    final nearest =
+                        ref.read(geofenceProvider).nearestCoordinates;
+
+                    String idGeof = nearest.id;
+                    String lokasi = nearest.nama;
+
+                    return ref
+                        .read(backgroundNotifierProvider.notifier)
+                        .addSavedLocation(
+                            savedLocation: SavedLocation.initial().copyWith(
+                          idGeof: idGeof,
+                          alamat: lokasi,
+                          latitude: lat,
+                          longitude: long,
+                          absenState: AbsenState.empty(),
+                        ));
+                  },
+                ),
+                VButton(
+                    label: 'ABSEN OUT $karyawanShiftStr',
                     height: 50,
                     isEnabled: isTesting
                         ? true
@@ -81,18 +118,18 @@ class AbsenButtonColumn extends ConsumerWidget {
                             tester: () =>
                                 buttonResetVisibility ||
                                 isShift ||
-                                absen == AbsenState.empty() ||
+                                absen == AbsenState.absenIn() ||
                                 absen == AbsenState.incomplete(),
                             orElse: () =>
                                 buttonResetVisibility ||
                                 isShift &&
                                     nearest < minDistance &&
                                     nearest != 0 ||
-                                absen == AbsenState.empty() &&
+                                absen == AbsenState.absenIn() &&
                                     nearest < minDistance &&
                                     nearest != 0 ||
                                 absen == AbsenState.incomplete() &&
-                                    nearest < 100 &&
+                                    nearest < minDistance &&
                                     nearest != 0),
                     onPressed: () async {
                       final geof = ref.read(geofenceProvider).currentLocation;
@@ -104,7 +141,7 @@ class AbsenButtonColumn extends ConsumerWidget {
                       String idGeof = nearest.id;
                       String lokasi = nearest.nama;
 
-                      await ref
+                      return ref
                           .read(backgroundNotifierProvider.notifier)
                           .addSavedLocation(
                               savedLocation: SavedLocation.initial().copyWith(
@@ -112,61 +149,17 @@ class AbsenButtonColumn extends ConsumerWidget {
                             alamat: lokasi,
                             latitude: lat,
                             longitude: long,
-                            absenState: AbsenState.empty(),
+                            absenState: AbsenState.absenIn(),
                           ));
-                    },
-                  ),
-                ),
-                Visibility(
-                  visible: !isOfflineMode,
-                  child: VButton(
-                      label: 'ABSEN OUT $karyawanShiftStr',
-                      height: 50,
-                      isEnabled: isTesting
-                          ? true
-                          : isTester.maybeWhen(
-                              tester: () =>
-                                  buttonResetVisibility ||
-                                  isShift ||
-                                  absen == AbsenState.absenIn(),
-                              orElse: () =>
-                                  buttonResetVisibility ||
-                                  isShift &&
-                                      nearest < minDistance &&
-                                      nearest != 0 ||
-                                  absen == AbsenState.absenIn() &&
-                                      nearest < minDistance &&
-                                      nearest != 0),
-                      onPressed: () async {
-                        final geof = ref.read(geofenceProvider).currentLocation;
-                        final lat = geof.latitude;
-                        final long = geof.longitude;
-                        final nearest =
-                            ref.read(geofenceProvider).nearestCoordinates;
-
-                        String idGeof = nearest.id;
-                        String lokasi = nearest.nama;
-
-                        await ref
-                            .read(backgroundNotifierProvider.notifier)
-                            .addSavedLocation(
-                                savedLocation: SavedLocation.initial().copyWith(
-                              idGeof: idGeof,
-                              alamat: lokasi,
-                              latitude: lat,
-                              longitude: long,
-                              absenState: AbsenState.absenIn(),
-                            ));
-                      }),
-                ),
+                    }),
               ],
             );
           },
         ),
         Visibility(
-            visible: true,
+            visible: false,
             child: VButton(
-                label: 'ABSEN SAVE',
+                label: 'ABSEN SAVE (DEBUG)',
                 height: 50,
                 onPressed: () async {
                   final geof = ref.read(geofenceProvider).currentLocation;

@@ -1,6 +1,6 @@
 buildscript {
     // ext.kotlin_version = '1.5.31'
-    ext.kotlin_version = '1.9.24'
+    ext.kotlin_version = '1.8.0'
     repositories {
         google()
         jcenter()
@@ -8,7 +8,7 @@ buildscript {
 
     dependencies {
         // classpath 'com.android.tools.build:gradle:3.5.0'
-        classpath 'com.android.tools.build:gradle:8.5.0'
+        classpath 'com.android.tools.build:gradle:7.1.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.google.gms:google-services:4.3.3'
     }
@@ -28,18 +28,6 @@ subprojects {
 }
 
 
-// The below script
-subprojects {
-   afterEvaluate { project ->
-        if (project.hasProperty('android')) {
-            project.android {
-                if (namespace == null) {
-                    namespace project.group
-                }
-            }
-        }
-    }
-}
 
 subprojects {
     project.evaluationDependsOn(':app')

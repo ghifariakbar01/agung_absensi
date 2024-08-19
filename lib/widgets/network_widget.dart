@@ -1,12 +1,6 @@
 import 'package:face_net_authentication/shared/providers.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-import '../network_state/application/network_state.dart';
-import '../network_state/application/network_state_notifier.dart';
-import '../utils/dialog_helper.dart';
-import 'v_async_widget.dart';
 
 class NetworkWidget extends ConsumerStatefulWidget {
   const NetworkWidget();

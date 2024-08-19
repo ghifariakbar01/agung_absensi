@@ -1,11 +1,15 @@
-import 'package:face_net_authentication/utils/logging.dart';
+import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../style/style.dart';
 import '../infrastructures/image/infrastructures/image_repository.dart';
+import '../utils/logging.dart';
 // import '../network_state/application/network_state.dart';
 // import '../network_state/application/network_state_notifier.dart';
 // import 'v_async_widget.dart';
@@ -18,30 +22,70 @@ final imageErrorProvider = StateProvider<bool>((ref) {
   return false;
 });
 
-class ImageAbsen extends ConsumerStatefulWidget {
-  const ImageAbsen();
-
-  @override
-  ConsumerState<ImageAbsen> createState() => _ImageAbsenState();
+extension WebViewControllerExtension on WebViewController {
+  Future<String> getHtml() {
+    return runJavaScriptReturningResult('document.documentElement.outerHTML')
+        .then((value) {
+      if (Platform.isAndroid) {
+        return jsonDecode(value as String) as String;
+      } else {
+        return value as String;
+      }
+    });
+  }
 }
 
-class _ImageAbsenState extends ConsumerState<ImageAbsen> {
-  InAppWebViewController? webViewController;
-  InAppWebViewController? webViewControllerDummy;
-
+class ImageAbsen extends HookConsumerWidget {
+  const ImageAbsen({Key? key}) : super(key: key);
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final imageUrl = ref.watch(imageUrlProvider);
     final imageError = ref.watch(imageErrorProvider);
     final displayImage = ref.watch(displayImageProvider);
-    // final networkState = ref.watch(networkStateNotifier2Provider);
 
-    // return VAsyncValueWidget<NetworkState>(
-    //     value: networkState,
-    //     data: (netw) => netw.when(
-    //           online: () => ,
-    //           offline: () => Container(),
-    //         ));
+    final isFinished = useState(false);
+
+    final controller = useState(WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(const Color(0x00000000))
+      ..loadRequest(Uri.parse(imageUrl)));
+
+    final controllerDummy = useState(WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(const Color(0x00000000))
+      ..setOnConsoleMessage((c) {
+        Log.info('console $c');
+      })
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onPageStarted: (_) {
+            isFinished.value = false;
+          },
+          onPageFinished: (_) {
+            isFinished.value = true;
+          },
+          onHttpError: (HttpResponseError error) {},
+          onWebResourceError: (WebResourceError error) {
+            ref.read(imageErrorProvider.notifier).state = true;
+          },
+        ),
+      )
+      ..loadRequest(Uri.parse(imageUrl)));
+
+    _check() async {
+      final html = await controllerDummy.value.getHtml();
+      if (html.contains('Runtime Error')) {
+        ref.read(imageErrorProvider.notifier).state = true;
+        isFinished.value = false;
+      }
+    }
+
+    useEffect(() {
+      if (isFinished.value) {
+        _check();
+      }
+      return () {};
+    }, [isFinished.value]);
 
     return Container(
         padding: EdgeInsets.symmetric(horizontal: 16),
@@ -60,28 +104,8 @@ class _ImageAbsenState extends ConsumerState<ImageAbsen> {
             SizedBox(
               height: 1,
               width: 1,
-              child: InAppWebView(
-                onWebViewCreated: (controller) {
-                  webViewControllerDummy = controller;
-                },
-                initialUrlRequest:
-                    URLRequest(url: WebUri.uri(Uri.parse(imageUrl))),
-                onReceivedError: (controller, request, error) {
-                  ref.read(displayImageProvider.notifier).state = false;
-                },
-                onLoadStop: (controller, url) async {
-                  String html = await controller.evaluateJavascript(
-                      source:
-                          "window.document.getElementsByTagName('html')[0].outerHTML;");
-
-                  Log.warning('html $html');
-
-                  if (html.contains('Runtime Error')) {
-                    ref.read(imageErrorProvider.notifier).state = true;
-                  } else {
-                    ref.read(imageErrorProvider.notifier).state = false;
-                  }
-                },
+              child: WebViewWidget(
+                controller: controllerDummy.value,
               ),
             ),
             if (imageUrl.isNotEmpty && imageError == false)
@@ -135,27 +159,7 @@ class _ImageAbsenState extends ConsumerState<ImageAbsen> {
                           padding: EdgeInsets.all(8),
                           child: IgnorePointer(
                             ignoring: true,
-                            child: InAppWebView(
-                              onWebViewCreated: (controller) {
-                                webViewController = controller;
-                              },
-                              initialUrlRequest: URLRequest(
-                                  url: WebUri.uri(Uri.parse(imageUrl))),
-                              onLoadStop: (controller, url) async {
-                                String html = await controller.evaluateJavascript(
-                                    source:
-                                        "window.document.getElementsByTagName('html')[0].outerHTML;");
-
-                                if (html.contains('Runtime Error')) {
-                                  ref
-                                      .read(displayImageProvider.notifier)
-                                      .state = false;
-                                }
-                              },
-                              // onConsoleMessage: (controller, consoleMessage) {
-                              //   print(consoleMessage);
-                              // },
-                            ),
+                            child: WebViewWidget(controller: controller.value),
                           )),
                     )
                   ]

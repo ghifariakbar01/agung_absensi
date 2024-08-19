@@ -28,8 +28,6 @@ class ProfileScaffold extends HookConsumerWidget {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
-        leading: null,
-        leadingWidth: 20,
         centerTitle: false,
         title: InkWell(
           onTap: () => scrollController.animateTo(

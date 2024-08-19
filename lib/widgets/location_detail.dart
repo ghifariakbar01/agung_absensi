@@ -15,6 +15,12 @@ class LocationDetail extends ConsumerWidget {
     final nearest =
         ref.watch(geofenceProvider.select((value) => value.nearestCoordinates));
 
+    final nearestInMeter = nearest.remainingDistance.round().toString();
+    bool inKm = nearestInMeter.length > 5 ? true : false;
+    double distanceInKiloMeters = nearest.remainingDistance / 1000;
+    final nearestInKiloMeter =
+        double.parse((distanceInKiloMeters).toStringAsFixed(2)).toString();
+
     return Container(
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -105,7 +111,10 @@ class LocationDetail extends ConsumerWidget {
                           ))
                     ],
                     if (nearest.remainingDistance != 0) ...[
-                      Text(' ${nearest.remainingDistance.round()} m',
+                      Text(
+                          inKm
+                              ? nearestInKiloMeter + ' km'
+                              : nearestInMeter + ' m',
                           style: nearest.remainingDistance < nearest.minDistance
                               ? Themes.customColor(
                                   12,
@@ -126,7 +135,7 @@ class LocationDetail extends ConsumerWidget {
           SizedBox(
             height: 4,
           ),
-          // displayImage == false && isOfflineMode ? Container() : ImageAbsen(),
+          displayImage == false && isOfflineMode ? Container() : ImageAbsen(),
         ],
       ),
     );

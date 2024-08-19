@@ -107,10 +107,12 @@ class VSimpleDialog extends StatelessWidget {
     required this.labelDescription,
     required this.asset,
     this.color,
+    this.textColor,
     this.fontSize,
   }) : super(key: key);
 
   final Color? color;
+  final Color? textColor;
   final double? fontSize;
   final String asset;
   final String label;
@@ -135,6 +137,7 @@ class VSimpleDialog extends StatelessWidget {
               textAlign: TextAlign.center,
               style: Themes.customColor(
                 15,
+                color: textColor ?? Colors.black,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -150,6 +153,7 @@ class VSimpleDialog extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: Themes.customColor(
                   11,
+                  color: textColor ?? Colors.black,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -167,7 +171,9 @@ class VAlertDialog3 extends StatelessWidget {
     required this.label,
     required this.labelDescription,
     required this.onPressed,
+    required this.onBackPressed,
     this.pressedLabel,
+    this.onBackPressedLabel,
     this.labelFont,
     this.height,
   }) : super(key: key);
@@ -175,9 +181,11 @@ class VAlertDialog3 extends StatelessWidget {
   final String label;
   final String labelDescription;
   final String? pressedLabel;
+  final String? onBackPressedLabel;
   final double? labelFont;
   final double? height;
   final Function() onPressed;
+  final Function() onBackPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -189,13 +197,17 @@ class VAlertDialog3 extends StatelessWidget {
         height: height ?? 315,
         child: Stack(
           children: [
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              padding: EdgeInsets.all(8),
-              child: Center(
+            Positioned(
+              left: 0,
+              right: 0,
+              top: 0,
+              bottom: 0,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                padding: EdgeInsets.all(8),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -225,30 +237,72 @@ class VAlertDialog3 extends StatelessWidget {
               bottom: 0,
               child: SizedBox(
                 height: 50,
-                child: Material(
-                  color: Colors.transparent,
-                  child: Ink(
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                        color: Palette.green,
-                        borderRadius: BorderRadius.only(
-                          bottomRight: Radius.circular(20),
-                          bottomLeft: Radius.circular(20),
-                        )),
-                    child: InkWell(
-                      onTap: onPressed,
-                      child: Center(
-                        child: Text(
-                          pressedLabel ?? 'Ok',
-                          style: Themes.customColor(
-                            12,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Flexible(
+                      flex: 1,
+                      child: SizedBox(
+                        height: 50,
+                        child: Material(
+                          color: Colors.transparent,
+                          child: Ink(
+                            padding: EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                                color: Palette.red,
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(20),
+                                )),
+                            child: InkWell(
+                              onTap: onBackPressed,
+                              child: Center(
+                                child: Text(
+                                  onBackPressedLabel ?? 'Tidak',
+                                  style: Themes.customColor(
+                                    12,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
+                    Flexible(
+                      flex: 1,
+                      child: SizedBox(
+                        height: 50,
+                        child: Material(
+                          color: Colors.transparent,
+                          child: Ink(
+                            padding: EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                                color: Palette.green,
+                                borderRadius: BorderRadius.only(
+                                  bottomRight: Radius.circular(20),
+                                )),
+                            child: InkWell(
+                              onTap: onPressed,
+                              child: Center(
+                                child: Text(
+                                  pressedLabel ?? 'Ok',
+                                  style: Themes.customColor(
+                                    12,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             )

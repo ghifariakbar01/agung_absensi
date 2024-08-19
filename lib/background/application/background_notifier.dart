@@ -26,6 +26,12 @@ class BackgroundNotifier extends StateNotifier<BackgroundState> {
             (r) => r.length,
           ));
 
+  Future<SavedLocation> getLastSavedLocations() =>
+      _backgroundRepository.getSavedLocations().then((value) => value.fold(
+            (_) => SavedLocation.initial(),
+            (r) => r.isEmpty ? SavedLocation.initial() : r.last,
+          ));
+
   void changeBackgroundItems(List<SavedLocation> backgroundItems) {
     state = state.copyWith(savedBackgroundItems: [...backgroundItems]);
   }
@@ -114,7 +120,6 @@ class BackgroundNotifier extends StateNotifier<BackgroundState> {
 
     state = state.copyWith(
       isGetting: false,
-      failureOrSuccessOptionSave: none(),
       failureOrSuccessOption: optionOf(failureOrSuccess),
     );
   }
@@ -140,7 +145,7 @@ class BackgroundNotifier extends StateNotifier<BackgroundState> {
     await _sharedPreference.setString(Constants.keyLocation, '');
   }
 
-  Future<void> removeLocationFromSavedById(int id) async {
+  Future<void> removeLocationFromSaved(SavedLocation location) async {
     final _sharedPreference = await SharedPreferences.getInstance();
     final _loc = await _sharedPreference.getString(Constants.keyLocation);
 
@@ -158,44 +163,8 @@ class BackgroundNotifier extends StateNotifier<BackgroundState> {
 
         return;
       } else {
-        final processLocation = savedLocations
-            .where((location) => location.id != location.id)
-            .toSet()
-            .toList();
-
-        await _backgroundRepository.save(
-          processLocation,
-        );
-
-        return;
-      }
-    }
-  }
-
-  Future<void> removeLocationFromSaved(
-    SavedLocation currentLocation,
-  ) async {
-    final _sharedPreference = await SharedPreferences.getInstance();
-    final _loc = await _sharedPreference.getString(Constants.keyLocation);
-
-    if (_loc != null) {
-      final savedLocations = await _parseLocation(
-        savedLocations: _loc,
-      );
-
-      if (savedLocations.isEmpty) {
-        return;
-      }
-
-      if (savedLocations.length == 1) {
-        await _backgroundRepository.clear();
-
-        return;
-      } else {
-        final processLocation = savedLocations
-            .where((location) => location.date != currentLocation.date)
-            .toSet()
-            .toList();
+        final processLocation =
+            savedLocations.where((loc) => loc != location).toSet().toList();
 
         await _backgroundRepository.save(
           processLocation,

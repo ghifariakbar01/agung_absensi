@@ -1,3 +1,4 @@
+import 'package:face_net_authentication/shared/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -8,7 +9,12 @@ import '../../widgets/v_dialogs.dart';
 import '../application/shared/imei_introduction_providers.dart';
 
 class ImeiIntroductionPage extends ConsumerWidget {
-  const ImeiIntroductionPage({Key? key}) : super(key: key);
+  const ImeiIntroductionPage({
+    Key? key,
+    required this.isUnlink,
+  }) : super(key: key);
+
+  final bool? isUnlink;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -115,10 +121,80 @@ class ImeiIntroductionPage extends ConsumerWidget {
                         text: ' -> ',
                         style: TextStyle(fontWeight: FontWeight.bold)),
                     TextSpan(
+                        text: ' Hubungi HR ',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    TextSpan(
+                        text: ' untuk melakukan',
+                        style: TextStyle(fontWeight: FontWeight.normal)),
+                    TextSpan(
+                        text: ' request unlink Server ',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    TextSpan(
+                        text: ' (Sertakan Nama & Payroll) ',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    TextSpan(
+                        text: ' -> ',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    TextSpan(
+                        text: ' Tunggu HR melakukan unlink Server ',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    TextSpan(
+                        text: ' -> ',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    TextSpan(
+                        text: ' Setelah HR melakukan unlink, ',
+                        style: TextStyle(fontWeight: FontWeight.normal)),
+                    TextSpan(
                         text: ' Download & Install',
                         style: TextStyle(fontWeight: FontWeight.bold)),
                     TextSpan(
-                        text: ' kembali di HP yang baru. ',
+                        text: ' kembali Aplikasi di HP yang baru. ',
+                        style: TextStyle(fontWeight: FontWeight.normal)),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 36,
+              ),
+              RichText(
+                text: TextSpan(
+                  text: '',
+                  style: Themes.customColor(
+                    18,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.black,
+                  ),
+                  children: const <TextSpan>[
+                    TextSpan(
+                      text:
+                          'Bagaimana jika saya mendapatkan error Unlink Saat Absen ? \n',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    TextSpan(
+                        text:
+                            'Anda harus menghubungi HR dan melakukan request Unlink. Dan ',
+                        style: TextStyle(fontWeight: FontWeight.normal)),
+                    TextSpan(
+                        text: 'menginstall ulang aplikasi ',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    TextSpan(
+                        text:
+                            ' dari HP anda. Untuk user iOS, cukup menghubungi HR. \n\n',
+                        style: TextStyle(fontWeight: FontWeight.normal)),
+                    TextSpan(
+                        text:
+                            'Bagaimana jika saya mendapatkan error Unlink Saat Login ? \n',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    TextSpan(
+                        text:
+                            'Anda harus menghubungi HR dan melakukan request Unlink. Dan ',
+                        style: TextStyle(fontWeight: FontWeight.normal)),
+                    TextSpan(
+                        text: 'menginstall ulang aplikasi ',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    TextSpan(
+                        text:
+                            ' dari HP anda.  Untuk user iOS, cukup menghubungi HR.',
                         style: TextStyle(fontWeight: FontWeight.normal)),
                   ],
                 ),
@@ -135,13 +211,27 @@ class ImeiIntroductionPage extends ConsumerWidget {
                         labelDescription:
                             'Jika anda sudah mengerti instruksi di atas, tap Ya',
                         onPressed: () async {
-                          await ref
-                              .read(imeiIntroNotifierProvider.notifier)
-                              .saveVisitedIMEIIntroduction('${DateTime.now()}');
+                          if (isUnlink != null) {
+                            await ref
+                                .read(imeiIntroNotifierProvider.notifier)
+                                .saveVisitedIMEIIntroduction(
+                                    '${DateTime.now()}');
+                            await ref
+                                .read(userNotifierProvider.notifier)
+                                .logout();
+                            await ref
+                                .read(authNotifierProvider.notifier)
+                                .checkAndUpdateAuthStatus();
+                          } else {
+                            await ref
+                                .read(imeiIntroNotifierProvider.notifier)
+                                .saveVisitedIMEIIntroduction(
+                                    '${DateTime.now()}');
 
-                          await ref
-                              .read(imeiIntroNotifierProvider.notifier)
-                              .checkAndUpdateImeiIntro();
+                            await ref
+                                .read(imeiIntroNotifierProvider.notifier)
+                                .checkAndUpdateImeiIntro();
+                          }
                         })),
               )
             ],

@@ -12,6 +12,10 @@ class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
 
   final AbsenRepository _absenRepository;
 
+  resetFoso() {
+    state = state.copyWith(failureOrSuccessOption: none());
+  }
+
   Future<void> absen({
     required int idUser,
     required String nama,

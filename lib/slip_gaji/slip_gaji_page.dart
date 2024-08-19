@@ -80,7 +80,7 @@ class SlipGajiPage extends HookConsumerWidget {
                       })
                 ],
               )
-            : WebViewWidget(url.value),
+            : WebViewCustom(url.value),
       ),
     ));
   }

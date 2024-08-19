@@ -54,7 +54,9 @@ class Constants {
 
   static const String notRegistered = 'Sukses';
   static const String imeiAlreadyRegistered =
-      'Anda belum melakukan unlink di hp sebelumnya, karena terindikasi sudah punya Installation ID. Mohon Uninstall Aplikasi. Terimakasih 🙏';
+      'Anda belum melakukan unlink di hp sebelumnya, karena terindikasi sudah punya Installation ID. Mohon lakukan unlink dari Icon Profil dan uninstall Aplikasi. Terimakasih 🙏';
+  static const String imeiNotRegistered =
+      'Mohon lakukan login ulang untuk meregister imei anda, lalu lakukan absen kembali dengan tap button Jalankan Absen Tersimpan';
 
   static const String geofenceStorageError =
       'Mohon Maaf Storage Anda penuh. Mohon luangkan storage Anda agar bisa menyimpan data Geofence.';

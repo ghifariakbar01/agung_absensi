@@ -41,9 +41,9 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
 
   @override
   Widget build(BuildContext context) {
-    // ref.listen<AsyncValue>(imeiInitFutureProvider(context), (_, state) async {
-    //   return state.showAlertDialogOnError(context, ref);
-    // });
+    ref.listen<AsyncValue>(imeiInitFutureProvider(context), (_, state) async {
+      return state.showAlertDialogOnError(context, ref);
+    });
 
     ref.listen<AsyncValue>(errLogControllerProvider, (_, state) async {
       return state.showAlertDialogOnError(context, ref);

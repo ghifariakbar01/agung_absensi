@@ -40,7 +40,7 @@ class VButton extends StatelessWidget {
                     style: textStyle ??
                         Themes.customColor(fontSize ?? 16,
                             fontWeight: FontWeight.bold, color: Colors.white),
-                    textAlign: textAlign ?? TextAlign.start),
+                    textAlign: textAlign ?? TextAlign.center),
               ),
             ),
           )
@@ -55,7 +55,7 @@ class VButton extends StatelessWidget {
                 child: Center(
                   child: Text(
                     label,
-                    textAlign: textAlign ?? TextAlign.start,
+                    textAlign: textAlign ?? TextAlign.center,
                     style: textStyle ??
                         Themes.customColor(fontSize ?? 16,
                             fontWeight: FontWeight.bold,

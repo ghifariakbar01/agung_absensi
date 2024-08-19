@@ -20,16 +20,15 @@ class GeofenceState with _$GeofenceState {
     required bool isGetting,
     required Option<Either<GeofenceFailure, List<GeofenceResponse>>>
         failureOrSuccessOption,
-    // GEOFENCE STORAGE ACTIVITY
-    required Option<Either<GeofenceFailure, Unit>>
-        failureOrSuccessOptionStorage,
+    required Option<Either<GeofenceFailure, List<GeofenceResponse>>>
+        failureOrSuccessOptionAfterAbsen,
   }) = _GeofenceState;
 
   factory GeofenceState.initial() => GeofenceState(
         isGetting: false,
         geofenceCoordinates: [],
         failureOrSuccessOption: none(),
-        failureOrSuccessOptionStorage: none(),
+        failureOrSuccessOptionAfterAbsen: none(),
         nearestCoordinates: GeofenceCoordinate.initial(),
         currentLocation: Location.fromJson(dummyLocation),
         geofenceService: GeofenceService.instance.setup(

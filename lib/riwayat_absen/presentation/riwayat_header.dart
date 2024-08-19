@@ -2,8 +2,8 @@ import 'package:face_net_authentication/utils/string_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../shared/providers.dart';
 import '../../style/style.dart';
-import '../application/riwayat_absen_notifier.dart';
 
 class RiwayatHeader extends ConsumerWidget {
   const RiwayatHeader({required this.date});
@@ -43,9 +43,6 @@ class RiwayatHeader extends ConsumerWidget {
                   await ref
                       .read(riwayatAbsenNotifierProvider.notifier)
                       .startFilter(
-                        changePage: () => ref
-                            .read(riwayatAbsenNotifierProvider.notifier)
-                            .changePage(1),
                         changeFilter: () => ref
                             .read(riwayatAbsenNotifierProvider.notifier)
                             .changeFilter(
@@ -54,7 +51,7 @@ class RiwayatHeader extends ConsumerWidget {
                             ),
                         onAllChanged: () => ref
                             .read(riwayatAbsenNotifierProvider.notifier)
-                            .getAbsenRiwayat(
+                            .filterRiwayatAbsen(
                               dateFirst: _end2,
                               dateSecond: _start2,
                             ),
@@ -104,9 +101,6 @@ class RiwayatHeader extends ConsumerWidget {
                   await ref
                       .read(riwayatAbsenNotifierProvider.notifier)
                       .startFilter(
-                        changePage: () => ref
-                            .read(riwayatAbsenNotifierProvider.notifier)
-                            .changePage(1),
                         changeFilter: () => ref
                             .read(riwayatAbsenNotifierProvider.notifier)
                             .changeFilter(
@@ -115,7 +109,7 @@ class RiwayatHeader extends ConsumerWidget {
                             ),
                         onAllChanged: () => ref
                             .read(riwayatAbsenNotifierProvider.notifier)
-                            .getAbsenRiwayat(
+                            .filterRiwayatAbsen(
                               dateFirst: _end2,
                               dateSecond: _start2,
                             ),

@@ -58,7 +58,7 @@ class SakitUploadPage extends ConsumerWidget {
               },
               child: Stack(
                 children: [
-                  WebViewWidget(formUploadUrl),
+                  WebViewCustom(formUploadUrl),
                   Positioned(
                     bottom: 0,
                     child: SizedBox(

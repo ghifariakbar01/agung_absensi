@@ -29,7 +29,7 @@ class TugasDinasDtlPhotoPage extends HookWidget {
         ),
         body: RotatedBox(
           quarterTurns: rotate.value,
-          child: WebViewWidget(imageUrl),
+          child: WebViewCustom(imageUrl),
         ),
       ),
     );

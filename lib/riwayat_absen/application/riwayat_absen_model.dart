@@ -21,4 +21,16 @@ class RiwayatAbsenModel with _$RiwayatAbsenModel {
 
   factory RiwayatAbsenModel.fromJson(Map<String, Object?> json) =>
       _$RiwayatAbsenModelFromJson(json);
+
+  factory RiwayatAbsenModel.initial() => RiwayatAbsenModel(
+        tgl: '',
+        latitudeMasuk: '',
+        longitudeMasuk: '',
+        latitudeKeluar: '',
+        longitudeKeluar: '',
+        lokasiMasuk: '',
+        lokasiKeluar: '',
+        masuk: '',
+        pulang: '',
+      );
 }

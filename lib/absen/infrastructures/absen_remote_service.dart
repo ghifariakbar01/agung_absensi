@@ -130,12 +130,34 @@ class AbsenRemoteService {
 
       data.addAll({
         "mode": "SELECT",
-        "command":
-            "with contoh as (select format(tgljam,'yyyy-MM-dd') as tgl, id_user from $dbNameProd where id_user = ${_userModelWithPassword.idUser} and tgljam >= '$currentDate' and tgljam < '$currentDateRange' group by format(tgljam,'yyyy-MM-dd'), id_user) select *, (select max(lokasi_masuk) from $dbNameProd where id_user = contoh.id_user and mode = 'MASUK' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as lokasi_masuk, (select max(latitude_masuk) from $dbNameProd where id_user = contoh.id_user and mode = 'MASUK' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as latitude_masuk, (select max(longitude_masuk) from $dbNameProd where id_user = contoh.id_user and mode = 'MASUK' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as longitude_masuk, (select min(tgljam) from $dbNameProd where id_user = contoh.id_user and mode = 'MASUK' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as masuk, (select max(lokasi_keluar) from $dbNameProd where id_user = contoh.id_user and mode = 'PULANG' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as lokasi_keluar, (select max(latitude_keluar) from $dbNameProd where id_user = contoh.id_user and mode = 'PULANG' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as latitude_keluar, (select max(longitude_keluar) from $dbNameProd where id_user = contoh.id_user and mode = 'PULANG' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as longitude_keluar, (select max(tgljam) from $dbNameProd where id_user = contoh.id_user and mode = 'PULANG' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as pulang from contoh",
+        "command": " with contoh as (select format(tgljam,'yyyy-MM-dd') as tgl, "
+            " id_user from $dbNameProd where id_user = ${_userModelWithPassword.idUser} "
+            " and tgljam >= '$currentDate' and tgljam < '$currentDateRange' group by "
+            "  format(tgljam,'yyyy-MM-dd'), id_user) select *, (select max(lokasi_masuk) "
+            " from $dbNameProd where id_user = contoh.id_user and mode = 'MASUK' and "
+            " format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as lokasi_masuk, (select max(latitude_masuk) "
+            " from $dbNameProd where id_user = contoh.id_user and mode = 'MASUK' and "
+            " format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as latitude_masuk, "
+            " (select max(longitude_masuk) from $dbNameProd where id_user = contoh.id_user "
+            " and mode = 'MASUK' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as longitude_masuk, "
+            " (select min(tgljam) from $dbNameProd where id_user = contoh.id_user and mode = 'MASUK' "
+            " and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as masuk, (select max(lokasi_keluar) "
+            " from $dbNameProd where id_user = contoh.id_user and mode = 'PULANG' and "
+            " format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as lokasi_keluar, "
+            " (select max(latitude_keluar) from $dbNameProd where id_user =  "
+            "  contoh.id_user and mode = 'PULANG' and format(tgljam, 'yyyy-MM-dd') = "
+            " contoh.tgl) as latitude_keluar, (select max(longitude_keluar) from "
+            " $dbNameProd where id_user = contoh.id_user and mode = 'PULANG' and "
+            " format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as longitude_keluar, "
+            " (select max(tgljam) from $dbNameProd where id_user = contoh.id_user and "
+            " mode = 'PULANG' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as pulang from contoh",
       });
 
-      final response = await _dio.post('',
-          data: jsonEncode(data), options: Options(contentType: 'text/plain'));
+      final response = await _dio.post(
+        '',
+        data: jsonEncode(data),
+        options: Options(contentType: 'text/plain'),
+      );
 
       final items = response.data?[0];
 
@@ -208,7 +230,8 @@ class AbsenRemoteService {
             " lokasi_masuk, (select max(latitude_masuk) from $dbNameProd where id_user = contoh.id_user and mode = 'MASUK' and  "
             " format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as latitude_masuk, (select max(longitude_masuk) from $dbNameProd "
             " where id_user = contoh.id_user and mode = 'MASUK' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as longitude_masuk, "
-            " (select min(tgljam) from $dbNameProd where id_user = contoh.id_user and mode = 'MASUK' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as masuk, "
+            " (select min(tgljam) from $dbNameProd where id_user = contoh.id_user and mode = 'MASUK' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) "
+            " as masuk, "
             " (select max(lokasi_keluar) from $dbNameProd where id_user = contoh.id_user and mode = 'PULANG' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) "
             " as lokasi_keluar, (select max(latitude_keluar) from $dbNameProd where id_user = contoh.id_user and mode = 'PULANG' "
             " and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as latitude_keluar, (select max(longitude_keluar) "

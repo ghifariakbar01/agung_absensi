@@ -82,6 +82,10 @@ class CrossAuthServerNotifier extends _$CrossAuthServerNotifier {
   ) async {
     final List<String> _blacklist = [];
 
+    if (username.isEmpty || pass.isEmpty) {
+      return _blacklist;
+    }
+
     for (int i = 0; i < _map.length; i++) {
       _resetCutiDioProvider(_map[i].value);
 

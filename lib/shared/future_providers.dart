@@ -132,7 +132,8 @@ final imeiInitFutureProvider =
   } else {}
 
   try {
-    await ref.read(getUserFutureProvider.future);
+    // ignore: unused_result
+    await ref.refresh(getUserFutureProvider.future);
   } catch (e) {
     final helper = HelperImpl();
     await helper.storageDebugMode(ref, isDebug: true);

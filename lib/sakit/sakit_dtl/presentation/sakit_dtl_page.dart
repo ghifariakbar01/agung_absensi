@@ -149,7 +149,7 @@ class SakitDtlWidget extends HookConsumerWidget {
               ),
               child: IgnorePointer(
                 ignoring: true,
-                child: WebViewWidget(imageUrl),
+                child: WebViewCustom(imageUrl),
               )),
 
           SizedBox(

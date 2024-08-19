@@ -34,10 +34,53 @@ class GeofenceRepository {
       return left(const GeofenceFailure.wrongFormat());
     } on NoConnectionException {
       return left(const GeofenceFailure.noConnection());
-    } on RestApiException {
-      return left(const GeofenceFailure.server());
+    } on RestApiException catch (e) {
+      return left(GeofenceFailure.server(
+        e.errorCode,
+      ));
     } on RestApiExceptionWithMessage catch (e) {
-      return left(GeofenceFailure.server(e.errorCode, e.message));
+      return left(GeofenceFailure.server(
+        e.errorCode,
+        e.message,
+      ));
+    } catch (e) {
+      return left(GeofenceFailure.server(
+        01,
+        e.toString(),
+      ));
+    }
+  }
+
+  Future<Either<GeofenceFailure, List<GeofenceResponse>>>
+      getAndSaveGeofenceList() async {
+    try {
+      final geof = await _remoteService.getGeofenceList();
+
+      if (geof.isEmpty) {
+        await _credentialsStorage.clear();
+
+        return right([]);
+      } else {
+        final json = jsonEncode(geof);
+        await _credentialsStorage.save(json);
+
+        return right(geof);
+      }
+    } on FormatException {
+      return left(const GeofenceFailure.wrongFormat());
+    } on PlatformException {
+      return left(const GeofenceFailure.storage());
+    } on NoConnectionException {
+      return left(const GeofenceFailure.noConnection());
+    } on RestApiException catch (e) {
+      return left(GeofenceFailure.server(
+        e.errorCode,
+      ));
+    } on RestApiExceptionWithMessage catch (e) {
+      return left(GeofenceFailure.server(
+        e.errorCode,
+        e.message,
+      ));
     } catch (e) {
       return left(GeofenceFailure.server(
         01,

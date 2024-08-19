@@ -4,7 +4,6 @@ import 'package:face_net_authentication/utils/logging.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 
-import '../../imei/application/imei_register_state.dart';
 import '../../infrastructures/exceptions.dart';
 import '../../utils/string_utils.dart';
 
@@ -20,7 +19,7 @@ class ImeiRemoteService {
   static const String dbName = 'mst_user';
   static const String dbLogName = 'log_unlink_mobile';
 
-  Future<String?> getImei({required String idKary}) async {
+  Future<String> getImei({required String idKary}) async {
     try {
       final commandUpdate =
           "SELECT imei_hp FROM $dbName WHERE idKary = '$idKary'";
@@ -60,7 +59,7 @@ class ImeiRemoteService {
           final isEmpty = (items['items'] as List).isEmpty;
 
           if (isEmpty) {
-            return null;
+            return '';
           } else {
             final _imei = _items[0]['imei_hp'];
 
@@ -85,8 +84,6 @@ class ImeiRemoteService {
 
         throw RestApiExceptionWithMessage(errorCode, message);
       }
-    } on FormatException catch (e) {
-      throw FormatException(e.message);
     } on DioException catch (e) {
       if (e.type == DioExceptionType.unknown ||
           e.type == DioExceptionType.connectionError ||
@@ -218,7 +215,7 @@ class ImeiRemoteService {
     }
   }
 
-  Future<ImeiRegisterResponse> registerImei({
+  Future<String> registerImei({
     required String imei,
     required String idKary,
   }) async {
@@ -245,11 +242,14 @@ class ImeiRemoteService {
       final items = response.data?[0];
 
       if (items['status'] == 'Success') {
-        return ImeiRegisterResponse.withImei(imei: imei);
+        return imei;
       } else {
-        return ImeiRegisterResponse.failure(
-          items['errornum'] as int?,
-          items['error'] as String?,
+        final message = items['error'] as String?;
+        final errorCode = items['errornum'] as int;
+
+        throw RestApiExceptionWithMessage(
+          errorCode,
+          message,
         );
       }
     } on DioException catch (e) {
@@ -258,10 +258,7 @@ class ImeiRemoteService {
           e.type == DioExceptionType.connectionTimeout ||
           e.type == DioExceptionType.sendTimeout ||
           e.type == DioExceptionType.receiveTimeout) {
-        return ImeiRegisterResponse.failure(
-          404,
-          'No Connection',
-        );
+        throw NoConnectionException();
       } else {
         rethrow;
       }

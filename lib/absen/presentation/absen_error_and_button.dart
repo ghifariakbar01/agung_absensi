@@ -22,18 +22,18 @@ class AbsenErrorAndButton extends ConsumerWidget {
       value: geofenceErrorNotifier,
       data: (geofenceError) {
         return geofenceError.maybeWhen(
-            ALREADY_STARTED: () => AbsenOk(),
-            LOCATION_SERVICES_DISABLED: () => AbsenError(
-                'Harap nyalakan lokasi / GPS di Hp Anda. \n\nJika Lowbat, matikan Battery Saver / Power Saver dan nyalakan Akurasi Lokasi / Location Accuracy di Hp.\n\n Jika sudah, force close aplikasi & buka ulang.'),
-            orElse: () =>
-                AbsenError('Mohon Izinkan Lokasi E-FINGER di Hp Anda.'));
+          ALREADY_STARTED: () => AbsenOk(),
+          LOCATION_SERVICES_DISABLED: () => AbsenError(
+              'Harap nyalakan lokasi / GPS di Hp Anda. \n\nJika Lowbat, matikan Battery Saver / Power Saver dan nyalakan Akurasi Lokasi / Location Accuracy di Hp.\n\n Jika sudah, force close aplikasi & buka ulang.'),
+          orElse: () => AbsenError('Mohon Izinkan Lokasi E-FINGER di Hp Anda.'),
+        );
       },
     );
   }
 }
 
 class AbsenOk extends HookConsumerWidget {
-  const AbsenOk();
+  const AbsenOk({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -56,6 +56,9 @@ class AbsenOk extends HookConsumerWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: LocationDetail(),
+              ),
+              SizedBox(
+                height: 16,
               ),
               AbsenButton()
             ],

@@ -13,7 +13,7 @@ class AbsenState with _$AbsenState {
   const factory AbsenState.failure({
     int? errorCode,
     String? message,
-  }) = _Failure;
+  }) = _AbsenState;
 
   factory AbsenState.fromJson(Map<String, dynamic> json) =>
       _$AbsenStateFromJson(json);

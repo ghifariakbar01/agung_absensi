@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 
 import 'package:face_net_authentication/constants/assets.dart';
 import 'package:face_net_authentication/domain/riwayat_absen_failure.dart';
+import 'package:face_net_authentication/shared/providers.dart';
 
 import 'package:face_net_authentication/widgets/loading_overlay.dart';
 import 'package:face_net_authentication/widgets/v_dialogs.dart';
@@ -9,7 +10,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../application/riwayat_absen_model.dart';
-import '../application/riwayat_absen_notifier.dart';
 import 'riwayat_scaffold.dart';
 
 class RiwayatAbsenPage extends ConsumerWidget {

@@ -1,7 +1,6 @@
 import 'package:dartz/dartz.dart';
 
 import 'package:face_net_authentication/domain/riwayat_absen_failure.dart';
-import 'package:face_net_authentication/shared/providers.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../absen/infrastructures/absen_repository.dart';
@@ -14,8 +13,16 @@ class RiwayatAbsenNotifier extends StateNotifier<RiwayatAbsenState> {
 
   final AbsenRepository _absenRepository;
 
+  Future<bool> hasOfflineData() => _absenRepository
+      .getRiwayatAbsenFromStorage()
+      .then((value) => value.isNotEmpty);
+
   reset() {
     state = RiwayatAbsenState.initial();
+  }
+
+  resetFoso() {
+    state = state.copyWith(failureOrSuccessOption: none());
   }
 
   Future<void> getAbsenRiwayat({
@@ -40,11 +47,43 @@ class RiwayatAbsenNotifier extends StateNotifier<RiwayatAbsenState> {
     );
   }
 
-  void changeAbsenRiwayat(
-      List<RiwayatAbsenModel> listAbsenOld, List<RiwayatAbsenModel> listAbsen) {
-    final list = [...listAbsenOld, ...listAbsen].toSet().toList();
+  Future<void> filterRiwayatAbsen({
+    required String? dateFirst,
+    required String? dateSecond,
+    bool isFilter = false,
+  }) async {
+    Either<RiwayatAbsenFailure, List<RiwayatAbsenModel>> failureOrSuccess;
 
-    state = state.copyWith(riwayatAbsen: [...list]);
+    state = state.copyWith(
+      isGetting: true,
+      failureOrSuccessOption: none(),
+    );
+
+    failureOrSuccess = await _absenRepository.filterRiwayatAbsen(
+      dateFirst: dateFirst,
+      dateSecond: dateSecond,
+    );
+
+    state = state.copyWith(
+      isGetting: false,
+      failureOrSuccessOption: optionOf(failureOrSuccess),
+    );
+  }
+
+  Future<void> getAbsenRiwayatFromStorage() async {
+    state = state.copyWith(
+      isGetting: true,
+      failureOrSuccessOption: none(),
+    );
+
+    final _item = await _absenRepository.getRiwayatAbsenFromStorage();
+
+    state = state.copyWith(
+      isGetting: false,
+      failureOrSuccessOption: optionOf(
+        right(_item),
+      ),
+    );
   }
 
   void replaceAbsenRiwayat(List<RiwayatAbsenModel> listAbsen) {
@@ -57,10 +96,6 @@ class RiwayatAbsenNotifier extends StateNotifier<RiwayatAbsenState> {
     state = state.copyWith(failureOrSuccessOption: none());
   }
 
-  void changePage(int page) {
-    state = state.copyWith(page: page);
-  }
-
   void changeFilter(
     String dateFirst,
     String dateSecond,
@@ -71,26 +106,15 @@ class RiwayatAbsenNotifier extends StateNotifier<RiwayatAbsenState> {
     );
   }
 
-  void changeIsMore(bool isMore) {
-    state = state.copyWith(isMore: isMore);
-  }
-
   void changeIsGetting(bool isGetting) {
     state = state.copyWith(isGetting: isGetting);
   }
 
   Future<void> startFilter({
-    required Function changePage,
     required Function changeFilter,
     required Function onAllChanged,
   }) async {
-    changePage();
     changeFilter();
     await onAllChanged();
   }
 }
-
-final riwayatAbsenNotifierProvider =
-    StateNotifierProvider<RiwayatAbsenNotifier, RiwayatAbsenState>(
-  (ref) => RiwayatAbsenNotifier(ref.watch(absenRepositoryProvider)),
-);
