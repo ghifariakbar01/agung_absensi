@@ -146,7 +146,9 @@ class VScaffoldTabLayout extends HookWidget with DialogHelper, CalendarHelper {
             ? _isSearching.value
                 ? 1
                 : 3
-            : length!);
+            : _isSearching.value
+                ? 1
+                : length!);
 
     final changingIndex = useState(0);
 
@@ -195,7 +197,9 @@ class VScaffoldTabLayout extends HookWidget with DialogHelper, CalendarHelper {
           ? _isSearching.value
               ? 1
               : 3
-          : length!,
+          : _isSearching.value
+              ? 1
+              : length!,
       child: Scaffold(
           appBar: AppBar(
             elevation: 0,
@@ -348,10 +352,9 @@ class VScaffoldTabLayout extends HookWidget with DialogHelper, CalendarHelper {
                           : null,
                       icon: Icon(Icons.search)),
                 additionalInfo != null ? additionalInfo! : Container(),
-                // NetworkWidget(),
-                // SizedBox(
-                //   width: 24,
-                // )
+                SizedBox(
+                  width: 16,
+                ),
               ]
             ],
           ),

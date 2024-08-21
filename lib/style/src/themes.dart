@@ -57,14 +57,14 @@ mixin Themes {
   }
 
   static InputDecoration formStyleBordered(String labelText,
-      {Color? borderColor, Widget? icon}) {
+      {Color? borderColor, Widget? icon, double? fontSize}) {
     return InputDecoration(
       labelText: labelText,
       suffixIcon: icon ?? null,
       contentPadding: const EdgeInsets.all(16),
       hintStyle: Themes.customColor(14, color: Palette.primaryColor),
       labelStyle: Themes.customColor(
-        14,
+        fontSize ?? 14,
       ),
       floatingLabelBehavior: FloatingLabelBehavior.always,
       border: Themes.focused(color: borderColor ?? Palette.primaryColor),

@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:collection/collection.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/services.dart';
 
@@ -44,12 +43,6 @@ class BackgroundRepository {
     } catch (e) {
       return left(BackgroundFailure.unknown(e.toString()));
     }
-  }
-
-  List<SavedLocation> _modifyIdInList(List<SavedLocation> locations) {
-    return locations
-        .mapIndexed((index, e) => e.copyWith(id: index + 1))
-        .toList();
   }
 
   Future<Either<BackgroundFailure, Unit>> addBackgroundLocation(

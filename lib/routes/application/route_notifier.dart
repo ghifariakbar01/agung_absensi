@@ -40,6 +40,8 @@ import '../../izin/izin_dtl/presentation/izin_dtl_photo_page.dart';
 import '../../izin/izin_dtl/presentation/izin_upload_page.dart';
 import '../../izin/izin_list/application/izin_list.dart';
 import '../../izin/izin_list/presentation/izin_list_page.dart';
+import '../../jadwal_shift/create_jadwal_shift/presentation/create_jadwal_shift_page.dart';
+import '../../jadwal_shift/jadwal_shift_list/presentation/jadwal_shift_list_page.dart';
 import '../../lembur/create_lembur/presentation/create_lembur_page.dart';
 import '../../lembur/create_lembur/presentation/edit_lembur_page.dart';
 import '../../lembur/lembur_list/application/lembur_list.dart';
@@ -460,6 +462,16 @@ class RouterNotifier extends ChangeNotifier {
                 final id = state.extra as int;
                 return TugasDinasViewSuratPage(id);
               },
+            ),
+            GoRoute(
+              name: RouteNames.jadwalShiftListNameRoute,
+              path: RouteNames.jadwalShiftListRoute,
+              builder: (context, state) => JadwalShiftListPage(),
+            ),
+            GoRoute(
+              name: RouteNames.createJadwalShiftNameRoute,
+              path: RouteNames.createJadwalShiftRoute,
+              builder: (context, state) => CreateJadwalShiftPage(),
             ),
           ]),
     ];

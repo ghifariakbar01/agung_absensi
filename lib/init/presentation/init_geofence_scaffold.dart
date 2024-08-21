@@ -1,14 +1,15 @@
 import 'package:dartz/dartz.dart';
-import 'package:face_net_authentication/device_detector/device_detector_notifier.dart';
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:geofence_service/geofence_service.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../background/application/saved_location.dart';
 import '../../config/configuration.dart';
+import '../../device_detector/device_detector_notifier.dart';
 import '../../domain/background_failure.dart';
 import '../../domain/geofence_failure.dart';
 import '../../err_log/application/err_log_notifier.dart';
@@ -19,6 +20,7 @@ import '../../home/presentation/home_saved.dart';
 import '../../shared/common_widgets.dart';
 import '../../shared/providers.dart';
 import '../../style/style.dart';
+import '../../utils/dialog_helper.dart';
 import '../../widgets/v_async_widget.dart';
 
 class InitGeofenceScaffold extends StatefulHookConsumerWidget {
@@ -35,17 +37,39 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await ref.read(backgroundNotifierProvider.notifier).getSavedLocations();
+      await _initGeofence();
 
-      final hasOfflineData =
-          await ref.read(geofenceProvider.notifier).hasOfflineData();
-
-      if (hasOfflineData) {
-        await ref.read(geofenceProvider.notifier).getGeofenceListFromStorage();
-      } else {
-        await ref.read(geofenceProvider.notifier).getGeofenceList();
-      }
+      FlLocation.getLocationServicesStatusStream().listen((event) async {
+        switch (event) {
+          case LocationServicesStatus.disabled:
+            await _showGpsDialog();
+            break;
+          case LocationServicesStatus.enabled:
+            await _initGeofence();
+            break;
+        }
+      });
     });
+  }
+
+  _showGpsDialog() {
+    return DialogHelper.showCustomDialog(
+      'Mohon nyalakan lokasi Anda untuk melakukan absensi',
+      context,
+    );
+  }
+
+  Future<void> _initGeofence() async {
+    await ref.read(backgroundNotifierProvider.notifier).getSavedLocations();
+
+    final hasOfflineData =
+        await ref.read(geofenceProvider.notifier).hasOfflineData();
+
+    if (hasOfflineData) {
+      await ref.read(geofenceProvider.notifier).getGeofenceListFromStorage();
+    } else {
+      await ref.read(geofenceProvider.notifier).getGeofenceList();
+    }
   }
 
   @override

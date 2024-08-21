@@ -271,16 +271,16 @@ class SakitDtlDialog extends ConsumerWidget {
                     Material(
                       color: Colors.transparent,
                       child: InkWell(
-                        onTap: () => item.qtyfoto == 0
+                        onTap: () => item.qtyFoto == 0
                             ? context.pushNamed(RouteNames.sakitUploadRoute,
                                 extra: item.idSakit)
                             : context.pushNamed(RouteNames.sakitDtlRoute,
                                 extra: item.idSakit),
                         child: Ink(
                           child: Text(
-                              item.qtyfoto == 0
+                              item.qtyFoto == 0
                                   ? '-'
-                                  : 'Upload : ${item.qtyfoto} Images',
+                                  : 'Upload : ${item.qtyFoto} Images',
                               style: Themes.customColor(
                                 9,
                                 color: Palette.blueLink,
@@ -297,7 +297,7 @@ class SakitDtlDialog extends ConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  if (true)
+                  if (item.isEdit!)
                     TappableSvg(
                         assetPath: Assets.iconEdit,
                         onTap: () {
@@ -310,7 +310,7 @@ class SakitDtlDialog extends ConsumerWidget {
                   SizedBox(
                     width: 8,
                   ),
-                  if (true)
+                  if (item.isDelete!)
                     TappableSvg(
                         assetPath: Assets.iconDelete,
                         onTap: () async {

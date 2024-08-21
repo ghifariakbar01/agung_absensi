@@ -12,6 +12,7 @@ class VButton extends StatelessWidget {
       this.height,
       this.textAlign,
       this.fontSize,
+      this.fontWeight,
       this.textStyle})
       : super(key: key);
 
@@ -19,6 +20,7 @@ class VButton extends StatelessWidget {
   final Color? color;
   final Function() onPressed;
   final bool? isEnabled;
+  final FontWeight? fontWeight;
   final double? height;
   final double? fontSize;
   final TextAlign? textAlign;
@@ -39,7 +41,8 @@ class VButton extends StatelessWidget {
                 child: Text(label,
                     style: textStyle ??
                         Themes.customColor(fontSize ?? 16,
-                            fontWeight: FontWeight.bold, color: Colors.white),
+                            fontWeight: fontWeight ?? FontWeight.bold,
+                            color: Colors.white),
                     textAlign: textAlign ?? TextAlign.center),
               ),
             ),
@@ -58,7 +61,7 @@ class VButton extends StatelessWidget {
                     textAlign: textAlign ?? TextAlign.center,
                     style: textStyle ??
                         Themes.customColor(fontSize ?? 16,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: fontWeight ?? FontWeight.bold,
                             color: Theme.of(context).disabledColor),
                   ),
                 )),

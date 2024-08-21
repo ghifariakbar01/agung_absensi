@@ -1,5 +1,3 @@
-// ignore_for_file: invalid_annotation_target
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'sakit_list.freezed.dart';
@@ -33,27 +31,30 @@ class SakitList with _$SakitList {
     @JsonKey(name: 'btl_sta') bool? btlSta,
     @JsonKey(name: 'btl_tgl') DateTime? btlTgl,
     @JsonKey(name: 'btl_nm') String? btlNm,
-    @JsonKey(name: 'btl_msg') String? btlMsg,
-    @JsonKey(name: 'sisa_cuti') String? sisaCuti,
-    @JsonKey(name: 'idkary') String? idkary,
+    @JsonKey(name: 'sisa_cuti') int? sisaCuti,
+    @JsonKey(name: 'idkary') String? idKary,
     @JsonKey(name: 'fullname') String? fullname,
     @JsonKey(name: 'dept') String? dept,
     @JsonKey(name: 'comp') String? comp,
     @JsonKey(name: 'email') String? email,
     @JsonKey(name: 'email2') String? email2,
-    @JsonKey(name: 'jedaspv') int? jedaspv,
-    @JsonKey(name: 'jedahr') int? jedahr,
-    @JsonKey(name: 'qtyfoto') int? qtyfoto,
-    // @JsonKey(name: 'app_spv') String? appSpv,
-    // @JsonKey(name: 'app_hrd') String? appHrd,
-    // @JsonKey(name: 'u_by') String? uBy,
-    // @JsonKey(name: 'c_by') String? cBy,
+    @JsonKey(name: 'jedaspv') int? jedaSpv,
+    @JsonKey(name: 'jedahr') int? jedaHrd,
+    @JsonKey(name: 'qtyfoto') int? qtyFoto,
+    @JsonKey(name: 'app_spv') String? appSpv,
+    @JsonKey(name: 'app_hrd') String? appHrd,
+    @JsonKey(name: 'u_by') String? uBy,
+    @JsonKey(name: 'c_by') String? cBy,
+    @JsonKey(name: 'is_edit') bool? isEdit,
+    @JsonKey(name: 'is_delete') bool? isDelete,
+    @JsonKey(name: 'is_spv_note') bool? isSpvNote,
+    @JsonKey(name: 'is_hr_note') bool? isHrdNote,
     @JsonKey(name: 'is_spv') bool? isSpv,
     @JsonKey(name: 'spv_msg') String? spvMsg,
-    @JsonKey(name: 'is_hr') bool? isHr,
-    @JsonKey(name: 'hr_msg') String? hrMsg,
+    @JsonKey(name: 'is_hr') bool? isHrd,
+    @JsonKey(name: 'hr_msg') String? hrdMsg,
     @JsonKey(name: 'is_btl') bool? isBtl,
-    // @JsonKey(name: 'btl_msg') String? btlMsg,
+    @JsonKey(name: 'btl_msg') String? btlMsg,
   }) = _SakitList;
 
   factory SakitList.fromJson(Map<String, dynamic> json) =>

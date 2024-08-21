@@ -48,6 +48,8 @@ final List<Item> activity = [
   Item('Lembur', Assets.iconLembur, RouteNames.lemburListNameRoute),
   Item(
       'Tugas Dinas', Assets.iconTugasDinas, RouteNames.tugasDinasListNameRoute),
+  Item('Jadwal Shift', Assets.iconJadwalShift,
+      RouteNames.jadwalShiftListNameRoute),
 ];
 
 // final List<Item> others = [

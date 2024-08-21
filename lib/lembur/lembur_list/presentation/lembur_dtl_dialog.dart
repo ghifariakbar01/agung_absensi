@@ -314,7 +314,7 @@ class LemburDtlDialog extends ConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  if (true)
+                  if (item.isEdit!)
                     TappableSvg(
                         assetPath: Assets.iconEdit,
                         onTap: () {
@@ -327,7 +327,7 @@ class LemburDtlDialog extends ConsumerWidget {
                   SizedBox(
                     width: 8,
                   ),
-                  if (true)
+                  if (item.isDelete!)
                     TappableSvg(
                         assetPath: Assets.iconDelete,
                         onTap: () {

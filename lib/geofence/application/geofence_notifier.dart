@@ -162,6 +162,16 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
       ),
     );
 
+    geofenceservice.addLocationServicesStatusChangeListener((isOn) {
+      if (isOn) {
+        initializeGeoFence(
+          geofenceList,
+          onError: onError,
+          mockListener: mockListener,
+        );
+      }
+    });
+
     if (geofenceservice.isRunningService) {
       Log.info('running');
     }

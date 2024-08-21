@@ -55,7 +55,7 @@ class SearchPemberiTugas extends HookConsumerWidget {
     final pemberiTugas = ref.watch(pemberiTugasDinasNotifierProvider);
 
     return VScaffoldWidget(
-      scaffoldTitle: 'Search Pemberi Tugas',
+      scaffoldTitle: 'Search Nama',
       scaffoldBody: KeyboardDismissOnTap(
         child: ListView(
           children: [
@@ -72,7 +72,7 @@ class SearchPemberiTugas extends HookConsumerWidget {
                 }
               },
               decoration: Themes.formStyle(
-                'Search Pemberi Tugas',
+                'Search Nama',
               ),
             ),
             SizedBox(

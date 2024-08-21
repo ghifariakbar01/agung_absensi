@@ -365,12 +365,12 @@ class SakitListItem extends HookConsumerWidget {
                                 : Colors.grey),
                       ),
                       SizedBox(
-                        height: item.qtyfoto == 0 ? 8 : 2,
+                        height: item.qtyFoto == 0 ? 8 : 2,
                       ),
                       Material(
                         color: Colors.transparent,
                         child: InkWell(
-                          onTap: () => item.qtyfoto == 0
+                          onTap: () => item.qtyFoto == 0
                               ? context.pushNamed(
                                   RouteNames.sakitUploadRoute,
                                   extra: item.idSakit,
@@ -379,7 +379,7 @@ class SakitListItem extends HookConsumerWidget {
                                   RouteNames.sakitDtlRoute,
                                   extra: item.idSakit,
                                 ),
-                          child: item.qtyfoto == 0
+                          child: item.qtyFoto == 0
                               ? Ink(
                                   child: Icon(
                                   Icons.upload,
@@ -388,7 +388,7 @@ class SakitListItem extends HookConsumerWidget {
                                       : Palette.primaryColor,
                                 ))
                               : Ink(
-                                  child: Text('Upload : ${item.qtyfoto} Images',
+                                  child: Text('Upload : ${item.qtyFoto} Images',
                                       style: Themes.customColor(
                                         9,
                                         color: item.btlSta == true
@@ -615,11 +615,11 @@ class SakitListItem extends HookConsumerWidget {
                                   child: InkWell(
                                     splashColor: Palette.primaryColor,
                                     onTap: () async {
-                                      if (!item.isHr!) {
+                                      if (!item.isHrd!) {
                                         showDialog(
                                           context: context,
                                           builder: (context) => VFailedDialog(
-                                            message: item.hrMsg,
+                                            message: item.hrdMsg,
                                           ),
                                         );
                                       } else {

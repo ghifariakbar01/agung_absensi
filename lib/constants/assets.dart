@@ -21,6 +21,7 @@ class Assets {
   static const String iconRiwayat = 'assets/ic_riwayat.svg';
   static const String iconSakit = 'assets/ic_sakit.svg';
   static const String iconTugasDinas = 'assets/ic_tugas_dinas.svg';
+  static const String iconJadwalShift = 'assets/ic_jadwal_shift.svg';
   static const String iconGantiHari = 'assets/ic_ganti_hari.svg';
   static const String iconSlipGaji = 'assets/ic_slip_gaji.svg';
   static const String iconLembur = 'assets/ic_lembur.svg';

@@ -307,7 +307,7 @@ class GantiHariDtlDialog extends ConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  if (true)
+                  if (item.isEdit!)
                     TappableSvg(
                         assetPath: Assets.iconEdit,
                         onTap: () {
@@ -320,7 +320,7 @@ class GantiHariDtlDialog extends ConsumerWidget {
                   SizedBox(
                     width: 8,
                   ),
-                  if (true)
+                  if (item.isDelete!)
                     TappableSvg(
                         assetPath: Assets.iconDelete,
                         onTap: () {

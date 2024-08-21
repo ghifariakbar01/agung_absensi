@@ -160,4 +160,13 @@ class RouteNames {
 
   static const centralApproveNameRoute = 'centralApprove';
   static const centralApproveRoute = 'centralApprove';
+
+  static const jadwalShiftListNameRoute = 'jadwalShiftList';
+  static const jadwalShiftListRoute = 'jadwalShiftList';
+
+  static const createJadwalShiftNameRoute = 'createJadwalShift';
+  static const createJadwalShiftRoute = 'createJadwalShift';
+
+  static const editJadwalShiftNameRoute = 'editJadwalShift';
+  static const editJadwalShiftRoute = 'editJadwalShift';
 }
