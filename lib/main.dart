@@ -5,13 +5,15 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:upgrader/upgrader.dart';
 import 'config/configuration.dart';
-import 'firebase/remote_config/helper/firebase_remote_config_initializer.dart';
-import 'imei_introduction/application/shared/imei_introduction_providers.dart';
+
+import 'features/firebase/remote_config/helper/firebase_remote_config_initializer.dart';
+import 'features/imei_introduction/application/shared/imei_introduction_providers.dart';
+import 'features/tc/application/shared/tc_providers.dart';
 import 'shared/providers.dart';
 import 'style/style.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-import 'tc/application/shared/tc_providers.dart';
+
 import 'utils/upgrader_message.dart';
 
 Future<void> main() async {

@@ -4,8 +4,8 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../domain/user_failure.dart';
-import '../../../remember_me/application/remember_me_state.dart';
+import '../../../features/domain/user_failure.dart';
+import '../../../features/remember_me/application/remember_me_state.dart';
 
 class KaryawanShiftRepository {
   KaryawanShiftRepository();

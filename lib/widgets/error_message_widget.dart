@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../copyright/presentation/copyright_page.dart';
+import '../features/copyright/presentation/copyright_page.dart';
 import '../shared/providers.dart';
 import '../style/style.dart';
 

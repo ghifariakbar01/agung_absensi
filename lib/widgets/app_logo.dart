@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-import '../../../constants/assets.dart';
+import '../constants/assets.dart';
 
 class AppLogo extends StatelessWidget {
   const AppLogo();

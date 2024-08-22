@@ -1,8 +1,8 @@
+import 'package:face_net_authentication/constants/assets.dart';
 import 'package:face_net_authentication/shared/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../constants/assets.dart';
 import '../style/style.dart';
 
 class UserInfo extends ConsumerWidget {

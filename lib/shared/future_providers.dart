@@ -2,15 +2,16 @@ import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:face_net_authentication/helper.dart';
-import 'package:face_net_authentication/ip/application/ip_notifier.dart';
+
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../auth/infrastructures/auth_repository.dart';
+import '../features/auth/infrastructures/auth_repository.dart';
 import '../constants/constants.dart';
-import '../cross_auth/application/cross_auth_notifier.dart';
-import '../firebase/remote_config/application/firebase_remote_config_notifier.dart';
-import '../user/application/user_model.dart';
+import '../features/cross_auth/application/cross_auth_notifier.dart';
+import '../features/firebase/remote_config/application/firebase_remote_config_notifier.dart';
+import '../features/ip/application/ip_notifier.dart';
+import '../features/user/application/user_model.dart';
 import 'providers.dart';
 
 _determineBaseUrl(UserModelWithPassword user) {

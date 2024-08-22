@@ -2,7 +2,7 @@ import 'package:face_net_authentication/style/style.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../routes/application/route_names.dart';
+import '../features/routes/application/route_names.dart';
 
 class CopyrightAgung extends StatelessWidget {
   const CopyrightAgung({Key? key}) : super(key: key);

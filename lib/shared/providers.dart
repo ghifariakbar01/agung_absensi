@@ -1,64 +1,64 @@
 // import 'package:face_net_authentication/utils/logging.dart';
 
 import 'package:dio/dio.dart';
-import 'package:face_net_authentication/infrastructures/cache_storage/imei_checked_storage.dart';
 
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../absen/application/absen_auth_notifier.dart';
-import '../absen/application/absen_auth_state.dart';
-import '../absen/application/absen_notifier.dart';
-import '../absen/application/absen_state.dart';
-import '../absen/infrastructures/absen_remote_service.dart';
-import '../absen/infrastructures/absen_repository.dart';
+import '../features/absen/application/absen_auth_notifier.dart';
+import '../features/absen/application/absen_auth_state.dart';
+import '../features/absen/application/absen_notifier.dart';
+import '../features/absen/application/absen_state.dart';
+import '../features/absen/infrastructures/absen_remote_service.dart';
+import '../features/absen/infrastructures/absen_repository.dart';
 
-import '../auth/application/auth_notifier.dart';
-import '../auth/infrastructures/auth_interceptor.dart';
-import '../auth/infrastructures/auth_interceptor_two.dart';
-import '../auth/infrastructures/auth_remote_service.dart';
-import '../auth/infrastructures/auth_repository.dart';
+import '../features/auth/application/auth_notifier.dart';
+import '../features/auth/infrastructures/auth_interceptor.dart';
+import '../features/auth/infrastructures/auth_interceptor_two.dart';
+import '../features/auth/infrastructures/auth_remote_service.dart';
+import '../features/auth/infrastructures/auth_repository.dart';
 
-import '../background/application/background_notifier.dart';
-import '../background/application/background_state.dart';
+import '../features/background/application/background_notifier.dart';
+import '../features/background/application/background_state.dart';
 
-import '../geofence/application/geofence_notifier.dart';
-import '../geofence/application/geofence_state.dart';
-import '../geofence/infrastructures/geofence_remote_service.dart';
-import '../geofence/infrastructures/geofence_repository.dart';
-import '../home/applicatioin/home_notifier.dart';
-import '../home/applicatioin/home_state.dart';
-import '../imei/application/imei_auth_notifier.dart';
-import '../imei/application/imei_auth_state.dart';
-import '../imei/application/imei_reset_notifier.dart';
-import '../imei/application/imei_reset_state.dart';
+import '../features/geofence/application/geofence_notifier.dart';
+import '../features/geofence/application/geofence_state.dart';
+import '../features/geofence/infrastructures/geofence_remote_service.dart';
+import '../features/geofence/infrastructures/geofence_repository.dart';
+import '../features/home/applicatioin/home_notifier.dart';
+import '../features/home/applicatioin/home_state.dart';
+import '../features/imei/application/imei_auth_notifier.dart';
+import '../features/imei/application/imei_auth_state.dart';
+import '../features/imei/application/imei_reset_notifier.dart';
+import '../features/imei/application/imei_reset_state.dart';
 
-import '../imei/infrastructures/imei_remote_service.dart';
+import '../features/imei/infrastructures/imei_remote_service.dart';
 import '../infrastructures/cache_storage/auto_absen_storage.dart';
-import '../background/infrastructures/background_repository.dart';
+import '../features/background/infrastructures/background_repository.dart';
+import '../infrastructures/cache_storage/imei_checked_storage.dart';
 import '../infrastructures/cache_storage/riwayat_storage.dart';
 import '../infrastructures/credentials_storage/credentials_storage.dart';
 import '../infrastructures/credentials_storage/secure_credentials_storage.dart';
 
 import '../infrastructures/cache_storage/geofence_storage.dart';
 import '../infrastructures/cache_storage/imei_storage.dart';
-import '../imei/infrastructures/imei_repository.dart';
+import '../features/imei/infrastructures/imei_repository.dart';
 import '../infrastructures/karyawan/infrastructures/karyawan_repository.dart';
 
-import '../init_user/application/init_user_notifier.dart';
-import '../init_user/application/init_user_status.dart';
-import '../mock_location/application/mock_location_notifier.dart';
-import '../mock_location/application/mock_location_state.dart';
-import '../riwayat_absen/application/riwayat_absen_notifier.dart';
-import '../riwayat_absen/application/riwayat_absen_state.dart';
-import '../routes/application/route_notifier.dart';
-import '../sign_in_form/application/sign_in_form_notifier.dart';
-import '../tester/application/tester_notifier.dart';
-import '../tester/application/tester_state.dart';
-import '../user/application/user_notifier.dart';
-import '../user/application/user_state.dart';
+import '../features/init_user/application/init_user_notifier.dart';
+import '../features/init_user/application/init_user_status.dart';
+import '../features/mock_location/application/mock_location_notifier.dart';
+import '../features/mock_location/application/mock_location_state.dart';
+import '../features/riwayat_absen/application/riwayat_absen_notifier.dart';
+import '../features/riwayat_absen/application/riwayat_absen_state.dart';
+import '../features/routes/application/route_notifier.dart';
+import '../features/sign_in_form/application/sign_in_form_notifier.dart';
+import '../features/tester/application/tester_notifier.dart';
+import '../features/tester/application/tester_state.dart';
+import '../features/user/application/user_notifier.dart';
+import '../features/user/application/user_state.dart';
 
 part 'providers.g.dart';
 

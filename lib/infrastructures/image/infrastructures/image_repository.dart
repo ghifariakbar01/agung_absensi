@@ -2,7 +2,7 @@ import 'package:face_net_authentication/shared/providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../constants/constants.dart';
-import '../../../user/application/user_model.dart';
+import '../../../features/user/application/user_model.dart';
 
 part 'image_repository.g.dart';
 

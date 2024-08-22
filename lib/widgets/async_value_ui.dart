@@ -1,14 +1,15 @@
 import 'package:dio/dio.dart';
-import 'package:face_net_authentication/utils/logging.dart';
-
-import 'package:face_net_authentication/err_log/application/err_log_notifier.dart';
-import 'package:face_net_authentication/infrastructures/exceptions.dart';
-import 'package:face_net_authentication/widgets/alert_dialogs.dart';
 import 'package:face_net_authentication/utils/string_hardcoded.dart';
+
+import 'package:face_net_authentication/widgets/alert_dialogs.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../imei/application/imei_notifier.dart';
+import '../features/err_log/application/err_log_notifier.dart';
+import '../features/imei/application/imei_notifier.dart';
+import '../infrastructures/exceptions.dart';
+import '../utils/logging.dart';
 import '../shared/providers.dart';
 
 extension AsyncValueUI on AsyncValue {

@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter/services.dart';
 
-import '../domain/password_expired_failure.dart';
+import '../features/domain/password_expired_failure.dart';
 import 'credentials_storage/credentials_storage.dart';
 
 class PasswordExpiredRepository {
