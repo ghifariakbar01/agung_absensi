@@ -15,6 +15,7 @@ class CreateJadwalShiftRemoteService {
 
   Future<Unit> submitJadwalShift({
     required int idUser,
+    required int week,
     required String username,
     required String pass,
     required DateTime dateTime,
@@ -29,6 +30,7 @@ class CreateJadwalShiftRemoteService {
             'id_user': idUser,
             'server': server,
             'periode': periode,
+            'week': week,
           }));
 
       final items = response.data;
@@ -41,7 +43,9 @@ class CreateJadwalShiftRemoteService {
         final errorCode = items['status_code'] as int;
 
         throw RestApiExceptionWithMessage(
-            errorCode, "$errorCode : $message $errmessage ");
+          errorCode,
+          "$errorCode : ${errmessage ?? message} ",
+        );
       }
     } on FormatException catch (e) {
       throw FormatException(e.message);

@@ -21,8 +21,7 @@ extension AsyncValueUI on AsyncValue {
 
       Log.shout('error is $error');
       if (error is RestApiExceptionWithMessage) {
-        message = (error as RestApiExceptionWithMessage).message ??
-            'Error RestApiExceptionWithMessage';
+        message = (error as RestApiExceptionWithMessage).message!;
       } else if (error is FormatException) {
         message = (error as FormatException).message;
       } else if (error is RestApiException) {
@@ -37,7 +36,7 @@ extension AsyncValueUI on AsyncValue {
       }
 
       if (error is NoConnectionException == false) {
-        await _sendLog(ref, message);
+        // await _sendLog(ref, message);
       }
 
       if (error is DioException) {

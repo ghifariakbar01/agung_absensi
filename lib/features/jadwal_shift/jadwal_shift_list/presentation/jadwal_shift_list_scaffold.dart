@@ -211,8 +211,8 @@ class JadwalShiftListScaffold extends HookConsumerWidget
                   data: (_) => VAsyncWidgetScaffold<bool>(
                     value: _userHasStaff,
                     data: (s) => VScaffoldTabLayout(
-                      scaffoldTitle: 'Jadwal Shift',
                       length: 2,
+                      scaffoldTitle: 'Jadwal Shift',
                       mapPT: mapPT,
                       additionalInfo:
                           VAdditionalInfo(infoMessage: [infoMessage]),
@@ -279,7 +279,6 @@ class JadwalShiftListScaffold extends HookConsumerWidget
                                 scrollController,
                               );
                             }),
-                        Container(),
                       ],
                     ),
                   ),

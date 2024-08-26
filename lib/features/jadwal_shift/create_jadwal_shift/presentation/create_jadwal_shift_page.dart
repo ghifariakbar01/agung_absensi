@@ -31,6 +31,9 @@ class CreateJadwalShiftPage extends HookConsumerWidget {
     final periode = useState(DateTime.now().subtract(Duration(days: 1)));
     final periodePlaceHolder = useTextEditingController();
 
+    final week = useState(1);
+    final weekList = [1, 2];
+
     ref.listen<AsyncValue>(createJadwalShiftProvider, (_, state) async {
       if (!state.isLoading &&
           state.hasValue &&
@@ -51,7 +54,7 @@ class CreateJadwalShiftPage extends HookConsumerWidget {
       return state.showAlertDialogOnError(context, ref);
     });
 
-    final createIzin = ref.watch(createJadwalShiftProvider);
+    final createJadwal = ref.watch(createJadwalShiftProvider);
 
     final _formKey = useMemoized(GlobalKey<FormState>.new, const []);
 
@@ -61,7 +64,7 @@ class CreateJadwalShiftPage extends HookConsumerWidget {
       child: VAsyncWidgetScaffold<void>(
         value: errLog,
         data: (_) => VAsyncWidgetScaffold<void>(
-          value: createIzin,
+          value: createJadwal,
           data: (_) => VScaffoldWidget(
               appbarColor: Palette.primaryColor,
               scaffoldTitle: 'Create Form Jadwal Shift',
@@ -154,6 +157,49 @@ class CreateJadwalShiftPage extends HookConsumerWidget {
                       ),
 
                       SizedBox(
+                        height: 16,
+                      ),
+
+                      DropdownButtonFormField<int>(
+                        isExpanded: true,
+                        elevation: 0,
+                        iconSize: 20,
+                        padding: EdgeInsets.all(0),
+                        icon: Icon(Icons.keyboard_arrow_down_rounded,
+                            color: Palette.primaryColor),
+                        decoration: Themes.formStyleBordered(
+                          'Minggu ke-',
+                        ),
+                        validator: (value) {
+                          if (value == null) {
+                            return 'Form tidak boleh kosong';
+                          }
+
+                          return null;
+                        },
+                        value: weekList.firstWhere(
+                          (element) => element == week.value,
+                          orElse: () => weekList.first,
+                        ),
+                        onChanged: (int? value) {
+                          if (value != null) {
+                            week.value = value;
+                          }
+                        },
+                        items: weekList.map<DropdownMenuItem<int>>((int value) {
+                          return DropdownMenuItem<int>(
+                            value: value,
+                            child: Text(
+                              'Week ${value} & ${value + 1}',
+                              style: Themes.customColor(
+                                14,
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+
+                      SizedBox(
                         height: 8,
                       ),
 
@@ -163,7 +209,9 @@ class CreateJadwalShiftPage extends HookConsumerWidget {
                             label: 'Submit Jadwal Shift',
                             onPressed: () async {
                               Log.info(
-                                  ' VARIABLES : \n  Nama : ${namaTextController.value.text} \n periode ${periode.value} ');
+                                  ' VARIABLES : \n  Nama : ${namaTextController.value.text} '
+                                  ' \n periode ${periode.value} '
+                                  ' \n week ${week.value} ');
 
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();
@@ -171,6 +219,7 @@ class CreateJadwalShiftPage extends HookConsumerWidget {
                                     .read(createJadwalShiftProvider.notifier)
                                     .submitJadwalShift(
                                       dateTime: periode.value,
+                                      week: week.value,
                                       onError: (msg) {
                                         return DialogHelper.showCustomDialog(
                                           msg,

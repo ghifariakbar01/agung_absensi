@@ -30,7 +30,7 @@ class JadwalShiftListItem extends HookConsumerWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: SizedBox(
-        height: 145,
+        height: 175,
         child: Stack(
           children: [
             Container(
@@ -157,6 +157,33 @@ class JadwalShiftListItem extends HookConsumerWidget {
                               ),
                             ],
                           ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Created',
+                                style: Themes.customColor(
+                                  7,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 2,
+                              ),
+                              Text(
+                                item.cUser == null || item.cDate == null
+                                    ? '-'
+                                    : "${item.cUser} / ${DateFormat('yyyy-MM-dd HH:mm').format(item.cDate!)}",
+                                style: Themes.customColor(9,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                       SizedBox(
@@ -197,7 +224,7 @@ class JadwalShiftListItem extends HookConsumerWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Created',
+                                'Week',
                                 style: Themes.customColor(
                                   7,
                                   color: Colors.grey,
@@ -207,9 +234,11 @@ class JadwalShiftListItem extends HookConsumerWidget {
                                 height: 2,
                               ),
                               Text(
-                                item.cUser == null || item.cDate == null
+                                item.week == null
                                     ? '-'
-                                    : "${item.cUser} / ${DateFormat('yyyy-MM-dd HH:mm').format(item.cDate!)}",
+                                    : item.week == 0
+                                        ? '-'
+                                        : "Week ${item.week} & ${item.week! + 1}",
                                 style: Themes.customColor(9,
                                     color: Colors.black,
                                     fontWeight: FontWeight.w500),
@@ -217,7 +246,7 @@ class JadwalShiftListItem extends HookConsumerWidget {
                             ],
                           ),
                         ],
-                      )
+                      ),
                     ],
                   ),
 

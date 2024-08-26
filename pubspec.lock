@@ -550,32 +550,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.20.5"
-  flutter_inappwebview_android:
-    dependency: "direct overridden"
-    description:
-      path: flutter_inappwebview_android
-      ref: android_release_mode_hotfix
-      resolved-ref: "0d25da09df5ad3a4af8e5ad21853584d733f1fc9"
-      url: "https://github.com/navaronbracke/flutter_inappwebview.git"
-    source: git
-    version: "1.0.13"
-  flutter_inappwebview_internal_annotations:
-    dependency: transitive
-    description:
-      name: flutter_inappwebview_internal_annotations
-      sha256: "5f80fd30e208ddded7dbbcd0d569e7995f9f63d45ea3f548d8dd4c0b473fb4c8"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.1"
-  flutter_inappwebview_platform_interface:
-    dependency: "direct overridden"
-    description:
-      path: flutter_inappwebview_platform_interface
-      ref: android_release_mode_hotfix
-      resolved-ref: "0d25da09df5ad3a4af8e5ad21853584d733f1fc9"
-      url: "https://github.com/navaronbracke/flutter_inappwebview.git"
-    source: git
-    version: "1.0.11"
   flutter_keyboard_visibility:
     dependency: "direct main"
     description:

@@ -47,60 +47,59 @@ class JadwalShiftDtlItem extends HookConsumerWidget {
                   children: [
                     Text(
                       'Jadwal',
-                      style: Themes.customColor(7, color: Colors.grey),
+                      style: Themes.customColor(10, color: Colors.grey),
                     ),
                     SizedBox(
                       height: 8,
                     ),
-                    SizedBox(
-                      height: 50,
-                      child: VAsyncValueWidget<List<AbsenGantiHari>>(
+                    VAsyncValueWidget<List<AbsenGantiHari>>(
                         value: absenGantiHari,
-                        data: (absen) =>
-                            DropdownButtonFormField<AbsenGantiHari>(
-                          isExpanded: true,
-                          elevation: 0,
-                          iconSize: 11,
-                          padding: EdgeInsets.all(0),
-                          icon: Icon(
-                            Icons.keyboard_arrow_down_rounded,
-                            color: Palette.primaryColor,
-                          ),
-                          validator: (value) {
-                            if (value == null) {
-                              return 'Form tidak boleh kosong';
-                            }
+                        data: (absen) {
+                          return DropdownButtonFormField<AbsenGantiHari>(
+                            elevation: 0,
+                            iconSize: 14,
+                            padding: EdgeInsets.all(0),
+                            icon: Icon(
+                              Icons.keyboard_arrow_down_rounded,
+                              color: Palette.primaryColor,
+                            ),
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Form tidak boleh kosong';
+                              }
 
-                            return null;
-                          },
-                          value: absen.firstWhere(
-                            (element) =>
-                                element.nama.toString() == param.value.jadwal,
-                            orElse: () => absen.first,
-                          ),
-                          onChanged: (AbsenGantiHari? value) {
-                            if (value != null) {
-                              final newItem = item.copyWith(jadwal: value.nama);
+                              return null;
+                            },
+                            value: absen.firstWhere(
+                              (element) =>
+                                  element.nama.toString() == param.value.jadwal,
+                              orElse: () => absen.first,
+                            ),
+                            onChanged: (AbsenGantiHari? value) {
+                              if (value != null) {
+                                final newItem =
+                                    item.copyWith(jadwal: value.nama);
 
-                              onChanged(newItem);
-                              param.value = newItem;
-                            }
-                          },
-                          items: absen.map<DropdownMenuItem<AbsenGantiHari>>(
-                              (AbsenGantiHari value) {
-                            return DropdownMenuItem<AbsenGantiHari>(
-                              value: value,
-                              child: Text(
-                                '${value.nama} | ${value.jdwIn} | ${value.jdwOut}',
-                                style: Themes.customColor(
-                                  9,
+                                onChanged(newItem);
+                                param.value = newItem;
+                              }
+                            },
+                            isExpanded: true,
+                            isDense: true,
+                            items: absen.map<DropdownMenuItem<AbsenGantiHari>>(
+                                (AbsenGantiHari value) {
+                              return DropdownMenuItem<AbsenGantiHari>(
+                                value: value,
+                                child: Text(
+                                  '${value.nama} | ${value.jdwIn} | ${value.jdwOut}',
+                                  style: Themes.customColor(
+                                    12,
+                                  ),
                                 ),
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    )
+                              );
+                            }).toList(),
+                          );
+                        })
                   ],
                 ),
                 SizedBox(
@@ -113,14 +112,14 @@ class JadwalShiftDtlItem extends HookConsumerWidget {
                   children: [
                     Text(
                       'In',
-                      style: Themes.customColor(7, color: Colors.grey),
+                      style: Themes.customColor(10, color: Colors.grey),
                     ),
                     SizedBox(
                       height: 2,
                     ),
                     Text(
                       item.jdwlIn ?? '-',
-                      style: Themes.customColor(9,
+                      style: Themes.customColor(12,
                           color: Palette.primaryColor,
                           fontWeight: FontWeight.w500),
                     ),
@@ -135,14 +134,14 @@ class JadwalShiftDtlItem extends HookConsumerWidget {
                   children: [
                     Text(
                       'Out',
-                      style: Themes.customColor(7, color: Colors.grey),
+                      style: Themes.customColor(10, color: Colors.grey),
                     ),
                     SizedBox(
                       height: 2,
                     ),
                     Text(
                       item.jdwlOut ?? '-',
-                      style: Themes.customColor(9,
+                      style: Themes.customColor(12,
                           color: Palette.primaryColor,
                           fontWeight: FontWeight.w500),
                     ),
@@ -159,7 +158,7 @@ class JadwalShiftDtlItem extends HookConsumerWidget {
                     Text(
                       'Updated',
                       style: Themes.customColor(
-                        7,
+                        10,
                         color: Colors.grey,
                       ),
                     ),
@@ -170,7 +169,7 @@ class JadwalShiftDtlItem extends HookConsumerWidget {
                       item.uUser == null || item.uDate == null
                           ? '-'
                           : "${item.uUser} / ${DateFormat('yyyy-MM-dd HH:mm').format(item.uDate!)}",
-                      style: Themes.customColor(9,
+                      style: Themes.customColor(12,
                           color: Colors.black, fontWeight: FontWeight.w500),
                     ),
                   ],

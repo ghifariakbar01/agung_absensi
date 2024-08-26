@@ -69,7 +69,13 @@ class CreateGantiHari extends _$CreateGantiHari {
       state = const AsyncValue.data('Sukses Input');
     } catch (e) {
       state = const AsyncValue.data('');
-      await onError('Error $e');
+      String _msg = e.toString();
+
+      if (e is RestApiExceptionWithMessage) {
+        _msg = e.errorCode.toString() + ' ' + e.message!;
+      }
+
+      await onError('Error $_msg');
     }
   }
 

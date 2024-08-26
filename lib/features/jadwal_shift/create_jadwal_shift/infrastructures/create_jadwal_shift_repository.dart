@@ -28,6 +28,7 @@ class CreateJadwalShiftRepository {
 
   Future<Unit> submitJadwalShift({
     required int idUser,
+    required int week,
     required String username,
     required String pass,
     required DateTime dateTime,
@@ -35,6 +36,7 @@ class CreateJadwalShiftRepository {
   }) async {
     return _remoteService.submitJadwalShift(
       idUser: idUser,
+      week: week,
       username: username,
       pass: pass,
       dateTime: dateTime,

@@ -36,6 +36,7 @@ class JadwalShiftList with _$JadwalShiftList {
     @JsonKey(name: 'spv_msg') String? spvMsg,
     @JsonKey(name: 'is_btl') bool? isBtl,
     @JsonKey(name: 'btl_msg') String? btlMsg,
+    int? week,
   }) = _JadwalShiftList;
 
   factory JadwalShiftList.fromJson(Map<String, dynamic> json) =>

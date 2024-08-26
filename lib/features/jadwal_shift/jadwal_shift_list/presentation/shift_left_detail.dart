@@ -18,14 +18,14 @@ class ShiftLeftDetail extends StatelessWidget {
         // ID FORM
         Text(
           'ID',
-          style: Themes.customColor(7, color: Colors.grey),
+          style: Themes.customColor(10, color: Colors.grey),
         ),
         SizedBox(
           height: 2,
         ),
         Text(
           item.idShiftDtl.toString(),
-          style: Themes.customColor(9,
+          style: Themes.customColor(12,
               color: Palette.primaryColor, fontWeight: FontWeight.w500),
         ),
         SizedBox(
@@ -38,14 +38,14 @@ class ShiftLeftDetail extends StatelessWidget {
           children: [
             Text(
               'Nama',
-              style: Themes.customColor(7, color: Colors.grey),
+              style: Themes.customColor(10, color: Colors.grey),
             ),
             SizedBox(
               height: 2,
             ),
             Text(
               item.fullname!,
-              style: Themes.customColor(9,
+              style: Themes.customColor(12,
                   color: Palette.primaryColor, fontWeight: FontWeight.w500),
             ),
           ],
@@ -61,7 +61,7 @@ class ShiftLeftDetail extends StatelessWidget {
             Text(
               'Tanggal',
               style: Themes.customColor(
-                7,
+                10,
                 color: Colors.grey,
               ),
             ),
@@ -70,7 +70,7 @@ class ShiftLeftDetail extends StatelessWidget {
             ),
             Text(
               DateFormat('E, dd-MM-yyyy').format(item.tgl!),
-              style: Themes.customColor(9,
+              style: Themes.customColor(12,
                   color: Palette.primaryColor, fontWeight: FontWeight.w500),
             ),
           ],
@@ -86,7 +86,7 @@ class ShiftLeftDetail extends StatelessWidget {
             Text(
               'Created',
               style: Themes.customColor(
-                7,
+                10,
                 color: Colors.grey,
               ),
             ),
@@ -97,7 +97,7 @@ class ShiftLeftDetail extends StatelessWidget {
               item.cUser == null || item.cDate == null
                   ? '-'
                   : "${item.cUser} / ${DateFormat('yyyy-MM-dd HH:mm').format(item.cDate!)}",
-              style: Themes.customColor(9,
+              style: Themes.customColor(12,
                   color: Colors.black, fontWeight: FontWeight.w500),
             ),
           ],

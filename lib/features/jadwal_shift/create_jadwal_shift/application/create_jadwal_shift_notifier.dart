@@ -31,6 +31,7 @@ class CreateJadwalShift extends _$CreateJadwalShift {
   FutureOr<void> build() async {}
 
   Future<void> submitJadwalShift({
+    required int week,
     required DateTime dateTime,
     String? server = Constants.isDev ? 'testing' : 'live',
     required Future<void> Function(String errMessage) onError,
@@ -45,6 +46,7 @@ class CreateJadwalShift extends _$CreateJadwalShift {
     try {
       await ref.read(createJadwalShiftRepositoryProvider).submitJadwalShift(
             idUser: idUser,
+            week: week,
             username: username,
             pass: pass,
             dateTime: dateTime,
@@ -54,7 +56,13 @@ class CreateJadwalShift extends _$CreateJadwalShift {
       state = const AsyncValue.data('Sukses Input');
     } catch (e) {
       state = const AsyncValue.data('');
-      await onError('Error $e');
+      String _msg = e.toString();
+
+      if (e is RestApiExceptionWithMessage) {
+        _msg = e.errorCode.toString() + ' ' + e.message!;
+      }
+
+      await onError('Error $_msg');
     }
   }
 
