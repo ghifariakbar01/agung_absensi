@@ -2,15 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 
+import '../../background/application/saved_location.dart';
 import '../../routes/application/route_names.dart';
 import '../../../shared/providers.dart';
 import '../../../style/style.dart';
 
 class Success extends HookConsumerWidget {
-  const Success(this.jam);
-  final String jam;
+  const Success(this.processedAbsen);
+
+  final List<SavedLocation> processedAbsen;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -31,7 +34,9 @@ class Success extends HookConsumerWidget {
               frameRate: FrameRate(60),
               onLoaded: (composition) async {
                 _controller
-                  ..duration = Duration(seconds: 2)
+                  ..duration = processedAbsen.length > 1
+                      ? Duration(seconds: 10)
+                      : Duration(seconds: 2)
                   ..forward().then((_) {
                     ref.read(geofenceProvider.notifier).resetFOSO();
                     context.pop();
@@ -58,7 +63,14 @@ class Success extends HookConsumerWidget {
             height: 4,
           ),
           Text(
-            jam,
+            processedAbsen
+                .map((e) => DateFormat('dd MMM HH:mm').format(e.date))
+                .toList()
+                .toString()
+                .replaceAll('[', '')
+                .replaceAll(']', '\n')
+                .replaceAll(',', '\n'),
+            textAlign: TextAlign.center,
             style: Themes.customColor(
               45,
               color: Colors.white,

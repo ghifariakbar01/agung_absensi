@@ -5,7 +5,6 @@ import 'package:dio/dio.dart';
 
 import '../../../infrastructures/exceptions.dart';
 import '../../riwayat_absen/application/riwayat_absen_model.dart';
-import '../../user/application/user_model.dart';
 import '../../../utils/string_utils.dart';
 
 import '../application/absen_state.dart';
@@ -15,13 +14,11 @@ class AbsenRemoteService {
     this._dio,
     this._dioHosting,
     this._dioRequest,
-    this._userModelWithPassword,
   );
 
   final Dio _dio;
   final Dio _dioHosting;
   final Map<String, String> _dioRequest;
-  final UserModelWithPassword _userModelWithPassword;
 
   static const String dbNameProd = 'hr_trs_absen';
 
@@ -29,10 +26,7 @@ class AbsenRemoteService {
     required Map<String, dynamic> absenMap,
   }) async {
     try {
-      final query = absenMap.values.fold<String>(
-        "",
-        (previousValue, element) => previousValue + " " + element,
-      );
+      final query = absenMap.values.first;
 
       _dioRequest.addAll({
         "mode": 'INSERT',
@@ -58,13 +52,6 @@ class AbsenRemoteService {
             itemsProd['items'] != null && itemsProd['items'] is List;
 
         if (absenProdExist) {
-          // if (items['errornum'] != null && items['errornum'] as int != 0) {
-
-          //   final message = items['error'] as String?;
-          //   final errorCode = items['errornum'] as int;
-
-          //   throw RestApiExceptionWithMessage(errorCode, message);
-          // }
           if (itemsProd['errornum'] != null &&
               itemsProd['errornum'] as int != 0) {
             final message = itemsProd['error'] as String?;
@@ -75,28 +62,12 @@ class AbsenRemoteService {
 
           return unit;
         } else {
-          // if (items['errornum'] != null && items['errornum'] as int != 0) {
-          //   final message = items['error'] as String?;
-          //   final errorCode = items['errornum'] as int;
-
-          //   throw RestApiExceptionWithMessage(errorCode, message);
-          // }
-
           final message = itemsProd['error'] as String?;
           final errorCode = itemsProd['errornum'] as int;
 
           throw RestApiExceptionWithMessage(errorCode, message);
         }
       } else {
-        // if (items['errornum'] != null && items['errornum'] as int != 0) {
-        //
-
-        //   final message = items['error'] as String?;
-        //   final errorCode = items['errornum'] as int;
-
-        //   throw RestApiExceptionWithMessage(errorCode, message);
-        // }
-
         final message = itemsProd['error'] as String?;
         final errorCode = itemsProd['errornum'] as int;
 
@@ -118,6 +89,7 @@ class AbsenRemoteService {
   }
 
   Future<AbsenState> getAbsen({
+    required int idUser,
     required DateTime date,
   }) async {
     try {
@@ -131,7 +103,7 @@ class AbsenRemoteService {
       data.addAll({
         "mode": "SELECT",
         "command": " with contoh as (select format(tgljam,'yyyy-MM-dd') as tgl, "
-            " id_user from $dbNameProd where id_user = ${_userModelWithPassword.idUser} "
+            " id_user from $dbNameProd where id_user = ${idUser} "
             " and tgljam >= '$currentDate' and tgljam < '$currentDateRange' group by "
             "  format(tgljam,'yyyy-MM-dd'), id_user) select *, (select max(lokasi_masuk) "
             " from $dbNameProd where id_user = contoh.id_user and mode = 'MASUK' and "
@@ -214,6 +186,7 @@ class AbsenRemoteService {
   }
 
   Future<List<RiwayatAbsenModel>> getRiwayatAbsen({
+    required int idUser,
     required String? dateFirst,
     required String? dateSecond,
   }) async {
@@ -224,7 +197,7 @@ class AbsenRemoteService {
       data.addAll({
         "mode": "SELECT",
         "command": "with contoh as (select format(tgljam,'yyyy-MM-dd') as tgl, id_user from $dbNameProd "
-            " where id_user = ${_userModelWithPassword.idUser} and tgljam >= '$dateSecond' and tgljam < '$dateFirst' "
+            " where id_user = ${idUser} and tgljam >= '$dateSecond' and tgljam < '$dateFirst' "
             " group by format(tgljam,'yyyy-MM-dd'), id_user) select *, (select max(lokasi_masuk) from $dbNameProd "
             " where id_user = contoh.id_user and mode = 'MASUK' and format(tgljam, 'yyyy-MM-dd') = contoh.tgl) as  "
             " lokasi_masuk, (select max(latitude_masuk) from $dbNameProd where id_user = contoh.id_user and mode = 'MASUK' and  "

@@ -35,8 +35,9 @@ class _RiwayatAbsenScaffoldState extends ConsumerState<RiwayatAbsenScaffold> {
               .getAbsenRiwayatFromStorage();
         } else {
           final riwayat = RiwayatAbsenState.initial();
-
+          final idUser = ref.read(userNotifierProvider).user.idUser!;
           await ref.read(riwayatAbsenNotifierProvider.notifier).getAbsenRiwayat(
+                idUser: idUser,
                 dateFirst: riwayat.dateFirst,
                 dateSecond: riwayat.dateSecond,
               );
@@ -80,9 +81,11 @@ class _RiwayatAbsenScaffoldState extends ConsumerState<RiwayatAbsenScaffold> {
             padding: EdgeInsets.all(8),
             child: RefreshIndicator(
               onRefresh: () async {
+                final idUser = ref.read(userNotifierProvider).user.idUser!;
                 return ref
                     .read(riwayatAbsenNotifierProvider.notifier)
                     .getAbsenRiwayat(
+                      idUser: idUser,
                       dateFirst: dateFirst,
                       dateSecond: dateSecond,
                     );

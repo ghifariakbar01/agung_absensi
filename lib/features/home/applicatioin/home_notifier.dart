@@ -116,7 +116,7 @@ class HomeNotifier extends StateNotifier<HomeState> {
   _resetFoso(WidgetRef ref) {
     ref.read(imeiNotifierProvider.notifier).reset();
     ref.read(riwayatAbsenNotifierProvider.notifier).reset();
-    ref.read(absenAuthNotifierProvidier.notifier).resetFoso();
+    ref.read(absenAuthNotifierProvidier.notifier).reset();
     ref.read(geofenceProvider.notifier).resetFOSO();
   }
 }

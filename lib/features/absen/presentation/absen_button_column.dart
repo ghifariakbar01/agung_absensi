@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -10,12 +11,11 @@ import '../../routes/application/route_names.dart';
 import '../application/absen_helper.dart';
 
 import '../application/absen_state.dart';
-import 'absen_button.dart';
 import 'absen_reset.dart';
 
-const bool isTesting = false;
+const bool isTesting = true;
 
-class AbsenButtonColumn extends ConsumerWidget {
+class AbsenButtonColumn extends HookConsumerWidget {
   const AbsenButtonColumn({Key? key}) : super(key: key);
 
   @override
@@ -46,7 +46,7 @@ class AbsenButtonColumn extends ConsumerWidget {
       geofenceProvider.select((value) => value.nearestCoordinates.minDistance),
     );
 
-    final buttonResetVisibility = ref.watch(buttonResetVisibilityProvider);
+    final buttonResetVisibility = useState(false);
 
     return Column(
       children: [
@@ -61,10 +61,11 @@ class AbsenButtonColumn extends ConsumerWidget {
             return Column(
               children: [
                 AbsenReset(
+                    buttonResetVisibility: buttonResetVisibility,
                     isTester: isTester.maybeWhen(
-                  tester: () => true,
-                  orElse: () => false,
-                )),
+                      tester: () => true,
+                      orElse: () => false,
+                    )),
                 SizedBox(height: 20),
                 VButton(
                   label: 'ABSEN IN $karyawanShiftStr',
@@ -73,12 +74,12 @@ class AbsenButtonColumn extends ConsumerWidget {
                       ? true
                       : isTester.maybeWhen(
                           tester: () =>
-                              buttonResetVisibility ||
+                              buttonResetVisibility.value ||
                               isShift ||
                               absen == AbsenState.empty() ||
                               absen == AbsenState.incomplete(),
                           orElse: () =>
-                              buttonResetVisibility ||
+                              buttonResetVisibility.value ||
                               isShift &&
                                   nearest < minDistance &&
                                   nearest != 0 ||
@@ -117,12 +118,12 @@ class AbsenButtonColumn extends ConsumerWidget {
                         ? true
                         : isTester.maybeWhen(
                             tester: () =>
-                                buttonResetVisibility ||
+                                buttonResetVisibility.value ||
                                 isShift ||
                                 absen == AbsenState.absenIn() ||
                                 absen == AbsenState.incomplete(),
                             orElse: () =>
-                                buttonResetVisibility ||
+                                buttonResetVisibility.value ||
                                 isShift &&
                                     nearest < minDistance &&
                                     nearest != 0 ||
@@ -158,7 +159,7 @@ class AbsenButtonColumn extends ConsumerWidget {
           },
         ),
         Visibility(
-            visible: false,
+            visible: true,
             child: VButton(
                 label: 'ABSEN SAVE (DEBUG)',
                 height: 50,
@@ -170,6 +171,7 @@ class AbsenButtonColumn extends ConsumerWidget {
 
                   String idGeof = nearest.id;
                   String lokasi = nearest.nama;
+                  final date = DateTime.now();
 
                   await ref
                       .read(backgroundNotifierProvider.notifier)
@@ -179,8 +181,8 @@ class AbsenButtonColumn extends ConsumerWidget {
                         alamat: lokasi,
                         latitude: lat,
                         longitude: long,
-                        date: DateTime.now().add(Duration(days: 1)),
-                        dbDate: DateTime.now().add(Duration(days: 1)),
+                        date: date.add(Duration(days: 1)),
+                        dbDate: date.add(Duration(days: 1)),
                         absenState: AbsenState.empty(),
                       ));
 
@@ -192,9 +194,9 @@ class AbsenButtonColumn extends ConsumerWidget {
                         alamat: lokasi,
                         latitude: lat,
                         longitude: long,
-                        date: DateTime.now().add(Duration(days: 1)),
-                        dbDate: DateTime.now().add(Duration(days: 1)),
-                        absenState: AbsenState.absenIn(),
+                        date: date.add(Duration(days: 1)),
+                        dbDate: date.add(Duration(days: 1)),
+                        absenState: AbsenState.empty(),
                       ));
 
                   await ref
@@ -207,6 +209,32 @@ class AbsenButtonColumn extends ConsumerWidget {
                         longitude: long,
                         date: DateTime.now().add(Duration(days: 2)),
                         dbDate: DateTime.now().add(Duration(days: 2)),
+                        absenState: AbsenState.empty(),
+                      ));
+
+                  await ref
+                      .read(backgroundNotifierProvider.notifier)
+                      .addSavedLocationDev(
+                          savedLocation: SavedLocation.initial().copyWith(
+                        idGeof: idGeof,
+                        alamat: lokasi,
+                        latitude: lat,
+                        longitude: long,
+                        date: DateTime.now().add(Duration(days: 3)),
+                        dbDate: DateTime.now().add(Duration(days: 3)),
+                        absenState: AbsenState.empty(),
+                      ));
+
+                  await ref
+                      .read(backgroundNotifierProvider.notifier)
+                      .addSavedLocationDev(
+                          savedLocation: SavedLocation.initial().copyWith(
+                        idGeof: idGeof,
+                        alamat: lokasi,
+                        latitude: lat,
+                        longitude: long,
+                        date: DateTime.now().add(Duration(days: 4)),
+                        dbDate: DateTime.now().add(Duration(days: 4)),
                         absenState: AbsenState.empty(),
                       ));
 

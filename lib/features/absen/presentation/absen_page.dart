@@ -28,7 +28,6 @@ import '../../../widgets/testing.dart';
 import '../../../widgets/user_info.dart';
 import '../../../widgets/v_async_widget.dart';
 import '../../../widgets/v_dialogs.dart';
-import 'absen_button.dart';
 import 'absen_error_and_button.dart';
 
 import 'absen_success.dart';
@@ -101,65 +100,63 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
       fireImmediately: true,
     );
 
-    ref.listenManual<Option<Either<AbsenFailure, Unit>>>(
+    ref.listenManual<List<Option<Either<AbsenFailure, SavedLocation>>>>(
       absenAuthNotifierProvidier
-          .select((value) => value.failureOrSuccessOption),
-      (_, failureOrSuccessOption) => failureOrSuccessOption.fold(
-          () {},
-          (either) => either.fold(
-              (failure) => failure.maybeWhen(
-                    noConnection: () => _onNoConnection(context),
-                    orElse: () => _onErrOther(failure, context),
-                  ),
-              (_) => _onBerhasilAbsen(context))),
+          .select((value) => value.failureOrSuccessOptionList),
+      (_, list) async {
+        for (int i = 0; i < list.length; i++) {
+          final e = list[i];
+          final isLast = i + 1 == list.length;
+
+          await e.fold(
+              () {},
+              (either) => either.fold(
+                      (failure) => failure.when(
+                          noConnection: (item) => _onNoConnection(
+                              item: item,
+                              context: context,
+                              checkProcessedAbsen: () async {
+                                if (isLast) {
+                                  return _checkProcessedAbsen(context);
+                                }
+                              }),
+                          server: (errorCode, message, item) => _onErrOther(
+                              item: item,
+                              failure: failure,
+                              context: context,
+                              checkProcessedAbsen: () async {
+                                if (isLast) {
+                                  return _checkProcessedAbsen(context);
+                                }
+                              }),
+                          passwordExpired: (item) => _onErrOther(
+                              item: item,
+                              failure: failure,
+                              context: context,
+                              checkProcessedAbsen: () async {
+                                if (isLast) {
+                                  return _checkProcessedAbsen(context);
+                                }
+                              }),
+                          passwordWrong: (item) => _onErrOther(
+                              item: item,
+                              failure: failure,
+                              context: context,
+                              checkProcessedAbsen: () async {
+                                if (isLast) {
+                                  return _checkProcessedAbsen(context);
+                                }
+                              })), (item) async {
+                    await _deleteSaved(item.id);
+
+                    if (isLast) {
+                      return _checkProcessedAbsen(context);
+                    }
+                  }));
+        }
+      },
       fireImmediately: true,
     );
-  }
-
-  Future<void> _onImeiAlreadyRegistered() async {
-    String idKary = await _getIdKary();
-
-    final imeiNotifier = ref.read(imeiNotifierProvider.notifier);
-
-    await imeiNotifier.onImeiAlreadyRegistered(
-      idKary: idKary,
-    );
-
-    await showSuccessDialog(
-      context,
-      'Absen berhasil, tapi kami mendeteksi abnormality.',
-    ).then((_) => showErrorDialog(
-          context,
-          Constants.imeiAlreadyRegistered,
-        ).then(
-          (_) => _restartImeiIntro(),
-        ));
-
-    _reset();
-  }
-
-  Future<void> _onImeiNotRegistered() async {
-    String idKary = await _getIdKary();
-
-    final imeiNotifier = ref.read(imeiNotifierProvider.notifier);
-    final generateImei = imeiNotifier.generateImei();
-
-    await imeiNotifier.registerImeiAfterAbsen(
-      imei: generateImei,
-      idKary: idKary,
-    );
-
-    await showSuccessDialog(
-      context,
-      'Absen berhasil, tapi kami mendeteksi abnormality.',
-    ).then((_) => showErrorDialog(
-          context,
-          Constants.imeiNotRegistered,
-        ).then(
-          (_) => logout(ref),
-        ));
-
-    _reset();
   }
 
   @override
@@ -251,6 +248,64 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
         ));
   }
 
+  Future<void> _checkProcessedAbsen(BuildContext context) async {
+    final List<SavedLocation> processed =
+        ref.read(absenAuthNotifierProvidier).absenProcessedList;
+
+    if (processed.isEmpty) {
+      return Future.value();
+    } else {
+      ref.read(absenAuthNotifierProvidier.notifier).resetFoso();
+      return _onBerhasilAbsen(context);
+    }
+  }
+
+  Future<void> _onImeiAlreadyRegistered() async {
+    String idKary = await _getIdKary();
+
+    final imeiNotifier = ref.read(imeiNotifierProvider.notifier);
+
+    await imeiNotifier.onImeiAlreadyRegistered(
+      idKary: idKary,
+    );
+
+    await showSuccessDialog(
+      context,
+      'Absen berhasil, tapi kami mendeteksi abnormality.',
+    ).then((_) => showErrorDialog(
+          context,
+          Constants.imeiAlreadyRegistered,
+        ).then(
+          (_) => _restartImeiIntro(),
+        ));
+
+    _reset();
+  }
+
+  Future<void> _onImeiNotRegistered() async {
+    String idKary = await _getIdKary();
+
+    final imeiNotifier = ref.read(imeiNotifierProvider.notifier);
+    final generateImei = imeiNotifier.generateImei();
+
+    await imeiNotifier.registerImeiAfterAbsen(
+      imei: generateImei,
+      idKary: idKary,
+    );
+
+    await showSuccessDialog(
+      context,
+      'Absen berhasil, tapi kami mendeteksi abnormality.',
+    ).then((_) => showErrorDialog(
+          context,
+          Constants.imeiNotRegistered,
+        ).then(
+          (_) => logout(ref),
+        ));
+
+    _reset();
+  }
+
   _restartImeiIntro() async {
     await ref
         .read(imeiIntroNotifierProvider.notifier)
@@ -333,24 +388,14 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
   }
 
   _onImeiOk() async {
-    final _time = await ref
-        .read(backgroundNotifierProvider.notifier)
-        .getLastSavedLocations()
-        .then(
-          (value) =>
-              value == SavedLocation.initial() ? DateTime.now() : value.date,
-        );
-
-    await ref.read(backgroundNotifierProvider.notifier).getSavedLocations();
+    final list = ref.read(absenAuthNotifierProvidier).absenProcessedList;
 
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       isDismissible: false,
       backgroundColor: Palette.green,
-      builder: (context) => Success(
-        DateFormat('HH:mm').format(_time),
-      ),
+      builder: (_) => Success(list),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(10.0),
@@ -359,23 +404,33 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
     );
   }
 
+  Future<Unit> _deleteSaved(int id) async {
+    return ref
+        .read(backgroundNotifierProvider.notifier)
+        .removeLocationFromSavedById(id);
+  }
+
   Future<void> _onBerhasilAbsen(BuildContext context) async {
-    ref.read(buttonResetVisibilityProvider.notifier).state = false;
     ref.read(absenOfflineModeProvider.notifier).state = false;
     await OSVibrate.vibrate();
 
-    await ref.read(backgroundNotifierProvider.notifier).clear();
-
     final _riwayat = RiwayatAbsenState.initial();
+    final idUser = ref.read(userNotifierProvider).user.idUser!;
     await ref.read(riwayatAbsenNotifierProvider.notifier).getAbsenRiwayat(
+          idUser: idUser,
           dateFirst: _riwayat.dateFirst,
           dateSecond: _riwayat.dateSecond,
         );
   }
 
-  Future<void> _onNoConnection(
-    BuildContext context,
-  ) async {
+  Future<void> _onNoConnection({
+    required SavedLocation item,
+    required BuildContext context,
+    required Function() checkProcessedAbsen,
+  }) async {
+    final lokasiDetail =
+        "\n Tanggal : ${DateFormat('dd, MMM HH:mm').format(item.date)}, Lokasi : ${item.alamat} \n";
+
     return showDialog(
         context: context,
         barrierDismissible: true,
@@ -383,7 +438,8 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
               color: Palette.red,
               asset: Assets.iconCrossed,
               label: 'NoConnection',
-              labelDescription: 'Tidak ada koneksi',
+              labelDescription:
+                  'Tidak ada koneksi saat melakukan absensi ${lokasiDetail}. Lihat daftar absen tersimpan anda di halaman Absen',
             )).then((_) => showDialog(
         context: context,
         barrierDismissible: true,
@@ -391,37 +447,50 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
               asset: Assets.iconChecked,
               label: 'Saved',
               labelDescription:
-                  'Absen masih tersimpan di HP. Mohon lakukan absen saat ada jaringan internet.',
-            )));
+                  'Absen ${lokasiDetail} masih tersimpan di HP. Anda bisa melihat daftar absen tersimpan anda di halaman Absen. Mohon lakukan absen saat ada jaringan internet.',
+            )).then((_) => checkProcessedAbsen()));
   }
 
-  Future<void> _onErrOther(
-    AbsenFailure failure,
-    BuildContext context,
-  ) async {
+  Future<void> _onErrOther({
+    required SavedLocation item,
+    required AbsenFailure failure,
+    required BuildContext context,
+    required Function() checkProcessedAbsen,
+  }) async {
+    final lokasiDetail =
+        "\n\n Tanggal : ${DateFormat('dd, MMM HH:mm').format(item.date)}\nLokasi : ${item.alamat} \n\n";
+
     final String errMessage = failure.maybeWhen(
-        server: (code, message) => 'Error $code $message',
-        passwordExpired: () => 'Password Expired',
-        passwordWrong: () => 'Password Wrong',
+        server: (code, message, id) => code == 10
+            ? 'Anda mencoba absen 2x pada $lokasiDetail. Absen pertama anda sudah masuk dalam database. \n Mohon cek riwayat absen Terimakasih'
+            : 'Error Saat absensi $lokasiDetail : $code $message. \n Lihat daftar absen tersimpan anda di halaman Absen \n',
+        passwordExpired: (id) =>
+            'Password Expired Saat absensi $lokasiDetail. \n Lihat daftar absen tersimpan anda di halaman Absen',
+        passwordWrong: (id) =>
+            'Password Wrong Saat absensi $lokasiDetail. \n Lihat daftar absen tersimpan anda di halaman Absen',
         orElse: () => '');
 
     await failure.maybeWhen(
-        server: (_, __) =>
-            ref.read(backgroundNotifierProvider.notifier).clear(),
-        orElse: () {});
+      server: (errorCode, __, id) => errorCode == 10
+          ? ref
+              .read(backgroundNotifierProvider.notifier)
+              .removeLocationFromSavedById(item.id)
+          : () {},
+      orElse: () {},
+    );
 
     await ref.read(errLogControllerProvider.notifier).sendLog(
           isHoting: true,
           errMessage: errMessage,
         );
 
-    return showDialog(
+    await showDialog(
         context: context,
         barrierDismissible: true,
         builder: (_) => VSimpleDialog(
               asset: Assets.iconCrossed,
               label: 'Error',
               labelDescription: errMessage,
-            ));
+            )).then((_) => checkProcessedAbsen());
   }
 }

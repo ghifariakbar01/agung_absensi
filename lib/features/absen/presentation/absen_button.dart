@@ -21,10 +21,6 @@ import '../../../widgets/v_dialogs.dart';
 import '../application/absen_helper.dart';
 import 'absen_button_column.dart';
 
-final buttonResetVisibilityProvider = StateProvider<bool>((ref) {
-  return false;
-});
-
 class AbsenButton extends StatefulHookConsumerWidget {
   const AbsenButton({
     Key? key,

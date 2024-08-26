@@ -165,10 +165,10 @@ final backgroundNotifierProvider =
 // ABSEN
 final absenRemoteServiceProvider = Provider(
   (ref) => AbsenRemoteService(
-      ref.watch(dioProvider),
-      ref.watch(dioProviderHosting),
-      ref.watch(dioRequestProvider),
-      ref.watch(userNotifierProvider).user),
+    ref.watch(dioProvider),
+    ref.watch(dioProviderHosting),
+    ref.watch(dioRequestProvider),
+  ),
 );
 
 // RIWAYAT ABSEN

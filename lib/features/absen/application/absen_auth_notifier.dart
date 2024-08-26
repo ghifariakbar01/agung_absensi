@@ -13,7 +13,14 @@ class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
   final AbsenRepository _absenRepository;
 
   resetFoso() {
-    state = state.copyWith(failureOrSuccessOption: none());
+    state = state.copyWith(failureOrSuccessOptionList: []);
+  }
+
+  reset() {
+    state = state.copyWith(
+      absenProcessedList: [],
+      failureOrSuccessOptionList: [],
+    );
   }
 
   Future<void> absen({
@@ -22,23 +29,37 @@ class AbsenAuthNotifier extends StateNotifier<AbsenAuthState> {
     required String imei,
     required List<SavedLocation> absenList,
   }) async {
-    Either<AbsenFailure, Unit> failureOrSuccess;
+    List<Option<Either<AbsenFailure, SavedLocation>>> failureOrSuccess = [];
 
     state = state.copyWith(
       isSubmitting: true,
-      failureOrSuccessOption: none(),
+      failureOrSuccessOptionList: [],
     );
 
-    failureOrSuccess = await _absenRepository.absen(
-      idUser: idUser,
-      nama: nama,
-      imei: imei,
-      absenList: absenList,
-    );
+    for (int i = 0; i < absenList.length; i++) {
+      final item = absenList[i];
+
+      final _failureOrSuccess = await _absenRepository.absen(
+        idUser: idUser,
+        nama: nama,
+        imei: imei,
+        item: item,
+        onSuccess: changeAbsenSuccessList,
+      );
+
+      failureOrSuccess.add(_failureOrSuccess);
+    }
 
     state = state.copyWith(
       isSubmitting: false,
-      failureOrSuccessOption: optionOf(failureOrSuccess),
+      failureOrSuccessOptionList: failureOrSuccess,
     );
+  }
+
+  changeAbsenSuccessList(SavedLocation item) {
+    state = state.copyWith(absenProcessedList: [
+      ...state.absenProcessedList,
+      item,
+    ]);
   }
 }

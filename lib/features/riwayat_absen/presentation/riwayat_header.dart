@@ -40,6 +40,8 @@ class RiwayatHeader extends ConsumerWidget {
                   final _start2 = StringUtils.yyyyMMddWithStripe(_start);
                   final _end2 = StringUtils.yyyyMMddWithStripe(_end);
 
+                  final idUser = ref.read(userNotifierProvider).user.idUser!;
+
                   await ref
                       .read(riwayatAbsenNotifierProvider.notifier)
                       .startFilter(
@@ -52,6 +54,7 @@ class RiwayatHeader extends ConsumerWidget {
                         onAllChanged: () => ref
                             .read(riwayatAbsenNotifierProvider.notifier)
                             .filterRiwayatAbsen(
+                              idUser: idUser,
                               dateFirst: _end2,
                               dateSecond: _start2,
                             ),
@@ -98,6 +101,8 @@ class RiwayatHeader extends ConsumerWidget {
                   final _start2 = StringUtils.yyyyMMddWithStripe(_start);
                   final _end2 = StringUtils.yyyyMMddWithStripe(_end);
 
+                  final idUser = ref.read(userNotifierProvider).user.idUser!;
+
                   await ref
                       .read(riwayatAbsenNotifierProvider.notifier)
                       .startFilter(
@@ -110,6 +115,7 @@ class RiwayatHeader extends ConsumerWidget {
                         onAllChanged: () => ref
                             .read(riwayatAbsenNotifierProvider.notifier)
                             .filterRiwayatAbsen(
+                              idUser: idUser,
                               dateFirst: _end2,
                               dateSecond: _start2,
                             ),

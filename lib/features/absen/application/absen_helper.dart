@@ -60,7 +60,7 @@ class AbsenHelper {
             onBackPressed: () async {
               context.pop();
               final last = await backgroundNotifier.getLastSavedLocations();
-              await backgroundNotifier.removeLocationFromSaved(last);
+              await backgroundNotifier.removeLocationFromSavedById(last.id);
               return backgroundNotifier.getSavedLocations();
             },
             onPressed: () async {

@@ -3,12 +3,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../shared/providers.dart';
 import '../../../style/style.dart';
-import 'absen_button.dart';
 
 class AbsenReset extends ConsumerWidget {
-  const AbsenReset({required this.isTester});
+  const AbsenReset(
+      {required this.isTester, required this.buttonResetVisibility});
 
   final bool isTester;
+  final ValueNotifier<bool> buttonResetVisibility;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -19,9 +20,6 @@ class AbsenReset extends ConsumerWidget {
     // JARAK MAKSIMUM
     final minDistance = ref.watch(geofenceProvider
         .select((value) => value.nearestCoordinates.minDistance));
-
-    // RESET ABSEN
-    final buttonResetVisibility = ref.watch(buttonResetVisibilityProvider);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -57,10 +55,8 @@ class AbsenReset extends ConsumerWidget {
                   inactiveThumbColor: Palette.primaryColor,
                   inactiveTrackColor:
                       Palette.containerBackgroundColor.withOpacity(0.1),
-                  value: buttonResetVisibility,
-                  onChanged: (value) => ref
-                      .read(buttonResetVisibilityProvider.notifier)
-                      .state = value,
+                  value: buttonResetVisibility.value,
+                  onChanged: (value) => buttonResetVisibility.value = value,
                 ),
               ),
             ],

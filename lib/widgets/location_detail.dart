@@ -3,19 +3,21 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../shared/providers.dart';
 import '../style/style.dart';
-import 'image_absen.dart';
 
 class LocationDetail extends ConsumerWidget {
   const LocationDetail();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final displayImage = ref.watch(displayImageProvider);
-    final isOfflineMode = ref.watch(absenOfflineModeProvider);
+    // final imageUrl = ref.watch(imageUrlProvider);
+    // final displayImage = ref.watch(displayImageProvider);
+    // final isOfflineMode = ref.watch(absenOfflineModeProvider);
+
     final nearest =
         ref.watch(geofenceProvider.select((value) => value.nearestCoordinates));
 
     final nearestInMeter = nearest.remainingDistance.round().toString();
+
     bool inKm = nearestInMeter.length > 5 ? true : false;
     double distanceInKiloMeters = nearest.remainingDistance / 1000;
     final nearestInKiloMeter =
@@ -28,19 +30,21 @@ class LocationDetail extends ConsumerWidget {
         color: Theme.of(context).primaryColor,
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Container(
-            padding: EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              color: Colors.white,
-            ),
-            child: Text(
-              '${nearest.nama}',
-              style: Themes.customColor(
-                15,
-                fontWeight: FontWeight.bold,
+          Center(
+            child: Container(
+              padding: EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                color: Colors.white,
+              ),
+              child: Text(
+                '${nearest.nama}',
+                style: Themes.customColor(
+                  15,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
@@ -135,7 +139,18 @@ class LocationDetail extends ConsumerWidget {
           SizedBox(
             height: 4,
           ),
-          displayImage == false && isOfflineMode ? Container() : ImageAbsen(),
+          // displayImage == false && isOfflineMode ? Container() : ImageAbsen(),
+          // TextButton(
+          //   onPressed: () => launchUrl(Uri.parse(imageUrl)),
+          //   style:
+          //       ButtonStyle(padding: WidgetStatePropertyAll(EdgeInsets.all(0))),
+          //   child: Text('Lokasi Absen Terdekat',
+          //       style: TextStyle(
+          //         color: Palette.blueLink,
+          //         decoration: TextDecoration.underline,
+          //         fontSize: 12,
+          //       )),
+          // )
         ],
       ),
     );

@@ -20,12 +20,6 @@ class BackgroundNotifier extends StateNotifier<BackgroundState> {
 
   final BackgroundRepository _backgroundRepository;
 
-  Future<int> getSavedLocationsLen() =>
-      _backgroundRepository.getSavedLocations().then((value) => value.fold(
-            (_) => 0,
-            (r) => r.length,
-          ));
-
   Future<SavedLocation> getLastSavedLocations() =>
       _backgroundRepository.getSavedLocations().then((value) => value.fold(
             (_) => SavedLocation.initial(),
@@ -124,10 +118,6 @@ class BackgroundNotifier extends StateNotifier<BackgroundState> {
     );
   }
 
-  modify() {
-    state = state.copyWith(failureOrSuccessOptionUpdate: none());
-  }
-
   Future<List<SavedLocation>> _parseLocation(
       {required String? savedLocations}) async {
     if (savedLocations == null) {
@@ -145,32 +135,28 @@ class BackgroundNotifier extends StateNotifier<BackgroundState> {
     await _sharedPreference.setString(Constants.keyLocation, '');
   }
 
-  Future<void> removeLocationFromSaved(SavedLocation location) async {
+  Future<Unit> removeLocationFromSavedById(int id) async {
     final _sharedPreference = await SharedPreferences.getInstance();
     final _loc = await _sharedPreference.getString(Constants.keyLocation);
 
-    if (_loc != null) {
-      final savedLocations = await _parseLocation(
-        savedLocations: _loc,
-      );
+    if (_loc == null) {
+      return unit;
+    } else {
+      final List<SavedLocation> savedLocations =
+          await _parseLocation(savedLocations: _loc);
 
       if (savedLocations.isEmpty) {
-        return;
+        return unit;
       }
 
       if (savedLocations.length == 1) {
         await _backgroundRepository.clear();
-
-        return;
+        return unit;
       } else {
-        final processLocation =
-            savedLocations.where((loc) => loc != location).toSet().toList();
+        final List<SavedLocation> processLocation =
+            savedLocations.where((loc) => loc.id != id).toSet().toList();
 
-        await _backgroundRepository.save(
-          processLocation,
-        );
-
-        return;
+        return _backgroundRepository.save(processLocation);
       }
     }
   }

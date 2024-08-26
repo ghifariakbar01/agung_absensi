@@ -11,13 +11,18 @@ part 'absen_auth_state.freezed.dart';
 class AbsenAuthState with _$AbsenAuthState {
   const factory AbsenAuthState({
     required bool isSubmitting,
-    required SavedLocation backgroundItemState,
-    required Option<Either<AbsenFailure, Unit>> failureOrSuccessOption,
+    required List<SavedLocation> absenProcessedList,
+    required List<Option<Either<AbsenFailure, SavedLocation>>>
+        failureOrSuccessOptionList,
   }) = _AbsenAuth;
 
   factory AbsenAuthState.initial() => AbsenAuthState(
         isSubmitting: false,
-        failureOrSuccessOption: none(),
-        backgroundItemState: SavedLocation.initial(),
+        failureOrSuccessOptionList: [],
+        absenProcessedList: [
+          SavedLocation.initial(),
+          SavedLocation.initial(),
+          SavedLocation.initial()
+        ],
       );
 }

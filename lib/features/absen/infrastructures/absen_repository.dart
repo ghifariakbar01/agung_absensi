@@ -31,63 +31,63 @@ class AbsenRepository {
   Future<bool> hasOfflineData() =>
       getRiwayatAbsenFromStorage().then((value) => value.isNotEmpty);
 
-  Future<Either<AbsenFailure, Unit>> absen({
+  Future<Option<Either<AbsenFailure, SavedLocation>>> absen({
     required int idUser,
     required String nama,
     required String imei,
-    required List<SavedLocation> absenList,
+    required SavedLocation item,
+    required Function(SavedLocation item) onSuccess,
   }) async {
     try {
-      if (absenList.isEmpty) {
-        //
-      }
+      final isIn = item.absenState == AbsenState.empty();
+      final ket = isIn ? 'MASUK' : 'PULANG';
+      final coancenate = isIn ? 'masuk' : 'keluar';
 
-      Map<String, dynamic> query = {};
-      for (int i = 0; i < absenList.length; i++) {
-        final item = absenList[i];
+      final trimmedDate = StringUtils.trimmedDate(item.date);
+      final trimmedDateDb = StringUtils.trimmedDate(item.dbDate);
 
-        final isIn = item.absenState == AbsenState.empty();
-        final ket = isIn ? 'MASUK' : 'PULANG';
-        final coancenate = isIn ? 'masuk' : 'keluar';
-
-        final trimmedDate = StringUtils.trimmedDate(item.date);
-        final trimmedDateDb = StringUtils.trimmedDate(item.dbDate);
-
-        query.addAll({
-          '${item.id}': " INSERT INTO $dbNameProd " +
-              "(tgljam, mode, id_user, imei, id_geof, c_date, c_user, latitude_$coancenate, longitude_$coancenate, lokasi_$coancenate)" +
-              " VALUES " +
-              " ('$trimmedDate', '$ket', '${idUser}', "
-                  " '$imei', '${item.idGeof}', '$trimmedDateDb', '${nama}', "
-                  " '${item.latitude}', '${item.longitude}', '${item.alamat}') ",
-        });
-      }
+      Map<String, dynamic> query = {
+        '${item.id}': " INSERT INTO $dbNameProd " +
+            "(tgljam, mode, id_user, imei, id_geof, c_date, c_user, latitude_$coancenate, longitude_$coancenate, lokasi_$coancenate)" +
+            " VALUES " +
+            " ('$trimmedDate', '$ket', '${idUser}', "
+                " '$imei', '${item.idGeof}', '$trimmedDateDb', '${nama}', "
+                " '${item.latitude}', '${item.longitude}', '${item.alamat}') ",
+      };
 
       Log.info(query.entries.toString());
 
-      if (query.isEmpty) {
-        //
-      }
-
-      //
+      if (query.isEmpty) {}
 
       await _remoteService.absen(
         absenMap: query,
       );
 
-      return right(unit);
+      onSuccess(item);
+
+      return optionOf(right(item));
     } on NoConnectionException {
-      return left(AbsenFailure.noConnection());
+      return optionOf(left(AbsenFailure.noConnection(item)));
     } on RestApiException catch (error) {
-      return left(AbsenFailure.server(error.errorCode));
+      return optionOf(left(AbsenFailure.server(
+        item: item,
+        errorCode: error.errorCode,
+      )));
     } on RestApiExceptionWithMessage catch (error) {
-      return left(AbsenFailure.server(error.errorCode, error.message));
+      return optionOf((left(AbsenFailure.server(
+        item: item,
+        errorCode: error.errorCode,
+        message: error.message,
+      ))));
     }
   }
 
-  Future<AbsenState> getAbsen({required DateTime date}) async {
+  Future<AbsenState> getAbsen({
+    required int idUser,
+    required DateTime date,
+  }) async {
     try {
-      return _remoteService.getAbsen(date: date);
+      return _remoteService.getAbsen(date: date, idUser: idUser);
     } on NoConnectionException {
       return AbsenState.failure(message: 'no connection');
     } on RestApiExceptionWithMessage catch (e) {
@@ -117,11 +117,13 @@ class AbsenRepository {
   }
 
   Future<Either<RiwayatAbsenFailure, List<RiwayatAbsenModel>>> getRiwayatAbsen({
+    required int idUser,
     required String? dateFirst,
     required String? dateSecond,
   }) async {
     try {
       final resp = await _remoteService.getRiwayatAbsen(
+        idUser: idUser,
         dateFirst: dateFirst,
         dateSecond: dateSecond,
       );
@@ -150,12 +152,14 @@ class AbsenRepository {
 
   Future<Either<RiwayatAbsenFailure, List<RiwayatAbsenModel>>>
       filterRiwayatAbsen({
+    required int idUser,
     required String? dateFirst,
     required String? dateSecond,
     bool isFilter = false,
   }) async {
     try {
       final resp = await _remoteService.getRiwayatAbsen(
+        idUser: idUser,
         dateFirst: dateFirst,
         dateSecond: dateSecond,
       );

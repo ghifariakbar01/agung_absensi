@@ -26,6 +26,7 @@ class RiwayatAbsenNotifier extends StateNotifier<RiwayatAbsenState> {
   }
 
   Future<void> getAbsenRiwayat({
+    required int idUser,
     required String? dateFirst,
     required String? dateSecond,
   }) async {
@@ -37,6 +38,7 @@ class RiwayatAbsenNotifier extends StateNotifier<RiwayatAbsenState> {
     );
 
     failureOrSuccess = await _absenRepository.getRiwayatAbsen(
+      idUser: idUser,
       dateFirst: dateFirst,
       dateSecond: dateSecond,
     );
@@ -48,6 +50,7 @@ class RiwayatAbsenNotifier extends StateNotifier<RiwayatAbsenState> {
   }
 
   Future<void> filterRiwayatAbsen({
+    required int idUser,
     required String? dateFirst,
     required String? dateSecond,
     bool isFilter = false,
@@ -60,6 +63,7 @@ class RiwayatAbsenNotifier extends StateNotifier<RiwayatAbsenState> {
     );
 
     failureOrSuccess = await _absenRepository.filterRiwayatAbsen(
+      idUser: idUser,
       dateFirst: dateFirst,
       dateSecond: dateSecond,
     );
