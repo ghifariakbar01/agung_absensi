@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../utils/logging.dart';
 import '../../geofence/application/geofence_error_notifier.dart';
 import '../../geofence/application/geofence_error_state.dart';
 import '../../../shared/providers.dart';
@@ -17,6 +18,8 @@ class AbsenErrorAndButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final geofenceErrorNotifier = ref.watch(geofenceErrorNotifierProvider);
+
+    Log.info('geofenceErrorNotifier $geofenceErrorNotifier');
 
     return VAsyncValueWidget<GeofenceErrorState>(
       value: geofenceErrorNotifier,
@@ -39,6 +42,8 @@ class AbsenOk extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isTester = ref.watch(testerNotifierProvider);
     final mockLocation = ref.watch(mockLocationNotifierProvider);
+
+    Log.info('isTester $isTester mockLocation $mockLocation');
 
     return Column(
       children: [

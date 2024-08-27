@@ -121,46 +121,48 @@ class VSimpleDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: SimpleDialog(
-        backgroundColor: color ?? Theme.of(context).primaryColor,
-        title: SizedBox(
-          height: 28,
-          child: SvgPicture.asset(asset),
-        ),
-        children: [
-          SizedBox(
-            height: 4,
-          ),
-          Center(
-            child: Text(
-              label,
-              textAlign: TextAlign.center,
-              style: Themes.customColor(
-                15,
-                color: textColor ?? Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
+      child: Dialog(
+          backgroundColor: color ?? Theme.of(context).primaryColor,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
             ),
-          ),
-          SizedBox(
-            height: 4,
-          ),
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                labelDescription,
-                textAlign: TextAlign.center,
-                style: Themes.customColor(
-                  11,
-                  color: textColor ?? Colors.black,
-                  fontWeight: FontWeight.bold,
+            padding: EdgeInsets.all(8),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 8,
                 ),
-              ),
+                SizedBox(
+                  height: 28,
+                  child: SvgPicture.asset(asset),
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+                Text(
+                  label,
+                  textAlign: TextAlign.center,
+                  style: Themes.customColor(17, fontWeight: FontWeight.w500),
+                ),
+                SizedBox(
+                  height: 8,
+                ),
+                Text(
+                  labelDescription,
+                  textAlign: TextAlign.center,
+                  style: Themes.customColor(14, fontWeight: FontWeight.w600),
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+              ],
             ),
-          )
-        ],
-      ),
+          )),
     );
   }
 }
@@ -265,6 +267,7 @@ class VAlertDialog3 extends StatelessWidget {
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                   ),
+                                  textAlign: TextAlign.center,
                                 ),
                               ),
                             ),
@@ -295,6 +298,7 @@ class VAlertDialog3 extends StatelessWidget {
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                   ),
+                                  textAlign: TextAlign.center,
                                 ),
                               ),
                             ),
@@ -330,11 +334,11 @@ class VAlertDialog2 extends StatelessWidget {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: SizedBox(
-        height: 124,
+        height: 174,
         child: Stack(
           children: [
             Container(
-              height: 124,
+              height: 154,
               decoration: BoxDecoration(
                 // color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
@@ -353,7 +357,7 @@ class VAlertDialog2 extends StatelessWidget {
               right: 0,
               bottom: 0,
               child: SizedBox(
-                height: 25,
+                height: 35,
                 child: Row(
                   children: [
                     Expanded(

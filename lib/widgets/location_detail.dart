@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../infrastructures/image/infrastructures/image_repository.dart';
 import '../shared/providers.dart';
 import '../style/style.dart';
+import 'image_absen.dart';
 
 class LocationDetail extends ConsumerWidget {
   const LocationDetail();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final imageUrl = ref.watch(imageUrlProvider);
-    // final displayImage = ref.watch(displayImageProvider);
-    // final isOfflineMode = ref.watch(absenOfflineModeProvider);
+    final imageUrl = ref.watch(imageUrlProvider);
+    final displayImage = ref.watch(displayImageProvider);
+    final isOfflineMode = ref.watch(absenOfflineModeProvider);
 
     final nearest =
         ref.watch(geofenceProvider.select((value) => value.nearestCoordinates));
@@ -139,18 +141,9 @@ class LocationDetail extends ConsumerWidget {
           SizedBox(
             height: 4,
           ),
-          // displayImage == false && isOfflineMode ? Container() : ImageAbsen(),
-          // TextButton(
-          //   onPressed: () => launchUrl(Uri.parse(imageUrl)),
-          //   style:
-          //       ButtonStyle(padding: WidgetStatePropertyAll(EdgeInsets.all(0))),
-          //   child: Text('Lokasi Absen Terdekat',
-          //       style: TextStyle(
-          //         color: Palette.blueLink,
-          //         decoration: TextDecoration.underline,
-          //         fontSize: 12,
-          //       )),
-          // )
+          displayImage == false && isOfflineMode
+              ? Container()
+              : ImageAbsen(imageUrl: Uri.parse(imageUrl)),
         ],
       ),
     );

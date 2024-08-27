@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../../utils/logging.dart';
 import '../../background/application/saved_location.dart';
 import '../../../constants/assets.dart';
 import '../../../constants/constants.dart';
@@ -180,6 +181,8 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
         ref.watch(
           absenAuthNotifierProvidier.select((value) => value.isSubmitting),
         );
+
+    Log.info('isOfflineMode $isOfflineMode isLoading $isLoading');
 
     return Scaffold(
         appBar: AppBar(

@@ -75,9 +75,6 @@ dependencies:
   flutter_hooks: ^0.20.4
   hooks_riverpod: ^2.4.3
 
-  #* Service Locator
-  get_it: ^7.2.0
-
   #* Logging
   logging: ^1.1.0
 

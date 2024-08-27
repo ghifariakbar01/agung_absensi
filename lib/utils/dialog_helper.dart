@@ -2,7 +2,6 @@ import 'package:face_net_authentication/utils/os_vibrate.dart';
 import 'package:flutter/material.dart';
 
 import '../constants/assets.dart';
-import '../style/style.dart';
 import '../widgets/v_dialogs.dart';
 
 class DialogHelper<T> {
@@ -21,7 +20,7 @@ class DialogHelper<T> {
               label: label ?? 'Oops',
               fontSize: isLarge == null ? 11 : 13,
               labelDescription: msg,
-              color: color ?? Palette.red,
+              color: color ?? Colors.white,
               asset: assets ?? Assets.iconCrossed,
             )));
   }

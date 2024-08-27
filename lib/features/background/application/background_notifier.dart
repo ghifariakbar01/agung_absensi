@@ -30,6 +30,24 @@ class BackgroundNotifier extends StateNotifier<BackgroundState> {
     state = state.copyWith(savedBackgroundItems: [...backgroundItems]);
   }
 
+  bool ifAbsenOverstay() {
+    final absen = state.savedBackgroundItems;
+
+    if (absen.isEmpty) {
+      return true;
+    }
+
+    final dateMoreThanFiveDays = absen
+        .where((e) => DateTime.now().difference(e.date).inDays >= 5)
+        .toList();
+
+    if (dateMoreThanFiveDays.isEmpty) {
+      return false;
+    }
+
+    return true;
+  }
+
   Future<void> addSavedLocationDev(
       {required SavedLocation savedLocation}) async {
     await _backgroundRepository.addBackgroundLocation(

@@ -37,10 +37,52 @@ extension WebViewControllerExtension on WebViewController {
   }
 }
 
-class ImageAbsen extends HookConsumerWidget {
-  const ImageAbsen({Key? key}) : super(key: key);
+class ImageAbsen extends StatefulHookConsumerWidget {
+  const ImageAbsen({
+    Key? key,
+    required this.imageUrl,
+  }) : super(key: key);
+
+  final Uri imageUrl;
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() => _ImageAbsenState();
+}
+
+class _ImageAbsenState extends ConsumerState<ImageAbsen> {
+  late WebViewController controller;
+  late WebViewController controllerDummy;
+
+  @override
+  void initState() {
+    super.initState();
+
+    final Uri imageUri = widget.imageUrl;
+
+    controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(const Color(0x00000000))
+      ..loadRequest(imageUri);
+
+    controllerDummy = (WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(const Color(0x00000000))
+      ..setOnConsoleMessage((c) {
+        Log.info('console $c');
+      })
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onHttpError: (HttpResponseError error) {},
+          onWebResourceError: (WebResourceError error) {
+            ref.read(imageErrorProvider.notifier).state = true;
+          },
+        ),
+      )
+      ..loadRequest(imageUri));
+  }
+
+  @override
+  Widget build(BuildContext context) {
     if (context.mounted == false) {
       return Container();
     } else {
@@ -48,56 +90,20 @@ class ImageAbsen extends HookConsumerWidget {
       final imageError = ref.watch(imageErrorProvider);
       final displayImage = ref.watch(displayImageProvider);
 
-      final isFinished = useState(false);
-
-      final controller = context.mounted == false
-          ? ValueNotifier(WebViewController())
-          : useState(WebViewController()
-            ..setJavaScriptMode(JavaScriptMode.unrestricted)
-            ..setBackgroundColor(const Color(0x00000000))
-            ..loadRequest(Uri.parse(imageUrl)));
-
-      final controllerDummy = context.mounted == false
-          ? ValueNotifier(WebViewController())
-          : useState(WebViewController()
-            ..setJavaScriptMode(JavaScriptMode.unrestricted)
-            ..setBackgroundColor(const Color(0x00000000))
-            ..setOnConsoleMessage((c) {
-              Log.info('console $c');
-            })
-            ..setNavigationDelegate(
-              NavigationDelegate(
-                onPageStarted: (_) {
-                  isFinished.value = false;
-                },
-                onPageFinished: (_) {
-                  isFinished.value = true;
-                },
-                onHttpError: (HttpResponseError error) {},
-                onWebResourceError: (WebResourceError error) {
-                  ref.read(imageErrorProvider.notifier).state = true;
-                },
-              ),
-            )
-            ..loadRequest(Uri.parse(imageUrl)));
-
-      _check() async {
-        final html = await controllerDummy.value.getHtml(context);
-        if (html.contains('Runtime Error')) {
-          ref.read(imageErrorProvider.notifier).state = true;
-          isFinished.value = false;
-        }
-      }
-
       useEffect(() {
         if (context.mounted) {
-          if (isFinished.value) {
-            _check();
-          }
+          controllerDummy
+            ..setNavigationDelegate(
+              NavigationDelegate(
+                onPageFinished: (_) => _check(),
+                onHttpError: (_) => _isCurrentlyError(),
+                onWebResourceError: (_) => _isCurrentlyError(),
+              ),
+            );
           return () {};
         }
         return () {};
-      }, [isFinished.value]);
+      }, []);
 
       return context.mounted == false
           ? Container()
@@ -118,9 +124,7 @@ class ImageAbsen extends HookConsumerWidget {
                   SizedBox(
                     height: 1,
                     width: 1,
-                    child: WebViewWidget(
-                      controller: controllerDummy.value,
-                    ),
+                    child: WebViewWidget(controller: controllerDummy),
                   ),
                   if (imageUrl.isNotEmpty && imageError == false)
                     Column(
@@ -177,8 +181,7 @@ class ImageAbsen extends HookConsumerWidget {
                                 padding: EdgeInsets.all(8),
                                 child: IgnorePointer(
                                   ignoring: true,
-                                  child: WebViewWidget(
-                                      controller: controller.value),
+                                  child: WebViewWidget(controller: controller),
                                 )),
                           )
                         ]
@@ -187,5 +190,16 @@ class ImageAbsen extends HookConsumerWidget {
                 ],
               ));
     }
+  }
+
+  _check() async {
+    final html = await controllerDummy.getHtml(context);
+    if (html.contains('Runtime Error')) {
+      _isCurrentlyError();
+    }
+  }
+
+  _isCurrentlyError() {
+    ref.read(imageErrorProvider.notifier).state = true;
   }
 }
