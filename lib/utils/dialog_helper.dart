@@ -50,17 +50,21 @@ class DialogHelper<T> {
     return null;
   }
 
-  static Future<void> showConfirmationDialog({
+  static Future<bool> showConfirmationDialog({
     String? label,
     required BuildContext context,
-    required Function() onPressed,
   }) async {
-    return OSVibrate.vibrate().then((value) => showDialog(
+    await OSVibrate.vibrate();
+
+    final bool? result = await showDialog(
         context: context,
         barrierDismissible: true,
-        builder: (_) => VAlertDialog2(
-              label: label ?? 'Oops',
-              onPressed: onPressed,
-            )));
+        builder: (_) => VAlertDialog4(label: label ?? 'Oops'));
+
+    if (result == null) {
+      return false;
+    }
+
+    return result;
   }
 }

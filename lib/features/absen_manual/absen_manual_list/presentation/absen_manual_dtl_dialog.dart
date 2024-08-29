@@ -278,28 +278,30 @@ class AbsenManualDtlDialog extends ConsumerWidget {
                   if (item.isDelete!)
                     TappableSvg(
                         assetPath: Assets.iconDelete,
-                        onTap: () {
-                          return DialogHelper.showConfirmationDialog(
-                              context: context,
-                              label: 'Hapus form ? ',
-                              onPressed: () async {
-                                context.pop();
-                                context.pop();
-                                await ref
-                                    .read(createAbsenManualNotifierProvider
-                                        .notifier)
-                                    .deleteAbsenmanual(
-                                        idAbsenmnl: item.idAbsenmnl!,
-                                        onError: (msg) {
-                                          return DialogHelper.showCustomDialog(
-                                            msg,
-                                            context,
-                                          ).then((_) => ref
-                                              .read(errLogControllerProvider
-                                                  .notifier)
-                                              .sendLog(errMessage: msg));
-                                        });
-                              });
+                        onTap: () async {
+                          final result =
+                              await DialogHelper.showConfirmationDialog(
+                            context: context,
+                            label: 'Hapus form ? ',
+                          );
+
+                          if (result) {
+                            context.pop();
+                            await ref
+                                .read(
+                                    createAbsenManualNotifierProvider.notifier)
+                                .deleteAbsenmanual(
+                                    idAbsenmnl: item.idAbsenmnl!,
+                                    onError: (msg) {
+                                      return DialogHelper.showCustomDialog(
+                                        msg,
+                                        context,
+                                      ).then((_) => ref
+                                          .read(
+                                              errLogControllerProvider.notifier)
+                                          .sendLog(errMessage: msg));
+                                    });
+                          }
                         })
                 ],
               )

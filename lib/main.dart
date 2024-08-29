@@ -19,7 +19,6 @@ import 'utils/upgrader_message.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Permission.camera.request();
-  // await Permission.microphone.request();
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,

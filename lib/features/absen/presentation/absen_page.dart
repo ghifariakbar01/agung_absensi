@@ -5,6 +5,7 @@ import 'package:face_net_authentication/widgets/async_value_ui.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
@@ -44,7 +45,7 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await _initializeGeofenceAndSaved();
+      await _initializeAbsen();
       await _recheckTesterState();
     });
 
@@ -162,6 +163,7 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isRefreshed = useState(false);
     final displayImage = ref.watch(displayImageProvider);
     final isOfflineMode = ref.watch(absenOfflineModeProvider);
     final imei = ref.watch(imeiNotifierProvider);
@@ -189,6 +191,34 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
           elevation: 0,
           backgroundColor: Colors.transparent,
           toolbarHeight: 45,
+          actions: [
+            isRefreshed.value == false
+                ? IconButton(
+                    onPressed: () async {
+                      final result = await DialogHelper.showConfirmationDialog(
+                          label: ' Refresh ulang Geofence ? ',
+                          context: context);
+
+                      if (result) {
+                        ref.read(geofenceProvider.notifier).resetFOSO();
+                        await ref.read(geofenceProvider.notifier).clear();
+                        await ref
+                            .read(geofenceProvider.notifier)
+                            .getGeofenceList();
+
+                        isRefreshed.value = true;
+                      }
+                    },
+                    icon: Icon(Icons.pin_drop_outlined),
+                  )
+                : IconButton(
+                    onPressed: () async {
+                      return DialogHelper.showCustomDialog(
+                          'Anda sudah melakukan refresh', context);
+                    },
+                    icon: Icon(Icons.pin_drop),
+                  )
+          ],
         ),
         body: VAsyncValueWidget(
           value: imei,
@@ -328,7 +358,7 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
             .checkAndUpdateTesterState());
   }
 
-  Future<void> _initializeGeofenceAndSaved() async {
+  Future<void> _initializeAbsen() async {
     await ref.read(testerNotifierProvider).maybeWhen(
           tester: () async {},
           orElse: () async {

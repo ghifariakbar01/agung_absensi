@@ -238,7 +238,9 @@ class JadwalShiftListItem extends HookConsumerWidget {
                                     ? '-'
                                     : item.week == 0
                                         ? '-'
-                                        : "Week ${item.week} & ${item.week! + 1}",
+                                        : item.week == 1
+                                            ? "Week 1 & 2"
+                                            : "Week 3 & 4",
                                 style: Themes.customColor(9,
                                     color: Colors.black,
                                     fontWeight: FontWeight.w500),

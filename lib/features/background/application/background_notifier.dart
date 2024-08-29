@@ -34,7 +34,7 @@ class BackgroundNotifier extends StateNotifier<BackgroundState> {
     final absen = state.savedBackgroundItems;
 
     if (absen.isEmpty) {
-      return true;
+      return false;
     }
 
     final dateMoreThanFiveDays = absen

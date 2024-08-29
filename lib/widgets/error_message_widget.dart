@@ -5,15 +5,15 @@ import '../features/copyright/presentation/copyright_page.dart';
 import '../shared/providers.dart';
 import '../style/style.dart';
 
-class ErrorMessageWidget extends ConsumerWidget {
+class ErrorMessageWidget<T> extends ConsumerWidget {
   const ErrorMessageWidget({
+    required this.t,
     required this.errorMessage,
-    // this.showButtonLogout,
     this.additionalWidgets,
   });
   final String errorMessage;
   final List<Widget>? additionalWidgets;
-  // final bool showButtonLogout;
+  final Type t;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -74,7 +74,7 @@ class ErrorMessageWidget extends ConsumerWidget {
                     ),
                   ),
                   subtitle: Text(
-                    'Error & Stack Trace',
+                    'Error (Type $t) & Stack Trace',
                     style: Themes.customColor(
                       14,
                       fontWeight: FontWeight.bold,

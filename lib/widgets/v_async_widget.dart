@@ -29,7 +29,11 @@ class VAsyncWidgetScaffold<T> extends StatelessWidget {
           errMessage = e.toString();
         }
 
-        return Center(child: ErrorMessageWidget(errorMessage: errMessage));
+        return Center(
+            child: ErrorMessageWidget<T>(
+          t: T,
+          errorMessage: errMessage,
+        ));
       },
       loading: () => VScaffoldWidget(
         isLoading: true,
@@ -57,7 +61,11 @@ class VAsyncWidgetScaffoldWrappedMaterial<T> extends HookWidget {
       error: (e, st) => MaterialApp(
         home: Scaffold(
           appBar: AppBar(),
-          body: Center(child: ErrorMessageWidget(errorMessage: e.toString())),
+          body: Center(
+              child: ErrorMessageWidget<T>(
+            t: T,
+            errorMessage: e.toString(),
+          )),
         ),
       ),
       loading: () => Directionality(
@@ -86,8 +94,11 @@ class VAsyncValueWidget<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return value.when(
       data: data,
-      error: (e, st) =>
-          Center(child: ErrorMessageWidget(errorMessage: e.toString())),
+      error: (e, st) => Center(
+          child: ErrorMessageWidget<T>(
+        t: T,
+        errorMessage: e.toString(),
+      )),
       loading: () => Center(child: CircularProgressIndicator()),
     );
   }

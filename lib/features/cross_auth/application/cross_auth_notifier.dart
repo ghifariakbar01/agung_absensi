@@ -49,24 +49,36 @@ class IsUserCrossed extends _$IsUserCrossed {
 
   Future<IsUserCrossedState> determine() async {
     final repo = ref.read(crossAuthRepositoryProvider);
-    final hasStorage = await _hasStorage();
+    late bool hasStorage;
+    try {
+      hasStorage = await _hasStorage();
+    } catch (err) {
+      return IsUserCrossedState.notCrossed();
+    }
+
+    hasStorage = false;
 
     if (hasStorage == false) {
       return IsUserCrossedState.notCrossed();
     } else {
-      final UserModelWithPassword _userSaved = await repo.loadSavedCrossed();
-      final UserModelWithPassword _currentUser =
-          await ref.read(userNotifierProvider.notifier).getUserString();
+      try {
+        final UserModelWithPassword _userSaved = await repo.loadSavedCrossed();
+        final UserModelWithPassword _currentUser =
+            await ref.read(userNotifierProvider.notifier).getUserString();
 
-      if (_hasDifferentImei(_userSaved, _currentUser)) {
-        await _replaceCrossed();
-        await determine();
-      }
+        if (_hasDifferentImei(_userSaved, _currentUser)) {
+          await _replaceCrossed();
+          await determine();
+        }
 
-      if (_userSaved == _currentUser) {
+        if (_userSaved == _currentUser) {
+          return IsUserCrossedState.notCrossed();
+        } else {
+          return IsUserCrossedState.crossed();
+        }
+      } catch (_) {
+        await repo.clear();
         return IsUserCrossedState.notCrossed();
-      } else {
-        return IsUserCrossedState.crossed();
       }
     }
   }

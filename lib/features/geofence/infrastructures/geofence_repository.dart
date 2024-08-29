@@ -18,6 +18,8 @@ class GeofenceRepository {
 
   GeofenceRepository(this._remoteService, this._credentialsStorage);
 
+  Future<void> clear() => _credentialsStorage.clear();
+
   Future<bool> hasOfflineData() =>
       readGeofenceList().then((credentials) => credentials.fold(
             (_) => false,
@@ -97,8 +99,8 @@ class GeofenceRepository {
       await _credentialsStorage.save(data);
 
       return right(unit);
-    } on PlatformException {
-      return left(GeofenceFailure.storage(Constants.geofenceStorageError));
+    } on PlatformException catch (e) {
+      return left(GeofenceFailure.storage(e.toString()));
     }
   }
 

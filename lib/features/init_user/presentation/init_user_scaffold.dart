@@ -1,3 +1,4 @@
+import 'package:dartz/dartz.dart';
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
 
 import 'package:flutter/material.dart';
@@ -82,7 +83,8 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
                     _controller,
                   ),
                 ),
-                error: (error, stackTrace) => ErrorMessageWidget(
+                error: (error, stackTrace) => ErrorMessageWidget<Unit>(
+                  t: Unit,
                   errorMessage: error.toString(),
                   additionalWidgets: [
                     VButton(
@@ -94,18 +96,21 @@ class _InitUserScaffoldState extends ConsumerState<InitUserScaffold> {
                       VButton(
                           label: 'Logout & Retry',
                           onPressed: () async {
-                            return DialogHelper.showConfirmationDialog(
-                                context: context,
-                                label:
-                                    '(PERINGATAN) Jika Tap Ya, anda akan LOGOUT dari E-Finger / ( PERLU INTERNET UNTUK LOGIN ). ',
-                                onPressed: () async {
-                                  await ref
-                                      .read(userNotifierProvider.notifier)
-                                      .logout();
-                                  await ref
-                                      .read(authNotifierProvider.notifier)
-                                      .checkAndUpdateAuthStatus();
-                                });
+                            final result =
+                                await DialogHelper.showConfirmationDialog(
+                              context: context,
+                              label:
+                                  '(PERINGATAN) Jika Tap Ya, anda akan LOGOUT dari E-Finger / ( PERLU INTERNET UNTUK LOGIN ). ',
+                            );
+
+                            if (result == true) {
+                              await ref
+                                  .read(userNotifierProvider.notifier)
+                                  .logout();
+                              await ref
+                                  .read(authNotifierProvider.notifier)
+                                  .checkAndUpdateAuthStatus();
+                            }
                           }),
                   ],
                 ),

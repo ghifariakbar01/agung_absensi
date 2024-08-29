@@ -421,6 +421,108 @@ class VAlertDialog2 extends StatelessWidget {
   }
 }
 
+class VAlertDialog4 extends StatelessWidget {
+  const VAlertDialog4({
+    Key? key,
+    required this.label,
+    this.pressedLabel,
+  }) : super(key: key);
+
+  final String label;
+  final String? pressedLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: SizedBox(
+        height: 174,
+        child: Stack(
+          children: [
+            Container(
+              height: 154,
+              decoration: BoxDecoration(
+                // color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              padding: EdgeInsets.all(8),
+              child: Center(
+                child: Text(
+                  label,
+                  textAlign: TextAlign.center,
+                  style: Themes.customColor(14, fontWeight: FontWeight.w500),
+                ),
+              ),
+            ),
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: SizedBox(
+                height: 35,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Material(
+                        color: Colors.transparent,
+                        child: Ink(
+                          padding: EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                              color: Palette.red2,
+                              borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(10))),
+                          child: InkWell(
+                            onTap: () => context.pop(false),
+                            child: Center(
+                              child: Text(
+                                'Cancel',
+                                style: Themes.customColor(
+                                  12,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Material(
+                        color: Colors.transparent,
+                        child: Ink(
+                          padding: EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                              color: Palette.green,
+                              borderRadius: BorderRadius.only(
+                                  bottomRight: Radius.circular(10))),
+                          child: InkWell(
+                            onTap: () => context.pop(true),
+                            child: Center(
+                              child: Text(
+                                pressedLabel ?? 'Ok',
+                                style: Themes.customColor(
+                                  12,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class VBatalDialog extends StatelessWidget {
   const VBatalDialog({Key? key, required this.onTap}) : super(key: key);
 

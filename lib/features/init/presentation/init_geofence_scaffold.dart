@@ -96,16 +96,17 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
       ),
       (_, failureOrSuccessOption) => failureOrSuccessOption.fold(
           () {},
-          (either) => either.fold((failure) {
-                failure.maybeWhen(
-                    noConnection: () => ref
-                        .read(geofenceProvider.notifier)
-                        .getGeofenceListFromStorage(),
-                    empty: () => geofenceHelper.geofenceEmptyError(),
-                    orElse: () => geofenceHelper.otherError(failure));
-              },
-                  (geofenceList) =>
-                      geofenceHelper.getAndInitializeGeofence(geofenceList))),
+          (either) => either.fold(
+                (failure) {
+                  failure.maybeWhen(
+                      noConnection: () => ref
+                          .read(geofenceProvider.notifier)
+                          .getGeofenceListFromStorage(),
+                      empty: () => geofenceHelper.geofenceEmptyError(),
+                      orElse: () => geofenceHelper.otherError(failure));
+                },
+                geofenceHelper.getAndInitializeGeofence,
+              )),
     );
 
     final isLoading =

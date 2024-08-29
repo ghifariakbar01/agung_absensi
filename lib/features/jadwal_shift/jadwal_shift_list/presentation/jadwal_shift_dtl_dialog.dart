@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../constants/assets.dart';
@@ -62,26 +61,28 @@ class _JadwalShiftDtlDialogState extends ConsumerState<JadwalShiftDtlDialog> {
                     right: 5,
                     child: TappableSvg(
                         assetPath: Assets.iconDelete,
-                        onTap: () {
-                          return DialogHelper.showConfirmationDialog(
-                              context: context,
-                              label: 'Hapus jadwal shift ? ',
-                              onPressed: () async {
-                                context.pop();
-                                await ref
-                                    .read(createJadwalShiftProvider.notifier)
-                                    .deleteJadwalShift(
-                                        idShift: widget.id,
-                                        onError: (msg) {
-                                          return DialogHelper.showCustomDialog(
-                                            msg,
-                                            context,
-                                          ).then((_) => ref
-                                              .read(errLogControllerProvider
-                                                  .notifier)
-                                              .sendLog(errMessage: msg));
-                                        });
-                              });
+                        onTap: () async {
+                          final result =
+                              await DialogHelper.showConfirmationDialog(
+                            context: context,
+                            label: 'Hapus jadwal shift ? ',
+                          );
+
+                          if (result == true) {
+                            await ref
+                                .read(createJadwalShiftProvider.notifier)
+                                .deleteJadwalShift(
+                                    idShift: widget.id,
+                                    onError: (msg) {
+                                      return DialogHelper.showCustomDialog(
+                                        msg,
+                                        context,
+                                      ).then((_) => ref
+                                          .read(
+                                              errLogControllerProvider.notifier)
+                                          .sendLog(errMessage: msg));
+                                    });
+                          }
                         })),
             ],
           ),

@@ -190,7 +190,7 @@ class CreateJadwalShiftPage extends HookConsumerWidget {
                           return DropdownMenuItem<int>(
                             value: value,
                             child: Text(
-                              'Week ${value} & ${value + 1}',
+                              value == 1 ? "Week 1 & 2" : "Week 3 & 4",
                               style: Themes.customColor(
                                 14,
                               ),

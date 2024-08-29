@@ -12,7 +12,7 @@ class GeofenceSecureStorage implements CredentialsStorage {
   String? _cachedCredentials;
 
   @override
-  Future<void> clear() {
+  Future<void> clear() async {
     _cachedCredentials = null;
     return _storage.delete(key: _key);
   }
@@ -36,7 +36,7 @@ class GeofenceSecureStorage implements CredentialsStorage {
   }
 
   @override
-  Future<void> save(String credentials) {
+  Future<void> save(String credentials) async {
     _cachedCredentials = credentials;
 
     return _storage.write(

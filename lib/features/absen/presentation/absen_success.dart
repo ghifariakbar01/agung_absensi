@@ -140,11 +140,14 @@ class Success extends HookConsumerWidget {
               if (_shouldMove.value == false)
                 IconButton(
                   onPressed: () async {
-                    return DialogHelper.showConfirmationDialog(
+                    final result = await DialogHelper.showConfirmationDialog(
                         label:
                             ' Sudah selesai screenshot & ingin melanjutkan ? ',
-                        context: context,
-                        onPressed: () => _runCommand(ref, context));
+                        context: context);
+
+                    if (result) {
+                      return _runCommand(ref, context);
+                    }
                   },
                   icon: Icon(
                     Icons.arrow_circle_right_rounded,
@@ -160,7 +163,7 @@ class Success extends HookConsumerWidget {
 
   void _runCommand(WidgetRef ref, BuildContext context) {
     ref.read(geofenceProvider.notifier).resetFOSO();
-    context.pop();
+
     context.pushReplacementNamed(
       RouteNames.riwayatAbsenRoute,
       extra: true,

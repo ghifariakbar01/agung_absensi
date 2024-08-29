@@ -25,6 +25,8 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
 
   GeofenceService get geofenceservice => state.geofenceService;
 
+  Future<void> clear() => _repository.clear();
+
   Future<bool> hasOfflineData() => _repository.hasOfflineData();
 
   Future<List<GeofenceResponse>> getGeofenceStorage() =>
@@ -147,8 +149,7 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
         return;
       } else {
         if (geofenceservice.isRunningService) {
-          stop();
-          await state.geofenceService.stop();
+          return stop();
         }
       }
     }
@@ -262,6 +263,7 @@ class GeofenceNotifier extends StateNotifier<GeofenceState> {
   stop() async {
     state.geofenceService.clearAllListeners();
     state.geofenceService.clearGeofenceList();
+    await state.geofenceService.stop();
   }
 
   List<GeofenceCoordinate> updateCoordinatesFromGeofence(

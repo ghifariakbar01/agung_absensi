@@ -322,26 +322,27 @@ class IzinDtlDialog extends ConsumerWidget {
                     TappableSvg(
                       assetPath: Assets.iconDelete,
                       onTap: () async {
-                        return DialogHelper.showConfirmationDialog(
-                            context: context,
-                            label: 'Hapus form ? ',
-                            onPressed: () async {
-                              context.pop();
-                              context.pop();
-                              await ref
-                                  .read(createIzinNotifierProvider.notifier)
-                                  .deleteIzin(
-                                      idIzin: item.idIzin!,
-                                      onError: (msg) {
-                                        return DialogHelper.showCustomDialog(
-                                          msg,
-                                          context,
-                                        ).then((_) => ref
-                                            .read(errLogControllerProvider
-                                                .notifier)
-                                            .sendLog(errMessage: msg));
-                                      });
-                            });
+                        final result =
+                            await DialogHelper.showConfirmationDialog(
+                          context: context,
+                          label: 'Hapus form ? ',
+                        );
+
+                        if (result == true) {
+                          context.pop();
+                          await ref
+                              .read(createIzinNotifierProvider.notifier)
+                              .deleteIzin(
+                                  idIzin: item.idIzin!,
+                                  onError: (msg) {
+                                    return DialogHelper.showCustomDialog(
+                                      msg,
+                                      context,
+                                    ).then((_) => ref
+                                        .read(errLogControllerProvider.notifier)
+                                        .sendLog(errMessage: msg));
+                                  });
+                        }
                       },
                     )
                 ],

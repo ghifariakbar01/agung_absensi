@@ -454,28 +454,28 @@ class TugasDinasDtlDialog extends ConsumerWidget {
                   if (item.isDelete!)
                     TappableSvg(
                         assetPath: Assets.iconDelete,
-                        onTap: () {
-                          return DialogHelper.showConfirmationDialog(
-                              context: context,
-                              label: 'Hapus form ? ',
-                              onPressed: () async {
-                                context.pop();
-                                context.pop();
-                                await ref
-                                    .read(createTugasDinasNotifierProvider
-                                        .notifier)
-                                    .deleteTugasDinas(
-                                        idDinas: item.idDinas!,
-                                        onError: (msg) {
-                                          return DialogHelper.showCustomDialog(
-                                            msg,
-                                            context,
-                                          ).then((_) => ref
-                                              .read(errLogControllerProvider
-                                                  .notifier)
-                                              .sendLog(errMessage: msg));
-                                        });
-                              });
+                        onTap: () async {
+                          final result = DialogHelper.showConfirmationDialog(
+                            context: context,
+                            label: 'Hapus form ? ',
+                          );
+
+                          if (result == true) {
+                            context.pop();
+                            await ref
+                                .read(createTugasDinasNotifierProvider.notifier)
+                                .deleteTugasDinas(
+                                    idDinas: item.idDinas!,
+                                    onError: (msg) {
+                                      return DialogHelper.showCustomDialog(
+                                        msg,
+                                        context,
+                                      ).then((_) => ref
+                                          .read(
+                                              errLogControllerProvider.notifier)
+                                          .sendLog(errMessage: msg));
+                                    });
+                          }
                         })
                 ],
               )
