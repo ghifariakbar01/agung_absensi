@@ -23,7 +23,8 @@ class CrossAuthRepository {
   }
 
   Future<bool> hasStorage() async {
-    return await _storage.read() != null;
+    final resp = await _storage.read();
+    return resp != null;
   }
 
   Future<UserModelWithPassword> loadSavedCrossed() async {

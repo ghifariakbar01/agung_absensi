@@ -49,14 +49,13 @@ class IsUserCrossed extends _$IsUserCrossed {
 
   Future<IsUserCrossedState> determine() async {
     final repo = ref.read(crossAuthRepositoryProvider);
-    late bool hasStorage;
+    bool hasStorage;
+
     try {
       hasStorage = await _hasStorage();
     } catch (err) {
       return IsUserCrossedState.notCrossed();
     }
-
-    hasStorage = false;
 
     if (hasStorage == false) {
       return IsUserCrossedState.notCrossed();
