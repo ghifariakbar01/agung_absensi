@@ -187,6 +187,8 @@ class SakitListScaffold extends HookConsumerWidget
     final _isSearching = useState(false);
     final _searchFocus = useFocusNode();
 
+    final _isDonePopping = useState(false);
+
     return VAsyncWidgetScaffold<void>(
       value: errLog,
       data: (_) => VAsyncWidgetScaffold(
@@ -200,7 +202,10 @@ class SakitListScaffold extends HookConsumerWidget
               );
 
               return PopScope(
-                onPopInvoked: (_) async {
+                canPop: _isDonePopping.value,
+                onPopInvoked: (cond) async {
+                  _isDonePopping.value = false;
+
                   final user = ref.read(userNotifierProvider).user;
                   final _ptMap = await ref
                       .read(firebaseRemoteConfigNotifierProvider.notifier)
@@ -214,7 +219,7 @@ class SakitListScaffold extends HookConsumerWidget
                         );
                   }
 
-                  context.pop();
+                  _isDonePopping.value = true;
                 },
                 child: VAsyncWidgetScaffold(
                   value: sakitApprove,

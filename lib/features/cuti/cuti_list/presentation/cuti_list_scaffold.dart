@@ -178,6 +178,8 @@ class CutiListScaffold extends HookConsumerWidget {
     final _isSearching = useState(false);
     final _searchFocus = useFocusNode();
 
+    final _isDonePopping = useState(false);
+
     return VAsyncWidgetScaffold<void>(
       value: errLog,
       data: (_) => VAsyncWidgetScaffold(
@@ -191,7 +193,10 @@ class CutiListScaffold extends HookConsumerWidget {
               );
 
               return PopScope(
+                  canPop: _isDonePopping.value,
                   onPopInvoked: (_) async {
+                    _isDonePopping.value = false;
+
                     final user = ref.read(userNotifierProvider).user;
                     final _rmt = await ref
                         .read(firebaseRemoteConfigNotifierProvider.future);
@@ -206,7 +211,7 @@ class CutiListScaffold extends HookConsumerWidget {
                           );
                     }
 
-                    context.pop();
+                    _isDonePopping.value = true;
                   },
                   child: VAsyncWidgetScaffold<MstKaryawanCuti>(
                     value: mstCuti,

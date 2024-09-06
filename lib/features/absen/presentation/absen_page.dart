@@ -1,6 +1,8 @@
 // ignore_for_file: unused_result
 
 import 'package:dartz/dartz.dart';
+import 'package:face_net_authentication/features/cross_auth/application/cross_auth_notifier.dart';
+import 'package:face_net_authentication/features/cross_auth/application/is_user_crossed.dart';
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
 
 import 'package:flutter/material.dart';
@@ -16,6 +18,7 @@ import '../../../constants/constants.dart';
 import '../../copyright/presentation/copyright_item.dart';
 import '../../domain/absen_failure.dart';
 import '../../err_log/application/err_log_notifier.dart';
+import '../../firebase/remote_config/application/firebase_remote_config_notifier.dart';
 import '../../imei/application/imei_notifier.dart';
 import '../../imei/application/imei_state.dart';
 import '../../imei_introduction/application/shared/imei_introduction_providers.dart';
@@ -167,6 +170,8 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
     final displayImage = ref.watch(displayImageProvider);
     final isOfflineMode = ref.watch(absenOfflineModeProvider);
     final imei = ref.watch(imeiNotifierProvider);
+    final isUserCrossed = ref.watch(isUserCrossedProvider);
+    final crossAuthNotifier = ref.watch(crossAuthNotifierProvider);
 
     final isLoading = ref.watch(
           imeiNotifierProvider.select((value) => value.isLoading),
@@ -222,61 +227,106 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
         ),
         body: VAsyncValueWidget(
           value: imei,
-          data: (_) => SafeArea(
-            child: !isOfflineMode && isLoading
-                ? Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : SingleChildScrollView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    child: SizedBox(
-                        height: displayImage == false || isOfflineMode
-                            ? MediaQuery.of(context).size.height + 300
-                            : MediaQuery.of(context).size.height + 475,
-                        child: Stack(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Container(
-                                padding: EdgeInsets.all(16),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12),
-                                  color: Palette.containerBackgroundColor
-                                      .withOpacity(0.1),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: <Widget>[
-                                    SizedBox(
-                                      height: 4,
-                                    ),
-                                    UserInfo(
-                                      'User ${isOfflineMode ? '(Mode Offline)' : ''}',
-                                    ),
-                                    Constants.isDev
-                                        ? Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Testing(),
-                                          )
-                                        : Container(),
-                                    const SizedBox(
-                                      height: 24,
-                                    ),
-                                    AbsenErrorAndButton(),
-                                  ],
+          data: (_) => VAsyncValueWidget(
+            value: crossAuthNotifier,
+            data: (_) => SafeArea(
+              child: !isOfflineMode && isLoading
+                  ? Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : SingleChildScrollView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      child: SizedBox(
+                          height: displayImage == false || isOfflineMode
+                              ? MediaQuery.of(context).size.height + 300
+                              : MediaQuery.of(context).size.height + 475,
+                          child: Stack(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Container(
+                                  padding: EdgeInsets.all(16),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    color: Palette.containerBackgroundColor
+                                        .withOpacity(0.1),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      SizedBox(
+                                        height: 4,
+                                      ),
+                                      UserInfo(
+                                        'User ${isOfflineMode ? '(Mode Offline)' : ''}',
+                                      ),
+                                      Constants.isDev
+                                          ? Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Testing(),
+                                            )
+                                          : Container(),
+                                      const SizedBox(
+                                        height: 24,
+                                      ),
+                                      VAsyncValueWidget<IsUserCrossedState>(
+                                          value: isUserCrossed,
+                                          data: (isCrossed) => isCrossed.when(
+                                                crossed: () => TextButton(
+                                                    onPressed: () async {
+                                                      final _ptMap = await ref
+                                                          .read(
+                                                              firebaseRemoteConfigNotifierProvider
+                                                                  .notifier)
+                                                          .getPtMap();
+                                                      final user = ref
+                                                          .read(
+                                                              userNotifierProvider)
+                                                          .user;
+
+                                                      if (user.idUser == null ||
+                                                          user.password ==
+                                                              null) {
+                                                        return DialogHelper
+                                                            .showCustomDialog(
+                                                                'idUser atau password null',
+                                                                context);
+                                                      }
+
+                                                      return ref
+                                                          .read(
+                                                              crossAuthNotifierProvider
+                                                                  .notifier)
+                                                          .uncross(
+                                                              userId: user
+                                                                  .idUser
+                                                                  .toString(),
+                                                              password: user
+                                                                  .password!,
+                                                              url: _ptMap);
+                                                    },
+                                                    child:
+                                                        Text('User Crossed')),
+                                                notCrossed: () =>
+                                                    AbsenErrorAndButton(),
+                                              )),
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                            Positioned(
-                              bottom: 20,
-                              left: 0,
-                              right: 0,
-                              child: CopyrightItem(),
-                            )
-                          ],
-                        )),
-                  ),
+                              Positioned(
+                                bottom: 20,
+                                left: 0,
+                                right: 0,
+                                child: CopyrightItem(),
+                              )
+                            ],
+                          )),
+                    ),
+            ),
           ),
         ));
   }

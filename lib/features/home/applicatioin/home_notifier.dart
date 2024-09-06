@@ -40,7 +40,7 @@ class HomeNotifier extends StateNotifier<HomeState> {
     required BuildContext context,
   }) async {
     bool isAbsenRoute = route == RouteNames.absenRoute;
-    bool isRiwayatRoute = route == RouteNames.riwayatRoute;
+    bool isRiwayatRoute = route == RouteNames.riwayatAbsenRoute;
 
     bool isSlipGajiRoute = route == RouteNames.slipGajiRoute;
 

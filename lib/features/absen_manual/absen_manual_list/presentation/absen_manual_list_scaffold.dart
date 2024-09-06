@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:collection/collection.dart';
 
 import 'package:face_net_authentication/shared/providers.dart';
@@ -90,6 +92,8 @@ class AbsenManualListScaffold extends HookConsumerWidget
 
     final _initialDropdownPlaceholder = ['ACT', 'Transina', 'ALR'];
     final _currPT = ref.watch(userNotifierProvider).user.ptServer;
+
+    log('_currPT $_currPT');
     final _initialDropdown = mapPT.entries
         .firstWhereOrNull((element) => element.key == _currPT)
         ?.value;
@@ -181,6 +185,8 @@ class AbsenManualListScaffold extends HookConsumerWidget
     final _isSearching = useState(false);
     final _searchFocus = useFocusNode();
 
+    final _isDonePopping = useState(false);
+
     return VAsyncWidgetScaffold<void>(
       value: errLog,
       data: (_) => VAsyncWidgetScaffold(
@@ -196,7 +202,10 @@ class AbsenManualListScaffold extends HookConsumerWidget
                 );
 
                 return PopScope(
+                  canPop: _isDonePopping.value,
                   onPopInvoked: (_) async {
+                    _isDonePopping.value = false;
+
                     final user = ref.read(userNotifierProvider).user;
                     final _ptMap = await ref
                         .read(firebaseRemoteConfigNotifierProvider.notifier)
@@ -212,7 +221,7 @@ class AbsenManualListScaffold extends HookConsumerWidget
                           );
                     }
 
-                    context.pop();
+                    _isDonePopping.value = true;
                   },
                   child: VAsyncValueWidget<bool>(
                     value: _userHasStaff,

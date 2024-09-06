@@ -184,6 +184,8 @@ class LemburListScaffold extends HookConsumerWidget
     final _isSearching = useState(false);
     final _searchFocus = useFocusNode();
 
+    final _isDonePopping = useState(false);
+
     return VAsyncWidgetScaffold<void>(
       value: errLog,
       data: (_) => VAsyncWidgetScaffold(
@@ -197,7 +199,10 @@ class LemburListScaffold extends HookConsumerWidget
               );
 
               return PopScope(
+                canPop: _isDonePopping.value,
                 onPopInvoked: (_) async {
+                  _isDonePopping.value = false;
+
                   final user = ref.read(userNotifierProvider).user;
                   final _ptMap = await ref
                       .read(firebaseRemoteConfigNotifierProvider.notifier)
@@ -211,7 +216,7 @@ class LemburListScaffold extends HookConsumerWidget
                         );
                   }
 
-                  context.pop();
+                  _isDonePopping.value = true;
                 },
                 child: VAsyncWidgetScaffold(
                   value: lemburApprove,

@@ -1,4 +1,6 @@
 import 'package:dartz/dartz.dart';
+import 'package:face_net_authentication/features/cross_auth/application/cross_auth_notifier.dart';
+import 'package:face_net_authentication/features/cross_auth/application/is_user_crossed.dart';
 import 'package:face_net_authentication/widgets/async_value_ui.dart';
 
 import 'package:flutter/material.dart';
@@ -124,6 +126,9 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
 
     final _device = ref.watch(deviceDetectorNotifierProvider);
 
+    final isUserCrossed = ref.watch(isUserCrossedProvider);
+    final crossAuthNotifier = ref.watch(crossAuthNotifierProvider);
+
     return VAsyncWidgetScaffold<void>(
       value: errLog,
       data: (_) => Scaffold(
@@ -155,7 +160,15 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
                             ),
                           ),
                         )
-                      : HomeSaved();
+                      : VAsyncValueWidget<void>(
+                          value: crossAuthNotifier,
+                          data: (_) => VAsyncValueWidget<IsUserCrossedState>(
+                              value: isUserCrossed,
+                              data: (isCrossed) => isCrossed.when(
+                                  crossed: () => Center(
+                                      child: CircularProgressIndicator()),
+                                  notCrossed: () => HomeSaved())),
+                        );
                 }),
           ],
           if (isLoading) ...[
