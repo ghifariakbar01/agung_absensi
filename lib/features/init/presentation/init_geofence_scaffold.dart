@@ -146,7 +146,7 @@ class _InitGeofenceScaffoldState extends ConsumerState<InitGeofenceScaffold> {
                     cond = dev;
                   }
 
-                  return false
+                  return cond
                       ? Center(
                           child: Padding(
                             padding: const EdgeInsets.all(16.0),

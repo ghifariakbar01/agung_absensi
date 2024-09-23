@@ -9,6 +9,7 @@ import 'config/configuration.dart';
 import 'features/firebase/remote_config/helper/firebase_remote_config_initializer.dart';
 import 'features/imei_introduction/application/shared/imei_introduction_providers.dart';
 import 'features/tc/application/shared/tc_providers.dart';
+import 'helper.dart';
 import 'shared/providers.dart';
 import 'style/style.dart';
 import 'package:firebase_core/firebase_core.dart';

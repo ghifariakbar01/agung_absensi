@@ -65,12 +65,7 @@ class IsUserCrossed extends _$IsUserCrossed {
         final UserModelWithPassword _currentUser =
             await ref.read(userNotifierProvider.notifier).getUserString();
 
-        if (_hasDifferentImei(_userSaved, _currentUser)) {
-          await _replaceCrossed();
-          await determine();
-        }
-
-        if (_userSaved == _currentUser) {
+        if (_userSaved.ptServer == _currentUser.ptServer) {
           return IsUserCrossedState.notCrossed();
         } else {
           return IsUserCrossedState.crossed();
@@ -165,6 +160,10 @@ class CrossAuthNotifier extends _$CrossAuthNotifier {
       await _saveCross();
       await _saveFirstTime();
     }
+  }
+
+  Future<void> obliterate() async {
+    return ref.read(crossAuthRepositoryProvider).clear();
   }
 
   Future<void> uncross({

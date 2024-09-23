@@ -204,6 +204,10 @@ class SakitListScaffold extends HookConsumerWidget
               return PopScope(
                 canPop: _isDonePopping.value,
                 onPopInvoked: (cond) async {
+                  if (_isDonePopping.value) {
+                    return;
+                  }
+
                   _isDonePopping.value = false;
 
                   final user = ref.read(userNotifierProvider).user;

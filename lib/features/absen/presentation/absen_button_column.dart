@@ -71,6 +71,7 @@ class AbsenButtonColumn extends HookConsumerWidget {
                 VButton(
                   label: 'ABSEN IN $karyawanShiftStr',
                   height: 50,
+                  color: Colors.green,
                   isEnabled: isTesting
                       ? true
                       : isTester.maybeWhen(
@@ -123,6 +124,7 @@ class AbsenButtonColumn extends HookConsumerWidget {
                 VButton(
                     label: 'ABSEN OUT $karyawanShiftStr',
                     height: 50,
+                    color: Colors.red,
                     isEnabled: isTesting
                         ? true
                         : isTester.maybeWhen(

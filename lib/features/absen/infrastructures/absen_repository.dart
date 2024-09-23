@@ -44,14 +44,14 @@ class AbsenRepository {
       final coancenate = isIn ? 'masuk' : 'keluar';
 
       final trimmedDate = StringUtils.trimmedDate(item.date);
-      final trimmedDateDb = StringUtils.trimmedDate(item.dbDate);
+      // final trimmedDateDb = StringUtils.trimmedDate(item.dbDate);
 
       Map<String, dynamic> query = {
         '${item.id}': " INSERT INTO $dbNameProd " +
             "(tgljam, mode, id_user, imei, id_geof, c_date, c_user, latitude_$coancenate, longitude_$coancenate, lokasi_$coancenate)" +
             " VALUES " +
             " ('$trimmedDate', '$ket', '${idUser}', "
-                " '$imei', '${item.idGeof}', '$trimmedDateDb', '${nama}', "
+                " '$imei', '${item.idGeof}', GETDATE(), '${nama}', "
                 " '${item.latitude}', '${item.longitude}', '${item.alamat}') ",
       };
 

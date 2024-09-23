@@ -9,7 +9,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../features/auth/infrastructures/auth_repository.dart';
 import '../constants/constants.dart';
 import '../features/cross_auth/application/cross_auth_notifier.dart';
-import '../features/firebase/remote_config/application/firebase_remote_config_notifier.dart';
 import '../features/ip/application/ip_notifier.dart';
 import '../features/user/application/user_model.dart';
 import 'providers.dart';
@@ -104,33 +103,13 @@ final imeiInitFutureProvider =
   final json = jsonDecode(userString) as Map<String, Object?>;
   final user = UserModelWithPassword.fromJson(json);
 
-  final _data = await ref.read(isUserCrossedProvider.future);
-
   if (user.IdKary == null) {
     final helper = HelperImpl();
     await helper.storageDebugMode(ref, isDebug: true);
     throw AssertionError('Error validating user. IdKary user is null');
   }
 
-  if (user.IdKary!.isNotEmpty) {
-    // uncross
-    final _isCrossed = _data.when(
-      crossed: () => true,
-      notCrossed: () => false,
-    );
-
-    final _ptMap = await ref
-        .read(firebaseRemoteConfigNotifierProvider.notifier)
-        .getPtMap();
-
-    if (_isCrossed) {
-      await ref.read(crossAuthNotifierProvider.notifier).uncrossStl(
-            url: _ptMap,
-            userId: user.nama!,
-            password: user.password!,
-          );
-    }
-  } else {}
+  await ref.read(crossAuthNotifierProvider.notifier).obliterate();
 
   try {
     // ignore: unused_result

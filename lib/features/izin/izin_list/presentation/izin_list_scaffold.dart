@@ -201,6 +201,10 @@ class IzinListScaffold extends HookConsumerWidget
               return PopScope(
                 canPop: _isDonePopping.value,
                 onPopInvoked: (_) async {
+                  if (_isDonePopping.value) {
+                    return;
+                  }
+
                   _isDonePopping.value = false;
 
                   final user = ref.read(userNotifierProvider).user;
