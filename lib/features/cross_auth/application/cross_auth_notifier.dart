@@ -76,24 +76,6 @@ class IsUserCrossed extends _$IsUserCrossed {
       }
     }
   }
-
-  _hasDifferentImei(
-      UserModelWithPassword _userSaved, UserModelWithPassword _currentUser) {
-    if (_userSaved != _currentUser) {
-      if (_userSaved.ptServer == _currentUser.ptServer) {
-        return true;
-      } else {
-        return false;
-      }
-    } else {
-      return false;
-    }
-  }
-
-  Future<void> _replaceCrossed() async {
-    final user = ref.read(userNotifierProvider).user;
-    await ref.read(crossAuthRepositoryProvider).save(user);
-  }
 }
 
 @riverpod

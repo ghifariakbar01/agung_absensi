@@ -65,7 +65,7 @@ class _AbsenPageState extends ConsumerState<AbsenPage> {
             state.value !=
                 AsyncData<ImeiState>(ImeiState.notRegisteredAfterAbsen())) {
           state.requireValue.maybeWhen(
-            alreadyRegistered: () => _onImeiNotRegistered(),
+            alreadyRegistered: () => _onImeiAlreadyRegistered(),
             notRegistered: () => _onImeiNotRegistered(),
             initial: () {},
             ok: () => _onImeiOk(),

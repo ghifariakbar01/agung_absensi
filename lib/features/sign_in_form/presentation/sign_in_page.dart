@@ -91,10 +91,9 @@ class SignInPage extends HookConsumerWidget {
         final generateImei = imeiNotifier.generateImei();
 
         state.requireValue.maybeWhen(
-          alreadyRegistered: () => _onImeiNotRegistered(
+          alreadyRegistered: () => _onImeiAlreadyRegistered(
             imeiNotifier,
             generateImei,
-            idKary,
             context,
           ),
           notRegistered: () => _onImeiNotRegistered(
@@ -221,28 +220,24 @@ class SignInPage extends HookConsumerWidget {
 
   _onImeiAlreadyRegistered(
       ImeiNotifier imeiNotifier, String idKary, BuildContext context) async {
-    {
-      await imeiNotifier.onImeiAlreadyRegistered(
-        idKary: idKary,
-      );
+    await imeiNotifier.onImeiAlreadyRegistered(
+      idKary: idKary,
+    );
 
-      return showErrorDialog(
-        context,
-        Constants.imeiAlreadyRegistered,
-      );
-    }
+    return showErrorDialog(
+      context,
+      Constants.imeiAlreadyRegistered,
+    );
   }
 
   _onImeiNotRegistered(ImeiNotifier imeiNotifier, String generateImei,
       String idKary, BuildContext context) async {
-    {
-      await imeiNotifier.registerImei(
-        imei: generateImei,
-        idKary: idKary,
-      );
+    await imeiNotifier.registerImei(
+      imei: generateImei,
+      idKary: idKary,
+    );
 
-      return showSuccessDialog(context);
-    }
+    return showSuccessDialog(context);
   }
 
   _reset(WidgetRef ref) => ref.read(imeiNotifierProvider.notifier).reset();

@@ -128,11 +128,11 @@ class ImeiRepository {
     required String imei,
     required String idKary,
   }) async {
-    final String response = await _remoteService.registerImei(
+    await _remoteService.registerImei(
       imei: imei,
       idKary: idKary,
     );
 
-    return _credentialsStorage.save(response);
+    return _credentialsStorage.save(imei);
   }
 }
