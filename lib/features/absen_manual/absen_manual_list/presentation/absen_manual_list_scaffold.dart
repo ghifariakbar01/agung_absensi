@@ -175,7 +175,7 @@ class AbsenManualListScaffold extends HookConsumerWidget
       "Absen Manual Di input Maks H=0 dan di approve oleh atasan dan HR maks H+1",
       "WFH : khusus untuk karyawan yang bekerja dari rumah (work from home)",
       "Absen Harian : untuk karyawan yang lokasi kerjanya tidak tersedia mesin finger print.",
-      "Absen Lainnya / Kasus : untuk kasus-kasus tidak melakukan finger print karena listrik mati, mesin error / rusak, sidik jari tidak terbaca, lupa absen, jaringan trouble / internet mati saat akan input absen manual dll.",
+      "Absen Abnormal : untuk kasus-kasus tidak melakukan finger print karena listrik mati, mesin error / rusak, sidik jari tidak terbaca, lupa absen, jaringan trouble / internet mati saat akan input absen manual dll.",
     ];
 
     final errLog = ref.watch(errLogControllerProvider);

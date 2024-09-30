@@ -127,45 +127,57 @@ class EditAbsenManualPage extends HookConsumerWidget {
 
                       VAsyncValueWidget<List<JenisAbsen>>(
                         value: jenisAbsen,
-                        data: (list) => DropdownButtonFormField<JenisAbsen>(
-                          elevation: 0,
-                          iconSize: 20,
-                          padding: EdgeInsets.all(0),
-                          icon: Icon(Icons.keyboard_arrow_down_rounded,
-                              color: Palette.primaryColor),
-                          decoration: Themes.formStyleBordered(
-                            'Jenis Absen',
-                          ),
-                          validator: (value) {
-                            if (value == null) {
-                              return 'Form tidak boleh kosong';
-                            }
+                        data: (list) => Builder(builder: (_) {
+                          if (list.isEmpty) {
+                            return Text('Error Jenis Absen Empty');
+                          }
 
-                            return null;
-                          },
-                          value: list.firstWhere(
-                            (element) => element.Kode == jenis.value,
-                            orElse: () => list.first,
-                          ),
-                          onChanged: (JenisAbsen? value) {
-                            if (value != null) {
-                              jenis.value = value.Kode;
-                            }
-                          },
-                          isExpanded: true,
-                          items: list.map<DropdownMenuItem<JenisAbsen>>(
-                              (JenisAbsen value) {
-                            return DropdownMenuItem<JenisAbsen>(
-                              value: value,
-                              child: Text(
-                                value.Nama,
-                                style: Themes.customColor(
-                                  14,
+                          final isAktifList =
+                              list.where((e) => e.aktif == true).toList();
+                          final absenAbornmal = list.firstWhere(
+                              (e) => e.Nama.toLowerCase().contains('abnormal'));
+
+                          return DropdownButtonFormField<JenisAbsen>(
+                            elevation: 0,
+                            iconSize: 20,
+                            padding: EdgeInsets.all(0),
+                            icon: Icon(Icons.keyboard_arrow_down_rounded,
+                                color: Palette.primaryColor),
+                            decoration: Themes.formStyleBordered(
+                              'Jenis Absen',
+                            ),
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Form tidak boleh kosong';
+                              }
+
+                              return null;
+                            },
+                            value: isAktifList.firstWhere(
+                              (element) => element.Kode == jenis.value,
+                              orElse: () => absenAbornmal,
+                            ),
+                            onChanged: (JenisAbsen? value) {
+                              if (value != null) {
+                                jenis.value = value.Kode;
+                              }
+                            },
+                            isExpanded: true,
+                            items: isAktifList
+                                .map<DropdownMenuItem<JenisAbsen>>(
+                                    (JenisAbsen value) {
+                              return DropdownMenuItem<JenisAbsen>(
+                                value: value,
+                                child: Text(
+                                  value.Nama,
+                                  style: Themes.customColor(
+                                    14,
+                                  ),
                                 ),
-                              ),
-                            );
-                          }).toList(),
-                        ),
+                              );
+                            }).toList(),
+                          );
+                        }),
                       ),
 
                       SizedBox(
@@ -364,9 +376,9 @@ class EditAbsenManualPage extends HookConsumerWidget {
                           validator: (item) {
                             if (jenis.value!.toLowerCase() == 'lln') {
                               if (item == null) {
-                                return 'Bila Pilih Absen Lainnya / Kasus -> Wajib Mengisi Kolom Keterangan';
+                                return 'Bila Pilih Absen Abnormal -> Wajib Mengisi Kolom Keterangan';
                               } else if (item.isEmpty) {
-                                return 'Bila Pilih Absen Lainnya / Kasus -> Wajib Mengisi Kolom Keterangan';
+                                return 'Bila Pilih Absen Abnormal -> Wajib Mengisi Kolom Keterangan';
                               }
                             }
 

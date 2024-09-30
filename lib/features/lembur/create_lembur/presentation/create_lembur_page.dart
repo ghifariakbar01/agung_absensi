@@ -169,7 +169,9 @@ class CreateLemburPage extends HookConsumerWidget {
                             if (picked != null) {
                               tglPlaceholder.text = DateFormat(
                                 'E, dd MMM yyyy',
-                              ).format(tgl.value);
+                              ).format(picked);
+
+                              tgl.value = picked;
                             }
                           },
                           child: IgnorePointer(
